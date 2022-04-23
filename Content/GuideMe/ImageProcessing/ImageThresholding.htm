@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Image Analysis">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Image Thresholding</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/image_analysis_gallery1.htm">Image Analysis</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Image Thresholding</span>
+        </div>
+        <h1>Image Thresholding</h1>
+        <p>Image thresholding is a simple form of image segmentation. It is a way to create a binary image from a grayscale or full-color image. This is typically done in order to separate "object" or foreground pixels from background pixels to aid in image processing.</p>
+        <p>In this example, you will use <a href="../../Reference Material/I/IMAGE_THRESHOLD.htm">IMAGE_THRESHOLD</a> to automatically calculate separate threshold values for one image using different algorithms. You will then use each threshold to create separate images which allows you to compare the outputs of the different algorithms.</p>
+        <p class="Code">; Read in and view the file</p>
+        <p class="Code">data = READ_IMAGE(FILEPATH('MagnaCarta1.png', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;SUBDIRECTORY=['examples', 'data']))</p>
+        <p class="Code">view_orig = IMAGE(data)</p>
+        <p>IDL Displays the image (on the left, below):</p>
+        <p>
+            <img src="../../Reference Material/images/MagnaCartaOrig.png" /> <img src="../../Reference Material/images/MagnaCartaHist.png" /></p>
+        <p class="Code">; Optional: obtain the image's histogram (right, above)</p>
+        <p class="Code">hist = BYTSCL(HISTOGRAM(data))</p>
+        <p class="Code">hist_plot = PLOT(hist)</p>
+        <p>First apply the default algorithm, ISODATA:</p>
+        <p class="Code">iso_result = IMAGE_THRESHOLD(data, THRESHOLD=t, /BYIMAGE)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the threshold value</p>
+        <p class="Code">PRINT, t</p>
+        <p>IDL&#160;displays:</p>
+        <p class="Code">165</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Assign everything below the threshold to black</p>
+        <p class="Code">; and view the resulting image</p>
+        <p class="Code">data[WHERE(iso_result EQ 0)] = 0</p>
+        <p class="Code">iso_view = IMAGE(data)</p>
+        <p>The image after applying the ISODATA algorithm:</p>
+        <p>
+            <img src="../../Reference Material/images/MagnaCarta_ISO.png" />
+        </p>
+        <p>Now use the second algorithm, OTSU:</p>
+        <p class="Code">data2 = READ_IMAGE(FILEPATH('MagnaCarta1.png', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;SUBDIRECTORY=['examples', 'data']))</p>
+        <p class="Code">otsu_result = IMAGE_THRESHOLD(data2, THRESHOLD=o, /BYIMAGE, /OTSU)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the threshold value</p>
+        <p class="Code">PRINT, o</p>
+        <p>IDL&#160;displays:</p>
+        <p class="Code">163</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Assign everything below the threshold to black</p>
+        <p class="Code">; and view the resulting image</p>
+        <p class="Code">data2[WHERE(otsu_result EQ 0)] = 0</p>
+        <p class="Code">otsu_view = IMAGE(data2)</p>
+        <p>The image after applying the OTSU algorithm:</p>
+        <p>
+            <img src="../../Reference Material/images/MagnaCarta_OTSU.png" />
+        </p>
+        <p>Apply the third algorithm, MOMENTS:</p>
+        <p class="Code">data3 = READ_IMAGE(FILEPATH('MagnaCarta1.png', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;SUBDIRECTORY=['examples', 'data']))</p>
+        <p class="Code">moments_result = IMAGE_THRESHOLD(data3, THRESHOLD=m, /BYIMAGE, /MOMENTS)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the threshold value</p>
+        <p class="Code">PRINT, m</p>
+        <p>IDL&#160;displays:</p>
+        <p class="Code">162</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Assign everything below the threshold to black</p>
+        <p class="Code">; and view the resulting image</p>
+        <p class="Code">data3[WHERE(moments_result EQ 0)] = 0</p>
+        <p class="Code">moments_view = IMAGE(data3)</p>
+        <p class="Code">&#160;</p>
+        <p>The image after applying the MOMENTS algorithm:</p>
+        <p class="Code">&#160;</p>
+        <p>
+            <img src="../../Reference Material/images/MagnaCarta_MOMENTS.png" />
+        </p>
+        <p>Apply the fourth algorithm, MAXENTROPY:</p>
+        <p class="Code">data4 = READ_IMAGE(FILEPATH('MagnaCarta1.png', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;SUBDIRECTORY=['examples', 'data']))</p>
+        <p class="Code">entr_result = IMAGE_THRESHOLD(data4, THRESHOLD=e, /BYIMAGE, /MAXENTROPY)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the threshold value</p>
+        <p class="Code">PRINT, e</p>
+        <p>IDL&#160;displays:</p>
+        <p class="Code">137</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Assign everything below the threshold to black</p>
+        <p class="Code">; and view the resulting image</p>
+        <p class="Code">data4[WHERE(entr_result EQ 0)] = 0</p>
+        <p class="Code">entr_view = IMAGE(data4)</p>
+        <p class="Code">&#160;</p>
+        <p>The image after applying MAXENTROPY:</p>
+        <p>
+            <img src="../../Reference Material/images/MagnaCarta_MAXENTROPY.png" />
+        </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In this image, above, we start to see some definition in the lettering in the shadowed area across the bottom quarter of the image.</p>
+        <p>Apply the next algorithm, MINERROR:</p>
+        <p class="Code">data5 = READ_IMAGE(FILEPATH('MagnaCarta1.png', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;SUBDIRECTORY=['examples', 'data']))</p>
+        <p class="Code">minerr_result = IMAGE_THRESHOLD(data5, THRESHOLD=r, /BYIMAGE, /MINERROR)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the threshold value</p>
+        <p class="Code">PRINT, r</p>
+        <p>IDL&#160;displays:</p>
+        <p class="Code">197</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Assign everything below the threshold to black</p>
+        <p class="Code">; and view the resulting image</p>
+        <p class="Code">data5[WHERE(minerr_result EQ 0)] = 0</p>
+        <p class="Code">minerr_view = IMAGE(data5)</p>
+        <p>The image after applying MINERROR:</p>
+        <p>
+            <img src="../../Reference Material/images/MagnaCarta_MINERROR.png" />
+        </p>
+        <p>Apply the final algorithm, MEAN:</p>
+        <p class="Code">data6 = READ_IMAGE(FILEPATH('MagnaCarta1.png', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;SUBDIRECTORY=['examples', 'data']))</p>
+        <p class="Code">mean_result = IMAGE_THRESHOLD(data6, THRESHOLD=a, /BYIMAGE, /MEAN)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the threshold value</p>
+        <p class="Code">PRINT, a</p>
+        <p>IDL&#160;displays:</p>
+        <p class="Code">186</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Assign everything below the threshold to black</p>
+        <p class="Code">; and view the resulting image</p>
+        <p class="Code">data6[WHERE(mean_result EQ 0)] = 0</p>
+        <p class="Code">mean_view = IMAGE(data6)</p>
+        <p>The image after applying the MEAN algorithm:</p>
+        <p>
+            <img src="../../Reference Material/images/MagnaCarta_MEAN.png" />
+        </p>
+        <p>As you can see from the above examples, each algorithm does not work equally well on this particular image. You may need to try each algorithm independently to judge whether it is beneficial to use in your situation.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

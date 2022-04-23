@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_RANDOM_ARMA</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="IMSL_RANDOM_ARMA"></a>IMSL_RANDOM_ARMA</h1>
+        <p>The IMSL_RANDOM_ARMA function generates a time series from a specific IMSL_ARMA model.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>The IMSL_RANDOM_ARMA function simulates an IMSL_ARMA(<i>p</i>, <i>q</i>) process, {W<sub>t</sub>}, for <i>t</i> = 1, 2, ..., <i>n</i>. The model is:</p>
+        <p>
+            <img src="images/IMSL_RANDOM_ARMA01.svg" />
+        </p>
+        <p>
+            <img src="images/IMSL_RANDOM_ARMA02.svg" />
+        </p>
+        <p>
+            <img src="images/IMSL_RANDOM_ARMA03.svg" />
+        </p>
+        <p>Let µ be the mean of the time series {W<sub>t</sub>}. The overall constant θ<sub>0</sub> (Const) is:</p>
+        <p>\theta_{0} = \left\{\begin{matrix}</p>
+        <p>\mu &amp; p = 0 \\</p>
+        <p>\mu \Big( 1 - \sum_{i=1}^{p} \phi_{i} \Big) &amp; p &gt; 0</p>
+        <p>\end{matrix}\right.</p>
+        <p>
+            <img src="images/IMSL_RANDOM_ARMA04.svg" />
+        </p>
+        <p>Time series whose innovations have a nonnormal distribution may be simulated by providing the appropriate innovations in Input_Noise and start values in W_Init.</p>
+        <p>The time series is generated according to the following model:</p>
+        <p>X(i) = Const + ar(0) * X(i – Ar_Lags(0)) + ... + ar(p – 1) * X(i – Ar_Lags(p – 1)) + A(I) – ma(0) * A(i – Ma_Lags(0)) – ... – ma(q – 1) * A(i – Ma_Lags(q – 1))</p>
+        <p>where the constant is related to the mean of the series:</p>
+        <p style="text-decoration: overline">W</p>
+        <p>as follows:</p>Const = <span style="text-decoration: overline">W</span> · (1 - ar(0) - ... + (-ar(q - 1)))<p>and where:</p><p>X(t) = W(t), t = 0, 1, ..., n − 1</p><p>and:</p><p>W(t) = W_Init(t + p), t = –p, –p + 1, ..., −2, −1</p><p>and A is either Input_Noise (if Input_Noise is used) or Output_Noise (otherwise).</p><h2 class="API">Examples</h2><p>For additional information on using IMSL_RANDOM_ARMA, see <a href="#Additional_Examples" class="selected">Additional Examples</a>.</p><h3>Example 1</h3><p>In this example, IMSL_RANDOM_ARMA is used to generate a time series of length five, using an IMSL_ARMA model with three autoregressive parameters and two moving average parameters. The start values are 0.1000, 0.0500, and 0.0375.</p><p class="Code">IMSL_RANDOMOPT, SET = 123457</p><p class="Code">n = 5</p><p class="Code">nparams = [3, 2]</p><p class="Code">ar = [0.5, 0.25, 0.125]</p><p class="Code">ma = [-0.5, -0.25]</p><p class="Code">r = IMSL_RANDOM_ARMA(n, nparams, ar, ma)</p><p class="Code">PM, r, FORMAT = '(5F10.3)',$</p><p class="Code_Indented">TITLE = ' IMSL_ARMA random deviates'</p><p class="Code">&#160;</p><p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;IMSL_ARMA random deviates</p><p class="Code">0.637 0.317 -0.366 -2.122 -1.407</p><h2 class="API">Syntax</h2><p><i>Result</i> = IMSL_RANDOM_ARMA(<i>n</i>, <i>nparams</i> [, /ACCEPT_REJECT] [, AR_LAGS=<i>array</i>] [, CONST=<i>value</i>] [, /DOUBLE] [, INPUT_NOISE=<i>array</i>] [, MA_LAGS=<i>array</i>] [, OUTPUT_NOISE=<i>variable</i>] [, /VAR_NOISE] [, W_INIT=<i>array</i>])</p><p><i>Result</i> = IMSL_RANDOM_ARMA(<i>n</i>, <i>nparams</i>, <i>ar</i> [, /ACCEPT_REJECT] [, AR_LAGS=<i>array</i>] [, CONST=<i>value</i>] [, /DOUBLE] [, INPUT_NOISE=<i>array</i>] [, MA_LAGS=<i>array</i>] [, OUTPUT_NOISE=<i>variable</i>] [, /VAR_NOISE] [, W_INIT=<i>array</i>])</p><p><i>Result</i> = IMSL_RANDOM_ARMA(<i>n</i>, <i>nparams</i>, <i>ma</i> [, /ACCEPT_REJECT] [, AR_LAGS=<i>array</i>] [, CONST=<i>value</i>] [, /DOUBLE] [, INPUT_NOISE=<i>array</i>] [, MA_LAGS=<i>array</i>] [, OUTPUT_NOISE=<i>variable</i>] [, /VAR_NOISE] [, W_INIT=<i>array</i>])</p><p><i>Result</i> = IMSL_RANDOM_ARMA(<i>n</i>, <i>nparams</i>, <i>ar</i>, <i>ma</i> [, /ACCEPT_REJECT] [, AR_LAGS=<i>array</i>] [, CONST=<i>value</i>] [, /DOUBLE] [, INPUT_NOISE=<i>array</i>] [, MA_LAGS=<i>array</i>] [, OUTPUT_NOISE=<i>variable</i>] [, /VAR_NOISE] [, W_INIT=<i>array</i>])</p><h2 class="API">Return Value</h2><p>One-dimensional array of length n containing the generated time series.</p><h2 class="API">Arguments</h2><h3 class="Argument">n</h3><p>Number of observations to be generated. Parameter n must be greater than or equal to one.</p><h3 class="Argument">nparams</h3><p>One-dimensional array containing the parameters p and q consecutively. nparams(0) = p, where p is the number of autoregressive parameters. Parameter p must be greater than or equal to zero. nparams(1) = q, where q is the number of moving average parameters. Parameter q must be greater than or equal to zero.</p><h3 class="Argument">ar</h3><p>One-dimensional array of length p containing the autoregressive parameters.</p><h3 class="Argument">ma</h3><p>One-dimensional array of length q containing the moving average parameters.</p><h2 class="API">Keywords</h2><h3 class="Keyword">ACCEPT_REJECT</h3><p>If present and nonzero, the random noises will be generated from a normal distribution using an acceptance/rejection method. If keyword ACCEPT_REJECT is not used, the random noises will be generated using an inverse normal CDF method. This argument will be ignored if keyword INPUT_NOISE is used.</p><h3 class="Keyword">AR_LAGS</h3><p>One-dimensional array of length p containing the order of the nonzero autoregressive parameters. Default: Ar_Lags = [1, 2, ..., p]</p><h3 class="Keyword">CONST</h3><p>Overall constant. See the Discussion section. Default: Const = 0</p><h3 class="Keyword">DOUBLE</h3><p>If present and nonzero, double precision is used.</p><h3 class="Keyword">INPUT_NOISE</h3><p>One-dimensional array of length n + max (Ar_Lags(i)) containing the random noises. Keywords INPUT_NOISE and VAR_NOISE can not be used together. Keywords INPUT_NOISE and OUTPUT_NOISE cannot be used together.</p><h3 class="Keyword">MA_LAGS</h3><p>One-dimensional array of length q containing the order of the nonzero moving average parameters. Default: MA_LAGS = [1, 2, ..., q]</p><h3 class="Keyword">OUTPUT_NOISE</h3><p>Named variable into which a one-dimensional array of length n + max (Ma_Lags(i)) containing the random noises is stored.</p><h3 class="Keyword">VAR_NOISE</h3><p>If present (and INPUT_NOISE is not used), noise at is generated from a normal distribution with mean 0 and variance VAR_NOISE. VAR_NOISE and INPUT_NOISE cannot be used together. Default: VAR_NOISE = 1.0</p><h3 class="Keyword">W_INIT</h3><p>One-dimensional array of length max (Ar_Lags(i)) containing the initial values of the time series. Default: W_Init(*) = Const/(1 – ar(0) – ar(1) – ... – ar(p − 1))</p><h2 class="API">Errors</h2><h3 class="Keyword">Warning Errors</h3><p>STAT_RNARM_NEG_VAR—VAR(a) = “Var_Noise” = #, VAR(a) must be greater</p><p>than 0. The absolute value of # is used for VAR(a).</p><h2 class="API"><a name="Additional_Examples"></a>Additional Examples</h2><h3>Example 2</h3><p>In this example, a time series of length 5 is generated using an IMSL_ARMA model with 4 autoregressive parameters and 2 moving average parameters. The start values are 0.1, 0.05 and 0.0375.</p><p class="Code">IMSL_RANDOMOPT, SET = 123457</p><p class="Code">n = 5</p><p class="Code">nparams = [3, 2]</p><p class="Code">ar = [0.5, 0.25, 0.125]</p><p class="Code">ma = [-0.5, -0.25]</p><p class="Code">wi = [0.1, 0.05, 0.0375]</p><p class="Code">theta0 = 1</p><p class="Code">avar = 0.1</p><p class="Code">r = IMSL_RANDOM_ARMA(n, nparams, ar, ma, /ACCEPT_REJECT, $</p><p class="Code">W_INIT = wi, CONST = theta0, VAR_NOISE = avar)</p><p class="Code">PM, r, FORMAT = '(5F10.3)', $</p><p class="Code_Indented">TITLE = ' IMSL_ARMA random deviates:'</p><p class="Code">&#160;</p><p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;IMSL_ARMA random deviates:</p><p class="Code">1.467 1.788 2.459 3.330 3.941</p><h2 class="API">Version History</h2><table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable"><col style="width: 40px;" /><col /><tbody><tr><td class="TableStyle_VersionTable_Body_0_0_ColSep"><p>6.4</p></td><td class="TableStyle_VersionTable_Body_0_0_ColEnd"><p>Introduced</p></td></tr><tr><td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">&#160;</td><td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">&#160;</td></tr></tbody></table><h2 class="API">See Also</h2><p>&#160;</p><div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div></body>
+</html>

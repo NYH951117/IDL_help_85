@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|Creating Widget Applications">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Widget Application Lifecycle</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Application Programming/Creating Widget Applications.htm">Creating Widget Applications</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Widget Application Lifecycle</span>
+        </div>
+        <h1><a name="widget_apps_4063420628_1041936"></a><a name="widget_apps_4063420628_56516"></a>Widget Application Lifecycle</h1>
+        <p><a name="kanchor4971"></a>When you create and use a widget application, you do the following things:</p>
+        <ol>
+            <li value="1"><a href="#widget_apps_4063420628_1041964" class="selected">Construct the Widget Hierarchy</a>
+            </li>
+            <li value="2"><a href="#widget_apps_4063420628_1041972" class="selected">Provide an Event-Handling Routine</a>
+            </li>
+            <li value="3"><a href="#widget_apps_4063420628_1041999" class="selected">Realize the Widgets</a>
+            </li>
+            <li value="4"><a href="#widget_apps_4063420628_1042005" class="selected">Register the Program with the XMANAGER</a>
+            </li>
+            <li value="5"><a href="#widget_apps_4063420628_1042016" class="selected">Interact with the Application</a>
+            </li>
+            <li value="6"><a href="#widget_apps_4063420628_1042019" class="selected">Destroy the Widgets</a>
+            </li>
+        </ol>
+        <h2 class="API"><a name="widget_apps_4063420628_1041964"></a><a name="widget_apps_4063420628_91942"></a>Construct the Widget Hierarchy</h2>
+        <p>You must first build a widget hierarchy using the WIDGET_* functions. Start by creating a <i>top-level base</i> with the WIDGET_BASE function.</p>
+        <p>Combine other widget creation functions — WIDGET_BUTTON, CW_PDMENU, etc. — to create and organize the user interface of your widget application. At this point, the widgets are <i>unrealized</i> — they exist only as IDL widget records — and nothing has been created or displayed on the screen.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Widget applications can include multiple widget hierarchies headed by multiple top-level base widgets. See <a href="Using_Multiple_Widget_Hi.htm#widget_techniques_4218446668_109965">Using Multiple Widget Hierarchies</a> for more on creating a hierarchy of widget hierarchies.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_1041972"></a><a name="widget_apps_4063420628_34391"></a>Provide an Event-Handling Routine</h2>
+        <p>In order for a widget application to <i>do</i> anything, you must provide a routine that examines events, determines what action to take, and implements that action. Actions may involve computation, graphics display, or updates to the widget interface itself.</p>
+        <p>For best performance, event processing routines must run and return to the calling routine as quickly as possible. Widgets won’t respond to user input while the event-processing routine is running. Widget-based programs should wait for user-generated events, handle them as quickly as possible, and return to wait for more events. Event processing is discussed in detail in <a href="Widget_Event_Processing.htm#widget_apps_4063420628_1042201">Widget Event Processing</a>.</p>
+        <p>Event handling routines can manipulate widgets via the <a href="../../Reference Material/W/WIDGET_CONTROL.htm#W_811389549_1232714">WIDGET_CONTROL</a> procedure. Possible actions include the following:</p>
+        <ul>
+            <li value="1">Obtain or change the value of a widget (see <a href="Widget_Programming_Conce.htm#widget_apps_4063420628_1041838">Widget Values</a>) using the APPEND, GET_VALUE, and SET_VALUE keywords.</li>
+            <li value="2">Obtain or change the value of a widget’s user value using the GET_UVALUE and SET_UVALUE keywords. (User values are discussed in <a href="Widget_User_Values.htm#widget_apps_4063420628_1042184">Widget User Values</a>)</li>
+            <li value="3">Map and unmap widgets using the MAP keyword. Unmapped widgets are removed from the screen and become invisible, but they still exist in memory.</li>
+            <li value="4">Change a widget’s sensitivity using the SENSITIVE keyword. A widget indicates that it is insensitive by changing its appearance (often by graying itself or displaying text with dashed lines) and ignoring any user input. It is useful to make widgets insensitive at points where it would be inconvenient to get events from them (for example, if your program is waiting for input from another source).</li>
+            <li value="5">Change the settings of toggle buttons using the SET_BUTTON keyword.</li>
+            <li value="6">Push a widget hierarchy behind the other windows on the screen, or pull it in front, using the SHOW keyword.</li>
+            <li value="7">Display the “hourglass” cursor while the application is busy and not able to respond to user actions by setting the HOURGLASS keyword. (See <a href="Manipulating_Widgets.htm#widget_apps_4063420628_1042097">Indicating Time-Consuming Operations</a>.)</li>
+        </ul>
+        <h2 class="API"><a name="widget_apps_4063420628_1041999"></a><a name="widget_apps_4063420628_19603"></a>Realize the Widgets</h2>
+        <p>To convert the IDL widget records representing your widget hierarchy into a set of platform-specific user interface toolkit elements, use the REALIZE keyword to the WIDGET_CONTROL procedure. Unless you have specifically <i>unmapped</i> the widgets before realizing them, the REALIZE keyword causes the widgets to be displayed on screen. See <a href="Manipulating_Widgets.htm#widget_apps_4063420628_1042022">Manipulating Widgets</a> for additional details.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_1042005"></a><a name="widget_apps_4063420628_89692"></a>Register the Program with the XMANAGER</h2>
+        <p>Your widget application waits for events to be reported to it and reacts as specified in the event handling routine after being registered with the XMANAGER procedure.</p>
+        <p>Events are obtained by XMANAGER via the WIDGET_EVENT function and passed to the calling routine (your event handler) in the form of an IDL structure variable. Each type of widget returns a different type of structure, as described in the documentation for the individual widget creation functions in the <span class="Reference MaterialbkReference Guide">IDL Reference Guide</span>. Every event structure has three common elements: long integers named <code>ID</code>, <code>TOP</code>, and <code>HANDLER</code>:</p>
+        <ul>
+            <li value="1"><code>ID</code> is the widget ID of the widget generating the event. </li>
+            <li value="2"><code>TOP</code> is the widget ID of the top-level base containing the widget that generated the event. </li>
+            <li value="3"><code>HANDLER</code> is important for event handler functions, which are discussed later in this chapter. </li>
+        </ul>
+        <p>When an event occurs, XMANAGER arranges for the event structure to be passed to an event-handling procedure specified by the program, and the event handler takes some appropriate action based on the event. This means that multiple widget applications can run simultaneously — XMANAGER arranges for the events be dispatched to the appropriate routine.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_1042016"></a><a name="widget_apps_4063420628_93204"></a>Interact with the Application</h2>
+        <p>Once the widget application has been realized and registered with XMANAGER, the user can interact with the application to accomplish whatever tasks the application is designed to accomplish.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_1042019"></a><a name="widget_apps_4063420628_57729"></a>Destroy the Widgets</h2>
+        <p>When the application has finished (usually when the user clicks on a “Done” or “Quit” button), destroy the widget hierarchy using the DESTROY keyword to the WIDGET_CONTROL procedure. This causes all resources related to the hierarchy to be freed and removes it from the screen.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

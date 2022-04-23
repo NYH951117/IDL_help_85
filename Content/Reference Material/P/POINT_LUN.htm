@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: P">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>POINT_LUN </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="P_list.htm">Routines: P</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">POINT_LUN</span>
+        </div>
+        <h1 class="Routine"><a name="P_817877613_678184"></a><a name="kanchor2053"></a><a name="P_817877613_15658"></a>POINT_LUN </h1>
+        <p><a name="kanchor2054"></a><a name="kanchor2055"></a>The POINT_LUN procedure sets or obtains the current position of the file pointer for the specified file.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>POINT_LUN cannot be used with files opened with the RAWIO keyword to the OPEN routines. Depending upon the device in question, the IOCTL function might be used instead for files of this type.</p>
+        <h3><a name="P_817877613_1069755_PageTOC_POINT_LUN_"></a>Use Of POINT_LUN On Compressed Files</h3>
+        <p>In general, it is not possible to arbitrarily move the file pointer within a compressed file (files opened with the COMPRESS keyword to OPEN) because the file compression code needs to maintain a compression state for the file that includes all the data that has already been passed in the stream. This limitation results in the following constraints on the use of POINT_LUN with compressed files:</p>
+        <ul>
+            <li value="1">POINT_LUN is not allowed on compressed files open for output, except to positions beyond the current file position. The compression code emulates such motion by outputting enough zero bytes to move the pointer to the new position.</li>
+            <li value="2">POINT_LUN is allowed to arbitrary positions on compressed files opened for input. However, this feature is emulated by positioning the file to the beginning of the file and then reading and discarding enough data to move the file pointer to the desired position. This can be extremely slow.</li>
+        </ul>
+        <p>For these reasons, use of POINT_LUN on compressed files, although possible under some circumstances, is best avoided.</p>
+        <h2 class="API"><a name="P_817877613_678195"></a><a name="P_817877613_678195_PageTOC_POINT_LUN_"></a>Examples</h2>
+        <p>To move the file pointer 2048 bytes into the file associated with file unit number 1, enter:</p>
+        <p class="Code">POINT_LUN, 1, 2048</p>
+        <p>To return the file pointer for file unit number 2, enter:</p>
+        <p class="Code">POINT_LUN, -2, pos</p>
+        <h2 class="API"><a name="P_817877613_678187"></a><a name="P_817877613_678187_PageTOC_POINT_LUN_"></a>Syntax</h2>
+        <p class="Syntax">POINT_LUN, <i>Unit</i>,<i> Position</i></p>
+        <h2 class="API"><a name="P_817877613_678189"></a><a name="P_817877613_678189_PageTOC_POINT_LUN_"></a>Arguments</h2>
+        <h3 class="Argument">Unit </h3>
+        <p>The file unit for the file in question. If <i>Unit</i> is positive, POINT_LUN sets the file position to the position given by <i>Position</i>. If negative, POINT_LUN gets the current file position and assigns it to the variable given by <i>Position</i>. Note that POINT_LUN cannot be used with the 3 standard file units (0, -1, and -2).</p>
+        <h3 class="Argument">Position</h3>
+        <p>If <i>Unit</i> is positive, <i>Position</i> gives the byte offset into the file at which the file pointer should be set. For example, to rewind the file to the beginning, specify 0.</p>
+        <p>If <i>Unit</i> is negative, <i>Position</i> must be a named variable into which the current file position will be stored. The returned type will be a longword signed integer if the position is small enough to fit, and a 64-bit longword integer otherwise.</p>
+        <h2 class="API"><a name="P_817877613_1084314"></a><a name="P_817877613_88727"></a>Keywords</h2>
+        <p>None.</p>
+        <h2 class="API"><a name="P_817877613_821521"></a><a name="P_817877613_821521_PageTOC_POINT_LUN_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="P_817877613_1079276"></a><a name="P_817877613_1079276_PageTOC_POINT_LUN_"></a>See Also</h2>
+        <p><a href="../G/GET_LUN.htm#G_845992557_922610">GET_LUN</a>, <a href="../O/OPEN.htm#O_828691053_932624">OPENR/OPENU/OPENW</a>, <a href="../T/TRUNCATE_LUN.htm#T_809226861_1089667">TRUNCATE_LUN</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

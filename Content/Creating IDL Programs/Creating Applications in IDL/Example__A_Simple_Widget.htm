@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|Creating Widget Applications|Widget Programming Concepts">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Example: A Simple Widget Application</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Application Programming/Creating Widget Applications.htm">Creating Widget Applications</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Example: A Simple Widget Application</span>
+        </div>
+        <h1><a name="widget_apps_4063420628_1041902"></a><a name="widget_apps_4063420628_88153"></a>Example: A Simple Widget Application</h1>
+        <p>The following example demonstrates the simplicity of widget programming. The example program creates a base widget containing a single button, labelled “Done.” When you position the mouse cursor over the button and click, the widget is destroyed. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you are new to IDL widget programming, don’t be dismayed if parts of this example are not immediately clear to you. As you read further through this chapter, the principles of the event-driven programming model and IDL’s specific implementation of that model will become clearer.</p>
+        <p class="ExampleCode">This example is included in the file <code>doc_widget1.<a name="kanchor4970"></a>pro</code> in the <code>examples/doc/widgets</code> subdirectory of the IDL distribution. Run this example procedure by entering<code> doc_widget1</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT doc_widget1.pro</code>. See <a href="About_Widget_Application.htm#widget_apps_4063420628_1041756">Running the Example Code</a> if IDL does not run the program as expected.</p>
+        <p class="Code">PRO doc_widget1_event, ev</p>
+        <p class="Code">&#160;&#160;IF ev.SELECT THEN WIDGET_CONTROL, ev.TOP, /DESTROY</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO doc_widget1</p>
+        <p class="Code">&#160;&#160;base = WIDGET_BASE(/COLUMN)</p>
+        <p class="Code">&#160;&#160;button = WIDGET_BUTTON(base, value='Done')</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, base, /REALIZE</p>
+        <p class="Code">&#160;&#160;XMANAGER, 'doc_widget1', base</p>
+        <p class="Code">END</p>
+        <p>While this simple example does nothing particularly useful, it does illustrate some basic concepts of event-driven programming. Let’s examine how the example is constructed.</p>
+        <p>First, note that the “application” consists of two parts: an event handling routine and a creation routine. Let’s first examine the second part — the creation routine — contained in the <code>doc_widget1</code> procedure.</p>
+        <p>The <code>doc_widget1</code> procedure does the following:</p>
+        <ol>
+            <li value="1">Creates a top-level base widget whose widget ID is stored in the variable <code>base</code>. All widget applications have at least one base.</li>
+            <li value="2">Creates a button widget whose widget ID is stored in the variable <code>button</code>. The button widget has <code>base</code> as its parent. The value “Done” is assigned to the button. The value of a button widget is the text that appears on the button’s face.</li>
+            <li value="3">Realizes the widget hierarchy built on <code>base</code> by calling WIDGET_CONTROL with the /REALIZE keyword. Realizing the widget hierarchy displays the widget on your computer screen.</li>
+            <li value="4">Invokes the XMANAGER routine to manage the widget event loop, providing the name of the calling routine (<code>doc_widget1</code>) and the widget ID of the top-level base on which the widget hierarchy is built (<code>base</code>).</li>
+        </ol>
+        <p>The <code>doc_widget1_event</code> procedure is the event handling routine for the application. By convention, the XMANAGER procedure looks for an event handling procedure with the same name as the procedure that creates the widgets, with “_event” appended to the end. (This default can be overridden by specifying an event handler directly using the EVENT_HANDLER keyword to XMANAGER.) When an event is received by XMANAGER, the event structure is passed to the <code>doc_widget1_event</code> procedure via the <code>ev</code> argument.</p>
+        <p>In this example, all the event handling routine does is check the event structure to see if the event passed to it was a select event generated by the button widget. If a <code>SELECT</code> event is received, the routine calls WIDGET_CONTROL with the DESTROY keyword to destroy the widget hierarchy built on the top-level base widget (specified in the <code>TOP</code> field of the event structure).</p>
+        <p>For further discussion of widget events and event structures, see <a href="Widget_Event_Processing.htm#widget_apps_4063420628_1042201">Widget Event Processing</a>. For details about the event structures returned by different widgets, see the documentation for each widget in the <span class="Reference MaterialbkReference Guide">IDL Reference Guide</span>.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

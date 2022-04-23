@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: S">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>SEM_CREATE</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="S_list.htm">Routines: S</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">SEM_CREATE</span>
+        </div>
+        <h1 class="Routine"><a name="S_820040301_1318441"></a><a name="S_820040301_89537"></a><a name="kanchor2341"></a>SEM_CREATE</h1>
+        <p>A <i><a name="kanchor2342"></a>semaphore</i> is a software mechanism used to provide synchronization between multiple processes or between different threads of a single process. Often, semaphores are used to protect or restrict access to shared or key resources, such as shared memory segments.</p>
+        <p>The SEM_CREATE function creates a reference to a semaphore in the current IDL process. If the specified semaphore already exists in the system, a reference to the existing semaphore is created. If the semaphore does not exist, a new semaphore is created in the system and a reference to it is created in the current IDL process.</p>
+        <p>It is important to note that the semaphore itself is independent of any IDL process, but that the <i>reference</i> to the semaphore is unique to the IDL process that calls SEM_CREATE.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>On UNIX systems, a semaphore is marked for deletion when the process that <i>created</i> the semaphore exits. While this does not immediately delete the semaphore itself, it does free up the semaphore’s <i>name</i>. This means that after the process that created a semaphore exits — even if other processes have references to that semaphore — SEM_CREATE will create a new and distinct semaphore with the same name. Any subsequent processes that call SEM_CREATE with that name will receive a reference to the new semaphore.<br /><br />If this behavior causes problems for your application, ensure that the process that creates a semaphore does not exit until all processes that use the semaphore have either exited or deleted their references to the semaphore.</p>
+        <h2 class="API"><a name="S_820040301_1318446"></a><a name="S_820040301_1318446_PageTOC_SEM_CREATE_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = SEM_CREATE(<i>strName</i> [,&#160;/<a class="Heading MCXref xref xrefHeading selected" href="#S_820040301_1318458">DESTROY_SEMAPHORE</a>] )</p>
+        <h2 class="API"><a name="S_820040301_1318448"></a><a name="S_820040301_1318448_PageTOC_SEM_CREATE_"></a>Return Value</h2>
+        <p>The result is 1 (one) if the semaphore was created successfully or already exists in the system, or 0 (zero) if the semaphore does not exist but an error occurred during creation.</p>
+        <h2 class="API"><a name="S_820040301_1318450"></a><a name="S_820040301_1318450_PageTOC_SEM_CREATE_"></a>Arguments</h2>
+        <h3 class="Argument">strName</h3>
+        <p>A scalar string containing the name associated with the semaphore. <i>strName</i> must conform to the rules for a valid file name on the target operating system.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Semaphore names must be 24 characters or less on Macintosh platforms.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>Use the <a class="Heading MCXref xref xrefHeading" href="../I/IDL_VALIDNAME.htm#I_833016429_893464">IDL_VALIDNAME</a> function to ensure that strName will be a valid semaphore name on all supported platforms.</p>
+        <h2 class="API"><a name="S_820040301_1318457"></a><a name="S_820040301_1318457_PageTOC_SEM_CREATE_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="S_820040301_1318458"></a><a name="S_820040301_1318458_Keywords_SEM_CREATE_"></a>DESTROY_SEMAPHORE</h3>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This keyword is ignored on Windows systems.<br />On Windows systems, a semaphore will be destroyed by a call to SEM_DELETE (in any IDL process) if no other processes have a reference to the semaphore.</p>
+        <p>Set the DESTROY_SEMAPHORE keyword to allow a call to SEM_DELETE in the current IDL process to destroy the semaphore, even if it was created in a different IDL process.</p>
+        <p>SEM_CREATE creates semaphores that persist in the operating system kernel until they are explicitly destroyed using the SEM_DELETE routine, or until the system is rebooted. A client program can access a semaphore, obtain or remove a lock, and then disconnect at any time. This is convenient in situations where the need for the semaphore is long lived, and programs that need it come and go. This behavior can create a problem, however, in that semaphores that are not explicitly destroyed can cause resource leaks in the operating system. It is important to properly destroy semaphores when they are no longer required.</p>
+        <p>The default behavior on UNIX systems is for IDL to destroy a semaphore when the SEM_DELETE routine is called <i>only</i> if the semaphore was created by the same IDL process — that is, if the call to SEM_CREATE in that IDL process created the semaphore itself and not just a reference to an existing semaphore. If the semaphore was created by another process, the call to SEM_DELETE destroys the <i>reference</i> to the semaphore within the current IDL process, but does not destroy the semaphore itself. This keyword alters the default behavior in the following way:</p>
+        <table style="margin-left: 0;margin-right: auto;caption-side: top;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <thead>
+                <tr class="Head-Header1">
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Behavior</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>not set</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The semaphore will only be destroyed by a call to SEM_DELETE in the same IDL process that <i>created</i> it. This is the default behavior.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>The semaphore will be destroyed by a call to SEM_DELETE in the current IDL process, even if the call to SEM_CREATE only created a <i>reference</i> to the semaphore.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>The semaphore will not be destroyed by a call to SEM_DELETE in the current IDL process, even if it was created by the current process.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="S_820040301_1318487"></a><a name="S_820040301_1318487_PageTOC_SEM_CREATE_"></a>Example</h2>
+        <p>See <a class="Heading MCXref xref xrefHeading" href="SEM_LOCK.htm#S_820040301_1318522">SEM_LOCK</a> for an example using this function.</p>
+        <h2 class="API"><a name="S_820040301_1318490"></a><a name="S_820040301_1318490_PageTOC_SEM_CREATE_"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="S_820040301_1318497"></a><a name="S_820040301_1318497_PageTOC_SEM_CREATE_"></a>See Also</h2>
+        <p><a class="Heading MCXref xref xrefHeading" href="SEM_DELETE.htm#S_820040301_1318499">SEM_DELETE</a>, <a class="Heading MCXref xref xrefHeading" href="SEM_LOCK.htm#S_820040301_1318522">SEM_LOCK</a>, <a class="Heading MCXref xref xrefHeading" href="SEM_RELEASE.htm#S_820040301_1318571">SEM_RELEASE</a>, <a class="Heading MCXref xref xrefHeading" href="SHMMAP.htm#S_820040301_1120658">SHMMAP </a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

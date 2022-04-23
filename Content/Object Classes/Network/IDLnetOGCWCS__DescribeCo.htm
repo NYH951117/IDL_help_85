@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|Network Object Classes|IDLnetOGCWCS">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLnetOGCWCS::DescribeCoverage</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/NoLines.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_network.htm">Network Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLnetOGCWCS::DescribeCoverage</span>
+        </div>
+        <h1 class="ObjMethod"><a name="objects_network_1009015_1384809"></a><a name="objects_network_1009015_21471"></a><a name="kanchor4141"></a>IDLnetOGCWCS::DescribeCoverage</h1>
+        <p>The IDLnetOGCWCS::DescribeCoverage function method retrieves an XML file containing one or more descriptive coverage offerings from a remote OGC WCS server, writes the file to disk, and parses the file contents before returning. The XML file is written to disk according to the <a href="IDLnetOGCWCS_Properties.htm#objects_network_1009015_1383909">DESCRIBE_COVERAGE_FILENAME</a> property, and will be overwritten if this property value remains unchanged between DescribeCoverage requests. </p>
+        <p>You can parse the contents of an existing XML file by setting the <a href="#objects_network_1009015_1400371" class="selected">FROM_FILE</a> keyword. This avoids having to download the same information as that which exists on disk. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The <a href="IDLnetOGCWCS_Properties.htm#objects_network_1009015_1384457">URL_PATH</a> and <a href="IDLnetOGCWCS_Properties.htm#objects_network_1009015_1384418">URL_HOSTNAME</a> properties must be set before requesting information from a remote WCS server. You can either set these properties manually or pass a URL to the <a href="IDLnetOGCWCS__ParseUrl.htm#objects_network_1009015_1386464">IDLnetOGCWCS::ParseUrl</a> method prior to making a request. If you are dealing with a proxy server, you must also set the <a href="IDLnetOGCWCS_Properties.htm#objects_network_1009015_1384151">PROXY_HOSTNAME</a> and <a href="IDLnetOGCWCS_Properties.htm#objects_network_1009015_1384207">PROXY_PORT</a> properties to the correct values.</p>
+        <p>This method returns only when one of the following occur: </p>
+        <ul>
+            <li value="1">Completes retrieval and parsing of information from server</li>
+            <li value="2">Encounters an HTTP error</li>
+            <li value="3">Encounters an OGC exception</li>
+            <li value="4">Responds to a cancel request as specified in a callback return value</li>
+        </ul>
+        <p>To return status information during the request, set the <a href="IDLnetOGCWCS_Properties.htm#objects_network_1009015_1383740">CALLBACK_FUNCTION</a> property. You can also use a callback to cancel a request. See <a href="IDLnetOGCWCS.htm#objects_network_1009015_1402515">Using Callbacks with the IDLnetOGCWCS Object</a> for details. This method will throw an error if the DescribeCoverage request fails. </p>
+        <p>After this method returns, you must use <a href="IDLnetOGCWCS__GetCoverag1.htm#objects_network_1009015_1385325">IDLnetOGCWCS::GetCoverageOffering</a> to return the coverage offerings details. The DescribeCoverage method accesses and parses the information retrieved from the server, and returns the names of the coverages, but does not return the detailed information. </p>
+        <h2 class="API"><a name="objects_network_1009015_1384870"></a><a name="objects_network_1009015_1334681_PageTOC_IDLffDICOM"></a>Syntax</h2>
+        <p class="Syntax"><i>Result = Obj</i>-&gt;[<a href="IDLnetOGCWCS.htm#objects_network_1009015_1403015">IDLnetOGCWCS</a>::]DescribeCoverage ([,&#160;<a href="#objects_network_1009015_1384899" class="selected">COUNT</a>=<i>variable</i>] [,&#160;<a href="#objects_network_1009015_1400371" class="selected">FROM_FILE</a>=<i>value</i>] ,&#160;<a href="#objects_network_1009015_1384920" class="selected">NAMES</a>=<i>value</i> [,&#160;<a href="#objects_network_1009015_1384937" class="selected">SCHEMA_CHECKING</a>=<i>value</i>] [,&#160;<a href="#objects_network_1009015_1400870" class="selected">VALIDATION_MODE</a>=<i>value</i>] )</p>
+        <h2 class="API"><a name="objects_network_1009015_1384887"></a><a name="objects_network_1009015_45037"></a>Return Value</h2>
+        <p>Returns a string array listing the names of the coverages returned by the remote WCS server. This is a subset of the information returned by the <a href="IDLnetOGCWCS__GetCoverag1.htm#objects_network_1009015_1385325">IDLnetOGCWCS::GetCoverageOffering</a> method and can be useful when populating a user interface with the names of the available coverage offerings. </p>
+        <p>This method returns an empty string when no names are available.</p>
+        <h2 class="API"><a name="objects_network_1009015_1384894"></a><a name="objects_network_1009015_1334683_PageTOC_IDLffDICOM"></a>Arguments</h2>
+        <p>None</p>
+        <h2 class="API"><a name="objects_network_1009015_1384897"></a><a name="objects_network_1009015_1397035_PageTOC_IDLffDICOM"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="objects_network_1009015_1384899"></a><a name="objects_network_1009015_30075"></a>COUNT</h3>
+        <p>Set this keyword to a named variable that will contain the number of coverage offerings received. </p>
+        <h3 class="Keyword"><a name="objects_network_1009015_1400371"></a><a name="objects_network_1009015_77586"></a>FROM_FILE</h3>
+        <p>Set this keyword to a string containing the full path and filename of the XML file to parse for coverage offering details. This allows you use a previously downloaded coverage offering file.</p>
+        <p>When you use the FROM_FILE keyword and the <a href="IDLnetOGCWCS_Properties.htm#objects_network_1009015_1383740">CALLBACK_FUNCTION</a> property is set, status information will be returned when the XML file is first accessed and when parsing has ended. The entire file contents are parsed.</p>
+        <h3 class="Keyword"><a name="objects_network_1009015_1384920"></a><a name="objects_network_1009015_27765"></a>NAMES</h3>
+        <p>Set this keyword to a string containing a single coverage name or a string array of coverage names for which to return detailed coverage offering information from the WCS server. The name of a coverage can be found by accessing the <a href="IDLnetOGCWCS__GetCoverag2.htm#objects_network_1009015_1386136">NAME</a> field of the structure returned by the <a href="IDLnetOGCWCS__GetCoverag2.htm#objects_network_1009015_1386082">IDLnetOGCWCS::GetCoverageOfferingBriefs</a> method. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Not all servers accept a string array. Always check the number of coverages returned before proceeding to avoid unexpected errors.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Setting the NAMES keyword is mandatory unless you are returning coverage information from a file using <a href="#objects_network_1009015_1400371" class="selected">FROM_FILE</a>. Do not set both NAMES and FROM_FILE keywords.</p>
+        <p>When you use the NAMES keyword and the <a href="IDLnetOGCWCS_Properties.htm#objects_network_1009015_1383740">CALLBACK_FUNCTION</a> property is set, status information will be returned each time a packet containing a portion of the file is delivered from the WCS server. </p>
+        <h3 class="Keyword"><a name="objects_network_1009015_1384937"></a><a name="objects_network_1009015_41220"></a>SCHEMA_CHECKING</h3>
+        <p>XML <i>Schemas</i> describe the structure and allowed contents of an XML document. Schemas are more robust than, and are envisioned as a replacement for, Document Type Definitions (DTDs). Schemas are typically provided via a link to an external document, which must be downloaded before validation can occur.</p>
+        <p>Set this keyword to one of the following values to control the degree of error-checking the parser should perform: </p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/NoLines.css');margin-left: 0;margin-right: auto;caption-side: top;" class="TableStyle_NoLines" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>Turn schema checking off — the XML file is not checked for errors. Use this setting to avoid the delays associated with schema checking. This is the default.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>Check for fatal schema errors in the XML file — this setting requires more time since the XML file is checked against a WCS schema reference document accessed from the OGC server. </p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColEnd">
+                        <p>Check for fatal errors in the XML file and schema document — this setting checks both the XML file and the reference schema document for fatal errors, and requires a considerable amount of time.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Keyword"><a name="objects_network_1009015_1400870"></a><a name="objects_network_1009015_1400870_Keywords_IDLnetOGCWCS"></a>VALIDATION_MODE </h3>
+        <p>XML <i>Document Type Definitions</i> (DTDs) describe the structure and allowed contents of an XML document. A DTD can be embedded in an XML document or provided via a link to an external document, which must be downloaded before validation can occur. In most applications, <i>schemas</i> provide a more robust validation mechanism.</p>
+        <p>Set this keyword to one of the following values to control DTD-based validation of the XML document: </p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/NoLines.css');margin-left: 0;margin-right: auto;caption-side: top;" class="TableStyle_NoLines" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>Turn DTD validation off — external DTDs are not loaded and the XML file is not checked for errors. Use this setting to avoid the delays associated with loading and checking an external DTD. This is the default.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>Validate only if an embedded DTD or a link to an external DTD is provided.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColEnd">
+                        <p>Always perform validation. If this option is in force and no DTD is provided, every XML element in the document will generate an error.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="objects_network_1009015_1384953"></a><a name="objects_network_1009015_1334686_PageTOC_IDLffDICOM"></a>Examples</h2>
+        <p>The following example accesses an OGC server and requests two coverage offering briefs. Retrieve the names of the briefs from the GetCoverageOfferingBriefs structure and add them to a string array. Then use the DescribeCoverage method to return detailed information about those two coverages from the server. After getting detailed coverage information, use the GetCoverageOffering method to access this information as shown in <a href="IDLnetOGCWCS__GetCoverag1.htm#objects_network_1009015_1388684">Examples</a>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You may need to replace the URL in the following example as there is no guarantee that the given OCG server will be available when you attempt to establish the connection. </p>
+        <p class="Code">FUNCTION ogcwcs_callback,  StatusInfo, CallbackData</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRINT, StatusInfo</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Indicate all is well.</p>
+        <p class="Code">vCancelFlag = 1</p>
+        <p class="Code">RETURN, vCancelFlag</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO ogc_wcs_describecoverage_doc</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use the DescribeCoverage method to return detailed information</p>
+        <p class="Code">; about a coverage, identified by name to the default descov.xml</p>
+        <p class="Code">; file. Access the coverage name by querying the</p>
+        <p class="Code">; GetCoverageOfferingBriefs method's structure.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; This example queries an OGC server at the following URL. Change </p>
+        <p class="Code">; the value of this variable to access a server of your choice. </p>
+        <p class="Code">url="http://data.exelisvis.com:80/cgi-bin" + $ </p>
+        <p class="Code">&#160;&#160;&#160;"/mapserv.exe?MAP=/OGC_Data/WCS/wcs_demo.map" + $</p>
+        <p class="Code">&#160;&#160;&#160;"&amp;SERVICE=WCS&amp;VERSION=1.0.0&amp;REQUEST=GetCapabilities"</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Catch error.</p>
+        <p class="Code">CATCH, errorStatus</p>
+        <p class="Code">IF (errorStatus NE 0) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;CATCH,/CANCEL</p>
+        <p class="Code">&#160;&#160;&#160;r = DIALOG_MESSAGE(!ERROR_STATE.MSG, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;TITLE='OGC WCS Error', /ERROR)</p>
+        <p class="Code">&#160;&#160;&#160;PRINT, !ERROR_STATE.MSG</p>
+        <p class="Code">&#160;&#160;&#160;IF OBJ_VALID(oWcs) THEN OBJ_DESTROY, oWcs</p>
+        <p class="Code">&#160;&#160;&#160;RETURN</p>
+        <p class="Code">ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create an IDLnetOGCWCS object and parse a known, working URL to</p>
+        <p class="Code">; set mandatory properties. </p>
+        <p class="Code">oWcs = OBJ_NEW("IDLnetOGCWCS", $</p>
+        <p class="Code">&#160;&#160;&#160;CALLBACK_FUNCTION="ogcwcs_callback")</p>
+        <p class="Code">oWcs-&gt;ParseUrl, url</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Return and parse a brief description of all data holdings</p>
+        <p class="Code">; on the WCS server.</p>
+        <p class="Code">count = oWCS-&gt;GetCapabilities()</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Initialize string array to hold names of briefs.</p>
+        <p class="Code">arrName=' '</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Make sure the server returned some coverage offering briefs.</p>
+        <p class="Code">IF (count NE 0) THEN BEGIN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">   ; Return information about the holding using the</p>
+        <p class="Code">   ; GetCoverageOfferingBriefs method. The NAME field of the</p>
+        <p class="Code">   ; returned structure is used to identifywhat coverage</p>
+        <p class="Code">   ; to get more information about using the DescribeCoverage</p>
+        <p class="Code">   ; method. Here we return a maximum of 2 coverage briefs.</p>
+        <p class="Code">   ; You could use INDEX to specify the first item to return.</p>
+        <p class="Code">   briefStruct = oWCS-&gt;GetCoverageOfferingBriefs $</p>
+        <p class="Code">      (COUNT=briefcount, NUMBER=2)</p>
+        <p class="Code">   PRINT, "Returning structures for ", + briefcount, + " briefs"</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">   ; Access the name element of the GetCoverageOfferingBriefs</p>
+        <p class="Code">   ; structre.</p>
+        <p class="Code">   FOR x=0, briefCount-1 DO BEGIN</p>
+        <p class="Code">      PRINT, 'CoverageOfferingBrief = ', strtrim(x,2)</p>
+        <p class="Code">      PRINT, '  name             = ', briefStruct[x].name</p>
+        <p class="Code">      ; Add the name to the string array.</p>
+        <p class="Code">      arrName = [arrName, briefStruct[x].name]</p>
+        <p class="Code">   ENDFOR</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">   ; Strip out empty string element.</p>
+        <p class="Code">   arrName=arrName[1:*]</p>
+        <p class="Code">   PRINT, "Number of arrName elements = " $</p>
+        <p class="Code">      + STRING(N_ELEMENTS(arrName))</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">   ; Call DescribeCoverage to acccess coverage details for the</p>
+        <p class="Code">   ; coverages offerings in the array.</p>
+        <p class="Code">    covName = oWCS-&gt;DescribeCoverage(NAMES=arrName, COUNT=numCov)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">   PRINT, "Number of coverages returned by DescribeCoverage = " $</p>
+        <p class="Code">      + STRING(numCov)</p>
+        <p class="Code">   PRINT, "Coverage Name(s) = " + covName</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ENDIF ELSE BEGIN</p>
+        <p class="Code">   void = DIALOG_MESSAGE("No information available" $</p>
+        <p class="Code">     + "from WCS Server", /ERROR)</p>
+        <p class="Code">   RETURN</p>
+        <p class="Code">ENDELSE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Cleanup.</p>
+        <p class="Code">OBJ_DESTROY, oWcs</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="objects_network_1009015_1384956"></a><a name="objects_network_1009015_92696"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="objects_network_1009015_1384964"></a><a name="objects_network_1009015_75174"></a>See Also</h2>
+        <p><a href="IDLnetOGCWCS__GetCoverag1.htm#objects_network_1009015_1385325">IDLnetOGCWCS::GetCoverageOffering</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

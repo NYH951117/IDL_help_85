@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Using CALL_EXTERNAL">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Passing String Data</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="CALL_EXTERNAL.htm">Using CALL_EXTERNAL</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Passing String Data</span>
+        </div>
+        <h1><a name="kanchor5432"></a>Passing String Data</h1>
+        <p>IDL represents strings internally as <b>IDL_STRING</b> descriptors. For more information about IDL_STRING, see  <a href="../IDLInternals - Variables/IDLInternalVariables.htm">IDL Internals: Variables</a> and <a href="../IDLInternals - String Processing/StringProcessing.htm">IDL Internals: String Processing</a>. These descriptors are defined in the C language as:</p>
+        <p class="Code">typedef struct { IDL_STRING_SLEN_T slen; </p>
+        <p class="Code">&#160;&#160;&#160;unsigned short stype; </p>
+        <p class="Code">&#160;&#160;&#160;char *s;</p>
+        <p class="Code">} IDL_STRING;</p>
+        <p>To pass a string by reference, IDL passes the address of its <b>IDL_STRING</b> descriptor. To pass a string by value the string pointer (the s field of the descriptor) is passed. Programmers should be aware of the following when manipulating IDL strings:</p>
+        <ul>
+            <li value="1">Called code should treat the information in the passed <b>IDL_STRING</b> descriptor and the string itself as read-only, and should not modify these values.</li>
+            <li value="2">The <b>slen</b> field contains the length of the string without including the NULL termination that is required at the end of all C strings.</li>
+            <li value="3">The stype field is used internally by IDL to keep track of how the memory for the string was obtained, and should be ignored by <b>CALL_EXTERNAL</b> users.</li>
+            <li value="4"><b>s</b> is the pointer to the actual C string represented by the descriptor. If the string is NULL, IDL represents it as a NULL (0) pointer, not as a pointer to an empty null terminated string. Hence, called code that expects a string pointer should check for a NULL pointer before dereferencing it.</li>
+            <li value="5">You must use the functions discussed in <a href="../IDLInternals - String Processing/StringProcessing.htm">IDL Internals: String Processing</a> to allocate the memory for an <b>IDL_STRING</b>. Attempting to do this directly by allocating dynamic memory and assigning it to the IDL_STRING descriptor is a common pitfall, as discussed in <a href="CallExtFn.htm#Common">Common CALL_EXTERNAL Pitfalls</a>.</li>
+        </ul>
+        <h2 class="API">Returning a String Value</h2>
+        <p>When returning a string value, a function must allocate the memory used to hold it. On return, IDL will copy this string. You can use a static buffer or dynamic memory, but do not return the address of an automatic (stack-based) variable.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDL will not free dynamically-allocated memory for this use.</p>
+        <h2 class="API">Example</h2>
+        <p>The following routine, found in<code> string_array.c</code>, demonstrates how to handle string variables in external code. This routine takes a string or array of strings as input and returns a copy of the longest string that it received. It is important to note that this routine uses a static char array as its return value, which avoids the possibility of a memory leak, but which must be long enough to handle the longest string required by the application. This is implemented as a function with a natural C interface, and a second glue routine that implements the IDL portable convention, using the one with the natural interface to do the actual work:</p>
+        <p>&#160;</p>
+        <p class="Code"> #include &lt;stdio.h&gt;</p>
+        <p class="Code"> #include &lt;string.h&gt;</p>
+        <p class="Code"> #include "idl_export.h"</p>
+        <p class="Code_Indented"> /*</p>
+        <p class="Code_Indented">	* IDL_STRING is declared in idl_export.h like this:</p>
+        <p class="Code_Indented">	*	typedef struct {</p>
+        <p class="Code_Indented">	*	IDL_STRING_SLEN_T slen;	Length of string, 0 for null</p>
+        <p class="Code_Indented">	*	short stype;	Type of string, static or dynamic</p>
+        <p class="Code_Indented">	*	char *s;	Address of string</p>
+        <p class="Code_Indented">	* } IDL_STRING;</p>
+        <p class="Code_Indented">	* However, you should rely on the definition in idl_export.h instead</p>
+        <p class="Code_Indented">	* of declaring your own string structure.</p>
+        <p class="Code_Indented">	*/</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">	char* string_array_natural(IDL_STRING *str_descr, IDL_LONG n)</p>
+        <p class="Code">	{</p>
+        <p class="Code_Indented">	/*</p>
+        <p class="Code_Indented">	* IDL will make a copy of the string that is returned (if it is</p>
+        <p class="Code_Indented">	* not NULL). One way to avoid a memory leak is therefore to return</p>
+        <p class="Code_Indented">	* a pointer to a static buffer containing a null terminated string.</p>
+        <p class="Code_Indented">	* IDL will copy the contents of the buffer and drop the reference</p>
+        <p class="Code_Indented">	* to our buffer immediately on return.</p>
+        <p class="Code_Indented">	*/</p>
+        <p class="Code">	#define MAX_OUT_LEN 511	/* truncate any string</p>
+        <p class="Code">	longer than this */</p>
+        <p class="Code">	static char result[MAX_OUT_LEN+1];	/* leave a space for a ’\0’</p>
+        <p class="Code">	on the longest string */</p>
+        <p class="Code">	int max_index;	/* index of longest string */</p>
+        <p class="Code">	int max_sofar;	/* length of longest string*/</p>
+        <p class="Code">	int i;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">	/*	Check the size of the array passed in. n should be &gt; 0.*/</p>
+        <p class="Code">	if (n &lt; 1) return (char *) 0;</p>
+        <p class="Code">	max_index = 0;</p>
+        <p class="Code">	max_sofar = 0;</p>
+        <p class="Code">	for(i=0; i &lt; n; i++) {</p>
+        <p class="Code_Indented">	if (str_descr[i].slen &gt; max_sofar) {</p>
+        <p class="Code_Indented">	max_index = i;</p>
+        <p class="Code_Indented">	max_sofar = str_descr[i].slen;</p>
+        <p class="Code">	}</p>
+        <p class="Code">	}</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">/*</p>
+        <p class="Code_Indented">* If all strings in the array are empty, the longest</p>
+        <p class="Code_Indented">* will still be a NULL string.</p>
+        <p class="Code_Indented">*/</p>
+        <p class="Code">if (str_descr[max_index].s == NULL) return (char *) 0;</p>
+        <p class="Code_Indented">/*</p>
+        <p class="Code_Indented">* Copy the longest string into the buffer, up to MAX_OUT_LEN</p>
+        <p class="Code_Indented">* characters.</p>
+        <p class="Code_Indented">* Explicitly store a NULL byte in the last byte of the buffer,</p>
+        <p class="Code_Indented">* because strncpy() does not NULL terminate if the string copied</p>
+        <p class="Code_Indented">* is truncated.</p>
+        <p class="Code_Indented">*/</p>
+        <p class="Code">strncpy(result, str_descr[max_index].s, MAX_OUT_LEN);</p>
+        <p class="Code">result[sizeof(result)-1] = ’\0’;</p>
+        <p class="Code">return(result);</p>
+        <p class="Code">#undef MAX_OUT_LEN</p>
+        <p class="Code">}</p>
+        <p class="Code">char* string_array(int argc, void* argv[])</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">/*</p>
+        <p class="Code_Indented">* Make sure there are the correct	# of arguments.</p>
+        <p class="Code_Indented">* IDL will convert the NULL into an empty string (’’).</p>
+        <p class="Code_Indented">*/</p>
+        <p class="Code">if (argc != 2) return (char *) NULL;</p>
+        <p class="Code">return string_array_natural((IDL_STRING *) argv[0], (IDL_LONG) argv[1]);</p>
+        <p class="Code">}</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

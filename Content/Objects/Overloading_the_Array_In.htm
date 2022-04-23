@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-conditions="" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Objects|Operator Overloading">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Overloading the Array Indexing Operator</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Object Classes/ref_part2.htm">Objects</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Operator Overloading</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Overloading the Array Indexing Operator</span>
+        </div>
+        <h1><a name="obj_operators_3013489070_1007239"></a><a name="obj_operators_3013489070_21637"></a>Overloading the Array Indexing Operator</h1>
+        <p>IDL arrays can have up to eight dimensions, so IDL’s <code>[]</code> (array indexing) operator allows you to specify a maximum of eight indices or subscript ranges. The same limit of eight index values applies when overloading the <code>[]</code> operator for an object class. See <a href="#obj_operators_3013489070_1000299" class="selected">Multiple Dimensions</a> for details.</p>
+        <p>Values passed to the array indexing <code>[]</code> operator are normally converted to integers before being used to index into the array. For an overloaded <code>[]</code> operator, no conversion of the values is performed for scalar entries. This means, for example, that passing a string value to the overloaded <code>[]</code> operator method is allowed:</p>
+        <p class="Code">value = Object['some_string_value']</p>
+        <p>and the input value is passed to the overload method unchanged. Values specified as <i>subscript ranges</i>, however, are converted to integer type. See <a href="#obj_operators_3013489070_1000311" class="selected">Subscript Ranges</a> for details.</p>
+        <p>The <code>[]</code> operator is implemented differently depending on which side of the equal sign the overloaded operator is used:</p>
+        <ul>
+            <li value="1"><b>Right-Hand Side:</b> If used on the right-hand side of the equal sign, the operator must return a value:</li>
+        </ul>
+        <p class="indent2"><code>value = Object[</code><code><i>index</i></code><code>]</code>
+        </p>
+        <p class="indent">This operator is overloaded by implementing the <a href="#obj_operators_3013489070_1000184" class="selected">_overloadBracketsRightSide Function</a> method.</p>
+        <ul>
+            <li value="1"><b>Left-Hand Side:</b> If used on the left-hand side of the equal sign, the operator does not return a value but must accept a value from the right-hand side:</li>
+        </ul>
+        <p class="indent2"><code>Object[</code><code><i>index</i></code><code>] = value</code>
+        </p>
+        <p class="indent">This operator is overloaded by implementing the <a href="#obj_operators_3013489070_1000201" class="selected">_overloadBracketsLeftSide Procedure</a> method.</p>
+        <h2 class="API"><a name="obj_operators_3013489070_1000184"></a><a name="obj_operators_3013489070_97004"></a>_overloadBracketsRightSide Function</h2>
+        <p>To overload the behavior of the <code>[]</code> operator when used on the right-hand side of the equal sign, the user-supplied method must be a function that accepts a minimum of two and a maximum of nine input arguments. The signature of the <code>_overloadBracketsRightSide</code> object method is:</p>
+        <p class="Code">FUNCTION className::_overloadBracketsRightSide, isRange, sub1, $</p>
+        <p class="Code">&#160;&#160;&#160;sub2, sub3, sub4, sub5, sub6, sub7, sub8</p>
+        <p class="Code">&#160;&#160;&#160;.</p>
+        <p class="Code">&#160;&#160;&#160;.</p>
+        <p class="Code">&#160;&#160;&#160;.</p>
+        <p class="Code">&#160;&#160;&#160;RETURN, something</p>
+        <p class="Code">END</p>
+        <p>The first argument will contain a vector that has one element for each argument supplied by the user; each element contains a zero if the corresponding input argument was an index variable or array of indices, or a one if the corresponding input argument was a subscript range. (See <a href="#obj_operators_3013489070_1000311" class="selected">Subscript Ranges</a> for details.) The second through ninth arguments are the index values or subscript ranges supplied by the user.</p>
+        <p>For example, the following shows a simple overloading of the right-hand side <code>[]</code> operator that retrieves values in an object member data field named <code>ARRAY</code> .</p>
+        <p class="Code">FUNCTION myObj::_overloadBracketsRightSide, isRange, $</p>
+        <p class="Code">&#160;&#160;&#160;sub1, sub2, sub3, sub4, sub5, sub6, sub7, sub8</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;IF (MAX(isRange) GT 0) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;RETURN, 'Subscript Ranges are not allowed'</p>
+        <p class="Code">&#160;&#160;&#160;ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;IF N_ELEMENTS(sub1) THEN retVal = self-&gt;ARRAY[sub1]</p>
+        <p class="Code">&#160;&#160;&#160;IF N_ELEMENTS(sub2) THEN retVal = [retVal, self-&gt;ARRAY[sub2]]</p>
+        <p class="Code">&#160;&#160;&#160;IF N_ELEMENTS(sub3) THEN retVal = [retVal, self-&gt;ARRAY[sub3]]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;RETURN, retVal</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>Assuming the object class <code>myObj</code> includes a member data field named <code>ARRAY</code> that contains array data, the following lines would create the <code>myObj</code> object and print out the third element of the array:</p>
+        <p class="Code">obj = OBJ_NEW('myObj')</p>
+        <p class="Code">PRINT, obj[3]</p>
+        <p>Note that in this simple example subscript ranges are specifically not handled, and only the first three subscripts provided by the user are retrieved. For a more realistic example, see <a href="Example__Overloading_Arr.htm#obj_operators_3013489070_1001052">Example: Overloading Array Indexing Syntax</a>.</p>
+        <h2 class="API"><a name="obj_operators_3013489070_1000201"></a><a name="obj_operators_3013489070_58030"></a>_overloadBracketsLeftSide Procedure</h2>
+        <p>To overload the behavior of the <code>[]</code> operator when used on the left-hand side of the equal sign, the user-supplied method must be a procedure that accepts a minimum of four and a maximum of 11 input arguments.</p>
+        <p>The signature of the <code>_overloadBracketsLeftSide</code> object method is:</p>
+        <p class="Code">PRO className::_overloadBracketsLeftSide, objRef, rValue, $</p>
+        <p class="Code">&#160;&#160;&#160;isRange, sub1, sub2, sub3, sub4, sub5, sub6, sub7, sub8</p>
+        <p class="Code">&#160;&#160;&#160;.</p>
+        <p class="Code">&#160;&#160;&#160;.</p>
+        <p class="Code">&#160;&#160;&#160;.</p>
+        <p class="Code">END</p>
+        <p>The first argument is the object reference variable that is being indexed. (This is the same object reference as the implicit <i>self</i> argument and is used only in certain special circumstances; see <a href="#obj_operators_3013489070_1000327" class="selected">Replacing the Object Reference</a> for a scenario in which having this object reference is useful.) The second argument contains the value specified on the right-hand side of the equal sign. The third argument contains a vector that has one element for each index value supplied by the user; each element contains a zero if the corresponding input argument was a scalar index value or array of indices, or a one if the corresponding input argument was a subscript range. (See <a href="#obj_operators_3013489070_1000311" class="selected">Subscript Ranges</a> for details.) The fourth through eleventh arguments are the index values supplied by the user.</p>
+        <p>For example, the following shows a simple overloading of the left-hand side <code>[]</code> operator that replaces values in an object member data field named <code>ARRAY</code> .</p>
+        <p class="Code">PRO myObj::_overloadBracketsLeftSide, objRef, rValue, $</p>
+        <p class="Code">&#160;&#160;&#160;isRange, sub1, sub2, sub3, sub4, sub5, sub6, sub7, sub8</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;IF (MAX(isRange) GT 0) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;PRINT, 'Subscript Ranges are not allowed'</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;RETURN</p>
+        <p class="Code">&#160;&#160;&#160;ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;IF (N_ELEMENTS(sub1) &amp;&amp; N_ELEMENTS(rValue) GT 0) $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;THEN self-&gt;ARRAY[sub1] = rValue[0]</p>
+        <p class="Code">&#160;&#160;&#160;IF (N_ELEMENTS(sub2) &amp;&amp; N_ELEMENTS(rValue) GT 1) $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;THEN self-&gt;ARRAY[sub2] = rValue[1]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>Assuming the object class <code>myObj</code> includes a member data field named <code>ARRAY</code> that contains array data, the following lines would create the <code>myObj</code> object and replace the third element of the array with the value <code>22</code>:</p>
+        <p class="Code">obj = OBJ_NEW('myObj')</p>
+        <p class="Code">obj[3] = 22</p>
+        <p>Note that in this simple example subscript ranges are specifically not handled, and only the first two subscripts provided by the user are inserted into the array.</p>
+        <h2 class="API">Implementing an Array Indexing Method</h2>
+        <p>The following sections discuss some of the main things to consider when overloading the array indexing operator.</p>
+        <h3><a name="obj_operators_3013489070_1000299"></a><a name="obj_operators_3013489070_43276"></a>Multiple Dimensions</h3>
+        <p>IDL’s array indexing notation can accommodate up to eight array dimensions. Although there is no similar restriction on object methods, it is prudent to create array indexing operator overload methods to accommodate the same eight array dimensions. Note that even if your method will accept all eight dimensions, the end user of the overloaded operator need not specify more than one.</p>
+        <p>You can determine the number of dimension arguments used in a call to the overloaded array indexing operator by counting the number of elements of the <i>isRange</i> positional parameter.</p>
+        <p>For example, if the <i>isRange</i> vector contains three values, the user has specified three index values (corresponding to a three-dimensional array, in normal array indexing syntax). The <i>sub1</i> parameter contains the first dimension’s index value, and the <i>sub2</i> and <i>sub3</i> parameters contain the second and third dimension’s index value.</p>
+        <p>An alternate method, if you simply need to know whether the user supplied a particular argument, is to use the <a href="../Reference Material/N/N_ELEMENTS.htm#N_830853741_953695">N_ELEMENTS</a> function. The N_ELEMENTS function will return zero when called on a named variable that is undefined in the current execution scope, so the code</p>
+        <p class="Code">IF N_ELEMENTS(sub3) THEN ...</p>
+        <p>will only be executed if a value for the variable <code>sub3</code> was provided by the user. (See the example function in <a href="#obj_operators_3013489070_1000184" class="selected">_overloadBracketsRightSide Function</a> for an illustration of this technique.)</p>
+        <h3><a name="obj_operators_3013489070_1000311"></a><a name="obj_operators_3013489070_45203"></a>Subscript Ranges</h3>
+        <p>There are six ways to describe a subarray inside of indexing brackets. This subarray syntax is described in <a href="../Creating IDL Programs/Components of the IDL Language/Combining_Array_Subscrip.htm#arrays_3727706888_515307">Subscript Ranges</a>.</p>
+        <p>The value of a <i>isRange</i> element reveals the type of index reference. A value of 1 (TRUE) means that the corresponding <i>sub*</i> parameter holds a range expression, while a value of 0 (FALSE) means that the corresponding <i>sub*</i> parameter is a variable or expression.</p>
+        <p>If the user specifies a range expression as one of the index values, the corresponding <i>sub*</i> parameter will contain a three-element array consisting of the individual elements of the range expression. For example, if a user specified the following range expression:</p>
+        <p class="Code">object[2:6]</p>
+        <p>(which would normally indicate the selection of array elements three through seven), the value of the <code>sub1</code> argument to the <code>_overloadBracketsRightSide</code> or <code>_overloadBracketsLeftSide</code> method would be the vector</p>
+        <p class="Code">[ 2, 6, 1]</p>
+        <p>Here, the first two elements of the <code>sub1</code> array indicate the beginning and ending indices of the range, and the third element indicates the <i>stride</i>.</p>
+        <p>If the user specifies an asterisk for the second range value:</p>
+        <p class="Code">object[2:*]</p>
+        <p>(which would normally indicate the selection of array elements from three through the end of the array), the value of the <code>sub1</code> argument to the <code>_overloadBracketsRightSide</code> or <code>_overloadBracketsLeftSide</code> method would be the array</p>
+        <p class="Code">[ 2, -1, 1]</p>
+        <p>Finally, if the user specifies a range with a stride value:</p>
+        <p class="Code">object[2,*,3]</p>
+        <p>(which would normally indicate the selection of every third array element from three through the end of the array), the value of the <code>sub1</code> argument to the <code>_overloadBracketsRightSide</code> or <code>_overloadBracketsLeftSide</code> method would be the array</p>
+        <p class="Code">[ 2, -1, 3]</p>
+        <p>Code similar to the following snippet would allow your overloaded array indexing method to determine whether a given index value is a range expression or a scalar, and process the values appropriately:</p>
+        <p class="Code">; Determine if an index value is a range expression,</p>
+        <p class="Code">; or a simple variable or constant expression.</p>
+        <p class="Code">; If a range expression, parse the string further</p>
+        <p class="Code">FOR I = 0, N_ELEMENTS(isRange) - 1 DO BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;IF isRange[i] THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; ...code to parse the range expression...</p>
+        <p class="Code">&#160;&#160;&#160;ENDIF ELSE BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; ...code to parse the variable or constant expression...</p>
+        <p class="Code">&#160;&#160;&#160;ENDELSE</p>
+        <p class="Code">ENDFOR</p>
+        <p class="Code">&#160;</p>
+        <h3><a name="obj_operators_3013489070_1000327"></a><a name="obj_operators_3013489070_65814"></a>Replacing the Object Reference</h3>
+        <p>Overloading the array indexing operator for an object class works because — with one very specialized exception — the overloaded <code>[]</code> operator does not apply to <i>arrays</i> of objects. This means that if a variable contains an array of objects, array indexing syntax used on that variable will have the normal array indexing behavior, even if the array indexing operator is overloaded for one or more of the objects in the array:</p>
+        <p class="Code">myVariable = OBJARR(10)</p>
+        <p class="Code">HELP, myVariable[3]</p>
+        <p>IDL Prints:</p>
+        <p class="Code">&lt;Expression&gt;    OBJREF    = &lt;NullObject&gt;</p>
+        <p>indicating that the third element of <code>myVariable</code> contains a null object reference.</p>
+        <p>If, however, we use the same syntax on a scalar object of a class that overrides the array indexing (like the one described in <a href="#obj_operators_3013489070_1000184" class="selected">_overloadBracketsRightSide Function</a>):</p>
+        <p class="Code">myVariable = OBJ_NEW('myObj')</p>
+        <p class="Code">HELP, myVariable[3]</p>
+        <p>IDL might print something like this:</p>
+        <p class="Code">&lt;Expression&gt;    FLOAT     =      0.000000</p>
+        <p>The important point to understand here is that IDL knows the difference between an array of objects and a scalar object, and only uses the overloaded array indexing method on scalar objects.</p>
+        <p>The specialized exception mentioned above has to do with arrays that contain only a single element. To IDL, a single-element array is the same as a scalar, and a scalar can always be referenced using the array index 0. To demonstrate this, try the following:</p>
+        <p class="Code">a = 10<br />PRINT, a<br />PRINT, a[0]<br />HELP, a, a[0]</p>
+        <p>Notice that although the variable <code>a</code> is defined as a scalar, we can subscript <code>a</code> with zero and get the same value.</p>
+        <p>This feature of IDL is true for all variables, including object references. As a result, if the variable <code>myObject</code> contains an object reference, the “bare” variable name and the same variable name subscribed with zero are the same thing:</p>
+        <p class="Code">myObject = OBJ_NEW('IDL_Container')<br />HELP, myObject<br />HELP, myObject[0]</p>
+        <p>This presents an interesting problem for overloading the array indexing operator. If we have an object class that overloads the array indexing operator and we use the following syntax:</p>
+        <p class="Code">someObject[0] = value</p>
+        <p>by IDL’s array indexing rules we might reasonably expect <code>value</code> to <i>replace</i><code>someObject</code> entirely. But because we have overloaded the array indexing operator for this object class, the replacement must be accomplished by our <code>_overloadBracketsLeftSide</code> procedure. This is where the first positional parameter to that method (<i>objRef</i>) comes into play.</p>
+        <p>In order to actually replace the object reference with something else, we must have the actual variable available within the <code>_overloadBracketsLeftSide</code> procedure method. Replacing the implicit <i>self</i> variable with a new value doesn’t work, since self is available only within the scope of the method itself, and cannot be returned to the calling routine.</p>
+        <p>The following is an example that uses the <i>objRef</i> argument to completely replace the original object if the user specifies the index zero:</p>
+        <p class="Code">PRO myObj::_overloadBracketsLeftSide, objRef, rValue, $</p>
+        <p class="Code">&#160;&#160;&#160;isRange, sub1, sub2, sub3, sub4, sub5, sub6, sub7, sub8</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;IF N_ELEMENTS(isRange) EQ 1 &amp;&amp; (sub1 EQ 0) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;PRINT, 'Replacing original object with specified value'</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;objRef = rValue</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;RETURN</p>
+        <p class="Code">&#160;&#160;&#160;ENDIF ELSE BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;PRINT, 'Leaving original object unchanged'</p>
+        <p class="Code">&#160;&#160;&#160;ENDELSE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>Remember that your overloaded array indexing operator does not need to support the single-element array syntax. If you never reference your scalar objects using the array notation, you need not implement this behavior in your <code>_overloadBracketsLeftSide</code> procedure and you will never need to use the value of the <i>objRef</i> argument.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

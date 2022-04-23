@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: O">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>OPLOT Procedure</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="O_list.htm">Routines: O</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">OPLOT Procedure</span>
+        </div>
+        <h1 class="Routine"><a name="dg_routines_3604229493_884310"></a><a name="dg_routines_3604229493_28954"></a>OPLOT Procedure</h1>
+        <p><a name="kanchor1989"></a>The OPLOT procedure plots vector data over a previously-drawn plot. It differs from PLOT only in that it does not generate a new axis. Instead, it uses the scaling established by the most recent call to PLOT and simply overlays a plot of the data on the existing axis.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_884430"></a><a name="dg_routines_3604229493_890032_PageTOC_OPLOT_"></a>Examples</h2>
+        <p class="Code">; Create a simple dataset:<br />D = SIN(FINDGEN(100)/EXP(FINDGEN(100)/50))<br /><br />; Create an X-Y plot of vector D:<br />PLOT, D<br /><br />; Overplot the sine of D as a thick, dashed line:<br />OPLOT, SIN(D), LINESTYLE = 5, THICK = 2</p>
+        <h3><a name="dg_routines_3604229493_884433"></a>Overplotting</h3>
+        <p>Additional data can be added to existing plots with the OPLOT procedure. Each call to PLOT establishes the plot window (the rectangular area enclosed by the axes), the plot region (the box enclosing the plot window and its annotation), the axis types (linear or log), and the scaling. This information is saved in the system variables !P, !X, and !Y and used by subsequent calls to OPLOT.</p>
+        <p>Frequently, the color index, line style, or line thickness parameters are changed in each call to OPLOT to distinguish the data sets. See <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_331728">LINESTYLE</a> for a table describing the line style associated with each index.</p>
+        <p>The figure below illustrates a plot showing all four data sets. Each data set except the first was plotted with a different line style and was produced by a call to OPLOT. In this example, an (11, 4) array called ALLPTS is defined and contains all the scores for the four categories using the array concatenation operator. Once this array is defined, the IDL array operators and functions can be applied to the entire data set, rather than explicitly referencing the particular sample.</p>
+        <p>
+            <img src="../../Resources/Images/plng05.gif" style="margin-left: 5.99976px;margin-top: 0.7495199px;margin-right: 5.999752px;" />
+        </p>
+        <p>First, we define an <i>n</i>-by-4 array containing all four sample vectors. (This array is also defined by the <code>plot01</code> batch file.)</p>
+        <p class="Code">ALLPTS = [[COHO], [SOCKEYE], [HUMPBACK], [CHINOOK]]</p>
+        <p>The plot in the preceding figure was produced with the following statements:</p>
+        <p class="Code">; Define variables:<br />@plot01<br />; Plot first graph. Set the y-axis min and max<br />; from the min and max of all data sets. Default linestyle is 0.<br />PLOT, YEAR, COHO, YRANGE = [MIN(ALLPTS), MAX(ALLPTS)], $<br />&#160;&#160;&#160;TITLE='Salmon Populations', XTITLE = 'Year', $<br />&#160;&#160;&#160;YTITLE = 'Fish (thousands)', XRANGE = [1975, 1983], $<br />&#160;&#160;&#160;/XSTYLE<br />; Loop for the three remaining scores, varying the linestyle:<br />FOR I = 1, 3 DO OPLOT, YEAR, ALLPTS[*, I], LINE = I</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If IDL does not find the batch file, the required directory may not be in your IDL search path. All of the files mentioned are located in the <code>examples/doc/plot</code> subdirectory of the IDL distribution. By default, this directory is part of IDL’s path; if you have not changed your path, you will be able to run the examples as described here. See <a href="../../Creating IDL Programs/Appendices/IDL_Environment_System_V.htm#sysvars_272074529_997094">!PATH</a> for information on modifying IDL’s path.</p>
+        <p>You can use the XYOUTS procedure to label data lines. See <a href="../X/XYOUTS_Procedure.htm#dg_routines_3604229493_890672">XYOUTS Procedure</a> for the code needed to label each line of data in the previous example.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_884334"></a><a name="dg_routines_3604229493_889959_PageTOC_OPLOT_"></a>Syntax</h2>
+        <p class="Syntax">OPLOT, [<i>X</i>,] <i>Y</i> [,&#160;<a href="#dg_routines_3604229493_884368" class="selected">MAX_VALUE</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_884375" class="selected">MIN_VALUE</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_884381" class="selected">NSUM</a>=<i>value</i>] [,&#160;/<a href="#dg_routines_3604229493_884390" class="selected">POLAR</a>] [,&#160;<a href="#dg_routines_3604229493_884395" class="selected">THICK</a>=<i>value</i>]</p>
+        <p class="Syntax"><b>Graphics Keywords:</b> [,&#160;CLIP=<i>[X</i><sub class="italic">0</sub>, <i>Y</i><sub class="italic">0</sub>, <i>X</i><sub class="italic">1</sub>, <i>Y</i><sub class="italic">1</sub><i>]</i>] [,&#160;COLOR=<i>value</i>] [,&#160;LINESTYLE={0 | 1 | 2 | 3 | 4 | 5}] [,&#160;/NOCLIP] [,&#160;PSYM=<i>integer</i>{0 to 10}] [,&#160;SYMSIZE=<i>value</i>] [,&#160;/T3D] [,&#160;ZVALUE=<i>value</i>{0 to 1}]</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Many of the keyword parameters correspond directly to fields in the system variables !P, !X, !Y, or !Z. When specifying a keyword parameter name and value in a call that value affects only the current call, the corresponding system-variable field is not changed. Changing the value of a system-variable field changes the default for that particular parameter and remains in effect until explicitly changed. The system variables involving graphics and their corresponding keywords are detailed in !PI.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_884358"></a><a name="dg_routines_3604229493_889961_PageTOC_OPLOT_"></a>Arguments</h2>
+        <h3 class="Argument">X</h3>
+        <p>A vector argument. If X is not specified, <i>Y</i> is plotted as a function of point number (starting at zero). If both arguments are provided, <i>Y</i> is plotted as a function of <i>X</i>.</p>
+        <p>This argument is converted to double-precision floating-point before plotting. Plots created with OPLOT are limited to the range and precision of double precision floating-point values.</p>
+        <h3 class="Argument">Y</h3>
+        <p>The ordinate data to be plotted. This argument is converted to double-precision floating-point before plotting. </p>
+        <h2 class="API"><a name="dg_routines_3604229493_884365"></a><a name="dg_routines_3604229493_889967_PageTOC_OPLOT_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884368"></a><a name="dg_routines_3604229493_889969_Keywords_OPLOT__"></a><a name="kanchor1990"></a>MAX_VALUE</h3>
+        <p>The maximum value to be plotted. If this keyword is present, data values greater than the value of MAX_VALUE are treated as missing and are not plotted. Note that the IEEE floating-point value NaN is also treated as missing data.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884375"></a><a name="dg_routines_3604229493_889976_Keywords_OPLOT__"></a>MIN_VALUE</h3>
+        <p>The minimum value to be plotted. If this keyword is present, data values less than the value of MIN_VALUE are treated as missing and are not plotted. Note that the IEEE floating-point value NaN is also treated as missing data.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884381"></a><a name="dg_routines_3604229493_889983_Keywords_OPLOT__"></a>NSUM</h3>
+        <p>The presence of this keyword indicates the number of data points to average when plotting. If NSUM is larger than 1, every group of NSUM points is averaged to produce one plotted point. If there are <i>m</i> data points, then <i>m</i>/NSUM points are displayed. On logarithmic axes a geometric average is performed. </p>
+        <p>It is convenient to use NSUM when there is an extremely large number of data points to plot because it plots fewer points, the graph is less cluttered, and it is quicker.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884390"></a><a name="dg_routines_3604229493_889990_Keywords_OPLOT__"></a>POLAR</h3>
+        <p>Set this keyword to produce polar plots. The <i>X</i> and <i>Y</i> vector parameters, both of which must be present, are first converted from polar to Cartesian coordinates. The first parameter is the radius, and the second is expressed in radians.</p>
+        <p>For example, to make a polar plot, use the command:</p>
+        <p class="Code_Indented">OPLOT, /POLAR, R, THETA</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884395"></a><a name="dg_routines_3604229493_889995_Keywords_OPLOT__"></a>THICK</h3>
+        <p>Controls the thickness of the lines connecting the points. A thickness of 1.0 is normal, 2.0 is double wide, etc.</p>
+        <h3><a name="dg_routines_3604229493_884399"></a><a name="dg_routines_3604229493_889997_Keywords_OPLOT__"></a><a name="dg_routines_3604229493_889997_PageTOC_OPLOT_"></a>Graphics Keywords Accepted</h3>
+        <p>See <a href="../../Direct Graphics/graphkeyw.htm#%23graphkeyw_3288778166_317209">Direct Graphics Keywords</a> for the description of the following graphics and plotting keywords:</p>
+        <p><a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_315949">CLIP</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_371352">COLOR</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_331728">LINESTYLE</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_370050">NOCLIP</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_367154">PSYM</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316061">SYMSIZE</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_315956">T3D</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316102">ZVALUE</a></p>
+        <h2 class="API"><![CDATA[  ]]><a name="dg_routines_3604229493_884482"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dg_routines_3604229493_884490"></a><a name="dg_routines_3604229493_931685_PageTOC_OPLOT_"></a>See Also</h2>
+        <p><a href="../P/PLOT.htm">PLOT</a>, <a href="OPLOTERR_Procedure.htm#dg_routines_3604229493_884502">OPLOTERR Procedure</a>, <a href="../P/PLOT_Procedure.htm#dg_routines_3604229493_883230">PLOT Procedure</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

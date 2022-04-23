@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Obsolete Internal Interfaces">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Simplified Routine Invocation</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="ObsIntInterfaces.htm">Obsolete Internal Interfaces</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Simplified Routine Invocation</span>
+        </div>
+        <h1>Simplified Routine Invocation</h1>
+        <p>The functions and techniques described in this section are no longer widely used, and are considered functionally obsolete although they continue to be supported by <span class="DocumentTitleCompanyName">Exelis VIS</span>. This section is supplied to help those maintaining older code. New code should be written using the information found in <a href="../Adding System Routines/AddingSystRoutines.htm">Adding System Routines</a>.</p>
+        <p>A great deal of the work involved in writing IDL system routines involves checking positional arguments, screening out illegal combinations of type and structure, and converting them to desired type. The function IDL_EzCall() provides a simplified way to handle this task. It processes an array of IDL_EZ_ARG structs which describe the processing to be applied to each positional argument.</p>
+        <p>The IDL_EzCall() function is similar to the facility provided for keyword arguments by IDL_KWGetParams():</p>
+        <p class="Code">void IDL_EzCall(int argc, IDL_VPTR argv[], IDL_EZ_ARG arg_struct[]);</p>
+        <p>where:</p>
+        <h3>argc</h3>
+        <p>The number of positional arguments present.</p>
+        <h3>argv</h3>
+        <p>An array of pointers to the positional arguments.</p>
+        <h3>arg_struct</h3>
+        <p>An array of IDL_EZ_ARG structures defining the desired characteristics for each possible argument. Note that this array must have a definition for every possible parameter whether that argument is present in the current call or not. The order of the IDL_EZ_ARG structures is the same as the order in which the arguments are specified in the call. (See “The IDL_EZ_ARG struct” on page 405.)</p>
+        <p>There are some things you need to be aware of when using IDL_EzCall():</p>
+        <ul>
+            <li value="1">IDL_EzCall() automatically excludes file variables (such as those created by the ASSOC function) so you don’t have to take any special action to screen such variables out.</li>
+            <li value="2">Every call to IDL_EzCall() must have a matching call to IDL_EzCallCleanup() before execution returns to the interpreter.</li>
+            <li value="3">IDL_EzCall() does not handle keyword arguments. If the calling routine allows keyword arguments, it must do its own keyword processing using IDL_KWGetParams() (see “IDL Internals: Keyword Processing” on page 121) and pass an argv containing only positional arguments to IDL_EzCall().</li>
+            <li value="4">If you mark a variable as being write-only, you shouldn’t count on anything useful being in the uargv or value fields. This implies that it is not a good idea to set the IDL_EZ_POST_WRITEBACK field in the post field. Instead, you will have to allocate a new temporary variable, place the desired value into it, and use the IDL_VarCopy() function to write its value back into the original argv entry yourself.</li>
+        </ul>
+        <p>&#160;</p>
+        <p>IDL_EZ_POST_WRITEBACK is only useful when the access field is set to IDL_EZ_ACCESS_RW.</p>
+        <h2>The IDL_EZ_ARG struct</h2>
+        <p>The IDL_EZ_ARG struct has the following definition:</p>
+        <p class="Code">typedef struct {</p>
+        <p class="Code">short allowed_dims; short allowed_types; short access;</p>
+        <p class="Code">short convert; short pre; short post;</p>
+        <p class="Code">IDL_VPTR to_delete; IDL_VPTR uargv; IDL_ALLTYPES value;</p>
+        <p class="Code">} IDL_EZ_ARG;</p>
+        <p>where:</p>
+        <h3>allowed_dims</h3>
+        <p>A bit mask that specifies the allowed dimensions. Bit 0 means scalar, bit 1 means one-dimensional, etc. The IDL_EZ_DIM_MASK macro can be used to specify certain bits. It accepts a single argument that specifies the number of dimensions that are accepted, and returns the bit value that represents that number. For example, to specify that the argument can be scalar or have 2 dimensions:</p>
+        <p>IDL_EZ_DIM_MASK(0) | IDL_EZ_DIM_MASK(2)</p>
+        <p>In addition, the following constants are defined to simplify the writing of common cases:</p>
+        <p>IDL_EZ_DIM_ARRAY</p>
+        <p>Allow all but scalar.</p>
+        <p>IDL_EZ_DIM_ANY</p>
+        <p>Allow anything.</p>
+        <h3>allowed_types</h3>
+        <p>This is a bit mask defining the allowed data types for the argument. To convert type codes to the appropriate bits, use the formula BitMask = 2TypeCode or use the IDL_TYP_MASK macro.</p>
+        <p>If you specify a value for the convert field, its a good idea to specify IDL_TYP_B_ALL or IDL_TYP_B_SIMPLE here. The type conversion will catch any problems and your routine will be more flexible.</p>
+        <h3>access</h3>
+        <p>A bitmask that describes the type of access to be allowed to the argument. The following constants should be OR’d together to set the proper value:</p>
+        <p>IDL_EZ_ACCESS_R</p>
+        <p>The value of the argument is used by the system routine.</p>
+        <p>IDL_EZ_ACCESS_W</p>
+        <p>The value of the argument is changed by the system routine. This means that it must be a named variable (as opposed to a constant or expression).</p>
+        <p>IDL_EZ_ACCESS_RW</p>
+        <p>This is equivalent to IDL_EZ_ACCESS_R | IDL_EZ_ACCESS_W.</p>
+        <h3>convert</h3>
+        <p>The type code for the type to which the argument will be converted. A value of</p>
+        <p>IDL_TYP_UNDEF means that no conversion will be applied.</p>
+        <h3>pre</h3>
+        <p>A bitmask that specifies special purpose processing that should be performed on the variable by IDL_EzCall(). These bits are specified with the following constants:</p>
+        <p>IDL_EZ_PRE_SQMATRIX</p>
+        <p>The argument must be a square matrix.</p>
+        <p>IDL_EZ_PRE_TRANSPOSE</p>
+        <p>Transpose the argument.</p>
+        <p>This processing occurs after any type conversions specified by convert, and is only done if the access field has the IDL_EZ_ACCESS_R bit set.</p>
+        <h3>post</h3>
+        <p>A bit mask that specifies special purpose processing that should be performed on the variable by IDL_EzCallCleanup(). These bits are specified with the following constants:</p>
+        <p>IDL_EZ_POST_WRITEBACK</p>
+        <p>Transfer the contents of the uargv field back to the actual argument.</p>
+        <p>IDL_EZ_POST_TRANSPOSE</p>
+        <p>Transpose uargv prior to transferring its contents back to the actual argument. This processing occurs only when the access field has the IDL_EZ_ACCESS_W bit set. If IDL_EZ_POST_WRITEBACK is not present, none of the other actions are considered, since that would imply wasted effort.</p>
+        <h3>to_delete</h3>
+        <p>Do not make use of this field. This field is reserved for use by the EZ module. If IDL_EzCall() allocated a temporary variable to satisfy the conversion requirements given by the convert field, the IDL_VPTR to that temporary is saved here for use by IDL_EzCallCleanup().</p>
+        <h3>uargv</h3>
+        <p>After calling IDL_EzCall(), uargv contains a pointer to the IDL_VARIABLE which is the argument. This is the IDL_VPTR that your routine should use. Depending on the required type conversions, it might be the actual argument, or a temporary variable containing a converted version of the original. This field won’t contain anything useful if the IDL_EZ_ACCESS_R bit is not set in the access field.</p>
+        <h3>value</h3>
+        <p>This is a copy of the value field of the IDL_VARIABLE pointed at by uargv. For scalar variables, it contains the value, for arrays it points at the array block. This field is here to make reading read-only variables faster. Note that this is only a copy from uargv, and changing it will not cause the actual value field in uargv to be updated.</p>
+        <h2>Cleaning Up</h2>
+        <p>Every call to IDL_EzCall() must be bracketed by a call to IDL_EzCallCleanup():</p>
+        <p class="Code">void IDL_EzCallCleanup(int argc, IDL_VPTR argv[], IDL_EZ_ARG arg_struct[]);</p>
+        <p>The arguments are exactly the same as those passed to IDL_EzCall().</p>
+        <h3>Example— using IDL_EzCall()</h3>
+        <p>The following function skeleton shows how to use the simplified interface to handle argument processing for an older version of the built-in SVD (Singular Value Decomposition) function. SVD accepts the following positional arguments (in order):</p>
+        <h4>A</h4>
+        <p>An m by n matrix (input, required).</p>
+        <h4>w</h4>
+        <p>An n-element vector (output, required).</p>
+        <h4>U</h4>
+        <p>An n by m matrix (output, optional)</p>
+        <h4>V</h4>
+        <p>An n by n matrix (output, optional)</p>
+        <p>&#160;</p>
+        <p class="Code">void nr_svdcmp(int argc, IDL_VPTR argv[])</p>
+        <p class="Code">{</p>
+        <p class="Code">.</p>
+        <p class="Code">.</p>
+        <p class="Code">.</p>
+        <p class="Code">static IDL_EZ_ARG arg_struct[] = {</p>
+        <p class="Code">{ IDL_EZ_DIM_MASK(2), IDL_TYP_B_SIMPLE, IDL_EZ_ACCESS_R, IDL_TYP_FLOAT, 0, 0 }, /* A */</p>
+        <p class="Code">{ IDL_EZ_DIM_ANY, IDL_TYP_B_ALL,</p>
+        <p class="Code">IDL_EZ_ACCESS_W, 0, 0, 0 }, /* w */</p>
+        <p class="Code">{ IDL_EZ_DIM_ANY, IDL_TYP_B_ALL, IDL_EZ_ACCESS_W, 0, 0, 0 }, /* U */</p>
+        <p class="Code">{ IDL_EZ_DIM_ANY, IDL_TYP_B_ALL, IDL_EZ_ACCESS_W, 0, 0, 0 } /* V */</p>
+        <p class="Code">};</p>
+        <p class="Code">IDL_EzCall(argc, argv, arg_struct);</p>
+        <p class="Code">.</p>
+        <p class="Code">.</p>
+        <p class="Code">.</p>
+        <p class="Code">/* Do the SVD calculation and prepare temporary variables to be returned as w, U, and V */</p>
+        <p class="Code">.</p>
+        <p class="Code">.</p>
+        <p class="Code">.</p>
+        <p class="Code">IDL_EzCallCleanup(argc, argv, arg_struct);</p>
+        <p class="Code">}</p>
+        <p>&#160;</p>
+        <p>Those features of this procedure that are interesting in terms of plain argument processing are, by line number:</p>
+        <p>7-8 - The settings of the various fields of the IDL_EZ_ARG struct for the first positional argument (A) specifies:</p>
+        <ul>
+            <li value="1">allowed_dims. The argument must be 2-dimensional.</li>
+            <li value="2">allowed_types. It can have any simple type. Types and type codes are discussed in “IDL Internals: Types”.</li>
+            <li value="3">access The routine will examine the argument’s value, but will not attempt to change it.</li>
+            <li value="4">convert The argument should be converted to IDL_TYP_FLOAT if necessary.</li>
+            <li value="5">pre No pre-processing is required.</li>
+            <li value="6">post No post-processing is required.</li>
+        </ul>
+        <p>The remaining fields are all set by IDL_EzCall() in response to the above.</p>
+        <p>9-14 - Arguments two through four are allowed to have any number of dimensions and are allowed any type. This is because the routine does not intend to examine them, only to change them. For the same reason, a zero (IDL_TYP_UNDEF) is specified for the convert field indicating that no type conversion is desired. No pre or post-processing is specified.</p>
+        <p>17 - Process the positional arguments.</p>
+        <p>26 - Clean up.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Passing Information to a Shader Program</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1>Passing Information to a Shader Program</h1>
+        <p>The increased processing power provided by shaders allows the display to be quickly updated when object parameters change. This one-way communication lets you pass in object parameters, such as color updates, but also other variables such as time, for which there is no OpenGL equivalent. The parameter updates cause changes in the color or depth buffers, but no output is returned to the calling application.</p>
+        <p>The two main ways to communicate with a shader program include using “Uniform Variables” and “Attribute Variables”. IDL activates the shader program when the application draws the scene containing the graphic object with the associated <a href="../../Object Classes/Graphics/IDLgrShader.htm">IDLgrShader</a> object. IDL passes the uniform variable and/or vertex attribute data that you set with the SetUniformVariable and SetVertexAttributeData methods to the shader program.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Uniform and attribute variable names are case-sensitive, unlike most variable names in IDL.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If there is insufficient support for the shader program, IDL draws the scene as if there was no shader object present.</p>
+        <h2>Uniform Variables</h2>
+        <p>Uniform variables contain small amounts of data that change infrequently. Use the GetUniformVariable and SetUniformVariable methods of the <a href="../../Object Classes/Graphics/IDLgrShader.htm">IDLgrShader</a> object to retrieve or pass a named uniform variable to a shader program.</p>
+        <h3>Reserved Uniform Variables</h3>
+        <p>If an IDLgrShader or object subclassing from IDLgrShader is associated with an image, surface or polygon object, IDL sets a number of reserved uniform variables. All reserved uniform variable names begin with "_IDL_".</p>
+        <ul>
+            <li value="1">_IDL_ImageStep — this uniform variable is of GLSL type vec2. It contains the values [1/width, 1/height]. These values are useful for convolution filters that must locate adjacent texels for convolution kernel computations, and are used with <a href="../../Object Classes/Graphics/IDLgrShaderConvol3.htm">IDLgrShaderConvol3</a>. This uniform variable is set only when a shader is associated with an <a href="../../Object Classes/Graphics/IDLgrImage.htm">IDLgrImage</a>.</li>
+            <li value="2">_IDL_ImageTexture — this uniform variable is of GLSL type sampler2D. When you associate a shader with an IDLgrImage, this variable contains the texture map data associated with the IDLgrImage object. For a shader associated with an <a href="../../Object Classes/Graphics/IDLgrPolygon.htm">IDLgrPolygon</a> or <a href="../../Object Classes/Graphics/IDLgrSurface.htm">IDLgrSurface</a>, this is the image data that was set using the TEXTURE_MAP property. In the shader program, use the GLSL texture2D function to access the texture data.</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDL always uses OpenGL’s texture unit 0 to store the texture used to draw an <a href="../../Object Classes/Graphics/IDLgrImage.htm">IDLgrImage</a> object. IDL also uses texture unit 0 for textures associated with the TEXTURE_MAP property of IDLgrPolygon and IDLgrSurface. If you define a sampler2D uniform variable in your shader program and do not initialize it with the SetUniformVariable method in your IDL application, OpenGL associates your sampler2D uniform variable with texture unit 0. This automatic association ensures correct operation because your GLSL sampler is referencing the correct texture. This feature may be useful when using shader programs from outside sources. For example if you obtain a shader program from the Internet that performs a type of image filtering, it probably defines a sampler2D uniform variable, perhaps named image. You can use the shader program without modification and not bother setting the uniform variable called image in your IDL code since IDL and OpenGL will correctly associate your IDLgrImage data with the sampler2D uniform variable. However, it may be good form and improve self-documentation to use the IDL reserved uniform variable, _IDL_ImageTexture, to explicitly indicate that the shader program is using the IDL texture as described above.</p>
+        <p>While the data is automatically associated with these uniform variables and made available to the shader program, you still must define them in the shader program to access the data from within the shader program.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you are layering multiple textures on a surface or polygon, see “Uniform Variables and Multi-Texture Shaders” for information on how to manage reserved and custom uniform variables.</p>
+        <h2>Attribute Variables</h2>
+        <p>Attribute variables contain per-vertex data that is passed to the vertex shader program. This type of data changes frequently (often for each vertex). Modifying object vertices can display movement within a scene. For example, an attribute variable that contains per-vertex velocity vectors multiplied by a uniform variable that contains a time value generates an offset location for each vertex. When this vertex program runs repeatedly with increasing time values, it simulates the motion of a set of vertices where each vertex has its own velocity vector representing its own movement direction. Such a vertex program can be used to visualize the path of moving particles.</p>
+        <p>Use the GetVertexAttributeData and SetVertexAttributeData methods of the graphic object (not the shader object since vertex data is intimately related to the object vertices) to retrieve or pass a named attribute variable to a shader program. See “Vertex Shaders” on page 359 for an example.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Within a GLSL program, a varying variable passes data from the vertex shader to the fragment shader. These variables are defined at each vertex and interpolated across a graphic object to produce a perspective-corrected value at each fragment. This type of variable cannot be directly accessed from IDL.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

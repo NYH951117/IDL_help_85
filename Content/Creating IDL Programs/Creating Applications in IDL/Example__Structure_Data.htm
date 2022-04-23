@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|About Table Widgets">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Example: Structure Data in a Table Widget</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="About_Table_Widgets.htm">About Table Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Example: Structure Data in a Table Widget</span>
+        </div>
+        <h1><a name="widget_table_1174167527_105296"></a><a name="widget_table_1174167527_60536"></a>Example: Structure Data in a Table Widget</h1>
+        <p>The following procedures build a simple application that displays the same structure data in two table widgets; one in row-major format and one in column-major format.</p>
+        <p class="ExampleCode">This example is included in the file <code>table_widget_example2.<a name="kanchor5089"></a>pro</code> in the <code>examples/doc/widgets</code> subdirectory of the IDL distribution. Run this example procedure by entering <code>table_widget_example2</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT table_widget_example2.pro</code>. See <a href="About_Widget_Application.htm#widget_apps_4063420628_1041756">Running the Example Code</a> if IDL does not run the program as expected.</p>
+        <p class="Code">; Event-handler routine for 'Quit' button</p>
+        <p class="Code">PRO table_widget_example2_quit_event, ev</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, ev.TOP, /DESTROY</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Widget creation routine.</p>
+        <p class="Code">PRO table_widget_example2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Create some structure data.</p>
+        <p class="Code">&#160;&#160;d0={planet:'Mercury', orbit:0.387, radius:2439, moons:0}</p>
+        <p class="Code">&#160;&#160;d1={planet:'Venus', orbit:0.723, radius:6052, moons:0}</p>
+        <p class="Code">&#160;&#160;d2={planet:'Earth', orbit:1.0, radius:6378, moons:1}</p>
+        <p class="Code">&#160;&#160;d3={planet:'Mars', orbit:1.524, radius:3397, moons:2}</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Combine structure data into a vector of structures.</p>
+        <p class="Code">&#160;&#160;data = [d0, d1, d2, d3]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Create labels for the rows or columns of the table.</p>
+        <p class="Code">&#160;&#160;labels = ['Planet', 'Orbit Radius (AU)', 'Radius (km)', 'Moons']</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; To make sure the table looks nice on all platforms,</p>
+        <p class="Code">&#160;&#160;; set all column widths to the width of the longest string</p>
+        <p class="Code">&#160;&#160;; that can be a header.</p>
+        <p class="Code">&#160;&#160;max_strlen = strlen('Orbit Radius (AU)')</p>
+        <p class="Code">&#160;&#160;maxwidth = max_strlen * !d.x_ch_size + 6   ; ... + 6 for padding</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Create base widget, two tables (column- and row-major,</p>
+        <p class="Code">&#160;&#160;; respectively), and 'Quit' button.</p>
+        <p class="Code">&#160;&#160;base = WIDGET_BASE(/COLUMN)</p>
+        <p class="Code">&#160;&#160;table1 = WIDGET_TABLE(base, VALUE=data, /COLUMN_MAJOR, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;ROW_LABELS=labels, COLUMN_LABELS='', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;COLUMN_WIDTHS=maxwidth, /RESIZEABLE_COLUMNS)</p>
+        <p class="Code">&#160;&#160;table2 = WIDGET_TABLE(base, VALUE=data, /ROW_MAJOR, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;ROW_LABELS='', COLUMN_LABELS=labels, /RESIZEABLE_COLUMNS)</p>
+        <p class="Code">&#160;&#160;b_quit = WIDGET_BUTTON(base, VALUE='Quit', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;EVENT_PRO='table_widget_example2_quit_event')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Realize the widgets.</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, base, /REALIZE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Retrieve the widths of the columns of the first table.</p>
+        <p class="Code">&#160;&#160;; Note that we must realize the widgets before retrieving</p>
+        <p class="Code">&#160;&#160;; this value.</p>
+        <p class="Code">&#160;&#160;col_widths = WIDGET_INFO(table1, /COLUMN_WIDTHS)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; We need the following trick to get the first column (which is</p>
+        <p class="Code">&#160;&#160;; a header column in our first table) to reset to the width of</p>
+        <p class="Code">&#160;&#160;; our data columns. The initial call to keyword COLUMN_WIDTHS</p>
+        <p class="Code">&#160;&#160;; above only set the data column widths.</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, table1, COLUMN_WIDTHS=col_widths[0], $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;USE_TABLE_SELECT=[-1,-1,3,3]</p>
+        <p class="Code">&#160;&#160;; This call gives table 2 the same cell dimensions as table 1</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, table2, COLUMN_WIDTHS=col_widths[0], $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;USE_TABLE_SELECT=[-1,-1,3,3]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Call XMANAGER to manage the widgets.</p>
+        <p class="Code">&#160;&#160;XMANAGER, 'table_widget_example2', base</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>The following things about this example are worth noting:</p>
+        <ul>
+            <li value="1">By default, column and row titles will contain the index of the column or row. To remove either column or row titles entirely, set the value of the COLUMN_LABELS or ROW_LABELS keyword to an empty string (<code>''</code>).</li>
+            <li value="2">Setting the width of the row-title column of the row-major table requires us to select column <code>-1</code> using the USE_TABLE_SELECT keyword.</li>
+        </ul>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

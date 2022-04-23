@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: H">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>HANNING </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="H_list.htm">Routines: H</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">HANNING</span>
+        </div>
+        <h1 class="Routine"><a name="H_835179117_883964"></a><a name="H_835179117_14061"></a><a name="H_835179117_60367"></a>HANNING </h1>
+        <p><a name="kanchor1104"></a><a name="kanchor1105"></a>The HANNING function is used to create a “window” for Fourier Transform filtering. It can be used to create both Hanning and Hamming windows.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>hanning.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <p>The Hanning window is defined as:</p>
+        <p>        w(k) = alpha - (1-alpha)*cos(2 pi k/ N),  k = 0,1,...,N-1</p>
+        <p>where alpha=0.5 for the Hanning, and alpha=0.54 for the Hamming window.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Because of the factor of 1/N (rather than 1/(N-1)) in the above equation, the Hanning filter is not exactly symmetric, and does not go to zero at the last point. The factor of 1/N is chosen to give the best behavior for spectral estimation of discrete data.</p>
+        <h2 class="API"><a name="H_835179117_758103"></a><a name="H_835179117_758103_PageTOC_HANNING_"></a>Examples</h2>
+        <p>
+            <img src="../images/hanning_plot.png" />
+        </p>
+        <p class="Code">; Construct a 1024-element time series composed of three sine waves.</p>
+        <p class="Code">n = 1024</p>
+        <p class="Code">dt = 0.02</p>
+        <p class="Code">w = 2 * !CONST.pi * dt * DINDGEN(n)</p>
+        <p class="Code">x = -0.3d + SIN(2.8d*w) + SIN(6.25d*w) + SIN(11.0d*w)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Find the power spectrum with and without the Hanning window.</p>
+        <p class="Code">hwindow = HANNING(n, /DOUBLE)</p>
+        <p class="Code">pwrspec = ABS(fft(x))^2</p>
+        <p class="Code">pwrspec_windowed = ABS(FFT(hwindow*x))^2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Calculate frequency vector.</p>
+        <p class="Code">freq = FINDGEN(n)/(n*dt)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Plot the results.</p>
+        <p class="Code">p = PLOT(freq, pwrspec_windowed, /XLOG, /YLOG, $</p>
+        <p class="Code">&#160;&#160;&#160;XRANGE=[1,1./(2*dt)], XSTYLE=1, $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE='Power spectrum with Hanning (black) and without (red)')</p>
+        <p class="Code">q = PLOT(freq, pwrspec, COLOR='red', /OVERPLOT)</p>
+        <h2 class="API"><a name="H_835179117_758091"></a><a name="H_835179117_758091_PageTOC_HANNING_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result </i>= HANNING( <i>N</i><sub>1</sub> [,&#160;<i>N</i><sub>2</sub>] [,&#160;<a href="#H_835179117_758100" class="selected">ALPHA</a>=<i>value</i>{0.5 to 1.0}] [,&#160;/<a href="#H_835179117_874103" class="selected">DOUBLE</a>] )</p>
+        <h2 class="API"><a name="H_835179117_874085"></a><a name="H_835179117_874085_PageTOC_HANNING_"></a>Return Value</h2>
+        <p>If only <i>N1</i> is specified, this function returns an array of dimensions [<i>N1</i>]. If both <i>N1</i> and <i>N2</i> are specified, this function returns an array of dimensions [<i>N1</i>, <i>N2</i>]. If any of the inputs are double-precision or if the DOUBLE keyword is set, the result is double-precision, otherwise the result is single-precision.</p>
+        <h2 class="API"><a name="H_835179117_874087"></a><a name="H_835179117_874087_PageTOC_HANNING_"></a>Arguments</h2>
+        <h3 class="Argument">N<sub>1</sub></h3>
+        <p>The number of columns in the resulting array.</p>
+        <h3 class="Argument">N<sub>2</sub></h3>
+        <p>The number of rows in the resulting array.</p>
+        <h2 class="API"><a name="H_835179117_758098"></a><a name="H_835179117_758098_PageTOC_HANNING_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="H_835179117_758100"></a><a name="H_835179117_758100_Keywords_HANNING__"></a>ALPHA</h3>
+        <p>Set this keyword equal to the width parameter of a generalized Hamming window. ALPHA must be in the range of 0.5 to 1.0. If ALPHA = 0.5 (the default) the function is called a “Hanning” window. If ALPHA = 0.54, the result is called a “Hamming” window.</p>
+        <h3 class="Keyword"><a name="H_835179117_874103"></a><a name="H_835179117_874103_Keywords_HANNING__"></a>DOUBLE</h3>
+        <p>Set this keyword to force the computations to be done in double-precision arithmetic.</p>
+        <h2 class="API"><a name="H_835179117_876590"></a><a name="H_835179117_876590_PageTOC_HANNING_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="H_835179117_880137"></a><a name="H_835179117_880137_PageTOC_HANNING_"></a>See Also</h2>
+        <p><a href="../F/FFT.htm"><a href="../A/ABS.htm">ABS</a>, <a href="../D/DINDGEN.htm">DINDGEN</a>,&#160;<a href="../F/FINDGEN.htm">FINDGEN</a>, FFT</a>, <a href="../P/PLOT.htm">PLOT</a>,  <a href="../S/SIN.htm">SIN</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

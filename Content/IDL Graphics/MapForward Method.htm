@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Methods">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>MapForward Method</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Graphics Methods.htm">Graphics Methods</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">MapForward Method</span>
+        </div>
+        <h1 class="ObjMethod">MapForward Method</h1>
+        <p>The <a name="kanchor4263"></a>MapForward method transforms map coordinates from longitude and latitude to Cartesian (x, y) coordinates, using the map projection associated with the graphic.</p>
+        <p>
+            <img src="images/MapForwardMethod.gif" />
+        </p>
+        <h2 class="API">Example</h2>
+        <p class="Code">; Set up map projection, draw a grid</p>
+        <p class="Code">mymap = MAP('Hotine Oblique Mercator', $</p>
+        <p class="Code">&#160;&#160;ELLIPSOID='GRS1980', $</p>
+        <p class="Code">&#160;&#160;MERCATOR_SCALE=0.9996d, $</p>
+        <p class="Code">&#160;&#160;LIMIT=[40, -90, 50, -80], $</p>
+        <p class="Code">&#160;&#160;CENTER_LATITUDE=45.3091667d, $</p>
+        <p class="Code">&#160;&#160;HOM_AZIM_LONGITUDE=-86, $</p>
+        <p class="Code">&#160;&#160;HOM_AZIM_ANGLE=337.25556d, $</p>
+        <p class="Code">&#160;&#160;FALSE_EASTING=2546731.496d, $</p>
+        <p class="Code">&#160;&#160;FALSE_NORTHING=-4354009.816d, $</p>
+        <p class="Code">&#160;&#160;FILL_COLOR="light_blue")</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Insert some shapes.</p>
+        <p class="Code">m1 = MAPCONTINENTS(/USA, $</p>
+        <p class="Code">&#160;&#160;FILL_COLOR="light green", COMBINE=0)</p>
+        <p class="Code">m2 = MAPCONTINENTS(/CANADA, $</p>
+        <p class="Code">&#160;&#160;FILL_COLOR="pale goldenrod")</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Convert from longitude/latitude to meters</p>
+        <p class="Code">longitudes = [-83.02, -88.50]</p>
+        <p class="Code">latitudes = [42.42, 47.17]</p>
+        <p class="Code">xy = mymap.MapForward(longitudes, latitudes)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Convert back to longitude/latitude and plot</p>
+        <p class="Code">EXPAND, xy, 2, 20, xycoordinates</p>
+        <p class="Code">lonlat = mymap.MapInverse(xycoordinates)</p>
+        <p class="Code">p = PLOT(lonlat[0,*], lonlat[1,*], 'rS', $</p>
+        <p class="Code">&#160;&#160;/OVERPLOT, /SYM_FILLED)</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result </i>= <i>graphic</i>.MapForward(<i>Longitude </i>[, <i>Latitude</i>] [, CONNECTIVITY=<i>vector</i>] [, /FILL] [, POLYGONS=<i>variable</i>] [, POLYLINES=<i>variable</i>] [,  /RADIANS] )</p>
+        <h2 class="API">Return Value</h2>
+        <p>The result is a (2, <i>n</i>) array containing the Cartesian (x, y) coordinates.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the POLYGONS or POLYLINES keyword is present, the number of points in the result may be different than the number of input points, depending upon whether clipping and splitting occurs.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Longitude</h3>
+        <p>An <i>n</i>-element vector containing the longitude values. If the <i>Latitude</i> argument is omitted, <i>Longitude</i> must be a (2, <i>n</i>) array of longitude and latitude pairs.</p>
+        <h3 class="Argument">Latitude</h3>
+        <p>An <i>n</i>-element vector containing latitude values. If this argument is omitted, <i>Longitude</i> must be a (2, <i>n</i>) array of longitude and latitude pairs.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">CONNECTIVITY</h3>
+        <p>Set this keyword to a vector containing an input connectivity list for polygons or polylines. The CONNECTIVITY keyword allows you to specify multiple polygons or polylines using a single array. </p>
+        <p>The CONNECTIVITY list is a one-dimensional integer array of the form: </p>
+        <p>
+            <img src="../images/19_10.jpg" />
+        </p>
+        <p>where each <i>m</i><sub class="italic">j</sub> is an integer specifying the number of vertices that define the polyline or polygon (the <i>vertex count</i>), and each associated set of <i>i</i><sub>0</sub>...<i>i</i><sub class="italic">m</sub><sub>-1</sub> are indices into the arrays of vertices specified by the <i>Longitude</i> and <i>Latitude</i> arguments.</p>
+        <p>For example, to draw polylines between the first, third, and sixth longitude and latitude values and the fourth, sixth, ninth, and tenth longitude and latitude values, set the CONNECTIVITY array equal to <code>[3,0,2,5,4,3,5,8,9]</code>.</p>
+        <p>To ignore a set of entries in the CONNECTIVITY array, set the vertex count, <i>m</i><sub class="italic">j</sub>, equal to zero. (Note that if you set an <i>m</i> equal to zero, you must remove the associated set of <i>i</i><sub>0</sub>...<i>i</i><sub class="italic">m</sub><sub>-1</sub> values as well.) To ignore the remaining entries in the CONNECTIVITY array, set the vertex count, <i>m</i><sub class="italic">j</sub>, equal to -1. </p>
+        <p>This keyword is ignored if neither POLYGONS nor POLYLINES is present.</p>
+        <h3 class="Keyword">FILL</h3>
+        <p>Set this keyword, along with the POLYGONS keyword, to perform a tessellation on the returned polygons after any clipping or splitting has been completed. This keyword is ignored if POLYGONS is not set.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>The use of the FILL keyword avoids having to first pass your data through MapForward, and then again through the IDLgrTessellator object. Since IDLgrPolygon can only draw convex polygons correctly, you should use the FILL keyword when your input polygon is either complex (that is, if the polygon crosses itself) or concave. Tessellation is also useful if your data contains one polygon within another, such as an island within a lake within a country. In this case the CONNECTIVITY array could be used to pass all three polygons in to MapForward, and the FILL keyword would automatically perform the correct tessellation.</p>
+        <h3 class="Keyword">POLYGONS</h3>
+        <p>Set this keyword to a named variable that will contain a connectivity array of the form described above in the CONNECTIVITY keyword.</p>
+        <p>If this keyword is present, the arrays specified by the <i>Longitude</i> and <i>Latitude</i> arguments are assumed to be the vertices of a closed polygon. In this case, polygon clipping and splitting is performed in addition to the map transform, and the connectivity array is returned in the specified variable. </p>
+        <p>If this keyword is not present, the arrays specified by the <i>Longitude</i> and <i>Latitude</i> arguments are assumed to be independent points and no clipping or splitting is performed.</p>
+        <h3 class="Keyword">POLYLINES</h3>
+        <p>Set this keyword to a named variable that will contain a connectivity array of the form described above in the CONNECTIVITY keyword.</p>
+        <p>If this keyword is present, the arrays specified by the <i>Longitude</i> and <i>Latitude</i> arguments are assumed to be the vertices of a polyline. In this case, polyline clipping and splitting is performed in addition to the map transform, and the connectivity array is returned in the specified variable. </p>
+        <p>If this keyword is not present, the arrays specified by the <i>Longitude</i> and <i>Latitude</i> arguments are assumed to be independent points and no clipping or splitting is performed.</p>
+        <h3 class="Keyword">RADIANS</h3>
+        <p>Set this keyword to indicate that the input longitude and latitude coordinates are in radians. By default, coordinates are assumed to be in degrees.</p>
+        <h2 class="API">Version History</h2>
+        <table style="mc-table-style: url('../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="MapInverse Method.htm">MapInverse Method</a>, 
+            <a href="../Reference Material/M/MAP_PROJ_FORWARD.htm">MAP_PROJ_FORWARD</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Maps">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Bubble Plots</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/maps_gallery.htm">Maps</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Bubbleplots</span>
+        </div>
+        <h1>Bubble Plots</h1>
+        <h2 class="API"><a name="BUBBLEPL"></a><a name="kanchor4204"></a>BUBBLEPLOT on a Map</h2>
+        <p>
+            <img src="../../Reference Material/images/bubbleplot_ex1.png" />
+        </p>
+        <p>This example demonstrates how to create a <a href="../../Reference Material/B/BUBBLEPLOT.htm">BUBBLEPLOT</a> that is integrated with an underlying map. The graphic above depicts several North American volcanoes with their largest eruptions (by volume) represented with the BUBBLEPLOT function. The area of each bubble is proportional to the size of the largest eruption. </p>
+        <p>First, create the underlying map using the <a href="../../Reference Material/M/MAP.htm">MAP</a> and <a href="../../Reference Material/M/MAPCONTINENTS.htm">MAPCONTINENTS</a> functions. Next, set up the variables that contain the data for the volcanic eruptions, then create the BUBBLEPLOT and a separate key. Optionally plot the center points of the bubbles using the <a href="../../Reference Material/P/PLOT.htm">PLOT</a> function.</p>
+        <p>Copy and paste the following code to the IDL command line to generate the above graphic.</p>
+        <p class="Code">; Set up the map projection.</p>
+        <p class="Code">Map = MAP('Geographic', CENTER_LONGITUDE=-122, $</p>
+        <p class="Code">&#160;&#160;&#160;DIMENSIONS=[900,700], LIMIT=[30,-160,70,-90], $</p>
+        <p class="Code">&#160;&#160;&#160;FILL_COLOR="steel blue", LINESTYLE='dotted', $</p>
+        <p class="Code">&#160;&#160;&#160;LABEL_POSITION=0, FONT_SIZE=12, $</p>
+        <p class="Code">&#160;&#160;&#160;MARGIN=[0.05,0.1,0.05,0.1], ASPECT_RATIO=0)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Insert the map boundaries and features.</p>
+        <p class="Code">m1 = MAPCONTINENTS(/USA, COMBINE=0, FILL_COLOR="MOCCASIN")</p>
+        <p class="Code">m2 = MAPCONTINENTS(/CANADA, COMBINE=0, FILL_COLOR="tan")</p>
+        <p class="Code">m3 = MAPCONTINENTS(/LAKES, FILL_COLOR="light blue")</p>
+        <p class="Code">m4 = MAPCONTINENTS(/RIVERS, COLOR="blue")</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Set up the longitudes, latitudes, eruption volumes (cubic km),</p>
+        <p class="Code">; and the names of the volcanoes.</p>
+        <p class="Code">long = [-158.2,-122.18,-122.1,-154.9,-106.94,-118.9,-111.33,-111.2, $</p>
+        <p class="Code">&#160;&#160;&#160;-121.25,-106.5,-110.7,-135.3,-121.75,-117.35]</p>
+        <p class="Code">lat = [56.9,46.18,42.9,58.26,37.75,37.7,44.33,44.33,43.68,35.9,44.4, $</p>
+        <p class="Code">&#160;&#160;&#160;60,46.85,44.53]</p>
+        <p class="Code">vol = [1,0.4,50,41,5000,600,280,2500,0.3,750,1000,850,8,600]</p>
+        <p class="Code">labels = [' Mt Aniakchak',' Mt St Helens',' Mt Mazama',' Mt Katmai', $</p>
+        <p class="Code">&#160;&#160;&#160;'La Garita','Long Valley','Henrys Fork','Island Park',' Newberry', $</p>
+        <p class="Code">&#160;&#160;&#160;'Valles Caldera','Yellowstone','Bennett Lake',' Mt Rainier','Columbia Basin']</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Specify the label positions individually to make reading them clearer, and</p>
+        <p class="Code">; choose colors for the bubbles individually to keep them distinctive.</p>
+        <p class="Code">positions = ['right','right','right','top','center','right','left','bottom', $</p>
+        <p class="Code">&#160;&#160;&#160;'right','center','top','top','right','top']</p>
+        <p class="Code">myColors = ['deep pink','deep pink','deep pink','deep pink','orange red', $</p>
+        <p class="Code">&#160;&#160;&#160;'gold','hot pink','orange red','deep pink', 'gold', 'firebrick', $</p>
+        <p class="Code">&#160;&#160;&#160;'firebrick','deep pink','gold']</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create the bubbles setting the exponent to 0.5 in order to plot</p>
+        <p class="Code">; bubble sizes as areas.</p>
+        <p class="Code">myBP = BUBBLEPLOT(long, lat, MAGNITUDE=vol, EXPONENT=0.5, /OVERPLOT, $</p>
+        <p class="Code">&#160;&#160;&#160;LABELS=labels, LABEL_FONT_SIZE=8, LABEL_ALIGNMENT=0.0, $</p>
+        <p class="Code">&#160;&#160;&#160;LABEL_POSITION=positions, COLOR=myColors)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Optional - plot the centerpoints of the bubbles.</p>
+        <p class="Code">myPlot = SCATTERPLOT(long, lat, /OVERPLOT, SYMBOL='dot', $</p>
+        <p class="Code">&#160;&#160;&#160;SYM_SIZE=2, SYM_FILLED=1, SYM_FILL_COLOR='black')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Set up the plot title and font size.</p>
+        <p class="Code">myBP.Title = 'Select Pre-Holocene Volcanic Eruptions of North America ' + $</p>
+        <p class="Code">&#160;&#160;&#160;'by Volume* $(km^3)$' </p>
+        <p class="Code">myBP.Title.Font_size = 15</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add an annotation in the lower left of the map using map coordinates.</p>
+        <p class="Code">areaText = TEXT(-159, 32, TARGET=myBP, $</p>
+        <p class="Code">&#160;&#160;&#160;'*Bubble areas proportional to volume of eruption.', $</p>
+        <p class="Code">&#160;&#160;&#160;/DATA, COLOR='black', FONT_SIZE=11, FONT_STYLE='italic')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use another call to BUBBLEPLOT to create a color key.</p>
+        <p class="Code">; First, set up the variables.</p>
+        <p class="Code">x = [1,1,1,1] ; line up the bubbles vertically</p>
+        <p class="Code">y = [.46,.71,.86,.95] ; values to evenly space these particular bubbles</p>
+        <p class="Code">myLegendColors = ['orange red','firebrick','gold','deep pink']</p>
+        <p class="Code">bSizes = [2500,750,250,50]</p>
+        <p class="Code">bLabels = ['&gt;2500','750-2499','50-750','&lt;50']</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Call BUBBLEPLOT carrying over the EXPONENT from the original</p>
+        <p class="Code">; BUBBLEPLOT - this creates the key in the lower left of the map.</p>
+        <p class="Code">myLegend = BUBBLEPLOT(x, y, MAGNITUDE=bSizes, COLOR=myLegendColors, $</p>
+        <p class="Code">&#160;&#160;&#160;EXPONENT=myBP.EXPONENT, XRANGE=[.8,1.2], YRANGE=[0,1], $</p>
+        <p class="Code">&#160;&#160;&#160;POSITION=[.1,.1,.17,.38], /CURRENT, AXIS_STYLE=0, LABELS=bLabels, $</p>
+        <p class="Code">&#160;&#160;&#160;LABEL_FONT_SIZE=8, TITLE='Color Key - Volume'+ '$(km^3)$', $</p>
+        <p class="Code">&#160;&#160;&#160;FONT_SIZE=10, FONT_STYLE='italic', MAX_VALUE=myBP.MAX_VALUE)</p>
+        <p class="Code">&#160;</p>
+        <p>For additional examples using BUBBLEPLOT, see: <a href="../LongExamples/EnvMonitoring/EM1_Gridding.htm">Model the Study Area and Setting</a> in the <a href="../LongExamples/EnvMonitoring/EM_Splash.htm">Environmental Monitoring Long Example</a>.</p>
+        <h2>See Also</h2>
+        <p><a href="../../Creating IDL Programs/Appendices/Constant_System_Variable.htm">!COLOR</a>, <a href="../../Reference Material/B/BUBBLEPLOT.htm">BUBBLEPLOT</a>,			<a href="../../IDL Graphics/FormattingSymsAndLines.htm">Formatting IDL&#160;Graphics Symbols and Lines</a>, <a href="../GraphicsWindowInterface.htm">Graphics Window Interface</a>, <a href="../../Reference Material/M/MAP.htm">MAP</a>, <a href="../../Reference Material/M/MAPCONTINENTS.htm">MAPCONTINENTS</a>,		 <a href="../../Reference Material/P/PLOT.htm">PLOT</a>, <a href="../../Reference Material/T/TEXT.htm">TEXT</a> <![CDATA[ ]]></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

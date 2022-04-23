@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Data Types">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Structure References</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDL_Data_Types.htm">Data Types</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Structure References</span>
+        </div>
+        <h1><a name="structures_2305844932_128102"></a><a name="kanchor4511"></a><a name="structures_2305844932_21317"></a>Structure References</h1>
+        <p>The basic syntax of a reference to a field within a structure is as follows:</p>
+        <p class="indent"><i>Variable_Name.Tag_Name</i>
+        </p>
+        <p><i>Variable_Name</i> must be a variable that contains a structure. <i>Tag_Name</i> is the name of the field and must exist in the structure. If the field referred to by the tag name is itself a structure, the <i>Tag_Name</i> can optionally be followed by one or more additional tag names, as shown by the following example:</p>
+        <p class="Code">var.tag1.tag2</p>
+        <p>Each tag name, except possibly the last, must refer to a field that contains a structure.</p>
+        <h2 class="API">Number of Structure Tags</h2>
+        <p>The function N_TAGS(<i>Structure</i>) returns the <a name="kanchor4512"></a>number of fields in a structure. To obtain the size, in bytes, of a structure call N_TAGS with the /LENGTH keyword.</p>
+        <h2 class="API"><a name="structures_2305844932_83799"></a>Names of Structure Tags</h2>
+        <p>The function TAG_NAMES(<i>Structure</i>) returns a string array containing the names of each tag. To return the name of the structure itself, call TAG_NAMES with the /STRUCTURE_NAME keyword.</p>
+        <h2 class="API">Access Fields by Tag Number</h2>
+        <p>A tag can be referenced using its index rather than its tag name. The tag index should be enclosed in parentheses, as follows:</p>
+        <p class="indent"><i>Variable_Name</i>.(<i>Tag_Index</i>)... ... ...</p>
+        <p>The <i>Tag_Index</i> ranges from zero to the number of fields minus one.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The <i>Tag_Index</i> is an expression, the result of which is taken to be a tag position. In order for the IDL parser to understand that this is the case, you must enclose the Tag_Index in parentheses. This is not an array indexing operation, so the use of square brackets [&#160;] is not allowed in this context.</p>
+        <h2 class="API"><a name="structures_2305844932_99663"></a>Subscripted Structure References</h2>
+        <p>A subscript specification can be appended to the variable or tag names if the variable is an array of structures or if the field referred to by the tag contains an array. Scalar fields within a structure can also be subscripted, provided the subscript is zero.</p>
+        <p class="indent"><i>Variable_Name.Tag_Name[Subscripts]</i>
+        </p>
+        <p class="indent"><i>Variable_Name[Subscripts].Tag_Name...</i>
+        </p>
+        <p class="indent"><i>Variable_Name[Subscripts].Tag_Name[Subscripts] </i>
+        </p>
+        <p>Each subscript is applied to the variable or tag name it immediately follows. The syntax and meaning of the subscript specification is similar to simple array subscripting in that it can contain a simple subscript, an array of subscripts, or a subscript range. If a variable or field containing an array is referenced without a subscript specification, all elements of the item are affected. Similarly, when a variable that contains an array of structures is referenced without a subscript but with a tag name, the designated field in all array elements is affected. The complete syntax of references to structures follows. (Optional items are enclosed in braces, {}.)</p>
+        <p class="indent"><i>Structure_reference</i>:= <i>Variable_Name</i>{<i>[Subscripts]</i>}.<i>Tags</i></p>
+        <p class="indent"><i>Tags</i>:= {<i>Tags</i>.}<i>Tag</i></p>
+        <p class="indent"><i>Tag</i>:= <i>Tag_Name</i>{<i>[Subscripts]</i>}</p>
+        <p>For example, all of the following are valid structure references:</p>
+        <p class="Code">A.B</p>
+        <p class="Code">A.B[N, M]</p>
+        <p class="Code">A[12].B</p>
+        <p class="Code">A[3:5].B[*, N]</p>
+        <p class="Code">A[12].B.C[X, *]</p>
+        <h2 class="API"><a name="kanchor4513"></a>Storing Into Array Fields</h2>
+        <p>The semantics of storing into structure array fields is slightly different than storing into simple arrays. The main difference is that with structures, a subscript range must be used when storing an array into part of an array field. With normal arrays, when storing an array inside part of another array, use the subscript of the lower-left corner, not a range specification. Other differences occur because the size and type of a field are fixed by the original structure definition, and the normal semantics of dynamic binding are not applicable. The rules for storing into array fields are as follows:</p>
+        <p>VAR.ARRAY_TAG = <i>Scalar_Expression</i></p>
+        <p>All elements of VAR.tag are set to<i> Scalar_Expression</i>. For example:</p>
+        <p class="Code">;Set all 12 elements of A.inten to 100.</p>
+        <p class="Code">A.inten = 100</p>
+        <p>VAR.TAG = <i>Array_Expression</i></p>
+        <p>Each element of <i>Array_Expression</i> is copied into the array VAR.tag. If <i>Array_Expression</i> contains more elements than the destination array does, an error results. If it contains fewer elements than VAR.TAG, the unmatched elements remain unchanged. For example:</p>
+        <p class="Code">;Set A.inten to the 12 numbers 0, 1, 2,..., 11.</p>
+        <p class="Code">A.inten = FINDGEN(12)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Set A.inten[0] to 1 and A.inten[1] to 2. The other elements </p>
+        <p class="Code">;remain unchanged.</p>
+        <p class="Code">A.inten = [1, 2]</p>
+        <p>VAR.TAG[<i>Subscript</i>] = <i>Scalar_Expression</i></p>
+        <p>The value of the scalar expression is simply copied into the designated element of the destination. If <i>Subscript</i> is an array of subscripts, the scalar expression is copied into the designated elements. For example:</p>
+        <p class="Code">;Set the sixth element of A.inten to 100. </p>
+        <p class="Code">A.inten[5] = 100</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Set elements 2, 4, and 6 to 100.</p>
+        <p class="Code">A.inten[[2, 4, 6]] = 100</p>
+        <p>VAR.TAG[<i>Subscript</i>] = <i>Array_Expression</i></p>
+        <p>Unless VAR.tag is an array of structures, the subscript must be an array. Each element of <i>Array_Expression</i> is copied into the element given by the corresponding element subscript. For example:</p>
+        <p class="Code">;Set elements 2, 4, and 6 to the values 5, 7, and 9 respectively.</p>
+        <p class="Code">A.inten[[2, 4, 6]] = [5, 7, 9]</p>
+        <p>VAR.TAG[<i>Subscript_Range</i>] = <i>Scalar_Expression</i></p>
+        <p>The value of the scalar expression is stored into each element specified by the subscript range. For example:</p>
+        <p class="Code">;Sets elements 8, 9, 10, and 11 to the value 5.</p>
+        <p class="Code">A.inten[8:*] = 5</p>
+        <p>VAR.TAG[<i>Subscript_Range</i>] = <i>Array_Expression</i></p>
+        <p>Each element of the array expression is stored into the element designated by the subscript range. The number of elements in the array expression must agree with the size of the subscript range. For example:</p>
+        <p class="Code">;Sets elements 3, 4, 5, and 6 to the numbers 0, 1, 2, and 3, ;respectively.</p>
+        <p class="Code">A.inten[3:6] = FINDGEN(4)</p>
+        <h2 class="API"><a name="structures_2305844932_127896"></a><a name="structures_2305844932_37564"></a>Examples of Structure References</h2>
+        <p>The name of the star contained in A is referenced as A.NAME. The entire intensity array is referred to as A.INTEN, while the n-th element of A.INTEN is A.INTEN[N]. The following are valid IDL statements using the STAR structure:</p>
+        <p class="Code">;Store a structure of type STAR into variable A. Define the values </p>
+        <p class="Code">;of all fields.</p>
+        <p class="Code">A = {star, name:'SIRIUS', ra:30., dec:40., inten:INDGEN(12)}</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Set name field. Other fields remain unchanged.</p>
+        <p class="Code">A.name = 'BETELGEUSE'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Print name, right ascension, and declination.</p>
+        <p class="Code">PRINT, A.name, A.ra, A.dec</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Set Q to the value of the sixth element of A.inten. Q will be a </p>
+        <p class="Code">;floating-point scalar.</p>
+        <p class="Code">Q = A.inten[5]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Set ra field to 23.21.</p>
+        <p class="Code">A.ra = 23.21</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Zero all 12 elements of intensity field. Because the type and size </p>
+        <p class="Code">;of A.inten are fixed by the structure definition, the semantics of </p>
+        <p class="Code">;assignment statements is different than with normal variables.</p>
+        <p class="Code">A.inten = 0</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Store fourth thru seventh elements of inten field in variable B.</p>
+        <p class="Code">B = A.inten[3:6]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;The integer 12 is converted to string and stored in the name field </p>
+        <p class="Code">;because the field is defined as a string.</p>
+        <p class="Code">A.name = 12</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Copy A to B. The entire structure is copied and B contains a STAR </p>
+        <p class="Code">;structure.</p>
+        <p class="Code">B = A</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

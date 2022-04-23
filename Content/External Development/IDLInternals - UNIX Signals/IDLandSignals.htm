@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - UNIX Signals">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDL and Signals</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="InternalsUNIX.htm">IDLInternals - UNIX Signals</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDL and Signals</span>
+        </div>
+        <h1><a name="kanchor5478"></a>IDL and Signals</h1>
+        <p>Signals pose one of the more difficult challenges faced by the UNIX programmer. Although seemingly simple, they are a tough portability problem because there are several variants, and their semantics are subtle, inconvenient, and easily confused. These issues are only magnified when signals are used in a program like IDL that employs multiple threads. IDL has always done whatever is necessary with signals in order to get its job done, but its signal assumptions can also affect user written code linked to it.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This discussion refers primarily to UNIX IDL. Microsoft Windows uses different mechanisms to solve these problems.</p>
+        <p>The following is a brief list of problems and contradictions inherent in UNIX signals. For a more complete description, see Chapter 10 of <i>External Programming in the UNIX Environment</i> by W. Richard Stevens.</p>
+        <ul>
+            <li value="1">POSIX signals (sigaction) promise to unify and simplify signals, but not all platforms support them fully.</li>
+            <li value="2">You can only have one signal handler function registered for each signal. This means that if one part of a program uses a signal, the rest of the program must leave that signal alone.</li>
+            <li value="3">In order to meet the needs of programs originally developed under different UNIX systems (AT&amp;T System V, BSD, Posix), most UNIX implementations provide more than one package of signal functions. Typically, a given program is restricted to one of these libraries. If a programmer links code into IDL that chooses a library or signal options different from that used by IDL itself, unexpected results may occur.</li>
+            <li value="4">The number and exact semantics of some signals differ in different versions.</li>
+            <li value="5">Details of signal blocking differ.</li>
+            <li value="6">Some System V implementations of signals are unreliable, meaning that signals can occur in a process and be missed.</li>
+            <li value="7">Some older System V systems reset the handling action to <b>SIG_DFL</b> before calling the handler. This opens a window in time where two signals in a row can cause the process to be killed. Also, the signal handler must re-establish itself every time it is called.</li>
+            <li value="8">On most platforms, if a signal is generated more than once while it is blocked, the second and subsequent occurrences are lost. In other words, most UNIX implementations do not queue signals.</li>
+        </ul>
+        <p>These are among the reasons that most libraries avoid signals, and leave their use to the programmer. IDL, however, must use signals to function properly. In order to allow users to link their code into IDL while using signals, IDL provides a signal API built on top of the signal mechanism supported by the target platform. The IDL signal API has the following attributes:</p>
+        <ul>
+            <li value="1">It disallows use of <b>SIGTRAP</b> and <b>SIGFPE</b>. These signals are reserved to IDL.</li>
+            <li value="2">It disallows use of <b>SIGALRM</b>. Most uses for <b>SIGALRM</b> are provided by the IDL timer API.</li>
+            <li value="3">It works with all other signals, including those IDL doesn’t currently use, so the interface won’t change over time.</li>
+            <li value="4">It allows multiple signal handlers for each signal, so IDL and other code can use the same signal simultaneously.</li>
+            <li value="5">It unifies the signal interface by supplying a stable consistent interface with known behavior to the underlying system signal mechanism.</li>
+            <li value="6">It keeps IDL in charge of which signal package is used and how.</li>
+        </ul>
+        <p>This is not a perfect solution, it is a compromise between the needs of IDL and programmers wishing to link code with it. Usually, the IDL signal abstraction is sufficient, but it does have the following limitations:</p>
+        <ul>
+            <li value="1">The calling program must not attempt to catch <b>SIGTRAP</b> or <b>SIGFPE</b>, either directly or through library routines that use these signals to achieve their ends. Furthermore, the IDL signal abstraction does not allow the caller to catch these signals, so your program must leave exception handling to IDL.</li>
+            <li value="2">The caller loses control over signal package choice and some minor signal abilities.</li>
+            <li value="3">Having multiple signal handler routines for a given signal opens the possibility that one handler might do something that causes problems for the others (like change the signal mask, or <b>longjmp()</b>). To minimize such problems, user code linked into IDL must not call the actual system signal routines, and must not longjmp() out of signal handlers—a tactic that is usually allowed, but which would seriously damage IDL’s signal state.</li>
+            <li value="4">Since there may be more than one signal handler registered for a given signal, the signal dispositions of <b>SIG_IGN</b> and <b>SIG_DFL</b> are not directly available to the caller as they would be if you were allowed to use the system signal facilities directly.</li>
+        </ul>
+        <p>If you find that these restrictions are too limiting for your application, chances are your code is not compatible with IDL and should be executed in a separate process. We then encourage you to consider running IDL in a separate process and to use an interprocess communication mechanism such as RPC.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>File Unit Manipulations </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="files_2839720996_2882799"></a><a name="files_2839720996_94072"></a>File Unit Manipulations </h1>
+        <p>The following sections describe common tasks when working with file units. </p>
+        <h2 class="API"><a name="kanchor5651"></a><a name="files_2839720996_84223"></a>Flushing File Units</h2>
+        <p>For efficiency, IDL buffers its input/output in memory. Therefore, when data are output, there is a window of time during which data are in memory and have not been actually placed into the file. Normally, this behavior is transparent to the user (except for the improved performance). The FLUSH routine exists for those rare occasions where a program needs to be certain that the data has actually been written to the file immediately. For example, use the statement,</p>
+        <p class="Code">FLUSH, 1</p>
+        <p>to flush file unit one.</p>
+        <p>See <a href="../../Reference Material/F/FLUSH.htm#F_848155245_676952">FLUSH</a>for details.</p>
+        <h2 class="API"><a name="kanchor5652"></a><a name="files_2839720996_69180"></a>Positioning<a name="kanchor5653"></a> File Pointers</h2>
+        <p>Each open file unit has a current file pointer associated with it. This file pointer indicates the position in the file at which the next input/output operation will take place. The file position is specified as the number of bytes from the start of the file. The first position in the file is position zero. The following statement will rewind file unit 1 to its start:</p>
+        <p class="Code">POINT_LUN, 1, 0</p>
+        <p>The following sequence of statements will position it at the end of the file:</p>
+        <p class="Code">tmp = FSTAT(1)</p>
+        <p class="Code">POINT_LUN, 1, tmp.size</p>
+        <p>POINT_LUN has the following operating-system specific behavior:</p>
+        <ul>
+            <li value="1"><b>UNIX:</b> the current file pointer can be positioned arbitrarily – moving to a position beyond the current end-of-file causes the file to grow out to that point. The gap created is filled with zeroes.</li>
+            <li value="2"><b>Windows:</b> the current file pointer can be positioned arbitrarily – moving to a position beyond the current end-of-file causes the file to grow out to that point. Unlike UNIX, the gap created is filled with arbitrary data instead of zeroes.</li>
+        </ul>
+        <p>See <a href="../../Reference Material/P/POINT_LUN.htm#P_817877613_678184">POINT_LUN</a>for details.</p>
+        <h2 class="API"><a name="kanchor5654"></a><a name="files_2839720996_76781"></a>Testing for End-Of-File</h2>
+        <p>The EOF function is used to test a f<a name="kanchor5655"></a>ile unit to see if it is currently positioned at the end of the file. It returns true (1) if the end-of-file condition is true and false (0) otherwise.</p>
+        <p>For example, to read the contents of a file and print it on the screen, use the following statements:</p>
+        <p class="Code">;Open file demo.doc for reading.</p>
+        <p class="Code">OPENR, 1, 'demo.doc'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Create a variable of type string.</p>
+        <p class="Code">LINE = ''</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Read and print each line until the end of the file is encountered. </p>
+        <p class="Code">WHILE(~ EOF(1)) DO BEGIN READF,1,LINE &amp; PRINT,LINE &amp; END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Done with the file.</p>
+        <p class="Code">CLOSE, 1 </p>
+        <p>See <a href="../../Reference Material/E/EOF.htm#E_841667181_984141">EOF</a>for details.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Type Conversion">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Converting Arguments to C Scalars</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="InternalsTypeConv.htm">IDLInternals - Type Conversion</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Converting Arguments to C Scalars</span>
+        </div>
+        <h1><a name="kanchor5475"></a>Converting Arguments to C Scalars</h1>
+        <p>The routines described in this section convert the value of their IDL_VARIABLE argument to the C scalar type indicated by their name. <b>IDL_MEMINTScalar()</b> and <b>IDL_FILEINTScalar()</b> exist for processing memory and file sizes without the need to know their actual types, as discussed in “IDL_MEMINT and IDL_FILEINT Types”. The converted value is returned as the function value. The functions are defined as:</p>
+        <p class="Code">IDL_LONG IDL_LongScalar(IDL_VPTR p) </p>
+        <p class="Code">IDL_ULONG IDL_ULongScalar(IDL_VPTR v) </p>
+        <p class="Code">IDL_LONG64 IDL_Long64Scalar(IDL_VPTR v) </p>
+        <p class="Code">IDL_ULONG64 IDL_ULong64Scalar(IDL_VPTR v) </p>
+        <p class="Code">double IDL_DoubleScalar(IDL_VPTR p) </p>
+        <p class="Code">IDL_MEMINT IDL_MEMINTScalar(IDL_VPTR p) </p>
+        <p class="Code">IDL_FILEINT IDL_FILEINTScalar(IDL_VPTR p)</p>
+        <p>If these functions are unable to perform the conversion (e.g., the argument is a file variable, an array, etc.), they issue a descriptive error and jump back to the interpreter. By using these functions, you avoid having to do any of the type checking described in <a href="../IDLInternals - Error Handling/CheckingArguments.htm">Checking Arguments</a>.</p>
+        <p>For example, the following IDL system function (named PRINT_LONG) prints the value of its first argument, converted to an IDL_LONG 32-bit integer:</p>
+        <p class="Code">IDL_VPTR print_long(int argc, IDL_VPTR argv[], char *argk)</p>
+        <p class="Code">{</p>
+        <p class="Code">printf("%d\n", IDL_LongScalar(argv[0]));</p>
+        <p class="Code">}</p>
+        <p>Executing it as:</p>
+        <p class="Code">PRINT_LONG, 23D</p>
+        <p>gives the output:</p>
+        <p class="Code">23</p>
+        <p>as expected, while the statement:</p>
+        <p class="Code">PRINT_LONG, FINDGEN(10)</p>
+        <p>causes the error:</p>
+        <p class="Code">% PRINT_LONG: Expression must be a scalar in this context:</p>
+        <p class="Code">&lt;FLOAT Array(10)&gt;</p>
+        <p class="Code">% Execution halted at $MAIN$ .</p>
+        <p>because it is not possible to convert an array (the result of <a href="../../Reference Material/F/FINDGEN.htm">FINDGEN</a>) to a scalar.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

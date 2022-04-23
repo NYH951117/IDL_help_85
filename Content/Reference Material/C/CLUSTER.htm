@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>CLUSTER </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">CLUSTER</span>
+        </div>
+        <h1 class="Routine"><a name="C_854643309_862474"></a><a name="kanchor264"></a><a name="kanchor265"></a>CLUSTER </h1>
+        <p>The CLUSTER function computes the classification of an <i>n</i>-column, <i>m</i>-row array, where <i>n</i> is the number of variables and <i>m</i> is the number of observations or samples. CLUST_WTS uses <i>k</i>-means clustering. With this technique, CLUST_WTS starts with k random clusters and then iteratively moves items between clusters, minimizing variability within each cluster and maximizing variability between clusters.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Because the initial clusters are chosen randomly, your results may differ slightly each time the CLUST_WTS routine is invoked, even for the same input data. For data with well-defined clusters the differences should be slight. For randomly-scattered data (no distinguishable clusters), the results may be significantly different, which may indicate that k-means clustering is not appropriate for your data.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>For hierarchical tree clustering, see the <a href="CLUSTER_TREE.htm#C_854643309_1074886">CLUSTER_TREE</a> function.</p>
+        <p>For more information on cluster analysis, see:</p>
+        <p>Everitt, Brian S. <i>Cluster Analysis</i>. New York: Halsted Press, 1993. ISBN 0-470-22043-0</p>
+        <h2 class="API"><a name="C_854643309_862587"></a>Examples</h2>
+        <p class="Code">; Construct 3 separate clusters in a 3D space:<br />n&#160;=&#160;50<br />c1&#160;=&#160;RANDOMN(seed, 3, n)<br />c1[0:1,*]&#160;-=&#160;3<br />c2&#160;=&#160;RANDOMN(seed, 3, n)<br />c2[0,*]&#160;+=&#160;3<br />c2[1,*]&#160;-=&#160;3<br />c3&#160;=&#160;RANDOMN(seed, 3, n)<br />c3[1:2,*]&#160;+=&#160;3<br />array&#160;=&#160;[[c1], [c2], [c3]]<br /><br />; Compute cluster weights, using three clusters: <br />weights&#160;=&#160;CLUST_WTS(array, N_CLUSTERS&#160;=&#160;3) <br /><br />; Compute the classification of each sample: <br />result&#160;=&#160;CLUSTER(array, weights, N_CLUSTERS&#160;=&#160;3)<br /><br />; Plot each cluster using a different symbol:<br />IPLOT, array[*, WHERE(result eq 0)], $<br />&#160;&#160;&#160;LINESTYLE&#160;=&#160;6, SYM_INDEX&#160;=&#160;2<br />IPLOT, array[*, WHERE(result eq 1)], /OVERPLOT, $<br />&#160;&#160;&#160;LINESTYLE&#160;=&#160;6, SYM_INDEX&#160;=&#160;4<br />IPLOT, array[*, WHERE(result eq 2)], /OVERPLOT, $<br />&#160;&#160;&#160;LINESTYLE&#160;=&#160;6, SYM_INDEX&#160;=&#160;1</p>
+        <p>
+            <img src="../../images/cluster1.gif" />
+        </p>
+        <h2 class="API"><a name="C_854643309_862569"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = CLUSTER( <i>Array</i>,<i> Weights</i> [,&#160;/<a href="#C_854643309_862580" class="selected">DOUBLE</a>] [,&#160;<a href="#C_854643309_862583" class="selected">N_CLUSTERS</a>=<i>value</i>] )</p>
+        <h2 class="API"><a name="C_854643309_1074836"></a>Return Value</h2>
+        <p>Results in a 1-column, <i>m</i>-row array of cluster number assignments that correspond to each sample. </p>
+        <h2 class="API"><a name="C_854643309_862573"></a>Arguments</h2>
+        <h3 class="Argument">Array</h3>
+        <p>An <i>n</i>-column, <i>m</i>-row array of type float or double.</p>
+        <h3 class="Argument">Weights</h3>
+        <p>An array of weights (the cluster centers) computed using the CLUST_WTS function. The dimensions of this array vary according to keyword values.</p>
+        <h2 class="API"><a name="C_854643309_862579"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="C_854643309_862580"></a>DOUBLE</h3>
+        <p>Set this keyword to force the computation to be done in double-precision arithmetic.</p>
+        <h3 class="Keyword"><a name="C_854643309_862583"></a>N_CLUSTERS</h3>
+        <p>Set this keyword equal to the number of clusters. The default is based upon the row dimension of the <i>Weights</i> array.</p>
+        <h2 class="API"><a name="C_854643309_1051949"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="C_854643309_1052118"></a><a name="C_854643309_1052118_PageTOC_CLUSTER_"></a>See Also</h2>
+        <p><a href="CLUST_WTS.htm#C_854643309_862463">CLUST_WTS</a>, <a href="CLUSTER_TREE.htm#C_854643309_1074886">CLUSTER_TREE</a>, <a href="../P/PCOMP.htm#P_817877613_1070461">PCOMP</a>, <a href="../S/STANDARDIZE.htm#S_820040301_1074850">STANDARDIZE</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

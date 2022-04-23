@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Obsolete Internal Interfaces">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Interfaces Obsoleted in IDL 5.2.1</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="ObsIntInterfaces.htm">Obsolete Internal Interfaces</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Interfaces Obsoleted in IDL 5.2.1</span>
+        </div>
+        <h1>Interfaces Obsoleted in IDL 5.2.1</h1>
+        <p>Changes were required to implement the ability to enable and disable IDL system routines from runtime and callable IDL. Rather than alter the IDL_SYSFUN_DEF structure, and the IDL_AddSystemRoutine() function in an incompatible way, a new structure (IDL_SYSFUN_DEF2) and new function (IDL_SysRtnAdd()) have been created to accomplish the new tasks, and the old structure and function have been obsoleted.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The interfaces described in this section are considered functionally obsolete although they continue to be supported by <span class="DocumentTitleCompanyName">Exelis VIS</span>. This section is supplied to help those maintaining older code. New code should be written using the information found in <a href="../Adding System Routines/RegisterRoutines.htm">Registering Routines</a>.</p>
+        <h2>Registering Routines</h2>
+        <p>The IDL_AddSystemRoutine() function adds system routines to IDL’s internal tables of system functions and procedures. As a programmer, you will need to call this function directly if you are linking a version of IDL to which you are adding routines, although this is very rare and not considered to be a good practice for maintainability reasons. More commonly, you use IDL_AddSystemRoutine() in the IDL_Load() function of a Dynamically Loadable Module (DLM).</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span><a href="../Adding System Routines/LinkImage.htm">LINKIMAGE</a> or <a href="../Adding System Routines/DLM.htm">DLMs</a> are the preferred way to add system routines to IDL because they do not require building a separate IDL program. These mechanisms are discussed in the following sections of this chapter.</p>
+        <p class="Code">int IDL_AddSystemRoutine(IDL_SYSFUN_DEF *defs, int is_function, int cnt);</p>
+        <p>It returns True if it succeeds in adding the routine or False in the event of an error:</p>
+        <h3>defs</h3>
+        <p>An array of IDL_SYSFUN_DEF structures, one per routine to be declared. This array must be defined with the C language static storage class because IDL keeps pointers to it. defs must be sorted by routine name in ascending lexical order.</p>
+        <h3>is_function</h3>
+        <p>Set this parameter to IDL_TRUE if the routines in defs are functions, and IDL_FALSE if they are procedures.</p>
+        <h3>cnt</h3>
+        <p>The number of IDL_SYSFUN_DEF structures contained in the defs array. The definition of IDL_SYSFUN_DEF is:</p>
+        <p class="Code">typedef IDL_VARIABLE *(* IDL_FUN_RET)();</p>
+        <p class="Code">typedef struct { IDL_FUN_RET funct_addr; char *name;</p>
+        <p class="Code">UCHAR arg_min;</p>
+        <p class="Code">UCHAR arg_max; UCHAR flags</p>
+        <p class="Code">} IDL_SYSFUN_DEF;</p>
+        <h3>funct_addr</h3>
+        <p>Address of the function implementing the system routine.</p>
+        <h3>name</h3>
+        <p>The name by which the routine is to be invoked from within IDL. This should be a pointer to a null terminated string. The name should be capitalized. If the routine is an object method, the name should be fully qualified, which means that it should include the class name at the beginning followed by two consecutive colons, followed by the method name (e.g. CLASS::METHOD).</p>
+        <h3>arg_min</h3>
+        <p>The minimum number of arguments allowed for the routine.</p>
+        <h3>arg_max</h3>
+        <p>The maximum number of arguments allowed for the routine. If the routine does not place an upper value on the number of arguments, use the value IDL_MAXPARAMS.</p>
+        <h3>flags</h3>
+        <p>A bitmask that provides additional information about the routine. Its value can be any combination of the following values (bitwise OR’d together to specify more than one at a time) or zero if no options are necessary:</p>
+        <p>IDL_SYSFUN_DEF_F_OBSOLETE</p>
+        <p>IDL should issue a warning message if this routine is called and</p>
+        <p>!WARN.OBS_ROUTINE is set.</p>
+        <p>IDL_SYSFUN_DEF_F_KEYWORDS</p>
+        <p>This routine accepts keywords as well as plain arguments.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

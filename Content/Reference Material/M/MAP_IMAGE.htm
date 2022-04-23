@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: M">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>MAP_IMAGE</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="M_list.htm">Routines: M</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">MAP_IMAGE</span>
+        </div>
+        <h1 class="Routine"><a name="dg_routines_3604229493_891676"></a><a name="dg_routines_3604229493_30580"></a>MAP_IMAGE</h1>
+        <p><a name="kanchor1775"></a><a name="kanchor1776"></a>The MAP_IMAGE function warps an image (or other dataset) to a Direct Graphics map projection. This function provides an easy method for displaying geographical data as an image on a map. The MAP_SET or MAP_PROJ_INIT procedures should be called prior to calling MAP_IMAGE.</p>
+        <p>MAP_IMAGE works in image (graphic) space. For each destination pixel (when COMPRESS is set to one) MAP_IMAGE calculates the latitude and longitude by applying the inverse map projection. This latitude and longitude are then used to index and interpolate the <i>Image</i> argument, obtaining an interpolated value for the destination pixel. The time required by MAP_IMAGE depends mainly on the number of pixels in the destination and the setting of the COMPRESS parameter.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>MAP_IMAGE is more efficient than MAP_PATCH when the input data set is large compared to the destination area. If the converse is true, MAP_PATCH is more efficient. </p>
+        <h2 class="API"><a name="dg_routines_3604229493_891805"></a><a name="dg_routines_3604229493_887776_PageTOC_MAP_IMAGE_"></a>Examples</h2>
+        <p>The following lines of code set up an orthographic map projection and warp a simple image to it.</p>
+        <p class="Code">; Create a simple image to be warped:<br />image = BYTSCL(SIN(DIST(400)/10))<br /><br />; Display the image so we can see what it looks like before<br />; warping:<br />TV, image<br />latmin = -65<br />latmax = 65<br /><br />; Left edge is 160 East:<br />lonmin = 160 <br /><br />; Right edge is 70 West = +360:<br />lonmax = -70 + 360<br />MAP_SET, 0, -140, /ORTHOGRAPHIC, /ISOTROPIC, $<br />&#160;&#160;&#160;LIMIT=[latmin, lonmin, latmax, lonmax]<br />result = MAP_IMAGE(image,Startx,Starty, COMPRESS=1, $<br />&#160;&#160;&#160;LATMIN=latmin, LONMIN=lonmin, $<br />&#160;&#160;&#160;LATMAX=latmax, LONMAX=lonmax)<br /><br />; Display the warped image on the map at the proper position:<br />TV, result, Startx, Starty<br /><br />; Draw gridlines over the map and image:<br />MAP_GRID, latdel=10, londel=10, /LABEL, /HORIZON<br /><br />; Draw continent outlines:<br />MAP_CONTINENTS, /coasts</p>
+        <h2 class="API"><a name="dg_routines_3604229493_891705"></a><a name="dg_routines_3604229493_887730_PageTOC_MAP_IMAGE_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = MAP_IMAGE( <i>Image</i> [,&#160;<i>Startx</i>, <i>Starty</i> [,&#160;<i>Xsize</i>, <i>Ysize</i>]] [,&#160;<a href="#dg_routines_3604229493_891761" class="selected">LATMIN</a>=<i>degrees</i>{-90 to 90}] [,&#160;<a href="#dg_routines_3604229493_891764" class="selected">LATMAX</a>=<i>degrees</i>{-90 to 90}] <br />[,&#160;<a href="#dg_routines_3604229493_891767" class="selected">LONMIN</a>=<i>degrees</i>{-180 to 180}] [,&#160;<a href="#dg_routines_3604229493_891770" class="selected">LONMAX</a>=<i>degrees</i>{-180 to 180}] [,&#160;/<a href="#dg_routines_3604229493_891773" class="selected">BILINEAR</a>] [,&#160;<a href="#dg_routines_3604229493_891776" class="selected">COMPRESS</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_891779" class="selected">SCALE</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_891782" class="selected">MAP_STRUCTURE</a>=<i>structure</i>] [,&#160;<a href="#dg_routines_3604229493_891788" class="selected">MASK</a>=<i>variable</i>] <br />[,&#160;<a href="#dg_routines_3604229493_891792" class="selected">MAX_VALUE</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_891795" class="selected">MIN_VALUE</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_891799" class="selected">MISSING</a>=<i>value</i>] )</p>
+        <h2 class="API"><a name="dg_routines_3604229493_891744"></a><a name="dg_routines_3604229493_63966"></a>Return Value</h2>
+        <p>Returns the image or dataset warped to the current map projection.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_891747"></a><a name="dg_routines_3604229493_887732_PageTOC_MAP_IMAGE_"></a>Arguments</h2>
+        <h3 class="Argument">Image</h3>
+        <p>A two-dimensional array containing the image to be overlaid on the map.</p>
+        <h3 class="Argument">Startx</h3>
+        <p>A named variable that, upon return, contains the X coordinate position where the left edge of the image should be placed on the screen.</p>
+        <h3 class="Argument">Starty</h3>
+        <p>A named variable that, upon return, contains the Y coordinate position where the left edge of the image should be placed on the screen.</p>
+        <h3 class="Argument">Xsize</h3>
+        <p>A named variable that, upon return, contains the width of the image expressed in graphic coordinate units. If the current graphics device uses scalable pixels (PostScript, for example), the values of <i>Xsize</i> and <i>Ysize</i> should be passed to the TV procedure.</p>
+        <h3 class="Argument">Ysize</h3>
+        <p>A named variable that, upon return, contains the height of the image expressed in graphic coordinate units. If the current graphics device uses scalable pixels (PostScript, for example), the values of <i>Xsize</i> and <i>Ysize</i> should be passed to the TV procedure.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_891759"></a><a name="dg_routines_3604229493_887743_PageTOC_MAP_IMAGE_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891761"></a><a name="dg_routines_3604229493_887745_Keywords_MAP_IMAGE__"></a>LATMIN</h3>
+        <p>The latitude corresponding to the first row of <i>Image</i>. The default is -90 degrees. Note also that -90°≤ LATMIN &lt; LATMAX ≤ 90°.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891764"></a><a name="dg_routines_3604229493_887748_Keywords_MAP_IMAGE__"></a>LATMAX</h3>
+        <p>The latitude corresponding to the last row of <i>Image</i>. The default value is 90 degrees. Note also that -90°≤ LATMIN &lt; LATMAX ≤ 90°. </p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891767"></a><a name="dg_routines_3604229493_887751_Keywords_MAP_IMAGE__"></a>LONMIN</h3>
+        <p>The longitude corresponding to the first (leftmost) column of the <i>Image</i> argument. Select LONMIN so that -180°≤ LONMIN ≤ 180°. The default value is -180.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891770"></a><a name="dg_routines_3604229493_887754_Keywords_MAP_IMAGE__"></a>LONMAX</h3>
+        <p>The longitude corresponding to the last (rightmost) column of the <i>Image</i> argument. Select LONMAX so that it is larger than LONMIN. If the longitude of the last column is equal to (LONMIN - (360. /<i>Nx</i>)) MODULO 360, it is assumed that the image covers all longitudes (<i>Nx</i> being the total number of columns in the <i>Image</i> argument). </p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891773"></a><a name="dg_routines_3604229493_903532_Keywords_MAP_IMAGE__"></a>BILINEAR</h3>
+        <p>Set this flag to use bilinear interpolation to soften edges in the returned image, otherwise, nearest neighbor sampling is used.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891776"></a><a name="dg_routines_3604229493_887760_Keywords_MAP_IMAGE__"></a>COMPRESS</h3>
+        <p>This keyword, the interpolation compression flag, controls the accuracy of the results from MAP_IMAGE. The default is 4 for output devices with fixed pixel sizes. The inverse projection transformation is applied to each <i>i</i>th row and column. Setting this keyword to a higher number saves time while lower numbers produce more accurate results. Setting this keyword to 1 solves the inverse map transformation for every pixel of the output image. </p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891779"></a><a name="dg_routines_3604229493_887763_Keywords_MAP_IMAGE__"></a>SCALE</h3>
+        <p>Set this keyword to the pixel/graphics scale factor for devices with scalable pixels (e.g., PostScript). The default is 0.02 pixels/graphic coordinate. This setting yields an approximate output image size of 350 x 250. Make this number larger for more resolution (and larger PostScript files and images), or smaller for faster, smaller, and less accurate images.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891782"></a><a name="dg_routines_3604229493_1060029_Keywords_MAP_IMAGE__"></a>MAP_STRUCTURE</h3>
+        <p>Set this keyword to a !MAP structure as returned from <a href="MAP_PROJ_INIT.htm">MAP_PROJ_INIT</a>, to be used instead of the default !MAP projection. This keyword is useful if you want to display the image in a UV (Cartesian) coordinate system, instead of the !MAP coordinate system.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891788"></a><a name="dg_routines_3604229493_1060026_Keywords_MAP_IMAGE__"></a>MASK</h3>
+        <p>Set this keyword equal to a named variable that will contain a byte array of the same dimensions as the <i>Result</i>, containing a mask of the good values. Values in the <i>Result</i> that were set to MISSING (that is, values were either off the map or outside the range specified by the MIN_VALUE and MAX_VALUE keywords) will have a mask value of zero, while all other mask values will be one.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>The MASK array allows you to distinguish values in the <i>Result</i> that were explicitly set to MISSING versus those that happen to have the same value. The array may also be useful in defining an alpha (transparency) channel for an object graphics image.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891792"></a><a name="dg_routines_3604229493_887766_Keywords_MAP_IMAGE__"></a>MAX_VALUE</h3>
+        <p>Data points with values equal to or greater than this value will be treated as missing data, and will be set to the value specified by the MISSING keyword.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891795"></a><a name="dg_routines_3604229493_887770_Keywords_MAP_IMAGE__"></a>MIN_VALUE</h3>
+        <p>Data points with values equal to or less than this value will be treated as <a name="kanchor1777"></a>missing data, and will be set to the value specified by the MISSING keyword.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891799"></a><a name="dg_routines_3604229493_887774_Keywords_MAP_IMAGE__"></a>MISSING</h3>
+        <p>The pixel value to set areas outside the valid map coordinates. If this keyword is omitted, areas outside the map are set to 255 (white) if the current graphics device is PostScript, otherwise they are set to 0.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_891809"></a><a name="dg_routines_3604229493_887797_PageTOC_MAP_IMAGE_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added MAP_STRUCTURE keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dg_routines_3604229493_891821"></a><a name="dg_routines_3604229493_972904_PageTOC_MAP_IMAGE_"></a>See Also</h2>
+        <p><a href="MAP_CONTINENTS_Procedure.htm#dg_routines_3604229493_883696">MAP_CONTINENTS Procedure</a>, <a href="MAP_GRID_Procedure.htm">MAP_GRID Procedure</a>, <a href="MAP_PATCH.htm#dg_routines_3604229493_891842">MAP_PATCH</a>, <a href="MAP_PROJ_IMAGE.htm">MAP_PROJ_IMAGE</a>, <a href="MAP_PROJ_INIT.htm">MAP_PROJ_INIT</a>, <a href="MAP_SET_Procedure.htm#dg_routines_3604229493_892044">MAP_SET Procedure</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

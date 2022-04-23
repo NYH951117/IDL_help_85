@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: S">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>SEARCH3D </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="S_list.htm">Routines: S</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">SEARCH3D</span>
+        </div>
+        <h1 class="Routine"><a name="S_820040301_758989"></a><a name="S_820040301_42474"></a>SEARCH3D </h1>
+        <p><a name="kanchor2339"></a><a name="kanchor2340"></a>The SEARCH3D function finds “objects” or regions of similar data values within a 3-D array of data. Given a starting location and a range of values to search for, SEARCH3D finds all the cells within the volume that are within the specified range of values and have some path of connectivity through these cells to the starting location. In addition to searching for cells within a global range of data values, SEARCH3D can also search for adjacent cells whose values deviate from their neighbors within specified tolerances.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>search3d.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="S_820040301_759028"></a><a name="S_820040301_759028_PageTOC_SEARCH3D_"></a>Examples</h2>
+        <p>Find all the indices corresponding to an object contained in a 3-D array:</p>
+        <p class="Code">; Create some data. <br />vol = RANDOMU(s, 40, 40, 40)<br />vol[3:13, 1:15, 17:33] = 1.3 <br />vol[15:25, 5:25, 15:25] = 0.2<br />vol[5:30,17:38,7:28] = 1.3<br />vol[9:23, 16:27, 7:33] = 1.5<br /><br />; Search for an object starting at (6, 22, 16) whose data values<br />; are between (1.2) and (1.4):<br />region = SEARCH3D(vol, 6, 22, 16, 1.2, 1.4, /DIAGONAL)<br /><br />; Scale the background cells into the range 0 to 127:<br />vol = BYTSCL(vol, TOP=127B)<br /><br />; Highlight the object region by setting it to 255:<br />vol[Region] = 255B<br />WINDOW, 0, XSIZE=640, YSIZE=512, RETAIN=2<br /><br />; Set up a 3-D view:<br />CREATE_VIEW, XMAX=39, YMAX=39, ZMAX=39, AX=(-30), AZ=30, ZOOM=0.8<br /><br />; Display the volume with the highlighted object in it:<br />TVSCL, PROJECT_VOL(vol, 64, 64, 40, DEPTH_Q=0.4)</p>
+        <h2 class="API"><a name="S_820040301_759000"></a><a name="S_820040301_759000_PageTOC_SEARCH3D_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = SEARCH3D( <i>Array</i>, <i>Xpos</i>, <i>Ypos</i>, <i>Zpos</i>, <i>Min_Val</i>, <i>Max_Val</i> [,&#160;/<a href="#S_820040301_759017" class="selected">DECREASE</a> ,&#160;/<a href="#S_820040301_759020" class="selected">INCREASE</a> [,&#160;<a href="#S_820040301_759023" class="selected">LPF_BAND</a>=<i>integer</i>{≥3}]] [,&#160;/<a href="#S_820040301_759026" class="selected">DIAGONAL</a>] )</p>
+        <h2 class="API"><a name="S_820040301_1133149"></a><a name="S_820040301_28028"></a>Return Value</h2>
+        <p>SEARCH3D returns a longword array that contains a list of the array subscripts that define the selected object or region. The original X and Y indices of the array subscripts returned by SEARCH3D can be found with the following IDL code:</p>
+        <p class="Code">S = SIZE(<i>Array</i>)</p>
+        <p class="Code">index_z = <i>Result</i> / (S[1] * S[2]) </p>
+        <p class="Code">index_y = (<i>Result</i> - (index_z * S[1] * S[2])) / S[1]</p>
+        <p class="Code">index_x = (<i>Result</i> - (index_z * S[1] * S[2])) - (index_y * S[1]) </p>
+        <p>where <i>Result</i> is the array returned by SEARCH3D and <i>Array</i> is the original input volume. The object within <i>Array</i> can be subscripted as <code>Array[Region]</code> or <code>Array[index_x, index_y, index_z]</code>. </p>
+        <h2 class="API"><a name="S_820040301_759002"></a><a name="S_820040301_759002_PageTOC_SEARCH3D_"></a>Arguments</h2>
+        <h3 class="Argument">Array</h3>
+        <p>The three-dimensional array, of any data type except string, to be searched.</p>
+        <h3 class="Argument">Xpos</h3>
+        <p>The X coordinate (dimension 0 or <i>Array</i>) of the starting location.</p>
+        <h3 class="Argument">Ypos</h3>
+        <p>The Y coordinate (dimension 1 of <i>Array</i>) of the starting location.</p>
+        <h3 class="Argument">Zpos</h3>
+        <p>The Z coordinate (dimension 2 of <i>Array</i>) of the starting location.</p>
+        <h3 class="Argument">Min_Val</h3>
+        <p>The minimum data value for which to search. All array subscripts of all the cells that are connected to the starting cell, and have a value between <i>Min_Val</i> and <i>Max_Val</i> (inclusive) are returned.</p>
+        <h3 class="Argument">Max_Val</h3>
+        <p>The maximum data value for which to search.</p>
+        <h2 class="API"><a name="S_820040301_759015"></a><a name="S_820040301_759015_PageTOC_SEARCH3D_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="S_820040301_759017"></a><a name="S_820040301_759017_Keywords_SEARCH3D__"></a>DECREASE</h3>
+        <p>This keyword and the INCREASE keyword allow you to compensate for changing intensities of data values within an object. An edge-enhanced copy of <i>Array</i> is made and compared to the orginal array if this keyword is set. When DECREASE or INCREASE is set, any adjacent cells are found if their corresponding data values in the edge enhanced array are greater than DECREASE and less than INCREASE. In any case, the adjacent cells will never be selected if their data values are not between <i>Min_Val</i> and <i>Max_Val</i>. The default for this keyword is 0.0 if INCREASE is specified.</p>
+        <h3 class="Keyword"><a name="S_820040301_759020"></a><a name="S_820040301_759020_Keywords_SEARCH3D__"></a>INCREASE</h3>
+        <p>This keyword and the DECREASE keyword allow you to compensate for changing intensities of data values within an object. An edge-enhanced copy of <i>Array</i> is made and compared to the orginal array if this keyword is set. When DECREASE or INCREASE is set, any adjacent cells are found if their corresponding data values in the edge enhanced array are greater than DECREASE and less than INCREASE. In any case, the adjacent cells will never be selected if their data values are not between <i>Min_Val</i> and <i>Max_Val</i>. The default for this keyword is 0.0 if DECREASE is specified.</p>
+        <h3 class="Keyword"><a name="S_820040301_759023"></a><a name="S_820040301_759023_Keywords_SEARCH3D__"></a>LPF_BAND</h3>
+        <p>Set this keyword to an integer value of 3 or greater to perform low-pass filtering on the edge-enhanced array. The value of LPF_BAND is used as the width of the smoothing window. This keyword is only effective when the DECREASE or INCREASE keywords are also specified. The default is no smoothing.</p>
+        <h3 class="Keyword"><a name="S_820040301_759026"></a><a name="S_820040301_759026_Keywords_SEARCH3D__"></a>DIAGONAL</h3>
+        <p>Set this keyword to cause SEARCH3D to find cells meeting the search criteria whose surrounding cubes share a common corner or edge. Normally, cells are considered adjacent only when cubes surrounding the cells share a common edge. Setting this option requires more memory and execution time.</p>
+        <h2 class="API"><a name="S_820040301_759043"></a><a name="S_820040301_759043_PageTOC_SEARCH3D_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre-4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="S_820040301_1110258"></a><a name="S_820040301_1110258_PageTOC_SEARCH3D_"></a>See Also</h2>
+        <p><a href="SEARCH2D.htm#S_820040301_758939">SEARCH2D</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

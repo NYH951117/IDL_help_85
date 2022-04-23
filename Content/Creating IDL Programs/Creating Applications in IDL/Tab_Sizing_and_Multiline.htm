@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|About Tab Widgets">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Tab Sizing and Multiline Behavior</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="About_Tab_Widgets.htm">About Tab Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Tab Sizing and Multiline Behavior</span>
+        </div>
+        <h1><a name="widget_tab_1691599768_98994"></a><a name="widget_tab_1691599768_68757"></a>Tab Sizing and Multiline Behavior</h1>
+        <p>The <a name="kanchor5092"></a>size of the rectangular area of the tab display (where individual widgets are placed) is determined by the size of the largest base widget included in the tab set. The size of the “tab” itself (the curved area that sticks out from the rectangular base and contains the tab’s title) is determined by a number of factors, including the size of other tabs, the presence of the LOCATION and MULTILINE keywords, and the platform on which the widget application is running.</p>
+        <p>IDL attempts to create a tab that is large enough to contain the tab’s title (which is set via the TITLE keyword to WIDGET_BASE for the base widget that has the tab widget as its parent). This, coupled with the fact that the value of the MULTILINE keyword has different meanings on different platforms (see <a href="../../Reference Material/W/WIDGET_TAB.htm#W_811389549_995663">WIDGET_TAB</a>for details), leads to the following behaviors:</p>
+        <h2 class="API">Windows Behavior</h2>
+        <p>Tabs are created to show the entire text of the TITLE keyword to WIDGET_BASE. </p>
+        <h3>If LOCATION = 0 or 1</h3>
+        <p>Setting the LOCATION keyword to WIDGET_TAB equal to zero places the tabs on the top of the tab set; setting LOCATION to one places the tabs on the bottom of the tab set. In either case, if the MULTILINE keyword is set equal to zero, and the width of the tabs exceeds the width of the largest child base widget, the tabs are shown with scroll buttons. This allows the user to scroll through the tabs while the base widget stays immobile.</p>
+        <p>If the MULTILINE keyword is set to a positive value, the tabs will be placed in as many rows as are necessary in order to display the entire text of each tab (limited by the width of the largest base, see note below).</p>
+        <h3>If LOCATION = 2 or 3</h3>
+        <p>Setting the LOCATION keyword to WIDGET_TAB equal to two places the tabs on the left edge of the tab set; setting LOCATION equal to three places the tabs on the right edge of the tab set. In either case, a multiline display is always used if the width of the tabs exceeds the height of the largest child base widget, even if the MULTILINE keyword is set equal to zero. Tabs are placed in as many rows as are necessary in order to display the entire text of each tab (limited by the height of the largest base, see note below).</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The width or height of the tab widget is based on the width or height of the largest base widget that is a child of the tab widget. If the width of the text of one tab exceeds the width or height of the tab widget, the text will be truncated even if the MULTILINE keyword is set.</p>
+        <h2 class="API">Motif Behavior</h2>
+        <p>Motif platforms interpret the value of the MULTILINE keyword to be the maximum number of tabs to display per row. If the keyword is not specified or is explicitly set equal to zero, all tabs are placed on the same row. Tabs are created to show the entire text of the TITLE keyword to WIDGET_BASE. The text of the tabs is not truncated in order to make the tabs fit the space available, unless the text of a single tab exceeds the width or height of the largest base widget that is a child of the tab widget. This means that if the MULTILINE keyword is set to any value other than one, some tabs may not be displayed.</p>
+        <h2 class="API">Tips for Tab Layout</h2>
+        <p>There is no good way to determine in advance the best setting for the MULTILINE keyword to ensure an appropriate tab display. In most cases, however, the following suggestions should enable you to create a tab display that is useful on both Windows and UNIX platforms.</p>
+        <ul>
+            <li value="1">Keep tab titles short. If you need a long description of the contents of a tab, use a label widget in the tab’s base widget rather than creating a long title.</li>
+            <li value="2">Set the MULTILINE keyword equal to a value greater than one. This allows you to tune the appearance of your tab set to the Motif platform without changing the appearance under Windows, since any value greater than zero will result in a multiline tab display under Windows.</li>
+            <li value="3">If practical, place the tabs along the longest dimension of the tab widget, as determined by the size of the largest base widget.</li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

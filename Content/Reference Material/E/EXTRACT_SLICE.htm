@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: E">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>EXTRACT_SLICE </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="E_list.htm">Routines: E</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">EXTRACT_SLICE</span>
+        </div>
+        <h1 class="Routine"><a name="E_841667181_758802"></a><a name="E_841667181_75003"></a>EXTRACT_SLICE </h1>
+        <p><a name="kanchor872"></a><a name="kanchor873"></a>The EXTRACT_SLICE function extracts a specified planar slice of volumetric data. This function allows for a rotation or vector form of the slice equation. In the vector form, the slice plane is governed by the plane equation (ax+by+cz+d = 0) and a single vector which defines the x direction. This form is more common throughout the IDL polygon interface. In the rotation form, the slicing plane can be oriented at any angle and can pass through any desired location in the volume.</p>
+        <p>This function allows for a vertex grid to be generated without sampling the data. In this form, the vertices could be used to sample additional datasets or used to form polygonal meshes. It would also be useful to return the planar mesh connectivity in this case.</p>
+        <p>Support for anisotropic data volumes is included via an ANISOTROPY keyword. This is an important feature in the proper interpolation of common medical imaging data.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>extract_slice.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="E_841667181_758842"></a><a name="E_841667181_758842_PageTOC_EXTRACT_SLICE_"></a>Examples</h2>
+        <p>Display an oblique slice through volumetric data:</p>
+        <p class="Code">; Create some data:<br />vol = RANDOMU(s, 40, 40, 40)<br /><br />; Smooth the data:<br />FOR i=0, 10 DO vol = SMOOTH(vol, 3)<br /><br />; Scale the smoothed part into the range of bytes:<br />vol = BYTSCL(vol[3:37, 3:37, 3:37])<br /><br />; Extract a slice:<br />slice = EXTRACT_SLICE(vol, 40, 40, 17, 17, 17, 30.0, 30.0, 0.0, $<br />&#160;&#160;&#160;OUT_VAL=0B)<br /><br />; Display the 2D slice as a magnified image:<br />TVSCL, REBIN(slice, 400, 400)<br /></p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Also see “Planar Slicing of Volumetric Data” (Chapter 2, <i>Image Processing in IDL</i>)in the <code>help/pdf</code> directory of your IDL installation for a more extensive example. </p>
+        <h2 class="API"><a name="E_841667181_758807"></a><a name="E_841667181_758807_PageTOC_EXTRACT_SLICE_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = EXTRACT_SLICE( <i>Vol</i>, <i>Xsize</i>, <i>Ysize</i>, <i>Xcenter</i>, <i>Ycenter</i>, <i>Zcenter</i>, <i>Xrot</i>, <i>Yrot</i>, <i>Zrot</i> [,&#160;<a href="#E_841667181_985393" class="selected">ANISOTROPY</a>=<i>[xspacing</i>, <i>yspacing</i>, <i>zspacing]</i>] [,&#160;<a href="#E_841667181_988206" class="selected">OUT_VAL</a>=<i>value</i>] [,&#160;/<a href="#E_841667181_758834" class="selected">RADIANS</a>] [,&#160;/<a href="#E_841667181_758840" class="selected">SAMPLE</a>] [,&#160;<a href="#E_841667181_985402" class="selected">VERTICES</a>=<i>variable</i>] )</p>
+        <p>or</p>
+        <p class="Syntax"><i>Result</i> = EXTRACT_SLICE( <i>Vol</i>, <i>Xsize</i>, <i>Ysize</i>, <i>Xcenter</i>, <i>Ycenter</i>, <i>Zcenter</i>, <i>PlaneNormal</i>, <i>Xvec</i> [,&#160;<a href="#E_841667181_985393" class="selected">ANISOTROPY</a>=<i>[xspacing</i>, <i>yspacing</i>, <i>zspacing]</i>] [,&#160;<a href="#E_841667181_988206" class="selected">OUT_VAL</a>=<i>value</i>] [,&#160;/<a href="#E_841667181_758840" class="selected">SAMPLE</a>] [,&#160;<a href="#E_841667181_985402" class="selected">VERTICES</a>=<i>variable</i>] )</p>
+        <h2 class="API"><a name="E_841667181_997370"></a><a name="E_841667181_62325"></a>Return Value</h2>
+        <p>Returns a two-dimensional planar slice extracted from 3-D volumetric data or returns a vertex grid in the form of a [3,n] array of vertices.</p>
+        <h2 class="API"><a name="E_841667181_758809"></a><a name="E_841667181_758809_PageTOC_EXTRACT_SLICE_"></a>Arguments</h2>
+        <h3 class="Argument">PlaneNormal</h3>
+        <p>Set this input argument to a 3 element array. The values are interpreted as the normal of the slice plane.</p>
+        <h3 class="Argument">Xvec</h3>
+        <p>Set this input argument to a 3 element array. The three values are interpreted as the 0 dimension directional vector. This should be a unit vector.</p>
+        <h3 class="Argument">Vol</h3>
+        <p>The volume of data to slice. This argument is a three-dimensional array of any type except string or structure. The planar slice returned by EXTRACT_SLICE has the same data type as <i>Vol</i>.</p>
+        <h3 class="Argument">Xsize</h3>
+        <p>The desired X size (dimension 0) of the returned slice. To preserve the correct aspect ratio of the data, Xsize should equal Ysize. For optimal results, set Xsize and Ysize to be greater than or equal to the largest of the three dimensions of <i>Vol</i>.</p>
+        <h3 class="Argument">Ysize</h3>
+        <p>The desired Ysize (dimension 1) of the returned slice. To preserve the correct aspect ratio of the data, Ysize should equal Xsize. For optimal results, set Xsize and Ysize to be greater than or equal to the largest of the three dimensions of <i>Vol</i>.</p>
+        <h3 class="Argument">Xcenter</h3>
+        <p>The X coordinate (index) of the point within the volume that the slicing plane passes through. The center of the slicing plane passes through <i>Vol</i> at the coordinate (<i>Xcenter, YCenter, Zcenter</i>).</p>
+        <h3 class="Argument">Ycenter</h3>
+        <p>The Y coordinate (index) of the point within the volume that the slicing plane passes through. The center of the slicing plane passes through <i>Vol</i> at the coordinate (<i>Xcenter, YCenter, Zcenter</i>).</p>
+        <h3 class="Argument">Zcenter</h3>
+        <p>The Z coordinate (index) of the point within the volume that the slicing plane passes through. The center of the slicing plane passes through <i>Vol</i> at the coordinate (<i>Xcenter, YCenter, Zcenter</i>).</p>
+        <h3 class="Argument">Xrot</h3>
+        <p>The X-axis rotation of the slicing plane, in degrees. Before transformation, the slicing plane is parallel to the X-Y plane. The slicing plane transformations are performed in the following order:</p>
+        <ul>
+            <li value="1">Rotate Z_rot degrees about the Z axis.</li>
+            <li value="2">Rotate Y_rot degrees about the Y axis.</li>
+            <li value="3">Rotate X_rot degrees about the X axis.</li>
+            <li value="4">Translate the center of the plane to Xcenter, Ycenter, Zcenter.</li>
+        </ul>
+        <h3 class="Argument">Yrot</h3>
+        <p>The Y-axis rotation of the slicing plane, in degrees. </p>
+        <h3 class="Argument">Zrot</h3>
+        <p>The orientation Z-axis rotation of the slicing plane, in degrees.</p>
+        <h2 class="API"><a name="E_841667181_758832"></a><a name="E_841667181_758832_PageTOC_EXTRACT_SLICE_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="E_841667181_985393"></a><a name="E_841667181_985393_Keywords_EXTRACT_SLICE__"></a>ANISOTROPY</h3>
+        <p>Set this keyword to a three-element array. This array specifies the spacing between the planes of the input volume in grid units of the (isotropic) output image.</p>
+        <h3 class="Keyword"><a name="E_841667181_988206"></a><a name="E_841667181_988206_Keywords_EXTRACT_SLICE__"></a>OUT_VAL</h3>
+        <p>Set this keyword to a value that will be assigned to elements of the returned slice that lie outside of the original volume.</p>
+        <h3 class="Keyword"><a name="E_841667181_758834"></a><a name="E_841667181_758834_Keywords_EXTRACT_SLICE__"></a>RADIANS</h3>
+        <p>Set this keyword to indicate that Xrot, Yrot, and Zrot are in radians. The default is degrees.</p>
+        <h3 class="Keyword"><a name="E_841667181_758840"></a><a name="E_841667181_758840_Keywords_EXTRACT_SLICE__"></a>SAMPLE</h3>
+        <p>Set this keyword to perform nearest neighbor sampling when computing the returned slice. The default is to use bilinear interpolation. A small reduction in execution time results when SAMPLE is set and the OUT_VAL keyword is <i>not</i> used. </p>
+        <h3 class="Keyword"><a name="E_841667181_985402"></a><a name="E_841667181_985402_Keywords_EXTRACT_SLICE__"></a>VERTICES</h3>
+        <p>Set this output keyword to a named variable in which to return a [3,Xsize,Ysize] floating point array. This is an array of the x, y, z sample locations for each pixel in the normal output.</p>
+        <h2 class="API"><a name="E_841667181_795846"></a><a name="E_841667181_795846_PageTOC_EXTRACT_SLICE_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre 4.0
+                        </p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre 6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Deprecated the CUBIC keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="E_841667181_992812"></a><a name="E_841667181_992812_PageTOC_EXTRACT_SLICE_"></a>See Also</h2>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

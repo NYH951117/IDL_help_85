@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Environment|Distributing IDL Applications|Creating a Runtime Distribution">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Runtime Application Launch Scripts</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../IDL Concepts.htm">Environment</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../DistributingIDLApplications.htm">Distributing IDL Applications</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="CreatingRuntimeDistributionIntro.htm">Creating a Runtime Distribution</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Runtime Application Launch Scripts</span>
+        </div>
+        <h1>Runtime Application Launch Scripts<a name="kanchor4295"></a></h1>
+        <p>The <code>bin/make_rt</code> subdirectory of the IDL installation directory contains generic launch scripts for <a href="#Windows" class="selected">Windows</a>, <a href="#Macintos" class="selected">Macintosh</a>, and <a href="#Linux/So" class="selected">Linux/Solaris</a> applications. If you use the MAKE_RT procedure to create a runtime distribution, the appropriate launch scripts will be copied to your distribution and renamed to match your application. If you specify a value for the SAVEFILE keyword, the launch scripts are modified by MAKE_RT to launch the specified SAVEFILE application. If the SAVEFILE keyword is not specified, executing the launch script prompts the end-user to select a .sav file to restore and run.</p>
+        <p>This section describes the different launch scripts in more detail, and explains how to configure and use them. Note that while some of the steps described here are performed by the MAKE_RT procedure, you may still need to modify the scripts to achieve the desired behavior.</p>
+        <h2><a name="Windows"></a>Windows Launch Script</h2>
+        <p>To use the application launcher, follow the steps outlined below.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you use the MAKE_RT procedure, the launch scripts are copied to your runtime distribution and renamed to match the Appname argument automatically. The <code>start_app_win.ini</code> file is modified to run your SAVE file or open a file-selection dialog, depending on the value of the SAVEFILE keyword.</p>
+        <h3>Copy and Rename the start_app_win.exe File</h3>
+        <p>Copy the file</p>
+        <p xml:space="preserve" class="Code"><i>IDL_DIR</i>\bin\make_rt\start_app_win.exe</p>
+        <p>(where <code style="font-style: italic;">IDL_DIR</code> is your IDL installation directory) to the location of your runtime distribution. If you want, rename <code>start_app_win.exe</code> to reflect the name of your application. (Be sure to retain the <code>.exe</code> extension.) For example, if your application is named <code>HydroPlot</code>, you could rename the <code>start_app_win.exe</code> file to <code>hydroplot.exe</code>.</p>
+        <h3>Copy and Rename the start_app_win.ini File</h3>
+        <p>When a user clicks on the executable file (<code>start_app_win.exe</code> or whatever you have renamed it), the executable searches for and reads an <code>.ini</code> file with the same base name as the executable. If you renamed <code>start_app_win.exe</code>, you will also need to rename the <code>.ini</code> file with the same base name. For example, if you renamed <code>start_app_win.exe</code> as <code>hydroplot.exe</code>, you would rename <code>start_app_win.ini</code> as <code>hydroplot.ini</code>.</p>
+        <p>Copy the file</p>
+        <p xml:space="preserve" class="Code">IDL_DIR\bin\make_rt\start_app_win.ini</p>
+        <p>(where <code style="font-style: italic;">IDL_DIR</code> is your IDL installation directory) to the location of your runtime distribution. Rename the <code>.ini</code> file to match the name of the executable file, if you have changed it from <code>start_app_win.exe</code>.</p>
+        <h3>Modify the start_app_win.ini File</h3>
+        <p>The <code>.ini</code> file (<code>start_app_win.ini</code> or whatever you have renamed it) specifies what will happen when the user runs the <code>.exe</code> file. If you use the MAKE_RT procedure and specify a value for the SAVEFILE keyword, the <code>.ini</code> file is rewritten to launch your application. If you copy the <code>.ini</code> file manually, you must modify it as described below.</p>
+        <p>The <code>start_app_win.exe</code> file can either run a single application immediately or display a dialog with up to four buttons, each of which invokes a different application. The configuration of the dialog (including whether or not it is displayed at all) is controlled by the <code>.ini</code> file.</p>
+        <p>The <code>.ini</code> file contains five sections, one labeled <code>[DIALOG]</code> and four labelled <code>[BUTTONn]</code> (where <i>n</i> is a number between 1 and 4). The contents of each type of section are described below.</p>
+        <h4>DIALOG Section</h4>
+        <p xml:space="preserve" class="Code">[DIALOG]</p>
+        <p xml:space="preserve" class="Code">
+Show=False</p>
+        <p xml:space="preserve" class="Code">
+BackColor=&amp;H6B1F29</p>
+        <p xml:space="preserve" class="Code">
+Caption=&lt;<i>any string</i>&gt;</p>
+        <p xml:space="preserve" class="Code">
+Picture=.\splash.bmp</p>
+        <p xml:space="preserve" class="Code">
+DefaultAction=&lt;<i>path to application</i>&gt;</p>
+        <ul>
+            <li value="1"><b>Show</b> — this field can contain the string <code>True</code> or <code>False</code>. If <code>Show=True</code>, the dialog is displayed and the <code>DefaultAction</code> is not executed. If <code>Show=False</code>, the dialog is not displayed, and the <code>DefaultAction</code> is executed immediately when the user double-clicks on the <code>start_app_win.exe</code> icon.</li>
+            <li value="2"><b>BackColor</b> — this field contains an RGB color triplet specified in hexadecimal form. This color will be used in any part of the dialog that is not covered by the image specified as the value of the <code>Picture</code> field. To make the background white, set <code>BackColor=&amp;HFFFFFF</code>.</li>
+            <li value="3"><b>Caption</b> — this field contains a string that will be displayed in the title bar of the dialog, if <code>Show=True</code>.</li>
+            <li value="4"><b>Picture</b> — this field contains the relative path to a Windows bitmap file that will be displayed in the dialog if <code>Show=True</code>. The image will be positioned with its upper left corner in the upper left corner of the dialog window. To completely fill the dialog, the image contained in the bitmap file should be 480 x 335 pixels. Any area of the dialog that is not filled by the image will be displayed in the color specified in the <code>BackColor</code> field.</li>
+            <li value="5"><a name="default_action"></a><b>DefaultAction</b> — this field contains the command that should be executed when <code>start_app_win.exe</code> is run if <code>Show=False</code>. In most cases, you will need to specify the relative path to the <code>idlrt.exe</code> file in the IDL distribution on your CD-ROM, followed by the <code>-vm</code> flag and the relative path to your application’s SAVE file.
+        
+        <p>For example, if you have placed the SAVE file for the application <code>hydroplot.sav</code> in the <code>hydroplot</code> directory of the CD-ROM along with the <code>start_app_win.exe</code> application, the following <code>DefaultAction</code> launches <code>hydroplot.sav</code> in the <a href="../VirtualMachineApplications/VirtualMachineApplicationsIntro.htm">IDL Virtual Machine</a> when the user double clicks on the <code>start_app_win.exe</code> icon:</p><p xml:space="preserve" class="Code">DefaultAction=.\idl71\bin\bin.x86\idlrt.exe -vm=hydro\hydroplot.sav</p><p>(The <code>DefaultAction</code> specification should be on a single line.)</p></li>
+        </ul>
+        <h4>BUTTON Sections</h4>
+        <p>There can be up to four <code>[BUTTON]</code> sections. The format is the same for any section of this type.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the <code>Show</code> field of the <code>[DIALOG]</code> section is set to <code>False</code>, no buttons will be displayed, regardless of the content of the <code>[BUTTON]</code> sections.</p>
+        <p xml:space="preserve" class="Code">[BUTTON1]</p>
+        <p xml:space="preserve" class="Code">
+Show=True</p>
+        <p xml:space="preserve" class="Code">
+Caption=&lt;<i>any string</i>&gt;</p>
+        <p xml:space="preserve" class="Code">
+Action=&lt;<i>path to application</i>&gt;</p>
+        <ul>
+            <li value="1"><b>Show</b> — this field can contain the string <code>True</code> or the string <code>False</code>. If <code>Show=True</code>, the button will be displayed on the dialog.</li>
+            <li value="2"><b>Caption</b> — this field contains a string that will be displayed on the button, if <code>Show=True</code>.</li>
+            <li value="3"><b>Action</b> — this field contains the command that should be executed when the user clicks on the button, if <code>Show=True</code>. See <a href="#default_action" class="selected">Default Action</a> above for an explanation of the format of the command string.
+        
+        <p>To create a button that closes the dialog without executing anything, set <code>Action=Exit</code> on the button.</p></li>
+        </ul>
+        <h3>Copy and Modify the autorun.inf File</h3>
+        <p>If you want your application to launch automatically when the user inserts your CD-ROM, you must modify the <code>autorun.inf</code> file. The <code>autorun.inf</code> file contains the following lines:</p>
+        <p xml:space="preserve" class="Code">[autorun]</p>
+        <p xml:space="preserve" class="Code">
+open = start_app_win.exe</p>
+        <p xml:space="preserve" class="Code">
+icon = idl.ico</p>
+        <p>If you want your application to launch automatically when the user inserts the CD-ROM, copy the file</p>
+        <p xml:space="preserve" class="Code"><i>IDL_DIR</i>\bin\make_rt\autorun.inf</p>
+        <p>(where <code style="font-style: italic;">IDL_DIR</code> is your IDL installation directory) into your runtime distribution and modify the</p>
+        <p xml:space="preserve" class="Code">open = start_app_win.exe</p>
+        <p>line to reflect the name of the executable file you want to launch automatically. For example, if you renamed <code>start_app_win.exe</code> to <code>hydroplot.exe</code>, change the line to read:</p>
+        <p xml:space="preserve" class="Code">open = hydroplot.exe</p>
+        <p>If your executable file displays a dialog, you might want to modify the</p>
+        <p xml:space="preserve" class="Code">icon = idl.ico</p>
+        <p>line to specify an icon that will be displayed in the Windows task bar. If you specify an icon file in your <code>autorun.inf</code> file, you must ensure that the icon file is included in the root directory of your CD-ROM.</p>
+        <h2><a name="Macintos"></a>Macintosh Launch Script</h2>
+        <p>The <code>bin/make_rt</code> subdirectory of the IDL installation directory includes two Applescripts that you can use to launch your application. To use the Applescripts, follow the steps outlined below.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you use the MAKE_RT procedure, the launch scripts are copied to your runtime distribution automatically. The <code>start_app_mac.app</code> file is renamed to match the Appname argument and modified to run your SAVE file or open a file-selection dialog, depending on the value of the SAVEFILE keyword. You can edit the <code>.app</code> file using the AppleScript editor.</p>
+        <p>A text version of the script named <code>Appname_mac_script_source.txt</code> is also saved in the same directory as the <code>.app</code> file. You can delete the <code>.txt</code> file or copy it into the AppleScript editor if you want to modify the script.</p>
+        <h3>Copy and Rename the Applescript Files</h3>
+        <p>Use the Finder to copy the files</p>
+        <p xml:space="preserve" class="Code"><i>IDL_DIR</i>/bin/make_rt/start_app_mac.app</p>
+        <p xml:space="preserve" class="Code"><i>IDL_DIR</i>/bin/make_rt/Utils_applescripts.scpt</p>
+        <p>(where <code style="font-style: italic;">IDL_DIR</code> is your IDL installation directory) to the location of your runtime distribution. If you want, rename <code>start_app_mac.app</code> to reflect the name of your application. For example, if your application is named <code>HydroPlot</code>, you could rename the <code>start_app_mac.app</code> file as <code>hydroplot.app</code>. Do not rename <code>Utils_applescripts.scpt</code>.</p>
+        <h3>Modify the start_app_mac.app File</h3>
+        <p>Use the Applescript editor to modify the value of the <code>idlApp</code> and <code>idlDir</code> variables in the <code>start_app_mac.app</code> file (or whatever you have renamed it) as shown below:</p>
+        <p xml:space="preserve" class="Code">(* Specify the path to the IDL SAVE file that launches the virtual</p>
+        <p xml:space="preserve" class="Code">
+machine application, relative to the location of the script *)</p>
+        <p class="Code">set idlApp to "my_app.sav" as string</p>
+        <p class="Code">(*
+Specify the path to the top directory of the IDL distribution,</p>
+        <p xml:space="preserve" class="Code">
+relative to the location of the script. *)</p>
+        <p xml:space="preserve" class="Code">set idlDir to "idl82" as string</p>
+        <p>where the IDL installation is in the directory <code>idl82</code> and the application is in a SAVE file named <code>my_app.sav</code>.</p>
+        <p>By default, the <code>start_app_mac</code> script will launch IDL in 64-bit mode if possible. To force IDL to launch in 32-bit mode (if, for example, your application uses DICOM features or the IDL Advanced Math and Stats IMSL libraries), edit the line in the <code>start_app_mac.app</code> file that looks like</p><pre xml:space="preserve">set idlCmd to IDLDirFolder &amp; "bin/idl -vm=" &amp; myAppPath</pre>
+        <p>to include the <code>-32</code> flag as shown in the file comments.</p>
+        <h2><a name="Linux/So"></a>Linux/Solaris Launch Script</h2>
+        <p>The <code>bin/make_rt</code> subdirectory of the IDL installation directory includes a bourne shell script that you can use to launch your application. To use the script, follow the steps outlined below.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you use the MAKE_RT procedure, the launch scripts are copied to your runtime distribution automatically. The <code>start_app_unix</code> file is renamed to match the Appname argument and modified to run your SAVE file or open a file-selection dialog, depending on the value of the SAVEFILE keyword.</p>
+        <h3>Copy and Rename the start_app_unix File</h3>
+        <p>Copy the file</p>
+        <p xml:space="preserve" class="Code"><i>IDL_DIR</i>/bin/make_rt/start_app_unix</p>
+        <p>(where <code style="font-style: italic;">IDL_DIR</code> is your IDL installation directory) to the location of your runtime distribution. If you want, rename <code>start_app_unix</code> to reflect the name of your application. For example, if your application is named <code>HydroPlot</code>, you could rename the <code>start_app_unix</code> file as <code>hydroplot</code>.</p>
+        <h3>Modify the start_app_unix File</h3>
+        <p>Using a text editor, modify the value of the <code>idlapp</code> and <code>IDL_DIR</code> variables in the <code>start_app_unix</code> file (or whatever you have renamed it) as show below:</p>
+        <p xml:space="preserve" class="Code"># Specify the path to the IDL SAVE file that launches<br /># the Virtual Machine application, relative to $topdir.<br />idlapp=$topdir/my_app.sav</p>
+        <p xml:space="preserve" class="Code"># Specify the path to the top directory of the IDL<br /># distribution, relative to $topdir.<br />IDL_DIR=$topdir/idl82 ; export IDL_DIR</p>
+        <p>where the IDL installation is in the directory <code>idl82</code> and the application is in a SAVE file named <code>my_app.sav</code>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you use the MAKE_RT procedure and specify a value for the SAVEFILE keyword, the <code>start_app_unix</code> file is rewritten to launch your application.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

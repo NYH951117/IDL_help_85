@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_RANDOM</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="IMSL_RANDOM"></a>IMSL_RANDOM</h1>
+        <p>The IMSL_RANDOM function generates pseudorandom numbers. The default distribution is a uniform (0, 1) distribution, but many different distributions can be specified through the use of keywords.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>The IMSL_RANDOM function is designed to return random numbers from any of a number of different distributions. The determination of which distribution to generate the random numbers from is based on the presence of a keyword or groups of keywords. If IMSL_RANDOM is called without any keywords, then random numbers from a uniform (0, 1) distribution are returned.</p>
+        <h3><a name="Uniform_Distribution"></a>Uniform (0,1) Distribution</h3>
+        <p>The default action of IMSL_RANDOM generates pseudorandom numbers from a uniform (0, 1) distribution using a multiplicative, congruential method. The form of the generator follows:</p>
+        <p><i>x</i><sub style="font-style: italic;">i</sub> ≡ <i>c</i><sub style="font-style: italic;">xi - 1</sub>mod (2<sup>31</sup> – 1)</p>
+        <p>Each <i>x<sub>i</sub></i> is then scaled into the unit interval (0, 1). The possible values for <i>c</i> in the generators are 16807, 397204094, and 950706376. The selection is made by using the IMSL_RANDOMOPT procedure with the GEN_OPTION keyword. The choice of 16807 results in the fastest execution time. If no selection is made explicitly, the functions use the multiplier 16807. See the <a href="IMSL_RANDOMOPT.htm#IMSL_RANDOMOPT">IMSL_RANDOMOPT</a> for further discussion of generator options.</p>
+        <p>The IMSL_RANDOMOPT procedure called with the Set keyword is used to initialize the seed of the random-number generator.</p>
+        <p>You can select a shuffled version of these generators. In this scheme, a table is filled with the first 128 uniform (0, 1) numbers resulting from the simple multiplicative congruential generator. Then, for each <i>x<sub>i</sub></i> from the simple generator, the low-order bits of <i>x<sub>i</sub></i> are used to select a random integer, j, from 1 to 128. The <i>j</i>-th entry in the table is then delivered as the random number, and <i>x<sub>i</sub></i>, after being scaled into the unit interval, is inserted into the <i>j</i>-th position in the table.</p>
+        <p>The values returned are positive and less than 1.0. Some values returned may be smaller than the smallest relative spacing; however, it may be the case that some value, for example <i>r(i)</i>, is such that 1.0 – <i>r(i)</i> = 1.0.</p>
+        <p>Deviates from the distribution with uniform density over the interval (<i>a</i>, <i>b</i>) can be obtained by scaling the output. See <a href="#Example_3_Beta_Distribution" class="selected">Example 3: Beta Distribution</a> for more details.</p>
+        <h3><a name="Normal_Distribution"></a>Normal Distribution</h3>
+        <p>Calling IMSL_RANDOM with keyword NORMAL generates pseudorandom numbers from a standard normal (Gaussian) distribution using an inverse CDF technique. In this method, a uniform (0,1) random deviate is generated. Then, the inverse of the normal distribution function is evaluated at that point using the IMSL_NORMALCDF function with keyword Inverse.</p>
+        <p>If the PARAMETERS keyword is specified in addition to Normal, IMSL_RANDOM generates pseudorandom numbers using an acceptance/rejection technique due to Kinderman and Ramage (1976). In this method, the normal density is represented as a mixture of densities over which a variety of acceptance/rejection methods due to Marsaglia (1964), Marsaglia and Bray (1964), and Marsaglia et al. (1964) are applied. This method is faster than the inverse CDF technique.</p>
+        <p>Deviates from the normal distribution with mean specific mean and standard deviation can be obtained by scaling the output from IMSL_RANDOM. See <a href="#Example_3_Beta_Distribution" class="selected">Example 3: Beta Distribution</a> for more details.</p>
+        <h3><a name="Exponential_Distribution"></a>Exponential Distribution</h3>
+        <p>Calling IMSL_RANDOM with keyword EXPONENTIAL generates pseudorandom numbers from a standard exponential distribution. The probability density function is <i>f(x)</i> = <i>e<sup>–x</sup></i>, for <i>x</i> &gt; 0. The IMSL_RANDOM function uses an antithetic inverse CDF technique. In other words, a uniform random deviate U is generated, and the inverse of the exponential cumulative distribution function is evaluated at 1.0 – U to yield the exponential deviate.</p>
+        <h3><a name="Poisson_Distribution"></a>Poisson Distribution</h3>
+        <p>Calling IMSL_RANDOM with keywords POISSON and PARAMETERS = θ generates pseudorandom numbers from a Poisson distribution with positive mean θ. The probability function follows:</p>
+        <p><i style="font-size: 12pt;">f(x) = (e</i><sup style="font-style: italic;font-size: 12pt;">-θ</sup><i style="font-size: 12pt;">θ</i><sup style="font-style: italic;font-size: 12pt;">x</sup><i style="font-size: 12pt;">)/x!, for x = 0, 1, 2, ...</i>
+        </p>
+        <p>If θ is less than 15, IMSL_RANDOM uses an inverse CDF method; otherwise, the PTPE method of Schmeiser and Kachitvichyanukul (1981) is used. (See also Schmeiser 1983.) The PTPE method uses a composition of four regions, a triangle, a parallelogram, and two negative exponentials. In each region except the triangle, acceptance/rejection is used. The execution time of the method is essentially insensitive to the mean of the Poisson.</p>
+        <h3><a name="Gamma_Distribution"></a>Gamma Distribution</h3>
+        <p>Calling IMSL_RANDOM with keywords GAMMA and PARAMETERS = a generates pseudorandom numbers from a Gamma distribution with shape parameter a and unit scale parameter. The probability density function follows:</p>
+        <p>
+            <img src="images/IMSL_RANDOM01.svg" />
+        </p>
+        <p>Various computational algorithms are used depending on the value of the shape parameter <i>a</i>. For the special case of a = 0.5, squared and halved normal deviates are used; for the special case of <i>a</i> = 1.0, exponential deviates are generated. Otherwise, if <i>a</i> is less than 1.0, an acceptance-rejection method due to Ahrens, described in Ahrens and Dieter (1974), is used. If <i>a</i> is greater than 1.0, a 10-region rejection procedure developed by Schmeiser and Lal (1980) is used.</p>
+        <p>The Erlang distribution is a standard Gamma distribution with the shape parameter having a value equal to a positive integer; hence, IMSL_RANDOM generates pseudorandom deviates from an Erlang distribution with no modifications required.</p>
+        <h3><a name="Beta_Distribution"></a>Beta Distribution</h3>
+        <p>Calling IMSL_RANDOM with keywords BETA, and PARAMETERS = [<i>p</i>, <i>q</i>] generates pseudorandom numbers from a beta distribution. With <i>p</i> and <i>q</i> both positive, the probability density function is:</p>
+        <p>
+            <img src="images/IMSL_RANDOM02.svg" />
+        </p>
+        <p>where Γ(·) is the Gamma function.</p>
+        <p>The algorithm used depends on the values of p and q. Except for the trivial cases of p = 1 or q = 1, in which the inverse CDF method is used, all the methods use acceptance/rejection. If p and q are both less than 1, the method of Jöhnk (1964) is used. If either p or q is less than 1 and the other is greater than 1, the method of Atkinson (1979) is used. If both p and q are greater than 1, algorithm BB of Cheng (1978), which requires very little setup time, is used if x is less than 4, and algorithm B4PE of Schmeiser and Babu (1980) is used if x is 4 or greater. Note that for p and q both greater than 1, calling IMSL_RANDOM to generate random numbers from a beta distribution a loop getting less than four variates on each call yields the same set of deviates as executing one call and getting all deviates at once.</p>
+        <p>The values returned are less than 1.0 and greater than ε, where ε is the smallest positive number such that 1.0 – ε is less than 1.0.</p>
+        <h3><a name="Multivariate_Normal_Distribution"></a>Multivariate Normal Distribution</h3>
+        <p>Calling IMSL_RANDOM with keywords MVAR_NORMAL and COVARIANCES generates pseudorandom numbers from a multivariate normal distribution with mean vector consisting of all zeros and variance-covariance matrix defined using keyword COVARIANCES. First, the Cholesky factor of the variance-covariance matrix is computed. Then, independent random normal deviates with mean zero and variance 1 are generated, and the matrix containing these deviates is postmultiplied by the Cholesky factor. Because the Cholesky factorization is performed in each invocation, it is best to generate as many random vectors as needed at once.</p>
+        <p>Deviates from a multivariate normal distribution with means other than zero can be generated by using IMSL_RANDOM with keywords MVAR_NORMAL and COVARIANCES, then adding the vectors of means to each row of the result.</p>
+        <h3><a name="Binomial_Distribution"></a>Binomial Distribution</h3>
+        <p>Calling IMSL_RANDOM with keywords BINOMIAL, PARAMETERS = [<i>p</i>, <i>n</i>] generates pseudorandom numbers from a binomial distribution with parameters <i>n</i> and <i>p</i>. Parameters <i>n</i> and <i>p</i> must be positive, and <i>p</i> must less than 1. The probability function (where <i>n</i> = <i>Binom_n</i> and <i>p</i> = <i>Binom_p</i>) is:</p>
+        <p>
+            <img src="images/IMSL_RANDOM03.svg" />
+        </p>
+        <p>for x = 0, 1, 2, ..., n.</p>
+        <p>The algorithm used depends on the values of n and p. If <i>n</i> * <i>p</i> &lt; 10 or p is less than machine epsilon, the inverse CDF technique is used; otherwise, the BTPE algorithm of Kachitvichyanukul and Schmeiser (see Kachitvichyanukul 1982) is used. This is an acceptance /rejection method using a composition of four regions. (TPE=Triangle, Parallelogram, Exponential, left and right.)</p>
+        <h3><a name="Cauchy_Distribution"></a>Cauchy Distribution</h3>
+        <p>Calling IMSL_RANDOM with the keyword Cauchy generates pseudorandom numbers from a Cauchy distribution. The probability density function is:</p>
+        <p>
+            <img src="images/IMSL_RANDOM04.svg" />
+        </p>
+        <p>where T is the median and T − S is the first quartile. This function first generates standard Cauchy random numbers (T = 0 and S = 1) using the technique described below, and then scales the values using T and S.</p>
+        <p>Use of the inverse CDF technique would yield a Cauchy deviate from a uniform (0, 1) deviate, u, as tan [π (u − 0.5)]. Rather than evaluating a tangent directly, however, IMSL_RANDOM generates two uniform (−1, 1) deviates, x<sub>1</sub> and x<sub>2</sub>. These values can be thought of as sine and cosine values. If:</p>
+        <p>
+            <img src="images/IMSL_RANDOM05.svg" />
+        </p>
+        <p>is less than or equal to 1, then <i>x<sub>1</sub>/x<sub>2</sub></i> is delivered as the unscaled Cauchy deviate; otherwise, <i>x</i><sub style="font-style: italic;">1</sub> and <i>x</i><sub style="font-style: italic;">2</sub> are rejected and two new uniform (−1, 1) deviates are generated.</p>
+        <p>This method is also equivalent to taking the ration of two independent normal deviates.</p>
+        <h3><a name="Chi-squared_Distribution"></a>Chi-squared Distribution</h3>
+        <p>Calling IMSL_RANDOM with keywords CHI_SQUARED and PARAMETERS=<i>Df</i> generates pseudorandom numbers from a chi-squared distribution with <i>Df</i> degrees of freedom.</p>
+        <p>If <i>Df</i> is an even integer less than 17, the chi-squared deviate <i>r</i> is generated as:</p>
+        <p>
+            <img src="images/IMSL_RANDOM06.svg" />
+        </p>
+        <p>where <i>n = Df /2</i> and the <i>u<sub>i</sub></i> are independent random deviates from a uniform (0, 1) distribution. If <i>Df</i> is an odd integer less than 17, the chi-squared deviate is generated in the same way, except the square of a normal deviate is added to the expression above. If <i>Df</i> is greater than 16 or is not an integer, and if it is not too large to cause overflow in the gamma random number generator, the chi-squared deviate is generated as a special case of a gamma deviate.</p>
+        <h3><a name="Mixed_Exponential_Distribution"></a>Mixed Exponential Distribution</h3>
+        <p>Calling IMSL_RANDOM with keywords MIX_EXPONENTIAL, and PARAMETERS = [θ<sub>1</sub>, θ<sub>2</sub>] generates pseudorandom numbers from a mixture of two exponential distributions. The probability density function is:</p>
+        <p>
+            <img src="images/IMSL_RANDOM07.svg" />
+        </p>
+        <p>for x &gt; 0.</p>
+        <p>In the case of a convex mixture, that is, the case 0 &lt; <i>p</i> &lt; 1, the mixing parameter <i>p</i> is interpretable as a probability; and IMSL_RANDOM with probability <i>p</i> generates an exponential deviate with mean θ<sub>1</sub>, and with probability 1 – <i>p</i> generates an exponential with mean θ<sub>2</sub>. When <i>p</i> is greater than 1, but less than θ<sub>1</sub>/(θ<sub>1</sub> – θ<sub>2</sub>), then either an exponential deviate with mean θ<sub>1</sub> or the sum of two exponentials with means θ<sub>1</sub> and θ<sub>2</sub> is generated. The probabilities are <i>q</i> = <i>p</i> – (<i>p</i> – 1) (θ<sub>1</sub>/θ<sub>2</sub>) and 1 – <i>q</i>, respectively, for the single exponential and the sum of the two exponentials.</p>
+        <p>Geometric Distribution</p>
+        <p>Calling IMSL_RANDOM with keywords GEOMETRIC and PARAMETERS = <i>P</i> generates pseudorandom numbers from a geometric distribution. The parameter <i>P</i> is the probability of getting a success on any trial. A geometric deviate can be interpreted as the number of trials until the first success (including the trial in which the first success is obtained). The probability function is:</p>
+        <p><i>f(x)</i> = <i>P</i>(1 − <i>P</i>)<sup>x–1</sup></p>
+        <p>for <i>x</i> = 1, 2, ... and 0 &lt; <i>P</i> &lt; 1.</p>
+        <p>The geometric distribution as defined above has mean 1/P.</p>
+        <p>The <i>i</i>-th geometric deviate is generated as the smallest integer not less than (<i>log(U<sub>i</sub>))/(log (1 – P)</i>), where the U<sub>i</sub> are independent uniform(0, 1) random numbers (see Knuth 1981).</p>
+        <p>The geometric distribution is often defined on 0, 1, 2, ..., with mean (1 – <i>P</i>)/<i>P</i>. Such deviates can be obtained by subtracting 1 from each element of the returned vector of random deviates.</p>
+        <h3><a name="Hypergeometric_Distribution"></a>Hypergeometric Distribution</h3>
+        <p>Calling IMSL_RANDOM with keywords HYPERGEOMETRIC, and PARAMETERS =[M, N, L] generates pseudorandom numbers from a hypergeometric distribution with parameters N, M, and L. The hypergeometric random variable X can be thought of as the number of items of a given type in a random sample of size N that is drawn without replacement from a population of size L containing M items of this type. The probability function is:</p>
+        <p>
+            <img src="images/IMSL_RANDOM08.svg" />
+        </p>
+        <p>for x = max(0, N − L + M), 1, 2, ..., min (N, M)</p>
+        <p>If the hypergeometric probability function with parameters N, M, and L evaluated at N − L + M (or at 0 if this is negative) is greater than the machine, and less than 1.0 minus the machine epsilon, then IMSL_RANDOM uses the inverse CDF technique. The routine recursively computes the hypergeometric probabilities, starting at x = max (0, N − L + M) and using the ratio:</p>
+        <p>
+            <img src="images/IMSL_RANDOM09.svg" />
+        </p>
+        <p>(see Fishman 1978, p. 475).</p>
+        <p>If the hypergeometric probability function is too small or too close to 1.0, then IMSL_RANDOM generates integer deviates uniformly in the interval [1, L − <i>i</i>] for <i>i</i> = 0, 1, ..., and at the <i>i</i>-th step, if the generated deviate is less than or equal to the number of special items remaining in the lot, the occurrence of one special item is tallied and the number of remaining special items is decreased by one. This process continues until the sample size of the number of special items in the lot is reached, whichever comes first. This method can be much slower than the inverse CDF technique. The timing depends on N. If N is more than half of L (which in practical examples is rarely the case), You may wish to modify the problem, replacing N by L − N, and to consider the generated deviates to be the number of special items not included in the sample.</p>
+        <h3><a name="Logarithmic_Distribution"></a>Logarithmic Distribution</h3>
+        <p>Calling IMSL_RANDOM with keywords LOGARITHMIC and PARAMETERS =a generates pseudorandom numbers from a logarithmic distribution. The probability function is:</p>
+        <p>
+            <img src="images/IMSL_RANDOM10.svg" />
+        </p>
+        <p>for <i>x</i> = 1, 2, 3, ..., and 0 &lt; <i>a</i> &lt; 1</p>
+        <p>The methods used are described by Kemp (1981) and depend on the value of <i>a</i>. If <i>a</i> is less than 0.95, Kemp’s algorithm LS, which is a “chop-down” variant of an inverse CDF technique, is used. Otherwise, Kemp’s algorithm LK, which gives special treatment to the highly probable values of 1 and 2 is used.</p>
+        <p>Lognormal Distribution</p>
+        <p>Calling IMSL_RANDOM with keywords LOGNORMAL, and PARAMETERS = [µ, σ] generates pseudorandom numbers from a lognormal distribution. The scale parameter σ in the underlying normal distribution must be positive. The method is to generate normal deviates with mean µ and standard deviation Σ and then to exponentiate the normal deviates.</p>
+        <p>The probability density function for the lognormal distribution is:</p>
+        <p>
+            <img src="images/IMSL_RANDOM11.svg" />
+        </p>
+        <p>for <i>x</i> &gt; 0. The mean and variance of the lognormal distribution are exp(µ + σ<sup>2</sup>/2) and exp(2µ + 2σ<sup>2</sup>) − exp(2µ + σ<sup>2</sup>), respectively.</p>
+        <h3><a name="Negative_Binomial_Distribution"></a>Negative Binomial Distribution</h3>
+        <p>Calling IMSL_RANDOM with keywords NEG_BINOMIAL and PARAMETERS = [<i>r</i>, <i>p</i>] generates pseudorandom numbers from a negative binomial distribution. The parameters <i>r</i> and <i>p</i> must be positive and <i>p</i> must be less than 1. The probability function is:</p>
+        <p>
+            <img src="images/IMSL_RANDOM12.svg" />
+        </p>
+        <p>for <i>x</i> = 0, 1, 2, ...</p>
+        <p>If <i>r</i> is an integer, the distribution is often called the Pascal distribution and can be thought of as modeling the length of a sequence of Bernoulli trials until <i>r</i> successes are obtained, where <i>p</i> is the probability of getting a success on any trial. In this form, the random variable takes values <i>r</i>, <i>r</i> + 1, <i>r</i> + 2, ... and can be obtained from the negative binomial random variable defined above by adding <i>r</i> to the negative binomial variable defined by adding <i>r</i> to the negative binomial variable. This latter form is also equivalent to the sum of <i>r</i> geometric random variables defined as taking values 1, 2, 3, ...</p>
+        <p>If <i>rp/(1 – p)</i> is less than 100 and <i>(1 – p)<sup>r</sup></i> is greater than the machine epsilon, IMSL_RANDOM uses the inverse CDF technique; otherwise, for each negative binomial deviate, IMSL_RANDOM generates a gamma <i>(r, p/(1 – p))</i> deviate Y and then generates a Poisson deviate with parameter Y.</p>
+        <h3><a name="Discrete_Uniform_Distribution"></a>Discrete Uniform Distribution</h3>
+        <p>Calling IMSL_RANDOM with keywords DISCRETE_UNIF and PARAMETERS = <i>k</i> generates pseudorandom numbers from a uniform discrete distribution over the integers 1, 2, ..., <i>k</i>. A random integer is generated by multiplying <i>k</i> by a uniform (0, 1) random number, adding 1.0, and truncating the result to an integer. This, of course, is equivalent to sampling with replacement from a finite population of size <i>k</i>.</p>
+        <h3><a name="Student’s_t_Distribution"></a>Student’s t Distribution</h3>
+        <p>Calling IMSL_RANDOM with keywords STUDENTS_T and PARAMETERS = <i>Df</i> generates pseudorandom numbers from a Student’s <i>t</i> distribution with <i>Df</i> degrees of freedom, using a method suggested by Kinderman et al. (1977). The method (“TMX” in the reference) involves a representation of the <i>t</i> density as the sum of a triangular density over (−2, 2) and the difference of this and the <i>t</i> density. The mixing probabilities depend on the degrees of freedom of the <i>t</i> distribution. If the triangular density is chosen, the variate is generated as the sum of two uniforms; otherwise, an acceptance/rejection method is used to generate the difference density.</p>
+        <h3><a name="Triangular_Distribution"></a>Triangular Distribution</h3>
+        <p>Calling IMSL_RANDOM with the keyword TRIANGULAR generates pseudorandom numbers from a triangular distribution over the unit interval. The probability density function is <i>f (x)</i> = 4<i>x</i>, for 0 ≤ <i>x</i> ≤ 0.5, and <i>f (x)</i> = 4 (1 – <i>x</i>), for 0.5 &lt; <i>x</i> ≤ 1. An inverse CDF technique is used.</p>
+        <h3><a name="von_Mises_Distribution"></a>von Mises Distribution</h3>
+        <p>Calling IMSL_RANDOM with keywords VON_MISES and PARAMETERS = <i>c</i> generates pseudorandom numbers from a von Mises distribution where <i>c</i> must be positive. The probability density function is:</p>
+        <p>
+            <img src="images/IMSL_RANDOM13.svg" />
+        </p>
+        <p>for −<i>π</i> &lt; <i>x</i> &lt; <i>π</i>, where <i>I<sub>0</sub> (c)</i> is the modified Bessel function of the first kind of order 0.</p>
+        <p>The probability density is equal to 0 outside the interval (−<i>π</i>, <i>π</i>).</p>
+        <p>The algorithm is an acceptance/rejection method using a wrapped Cauchy distribution as the majorizing distribution. It is due to Nest and Fisher (1979).</p>
+        <h3><a name="Weibull_Distribution"></a>Weibull Distribution</h3>
+        <p>Calling IMSL_RANDOM with keywords WEIBULL and PARAMETERS = [<i>a</i>, <i>b</i>] generates pseudorandom numbers from a Weibull distribution with shape parameter <i>a</i> and scale parameter <i>b</i>. The probability density function is:</p>
+        <p><i>f(x)</i> = <i>abx<sup>a-1</sup></i>exp(-<i>bx<sup>a</sup></i>)</p>
+        <p>for x<sup>3</sup> 0, <i>a</i> &gt; 0, and <i>b</i> &gt; 0. The value of <i>b</i> is optional; if it is not specified, it is set to 1.0.</p>
+        <p>The IMSL_RANDOM function uses an antithetic inverse CDF technique to generate a Weibull variate; that is, a uniform random deviate U is generated and the inverse of the Weibull cumulative distribution function is evaluated at 1.0 − U to yield the Weibull deviate.</p>
+        <p>Note that the Rayleigh distribution with probability density function:</p>
+        <p>
+            <img src="images/IMSL_RANDOM14.svg" />
+        </p>
+        <p>for <i>x</i> ≥ 0 is the same as a Weibull distribution with shape parameter <i>a</i> equal to 2 and scale parameter <i>b</i> equal to:</p>
+        <p>
+            <img src="images/IMSL_RANDOM15.svg" />
+        </p>
+        <h3>Stable Distribution</h3>
+        <p>Calling IMSL_RANDOM with keywords STABLE and PARAMETERS = [α, β'] generates pseudorandom numbers from a stable distribution with parameters α' and β'. α is the usual characteristic exponent parameter α, and β' is related to the usual skewness parameter β of the stable distribution. With restrictions 0 &lt; α ≤ 2 and –1 ≤ β ≤ 1, the characteristic function of the distribution is:</p>
+        <p><i style="font-size: 12pt;">ϕ(t) = exp[-|t|a exp(-π iβ (1 - |1 - α|)sign(t)/2)] for α ≠ 1</i>
+        </p>
+        <p>and</p>
+        <p><i style="font-size: 12pt;">ϕ(t) = exp[-|t|(1 + 2iβ ln|t|)sign(t)/π)] for α = 1</i>
+        </p>
+        <p>When β = 0, the distribution is symmetric. In this case, if α = 2, the distribution is normal with mean 0 and variance 2; and if α = 1, the distribution is Cauchy. The parameterization using β' and the algorithm used here are due to Chambers, Mallows, and Stuck (1976). The relationship between β' and the standard β is:</p>
+        <p><i style="font-size: 12pt;">β' = -tan(π (1 - α )/2) tan(-π β (1 - |1 - α|)/2) for α ≠ 1</i>
+        </p>
+        <p>and:</p>
+        <p><i style="font-size: 12pt;">β' = β for α = 1</i>
+        </p>
+        <p>The algorithm involves formation of the ratio of a uniform and an exponential random variate.</p>
+        <h3>Multinomial Distribution</h3>
+        <p>Calling IMSL_RANDOM with keywords MULTINOMIAL, PROBABILITIES, and PARAMETERS = <i>ntrials</i> generates pseudorandom numbers from a K-variate multinomial distribution with parameters <i>n</i> and <i>p</i>. <i>k</i> = N_ELEMENTS(<i>Probabilities</i>) and <i>ntrials</i> must be positive. Each element of <i>Probabilites</i> must be positive and the elements must sum to 1. The probability function (with <i>n</i> = <i>n</i>, <i>k</i> = <i>k</i>, and <i>pi</i> = <i>Probabilities</i>(<i>i</i>)) is:</p>
+        <p>
+            <img src="images/IMSL_RANDOM16.svg" />
+        </p>
+        <p>
+            <img src="images/IMSL_RANDOM17.svg" />
+        </p>
+        <p>The deviate in each row of <i>r</i> is produced by generation of the binomial deviate <i>x<sub>0</sub></i> with parameters <i>n</i> and <i>p<sub>i</sub></i> and then by successive generations of the conditional binomial deviates <i>x<sub>j</sub></i> given <i>x<sub>0</sub></i>, <i>x<sub>1</sub></i>, ..., <i>x<sub>j-2</sub></i> with parameters <i>n - x<sub>0</sub> - x<sub>1</sub> - ... - x<sub>j-2</sub></i> and <i>p<sub>j</sub>/(1 - p<sub>0</sub> - p<sub>1</sub> - ... - p<sub>j-2</sub>)</i>.</p>
+        <h3>Random Points on a K-dimensional Sphere</h3>
+        <p>Calling IMSL_RANDOM with the keywords SPHERE and PARAMETERS = <i>k</i> generates pseudorandom coordinates of points that lie on a unit circle or a unit sphere in K-dimensional space. For points on a circle (<i>k</i> = 2), pairs of uniform (–1, 1) points are generated and accepted only if they fall within the unit circle (the sum of their squares is less than 1), in which case they are scaled so as to lie on the circle.</p>
+        <p>For spheres in three or four dimensions, the algorithms of Marsaglia (1972) are used.</p>
+        <p>For three dimensions, two independent uniform (–1, 1) deviates U<sub>1</sub> and U<sub>2</sub> are generated and accepted only if the sum of their squares S<sub>1</sub> is less than 1. Then, the coordinates:</p>
+        <p>
+            <img src="images/IMSL_RANDOM18.svg" />
+        </p>
+        <p>are formed. For four dimensions, U<sub>1</sub>, U<sub>2</sub>, and S<sub>1</sub> are produced as described above.</p>
+        <p>Similarly, U<sub>3</sub>, U<sub>4</sub>, and S<sub>2</sub> are formed. The coordinates are then:</p>
+        <p>
+            <img src="images/IMSL_RANDOM19.svg" />
+        </p>
+        <p>and:</p>
+        <p>
+            <img src="images/IMSL_RANDOM20.svg" />
+        </p>
+        <p>For spheres in higher dimensions, K independent normal deviates are generated and scaled so as to lie on the unit sphere in the manner suggested by Muller (1959).</p>
+        <h3>Random Permutation</h3>
+        <p>Calling IMSL_RANDOM with the keyword PERMUTATION generates a pseudorandom permutation of the integers from 1 to <i>n</i>. It begins by filling a vector of length <i>n</i> with the consecutive integers 1 to <i>n</i>. Then, with <i>M</i> initially equal to <i>n</i>, a random index J between 1 and <i>M</i> (inclusive) is generated. The element of the vector with the index <i>M</i> and the element with index <i>J</i> swap places in the vector. <i>M</i> is then decremented by 1 and the process repeated until <i>M</i> = 1.</p>
+        <h3>Sample Indices</h3>
+        <p>Calling IMSL_RANDOM with the keywords SAMPLE_INDICES and PARAMETERS = <i>npop</i> generates the indices of a pseudorandom sample, without replacement, of size <i>n</i> numbers from a population of size <i>npop</i>. If <i>n</i> is greater than <i>npop</i>/2, the integers from 1 to <i>npop</i> are selected sequentially with a probability conditional on the number selected and the number remaining to be considered. If, when the <i>i</i>-th population index is considered, <i>j</i> items have been included in the sample, then the index <i>i</i> is included with probability <i>(n - j)/(npop + 1 - i)</i>.</p>
+        <p>If <i>n</i> is not greater than <i>npop</i>/2, a O(<i>n</i>) algorithm due to Ahrens and Dieter (1985) is used. Of the methods discussed by Ahrens and Dieter, the one called SG* is used. It involves a preliminary selection of <i>q</i> indices using a geometric distribution for the distances between each index and the next one. If the preliminary sample size <i>q</i> is less than <i>n</i>, a new preliminary sample is chosen, and this is continued until a preliminary sample greater in size than <i>n</i> is chosen. This preliminary sample is then thinned using the same kind of sampling as described above for the case in which the sample size is greater than half of the population size. This routine does not store the preliminary sample indices, but rather restores the state of the generator used in selecting the sample initially, and then passes through once again, making the final selection as the preliminary sample indices are being generated.</p>
+        <h2 class="API">Examples</h2>
+        <p>For additional information on using IMSL_RANDOM, see <a href="#Additional_Examples" class="selected">Additional Examples</a>.</p>
+        <h3>Example 1</h3>
+        <p>In this example, IMSL_RANDOM is used to generate five pseudorandom, uniform numbers. Since RANDOMOPT is not called, the generator used is a simple multiplicative congruential one with a multiplier of 16807.</p>
+        <p class="Code">IMSL_RANDOMOPT, Set = 123457</p>
+        <p class="Code">; Set the random seed.</p>
+        <p class="Code">r = IMSL_RANDOM(5)</p>
+        <p class="Code">; Call IMSL_RANDOM to compute the random numbers.</p>
+        <p class="Code">PM, r</p>
+        <p>The results are something like:</p>
+        <p class="Code">0.966220</p>
+        <p class="Code">0.260711</p>
+        <p class="Code">0.766262</p>
+        <p class="Code">0.569337</p>
+        <p class="Code">0.844829</p>
+        <h2 class="API">Syntax</h2>
+        <p><i>Result</i> = IMSL_RANDOM(<i>n</i> [, /BETA] [, /BINOMIAL] [, /CAUCHY] [, COVARIANCES=<i>value</i>] [, /CHI_SQUARED] [, /DISCRETE_UNIF] [, /DOUBLE] [, /EXPONENTIAL] [, /GAMMA] [, /GEOMETRIC] [, /HYPERGEOMETRIC] [, /LOGARITHMIC] [, /LOGNORMAL] [, /MIX_EXPONENTIAL] [, /MULTINOMIAL] [, /MVAR_NORMAL] [, /NEG_BINOMIAL] [, /NORMAL] [, PARAMETERS=<i>value</i>] [, /PERMUTATION] [, /POISSON] [, PROBABILITIES=<i>array</i>] [, /SAMPLE_INDICES] [, /SPHERE] [, /STABLE] [, /STUDENT_T] [, /TRIANGULAR] [, /UNIFORM] [, /VON_MISES] [, /WEIBULL])</p>
+        <p>Generally, it is best to first identify the desired distribution from the “Discussion” section, then refer to the “Input Keywords” section for specific usage instructions.</p>
+        <h2 class="API">Return Value</h2>
+        <p>A one-dimensional array of length <i>n</i> containing the random numbers. If one of the keywords SPHERE, MULTINOMIAL, or MVAR_NORMAL are used, then a two-dimensional array is returned.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">n</h3>
+        <p>Number of random numbers to generate.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">BETA</h3>
+        <p>If present and nonzero, the random numbers are generated from a beta distribution. Requires the PARAMETERS keyword to specify the parameters (<i>p</i>, <i>q</i>) for the distribution. The parameters <i>p</i> and <i>q</i> must be positive.</p>
+        <h3 class="Keyword">BINOMIAL</h3>
+        <p>If present and nonzero, random numbers are generated from a binomial distribution. Requires PARAMETERS keyword to specify the parameters (<i>p</i>, <i>n</i>) for the distribution. The parameter <i>n</i> is the number of Bernoulli trials, and it must be greater than zero. The parameter <i>p</i> represents the probability of success on each trial, and it must be between 0.0 and 1.0.</p>
+        <h3 class="Keyword">CAUCHY</h3>
+        <p>If present and nonzero, the random numbers are generated from a Cauchy distribution.</p>
+        <h3 class="Keyword">COVARIANCES</h3>
+        <p>Two-dimensional, square matrix containing the variance-covariance matrix. The two-dimensional array returned by IMSL_RANDOM is of the following size:</p>
+        <p>n by N_ELEMENTS(Covariances(*, 0))</p>
+        <p>Keywords MVAR_NORMAL and COVARIANCES must be specified to return numbers from a multivariate normal distribution.</p>
+        <h3 class="Keyword">CHI_SQUARED</h3>
+        <p>If present and nonzero, the random numbers are generated from a chi-squared distribution. Requires the PARAMETERS keyword to specify the parameter <i>Df</i> for the distribution. The parameter <i>Df</i> is the number of degrees of freedom for the distribution, and it must be positive.</p>
+        <h3 class="Keyword">DISCRETE_UNIF</h3>
+        <p>If present and nonzero, the random numbers are generated from a discrete uniform distribution. Requires the PARAMETERS keyword to specify the parameter <i>k</i> for the distribution. This generates integers in the range from 1 to <i>k</i> (inclusive) with equal probability. The parameter <i>k</i> must be positive.</p>
+        <h3 class="Keyword">DOUBLE</h3>
+        <p>If present and nonzero, double precision is used.</p>
+        <h3 class="Keyword">EXPONENTIAL</h3>
+        <p>If present and nonzero, the random numbers are generated from a standard exponential distribution.</p>
+        <h3 class="Keyword">GAMMA</h3>
+        <p>If present and nonzero, the random numbers are generated from a standard Gamma distribution. Requires the PARAMETERS keyword to specify the parameter <i>a</i> for the distribution. The parameter <i>a</i> is the shape parameter of the distribution, and it must be positive <i>n</i>.</p>
+        <h3 class="Keyword">GEOMETRIC</h3>
+        <p>If present and nonzero, the random numbers are generated from a geometric distribution. Requires the PARAMETERS keyword to specify the parameter <i>P</i> for the distribution. The parameter <i>P</i> must be positive and less than 1.0.</p>
+        <h3 class="Keyword">HYPERGEOMETRIC</h3>
+        <p>If present and nonzero, the random numbers are generated from a hypergeometric distribution. Requires the PARAMETERS keyword to specify the parameters (M, N, L) for the distribution. The parameter N represents the number of items in the sample, M is the number of special items in the population, and L is the total number of items in the population. The parameters N and M must be greater than zero, and L must be greater than both N and M.</p>
+        <h3 class="Keyword">LOGARITHMIC</h3>
+        <p>If present and nonzero, the random numbers are generated from a logarithmic distribution. Requires the PARAMETERS keyword to specify the parameter <i>a</i> for the distribution. The parameter <i>a</i> must be greater than zero.</p>
+        <h3 class="Keyword">LOGNORMAL</h3>
+        <p>If present and nonzero, the random numbers are generated from a lognormal distribution. Requires the PARAMETERS keyword to specify the parameters (µ, σ) for the distribution. The parameter µ is the mean of the distribution, while σ represents the standard deviation.</p>
+        <h3 class="Keyword">MIX_EXPONENTIAL</h3>
+        <p>If present and nonzero, the random numbers are generated from a mixture of two exponential distributions. Requires the PARAMETERS keyword to specify the parameters (θ<sub>1</sub>, θ<sub>2</sub>, <i>p</i>) for the distribution. The parameters θ<sub>1</sub> and θ<sub>2</sub> are the means for the two distributions; both must be positive, and θ<sub>1</sub> must be greater than θ<sub>2</sub>. The parameter <i>p</i> is the relative probability of the θ<sub>1</sub> distribution, and it must be non-negative and less than or equal to θ<sub>1</sub>/( θ<sub>1</sub> – θ<sub>2</sub>).</p>
+        <h3 class="Keyword">NEG_BINOMIAL</h3>
+        <p>If present and nonzero, the random numbers are generated from a negative binomial distribution. Requires the PARAMETERS keyword to specify the parameters (<i>r</i>, <i>p</i>) for the distribution. The parameter <i>r</i> must be greater than zero. If <i>r</i> is an integer, the generated deviates can be thought of as the number of failures in a sequence of Bernoulli trials before <i>r</i> successes occur. The parameter <i>p</i> is the probability of success on each trial. It must be greater than the machine epsilon, and less than 1.0.</p>
+        <h3 class="Keyword">MULTINOMIAL</h3>
+        <p>If present and nonzero, the random numbers are generated from a multinomial distribution. Requires the Parameters keyword to specify the parameter (ntrials) for the distribution, and the keyword Probabilities to specify the array containing the probabilities of the possible outcomes. The value if ntrials is the multinomial parameter indicating the number of independent trials.</p>
+        <h3 class="Keyword">MVAR_NORMAL</h3>
+        <p>If present and nonzero, the random numbers are generated from a multivariate normal distribution. Keywords MVAR_NORMAL and COVARIANCES must be specified to return numbers from a multivariate normal distribution.</p>
+        <h3 class="Keyword">NORMAL</h3>
+        <p>If present and nonzero, the random numbers are generated from a standard normal distribution using an inverse CDF method.</p>
+        <h3 class="Keyword">PARAMETERS</h3>
+        <p>Specifies parameters for the distribution used by IMSL_RANDOM to generate numbers. Some distributions require this keyword to execute successfully. The type and range of these parameters depends upon which distribution is specified. See the keyword for the desired distribution or the Discussion section for more details.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The keywords <i>A</i>, <i>Pin</i>, <i>Qin</i>, and <i>Theta</i> are still supported, but are now deprecated. Please use the PARAMETERS keyword instead.</p>
+        <h3 class="Keyword">PERMUTATION</h3>
+        <p>If present and nonzero, then generate a pseudorandom permutation.</p>
+        <h3 class="Keyword">POISSON</h3>
+        <p>If present and nonzero, the random numbers are generated from a Poisson distribution. Requires the PARAMETERS keyword to specify the parameter θ for the distribution. The parameter θ represents the mean of the distribution, and it must be positive.</p>
+        <h3 class="Keyword">PROBABILITIES</h3>
+        <p>Specifies the array containing the probabilities of the possible outcomes. The elements of <i>P</i> must be positive and must sum to 1.0. </p>
+        <p>Keywords MULTINOMIAL and PROBABILITIES must be specified to return numbers from a Multinomial distribution.</p>
+        <h3 class="Keyword">SAMPLE_INDICES</h3>
+        <p>If present and nonzero, generate a simple pseudorandom sample of indices. Requires the PARAMETERS keyword to specify the parameter <i>npop</i>, the number of items in the population.</p>
+        <h3 class="Keyword">SPHERE</h3>
+        <p>If present and nonzero, the random numbers are generated on a unit circle or K-dimensional sphere. Requires the PARAMETERS keyword to specify the parameter <i>k</i>, the dimension of the circle (<i>k</i> = 2) or of the sphere.</p>
+        <h3 class="Keyword">STABLE</h3>
+        <p>If present and nonzero, the random numbers are generated from a stable distribution. Requires the PARAMETERS keyword to specify the parameters <i>A</i> and <i>bprime</i> for the stable distribution. <i>A</i> is the characteristic exponent of the stable distribution. <i>A</i> must be positive and less than or equal to 2. <i>bprime</i> is related to the usual skewness parameter <i>b</i> of the stable distribution.</p>
+        <h3 class="Keyword">STUDENT_T</h3>
+        <p>If present and nonzero, the random numbers are generated from a Student’s <i>t</i> distribution. Requires the PARAMETERS keyword to specify the parameter <i>Df</i> for the distribution. The <i>Df</i> parameter is the number of degrees of freedom for the distribution, and it must be positive.</p>
+        <h3 class="Keyword">TRIANGULAR</h3>
+        <p>If present and nonzero, the random numbers are generated from a triangular distribution.</p>
+        <h3 class="Keyword">UNIFORM</h3>
+        <p>If present and nonzero, the random numbers are generated from a uniform (0, 1) distribution. The default action of this returns random numbers from a uniform (0, 1) distribution.</p>
+        <h3 class="Keyword">VON_MISES</h3>
+        <p>If present and nonzero, the random numbers are generated from a von Mises distribution. Requires the PARAMETERS keyword to specify the parameter <i>c</i> for the function. The parameter <i>c</i> must be greater than one-half the machine epsilon.</p>
+        <h3 class="Keyword">WEIBULL</h3>
+        <p>If present and nonzero, the random numbers are generated from a Weibull distribution. Requires the PARAMETERS keyword to specify the parameters (<i>a</i>, <i>b</i>) for the distribution. The parameter <i>a</i> is the shape parameter, and it is required. The parameter <i>b</i> is the scale parameter, and is optional (Default: <i>b</i> = 1.0).</p>
+        <h2 class="API"><a name="Additional_Examples"></a>Additional Examples</h2>
+        <h3>Example 2</h3>
+        <p>Poisson Distribution</p>
+        <p>In this example, random numbers from a Poisson distribution are computed.</p>
+        <p class="Code">IMSL_RANDOMOPT, Set = 123457</p>
+        <p class="Code">r = IMSL_RANDOM(5, /POISSON, PARAMETERS = 0.5)</p>
+        <p class="Code">; Call IMSL_RANDOM with keywords Poisson and Parameters.</p>
+        <p class="Code">PM, r</p>
+        <h3><a name="Example_3_Beta_Distribution"></a>Example 3</h3>
+        <p>Beta Distribution</p>
+        <p>In this example, random numbers are computed from a Beta distribution.</p>
+        <p class="Code">IMSL_RANDOMOPT, set = 123457</p>
+        <p class="Code">r = IMSL_RANDOM(5, /Beta, Parameter = [3,2])</p>
+        <p class="Code">; Call IMSL_RANDOM with keywords Beta, Pin, and Qin.</p>
+        <p class="Code">PM, r</p>
+        <h3>Example 4</h3>
+        <p>Scaling the Results of IMSL_RANDOM</p>
+        <p>This example computes deviates with uniform density over the interval (10, 20) and deviates from the normal distribution with a mean of 10 and a standard deviation of 2.</p>
+        <p class="Code">IMSL_RANDOMOPT, Set = 123457</p>
+        <p class="Code">; Set the random number seed.</p>
+        <p class="Code">a = 10</p>
+        <p class="Code">; Define the lowerbound.</p>
+        <p class="Code">b = 20</p>
+        <p class="Code">; Define the upperbound.</p>
+        <p class="Code">r = a + (b - a) * IMSL_RANDOM(5)</p>
+        <p class="Code">; Call IMSL_RANDOM to compute the deviates on (0,1) and scale the</p>
+        <p class="Code">; results to (a,b).</p>
+        <p class="Code">PM, r</p>
+        <p>The results are something like:</p>
+        <p class="Code">19.6622</p>
+        <p class="Code">12.6071</p>
+        <p class="Code">17.6626</p>
+        <p class="Code">15.6934</p>
+        <p class="Code">18.4483</p>
+        <p class="Code">; Define a standard deviation.</p>
+        <p class="Code">stdev = 2</p>
+        <p class="Code">; Define a mean.</p>
+        <p class="Code">mean = 10</p>
+        <p class="Code">; Call IMSL_RANDOM to compute the deviates normal deviates</p>
+        <p class="Code">; and scale the results using the specified mean and standard</p>
+        <p class="Code">; deviation.</p>
+        <p class="Code">r = IMSL_RANDOM(6, /Normal) * stdev + mean</p>
+        <p class="Code">PM, r</p>
+        <p>The results are something like:</p>
+        <p class="Code">6.59363</p>
+        <p class="Code">14.4635</p>
+        <p class="Code">10.5137</p>
+        <p class="Code">12.5223</p>
+        <p class="Code">9.39352</p>
+        <p class="Code">5.71021</p>
+        <h3>Example 5</h3>
+        <p>Multivariate Normal Distribution</p>
+        <p>In this example, IMSL_RANDOM generates five pseudorandom normal vectors of length 2 with variance covariance matrix equal to the following:</p>
+        <p class="Code">IMSL_RANDOMOPT, SET = 123457</p>
+        <p class="Code">; Set the random number seed.</p>
+        <p class="Code">cov = [[.5,.375],[.375, .5]]</p>
+        <p class="Code">; Define the covariance matrix.</p>
+        <p class="Code">PM, IMSL_RANDOM(5, /MVAR_NORMAL, COVARIANCES = cov)</p>
+        <p>The results are something like:</p>
+        <p class="Code">1.45068 1.24634</p>
+        <p class="Code">0.765975 -0.0429410</p>
+        <p class="Code">0.0583781 -0.669214</p>
+        <p class="Code">0.903489 0.462826</p>
+        <p class="Code">-0.866886 -0.933426</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

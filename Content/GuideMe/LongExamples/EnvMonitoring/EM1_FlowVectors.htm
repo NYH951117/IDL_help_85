@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Long Examples|Environmental Monitoring">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Plot Relative Aquifer Flow Vectors</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Long Examples</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Plot Relative Aquifer Flow Vectors</span>
+        </div>
+        <h1>Plot Relative Aquifer Flow Vectors</h1>
+        <p>An additional characteristic of the site we could characterize is the relative flow rates of the of the aquifer across the study area. This example uses <a href="../../../Reference Material/G/GRIDDATA.htm">GRIDDATA</a> and <a href="../../../Reference Material/C/CONTOUR.htm">CONTOUR</a> to generate the base terrain map, over which we lay a <a href="../../../Reference Material/V/VECTOR.htm">VECTOR</a> plot of the aquifer flow rates. Your final plot should look similar to this:</p>
+        <p>
+            <img src="../../images/EM_Vectors.png" />
+        </p>
+        <h2>Grid the Terrain Data</h2>
+        <p>Using the data in the files "TankTerrainData.csv" (see <a href="EM1_Gridding.htm">Model the Study Area and Setting</a>), create a contour plot  of the terrain to act as a base for the flow vectors.</p>
+        <p>Start by reading in the base data to use throughout the rest of the examples. The data resides in the file <code>TankDataTerrain.csv</code> in the <code>\examples\data</code> directory of your IDL installation. This file contains the surface terrain data of our site, in X, Y, Z coordinates (all in meters). The fourth column of data in this file contains the elevation of the surface of the underlying aquifer.</p>
+        <p>In this example, we create a template with <a href="../../../Reference Material/A/ASCII_TEMPLATE.htm">ASCII_TEMPLATE</a>, then read in the data using <a href="../../../Reference Material/R/READ_ASCII.htm">READ_ASCII</a>.</p>
+        <p class="Code">; Create the base template and assign X, Y, Z, </p>
+        <p class="Code">; and AQ as the variable names.</p>
+        <p class="Code">; Make sure to start the data at row 2 </p>
+        <p class="Code">; (row 1 contains column headers).</p>
+        <p class="Code">myTemplate = ASCII_TEMPLATE()</p>
+        <p class="Code">site = READ_ASCII('TankDataTerrain.csv', $</p>
+        <p class="Code">&#160;&#160;&#160;TEMPLATE=myTemplate)</p>
+        <p>&#160;</p>
+        <p class="Code">; Grid the data using the Kriging method </p>
+        <p class="Code">; (set DIMENSION to 1000 </p>
+        <p class="Code">; to align with the size of the study area). </p>
+        <p class="Code">;  Choose another gridding method if you wish.</p>
+        <p class="Code">grid = GRIDDATA(site.X, site.Y, site.Z, $</p>
+        <p class="Code">&#160;&#160;&#160;DIMENSION=1000, METHOD="Kriging")</p>
+        <p class="Code">&#160;</p>
+        <h2>Create the Base Contour Map </h2>
+        <p>Create the plot that will serve as a base for the flow vectors.</p>
+        <p class="Code">; Create a variable for a refactored color table. Use the REVERSE</p>
+        <p class="Code">; keyword of the COLORTABLE function on colortable #74 </p>
+        <p class="Code">; to flip the colors so that the darker colors are </p>
+        <p class="Code">; in the lower areas of the terrain.</p>
+        <p class="Code">myCT = COLORTABLE(74, /REVERSE)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Set up an index variable to hold the contour levels.</p>
+        <p class="Code">; Create the contour  plot from the gridded data. </p>
+        <p class="Code">index = [420,430,440,450,460,470,480,490,500,510, $</p>
+        <p class="Code">&#160;&#160;&#160;520,530,540,550,560,570,580]</p>
+        <p class="Code">myContour = CONTOUR(grid, RGB_TABLE=myCT, $</p>
+        <p class="Code">&#160;&#160;&#160;C_VALUE=index, ASPECT_RATIO=.75, /FILL, $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE="Study Area Terrain with Tank Locations", $</p>
+        <p class="Code">&#160;&#160;&#160;XTITLE="Meters (x10)", YTITLE="Meters (x10)")</p>
+        <p class="Code">myContour2 = CONTOUR(grid, COLOR='black', $</p>
+        <p class="Code">&#160;&#160;&#160;C_VALUE=index, ASPECT_RATIO=.75, /OVERPLOT)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Change the font size of the title.</p>
+        <p class="Code">myContour.TITLE.FONT_SIZE = 14</p>
+        <p class="Code">&#160;</p>
+        <h2>Read and Grid the Flow Data</h2>
+        <p>Now that we have the base CONTOUR plot completed, read in the aquifer flow data and create a VECTOR plot in the current window.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The rate of flow for the river is several orders of magnitude greater than that in the aquifer. For this reason, only directional data for river flow is included in the dataset.</p>
+        <p>&#160;</p>
+        <p class="Code">; Create a template to populate variables U, V, AX, and AY.</p>
+        <p class="Code">myTemplateAQ = ASCII_TEMPLATE()</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Read in the data.</p>
+        <p class="Code">gwFlow = READ_ASCII('GWFlowRates.csv', TEMPLATE=myTemplateAQ)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create the VECTOR plot over the current CONTOUR plot using </p>
+        <p class="Code">; a separate RGB_TABLE, then hide the axes. Note that</p>
+        <p class="Code">; AUTO_COLOR must be set to 1 in order for the vectors to </p>
+        <p class="Code">; have a color assigned based on the RGB_TABLE.</p>
+        <p class="Code">myVectors = VECTOR(gwFlow.U, gwFlow.V, gwFlow.AX, gwFlow.AY, $</p>
+        <p class="Code">&#160;&#160;&#160;XRANGE=[0,9], YRANGE=[0,10], rgb_table = 34, /CURRENT, $</p>
+        <p class="Code">&#160;&#160;&#160;AUTO_COLOR=1, background_transparency=100)</p>
+        <p class="Code">ax = myVectors.AXES</p>
+        <p class="Code">ax[0].HIDE= 1 ; hide bottom X axis</p>
+        <p class="Code">ax[1].HIDE= 1 ; hide left Y axis</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add a colorbar.</p>
+        <p class="Code">cb = COLORBAR(TARGET=myVectors, POSITION=[0.10,0.065,0.3,0.085], $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE='Flow Rate (m/day)', FONT_SIZE=8)</p>
+        <p>&#160;</p>
+        <h2>Other Topics in this Series</h2>
+        <ul>
+            <li value="1"><a href="EM1_Gridding.htm">Model the Study Area and Setting</a>
+            </li>
+            <li value="2"><a href="EM1_SurfacePlot.htm">Plot 3D Terrain and Water Table</a>
+            </li>
+            <li value="3"><a href="EM1_PlotSupportingInformation.htm">Plot Supporting Information</a>
+            </li>
+            <li value="4"><a href="EM1_PlumeContours.htm">Create Contours of Pollutant Plume</a>
+            </li>
+        </ul>
+        <h2>See Also</h2>
+        <p><a href="../../../Reference Material/A/ASCII_TEMPLATE.htm">ASCII_TEMPLATE</a>, <a href="../../../Reference Material/C/COLORBAR.htm">COLORBAR</a>, <a href="../../../Reference Material/C/COLORTABLE.htm">COLORTABLE</a>, <a href="../../../Reference Material/C/CONTOUR.htm">CONTOUR</a>, <a href="../../../IDL Graphics/FormattingSymsAndLines.htm">Formatting IDL&#160;Graphics Symbols and Lines</a>, <a href="../../../Reference Material/G/GRIDDATA.htm">GRIDDATA</a>, <a href="../../../Reference Material/R/READ_ASCII.htm">READ_ASCII</a>, <a href="../../../Reference Material/R/READ_CSV.htm">READ_CSV</a>, <a href="../../../Reference Material/V/VECTOR.htm">VECTOR</a> <![CDATA[ ]]></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

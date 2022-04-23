@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|Graphics Object Classes">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLgrPolygon</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/NoLines.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_gr.htm">Graphics Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLgrPolygon</span>
+        </div>
+        <h1 class="ObjClass"><a name="objects_gr_2157407275_1013068"></a><a name="kanchor3724"></a>IDLgrPolygon</h1>
+        <p>A polygon object represents one or more polygons that share a given set of vertices and rendering attributes. All polygons must be convex—that is, a line connecting any pair of vertices on the polygon cannot fall outside the polygon. Concave polygons can be converted to a set of convex polygons using the <a href="IDLgrTessellator.htm#objects_gr_2157407275_1016107">IDLgrTessellator</a> object.</p>
+        <p>An IDLgrPolygon object is an <i> atomic graphic object</i>; it is one of the basic drawable elements of the IDL Object Graphics system, and it is not a container for other objects.</p>
+        <h2 class="API"><a name="kanchor3725"></a>Polygon Optimization</h2>
+        <p>Polygon objects can be used in a wide variety of graphic displays. Consider consulting the following topics for information on improving the performance of polygon creation and rendering: </p>
+        <ul>
+            <li value="1"><a href="#obj_poly_2941541718_1020883" class="selected">Polygon Mesh Optimization</a> — describes how to optimize polygon meshes associated with a polygon through the POLYGON keyword</li>
+            <li value="2"><a href="#obj_poly_2941541718_1020816" class="selected">Back-face Culling</a> — lets you skip rendering the unseen side of closed polygons</li>
+            <li value="3"><a href="#obj_poly_2941541718_1001130" class="selected">Normal Computations</a> — uses normals that can be computed by COMPUTE_MESH_NORMALS instead of the expensive generation of default normals each time a polygon is drawn</li>
+        </ul>
+        <h3><a name="obj_poly_2941541718_1020883"></a>Polygon Mesh Optimization</h3>
+        <p>IDLgrPolygon objects consist of a set of vertices and, optionally—via the POLYGON keyword—a connectivity array describing how those vertices are to be connected to form one or more polygons. Internally, IDL can identify three special types of polygonal meshes that may be represented very efficiently and therefore displayed substantially faster than individually described polygons.   These special mesh types are characterized by repetitive patterns in the connectivity of the vertices. In performance terms, it is to your advantage to utilize this optimization whenever possible by appropriately preparing the connectivity list according to the rules described for the corresponding type of mesh. The special mesh types are as follows:</p>
+        <ul>
+            <li value="1"><a href="#obj_poly_2941541718_1001060" class="selected">Quad Strips</a>
+            </li>
+            <li value="2"><a href="#obj_poly_2941541718_1001087" class="selected">Triangle Fans</a>
+            </li>
+            <li value="3"><a href="#obj_poly_2941541718_1001107" class="selected">Triangle Strips</a>
+            </li>
+        </ul>
+        <h4><a name="obj_poly_2941541718_1001060"></a>Quad Strips</h4>
+        <p>A quad strip is a connected set of four-sided polygons. To take advantage of accelerated quad strips, the connectivity should be set up so that the first and last vertex for one quad are the same as the second and third of the previous quad. </p>
+        <p>
+            <img src="../../images/quad_strip_mesh.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 6.000469px;margin-bottom: 6.000484px;" /><![CDATA[       ]]></p>
+        <p>For example, to use a quad strip optimization for the polygons shown previously, the connectivity for the vertices should be as follows:</p>
+        <p class="Code">verts = [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10 ,v11]</p>
+        <p class="Code">oPoly = OBJ_NEW(IDLgrPolygon, verts, $</p>
+        <p class="Code">&#160;&#160;&#160;POLYGON=[4, 0, 1, 5, 4, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;4, 1, 2 ,6, 5, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;4, 2, 3, 7, 6, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;4, 4, 5, 9, 8, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;4, 5, 6, 10, 9, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;4, 6, 7, 11, 10])</p>
+        <p>An alternate connectivity list that still uses quad strip optimization can also be used as in the following example, which orients each quad in the opposite direction of the first example. </p>
+        <p class="Code">oPoly = OBJ_NEW('IDLgrPolygon', verts, $</p>
+        <p class="Code">&#160;&#160;&#160;POLYGON=[4, 4, 5, 1, 0, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;4, 5, 6, 2, 1, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;4, 6, 7, 3, 2, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;4, 8, 9, 5, 4, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;4, 9, 10, 6, 5,$</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;4, 10, 11, 7, 6])</p>
+        <h4><a name="obj_poly_2941541718_1001087"></a><a name="obj_poly_2941541718_17920"></a>Triangle Fans</h4>
+        <p>A triangle fan is a set of connected triangles that all share a common vertex. To take advantage of accelerated triangle fans, the connectivity should be set up so that the first vertex in every triangle is the common vertex, and the second vertex is the same as the last vertex of the previous triangle, as shown below. </p>
+        <p>
+            <img src="../../images/fan_triangle_strip_mesh.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 5.999783px;margin-bottom: 5.99976px;" />
+        </p>
+        <p>For example, to use a triangle fan optimization for the polygons shown in the left side of the figure, the connectivity for the vertices should be as follows:</p>
+        <p class="Code">verts = [v0, v1, v2, v3, v4, v5]</p>
+        <p class="Code">oPoly = OBJ_NEW(IDLgrPolygon, verts, $</p>
+        <p class="Code">&#160;&#160;&#160;POLYGON=[3, 0, 1, 2, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;3, 0, 2, 3, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;3, 0, 3, 4, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;3, 0, 4, 5]) </p>
+        <h4><a name="obj_poly_2941541718_1001107"></a>Triangle Strips</h4>
+        <p>A triangle strip is a set of connected triangles, each of which share two vertices with the previous triangle. To take advantage of accelerated triangle strips, the connectivity should be set up so that the first two vertices in every triangle must have been in the previous triangle and ordered in the same direction (counter-clockwise or clockwise) and the final vertex must be new, as shown in the right side of the previous figure.</p>
+        <p>For example, to use the triangle strip optimization for the polygons shown in the right-hand figure, the connectivity for the vertices should be as follows:</p>
+        <p class="Code">verts = [v0, v1, v2, v3, v4, v5]</p>
+        <p class="Code">oPoly = OBJ_NEW(IDLgrPolygon, verts, $</p>
+        <p class="Code">&#160;&#160;&#160;POLYGON=[3, 0, 1, 2, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;3, 2, 1, 3, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;3, 2, 3, 4, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;3, 4, 3, 5])</p>
+        <p>No limits are imposed on the number of meshes or types of meshes within any given polygon object. A single POLYGON keyword value might contain any combination of quad strips, triangle strips, triangle fans, or non-specialized polygons.</p>
+        <p>As the length of the strips or fans grows, and as the percentage of vertex connections that are optimized by the rules described above increases, the performance upgrade becomes more perceptible. The optimizations are a result of minimizing the time required to perform vertex transforms. If the drawing of the polygons are otherwise limited by fill-rate (as might occur on some systems if texture-mapping is being applied, for instance), these optimizations may not be of significant benefit. In any case, performance will not be hindered in any way by utilizing these specialized meshes, so it is suggested that they be applied whenever possible.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The IDLgrSurface object always takes advantage of the quad mesh optimization automatically without programmer intervention.</p>
+        <h3><a name="obj_poly_2941541718_1020816"></a><a name="kanchor3726"></a><a name="kanchor3727"></a>Back-face Culling</h3>
+        <p>For polygonal meshes that describe a closed shape (for example, a sphere), it is often wasteful to spend any time rendering the polygons whose normal vector faces away from the eye because it is known that the polygons whose normals face toward the eye will obscure those back-facing polygons. Therefore, for efficiency, it may be beneficial to employ back-face culling, which is simply the process of choosing to skip the rasterization of any polygons whose normal vector faces away from the eye.</p>
+        <p>On an IDLgrPolygon object, set the REJECT property to a value of 1 to enable back-face culling. </p>
+        <h3><a name="obj_poly_2941541718_1001130"></a><a name="kanchor3728"></a>Normal Computations</h3>
+        <p>For IDLgrPolygon objects, normal vectors are computed by default at each vertex by averaging the normals of the polygons that share that vertex. These normals are then used to compute illumination intensities across the surface of the polygon. Computing default normals is a computationally expensive operation. Each time the polygon is drawn, this computation will be repeated if the polygon has changed significantly enough to warrant a new internal cache (for example, if the connectivity, vertices, shading, or style has changed). In some cases, the normals do not actually change as other modifications are made. In these cases, the expense of default normal computation can be bypassed if the user provides the normals explicitly (via the NORMALS keyword). These normals can be computed by using the <a href="../../Reference Material/C/COMPUTE_MESH_NORMALS.htm#C_854643309_917905">COMPUTE_MESH_NORMALS </a>routine. The resulting normals, if passed in through the NORMALS keyword of the IDLgrPolygon object, will be reused every time the polygon is drawn (without further computation) until they are replaced explicitly by the user.</p>
+        <h2 class="API"><a name="objects_gr_2157407275_1013090"></a>Superclasses</h2>
+        <p><a href="../Miscellaneous/IDLitComponent.htm">IDLitComponent</a>
+        </p>
+        <h2 class="API"><a name="objects_gr_2157407275_1013093"></a>Creation</h2>
+        <p>See <a href="IDLgrPolygon__Init.htm#objects_gr_2157407275_1013254">IDLgrPolygon::Init</a>.</p>
+        <h2 class="API"><a name="objects_gr_2157407275_1044033"></a>Properties</h2>
+        <p>Objects of this class have the following properties. See <a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1044908">IDLgrPolygon Properties</a> for details on individual properties.</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/NoLines.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_NoLines">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056563">ALL</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1316054">ALPHA_CHANNEL</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1309898">AMBIENT</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#ANTIALIA">ANTIALIAS</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1074388">BOTTOM</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056581">CLIP_PLANES</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056586">COLOR</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1309971">DATA</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056590">DEPTH_OFFSET</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1094995">DEPTH_TEST_DISABLE</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1095559">DEPTH_TEST_FUNCTION</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1095598">DEPTH_WRITE_DISABLE</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1310292">DIFFUSE</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1310286">DOUBLE</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1310032">EMISSION</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056598">FILL_PATTERN</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056600">HIDDEN_LINES</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056602">HIDE</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056606">LINESTYLE</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056621">NORMALS</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056629">PALETTE</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056792">PARENT</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056790">POLYGONS</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1327262">REGISTER_PROPERTIES</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1093870">REJECT</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056641">RESET_DATA</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056643">SHADE_RANGE</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1799542">SHADER</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056645">SHADING</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056650">SHARE_DATA</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1310128">SHININESS</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1310225">SPECULAR</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#STENCIL_">STENCIL_BUFFER_FILL</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1310253">STYLE</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1214343">TEXTURE_COORD</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056664">TEXTURE_INTERP</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056666">TEXTURE_MAP</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056674">THICK</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056679">VERT_COLORS</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1088401">XCOORD_CONV</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056808">XRANGE</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1075980">YCOORD_CONV</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056822">YRANGE</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056694">ZCOORD_CONV</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056700">ZERO_OPACITY_SKIP</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">
+                        <p><a href="IDLgrPolygon_Properties.htm#objects_gr_2157407275_1056834">ZRANGE</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>In addition, objects of this class inherit the properties of all superclasses of this class.</p>
+        <h2 class="API"><a name="objects_gr_2157407275_1213984"></a><a name="kanchor3729"></a>Methods</h2>
+        <p>This class has the following methods:</p>
+        <ul>
+            <li value="1"><a href="IDLgrPolygon__Cleanup.htm#objects_gr_2157407275_1013128">IDLgrPolygon::Cleanup</a>
+            </li>
+            <li value="2"><a href="IDLgrPolygon__GetCTM.htm#objects_gr_2157407275_1013163">IDLgrPolygon::GetCTM</a>
+            </li>
+            <li value="3"><a href="IDLgrPolygon__GetMultiTe.htm#objects_gr_2157407275_1812042">IDLgrPolygon::GetMultiTextureCoord</a>
+            </li>
+            <li value="4"><a href="IDLgrPolygon__GetPropert.htm#objects_gr_2157407275_1013207">IDLgrPolygon::GetProperty</a>
+            </li>
+            <li value="5"><a href="IDLgrPolygon__GetVertexA.htm#objects_gr_2157407275_1805278">IDLgrPolygon::GetVertexAttributeData</a>
+            </li>
+            <li value="6"><a href="IDLgrPolygon__Init.htm#objects_gr_2157407275_1013254">IDLgrPolygon::Init</a>
+            </li>
+            <li value="7"><a href="IDLgrPolygon__SetMultiTe.htm#objects_gr_2157407275_1811652">IDLgrPolygon::SetMultiTextureCoord</a>
+            </li>
+            <li value="8"><a href="IDLgrPolygon__SetPropert.htm#objects_gr_2157407275_1013427">IDLgrPolygon::SetProperty</a>
+            </li>
+            <li value="9"><a href="IDLgrPolygon__SetVertexA.htm#objects_gr_2157407275_1805782">IDLgrPolygon::SetVertexAttributeData</a>
+            </li>
+        </ul>
+        <p>In addition, this class inherits the methods of its superclasses (if any).</p>
+        <h2 class="API"><a name="objects_gr_2157407275_1013123"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>5.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">
+                        <p>5.6</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">
+                        <p>Added CLIP_PLANES property</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Added ALPHA_CHANNEL, AMBIENT, DIFFUSE, EMISSION, SHININESS, and SPECULAR properties</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">
+                        <p>Added the SHADER property</p>
+                        <p>Added GetVertexAttributeData, SetVertexAttributeData, GetMultiTextureCoord, and SetMultiTextureCoord methods</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.2.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added ANTIALIAS property</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

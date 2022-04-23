@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-conditions="" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Objects|Operator Overloading">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Example: Overloading Array Indexing Syntax</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Object Classes/ref_part2.htm">Objects</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Operator Overloading</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Example: Overloading Array Indexing Syntax</span>
+        </div>
+        <h1><a name="obj_operators_3013489070_1001052"></a><a name="obj_operators_3013489070_82522"></a>Example: Overloading Array Indexing Syntax</h1>
+        <p>This example demonstrates a simple use of operator overloading with the <code>[]</code> (array indexing) operator. We create an object class (hexRGB_doc) whose only purpose is to provide an easy way to convert web-style hexadecimal color specifications to three-element RGB vectors. </p>
+        <p class="ExampleCode">The hexRGB_doc object definition and operator overloading code listed in this section is contained in the procedure file <code>hexrgb_doc__define.pro</code>, and is located in the <code>examples/doc/objects</code> subdirectory of the IDL distribution. To view the file in an IDL editor window, enter .EDIT hexrgb_doc__define.pro at the IDL command line.</p>
+        <p>The following code, located in <code>hexrgb_doc__define.pro</code>, defines the hexRGB_doc object and the overloaded <code>[]</code> (array indexing) operator method.</p>
+        <p>&#160;</p>
+        <p class="Code">FUNCTION hexrgb_doc::_overloadBracketsRightSide, isRange, sub1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Check to see that the input is a single, six-character string.</p>
+        <p class="Code">&#160;&#160;&#160;; If not, generate an error.</p>
+        <p class="Code">&#160;&#160;&#160;IF (N_ELEMENTS(sub1) NE 1 || $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;SIZE(sub1, /TYPE) NE 7 || $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;STRLEN(sub1) NE 6 ) $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;THEN BEGIN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;MESSAGE, 'Input must be a single, six-character string'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;ENDIF ELSE BEGIN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Read the input string, using the 'z' format code</p>
+        <p class="Code">&#160;&#160;&#160;; to convert from hexadecimal to floating-point values.</p>
+        <p class="Code">&#160;&#160;&#160;READS, sub1, red, green, blue, FORMAT='(z2,z2,z2)'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Create the return RGB array, converting to integer type.</p>
+        <p class="Code">&#160;&#160;&#160;retval = FIX([red, green, blue])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;ENDELSE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;RETURN, retval</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO hexrgb_doc__define</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;STRUCT = { hexrgb_doc, $</p>
+        <p class="Code">&#160;&#160;&#160;INHERITS IDL_Object }</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>The following code snippet creates a hexRGB_doc object and uses it to convert a hexadecimal color value to a three-element RGB vector.</p>
+        <p class="Code">c = hexrgb_doc()<br />PRINT, c['FF2C9D']</p>
+        <p>You could use this method to supply color values to IDL routines or keywords that expect a three-element RGB vector. For example:</p>
+        <p class="Code">p = PLOT(INDGEN(10), COLOR=c['FF00CC'])</p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

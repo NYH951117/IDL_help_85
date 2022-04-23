@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Variables">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Structure Variables</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDLInternalVariables.htm">IDLInternals - Variables</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Structure Variables</span>
+        </div>
+        <h1><a name="kanchor5454"></a>Structure Variables</h1>
+        <p>Structure variables have the type code <b>IDL_TYP_STRUCT</b>. They also have the <b>IDL_V_STRUCT</b> bit set in their flags field. The <b>value.s</b> field of such a variable contains a structure descriptor defined by the <b>IDL_SREF</b> structure:</p>
+        <p class="Code">typedef struct {</p>
+        <p class="Code_Indented">IDL_ARRAY *arr;	/* ^ to IDL_ARRAY containing data */</p>
+        <p class="Code_Indented">void *sdef;	/* ^ to structure definition */</p>
+        <p class="Code">} IDL_SREF;</p>
+        <p>The <b>arr</b> field points at an array block, as described in <a href="ArrayVariables.htm">Array Variables</a>. It is worth noting that in the definition of the <b>IDL_ALLTYPES</b> union (described in <a href="IDLVARIABLEStructure.htm">The IDL_VARIABLE Structure</a>), the <b>arr</b> field is a pointer to <b>IDL_ARRAY</b>, while the <b>s</b> field is an <b>IDL_SREF</b>, a structure that contains a pointer to <b>IDL_ARRAY</b> as its first member.</p>
+        <p>The resulting definition looks like:</p>
+        <p class="Code">union {</p>
+        <p class="Code_Indented">IDL_ARRAY arr;</p>
+        <p class="Code_Indented">struct { </p>
+        <p class="Code_Indented">&#160;&#160;&#160;IDL_ARRAY arr; </p>
+        <p class="Code_Indented">&#160;&#160;&#160;void *sdef;</p>
+        <p class="Code_Indented">} s;</p>
+        <p class="Code">} value;</p>
+        <p>Due to the way C lays out fields in structs and unions, <b>value.arr</b> will have the same offset and size within the value union as <b>value.s.arr</b>. Therefore, it is possible to access the array block of a structure variable as <b>var</b>-&gt;<b>value.arr</b> rather than the more correct <b>var</b>-&gt;<b>value.s.arr</b>. You should avoid use of this shorthand, however, because it is not strictly correct usage and because we reserve the right to change the <b>IDL_SREF</b> definition in a way that could cause the memory layout of the <b>ALLTYPES</b> union to change.</p>
+        <h2>Creating Structures</h2>
+        <p>The actual structure definition is accessed through the <b>sdef</b> field, which is a pointer to an opaque IDL structure definition. Although the implementation of structure definitions is not public information, they can be created using the <b>IDL_MakeStruct()</b> function from a structure name and a list of tags:</p>
+        <p class="Code">void *IDL_MakeStruct(char *name, IDL_STRUCT_TAG_DEF *tags)</p>
+        <h3>name</h3>
+        <p>The name of the structure definition, or NULL for anonymous structures.</p>
+        <h3>tags</h3>
+        <p>An array of <b>IDL_STRUCT_TAG_DEF</b> elements, one for each tag. The result from this function can be passed to <b>IDL_ImportArray()</b> or <b>IDL_ImportNamedArray()</b>, as described in <a href="CreateArrayFromExistingData.htm">Creating an Array from Existing Data</a>.</p>
+        <p><b>IDL_STRUCT_TAG_DEF</b> is defined as:</p>
+        <p class="Code">typedef struct { </p>
+        <p class="Code_Indented">char *name; </p>
+        <p class="Code_Indented">IDL_MEMINT *dims; </p>
+        <p class="Code_Indented">void *type;</p>
+        <p class="Code_Indented">UCHAR flags;</p>
+        <p class="Code">} IDL_STRUCT_TAG_DEF;</p>
+        <h3>name</h3>
+        <p>Null-terminated uppercase name of the tag.</p>
+        <h3>dims</h3>
+        <p>An array that contains information about the dimensions of the structure. The first element of this array is the number of dimensions. Following elements contain the size of each dimension.</p>
+        <h3>type</h3>
+        <p>Either a pointer to another structure definition, or a simple IDL type code cast to void (e.g., (<b>void *</b>) <b>IDL_TYP_BYTE</b>).</p>
+        <h3>flags</h3>
+        <p>A bit mask that specifies additional characteristics of the tag. Allowed values are:</p>
+        <ul>
+            <li value="1"><b>IDL_STD_INHERIT</b> — Type must be <b>IDL_TYP_STRUCT</b>. This flag indicates that the structure is inherited (inlined) instead of making it a sub- structure as usual.</li>
+        </ul>
+        <p>The following example shows how to define an anonymous structure. Suppose that you want to create a structure whose definition in the IDL language is:</p>
+        <p class="Code">{TAG1: 0L, TAG2: FLTARR(2,3,4), TAG3: STRARR(10)}</p>
+        <p>It can be created with <b>IDL_MakeStruct()</b> as follows:</p>
+        <p class="Code">static IDL_MEMINT one = 1;</p>
+        <p class="Code">static IDL_MEMINT tag2_dims[] = { 3, 2, 3, 4}; </p>
+        <p class="Code">static IDL_MEMINT tag3_dims[] = { 1, 10 }; </p>
+        <p class="Code">static IDL_STRUCT_TAG_DEF s_tags[] = {</p>
+        <p class="Code_Indented">{ "TAG1", 0, (void *) IDL_TYP_LONG},</p>
+        <p class="Code_Indented">{ "TAG2", tag2_dims, (void *) IDL_TYP_FLOAT},</p>
+        <p class="Code_Indented">{ "TAG3", tag3_dims, (void *) IDL_TYP_STRING},</p>
+        <p class="Code_Indented">{ 0 }</p>
+        <p class="Code">};</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">typedef struct data_struct { </p>
+        <p class="Code_Indented">IDL_LONG tag1_data;</p>
+        <p class="Code_Indented">float tag2_data [4] [3] [2]; IDL_STRING tag_3_data [10];</p>
+        <p class="Code_Indented">} DATA_STRUCT;</p>
+        <p class="Code">static DATA_STRUCT s_data;</p>
+        <p class="Code">void *s; </p>
+        <p class="Code">IDL_VPTR v;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">/* Create the structure definition */</p>
+        <p class="Code">s = IDL_MakeStruct(0, s_tags);</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">/* Import the data area s_data into an IDL structure, </p>
+        <p class="Code">&#160;&#160;&#160;note that no data are moved. */</p>
+        <p class="Code">v = IDL_ImportArray(1, &amp;one, IDL_TYP_STRUCT, </p>
+        <p class="Code">&#160;&#160;&#160;(UCHAR *) &amp;s_data, 0, s);</p>
+        <h2>Accessing Structure Tags</h2>
+        <p>Given an opaque IDL structure definition, you can determine the offset of the data and a description of its size and form (scalar, array, etc) for a given tag. <b>IDL_StructTagInfoByName()</b> returns this information given the name of the tag. <b>IDL_StructTagInfoByIndex()</b> does the same thing, given the numeric index of the tag. They are essentially the same routine, although <b>IDL_StructTagInfoByIndex()</b> is slightly more efficient:</p>
+        <p class="Code">IDL_MEMINT IDL_StructTagInfoByName(IDL_StructDefPtr sdef,</p>
+        <p class="Code">&#160;&#160;&#160;char *name, int msg_action, IDL_VPTR *var)</p>
+        <p class="Code">IDL_MEMINT IDL_StructTagInfoByIndex(IDL_StructDefPtr sdef,</p>
+        <p class="Code">&#160;&#160;&#160;int index,int msg_action, IDL_VPTR *var)</p>
+        <p>where:</p>
+        <h3>sdef</h3>
+        <p>Structure definition for which offset is needed.</p>
+        <h3>name (IDL_StructTagInfoByName)</h3>
+        <p>Name of tag for which information is required.</p>
+        <h3>index (IDL_StructTagInfoByIndex)</h3>
+        <p>Zero based index of tag for which information is required.</p>
+        <h3>msg_action</h3>
+        <p>The parameter that will be passed directly to <b>IDL_Message()</b> if the specified tag cannot be found in the supplied structure definition.</p>
+        <h3>var</h3>
+        <p>NULL, or the address of an <b>IDL_VPTR</b> to be filled in with a pointer to the variable description for the specified field.</p>
+        <p>On success, these functions return the data offset of the tag. On error, if the resulting call to <b>IDL_Message()</b> returns to the caller, a -1 is returned. The data offset can be added to the data pointer of an IDL variable of this structure type to obtain a pointer to the actual data for that tag.</p>
+        <p>If the tag is successfully located and the var argument is non-NULL, the <b>IDL_VPTR</b> it points at is filled in with a pointer to an <b>IDL_VARIABLE</b> structure that describes the type and organization of the tag. It is important to understand that this <b>IDL_VARIABLE</b> does not contain any actual data (or in the case of an array tag, a valid data pointer). Hence, the data part of the <b>IDL_VARIABLE</b> description should be ignored.</p>
+        <h2>Determining the Number Of Structure Tags</h2>
+        <p> The <b>IDL_StructNumTags()</b> function returns information on how many tags a structure definition has:</p>
+        <p class="Code">int IDL_StructNumTags(IDL_StructDefPtr sdef)</p>
+        <p>where:</p>
+        <h3>sdef</h3>
+        <p>Structure definition for which offset is needed.</p>
+        <h2>Determining the Names Of Structures and their Tags</h2>
+        <p>The <b>IDL_StructTagNameByIndex()</b> function returns the name of a specified tag from a structure definition, and optionally the name of the structure:</p>
+        <p class="Code">char *IDL_StructTagNameByIndex(IDL_StructDefPtr sdef, int index, </p>
+        <p class="Code">&#160;&#160;&#160;int msg_action, char **struct_name)</p>
+        <p>where:</p>
+        <h3>sdef</h3>
+        <p>Structure definition for which name information is needed.</p>
+        <h3>index</h3>
+        <p>Zero based index of tag within the structure.</p>
+        <h3>msg_action</h3>
+        <p>The parameter that will be passed directly to <b>IDL_Message()</b> if the specified tag cannot be found in the supplied structure definition.</p>
+        <h3>struct_name</h3>
+        <p>NULL, or the address of a character pointer (<b>char *</b>) to be filled in with a pointer to the name of the structure. If the structure is anonymous, the string “&lt;Anonymous&gt;” is returned.</p>
+        <p>On success, a pointer to the tag name is returned. On error, if the resulting call to <b>IDL_Message()</b> returns to the caller, a NULL pointer is returned.</p>
+        <p>All strings returned by this function must be considered read-only, and must not be modified by the caller.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

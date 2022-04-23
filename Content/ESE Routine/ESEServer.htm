@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="ESE Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>ESEServer</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="ESEAPIOverview.htm">ESE Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">ESEServer</span>
+        </div>
+        <h1 class="Routine"><a name="kanchor4191"></a>ESEServer</h1>
+        <p>The ESEServer class provides the ability to:</p>
+        <ul>
+            <li value="1">Introspect an ESE installation for its catalog</li>
+            <li value="2">Get a task by URI</li>
+            <li value="3">Get a task by name or pattern</li>
+            <li value="4">Upload files</li>
+            <li value="5">Download files</li>
+        </ul>
+        <h2 class="API">Methods</h2>
+        <ul>
+            <li value="1"><a href="#About" class="selected">ESEServer::About</a>
+            </li>
+            <li value="2"><a href="#DownloadFile" class="selected">ESEServer::DownloadFile</a>
+            </li>
+            <li value="3"><a href="#FindTask" class="selected">ESEServer::FindTask</a>
+            </li>
+            <li value="4"><a href="#GetCatalog" class="selected">ESEServer::GetCatalog</a>
+            </li>
+            <li value="5"><a href="#GetTask" class="selected">ESEServer::GetTask</a>
+            </li>
+            <li value="6"><a href="#Ping" class="selected">ESEServer::Ping</a>
+            </li>
+            <li value="7"><a href="#UploadFile" class="selected">ESEServer::UploadFile</a>
+            </li>
+        </ul>
+        <h2 class="API">Examples</h2>
+        <h3>Example 1</h3>
+        <p>The full hierarchy of tasks can be introspected, starting with the <a href="ESECatalog.htm">ESECatalog</a>. In this example we start the process of enumerating all folders, services and tasks by using an ESEServer object to get the catalog.  Folders and services can be acquired by using the catalog object's methods.  Similarly, tasks can be acquired from <a href="ESEService.htm">ESEService</a> objects.</p>
+        <p class="Code">Server = ESE.GetServer( 'localhost', 8181 )</p>
+        <p class="Code">Catalog = Server.GetCatalog()</p>
+        <h3>Example 2</h3>
+        <p>The ESEServer class has two convenience methods for finding tasks: FindTask() and GetTask(). If the URI of a task is not known then the task can be searched for using findTask(). This is also good if the task ever moves within the folder and services hierarchy.</p>
+        <p class="Code">Server = ESE.GetServer( 'localhost', 8181 )</p>
+        <p class="Code">Task = Server.FindTask( 'ese_addition' )</p>
+        <p>Regular expressions can also be used. In this example, all tasks with the substring 'ortho' in their name are found:</p>
+        <p class="Code">Server = ESE.GetServer( 'localhost', 8181 )</p>
+        <p class="Code">Task = Server.FindTask( 'ortho', /REGEX )</p>
+        <h3>Example 3</h3>
+        <p>If the URI to a task is known, then GetTask() can be used to more directly specify and retrieve an <a href="ESETask.htm">ESETask</a> object. Since there is a fixed root ("ese") and only one catalog (defaults to "services"), they are not specified.</p>
+        <p class="Code">Server = ESE.GetServer( 'localhost', 8181 )</p>
+        <p class="Code">Task = Server.GetTask( 'SyncService/ese_addition' )</p>
+        <p>When a service is in a folder, its tasks can be retrieved this way:</p>
+        <p class="Code">Server = ESE.GetServer( 'localhost', 8181 )</p>
+        <p class="Code">Task = Server.GetTask( 'MyFolder/MySubFolder/MyService/myFunTask' )</p>
+        <h2 class="API">Properties</h2>
+        <h3 class="Property">HOST (Get)</h3>
+        <p>The name or IP address of the machine that is hosting the ESE server.</p>
+        <h3 class="Property">PORT (Get)</h3>
+        <p>The port number that the ESE server is listening on.</p>
+        <h3 class="Property">ROOT (Get)</h3>
+        <p>The root endpoint for all ESE requests. This value is always 'ese'.</p>
+        <h3 class="Property">URI (Get)</h3>
+        <p>The URI up to and including the host, port, and root (for example, <code>http://<i>host</i>:<i>port</i>/ese</code>).</p>
+        <h1 class="ObjMethod"><a name="About"></a>ESEServer::About</h1>
+        <p>This method returns a hash that gives version information for ESE, IDL, ENVI, LiDAR, Mongoose, and SQLite.</p>
+        <h2 class="API">Example</h2>
+        <p class="Code">Server = ESE.GetServer( 'localhost', 8181 )</p>
+        <p class="Code">info = Server.About()</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>.[ESEServer::]About()</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns a hash with the following keys and values:</p>
+        <table class="TableStyle_Description" style="mc-table-style: url('../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Key</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Example Value</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>ESE </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Version	5.2.1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>License Expiration Date	</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1-apr-2015</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Maximum Concurrent Jobs</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>4</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>IDL Version	</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>8.4.1 (Jan 18, 2014)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>IDL Platform	</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>unix</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>ENVI Version	</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>5.2.1 (Jan 18, 2014)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>LiDAR Version	</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>unavailable</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Mongoose Version	</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>5.4</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>SQLite Version	</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>3.7.13</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>This method returns !null on error.</p>
+        <h2 class="API">Arguments</h2>
+        <p>None.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="DownloadFile"></a>ESEServer::DownloadFile</h1>
+        <p>This method downloads the resource specified by the given URL to the given file path. An array of URLs and matching files can be provided. The URLs must be valid and the file paths must be new files in writable directories.</p>
+        <h2 class="API">Example</h2>
+        <p>This example downloads the file previously uploaded in the ESE::uploadFile example. Note that the destination path must be updated to be valid.</p>
+        <p class="Code">Server = ESE.GetServer( 'localhost', 8181 )</p>
+        <p class="Code">Server.DownloadFile( 'http://localhost:8181/docroot/ese/data_upload/boulder.tif', 'C:\Users\me\Desktop\boulder.tif' )</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Obj</i>.[ESEServer::]DownloadFile, <i>URL</i>, <i>File</i></p>
+        <h2 class="API">Return Value</h2>
+        <p>None.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">URL</h3>
+        <p>The URL of the file to download. The ESE server can only download files that exist underneath its "docroot" directory. This argument can be an array of URLs. In that case, the File argument should be an array of corresponding destination file paths.</p>
+        <h3 class="Argument">File</h3>
+        <p>The destination to download the file to. This argument can be an array of file paths.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="FindTask"></a>ESEServer::FindTask</h1>
+        <p>This method searches for the given task and returns an array of <a href="ESETask.htm">ESETask</a> objects. If the REGEX keyword is specified, then matches are performed using the name as a regular expression. The search is case insensitive.</p>
+        <h2 class="API">Example</h2>
+        <p class="Code">Server = ESE.GetServer( 'localhost', 8181 )</p>
+        <p class="Code">Task = Server.FindTask( 'ortho', /REGEX)</p>
+        <h2 class="API">Syntax</h2>
+        <p><i>Task</i> = <i>Obj</i>.[ESEServer::]FindTask( <i>Name</i> [, /REGEX ] )</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns one or more ESETask objects. If more than one match is found then the return value is an array of ESETask objects. If there is a communications error with the server then an error is thrown.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Name</h3>
+        <p>The name of the task to search for. Matches are case-insensitive.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">REGEX</h3>
+        <p>Set this keyword to perform matching using Name as a regular expression. Matches are case-insensitive.</p>
+        <h1 class="ObjMethod"><a name="GetCatalog"></a>ESEServer::GetCatalog</h1>
+        <p>This method returns an object that represents the server's catalog. There is only one.</p>
+        <h2 class="API">Example</h2>
+        <p class="Code">Server = ESE.GetServer( 'localhost', 8181 )</p>
+        <p class="Code">Catalog = Server.GetCatalog()</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Catalog</i> = <i>Obj</i>.[ESEServer::]GetCatalog()</p>
+        <h2 class="API">Return Value</h2>
+        <p>This method returns an <a href="ESECatalog.htm">ESECatalog</a> object.</p>
+        <h2 class="API">Arguments</h2>
+        <p>None.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="GetTask"></a>ESEServer::GetTask</h1>
+        <p>This method returns the <a href="ESETask.htm">ESETask</a> object at the given relative URI, which must start with a folder or service. The root and catalog are implied and must not be specified. Namely, the URI should be [<i>folders</i>/]<i>service</i>/<i>task</i>.</p>
+        <h2 class="API">Example</h2>
+        <p class="Code">Server = ESE.GetServer( 'localhost', 8181 )</p>
+        <p class="Code">Task = Server.GetTask( 'SyncService/ese_addition' )</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Task</i> = <i>Obj</i>.[ESEServer::]GetTask( URI )</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns an ESETask object that represents the specified task. If the relative URI is invalid then !null is returned.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">URI</h3>
+        <p>A partial URI that is relative to the server's catalog. The server's root and catalog (typically 'ese' and 'services') are implied. The relative URI must begin with the folder or service that follows the catalog.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="Ping"></a>ESEServer::Ping</h1>
+        <p>This method checks whether the server is alive, returning !true or !false.</p>
+        <h2 class="API">Example</h2>
+        <p class="Code">Server = ESE.GetServer( 'localhost', 8181 )</p>
+        <p class="Code">isAlive = Server.Ping()</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>.[ESEServer::]Ping()</p>
+        <h2 class="API">Return Value</h2>
+        <p>This method returns !true if the server is responsive; otherwise, it returns !false.</p>
+        <h2 class="API">Arguments</h2>
+        <p>None.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="UploadFile"></a>ESEServer::UploadFile</h1>
+        <p>This method uploads the specified file or files to ESE's "docroot/ese/data_upload" directory. The return value is the URI of the uploaded file (or an array, as appropriate). If the file already exists at the specified destination then it is overwritten. If there is a failure then an error is thrown.</p>
+        <h2 class="API">Example</h2>
+        <p class="Code">file = filepath( 'boulder.tif', subdir = [ 'examples', 'data' ] )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Server = ESE.GetServer( 'localhost', 8181 )</p>
+        <p class="Code">uri = Server.UploadFile( file )</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>URIs</i> = <i>Obj</i>.[ESEServer::]UploadFile( <i>Files</i> )</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns the URI of the uploaded file or an array of URIs if an array of files was specified.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Files</h3>
+        <p>A scalar or array of file paths. Each specified file is uploaded to the "docroot/ese/data_upload" directory on the server and a URI to the file is returned for convenience.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h2 class="API">Version History</h2>
+        <table class="TableStyle_VersionTable" style="mc-table-style: url('../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;" cellspacing="0">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">IDL 8.4.1</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">Introduced</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="ESE.htm">ESE</a>, <a href="ESECatalog.htm">ESECatalog</a>, <a href="ESETask.htm">ESETask</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Files and Input Output">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Opening Files with IDL_FileOpen()</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="FilesIO.htm">IDLInternals - Files and Input Output</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Opening Files with IDL_FileOpen()</span>
+        </div>
+        <h1><a name="kanchor5489"></a>Opening Files with IDL_FileOpen()</h1>
+        <h2 class="API">IDL_FileOpen()</h2>
+        <p class="Code">int IDL_FileOpen(int argc, IDL_VPTR *argv, char *argk, </p>
+        <p class="Code">&#160;&#160;&#160;int access_mode, IDL_SFILE_FLAGS_T extra_flags, </p>
+        <p class="Code">&#160;&#160;&#160;int longjmp_safe, int msg_attr)</p>
+        <p><b>IDL_FileOpen()</b> returns TRUE if the file has been successfully opened and FALSE otherwise.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If <b>longjmp_safe</b> is TRUE, the usual course is to jump back to the IDL interpreter, in which case the routine won’t return.</p>
+        <h3>argc</h3>
+        <p>The number of arguments in argv. This value should always be 2.</p>
+        <h3>argv</h3>
+        <p>The arguments to <b>IDL_File_Open(). argv[0]</b> should be a scalar integer value giving the file unit number (LUN) to be opened. <b>argv[1]</b> is a scalar string giving the file name.</p>
+        <h3>argk</h3>
+        <p>Keywords. Set this argument to NULL.</p>
+        <h3>access_mode</h3>
+        <p>A bit mask that specifies the access to be allowed to the file being opened. The allowed bit values are listed in the following table:</p>
+        <ul>
+            <li value="1"><b>IDL_OPEN_R</b>: The file is open for input.</li>
+            <li value="2"><b>IDL_OPEN_W</b>: The file is open for output.</li>
+            <li value="3"><b>IDL_OPEN_TRUNC</b>: The file was truncated when it was opened. This implies that <b>IDL_OPEN_W</b> is also set.</li>
+            <li value="4"><b>IDL_OPEN_APND</b>: The file was opened with the file pointer set just past the last byte of data in the file (the file is open for appending).</li>
+        </ul>
+        <p>Conflicting bits should not be set together (for example, do not specify <b>IDL_OPEN_TRUNC</b> | <b>IDL_OPEN_APND</b>). Also, one or both of <b>IDL_OPEN_R</b> and <b>IDL_OPEN_W</b> must always be specified.</p>
+        <h3>extra_flags</h3>
+        <p>Used to specify additional file attributes using the flags defined in the description of the flags field of the <b>IDL_FILE_STAT</b> struct (see <a href="FileInformation.htm">File Information</a>). Note that some flags are set by IDL based on the actual attributes of the opened file (e.g. <b>IDL_F_ISTTY</b>) and that it makes no sense to set such flags in this mask.</p>
+        <p>If you intend to use the opened file as a C standard I/O (stdio) stream file, you must specify the <b>IDL_F_STDIO</b> flag when calling <b>IDL_FileOpen()</b>. Otherwise, IDL may choose not to use stdio.</p>
+        <h3>longjmp_safe</h3>
+        <p>If set to TRUE, <b>IDL_FileOpen()</b> is being called in a context where an <b>IDL_MSG_LONGJMP</b> <b>IDL_Message</b> action code is okay. If set to FALSE, the routine won’t longjmp().</p>
+        <p><b>IDL_FileOpen()</b> returns TRUE if the file has been successfully opened and FALSE otherwise. Of course, if longjmp_safe is TRUE, the usual course is to jump back to the IDL interpreter, in which case the routine won’t return.</p>
+        <h3>msg_attr</h3>
+        <p>A zero (0), or any combination of the <b>IDL_MSG_ATTR_</b> flags, used to fine tune the error handling specified by the longjmp_safe argument. Note that you must not specify any of the base <b>IDL_MSG_</b> codes, but only the attributes. The base code (e.g. <b>IDL_MSG_LONGJMP</b>) is determined by the value of longjmp_safe. For a discussion of the <b>IDL_MSG_ATTR_ f</b>lags, see <a href="../IDLInternals - Error Handling/IssuingErrorMessages.htm">Issuing Error Messages</a>.</p>
+        <h2 class="API">Special File Units</h2>
+        <p>There are three files that are always open. The three units are:</p>
+        <ul>
+            <li value="1"><b>IDL_STDIN_UNIT</b>: Unit 0 (zero) is the standard input for the IDL process.</li>
+            <li value="2"><b>IDL_STDOUT_UNIT</b>: Unit –1 is the standard output.</li>
+            <li value="3"><b>IDL_STDERR_UNIT</b>: Unit –2 is the standard error.</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The constant IDL_NON_UNIT always has a value that is not a valid file unit.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

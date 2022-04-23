@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Miscellaneous Topics">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Automatic Garbage Collection</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../MiscellaneousLanguageTopics.htm">Miscellaneous Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Automatic Garbage Collection</span>
+        </div>
+        <h1><a name="pointers_3224653378_1018570"></a><a name="pointers_3224653378_18342"></a>Automatic Garbage Collection</h1>
+        <p>The term<i> garbage collection</i> refers to the process of finding heap variables that have become inaccessible, and de-allocating the memory storing the data. IDL performs automatic garbage collection on all data types so that when a variable is destroyed or goes out of scope, the variable’s memory is automatically reclaimed.</p>
+        <p>IDL garbage collection is implemented using a reference counting scheme. In reference counting, each heap variable keeps track of the number of references to it. In general, the reference count increases when a new reference to the underlying heap variable is created, and decreases when a reference is removed. When the reference count reaches zero, the object or pointer is destroyed. You can call the <a href="../../Reference Material/H/HEAP_REFCOUNT.htm">HEAP_REFCOUNT</a> function to return the reference count for a pointer or object reference. You can also call the HELP procedure with the /FULL keyword to retrieve the same information.</p>
+        <p>An object or heap variable can have multiple references to it. When the last reference to an object is removed, the object’s Cleanup method is called and the heap variable is automatically destroyed. When the last pointer to a heap variable is removed, the associated heap variable is automatically destroyed.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Automatic garbage collection is unable to destroy the objects in a cyclic reference (where two objects or pointers refer to each other, but no other object or pointer refers to either).</p>
+        <p>In addition to automatic garbage collection, users have several options for explicitly de-allocating heap variables. Users can call <a href="../../Reference Material/P/PTR_FREE.htm#P_817877613_845045">PTR_FREE</a> or <a href="../../Reference Material/O/OBJ_DESTROY.htm#O_828691053_889421">OBJ_DESTROY</a> to explicitly free associated pointers and objects. A user can also call <a href="../../Reference Material/H/HEAP_FREE.htm#H_835179117_877451">HEAP_FREE</a> to recursively free all heap variables that are contained within an input variable. Finally, the <a href="../../Reference Material/H/HEAP_GC.htm#H_835179117_852187">HEAP_GC</a> function can be called to perform garbage collection on all inaccessible heap variables.</p>
+        <h2 class="API">Enabling and Disabling Automatic Garbage Collection</h2>
+        <p>By default, automatic garbage collection is enabled for all object and pointer heap variables, except for IDLgrWindow and all subclasses. (When the actual window is closed, the IDLgrWindow is automatically destroyed.)</p>
+        <p>You can disable automatic garbage collection for all heap variables using the <a href="../../Reference Material/H/HEAP_REFCOUNT.htm">HEAP_REFCOUNT</a> function. This is useful when testing an application to ensure that variable cleanup is working as expected.</p>
+        <p>If you want to disable automatic garbage collection for a particular object reference or pointer, call HEAP_REFCOUNT with the pointer or object reference and the DISABLE keyword.</p>
+        <p>If you want to always disable garbage collection for a specific object class, you can add the following line of code to the class Init method:</p>
+        <p class="Code">void=HEAP_REFCOUNT(self, /DISABLE)</p>
+        <p>This code will disable garbage collection for all class instances.</p>
+        <p>To determine if garbage collection is enabled for a particular heap variable, call HEAP_REFCOUNT with the IS_ENABLED keyword.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Surfaces">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Surface with Contour Lines</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/surfaces_gallery.htm">Surfaces</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Surface with Contour Lines</span>
+        </div>
+        <h1><a name="kanchor4214"></a>Surface with Contour Lines</h1>
+        <p>You can enhance surface graphics by overplotting contour data to show more detail. In this topic, we will show two examples of using the SURFACE&#160;function along with the CONTOUR to display gravity and elevation data.</p>
+        <p>For an additional example using SURFACE, see <a href="../LongExamples/EnvMonitoring/EM1_SurfacePlot.htm">Plot 3D Terrain and Water Table</a>.</p>
+        <h2>Example 1</h2>
+        <p>For this example, we display simulated data for gravity measurements from a hypothetical meteorite impact crater in New South Wales, Australia. The data is stored in the file 'CraterGravityMeasurements.csv' in your IDL Examples/Data directory.</p>
+        <p>
+            <img src="../images/GravitySurface.png" />
+        </p>
+        <p>Since this is ungridded CSV data, read it in with your choice of ASCII readers. In this example we use <a href="../../Reference Material/R/READ_ASCII.htm">READ_ASCII()</a> with <a href="../../Reference Material/A/ASCII_TEMPLATE.htm">ASCII_TEMPLATE()</a>. We will then grid the data before creating <a href="../../Reference Material/S/SURFACE.htm">SURFACE</a> and <a href="../../Reference Material/C/CONTOUR.htm">CONTOUR</a> plots.</p>
+        <p class="Code">; Create the base template and assign X, Y, and Z as the variable names.</p>
+        <p class="Code">; Make sure to start the data at row 2 (row 1 contains column headers).</p>
+        <p class="Code">myTemplate = ASCII_TEMPLATE()</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Read in the data.</p>
+        <p class="Code">grav = READ_ASCII('CraterGravityMeasurements.csv', TEMPLATE=myTemplate)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Grid the data to 1 meter using the Kriging method (set DIMENSION to 1000</p>
+        <p class="Code">; since the data covers 1000 meters squared). Optionally, to reduce rendering time</p>
+        <p class="Code">; change DIMENSION to 100 (gridding to 10 meter squares).</p>
+        <p class="Code">grid = GRIDDATA(grav.x, grav.y, grav.z, DIMENSION=1000, METHOD="Kriging")</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create the surface plot from the gridded data. Note that if you set</p>
+        <p class="Code">; DIMENSION to 100 in the previous step, change the X and Y titles to</p>
+        <p class="Code">; "Meters (x 10)".</p>
+        <p class="Code">mySurf = SURFACE(grid, RGB_TABLE=16, TRANSPARENCY=25, COLOR='burlywood', $</p>
+        <p class="Code">&#160;&#160;&#160;XTITLE="Meters", YTITLE="METERS", TITLE="Gravity Measurements at Impact Crater, NSW Australia")</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create an alternate z-axis at the back of the plot for easier reading.</p>
+        <p class="Code">; Note that if you set DIMENSION to 100, use LOCATION=[0,105] here.</p>
+        <p class="Code">zAxis = AXIS('Z', LOCATION=[0, 1010], TITLE='Measured Gravity (mGal)', $</p>
+        <p class="Code">&#160;&#160;&#160;TICKINTERVAL=0.5, AXIS_RANGE=[-2.0,0.0])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Do not display the original z-axis.</p>
+        <p class="Code">mySurf['axis2'].TRANSPARENCY=100</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Finally, add the gridded contours.</p>
+        <p class="Code">contours = CONTOUR(grid, C_VALUE=grav.z, PLANAR=0, /OVERPLOT)</p>
+        <p class="Code">&#160;</p>
+        <h2>Example 2</h2>
+        <p>This example works with digital elevation data from the Maroon Bells Wilderness in Colorado, USA.</p>
+        <p>
+            <img src="../../Resources/Images/surface_contour.gif" />
+        </p>
+        <p>The code shown below creates the graphic shown above. You can copy the entire block and paste it into the IDL&#160;command line to run it. </p>
+        <p class="Code_Indented">; Define the elevation data to use.</p>
+        <p class="Code_Indented">RESTORE, FILEPATH('marbells.dat', $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;SUBDIRECTORY=['examples', 'data'])</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Display the elevation surface.</p>
+        <p class="Code_Indented">mySurface = SURFACE(elev, TITLE='Maroon Bells Elevation Data')</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Overlay the contour data.</p>
+        <p class="Code_Indented">myContour = CONTOUR(elev, N_LEVELS=15, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;/ZVALUE, PLANAR=0, /OVERPLOT)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The ZVALUE keyword will not have any visual effect unless PLANAR is set to 0 and  the plot is in a 3D dataspace, such as in conjunction with the        <a href="../../Reference Material/S/SURFACE.htm">SURFACE</a> function. </p>
+        <h2 class="API">Resources</h2>
+        <ul>
+            <li value="1"><a href="../propChanges.htm">Change graphics properties</a>
+            </li>
+            <li value="2"><a href="../MultiViz.htm">Multiple graphics in one window</a>
+            </li>
+            <li value="3"><a href="../ImageGuideMe/SaveImage.htm">Save a graphic</a>
+            </li>
+            <li value="4"><a href="surfaces.htm">Displaying surfaces</a>
+            </li>
+            <li value="5"><a href="../../Reference Material/C/CONTOUR.htm">CONTOUR</a>
+            </li>
+            <li value="6"><a href="../../Reference Material/S/SURFACE.htm">SURFACE</a>
+            </li>
+            <li value="7"><a href="../../Reference Material/Functional List of IDL Routines/Graphics.htm">IDL Graphics Functions</a>
+            </li>
+            <li value="8"><a href="../../IDL Graphics/FormattingSymsAndLines.htm">Formatting IDL&#160;Graphics Symbols and Lines</a>
+            </li>
+            <li value="9"><a href="../LongExamples/EnvMonitoring/EM1_SurfacePlot.htm">Plot 3D Terrain and Water Table</a>
+            </li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

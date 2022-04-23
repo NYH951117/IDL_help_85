@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: X">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>XVOLUME_ROTATE </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="X_list.htm">Routines: X</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">XVOLUME_ROTATE</span>
+        </div>
+        <h1 class="Routine"><a name="X_800576109_1033823"></a><a name="X_800576109_32450"></a>XVOLUME_ROTATE </h1>
+        <p><a name="kanchor3077"></a>The XVOLUME_ROTATE procedure is used to programmatically rotate the volume currently displayed in XVOLUME. XVOLUME must be called prior to calling XVOLUME_ROTATE. This procedure can be used to create animations of volumes and isosurfaces.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>xvolume_rotate.pro</code> in the <code>lib/utilities</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="X_800576109_977324"></a><a name="X_800576109_977324_PageTOC_XVOLUME_ROTATE_"></a>Examples</h2>
+        <p>The following example creates an animation of the volume currently displayed in XVOLUME. It does this by rotating the volume through 360 degrees in increments of 10 degrees using XVOLUME_ROTATE, and writing the volume to a BMP file for each increment using XVOLUME_WRITE_IMAGE. It then loops through the images and uses TV to display each image.</p>
+        <p>First, display a volume as follows:</p>
+        <p class="Code">; Create a volume:<br />vol = BYTSCL(RANDOMU((SEED=0),5,5,5))<br />vol = CONGRID(vol, 30,30,30)<br /><br />; Display volume:<br />XVOLUME, vol</p>
+        <p>Now, use the XVOLUME interface to modify the orientation and appearance of the volume or isosurface as desired. Once you have the volume or isosurface displayed the way you want it, run the following program. To try the example, save the following code in a file named <code>spin_volume.pro</code>, then compile and execute the procedure. <MadCap:conditionalText data-mc-conditions="Reference Material.Online_Help_Only">(If you are viewing this topic in the IDL Workbench help, you can simply click on the code block below to compile the routine, then enter <code>spin_volume</code> at the IDL command line.)</MadCap:conditionalText></p>
+        <p class="Code">PRO spin_volume<br /><br />&#160;&#160;&#160;inc = 10. ; degrees.<br />&#160;&#160;&#160;; Create images<br />&#160;&#160;&#160;FOR i=0,(360./inc)-2 DO BEGIN<br />&#160;&#160;&#160;&#160;&#160;&#160;XVOLUME_WRITE_IMAGE, $<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;'spin' + STRCOMPRESS(i, /REMOVE_ALL) + '.bmp', 'bmp'<br />&#160;&#160;&#160;&#160;&#160;&#160;XVOLUME_ROTATE, [0,0,1], inc, /PREMULTIPLY<br />&#160;&#160;&#160;ENDFOR<br />&#160;&#160;&#160;XVOLUME_ROTATE, [0,0,1], inc, /PREMULTIPLY<br /><br />&#160;&#160;&#160;; Read images<br />&#160;&#160;&#160;img = READ_BMP('spin0.bmp')<br />&#160;&#160;&#160;siz = SIZE(img, /DIM)<br />&#160;&#160;&#160;arr = BYTARR(3, siz[1], siz[2], 360./inc-1)<br />&#160;&#160;&#160;FOR i=0,360./inc-2 DO BEGIN<br />&#160;&#160;&#160;&#160;&#160;&#160;img = READ_BMP( $<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;'spin' + STRCOMPRESS(i, /REMOVE_ALL) + '.bmp', /RGB)<br />&#160;&#160;&#160;&#160;&#160;&#160;arr[0,0,0, i] = img<br />&#160;&#160;&#160;&#160;&#160;&#160;PRINT, i<br />&#160;&#160;&#160;ENDFOR<br /><br />&#160;&#160;&#160;; Display animation<br />&#160;&#160;&#160;FOR i=0,2 DO BEGIN ; num rotations<br />&#160;&#160;&#160;&#160;&#160;&#160;FOR j=0,(360./inc)-2 DO BEGIN<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;TV, arr[*,*,*,j], /TRUE<br />&#160;&#160;&#160;&#160;&#160;&#160;ENDFOR<br />&#160;&#160;&#160;ENDFOR<br /><br />&#160;&#160;&#160;TV, arr[*,*,*,0], /TRUE<br /><br />END</p>
+        <h2 class="API"><a name="X_800576109_977314"></a><a name="X_800576109_977314_PageTOC_XVOLUME_ROTATE_"></a>Syntax</h2>
+        <p class="Syntax">XVOLUME_ROTATE, <i>Axis</i>, <i>Angle</i> [,&#160;/<a href="#X_800576109_977322" class="selected">PREMULTIPLY</a>]</p>
+        <h2 class="API"><a name="X_800576109_977316"></a><a name="X_800576109_977316_PageTOC_XVOLUME_ROTATE_"></a>Arguments</h2>
+        <h3 class="Argument">Axis</h3>
+        <p>A 3-element vector of the form [<i>x</i>, <i>y</i>, <i>z</i>] describing the axis about which the model is to be rotated.</p>
+        <h3 class="Argument">Angle</h3>
+        <p>The amount of rotation, measured in degrees.</p>
+        <h2 class="API"><a name="X_800576109_977321"></a><a name="X_800576109_977321_PageTOC_XVOLUME_ROTATE_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="X_800576109_977322"></a><a name="X_800576109_977322_Keywords_XVOLUME_ROTATE__"></a>PREMULTIPLY</h3>
+        <p>Set this keyword to cause the rotation matrix specified by <i>Axis</i> and <i>Angle</i> to be pre-multiplied to the model’s transformation matrix. By default, the rotation matrix is post-multiplied.</p>
+        <h2 class="API"><a name="X_800576109_977366"></a><a name="X_800576109_977366_PageTOC_XVOLUME_ROTATE_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="X_800576109_991512"></a><a name="X_800576109_991512_PageTOC_XVOLUME_ROTATE_"></a>See Also</h2>
+        <p><a href="XVOLUME.htm#X_800576109_977077">XVOLUME</a>, <a href="XVOLUME_WRITE_IMAGE.htm#X_800576109_977386">XVOLUME_WRITE_IMAGE</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

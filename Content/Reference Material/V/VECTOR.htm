@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: V">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>VECTOR</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/NoLines.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="V_list.htm">Routines: V</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">VECTOR</span>
+        </div>
+        <h1 class="ClassRoutine"><a name="kanchor2671"></a>VECTOR</h1>
+        <p>The VECTOR&#160;function draws a plot of either vectors or wind barbs. The vectors or wind barbs are input using two arrays that specify the horizontal and vertical components (in arbitrary units). You can also specify the X and Y locations for the vectors or wind barbs.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>The <a href="../L/LEGEND.htm">LEGEND</a> function may be used to add a "sample" vector of a given length to a vector plot.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>The purpose of the VECTOR function is to draw a vector field or wind field at a series of (X, Y) locations. The units of the vector or wind field are arbitrary, and are not related to the units for the X and Y coordinates. The <a href="../A/ARROW.htm">ARROW</a> function (with the DATA keyword) may be used to draw arrows that are directly related to the X and Y coordinates.</p>
+        <h2 class="API">Example
+		</h2>
+        <p>
+            <img src="../images/vector_ex.png" />
+        </p>
+        <p>The following lines create the graphic shown at the right.</p>
+        <p class="Code">n = 21</p>
+        <p class="Code">x = 10*DINDGEN(n)/(n-1) - 5</p>
+        <p class="Code">y = 10*DINDGEN(n)/(n-1) - 5</p>
+        <p class="Code">xx = REBIN(x, n, n)</p>
+        <p class="Code">yy = REBIN(TRANSPOSE(y), n, n)</p>
+        <p class="Code">mu = 1</p>
+        <p class="Code">xdot = mu*(xx - xx^3/3 - yy)</p>
+        <p class="Code">ydot = xx/mu</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">v = VECTOR(xdot, ydot, x, y, $</p>
+        <p class="Code">AUTO_COLOR=1, AUTO_RANGE=[0,45], $</p>
+        <p class="Code">RGB_TABLE=10, $</p>
+        <p class="Code">POSITION=[0.10,0.22,0.95,0.9], $</p>
+        <p class="Code">XTITLE='X', YTITLE='Y', $</p>
+        <p class="Code">TITLE='Van der Pol Oscillator - Phase Portrait')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Change some properties.</p>
+        <p class="Code">v.ARROW_THICK = 2</p>
+        <p class="Code">v.LENGTH_SCALE = 2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add a colorbar and text annotations.</p>
+        <p class="Code">c = COLORBAR(TARGET=v, $</p>
+        <p class="Code">POSITION=[0.10,0.1,0.45,0.15], $</p>
+        <p class="Code">TITLE='Magnitude')</p>
+        <p class="Code">t = TEXT(0.57, 0.09, 'dx/dt = $\mu(x - x^3/3 - y)$')</p>
+        <p class="Code">t = TEXT(0.57, 0.03, 'dy/dt = $x/\mu$')</p>
+        <h3>Additional Examples</h3>
+        <p>See <a href="../../GUInavigation/visualize.htm#Surface">Surface, contour, and vector examples</a> for additional examples using the VECTOR function.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>graphic</i> = VECTOR(<i>U</i>, <i>V</i>, [, <i>X</i>, <i>Y</i> ] [, <i>Keywords</i>=<i>value</i>] [, <i>Properties</i>=<i>value</i>])</p>
+        <h3>Keywords</h3>
+        <p>Keywords are applied <i>only</i> during the initial creation of the graphic.</p>
+        <p><a href="#AXIS_STYLE" class="selected">AXIS_STYLE</a>=<i>value</i></p>
+        <p>/<a href="#BUFFER" class="selected">BUFFER</a>, /<a href="#CURRENT" class="selected">CURRENT</a>, /<a href="#DEVICE" class="selected">DEVICE</a>, <a href="#DIMENSIO" class="selected">DIMENSIONS</a>=[<i>width</i>, <i>height</i>], <a href="#LAYOUT" class="selected">LAYOUT</a>=<i>array</i>, <a href="#LOCATION" class="selected">LOCATION</a>=[<i>x</i>, <i>y</i>], <a href="#MARGIN" class="selected">MARGIN</a>=<i>scalar</i> or [<i>left</i>, <i>bottom</i>, <i>right</i>, <i>top</i>], /<a href="#NOTOOLBAR" class="selected">NO_TOOLBAR</a>, /<a href="#NODATA" class="selected">NODATA</a>, /<a href="#OVERPLOT" class="selected">OVERPLOT</a>, /<a href="#WIDGETS" class="selected">WIDGETS</a></p>
+        <h3>Properties</h3>
+        <p>Properties can be set as keywords to the function during creation, or retrieved or changed using the "." notation after creation.</p>
+        <p><a href="#ANTIALIA" class="selected">ANTIALIAS</a>, <a href="#ARROW_ST" class="selected">ARROW_STYLE</a>, <a href="#ARROW_TH" class="selected">ARROW_THICK</a>, <a href="#ASPECT_R" class="selected">ASPECT_RATIO</a>, <a href="#AUTO_COL" class="selected">AUTO_COLOR</a>, <a href="#AUTO_RAN" class="selected">AUTO_RANGE</a>, <a href="#AUTO_SUB" class="selected">AUTO_SUBSAMPLE</a>, <a href="#AXES" class="selected">AXES</a>, <a href="#BACKGROU" class="selected">BACKGROUND_COLOR</a>, <a href="#BACKTRANS" class="selected">BACKGROUND_TRANSPARENCY</a>, <a href="#CLIP" class="selected">CLIP</a>, <a href="#COLOR" class="selected">COLOR</a>, <a href="#CROSSHAIR" class="selected">CROSSHAIR</a>, <a href="#DATA_LOC" class="selected">DATA_LOCATION</a>, <a href="#DIRECTIO" class="selected">DIRECTION_CONVENTION</a>, <a href="#FONT_COL2" class="selected">FONT_COLOR</a>, <a href="#FONT_NAM" class="selected">FONT_NAME</a>, <a href="#FONT_SIZ" class="selected">FONT_SIZE</a>, <a href="#FONT_STY" class="selected">FONT_STYLE</a>, <a href="#GRID_UNI" class="selected">GRID_UNITS</a>, <a href="#HEAD_ANG" class="selected">HEAD_ANGLE</a>, <a href="#HEAD_IND" class="selected">HEAD_INDENT</a>, <a href="#HEAD_PRO" class="selected">HEAD_PROPORTIONAL</a>, <a href="#HEAD_SIZ" class="selected">HEAD_SIZE</a>, <a href="#HIDE" class="selected">HIDE</a>, <a href="#LENGTH_S" class="selected">LENGTH_SCALE</a>, <a href="#MAPGRID" class="selected">MAPGRID</a>, <a href="#MAPPROJE" class="selected">MAPPROJECTION</a>, <a href="#MAP_PROJ" class="selected">MAP_PROJECTION</a>, <a href="#MAX_VALU" class="selected">MAX_VALUE</a>, <a href="#MIN_VALU" class="selected">MIN_VALUE</a>, <a href="#NAME" class="selected">NAME</a>, <a href="#POSITION" class="selected">POSITION</a>, <a href="#RGB_TABL" class="selected">RGB_TABLE</a>, <a href="#SUBSAMPL" class="selected">SUBSAMPLE_METHOD</a>, <a href="#SYMBOL" class="selected">SYMBOL</a>, <a href="#SYM_COLO" class="selected">SYM_COLOR</a>, <a href="#SYM_FILL" class="selected">SYM_FILLED</a>, <a href="#SYM_FILL2" class="selected">SYM_FILL_COLOR</a>, <a href="#SYM_OBJE" class="selected">SYM_OBJECT</a>, <a href="#SYM_SIZE" class="selected">SYM_SIZE</a>, <a href="#SYM_THIC" class="selected">SYM_THICK</a>, <a href="#SYM_TRAN" class="selected">SYM_TRANSPARENCY</a>, <a href="#THICK" class="selected">THICK</a>, <a href="#TITLE" class="selected">TITLE</a>, <a href="#TRANSPAR" class="selected">TRANSPARENCY</a>, <a href="#USE_DEFA" class="selected">USE_DEFAULT_COLOR</a>, <a href="#UVALUE" class="selected">UVALUE</a>, <a href="#VECTOR_C" class="selected">VECTOR_COLORS</a>, <a href="#VECTOR_S" class="selected">VECTOR_STYLE</a>, <a href="#WINDOW" class="selected">WINDOW</a>, <a href="#WINDOW_T" class="selected">WINDOW_TITLE</a>, <a href="#X_SUBSAM" class="selected">X_SUBSAMPLE</a>, <a href="#Y_SUBSAM" class="selected">Y_SUBSAMPLE</a>, <a href="#XRANGE" class="selected">XRANGE</a>, <a href="#YRANGE" class="selected">YRANGE</a>, <a href="#ZVALUE" class="selected">ZVALUE</a></p>
+        <h2 class="API">Methods</h2>
+        <p class="Method"><a href="../../IDL Graphics/Close Method.htm">Close</a>
+        </p>
+        <p class="Method"><a href="../../IDL Graphics/ConvertCoord Method.htm">ConvertCoord</a>
+        </p>
+        <p class="Method"><a href="../../IDL Graphics/CopyWindow Method.htm">CopyWindow</a>
+        </p>
+        <p class="Method"><a href="../../IDL Graphics/Delete Method.htm">Delete</a>
+        </p>
+        <p><a href="../../IDL Graphics/Erase Method.htm">Erase</a>
+        </p>
+        <p class="Method"><a href="../../IDL Graphics/GenerateCode Method.htm">GenerateCode</a>
+        </p>
+        <p class="Method"><a href="../../IDL Graphics/GetData Method.htm">GetData</a>
+        </p>
+        <p class="Method"><a href="../../IDL Graphics/GetValueAtLocation Method.htm">GetValueAtLocation</a>
+        </p>
+        <p class="Method"><a href="../../IDL Graphics/MapForward Method.htm">MapForward</a>
+        </p>
+        <p class="Method"><a href="../../IDL Graphics/MapInverse Method.htm">MapInverse</a>
+        </p>
+        <p class="Method"><a href="../../IDL Graphics/Order Method.htm">Order</a>
+        </p>
+        <p class="Method"><a href="../../IDL Graphics/Print Method.htm">Print</a>
+        </p>
+        <p class="Method"><a href="../../IDL Graphics/Refresh Method.htm">Refresh</a>
+        </p>
+        <p class="Method"><a href="../../IDL Graphics/Rotate Method.htm">Rotate</a>
+        </p>
+        <p class="Method"><a href="../../IDL Graphics/Save Method.htm">Save</a>
+        </p>
+        <p class="Method"><a href="../../IDL Graphics/Scale Method.htm">Scale</a>
+        </p>
+        <p class="Method"><a href="../../IDL Graphics/Select Method.htm">Select</a>
+        </p>
+        <p class="Method"><a href="../../IDL Graphics/SetData Method.htm">SetData</a>
+        </p>
+        <p class="Method"><a href="../../IDL Graphics/Translate Method.htm">Translate</a>
+        </p>
+        <h2 class="API">Return Value</h2>
+        <p>The VECTOR&#160;function returns a reference to the created graphic. Use the returned reference to manipulate the graphic after creation by changing properties or calling methods.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">U</h3>
+        <p>A one or two-dimensional array containing the horizontal components of the vectors. If the <i>X</i> and <i>Y</i> arguments are provided, the vectors are plotted as a function of the (x, y) locations. Otherwise, the vectors are plotted as a function of the two-dimensional array index of each element of <i>U</i>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The units for the U and V components are arbitrary, and are not related to the units of the X and Y coordinates. The VECTOR function will compute a default length scale and head size based upon the overall number of vectors and the average magnitude of the vectors. The LENGTH_SCALE and HEAD_SCALE properties may be used to change the default size.</p>
+        <h3 class="Argument">V</h3>
+        <p>A one or two-dimensional array containing the vertical components of the vectors. <i>V</i> must have the same dimensions as <i>U</i>.</p>
+        <h3 class="Argument">X</h3>
+        <p>A one-dimensional array specifying the x-coordinates for the vectors. If <i>U</i> is a two-dimensional array then <i>X</i> must have the same number of elements as the first dimension of <i>U</i>, where each element of <i>X</i> specifies the x-coordinate for a column of <i>U</i>. If <i>U</i> is a one-dimensional array then <i>X</i> must have the same number of elements as <i>U</i>, where each element of <i>X</i> specifies the x-coordinate for the corresponding element of <i>U</i>.</p>
+        <h3 class="Argument">Y</h3>
+        <p>A one-dimensional array specifying the y-coordinates for the vectors. If <i>U</i> is a two-dimensional array then <i>Y</i> must have the same number of elements as the second dimension of <i>U</i>, where each element of <i>Y</i> specifies the y-coordinate for a row of <i>U</i>. If <i>U</i> is a one-dimensional array then <i>Y</i> must have the same number of elements as <i>U</i>, where each element of <i>Y</i> specifies the y-coordinate for the corresponding element of <i>U</i>.</p>
+        <h2 class="API">Keywords</h2>
+        <p>Keywords are applied <i>only</i> during the initial creation of the graphic.</p>
+        <h3 class="Keyword"><a name="AXIS_STYLE"></a>AXIS_STYLE</h3>
+        <p>Set this keyword to one of the following values:</p>
+        <ul>
+            <li value="1">0 - No axes. Decrease the margins so the graphic almost fills the window. This is the default for images.</li>
+            <li value="2">1 - Single X, Y (and Z if 3D) axes located at the minimum data value.  The margins will be adjusted to leave space for the axes. This is the default for 3D graphics.</li>
+            <li value="3">2 - Box axes - multiple axes located at both the minimum and maximum data values. The margins will be adjusted to leave space for the axes. This is the default for 2D graphics.</li>
+            <li value="4">3 - Crosshair-style axes - located at the midpoint of each data dimension. Since the axes are in the middle, decrease the margins so the graphic almost fills the window. This is the default for polar plots.</li>
+            <li value="5">4 - No axes, but use the same margins as if axes were there. This is useful if you want to later add another graphic that does have axes, and you want the two visualizations to be aligned properly.</li>
+        </ul>
+        <p>You can set the following properties on the axes:</p>
+        <table style="margin-left: 0;margin-right: auto;caption-side: top;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <thead>
+                <tr class="Head-Header1">
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Property</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[XYZ]COLOR</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>A string or RGB vector containing the axis color.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>[XYZ]GRIDSTYLE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>A string, integer, or 2-element vector giving the linestyle for tickmarks.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[XYZ]LOG</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Set to 1 if the axis is logarithmic. The minimum value of the axis range must be greater than zero.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>[XYZ]MAJOR</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>The number of major tick marks. Set to -1 to auto-compute, set to 0 to suppress.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[XYZ]MINOR</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The number of minor tick marks. Set to -1 to auto-compute, set to 0 to suppress.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>[XYZ]SUBGRIDSTYLE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>A string, integer, or 2-element vector giving the linestyle for the minor tickmarks. The default is 0, for solid lines. Set to -1 to force minor ticks to have the same linestyle as major ticks.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[XYZ]SHOWTEXT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Set to 1 to show text labels or 0 to hide the text labels.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>[XYZ]STYLE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>The axis range style. The valid values are:</p>
+                        <p>(0) Nice range. Default for all graphics except Image, Barplot, and Map.</p>
+                        <p>(1) Force the exact data range. Default for Image, Barplot, and Map.</p>
+                        <p>(2) Pad the axes slightly beyond the nice range.</p>
+                        <p>(3) Pad the axes slightly beyond the exact data range.</p>
+                        <p>The [XYZ]RANGE takes precedence over this property.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[XYZ]SUBTICKLEN</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The ratio of the minor tick length to the major tick length. The default is 0.5.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>[XYZ]TEXT_COLOR</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>A string or RGB vector containing the axis text color.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[XYZ]TEXT_ORIENTATION</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The angle (in degrees) of the tick mark labels.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>[XYZ]TEXTPOS</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Set to 1 to position text above the axis. The default is 0, below the axis.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[XYZ]THICK</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Set to a floating-point value between 0 and 10 to specify the line thickness for tickmarks. A thickness of 0 gives a thin hairline. The default is 1.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>[XYZ]TICKDIR</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Set to 1 to draw the tickmarks facing outwards. The default is 0, facing inwards.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[XYZ]TICKFONT_NAME</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>A string containing the font name for the axis text.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>[XYZ]TICKFONT_SIZE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>The axis text size in points.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[XYZ]TICKFONT_STYLE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>A string or integer containing the font style: normal (0), <b>bold</b> (1), <i>italic</i> (2), or <b style="font-style: italic;">bold italic</b> (3).</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>[XYZ]TICKFORMAT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>A string or string array of tick label formats. See <a href="../../Creating IDL Programs/Components of the IDL Language/Format_Codes.htm">Format Codes</a> for more information.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[XYZ]TICKINTERVAL</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The interval between major tick marks.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>[XYZ]TICKLAYOUT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Set to 1 to suppress tick marks; set to 2 to draw a box around the tick labels.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[XYZ]TICKLEN</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The length of each major tick mark, normalized to the width or height of the graphic. The default value is automatically calculated based upon the aspect ratio of the graphic.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>[XYZ]TICKNAME</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>A string array containing the tick labels.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[XYZ]TICKUNITS</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>A string giving the tick units. Valid values are: null (the default, signified by empty quotes), Years, Months, Days, Hours, Minutes, Seconds, Time, exponent for exponential notation, or scientific for scientific notation. </p>
+                        <p>If any of the time units are utilized, then the tick values are interpreted as Julian date/time values. If more than one unit is provided, the axis will be drawn with multiple levels.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>[XYZ]TICKVALUES</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>An array of tick mark locations.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[XYZ]TITLE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>A string giving the axis title.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>[XYZ]TRANSPARENCY</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>An integer from 0-100 giving the percent transparency.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>For more detailed explanations of these properties, see the <a href="../A/AXIS.htm">AXIS</a> function.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>You can also use the <a href="../A/AXIS.htm">AXIS</a> function to insert additional axes after the graphic has been created.</p>
+        <h3 class="Keyword"><a name="BUFFER"></a>BUFFER</h3>
+        <p>Set this keyword to 1 to direct the graphics to an off-screen buffer instead of creating a window.</p>
+        <h3 class="Keyword"><a name="CURRENT"></a>CURRENT</h3>
+        <p>Set this keyword to create the graphic in the current window with a new set of axes. If no window exists, a new window is created. The WINDOW's <a href="../../IDL Graphics/SetCurrent Method.htm">SetCurrent</a> method may be used to set the current window.</p>
+        <p>Or, set this keyword to an existing IDL Graphic reference to make that window be the current window and direct the new graphic to that window.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>The CURRENT&#160;keyword is usually used with the LAYOUT keyword or POSITION property to produce a window which has multiple graphics in different locations.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>If you want your graphic to share the <i>same</i> axes as an existing graphic, you should use the OVERPLOT keyword instead.</p>
+        <h3 class="Keyword"><a name="DEVICE"></a>DEVICE</h3>
+        <p>Set this keyword if values are specified in device coordinates (pixels) for the MARGIN and POSITION keywords. (Normalized coordinates are the default for these keywords.)</p>
+        <h3 class="Keyword"><a name="DIMENSIO"></a>DIMENSIONS</h3>
+        <p>Set this keyword to a two-element vector of the form [<i>width</i>, <i>height</i>] to specify the window dimensions in pixels. If you do not specify a value for DIMENSIONS, IDL&#160;by default uses the values of the IDL_GR_WIN_HEIGHT and IDL_GR_WIN_WIDTH preferences for Windows platforms or the IDL_GR_X_HEIGHT and IDL_GR_X_WIDTH preferences for X Windows systems on UNIX.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>The minimum <i>width</i> is set by the toolbar in the window, usually around 400 pixels. If you want to create a smaller graphics window, you can use the NO_TOOLBAR keyword.</p>
+        <h3 class="Keyword"><a name="LAYOUT"></a>LAYOUT</h3>
+        <p>Set this keyword to a three-element vector [<i>ncol</i>, <i>nrow</i>, <i>index</i>] that arranges graphics in a grid. The first dimension <i>ncol </i>is the number of columns in the grid, <i>nrow </i>is the number of rows, and <i>index </i>is the grid position at which to place the graphic (starting at element 1). This keyword is ignored if either OVERPLOT or POSITION is specified.</p>
+        <h3 class="Keyword"><a name="LOCATION"></a>LOCATION</h3>
+        <p>Set this keyword to a two-element vector [<i>X offset</i>, <i>Y offset</i>] giving the window's screen offset in pixels.</p>
+        <h3 class="Keyword"><a name="MARGIN"></a>MARGIN</h3>
+        <p>Set this keyword to the current graphic’s margin values in the layout specified by the LAYOUT property. Use a scalar value to set the same margin on all sides, or use a four-element vector [<i>left</i>, <i>bottom</i>, <i>right</i>, <i>top</i>] to specify different margins on each side.</p>
+        <p>By default, margin values are expressed in normalized units ranging from 0.0 to 0.5. If the DEVICE keyword is set, the values are given in device units (pixels).</p>
+        <p>This keyword is ignored if either OVERPLOT or POSITION is specified.</p>
+        <h3 class="Keyword"><a name="NOTOOLBAR"></a>NO_TOOLBAR</h3>
+        <p>By default the graphics window will have a toolbar containing some common tools such as Print and Save. Set this keyword to remove the toolbar. This keyword has no effect if the window is already created.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>When the toolbar exists, the minimum window <i>width</i> is set to the toolbar's width, usually around 400 pixels. If you want to create a smaller graphics window, you can use the NO_TOOLBAR keyword.</p>
+        <h3 class="Keyword"><a name="NODATA"></a>NODATA</h3>
+        <p>Set this keyword to 1 to create the graphic, but without any data attached to it. The axes and title (if present) are also created and displayed. If the OVERPLOT keyword is specified, axis ranges will not change.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You must still provide valid input arguments. The data range of the input arguments are used to automatically set the range of the axes. The [XYZ]RANGE properties may be used to override these default ranges.</p>
+        <h3 class="Keyword"><a name="OVERPLOT"></a>OVERPLOT</h3>
+        <p>Set this keyword to 1 (one) to place the graphic on top of the currently-selected graphic within the current window. The two graphics items will then share the same set of axes. If no current window exists, then this keyword is ignored and a new window is created.</p>
+        <p>If you have a graphic in another window that is not currently selected, you can also set this keyword to that graphic's reference to overplot on top of that graphic.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>If you want your graphic to have a <i>new</i> set of axes, you should use the CURRENT keyword instead.</p>
+        <h3 class="Keyword"><a name="WIDGETS"></a>WIDGETS</h3>
+        <p>By default, when running from the IDL Workbench, the graphics window will use the native widgets for your platform. Set this keyword to instead use IDL widgets for the graphics window. This keyword is ignored when running from the IDL command line, since IDL&#160;widgets are always used in that case.</p>
+        <h2 class="API">Properties</h2>
+        <h3 class="Property"><a name="ANTIALIA"></a>ANTIALIAS</h3>
+        <p>By default anti-aliasing is used when drawing lines. Set this property to 0 to disable anti-aliasing.</p>
+        <h3 class="Property"><a name="ARROW_ST"></a>ARROW_STYLE</h3>
+        <p>Set this property to 1 to fill the arrow heads (this is the default). Set this property to 0 to draw the arrow heads as an outline. If wind barbs are displayed then this property is ignored.</p>
+        <h3 class="Property"><a name="ARROW_TH"></a>ARROW_THICK</h3>
+        <p>Set this property to a value between 1.0 and 10.0, specifying the thickness of the arrow shaft. The default is 1.0 points.</p>
+        <h3 class="Property"><a name="ASPECT_R"></a>ASPECT_RATIO</h3>
+        <p>A floating point value indicating the ratio of the Y dimension to the X dimension in data units. If this property is set to a nonzero value, the aspect ratio will be preserved as the graphic is stretched or shrunk. The default value is 0 for all graphics except images, meaning that the aspect ratio is not fixed, but is allowed to change as the graphic is stretched or shrunk.</p>
+        <h3 class="Property"><a name="AUTO_COL"></a>AUTO_COLOR</h3>
+        <p>Set this property to enable or disable automatic coloring of vectors or wind barbs. Possible values are:</p>
+        <ul>
+            <li value="1">0 - No automatic colors, or use the vertex colors if VECTOR_COLORS is provided (this is the default).</li>
+            <li value="2">1 - Color according to magnitude, using the current color palette.</li>
+            <li value="3">2 - Color according to direction, using the current color palette.</li>
+        </ul>
+        <p>If AUTO_COLOR is set to 1 or 2 then the VECTOR_COLORS property will be ignored.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>The AUTO_RANGE property may be used to control the scaling from the data range into the 0-255 color table range.</p>
+        <h3 class="Property"><a name="AUTO_RAN"></a>AUTO_RANGE</h3>
+        <p>Set this property to a two-element vector [<i>min</i>, <i>max</i>] giving the data scaling range for the vector color array. If AUTO_COLOR=1 or 2, or if VECTOR_COLORS is provided, then the vector color array is scaled from its original data range into the range 0-255. The AUTO_RANGE property may be used to control the minimum and maximum data values used in this scaling. The default value for AUTO_RANGE is the minimum and maximum values of the vector color array.</p>
+        <h3 class="Property"><a name="AUTO_SUB"></a>AUTO_SUBSAMPLE</h3>
+        <p>Set this property to enable or disable automatic sub-sampling of vectors. If automatic sub-sampling is enabled, then the X and Y sub-sampling factors will change depending upon the current view zoom. The default is disabled.</p>
+        <h3 class="Property"><a name="AXES"></a>AXES (Get Only)</h3>
+        <p>This property retrieves an array that contains all of the AXIS objects within the visualization. For example, for a plot visualization:</p>
+        <p class="Code">p = PLOT(/TEST)</p>
+        <p class="Code"> ax = p.AXES</p>
+        <p class="Code">ax[0].TITLE = 'X axis'</p>
+        <p class="Code">ax[1].TITLE = 'Y axis'</p>
+        <p class="Code">ax[2].HIDE = 1  ; hide top X axis</p>
+        <p class="Code">ax[3].HIDE = 1  ; hide right Y axis</p>
+        <p>See <a href="../A/AXIS.htm">AXIS</a> for a list of the available properties.</p>
+        <h3 class="Property"><a name="BACKGROU"></a>BACKGROUND_COLOR</h3>
+        <p>Set this property to a <a href="../../IDL Graphics/FormattingSymsAndLines.htm#Color">string or RGB vector</a> indicating the graphic's background color. The default value is [255, 255, 255] (white). Set this property to a scalar value to remove the background color.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>To set the background color of the entire window, retrieve the window object using the WINDOW property, and set the BACKGROUND_COLOR on the window object.</p>
+        <h3 class="Property"><a name="BACKTRANS"></a>BACKGROUND_TRANSPARENCY</h3>
+        <p>Set this property to an integer between 0 and 100 giving the percent transparency of the background color. The default is 100 (completely transparent).</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the BACKGROUND_COLOR property is changed, and the current background transparency is 100, then the BACKGROUND_TRANSPARENCY will be automatically set to 0 (opaque) so that you can see the new color.</p>
+        <h3 class="Property"><a name="CLIP"></a>CLIP</h3>
+        <p>Set this property to 1 to clip portions of the graphic that lie  outside of the dataspace range, or to 0 to disable clipping. The default is 1.</p>
+        <h3 class="Property"><a name="COLOR"></a>COLOR</h3>
+        <p>Set this property to a <a href="../../IDL Graphics/FormattingSymsAndLines.htm#Color">string or RGB vector</a> that specifies the vector color. The default is "black".</p>
+        <h3 class="Property"><a name="CROSSHAIR"></a>CROSSHAIR (Get Only)</h3>
+        <p>Use this property to retrieve a reference to the Crosshair graphic. All graphics objects within the same set of axes share a single Crosshair graphic. For Plot graphics the default behavior is to display the crosshair when a Mouse_Down event is received. For other graphics the crosshair is disabled. The STYLE property may be used to automatically draw the crosshair, while the LOCATION property may be used to manually draw the crosshair.</p>
+        <p>You can get and set the following properties on the retrieved crosshair:</p>
+        <table style="margin-left: 0;margin-right: auto;caption-side: top;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <thead>
+                <tr class="Head-Header1">
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Property</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>ANTIALIAS</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Set to 1 to enable anti-aliasing for the lines.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>COLOR</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>A string or RGB vector containing the color.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>HIDE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Set to 1 to hide the crosshair, 0 to show.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>INTERPOLATE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Set to 1 to force interpolation between Plot data points when SNAP is active. For other graphics this property is ignored. The default is&#160;0.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>LINESTYLE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>An integer or string giving the line style. The default is 'dot'. See <a href="../../IDL Graphics/FormattingSymsAndLines.htm#LinestyleValues">Linestyle Values</a> for additional options.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>LOCATION</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>The location at which to draw the crosshair. For Plot graphics, if SNAP is enabled, then only the X coordinate needs to be supplied. Otherwise, LOCATION should be set to a two-element vector [X,&#160;Y] for two-dimensional graphics or [X,&#160;Y,&#160;Z] for three-dimensional graphics. If STYLE is currently "None", then setting the LOCATION will automatically set the STYLE to "Manual".</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>NAME</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The name of the graphic.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>SNAP</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Set to 1 to snap the crosshair to the nearest Plot data point. For other graphics this property is ignored. The default is&#160;1.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STYLE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>An integer or string giving the crosshair style. Possible values are:<br />                    0 - "None" - never draw the crosshair. This is the default for all graphics except 2D plots.<br />                    1 - "Manual" - draw the crosshair using the LOCATION property.<br />                    2 - "Auto" - automatically draw the crosshair. This is the default for 2D plots.
+                </p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>THICK</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>The thickness of the lines. The default is 1.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>TRANSPARENCY</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The percent transparency of the lines. The default is 50.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>UVALUE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>An IDL variable of any data type.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>For example, use the CROSSHAIR property to draw a crosshair on an image:</p>
+        <p class="Code">im = IMAGE(/TEST, TRANSPARENCY=50, AXIS_STYLE=2)</p>
+        <p class="Code">c = im.CROSSHAIR</p>
+        <p class="Code">c.COLOR = 'red'</p>
+        <p class="Code">c.THICK = 2</p>
+        <p class="Code">c.LOCATION = [300, 200]</p>
+        <p>See&#160;<a href="../../GuideMe/MouseEventFunctions.htm">Creating Functions to Control Mouse Events</a> for a more detailed crosshair example.</p>
+        <h3 class="Property"><a name="DATA_LOC"></a>DATA_LOCATION</h3>
+        <p>Set this property to specify the position of the vectors or wind barbs at each data location. Possible values are:</p>
+        <ul>
+            <li value="1">0 or "Tail" - Vectors are positioned so that the vector tail lies on each data location.</li>
+            <li value="2">1 or "Center" - Vectors are positioned so that the vector center lies on each data location (the default).</li>
+            <li value="3">2 or "Head" - Vectors are positioned so that the vector head lies on each data location.</li>
+        </ul>
+        <h3 class="Property"><a name="DIRECTIO"></a>DIRECTION_CONVENTION</h3>
+        <p>
+            <img src="../../Resources/Images/ivector_02.gif" />
+        </p>
+        <p>Set this property to indicate the convention to be used when displaying vector directions. Possible values are:</p>
+        <ul>
+            <li value="1">0 or "Polar" - This describes the direction counterclockwise from X axis, and is the usual physics convention (the default).</li>
+            <li value="2">1 or "Meteorological" - This describes the direction from which the wind is blowing, and uses terms such as northerly, westerly, and so on.</li>
+            <li value="3">2 or "Wind" - This describes the wind azimuth (the direction towards which the wind is blowing), and uses terms such as southward, eastward, and so on.</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This property does not change the visual appearance of the vectors - only the direction that is reported in the window's status bar is affected.</p>
+        <h3 class="Property"><a name="FONT_COL2"></a>FONT_COLOR</h3>
+        <p>Set this property to a <a href="../../IDL Graphics/FormattingSymsAndLines.htm#Color">string or RGB vector</a> that specifies the text color of the title and axes (if present). The default value is "black".</p>
+        <h3 class="Property"><a name="FONT_NAM"></a>FONT_NAME</h3>
+        <p>Set this property equal to a string specifying the IDL or system font for the title and axes (if present). The default value is “Helvetica”.</p>
+        <h3 class="Property"><a name="FONT_SIZ"></a>FONT_SIZE</h3>
+        <p>Set this property equal to an integer specifying the font size for the title and axes (if present). The default value is 16 points.</p>
+        <h3 class="Property"><a name="FONT_STY"></a>FONT_STYLE</h3>
+        <p>Set this property equal to an integer or a string specifying the font style for the title and axes (if present). Allowed values are:</p>
+        <table class="TableStyle_Description" cellspacing="0" style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;">
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Integer</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>String</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Resulting Style</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"Normal" or "rm"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Default (roman)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"Bold" or "bf"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Bold</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"Italic" or "it"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Italic</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>"Bold italic" or "bi"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Bold italic</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Property"><a name="GRID_UNI"></a>GRID_UNITS</h3>
+        <p>Set this property to a string or integer specifying the units for the vector grid. This property applies only when a map projection is inserted. It has the following values:</p>
+        <ul>
+            <li value="1">
+                <p><b>0 or ""</b> - None. The grid is in arbitrary units that are not tied to a map projection. The vectors will not be warped to the current map projection.</p>
+            </li>
+            <li value="2">
+                <p><b>1 or "m" or "meters"</b> - Meters. The grid is in meters, and is tied to a particular map projection. The vectors will be warped to the current map projection.</p>
+            </li>
+            <li value="3">
+                <p><b>2 or "deg" or "degrees"</b> - Degrees. The grid is in degrees longitude/latitude, and will be automatically warped to the current map projection.</p>
+            </li>
+        </ul>
+        <h3 class="Property"><a name="HEAD_ANG"></a>HEAD_ANGLE</h3>
+        <p>
+            <img src="../../Resources/Images/ivector_03.gif" />
+        </p>
+        <p>Set this property to a floating-point value between 0 and 90 giving the angle in degrees of the arrowhead to the shaft. The default is 30.</p>
+        <h3 class="Property"><a name="HEAD_IND"></a>HEAD_INDENT</h3>
+        <p>Set this property to a floating-point value between -1 and +1 giving the indentation of the back of the arrowhead along the shaft. A value of 0 gives a triangular shape, a value of +1 will create an arrowhead that is just two lines, while a value of -1 will create a diamond shape. The default is 0.4.</p>
+        <h3 class="Property"><a name="HEAD_PRO"></a>HEAD_PROPORTIONAL</h3>
+        <p>Set this property to make the size of arrowheads proportional to their magnitude. The default is to make all arrowheads the same size. This property is ignored for wind barbs.</p>
+        <h3 class="Property"><a name="HEAD_SIZ"></a>HEAD_SIZE</h3>
+        <p>Set this property to a floating-point value giving a scale factor to be used when drawing the arrow heads or feathers. The default is 1.0.</p>
+        <h3 class="Property"><a name="HIDE"></a>HIDE</h3>
+        <p>Set this property to 1 to hide the graphic. Set HIDE to 0 to show the graphic.</p>
+        <h3 class="Property"><a name="LENGTH_S"></a>LENGTH_SCALE</h3>
+        <p>Set this property to a floating-point value giving a scale factor for the length of arrows or barbs. The default is 1.0.</p>
+        <h3 class="Property"><a name="MAPGRID"></a>MAPGRID (Get Only)</h3>
+        <p>If a map projection is currently in effect, this property retrieves a reference to the <a href="../M/MAPGRID.htm">MAPGRID</a> object.</p>
+        <h3 class="Property"><a name="MAPPROJE"></a>MAPPROJECTION (Get Only)</h3>
+        <p>If a map projection is currently in effect, this property retrieves a reference to the <a href="../M/MAP.htm">MAPPROJECTION</a> object.</p>
+        <h3 class="Property"><a name="MAP_PROJ"></a>MAP_PROJECTION</h3>
+        <p>A string giving the name of the current map projection. After creation, use this property to retrieve or set the current map projection.</p>
+        <h3 class="Property"><a name="MAX_VALU"></a>MAX_VALUE</h3>
+        <p>Set this property to the maximum magnitude value to be plotted. Vectors which have a magnitude greater than this value are treated as missing data. The default is to display all vectors.</p>
+        <h3 class="Property"><a name="MIN_VALU"></a>MIN_VALUE</h3>
+        <p>Set this property to the minimum magnitude value to be plotted. Vectors which have a magnitude smaller than this value are treated as missing data. The default is to display all vectors.</p>
+        <h3 class="Property"><a name="NAME"></a>NAME</h3>
+        <p>A string that specifies the name of the graphic. The name can be used to retrieve the graphic using the brackets array notation.  If NAME is not set then a default name is chosen based on the graphic type.</p>
+        <h3 class="Property"><a name="POSITION"></a>POSITION</h3>
+        <p>Set this property to a four-element vector that determines the position of the graphic within the window. The coordinates [X<sub>1</sub>, Y<sub>1</sub>, X<sub>2</sub>, Y<sub>2</sub>] define the lower left and upper right corners of the graphic. Coordinates are expressed in normalized units ranging from 0.0 to 1.0. On creation,  if the DEVICE keyword is set, the units are given in device units (pixels).</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>After creation, you can set the POSITION to either a two or four-element vector. If two elements are provided, the center of the graphic will be translated to that position. If four elements are provided, the graphics will be translated and scaled to fit the position.</p>
+        <h3 class="Property"><a name="RGB_TABL"></a>RGB_TABLE</h3>
+        <p>The number of the <a href="../../LoadingDefaultColorTables.htm">predefined IDL color table</a>, or a 3 x 256 or 256 x 3 byte array containing color values to use for the color palette. This color palette is used when either the AUTO_COLOR property is set or if VECTOR_COLORS is set to an array of color indices. The default is to use a grayscale ramp.</p>
+        <h3 class="Property"><a name="SUBSAMPL"></a>SUBSAMPLE_METHOD</h3>
+        <p>If either X_SUBSAMPLE or Y_SUBSAMPLE are set to a value greater than 1, then set this property to specify the method used for subsampling. Possible values are:</p>
+        <ul>
+            <li value="1">0 - Nearest neighbor (this is the default)</li>
+            <li value="2">1 - Bilinear</li>
+        </ul>
+        <h3 class="Property"><a name="SYMBOL"></a>SYMBOL</h3>
+        <p>A string giving the symbol name to be used for any missing vectors (see the MIN_VALUE and MAX_VALUE properties). Allowed values are:</p>
+        <table style="margin-left: 0;margin-right: auto;caption-side: top;mc-table-style: url('../../Resources/TableStyles/NoLines.css');" class="TableStyle_NoLines" cellspacing="0">
+            <col />
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">
+                        <p>"None" (the default)</p>
+                        <p>"Plus" or "+"</p>
+                        <p>"Asterisk" or "*"</p>
+                        <p>"Period" or "dot"</p>
+                        <p>"Diamond" or "D"</p>
+                        <p>"Triangle" or "tu"</p>
+                        <p>"Square" or "s"</p>
+                        <p>"X"</p>
+                        <p>"Greater_than" or "&gt;"</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">
+                        <p>"Less_than" or "&lt;"</p>
+                        <p>"Triangle_down" or "td"</p>
+                        <p>"Triangle_left" or "tl"</p>
+                        <p>"Triangle_right" or "tr"</p>
+                        <p>"Tri_up" or "Tu"</p>
+                        <p>"Tri_down" or "Td"</p>
+                        <p>"Tri_left" or "Tl"</p>
+                        <p>"Tri_right" or "Tr"</p>
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColEnd">
+                        <p>"Thin_diamond" or "d"</p>
+                        <p>"Pentagon" or "p"</p>
+                        <p>"Hexagon_1" or "h"</p>
+                        <p>"Hexagon_2" or "H"</p>
+                        <p>"Vline" or "|"</p>
+                        <p>"Hline" or "_"</p>
+                        <p>"Star" or "S"</p>
+                        <p>"Circle" or "o"</p>
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Note that symbol names of more than 1 character are case insensitive, while single-character names are case sensitive.</p>
+        <h3 class="Property"><a name="SYM_COLO"></a>SYM_COLOR</h3>
+        <p>Set this property to a <a href="../../IDL Graphics/FormattingSymsAndLines.htm#Color">string or RGB vector</a> that specifies the color for the missing-point symbols.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This color is applied to the symbols only if the USE_DEFAULT_COLOR property is explicitly set equal to zero.</p>
+        <h3 class="Property"><a name="SYM_FILL"></a>SYM_FILLED</h3>
+        <p>Set this property to 1 to fill the symbols.</p>
+        <h3 class="Property"><a name="SYM_FILL2"></a>SYM_FILL_COLOR</h3>
+        <p>Set this property to a <a href="../../IDL Graphics/FormattingSymsAndLines.htm#Color">string or RGB vector</a> that specifies the color for the filled portion of the symbol. If this property is not set then the symbol fill color will match the SYM_COLOR.</p>
+        <h3 class="Property"><a name="SYM_OBJE"></a>SYM_OBJECT</h3>
+        <p>Set this property equal to an object reference to be used for the missing symbols. The SYM_OBJECT may be either an IDLgrModel object or an atomic graphics object.</p>
+        <h3 class="Property"><a name="SYM_SIZE"></a>SYM_SIZE</h3>
+        <p>A floating point value specifying the size of the vector symbol. A value of 1.0 produces a symbol that is 10% of the width/height of the vector.</p>
+        <h3 class="Property"><a name="SYM_THIC"></a>SYM_THICK</h3>
+        <p>A floating point value from 1.0 to 10.0 that specifies the thickness (in points) of the vector symbol.</p>
+        <h3 class="Property"><a name="SYM_TRAN"></a>SYM_TRANSPARENCY</h3>
+        <p>An integer between 0 and 100 that specifies the percent transparency of the symbols. The default value is 0.</p>
+        <h3 class="Property"><a name="THICK"></a>THICK</h3>
+        <p>Set this property to a value between 0 and 10 that specifies the line thickness of the vectors or wind barbs. A thickness of 0 displays a thin hairline on the chosen device. The default value is 1.</p>
+        <h3 class="Property"><a name="TITLE"></a>TITLE</h3>
+        <p>Set this property to a string specifying a title. The title properties may be modified using FONT_COLOR, FONT_NAME, FONT_SIZE, and FONT_STYLE. After creation the TITLE property may be used to retrieve a reference to the title text object, and the <a href="../T/TEXT.htm">TEXT</a> properties may be used to modify the title object.</p>
+        <p>You can also add Greek letters and mathematical symbols using a TeX-like syntax. These symbols need to be enclosed within a pair of "$" characters. See <a href="../T/TEXT.htm#Adding" class="Heading">Adding Mathematical Symbols and Greek Letters to the Text String</a> for details on the available symbols.</p>
+        <h3 class="Property"><a name="TRANSPAR"></a>TRANSPARENCY</h3>
+        <p>An integer between 0 and 100 that specifies the percent transparency of the graphic. The default value is 0.</p>
+        <h3 class="Property"><a name="USE_DEFA"></a>USE_DEFAULT_COLOR</h3>
+        <p>Set this property to use the color of the vectors for the missing-point symbols (this is the default). If this property is explicitly set to 0, the color specified by the SYM_COLOR property is used for symbols.</p>
+        <h3 class="Property"><a name="UVALUE"></a>UVALUE</h3>
+        <p>Set this property to an IDL variable of any data type.</p>
+        <h3 class="Property"><a name="VECTOR_C"></a>VECTOR_COLORS</h3>
+        <p>Set this property to a vector or two-dimensional array with the same number of elements as U, or a two-dimensional array containing RGB triplets (or RGBA) representing colors to be used for each vector. If this property is set to an array with the same number of elements as U, these values are indices into a color table that can be specified by the RGB_TABLE property. If the RGB_TABLE property is not set, a grayscale color is used. For RGB triplets the first dimension of VECTOR_COLORS must be 3 (or 4 for RGBA), and the second dimension must be equal to the number of elements in U. If this property is omitted, the vectors are drawn in the color specified by the COLOR property or the default color.</p>
+        <p>If VECTOR_COLORS is not of type byte, it is byte scaled into the range 0-255. This is useful if you have an auxiliary dataset (say of type float) and you want to color your vectors according to this auxiliary dataset.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>IDL will remember the original data range of VECTOR_COLORS before byte scaling. If you insert a colorbar for the vector visualization, the colorbar axis will have the correct range for your auxiliary dataset.</p>
+        <h3 class="Property"><a name="VECTOR_S"></a>VECTOR_STYLE</h3>
+        <p>Set this property to specify the style of the vector visualization. Possible values are:</p>
+        <ul>
+            <li value="1">0 or "Arrows" - Vectors are drawn as arrows with lines for arrowheads.</li>
+            <li value="2">1 or "Barbs" - Vectors are drawn as wind barbs with feathers and flags.</li>
+        </ul>
+        <h3 class="Property"><a name="WINDOW"></a>WINDOW (Get Only)</h3>
+        <p>This property retrieves a reference to the <a href="../W/WINDOW.htm">WINDOW</a> object which contains the graphic.</p>
+        <h3 class="Property"><a name="WINDOW_T"></a>WINDOW_TITLE</h3>
+        <p>Set this property to the title of the IDL Graphic window. The title is displayed in the window's title bar.</p>
+        <h3 class="Property"><a name="X_SUBSAM"></a>X_SUBSAMPLE</h3>
+        <p>Set this property to an integer giving a subsampling factor to be used for the first dimension of U and V. This property is ignored if AUTO_SUBSAMPLE is true.</p>
+        <h3 class="Property"><a name="Y_SUBSAM"></a>Y_SUBSAMPLE</h3>
+        <p>Set this property to an integer giving a subsampling factor to be used for the second dimension of U and V. This property is ignored if AUTO_SUBSAMPLE is true.</p>
+        <h3 class="Property"><a name="XRANGE"></a>XRANGE</h3>
+        <p>A two-element vector giving the X data range to vector. The default behavior is to vector the entire data range.</p>
+        <h3 class="Property"><a name="YRANGE"></a>YRANGE</h3>
+        <p>A two-element vector giving the Y data range to vector. The default behavior is to vector the entire data range.</p>
+        <h3 class="Property"><a name="ZVALUE"></a>ZVALUE</h3>
+        <p>A scalar value to be used as the z-coordinate for the entire vector. By default, 0.0 is used as the z-coordinate.</p>
+        <h2 class="API">Version History</h2>
+        <table class="TableStyle_VersionTable" style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>8.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">
+                        <p>8.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">
+                        <p>Added the following properties: CROSSHAIR, MAPPROJECTION, MAP_PROJECTION, MAPGRID, UVALUE, WINDOW, [XYZ]SHOWTEXT, [XYZ]STYLE</p>
+                        <p>The THICK property was changed to accept a value between 0 and 10.</p>
+                        <p>Added the following methods: Delete, GetData, GetValueAtLocation, MapForward, MapInverse, SetData</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>8.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Added AXES, BACKGROUND_COLOR, BACKGROUND_TRANSPARENCY, CLIP properties.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">
+                        <p>8.2.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">
+                        <p>Added ANTIALIAS property.</p>
+                        <p>[XYZ]TICKUNITS accepts exponent as a value.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.2.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Change POSITION from a keyword to a property.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="../../Creating IDL Programs/Appendices/Constant_System_Variable.htm">!COLOR</a>, <a href="../A/ARROW.htm" class="Heading">ARROW</a>, <a href="../C/COLORBAR.htm">COLORBAR</a>, <a href="../../IDL Graphics/FormattingSymsAndLines.htm">Formatting IDL&#160;Graphics Symbols and Lines</a>,     <a href="../L/LEGEND.htm" class="Heading">LEGEND</a>,
+            <a href="../S/STREAMLINE.htm" class="Heading">STREAMLINE</a>,
+			<a href="../../GuideMe/Using IDL Graphics.htm" class="Heading">Using IDL graphics</a></p>
+        <p class="Hidden">VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR VECTOR </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

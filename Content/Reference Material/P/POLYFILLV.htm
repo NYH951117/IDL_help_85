@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: P">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>POLYFILLV</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="P_list.htm">Routines: P</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">POLYFILLV</span>
+        </div>
+        <h1 class="Routine"><a name="P_817877613_678285"></a><a name="kanchor2068"></a><a name="P_817877613_19180"></a>POLYFILLV</h1>
+        <p><a name="kanchor2069"></a>The POLYFILLV function returns a vector containing the subscripts of the array elements contained inside a polygon defined by vectors. </p>
+        <p>The <i>X</i> and <i>Y</i> parameters are vectors that contain the subscripts of the vertices that define the polygon in the coordinate system of the two-dimensional <i>S</i><sub class="italic">x</sub> by <i>S</i><sub class="italic">y</sub> array. The <i>S</i><sub class="italic">x</sub> and <i>S</i><sub class="italic">y</sub> parameters define the number of columns and rows in the array enclosing the polygon. At least three points must be specified, and all points should lie within the limits: 0 ≤ X<sub class="italic">i</sub> &lt; S<sub class="italic">x</sub> and 0 ≤ Y<sub class="italic">i</sub> &lt; S<sub class="italic">y</sub> for all <i>i</i>.</p>
+        <p>As with the POLYFILL procedure, the polygon is defined by connecting each point with its successor and the last point with the first. This function is useful for defining, analyzing, and displaying regions of interest within a two-dimensional array.</p>
+        <h3>Algorithm</h3>
+        <p>The scan-line coordinate system is used, as defined by Rogers in <i>Procedural Elements for Computer Graphics</i>, McGraw-Hill, 1985, page 71. In this system, the scan lines are considered to pass through the center of each row of pixels. Pixels are activated if the center of the pixel is to the right of the intersection of the scan line and the polygon edge within the interval. This implies that for a given set of vertices, some of the vertices themselves may not be included in the returned result.</p>
+        <p>For example, imagine a square polygon, extending from pixels 2 to 4 in a 6x6 array:</p>
+        <p class="Code_Indented">subscripts = POLYFILLV( [2,4,4,2,2], [4,4,2,2,4], 6, 6 )</p>
+        <p class="Code_Indented">filled = BYTARR(6, 6)</p>
+        <p class="Code_Indented">filled[subscripts] = 1</p>
+        <p class="Code_Indented">print, filled</p>
+        <p>IDL prints:</p>
+        <p class="Code_Indented">0   0   0   0   0   0</p>
+        <p class="Code_Indented">0   0   0   0   0   0</p>
+        <p class="Code_Indented">0   0   1   1   0   0</p>
+        <p class="Code_Indented">0   0   1   1   0   0</p>
+        <p class="Code_Indented">0   0   0   0   0   0</p>
+        <p class="Code_Indented">0   0   0   0   0   0</p>
+        <p>Note that only points 2:3 in each dimension are included in the polygon, where you might have expected pixels 2:4. The result can be verified by checking the area of the polygon. Here, the original area is 4 pixels, and 4 indices are returned in the subscripts from POLYFILLV.</p>
+        <h2 class="API"><a name="P_817877613_678302"></a><a name="P_817877613_678302_PageTOC_POLYFILLV_"></a>Examples</h2>
+        <p>To determine the mean and standard deviation of the elements within a triangular region defined by the vertices at pixel coordinates (100, 100), (200, 300), and (300, 100), inside a 512 x 512 array called DATA, enter the commands:</p>
+        <p class="Code">; Get the subscripts of the elements inside the triangle:</p>
+        <p class="Code">P = DATA[POLYFILLV([100,200,300], [100,300,100], 512, 512)]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use the STDEV function to obtain the mean and standard deviation </p>
+        <p class="Code">; of the selected elements:</p>
+        <p class="Code">STD = STDEV(P,MEAN)</p>
+        <h2 class="API"><a name="P_817877613_678289"></a><a name="P_817877613_678289_PageTOC_POLYFILLV_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = POLYFILLV( <i>X</i>,<i> Y</i>,<i> S</i><sub class="italic">x</sub>,<i> S</i><sub class="italic">y</sub>[,&#160;<i>Run_Length</i>] )</p>
+        <h2 class="API"><a name="P_817877613_1085220"></a><a name="P_817877613_32050"></a>Return Value</h2>
+        <p>Returns a vector containing the one-dimensional subscripts of the array elements contained inside a polygon defined by vectors <i>X</i> and <i>Y</i>. These subscripts will be LONG64 values if the dimensions of the input array (<i>S<sub>x</sub></i> * <i>S<sub>y</sub></i>) warrant that size for proper addressing. If no points are contained within the polygon, a -1 is returned, and an informational message is printed. </p>
+        <h2 class="API"><a name="P_817877613_678291"></a><a name="P_817877613_678291_PageTOC_POLYFILLV_"></a>Arguments</h2>
+        <h3 class="Argument">X</h3>
+        <p>A vector containing the X subscripts of the vertices that define the polygon.</p>
+        <h3 class="Argument">Y</h3>
+        <p>A vector containing the Y subscripts of the vertices that define the polygon.</p>
+        <h3 class="Argument">S<sub class="italic">x</sub></h3>
+        <p>The number of columns in the array surrounding the polygon.</p>
+        <h3 class="Argument">S<sub class="italic">y</sub></h3>
+        <p>The number of rows in the array surrounding the polygon.</p>
+        <h3 class="Argument">Run_Length</h3>
+        <p><a name="kanchor2070"></a>Set this optional parameter to a nonzero value to make POLYFILLV return a vector of run lengths, rather than subscripts. For large polygons, a considerable savings in space results. When run-length encoded, each element with an even subscript result contains the length of the run, and the following element contains the starting index of the run.</p>
+        <h2 class="API"><a name="P_817877613_821460"></a><a name="P_817877613_821460_PageTOC_POLYFILLV_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="P_817877613_1079127"></a><a name="P_817877613_1079127_PageTOC_POLYFILLV_"></a>See Also</h2>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

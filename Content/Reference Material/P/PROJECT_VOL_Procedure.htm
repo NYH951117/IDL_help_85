@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: P">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>PROJECT_VOL Procedure</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="P_list.htm">Routines: P</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">PROJECT_VOL Procedure</span>
+        </div>
+        <h1 class="Routine"><a name="dg_routines_3604229493_878002"></a><a name="kanchor2097"></a><a name="dg_routines_3604229493_31417"></a>PROJECT_VOL Procedure</h1>
+        <p><a name="kanchor2098"></a><a name="kanchor2099"></a><a name="kanchor2100"></a><a name="kanchor2101"></a>The PROJECT_VOL function returns a two-dimensional image that is the projection of a 3-D volume of data onto a plane (similar to an X-ray). The returned image is a translucent rendering of the volume (the highest data values within the volume show up as the brightest regions in the returned image). Depth queuing and opacity may be used to affect the image. The volume is projected using a 4x4 matrix, so any type of projection may be used including perspective. Typically the system viewing matrix (!P.T) is used as the 4x4 matrix.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The <a href="../V/VOXEL_PROJ.htm#dg_routines_3604229493_889793">VOXEL_PROJ</a> procedure performs many of the same functions as this routine, and is faster.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>project_vol.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_878103"></a><a name="dg_routines_3604229493_786873_PageTOC_PROJECT_VOL_"></a>Examples</h2>
+        <p>Use the T3D routine to set up a viewing projection and render a volume of data using PROJECT_VOL. </p>
+        <p class="Code">; First, create some data:<br />vol = RANDOMU(S, 40, 40, 40) <br />FOR I=0, 10 DO vol = SMOOTH(vol, 3) <br />vol = BYTSCL(vol(3:37, 3:37, 3:37)) <br />opaque = RANDOMU(S, 40, 40, 40) <br />FOR I=0, 10 DO opaque = SMOOTH(opaque, 3) <br />opaque = BYTSCL(opaque(3:37, 3:37, 3:37), TOP=25B)<br /><br />; Set up the view:<br />xmin = 0 &amp; ymin = 0 &amp; zmin = 0<br />xmax = 34 &amp; ymax = 34 &amp; zmax = 34<br />!X.S = [-xmin, 1.0] / (xmax - xmin)<br />!Y.S = [-ymin, 1.0] / (ymax - ymin)<br />!Z.S = [-zmin, 1.0] / (zmax - zmin)<br />T3D, /RESET <br />T3D, TRANSLATE=[-0.5, -0.5, -0.5] <br />T3D, SCALE=[0.7, 0.7, 0.7] <br />T3D, ROTATE=[30, -30, 60] <br />T3D, TRANSLATE=[0.5, 0.5, 0.5]<br />WINDOW, 0, XSIZE=512, YSIZE=512<br /><br />; Generate and display the image:<br />img = PROJECT_VOL(vol, 64, 64, 64, DEPTH_Q=0.7, $<br />&#160;&#160;OPAQUE=opaque, TRANS=(!P.T)) <br />TVSCL, img</p>
+        <h2 class="API"><a name="dg_routines_3604229493_878037"></a><a name="dg_routines_3604229493_786852_PageTOC_PROJECT_VOL_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result </i>= PROJECT_VOL( <i>Vol</i>, <i>X_Sample</i>, <i>Y_Sample</i>, <i>Z_Sample</i> [,&#160;/<a href="#dg_routines_3604229493_878079" class="selected">AVG_INTENSITY</a>] [,&#160;/<a href="#dg_routines_3604229493_878082" class="selected">CUBIC</a>] [,&#160;<a href="#dg_routines_3604229493_878085" class="selected">DEPTH_Q</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_878088" class="selected">OPAQUE</a>=<i>3D_array</i>] [,&#160;<a href="#dg_routines_3604229493_878091" class="selected">TRANS</a>=<i>array</i>] [,&#160;<a href="#dg_routines_3604229493_878094" class="selected">XSIZE</a>=<i>longword integer</i>] [,&#160;<a href="#dg_routines_3604229493_878097" class="selected">YSIZE</a>=<i>longword integer</i>] [,&#160;/<a href="#dg_routines_3604229493_878100" class="selected">Z_BUFFER</a>] )</p>
+        <h2 class="API"><a name="dg_routines_3604229493_878064"></a><a name="dg_routines_3604229493_46349"></a>Return Value</h2>
+        <p>Returns a projection of the volumetric data.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_878067"></a><a name="dg_routines_3604229493_786854_PageTOC_PROJECT_VOL_"></a>Arguments</h2>
+        <h3 class="Argument">Vol</h3>
+        <p>A 3-D array of any type except string or structure containing the three-dimensional volume of data to project.</p>
+        <h3 class="Argument">X_Sample</h3>
+        <p>A long integer specifying the number of rays to project along the X dimension of the image. The returned image will have the dimensions <i>X_sample</i> by <i>Y_sample</i>.</p>
+        <h3 class="Argument">Y_Sample</h3>
+        <p>A long integer specifying the number of rays to project along the Y dimension of the image. To preserve the correct aspect ratio of the data, <i>Y_sample</i> should equal <i>X_sample</i>.</p>
+        <h3 class="Argument">Z_Sample</h3>
+        <p>A long integer specifying the number of samples to take along each ray. Higher values for <i>X_sample</i>, <i>Y_sample</i>, and <i>Z_sample</i> increase the image resolution as well as execution time.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_878077"></a><a name="dg_routines_3604229493_786863_PageTOC_PROJECT_VOL_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_878079"></a><a name="dg_routines_3604229493_786865_Keywords_PROJECT_VOL__"></a>AVG_INTENSITY</h3>
+        <p>If this keyword is set, the average intensity method of projection is used. The default is a maximum intensity projection. This keyword is ignored if the Z_BUFFER keyword is set.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_878082"></a><a name="dg_routines_3604229493_1105686_Keywords_PROJECT_VOL__"></a>CUBIC</h3>
+        <p>If this keyword is set, the cubic method of interpolation is used. The default is bilinear interpolation.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_878085"></a><a name="dg_routines_3604229493_1105735_Keywords_PROJECT_VOL__"></a>DEPTH_Q</h3>
+        <p>Set this keyword to indicate that the image should be created using depth queuing. The depth queuing should be a single floating-point value between 0.0 and 1.0. This value specifies the brightness of the farthest regions of the volume relative to the closest regions of the volume. A value of 0.0 will cause the back side of the volume to be completely blacked out, while a value of 1.0 indicates that the back side will show up just as bright as the front side. The default is 1.0 (indicating no depth queuing).</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_878088"></a><a name="dg_routines_3604229493_786868_Keywords_PROJECT_VOL__"></a>OPAQUE</h3>
+        <p>A 3-D array of any type except string or structure, with the same size and dimensions as <i>Vol</i>. This array specifies the opacity of each cell in the volume. OPAQUE values of 0 allow all light to pass through. OPAQUE values are cumulative. For example, if a ray emanates from a data value of 50, and then passes through 10 opaque cells (each with a data value of 0 and an opacity value of 5) then that ray would be completely blocked out (the cell with the data value of 50 would be invisible on the returned image). The default is no opacity.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_878091"></a><a name="dg_routines_3604229493_786871_Keywords_PROJECT_VOL__"></a>TRANS</h3>
+        <p>A 4x4 floating-point array to use as the transformation matrix when projecting the volume. The default is to use the system viewing matrix (!P.T).</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_878094"></a><a name="dg_routines_3604229493_1105761_Keywords_PROJECT_VOL__"></a>XSIZE</h3>
+        <p>The <i>x</i> size of the returned image to return. CONGRID is used to resize the final image to be XSIZE by YSIZE.   The default is the <i>x</i> size of the current window (or the <i>x</i> size of the Z-buffer). If no current window exists, then the default is <i>X_sample</i>.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_878097"></a><a name="dg_routines_3604229493_1105822_Keywords_PROJECT_VOL__"></a>YSIZE</h3>
+        <p>The <i>y</i> size of the returned image. CONGRID is used to resize the final image to be XSIZE by YSIZE. The default is the <i>y</i> size of the current window (or the <i>y</i> size of the Z-buffer). If no current window exists, then the default is <i>Y_sample</i>.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_878100"></a><a name="dg_routines_3604229493_1105820_Keywords_PROJECT_VOL__"></a>Z_BUFFER</h3>
+        <p>If this keyword is set, the projection is combined with the contents of the Z-buffer.   The default is to not use the Z-buffer contents.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_878107"></a><a name="dg_routines_3604229493_786891_PageTOC_PROJECT_VOL_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre-4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dg_routines_3604229493_878115"></a><a name="dg_routines_3604229493_1079222_PageTOC_PROJECT_VOL_"></a>See Also</h2>
+        <p><a href="POLYSHADE_Procedure.htm#dg_routines_3604229493_892899">POLYSHADE Procedure</a>, <a href="../V/VOXEL_PROJ.htm#dg_routines_3604229493_889793">VOXEL_PROJ</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

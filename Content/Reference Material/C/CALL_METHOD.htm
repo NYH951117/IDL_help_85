@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>CALL_METHOD </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">CALL_METHOD</span>
+        </div>
+        <h1 class="Routine"><a name="C_854643309_CALL_METHOD"><a name="C_854643309_907020"></a><a name="C_854643309_30885"></a>CALL_METHOD </a>
+        </h1>
+        <p>The <a name="kanchor157"></a>CALL_METHOD <a name="kanchor158"></a>function or procedure calls an object method by name, passing any additional parameters as its arguments. CALL_METHOD is useful when you want to dynamically determine the method to call at run-time instead of compile-time.</p>
+        <p>Although not as flexible as <a href="../E/EXECUTE.htm">EXECUTE</a>, CALL_METHOD is much faster. Therefore, CALL_METHOD should be used in preference to EXECUTE whenever possible.</p>
+        <h2 class="API">Examples</h2>
+        <h6>Dynamic Method Calls on an Object</h6>
+        <p>Here we dynamically either remove or add an object from a container, depending upon whether it is already contained. Instead of having two different method calls, we use CALL_METHOD with the appropriate method name.</p>
+        <p class="Code">obj = IDL_Container( )</p>
+        <p class="Code">obj.Add, IDL_Object( )</p>
+        <p class="Code">newobj = IDL_Object( )</p>
+        <p class="Code">CALL_METHOD, obj.IsContained(newobj) ? "Remove" : "Add", obj, newobj</p>
+        <p class="Code">print, obj.Count()</p>
+        <p>IDL prints:</p>
+        <p class="Code">2</p>
+        <h6>Static Method Calls on a Variable</h6>
+        <p>Next, we dynamically call a static method on a string variable:</p>
+        <p class="Code">var = "mY iDL stRing"</p>
+        <p class="Code">method = RANDOMU(seed) gt 0.5 ? "ToUpper" : "ToLower"</p>
+        <p class="Code">print, CALL_METHOD(method, var)</p>
+        <p class="Code">method = RANDOMU(seed) gt 0.5 ? "ToUpper" : "ToLower"</p>
+        <p class="Code">print, CALL_METHOD(method, var)</p>
+        <p>IDL prints (your result may vary!):</p>
+        <p class="Code">MY IDL STRING</p>
+        <p class="Code">my idl string</p>
+        <h6>Static Class Method Calls</h6>
+        <p>Finally, we call a static class method by just giving the name of the method:</p>
+        <p class="Code">print, CALL_METHOD("IDLUnit.ListUnits")</p>
+        <p>IDL prints:</p>
+        <p class="Code">meter gram second ampere kelvin mole candela bit micron inch point pica foot yard mile link...</p>
+        <p>In this last example you could also have called the method using an undefined variable with the appropriate name:</p>
+        <p class="Code">print, CALL_METHOD("ListUnits", IDLUnit)</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = CALL_METHOD(<i>Method</i>, <i>Item</i>,&#160;<i>Args...</i>, <i>Keywords=...</i>)</p>
+        <p>or</p>
+        <p class="Syntax">CALL_METHOD, <i>Method</i>, <i>Item</i>,&#160;<i>Args...</i>, <i>Keywords=...</i></p>
+        <h2 class="API">Return Value</h2>
+        <p>If calling a function method, then the Result will be the result from that method.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Method</h3>
+        <p>A string containing the name of the method to be called. This argument can be a variable, which allows the called method to be determined at runtime.</p>
+        <p>You can also call a static class method by giving a method name of the form "<i>Class</i>.<i>Method</i>". In this case you should not supply the <i>Item</i> argument.</p>
+        <h3 class="Argument">Item</h3>
+        <p>Set this argument to either a scalar object reference or an IDL variable of any type except STRUCTURE.</p>
+        <p>If <i>Item</i> is an object reference, then the <i>Method</i> will be called on that object, with <i>Item</i> being passed as the <i>Self</i> argument.</p>
+        <p>If <i>Item</i> is an IDL variable then the static method given by <i>Method</i> will be called on that variable. For example, if <i>Item</i> was a string and Method was "ToUpper", then the <a href="../Static Methods/IDL_String.htm#ToUpper">IDL_String.ToUpper</a> method would be called on that string.</p>
+        <p>If <i>Item</i> is an undefined variable, then <i>Item</i> will be used as the name of a static class. For example, if <i>Item</i> was set to a variable named IDLUnit, and <i>Method</i> was "AddUnit", then the <a href="../I/IDLUNIT.htm#ADDUNIT">IDLUnit.AddUnit</a> static class method would be called.</p>
+        <h3 class="Argument">P<sub class="italic">i</sub></h3>
+        <p>The arguments to be passed to the method. These arguments are the positional and keyword arguments documented for the called method, and are passed to the called method exactly as if it had been called directly.</p>
+        <h2 class="API">Keywords</h2>
+        <p>Any keywords are passed directly to the called method.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>5.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">8.4</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added support for static method calls.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="CALL_FUNCTION.htm#C_854643309_996991">CALL_FUNCTION</a>, <a href="CALL_PROCEDURE.htm#C_854643309_676035">CALL_PROCEDURE</a>, <a href="../E/EXECUTE.htm#E_841667181_676755">EXECUTE</a>, <a href="../../Objects/Static_Methods.htm">Static Methods and Properties</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

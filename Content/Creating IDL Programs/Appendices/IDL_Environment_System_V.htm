@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Variables|System Variables">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>General System Variables</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Variables.htm">Variables</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../System Variables.htm">System Variables</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">General System Variables</span>
+        </div>
+        <h1><a name="sysvars_272074529_997068"></a><a name="sysvars_272074529_70125"></a>General System Variables</h1>
+        <p>The following system variables contain information about IDL’s configuration.</p>
+        <h3 class="Sysvar"><a name="sysvars_272074529_1014201"></a><a name="kanchor4672"></a><a name="!CPU"></a>!CPU</h3>
+        <p>IDL can use multiple system processors to perform some computations in parallel. </p>
+        <p>The !CPU system variable supplies information about the state of the system processor, and of IDL's use of it. !CPU is read only, and cannot be modified directly. Use the CPU procedure to modify values contained in !CPU.</p>
+        <p>The !CPU structure is defined as follows:</p>
+        <p class="Code">{ !CPU, HW_VECTOR:0L, VECTOR_ENABLE:0L, HW_NCPU:0L,<br />&#160;&#160;TPOOL_NTHREADS:0L, TPOOL_MIN_ELTS:0L, TPOOL_MAX_ELTS:0L }</p>
+        <p>where the meaning of the fields as follows:</p>
+        <h4 class="SysvarField">HW_VECTOR</h4>
+        <p>True (1) if the system supports a vector unit (<i>e.g.</i>, Macintosh Altivec/Velocity Engine). False (0) otherwise.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This value is currently always 0 (False) on platforms other than Macintosh.</p>
+        <h4 class="SysvarField"><a name="sysvars_272074529_1014490"></a><a name="sysvars_272074529_65346"></a>VECTOR_ENABLE</h4>
+        <p>True (1) if IDL will use a vector unit, if such a unit is available on the current system, and False (0) otherwise.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This value is currently always 0 (False) on platforms other than Macintosh.</p>
+        <h4 class="SysvarField">HW_NCPU</h4>
+        <p>The number of CPUs contained in the system on which IDL is currently running.</p>
+        <h4 class="SysvarField"><a name="sysvars_272074529_1014498"></a><a name="sysvars_272074529_34011"></a>TPOOL_NTHREADS</h4>
+        <p>The number of threads that IDL will use in thread pool computations. The default is to use HW_NCPU threads, so that each thread will have the potential to run in parallel with the others. For numerical computation, there is no benefit to using more threads than your system has CPUs. However, depending on the size of the problem and the number of other programs running on the system, there may be a performance advantage to using fewer CPUs.</p>
+        <p>If the IDL_CPU_TPOOL_NTHREADS preference has been set, then TPOOL_NTHREADS is initialized with this value at startup. On systems shared by multiple users, you may wish to set this preference so that IDL uses the specified number of threads instead of defaulting to the number of CPUs present in the underlying hardware. See <a href="prefs_cpu.htm#preferences_2247882535_1024551">!CPU Settings Preferences</a> for details.</p>
+        <h4 class="SysvarField"><a name="sysvars_272074529_1014580"></a><a name="sysvars_272074529_11006"></a>TPOOL_MIN_ELTS</h4>
+        <p>The number of elements in a computation that are necessary before IDL will use the thread pool to perform the work. For fewer than TPOOL_MIN_ELTS, the main IDL thread will simply perform the work without using the thread pool. It is important not to use the thread pool for small tasks because the overhead of threading will not be offset by the overhead incurred by operation of the pool, and the overall computation will go slower than if threading is not used.</p>
+        <h4 class="SysvarField"><a name="sysvars_272074529_1014576"></a><a name="sysvars_272074529_45533"></a>TPOOL_MAX_ELTS</h4>
+        <p>The maximum number of elements in a computation for which IDL will use the thread pool. If this value is 0 (zero) (the default), then no limit is imposed and any computation with at least TPOOL_MIN_ELTS is a candidate for the thread pool. If your computation is too large for the physical memory available on the system, the virtual memory system of the operating system will begin paging. Under such conditions, the performance of the thread pool can be worse than that of a single threaded computation because the threads end up fighting each other for access to memory. TPOOL_MAX_ELTS can be used to prevent this.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The TPOOL_MAX_ELTS, TPOOL_MIN_ELTS, TPOOL_NTHREADS, and VECTOR_ENABLE fields of this system variable take their default values from the <a href="prefs_cpu.htm#preferences_2247882535_1024551">!CPU Settings Preferences</a>.</p>
+        <h3 class="Sysvar"><a name="kanchor4673"></a><a name="DEBUG_PROCESS_EVENTS"></a>!DEBUG_PROCESS_EVENTS</h3>
+        <p>Set this system variable to 1 to allow IDL to process widget events while the IDL&#160;interpreter is stopped within a routine. Set this variable to 0 to disable widget events while stopped within a routine. The default value is 1.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you are stopped within a $MAIN program, IDL will always process widget events, regardless of the setting of this system variable.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>Usually, you will want to keep !DEBUG_PROCESS_EVENTS = 1. This allows you to use graphics and widget applications while debugging your code. However, if you are debugging an event handler within your widget application, you may want to temporarily set !DEBUG_PROCESS_EVENTS = 0 so that IDL does not make widget event calls back into your event handler.</p>
+        <h3 class="Sysvar"><a name="sysvars_272074529_997072"></a><a name="kanchor4674"></a><a name="!DIR"></a>!DIR</h3>
+        <p><a name="kanchor4675"></a>A string variable containing the path to the main IDL directory.</p>
+        <p>!DIR takes its default value from a <i>preference</i>. See <a href="prefs_directory.htm#preferences_2247882535_1025563">IDL_DIR</a> for details.</p>
+        <h3 class="Sysvar"><a name="sysvars_272074529_1004032"></a><a name="!DLM_PATH"></a><a name="kanchor4676"></a>!DLM_PATH</h3>
+        <p>Significant portions of IDL’s built in functionality are packaged in the form of Dynamically Loadable Modules (DLMs). DLMs correspond to UNIX sharable libraries or Windows DLLs, depending on the operating system in use. At startup, IDL searches for DLM definition files (which end in the .<code>dlm</code> suffix) and makes note of the routines supplied by each DLM. If a routine is called, IDL automatically loads the DLM. To see a list of the DLMs that IDL knows about, use <code>HELP,</code><code>/DLM</code> (see the <a href="../../Reference Material/H/HELP.htm">HELP</a> procedure for more information).</p>
+        <p>!DLM_PATH takes its default value from the <a href="prefs_directory.htm#preferences_2247882535_1025503">IDL_DLM_PATH</a> preference.</p>
+        <p>If the IDL_DLM_PATH preference is not explicitly defined by the user, IDL supplies a default that contains the directory in the IDL distribution where the supplied DLMs reside. Once !DLM_PATH is expanded, IDL uses it as the list of places to look for DLM definition files. IDL also searches the current working directory for DLM&#160;files.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you change the value of !DLM_PATH then IDL will automatically parse the "<code>.dlm</code>" files within the new directories and add the routines to IDL's internal table of available routines. If your IDL code calls one of these routines then IDL will automatically load the appropriate <code>.dll</code> or <code>.so</code> library, even if that directory is no longer on !DLM_PATH. The only way to clear out the table of available routines is to restart IDL.</p>
+        <h3>Using Path Definition Tokens to Load a DLM Path</h3>
+        <p>Using the <code>&lt;IDL_BIN_DIRNAME&gt;</code> token in the IDL_DLM_PATH preference can be useful for distributing packages of DLMs with support for multiple operating system and hardware combinations. This token is described in <a href="../../Reference Material/E/EXPAND_PATH.htm#E_841667181_997238">The Path Definition String</a> under <a href="../../Reference Material/E/EXPAND_PATH.htm#E_841667181_676787">EXPAND_PATH</a>.</p>
+        <p>For example, assume that you have your DLMs installed in <code>/usr/local/mydlm</code>, with support for each platform in a subdirectory using the same naming convention that IDL uses for the platform dependent subdirectories underneath the <code>bin</code> directory of the IDL distribution. Setting the IDL_DLM_PATH preference to the following:</p>
+        <p class="Code">"/usr/local/mydlm/&lt;IDL_BIN_DIRNAME&gt;:&lt;IDL_DEFAULT&gt;"</p>
+        <p>adds the location of the proper DLM for your current system to IDL's !DLM_PATH at startup.</p>
+        <p>Similarly, the <code>&lt;IDL_VERSION_DIRNAME&gt;</code> token can be useful for distributing packages of DLMs with support for multiple IDL versions, operating systems, and hardware platforms. This token is described in <a href="../../Reference Material/E/EXPAND_PATH.htm#E_841667181_997238">The Path Definition String</a> under <a href="../../Reference Material/E/EXPAND_PATH.htm#E_841667181_676787">EXPAND_PATH</a>.</p>
+        <p>For example, assume that you have your DLMs installed in <code>/usr/local/mydlm</code>. You create a subdirectory for each supported version of IDL within the <code>mydlm</code> directory. Within each of those subdirectories would be a subdirectory for each operating system and hardware combination supported by that version of IDL. Setting the IDL_DLM_PATH preference to the following:</p>
+        <p class="Code">"/usr/local/mydlm/&lt;IDL_VERSION_DIRNAME&gt;/&lt;IDL_BIN_DIRNAME&gt;:&lt;IDL_DEFAULT&gt;"</p>
+        <p>adds the location of the proper DLM for your current system to IDL's !DLM_PATH at startup.</p>
+        <h3 class="Sysvar"><a name="sysvars_272074529_1004047"></a><a name="kanchor4677"></a><a name="!EDIT_INPUT"></a>!EDIT_INPUT</h3>
+        <p>This system variable determines whether or not the tty-based (non-IDE) command-line version of IDL does command-line editing when reading commands. The default value for !EDIT_INPUT comes from the <a href="prefs_general.htm#preferences_2247882535_1025553">IDL_EDIT_INPUT</a> preference. See <a class="Heading">IDL System Preferences</a> for details.</p>
+        <p>By default, IDL saves the last 20 command lines in a recall buffer. You can change the number of command lines saved in the recall buffer by setting the <a href="prefs_general.htm#preferences_2247882535_1024816">IDL_RBUF_SIZE</a> preference to the desired number. To preserve backward compatibility with releases of IDL prior to version 6.2, you can also change the number of command lines saved in the recall buffer by setting !EDIT_INPUT equal to the number of lines you would like to save. In order for the change to take effect, IDL must be able to process the assignment statement before providing a command prompt. This means that you must put the assignment statement in the IDL startup file. </p>
+        <h3 class="Sysvar"><a name="sysvars_272074529_1000204"></a><a name="kanchor4678"></a><a name="!HELP_PATH"></a>!HELP_PATH</h3>
+        <p>A string variable listing the <a name="kanchor4679"></a>directories IDL will search for online help files. Help files must either be part of an IDL&#160;Assistant online help system (controlled by a <code>.adp</code> file), Adobe Portable Document Format (<code>.pdf</code>) files, or HTML (<code>.html</code> or <code>.htm</code>) files. On Windows systems, help files can also be HTML Help (<code>.chm</code>) or Windows Help (<code>.hlp</code>) files. </p>
+        <p>!HELP_PATH takes its default value from a <i>preference</i>. See <a href="prefs_directory.htm#preferences_2247882535_1025575">IDL_HELP_PATH</a> for details.</p>
+        <p>If the IDL_HELP_PATH preference is not explicitly defined by the user, IDL supplies a default that contains the directory in the IDL distribution where the supplied help files reside.</p>
+        <p>To change the value of !HELP_PATH for the duration of an IDL session, simply set the variable equal to a new string containing the desired path. See <a href="#sysvars_272074529_1016600" class="selected">Changing the Value of !PATH After IDL Starts</a> for tips that also apply to setting the value of !HELP_PATH.</p>
+        <h3 class="Sysvar"><a name="kanchor4680"></a><a name="!JOURNAL"></a>!JOURNAL</h3>
+        <p><a name="kanchor4681"></a>A read-only long-integer variable containing the logical unit number of the file used for journal output.</p>
+        <h3 class="Sysvar"><a name="sysvars_272074529_1009307"></a><a name="kanchor4682"></a><a name="!MAKE_DLL"></a>!MAKE_DLL</h3>
+        <p>The MAKE_DLL procedure and the CALL_EXTERNAL function’s AUTO_GLUE keyword use the standard system C compiler and linker to generate sharable libraries that can be used by IDL in various contexts (CALL_EXTERNAL, DLMs, LINKIMAGE). There is a great deal of variation possible in the use of these tools between different platforms, operating system versions, and compiler releases. The !MAKE_DLL system variable is used to configure how IDL uses them for the current platform.</p>
+        <p>The !MAKE_DLL structure is defined as follows:</p>
+        <p class="Code">{ !MAKE_DLL, COMPILE_DIRECTORY:’’, COMPILER_NAME:’’, CC:’’, LD:’’}</p>
+        <p>where the meaning of the fields as follows:</p>
+        <h4 class="SysvarField">COMPILE_DIRECTORY</h4>
+        <p>IDL requires a place to create the intermediate files necessary to build a sharable library, and possibly the final library itself. Unless told to use an explicit directory, it uses the directory given by the COMPILE_DIRECTORY field of !MAKE_DLL. </p>
+        <p>IDL takes the default value of this field from a <i>preference</i>. See <a href="prefs_directory.htm#preferences_2247882535_1025580">IDL_MAKE_DLL_COMPILE_DIRECTORY</a> for details.</p>
+        <h4 class="SysvarField">COMPILER_NAME</h4>
+        <p>A string containing the name of the C compiler used to build the currently running IDL. This field is not used by IDL, and exists solely for informational purposes and to help the end user decide which C compiler to install on their system.</p>
+        <h4 class="SysvarField">CC</h4>
+        <p>A string used by IDL as a template to construct the command for using the C compiler. This template uses PRINTF style substitution codes, as described in the following table.</p>
+        <h4 class="SysvarField">LD</h4>
+        <p>A string used by IDL as a template to construct the command for using the linker. This template uses PRINTF style substitution codes, as described in the following table.</p>
+        <p>When expanding !MAKE_DLL.CC and !MAKE_DLL.LD, IDL substitutes text in place of the PRINTF style codes described in the following table. These codes are case-insensitive (they can be either upper or lower case).</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>It is possible to use C compilers other than the one assumed in !MAKE_DLL to build sharable libraries. To do so, you can alter the contents of !MAKE_DLL or use the CC and/or LD keyword to MAKE_DLL and CALL_EXTERNAL. Please understand that a list of all possible compilers and the necessary compiler options is not maintained. This information is available in your compiler and system documentation. It is the programmer’s responsibility to understand the rules for the chosen compiler.</p>
+        <p>The following table describes the substitution codes for the CC and LD fields:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Code</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Meaning</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>%B %b</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The base name of a C file to compile. For example, if the C file is <code>moose.c</code>, then %B substitutes <code>moose</code>.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>%C %c</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>The name of the C file.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>%E %e</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The name of the linker options file. This file, which is automatically generated by IDL as needed, is used to control the linker. Under UNIX, the system documentation refers to this as an export file, or a linker map file. Microsoft Windows calls it a <code>.DEF</code> file.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>%F %f</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>This substitution code is no longer meaningful, and will be ignored.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>%L %l</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The name of the resulting sharable library. IDL constructs this name by using the base name (%B) and adding the appropriate suffix for the current platform (<code>.dll</code>, <code>.so</code>, <code>.sl</code>, <code>.exe</code>, <i>etc.</i>).</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>%O %o</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>An object file name. IDL constructs this name by using the base name (%B) and adding the appropriate suffix for the current platform (<code>.o</code>, <code>.obj</code>).</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>%X %x</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>When expanding !MAKE_DLL.CC, IDL inserts any text supplied via the EXTRA_CFLAGS keyword to MAKE_DLL or CALL_EXTERNAL in place of %X. IDL does not interpret this text. It is the user’s responsibility to ensure that it is meaningful in the command. When expanding !MAKE_DLL.LD, the text from the EXTRA_LFLAGS keyword is substituted. The primary use for this code is to include necessary header include directories and link libraries.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>%%</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Replaced with a single % character.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Sysvar"><a name="sysvars_272074529_1025456"></a><a name="kanchor4683"></a><a name="!MORE"></a>!MORE</h3>
+        <p>An integer variable indicating whether IDL should paginate help output sent to a tty device. (This preference has no effect on the IDL Workbench Console view.) Setting !MORE to zero (0) prevents IDL from paginating the output text. A non-zero value (the default) causes IDL to display output text one screen at a time.</p>
+        <p>!MORE takes its default value from a <i>preference</i>. See <a href="prefs_general.htm#preferences_2247882535_1025522">IDL_MORE</a> for details.</p>
+        <h3 class="Sysvar"><a name="sysvars_272074529_997094"></a><a name="kanchor4684"></a><a name="!PATH"></a>!PATH</h3>
+        <p>A string variable listing the directories IDL will search for libraries and include files.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The current directory is always searched before consulting !PATH.</p>
+        <p>!PATH takes its default value from a <i>preference</i>. See <a href="prefs_directory.htm#preferences_2247882535_1025585">IDL_PATH</a> for details.</p>
+        <p>If you are using the IDL Workbench, your project directories may be added to !PATH.</p>
+        <h3>Note on Path Expansion</h3>
+        <p>When IDL starts, it reads the value of the IDL_PATH preference and builds a value to be stored in !PATH from the specified initialization value. While the initialization value can consist of a normal path string specifying all directories to be included in !PATH, it can also take advantage of several special values that IDL uses to dynamically create the value of !PATH. These values (the “<code>+</code>” symbol and the “<code>&lt;IDL_*&gt;</code>” strings) are described in detail in The Path Definition String under <a href="../../Reference Material/E/EXPAND_PATH.htm#E_841667181_676787">EXPAND_PATH</a>.</p>
+        <h3>Path Caching</h3>
+        <p>By default, as IDL searches directories included in the !PATH system variable for <code>.pro</code> or <code>.sav</code> files to compile, it creates an in-memory list of <i>all</i><code>.pro</code> and <code>.sav</code> files contained in each directory. When IDL later searches for a <code>.pro</code> or <code>.sav</code> file, before attempting to open the file in a given directory, IDL checks the path cache to determine whether the directory has already been cached. If the directory is included in the cache, IDL uses the cached information to determine whether the file will be found in that directory, and will only attempt to open the file there if the cache tells it that the file exists. By eliminating unnecessary attempts to open files, the path cache speeds the path searching process. If use of the patch cache causes problems, you can disable it either via a keyword to the PATH_CACHE routine or via the <a href="prefs_directory.htm#preferences_2247882535_1025604">IDL_PATH_CACHE_DISABLE</a> preference.</p>
+        <p>See <a href="../../Reference Material/P/PATH_CACHE.htm#P_817877613_1092955">PATH_CACHE</a> for details.</p>
+        <h3><a name="sysvars_272074529_1016600"></a><a name="sysvars_272074529_31889"></a>Changing the Value of !PATH After IDL Starts</h3>
+        <p>Once IDL has started, you can alter the value of !PATH by setting it to a new string value. For example, on a UNIX system, to add a directory to !PATH for the duration of an IDL session, you would use a command like the following:</p>
+        <p class="Code">!PATH = '/usr2/project/idl_files:' + !PATH</p>
+        <p>Keep the following in mind when changing the value of !PATH by setting its value to a new string:</p>
+        <ul>
+            <li value="1">Remember to use the proper platform-specific directory separator character in path specification strings. </li>
+            <li value="2">Remember to use the proper path string separator character for your platform. If you are writing a cross-platform application that changes !PATH, you may want to use code that looks something like this:</li>
+        </ul>
+        <p class="Code_Indented">pathsep = PATH_SEP(/SEARCH_PATH)</p>
+        <p class="Code_Indented">!PATH = '<i>new_path</i>' + pathsep + !PATH</p>
+        <p class="indent">where <i>new_path</i> is the path to the directory you want to add.</p>
+        <ul>
+            <li value="1">You can use the EXPAND_PATH function to generate a path string. This method allows you to specify one or more directories and let IDL figure out whether those directories contain <code>.pro</code> or <code>.sav</code> files. It also allows you to use the “+” character path expansion technique. For example, the following commands add all directories below the <i>new_path</i> directory that contain <code>.pro</code> or <code>.sav</code> files to !PATH:</li>
+        </ul>
+        <p class="Code_Indented">pathsep = PATH_SEP(/SEARCH_PATH)</p>
+        <p class="Code_Indented">!PATH = EXPAND_PATH('+<i>new_path</i>') + pathsep + !PATH</p>
+        <p class="indent">See <a href="../../Reference Material/E/EXPAND_PATH.htm#E_841667181_676787">EXPAND_PATH</a> for details.</p>
+        <ul>
+            <li value="1">Setting the value of !PATH within an IDL session changes the value for that session only. If you want to change the value permanently, change the value of the IDL_PATH preference, using either the <a href="../../Reference Material/P/PREF_SET.htm#P_817877613_1141288">PREF_SET</a> command or the Preferences dialog of the workbench.</li>
+        </ul>
+        <h3 class="Sysvar"><a name="sysvars_272074529_997101"></a><a name="kanchor4685"></a><a name="!PROMPT"></a>!PROMPT</h3>
+        <p><a name="kanchor4686"></a>A string variable containing the text string used by IDL to prompt the user for input. The default is <code>IDL&gt;</code>.</p>
+        <p>!PROMPT takes its default value from a <i>preference</i>. See <a href="prefs_general.htm#preferences_2247882535_1025532">IDL_PROMPT</a> for details.</p>
+        <h3 class="Sysvar"><a name="sysvars_272074529_997106"></a><a name="kanchor4687"></a><a name="!QUIET"></a>!QUIET</h3>
+        <p><a name="kanchor4688"></a>A long-integer variable indicating whether informational messages should be printed (0) or suppressed (nonzero). By default, !QUIET is set to zero.</p>
+        <p>!QUIET takes its default value from a <i>preference</i>. See <a href="prefs_general.htm#preferences_2247882535_1025537">IDL_QUIET</a> for details.</p>
+        <h3 class="Sysvar"><a name="sysvars_272074529_997111"></a><a name="kanchor4689"></a><a name="!VERSION"></a>!VERSION</h3>
+        <p>A structure variable <a name="kanchor4690"></a>containing information about the version of IDL in use. The structure is defined as follows:</p>
+        <p class="Code">{ !VERSION, ARCH:'', OS:'', OS_FAMILY:'', OS_NAME:'', $</p>
+        <p class="Code">&#160;&#160;&#160;RELEASE:'', BUILD_DATE:'', MEMORY_BITS:0, FILE_OFFSET_BITS:0 }</p>
+        <p>where the meaning of the fields as follows:</p>
+        <h4 class="SysvarField">ARCH</h4>
+        <p>CPU hardware architecture of the system. The ARCH field will report one of the following strings, depending on the operating system and number of bits used to address memory:</p>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Operating System</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Memory Bits</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Value of ARCH field</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="2" class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Windows</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>32</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>x86</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>64</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>x86_64</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td rowspan="2" class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Macintosh OS X (Intel)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>32</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>i386</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>64</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>x86_64</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td rowspan="2" class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Linux</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>32</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>x86</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>64</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>x86_64</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td rowspan="2" class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Solaris</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>32</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>sparc</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>64</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>sparc</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4 class="SysvarField">OS</h4>
+        <p>The vendor name of the operating system. The OS field will report one of the following strings: <code>linux</code>, <code>darwin</code>, <code>sunos</code>, <code>Win32</code>. This is the name of the underlying operating system kernel (not necessarily of the overall operating environment: see OS_NAME). Once an OS name is assigned to a platform, it is not altered in subsequent releases. This makes it safe for use in IDL programs that need to distinguish between platforms. Consider using the OS_FAMILY field before using the OS field, as most programs are mainly concerned with high level platform differences.</p>
+        <h4 class="SysvarField">OS_FAMILY</h4>
+        <p>The generic name of the operating system (UNIX, Windows). Whenever possible, use this field (rather than OS or OS_NAME) in code that must distinguish between platforms.</p>
+        <h4 class="SysvarField">OS_NAME</h4>
+        <p>The vendor’s name for the operating system environment, as used by the vendor for casual descriptive and promotional purposes. For example, on Sun workstations, the name of the operating system kernel (!VERSION.OS) is “sunos”, whereas the name of the overall system (!VERSION.OS_NAME) is “Solaris”. Vendors change their descriptive environment names from time to time, and the OS_NAME field is updated to reflect this. As a result, restrict your use of this field to descriptive textual uses, and use the OS_FAMILY or OS fields of !VERSION in code that must distinguish between platforms.</p>
+        <h4 class="SysvarField">RELEASE</h4>
+        <p>IDL version number.</p>
+        <h4 class="SysvarField">BUILD_DATE</h4>
+        <p>The date the IDL executable was compiled, in the format dictated by ANSI C for the <code>__DATE__</code> macro.</p>
+        <h4 class="SysvarField">MEMORY_BITS</h4>
+        <p>The number of bits used to address memory. Possible values are 32 or 64. The number of bits used to address memory places a theoretical upper limit on the amount of memory available to IDL.</p>
+        <h4 class="SysvarField">FILE_OFFSET_BITS</h4>
+        <p>The number of bits used to position file offsets. Possible values are 32 or 64. The number of bits used to position files places a theoretical upper limit on the largest file IDL can access.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you need to differentiate between different IDL versions in your code, use !VERSION.OS_FAMILY. At present, two operating system families are supported: UNIX and Windows. For even more detail, you can use !VERSION.OS. </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Environment|Distributing IDL Applications|Creating a Runtime Distribution">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Working with the manifest_rt.txt File</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../IDL Concepts.htm">Environment</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../DistributingIDLApplications.htm">Distributing IDL Applications</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="CreatingRuntimeDistributionIntro.htm">Creating a Runtime Distribution</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Working with the manifest_rt.txt File</span>
+        </div>
+        <h1>Working with the manifest_rt.txt File<a name="kanchor4294"></a></h1>
+        <p>In many cases you can use the <code><i>IDL_DIR</i>/bin/make_rt/manifest_rt.txt</code> file (where <code style="font-style: italic;">IDL_DIR</code> is the IDL installation directory) without modification. If, however, your application uses files that are not part of the IDL distribution, or if you want to include features described in <code>manifest_rt.txt</code> but commented out of the default runtime distribution, you can create a custom manifest file. To create a custom manifest file, begin by copying the <code>manifest_rt.txt</code> file and giving your file a new name, such as <code>manifest_custom.txt</code>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Use a text editor such as vi, emacs, TextEdit, or the Windows Notepad to edit manifest files. Blank lines and any text following a comment character (semicolon) will be ignored by the MAKE_RT procedure.</p>
+        <h2>Format of the Manifest File</h2>
+        <p>The manifest files used by the <a href="../../../Reference Material/M/MAKE_RT.htm">MAKE_RT</a> procedure are plain text files that contain one line for each file in the IDL installation directory that can potentially be copied to the runtime distribution.</p>
+        <p>Each entry in the manifest file corresponds to a file that exists in the IDL distribution for a particular platform. (Note that although files for all supported platforms are included in the manifest file, the MAKE_RT procedure only attempts to copy files for platforms specified when the procedure is run.)</p>
+        <p>In addition to editing the contents of the manifest file based on the keywords specified at runtime, the MAKE_RT procedure applies the following rules when creating its list of files to copy to the runtime distribution:</p>
+        <ul>
+            <li value="1">blank lines are ignored</li>
+            <li value="2">lines that begin with a semicolon are ignored</li>
+            <li value="3">text following a semicolon that is not at the beginning of a line is ignored</li>
+        </ul>
+        <h2>Removing IDL Features</h2>
+        <p>Some sections of the <code>manifest_rt.txt</code> file are noted as optional. If your application does not use the features contained in one or more of these sections, you may be able to remove them from your custom manifest file, creating a smaller runtime distribution.</p>
+        <p>If you choose to remove one or more optional features, be sure to test your application thoroughly using the runtime distribution. Removing an optional feature may reveal dependencies in your code of which you were unaware.</p>
+        <h2>Including Optional IDL Features</h2>
+        <p>The <code>manifest_rt.txt</code> file includes sections that are commented out (that is, each line begins with a semicolon). These sections correspond to features that are rarely used or that require a special license. To include these features in your runtime distribution, you will need to edit the manifest file to remove the comment characters.</p>
+        <p>Even if you uncomment all of the entries for a particular feature, only the files that are required for the platforms you specify will be copied by MAKE_RT.</p>
+        <h2>Including Non-IDL Files</h2>
+        <p>To include features that are not described in the <code>manifest_rt.txt</code> file, add new lines describing the location of the files. Note that paths specified in the manifest file are relative to <code style="font-style: italic;">IDL_DIR</code>, and that files will have the same relative location with the IDL runtime distribution as they have in the source distribution.</p>
+        <p>When adding non-IDL files to a manifest file, use the forward slash (“/”) as the directory separator, even on Windows platforms.</p>
+        <p>If you are unable to place your extra files into the source IDL distribution, you may want to <a href="CreatingDistributionUsingMAKE_RT.htm#Add">manually copy the files after the runtime distribution has been built</a>.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

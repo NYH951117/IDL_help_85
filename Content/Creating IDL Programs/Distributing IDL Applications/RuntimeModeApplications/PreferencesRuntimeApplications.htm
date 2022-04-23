@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Environment|Distributing IDL Applications|Runtime Mode Applications">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Preferences for Runtime Applications</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../IDL Concepts.htm">Environment</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../DistributingIDLApplications.htm">Distributing IDL Applications</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="DistributingRuntimeModeApplicationsIntro.htm">Runtime Mode Applications</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Preferences for Runtime Applications</span>
+        </div>
+        <h1>Preferences for Runtime Applications<a name="kanchor4278"></a></h1>
+        <p>IDL’s preference system allows developers, administrators, and individual users to control default values for many aspects of IDL’s environment and configuration. Creators of runtime applications can take advantage of the preference system to customize the environment in which a particular application runs.</p>
+        <p>Before attempting to use preferences to customize the runtime IDL environment, you should have a clear understanding of how IDL loads and uses preference values. See IDL System Preferences for a detailed discussion of the preference system.</p>
+        <h2>Preference Etiquette</h2>
+        <p>IDL’s preference system routines <a href="../../../Reference Material/P/PREF_SET.htm">PREF_SET</a> and <a href="../../../Reference Material/P/PREF_COMMIT.htm">PREF_COMMIT</a> provide programmatic control over the values of preferences saved in an individual user’s preferences file. <b>In general, as an application author, you should not use these routines in IDL code.</b> Since preference values set in the user preference file persist between sessions, changes made by your application using these routines will affect your end user’s IDL environment even when he or she is running other applications.</p>
+        <p>Preference files loaded at application startup provide a much more user-friendly mechanism for specifying preference values that apply only to your application. To use this mechanism, create a preference file that contains the preference values you wish to have in effect when your application runs, and include the name of the preference file in the command that launches your application via the -pref command-line option. See <a href="../../../Reference Material/C/Command_Line_Options_for.htm">Command Line Options for IDL Startup</a> for details.</p>
+        <h2>Loading Preference Values at Application Startup</h2>
+        <p>IDL provides the following mechanisms for loading preference values when an IDL application starts:</p>
+        <ul>
+            <li value="1">Specifying a preference file via the <code>-pref</code> command line option.</li>
+            <li value="2">Providing an <code>idl.pref</code> file located in the same directory as the IDL DLL file (Windows only).</li>
+            <li value="3">Specifying individual preference values specified as command line options.</li>
+            <li value="4">Specifying individual preference values via the values of corresponding system environment variables.</li>
+            <li value="5">Modifying the <code>idl.pref</code> file in the <code>resource/pref</code> subdirectory of the application distribution. This method is only useful if you are distributing an IDL distribution to support your application — you should not modify an existing <code>idl.pref</code> file in your end user’s installed IDL distribution.</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>These mechanisms change the value of the specified preference or preferences for the current IDL session only. Values are not written to the user’s preference file.</p>
+        <h3>Specifying Preferences at the Command Line</h3>
+        <p>Of these options the first — specifying a preference file via the <code>-pref</code> command line option — is the most general and user-friendly. By specifying the values for preferences used by your application in a separate, application-specific preferences file, you can both control IDL’s runtime environment and provide your end users with a mechanism to tune the IDL environment themselves. If one of your end users can achieve better performance using a different preference value, all that user needs to do is alter the value in the preference file loaded at startup.</p>
+        <h3>Providing an idl.pref File (Windows Only)</h3>
+        <p>The second option — providing an <code>idl.pref</code> file in the same directory as the IDL DLL — is only available under Microsoft Windows.</p>
+        <p>There are three Windows-only runtime preferences:</p>
+        <ul>
+            <li value="1"><a href="../../Appendices/prefs_win_rt.htm#preferences_2247882535_1025886">IDL_WINRT_FILE</a> allows you to specify the name of a save file to be run when IDL starts up</li>
+            <li value="2"><a href="../../Appendices/prefs_win_rt.htm#preferences_2247882535_1025891">IDL_WINRT_FILE_TYPE</a> allows you to specify the licensing mode of a runtime application</li>
+            <li value="3"><a href="../../Appendices/prefs_win_rt.htm#preferences_2247882535_1033093">IDL_WINRT_ICON</a> allows you to specify the name of an icon file to use with a runtime application</li>
+        </ul>
+        <p>These preferences are honored only when the <code>idlrt.exe</code> executable is in use.</p>
+        <h3>Specifying Individual Preference Files</h3>
+        <p>Specifying individual preference values at the command line provides little advantage over specifying the name of a preference file, but may be useful if the number of preferences to be specified is small.</p>
+        <h3>Using Environment Variables</h3>
+        <p>The technique of using environment variables to specify preference values can be useful, but should be used with caution. Setting an environment variable provides a relatively easy way for your end users to override your preference settings without the need to modify the preference file you distribute. Depending on how the value of an environment variable is specified, however, the value may persist between invocations of your application. As a result, end users might experience unexpected behavior in other IDL applications (or in IDL itself) if an environment variable specified for your applications is in effect when the other applications are run.</p>
+        <h3>Modifying the Default Preferences File</h3>
+        <p>You should only modify the <code>resource/pref/idl.pref</code> file if you are creating and distributing your own runtime application distribution. See <a href="../../Appendices/About_IDL_System_Prefere.htm">IDL System Preferences</a> for a detailed discussion of these options.</p>
+        <h2>Examples</h2>
+        <p>Suppose you created an IDL runtime application named <code>myapp</code> that performs numerous CPU-intensive calculations that could potentially use multiple CPUs on a multiprocessor system. If you want to ensure that your application uses at most two CPUs, you could include the following setting in a preference file named <code>myapp.pref</code>:</p>
+        <p xml:space="preserve" class="Code">IDL_CPU_TPOOL_NTHREADS : 2</p>
+        <p>On UNIX platforms, you could then invoke your runtime application with a command line something like the following:</p>
+        <p xml:space="preserve" class="Code">idl -rt=/myapp/myapp.sav -pref=/myapp/myapp.pref</p>
+        <p>On Windows platforms, you could create a preference file containing the following:</p>
+        <p xml:space="preserve" class="Code">IDL_CPU_TPOOL_NTHREADS : 2</p>
+        <p xml:space="preserve" class="Code">
+IDL_WINRT_FILETYPE: 0</p>
+        <p xml:space="preserve" class="Code">
+IDL_WINRT_ICON: c:\myapp\myapp.ico</p>
+        <p>These preference values specify the maximum number of CPUs, the need for a runtime license for your application, and the application icon. If you name the preferences file <code>idl.pref</code> and place it in the <code>bin/bin.<i>platform</i></code> subdirectory of your application distribution (where <code style="font-style: italic;">platform</code> is your platform-specific <code>bin</code> directory), IDL will load the preferences when a user double-clicks on the application icon.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

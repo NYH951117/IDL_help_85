@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: M">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>MAP_GRID Procedure</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="M_list.htm">Routines: M</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">MAP_GRID Procedure</span>
+        </div>
+        <h1 class="Routine"><a name="dg_routines_3604229493_883952"></a><a name="kanchor1773"></a><a name="dg_routines_3604229493_13744"></a><a name="kanchor1774"></a>MAP_GRID Procedure</h1>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Please see the <a href="MAPGRID.htm" class="Heading">MAPGRID</a> function, which replicates the functionality of this routine and offers an interactive interface.</p>
+        <p>The MAP_GRID procedure draws the graticule of parallels and meridians (grid lines) over a map projection.</p>
+        <p>The MAP_STRUCTURE keyword may be used to draw directly to UV (Cartesian) coordinates. Otherwise, MAP_SET must be called before MAP_GRID to establish the projection type, the center of the projection, polar rotation and geographical limits.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_884155"></a><a name="dg_routines_3604229493_887694_PageTOC_MAP_GRID_"></a>Examples</h2>
+        <p>The following example creates an orthographic projection, defines which latitudes to label, and provides text labels. Note that the text labels are rotated to match the orientation of the map projection.</p>
+        <p class="Code">; Set up an orthographic projection:<br />MAP_SET, /ORTHO, 10, 20, 30, /ISOTROPIC, /CONTINENTS, /HORIZON<br />; Define latitudes of interest:<br />lats = [ -80, -45, -30, -20, 0, 15, 27, 35, 45, 55, 75]<br />; Create string equivalents of latitudes:<br />latnames = strtrim(lats, 2)<br />; Label the equator:<br />latnames(where(lats eq 0)) = 'Equator'<br />; Draw the grid:<br />MAP_GRID, LABEL=2, LATS=lats, LATNAMES=latnames, LATLAB=7, $<br />&#160;&#160;&#160;LONLAB=-2.5, LONDEL=20, LONS=-15, ORIENTATION=-30</p>
+        <p>The following example uses the MAP_STRUCTURE keyword to map the grid lines in UV (Cartesian) coordinates, without having to set up a !MAP transform using MAP_SET.</p>
+        <p class="Code">; GCTP Polar stereographic projection<br />mapStruct = MAP_PROJ_INIT(106, LIMIT=[0,-180,90,180], $<br />&#160;&#160;&#160;CENTER_LATITUDE=90)<br /><br />; Create a plot window using the UV Cartesian range.<br />PLOT, mapStruct.uv_box[[0,2]],mapStruct.uv_box[[1,3]], $<br />&#160;&#160;&#160;/NODATA, /ISOTROPIC, XSTYLE=1, YSTYLE=1<br /><br />MAP_CONTINENTS, MAP_STRUCTURE=mapStruct<br />MAP_GRID, MAP_STRUCTURE=mapStruct</p>
+        <h2 class="API"><a name="dg_routines_3604229493_883974"></a><a name="dg_routines_3604229493_887632_PageTOC_MAP_GRID_"></a>Syntax</h2>
+        <p class="Syntax">MAP_GRID [,&#160;/<a href="#dg_routines_3604229493_884049" class="selected">BOX_AXES</a> | [,&#160;<a href="#dg_routines_3604229493_884060" class="selected">CLIP_TEXT</a>=0] [,&#160;<a href="#dg_routines_3604229493_884087" class="selected">LATALIGN</a>=<i>value</i>{0.0 to 1.0}] [,&#160;<a href="#dg_routines_3604229493_884106" class="selected">LONALIGN</a>=<i>value</i>{0.0 to 1.0}] [,&#160;<a href="#dg_routines_3604229493_884093" class="selected">LATLAB</a>=<i>longitude</i>] [,&#160;<a href="#dg_routines_3604229493_884112" class="selected">LONLAB</a>=<i>latitude</i>] [,&#160;<a href="#dg_routines_3604229493_884134" class="selected">ORIENTATION</a>=<i>clockwise_degrees_from_horiz</i>]] <br />[,&#160;<a href="#dg_routines_3604229493_884053" class="selected">CHARSIZE</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_884063" class="selected">COLOR</a>=<i>index</i>] [,&#160;/<a href="#dg_routines_3604229493_884066" class="selected">FILL_HORIZON</a>] [,&#160;<a href="#dg_routines_3604229493_884069" class="selected">GLINESTYLE</a>={0 | 1 | 2 | 3 | 4 | 5}] [,&#160;<a href="#dg_routines_3604229493_884075" class="selected">GLINETHICK</a>=<i>value</i>] [,&#160;/<a href="#dg_routines_3604229493_884078" class="selected">HORIZON</a>] [,&#160;<a href="#dg_routines_3604229493_884081" class="selected">INCREMENT</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_884084" class="selected">LABEL</a>=<i>n</i>{label_every_<i>n</i>th_gridline}] [,&#160;<a href="#dg_routines_3604229493_884090" class="selected">LATDEL</a>=<i>degrees</i>] [,&#160;<a href="#dg_routines_3604229493_884096" class="selected">LATNAMES</a>=<i>array</i>, <a href="#dg_routines_3604229493_884101" class="selected">LATS</a>=<i>vector</i>] [,&#160;<a href="#dg_routines_3604229493_884109" class="selected">LONDEL</a>=<i>degrees</i>] [,&#160;<a href="#dg_routines_3604229493_884115" class="selected">LONNAMES</a>=<i>array</i>, <a href="#dg_routines_3604229493_884120" class="selected">LONS</a>=<i>vector</i>] [,&#160;<a href="#dg_routines_3604229493_884125" class="selected">MAP_STRUCTURE</a>=<i>structure</i>] [,&#160;/<a href="#dg_routines_3604229493_884131" class="selected">NO_GRID</a>]</p>
+        <p class="Syntax"><b>Graphics Keywords:</b> [,&#160;/T3D] [,&#160;ZVALUE=<i>value</i>{0 to 1}]</p>
+        <h2 class="API"><a name="dg_routines_3604229493_884047"></a><a name="dg_routines_3604229493_887634_PageTOC_MAP_GRID_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884049"></a><a name="dg_routines_3604229493_919039_Keywords_MAP_GRID__"></a>BOX_AXES</h3>
+        <p>Set this keyword to create box-style axes for map plots where the parallels intersect the sides, and the meridians intersect the bottom and top edges of the box.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If a device (or hardware) font is in use, the labels generated by this keyword may appear incorrectly. Consider using TrueType or vector fonts instead.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884053"></a><a name="dg_routines_3604229493_887636_Keywords_MAP_GRID__"></a>CHARSIZE</h3>
+        <p>Set this keyword to the size of the characters used for the labels. The default is 1.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If a device (or hardware) font is in use, this keyword will have no effect. Use the FONTSIZE keyword to the <a href="../D/DEVICE_Procedure.htm#dg_routines_3604229493_882302">DEVICE Procedure</a> to specify character size when using hardware fonts.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884060"></a><a name="dg_routines_3604229493_919041_Keywords_MAP_GRID__"></a>CLIP_TEXT</h3>
+        <p>Set this keyword to a zero value to turn off clipping of text labels. By default, text labels are clipped. This keyword is ignored if the BOX_AXES keyword is set.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884063"></a><a name="dg_routines_3604229493_887639_Keywords_MAP_GRID__"></a>COLOR</h3>
+        <p>Set this keyword to the color index for the grid lines.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884066"></a><a name="dg_routines_3604229493_958045_Keywords_MAP_GRID__"></a>FILL_HORIZON</h3>
+        <p>Set this keyword to fill the current map_horizon.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884069"></a><a name="dg_routines_3604229493_887642_Keywords_MAP_GRID__"></a>GLINESTYLE</h3>
+        <p>If set, the line style used to draw the grid of parallels and meridians. See <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_331728">LINESTYLE</a> for a list of available linestyles. The default index is 1, drawing a dotted line.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884075"></a><a name="dg_routines_3604229493_887648_Keywords_MAP_GRID__"></a>GLINETHICK</h3>
+        <p>Set this keyword to the thickness of the grid lines. Default is 1.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884078"></a><a name="dg_routines_3604229493_958090_Keywords_MAP_GRID__"></a>HORIZON</h3>
+        <p>Set this keyword to draw the current map horizon.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884081"></a><a name="dg_routines_3604229493_958092_Keywords_MAP_GRID__"></a>INCREMENT</h3>
+        <p>Set this keyword to the spacing between graticle points.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884084"></a><a name="dg_routines_3604229493_958064_Keywords_MAP_GRID__"></a>LABEL </h3>
+        <p>Set this keyword to label the parallels and meridians with their corresponding latitudes and longitudes. Setting this keyword to an integer will cause every LABEL gridline to be labeled (that is, if LABEL=3 then every third gridline will be labeled). The starting point for determining which gridlines are labeled is the minimum latitude or longitude (-180 to 180), unless the LATS or LONS keyword is set to a single value. In this case, the starting point is the value of LATS or LONS.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884087"></a><a name="dg_routines_3604229493_887654_Keywords_MAP_GRID__"></a>LATALIGN</h3>
+        <p>This keyword controls the alignment of the text baseline for latitude labels. A value of 0.0 left justifies the label, 1.0 right justifies it, and 0.5 centers it. This keyword is ignored if the BOX_AXES keyword is set.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884090"></a><a name="dg_routines_3604229493_887657_Keywords_MAP_GRID__"></a>LATDEL</h3>
+        <p>Set this keyword equal to the spacing (in degrees) between parallels of latitude in the grid. If this keyword is not set, a suitable value is determined from the current map projection.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884093"></a><a name="dg_routines_3604229493_887660_Keywords_MAP_GRID__"></a>LATLAB</h3>
+        <p>The longitude at which to place latitude labels. The default is the center longitude on the map. This keyword is ignored if the BOX_AXES keyword is set.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884096"></a><a name="dg_routines_3604229493_887663_Keywords_MAP_GRID__"></a>LATNAMES</h3>
+        <p>Set this keyword equal to an array specifying the names to be used for the latitude labels. By default, this array is automatically generated in units of degrees. The LATNAMES array can be either type string or any single numeric type, but should not be of mixed type.</p>
+        <p>When LATNAMES is specified, the LATS keyword must also be specified. The number of elements in the two arrays need not be equal. If there are more elements in the LATNAMES array than in the LATS array, the extra LATNAMES are ignored. If there are more elements in the LATS array than in the LATNAMES array, labels in degrees will be automatically provided for the missing latitude labels.</p>
+        <p>The LATNAMES keyword can be also used when the LATS keyword is set to a single value. It this case, the first label supplied will be used at the specified latitude; subsequent names will be placed at the next latitude line to the north, wrapping around the globe if appropriate. Caution should be used when using LATNAMES in conjunction with a single LATS value, since the number of visible latitude gridlines is dependent on many factors.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884101"></a><a name="dg_routines_3604229493_887668_Keywords_MAP_GRID__"></a>LATS</h3>
+        <p>Set this keyword equal to a one or more element vector of latitudes for which lines will be drawn (and optionally labeled). If LATS is omitted, appropriate latitudes will be generated based on the value of the (optional) LATDEL keyword. If LATS is set to a single value, that latitude and a series of automatically generated latitudes will be drawn (and optionally labeled). Automatically generated latitudes have the values:</p>
+        <p class="Code">[...,LATS-LATDEL,LATS,LATS+LATDEL,...] </p>
+        <p>over the extent of the map. If LATS is a single value, that value is taken to be the starting point for labelling (See the LABEL keyword).</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884106"></a><a name="dg_routines_3604229493_887673_Keywords_MAP_GRID__"></a>LONALIGN</h3>
+        <p>This keyword controls the alignment of the text baseline for longitude labels. A value of 0.0 left justifies the label, 1.0 right justifies it, and 0.5 centers it. This keyword is ignored if the BOX_AXES keyword is set.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884109"></a><a name="dg_routines_3604229493_887676_Keywords_MAP_GRID__"></a>LONDEL</h3>
+        <p>Set this keyword equal to the spacing (in degrees) between meridians of longitude in the grid. If this keyword is not set, a suitable value is determined from the current map projection.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884112"></a><a name="dg_routines_3604229493_887679_Keywords_MAP_GRID__"></a>LONLAB</h3>
+        <p>The latitude at which to place longitude labels. The default is the center latitude on the map. This keyword is ignored if the BOX_AXES keyword is set.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884115"></a><a name="dg_routines_3604229493_887682_Keywords_MAP_GRID__"></a>LONNAMES</h3>
+        <p>Set this keyword equal to an array specifying the names to be used for the longitude labels. By default, this array is automatically generated in units of degrees. The LONNAMES array can be either type string or any single numeric type, but should not be of mixed type.</p>
+        <p>When LONNAMES is specified, the LONS keyword must also be specified. The number of elements in the two arrays need not be equal. If there are more elements in the LONNAMES array than in the LONS array, the extra LONNAMES are ignored. If there are more elements in the LONS array than in the LONNAMES array, labels in degrees will be automatically provided for the missing longitude labels.</p>
+        <p>The LONNAMES keyword can be also used when the LONS keyword is set to a single value. It this case, the first label supplied will be used at the specified longitude; subsequent names will be placed at the next longitude line to the east, wrapping around the globe if appropriate. Caution should be used when using LONNAMES in conjunction with a single LONS value, since the number of visible longitude gridlines is dependent on many factors.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884120"></a><a name="dg_routines_3604229493_887687_Keywords_MAP_GRID__"></a>LONS</h3>
+        <p>Set this keyword equal to a one or more element vector of longitudes for which lines will be drawn (and optionally labeled). If LONS is omitted, appropriate longitudes will be generated based on the value of the (optional) LONDEL keyword. If LONS is set to a single value, that longitudes and a series of automatically generated longitudes will be drawn (and optionally labeled). Automatically generated longitudes have the values:</p>
+        <p class="Code">[...,LONS-LONDEL,LONS,LONS+LONDEL,...] </p>
+        <p>over the extent of the map. If LONS is a single value, that value is taken to be the starting point for labelling (See the LABEL keyword).</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884125"></a><a name="dg_routines_3604229493_1059914_Keywords_MAP_GRID__"></a>MAP_STRUCTURE</h3>
+        <p>Set this keyword to a !MAP structure, as returned from <a href="MAP_PROJ_INIT.htm">MAP_PROJ_INIT</a>. If this keyword is set, the !MAP system variable is ignored, and the grid lines are drawn using UV (Cartesian) coordinates.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884131"></a><a name="dg_routines_3604229493_958111_Keywords_MAP_GRID__"></a>NO_GRID</h3>
+        <p>Set this keyword if you only want labels but not gridlines.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_884134"></a><a name="dg_routines_3604229493_887692_Keywords_MAP_GRID__"></a>ORIENTATION</h3>
+        <p>Set this keyword equal to an angle in degrees from horizontal (in the clockwise direction) to rotate the labels. This keyword is ignored if the BOX_AXES keyword is set.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If a device (or hardware) font is in use, this keyword will have no effect.</p>
+        <h3><a name="dg_routines_3604229493_884142"></a><a name="dg_routines_3604229493_958150_Keywords_MAP_GRID__"></a><a name="dg_routines_3604229493_958150_PageTOC_MAP_GRID_"></a>Graphics Keywords Accepted</h3>
+        <p>See <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_317209">Direct Graphics Keywords</a> for the description of the following graphics and plotting keywords:</p>
+        <p><a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_315956">T3D</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316102">ZVALUE</a></p>
+        <h2 class="API"><a name="dg_routines_3604229493_884161"></a><a name="dg_routines_3604229493_887702_PageTOC_MAP_GRID_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added MAP_STRUCTURE keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dg_routines_3604229493_884173"></a><a name="dg_routines_3604229493_972900_PageTOC_MAP_GRID_"></a>See Also</h2>
+        <p><a href="MAP_CONTINENTS_Procedure.htm#dg_routines_3604229493_883696">MAP_CONTINENTS Procedure</a>, <a href="MAP_IMAGE.htm#dg_routines_3604229493_891676">MAP_IMAGE</a>, <a href="MAP_PATCH.htm#dg_routines_3604229493_891842">MAP_PATCH</a>, <a href="MAP_PROJ_INIT.htm">MAP_PROJ_INIT</a>, <a href="MAP_SET_Procedure.htm#dg_routines_3604229493_892044">MAP_SET Procedure</a></p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

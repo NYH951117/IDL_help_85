@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: H|HDF Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>HDF_DF24_ADDIMAGE</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../H_list.htm">Routines: H</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../HDF_Routines.htm">HDF Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">HDF_DF24_ADDIMAGE</span>
+        </div>
+        <h1 class="Routine"><a name="HDF_1733484267_1006430"></a><a name="HDF_1733484267_16041"></a>HDF_DF24_ADDIMAGE</h1>
+        <p>The <a name="kanchor1135"></a>HDF_DF24_ADDIMAGE procedure writes a 24-bit raster <a name="kanchor1136"></a>image to an HDF file. The interlace is set automatically based upon the dimensions of the image being written: ARR(3, Width, Height) for pixel interlace, ARR(Width, 3, Height) for scan-line interlace, and ARR(Width, Height, 3) for scan-plane interlace.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>HDF_DF24_ADDIMAGE chooses an interlace based upon the location of the ‘3’-sized dimension. For 3x3xN, 3xNx3 and Nx3x3 images, if the first ‘3’ encountered is supposed to be a width or height, HDF_DF24_ADDIMAGE will choose the ‘wrong’ interlace. However, as long as one reads in the image using the same interlace, the image will be read correctly anyway. Avoid writing 24-bit-deep raster images with a width or height of 3 pixels.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Input data is converted to bytes before being written to the file, as images in the DF24 HDF model are necessarily byte images.</p>
+        <h2 class="API"><a name="HDF_1733484267_996959_PageTOC_HDF_DF24_ADDIMAGE_"></a>Syntax</h2>
+        <p class="Syntax">HDF_DF24_ADDIMAGE, <i>Filename</i>, <i>Image </i>[,&#160;/<a href="#HDF_1733484267_1006476" class="selected">FORCE_BASELINE</a>{useful only if QUALITY&lt;25}] [,&#160;/<a href="#HDF_1733484267_1006479" class="selected">JPEG</a> | , /<a href="#HDF_1733484267_1006485" class="selected">RLE</a>] [,&#160;<a href="#HDF_1733484267_1006482" class="selected">QUALITY</a>=<i>value</i>{0 to 100}]</p>
+        <h2 class="API"><a name="HDF_1733484267_996961_PageTOC_HDF_DF24_ADDIMAGE_"></a>Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>A scalar string containing the name of the file to be written.</p>
+        <h3 class="Argument">Image</h3>
+        <p>A 3-dimensional array of values representing the 3 planes (Red, Green, and Blue) of the 24-bit image. One of the dimensions <i>must</i> be 3 (e.g., a 3 x 100 x 100 array).</p>
+        <h2 class="API"><a name="HDF_1733484267_996966_PageTOC_HDF_DF24_ADDIMAGE_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="HDF_1733484267_1006476"></a><a name="HDF_1733484267_1025840_Keywords_HDF_DF24_ADDIMAGE_"></a>FORCE_BASELINE</h3>
+        <p>Set this keyword to force the JPEG quantization tables to be constrained to the range 1 to 255. This provides full baseline compatibility with external JPEG applications, but only makes a difference if the QUALITY keyword is set to a value less than 25. The default is TRUE.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1006479"></a><a name="HDF_1733484267_1025843_Keywords_HDF_DF24_ADDIMAGE_"></a>JPEG</h3>
+        <p>Set this keyword to compress the image being added using the JPEG (Joint Photographic Expert Group) method. Note that JPEG compression is <i>lossy</i>; see WRITE_JPEG in the <i>IDL Reference Guide</i> for more information about when this method is appropriate. (In other words, using JPEG compression to reduce the size of an image changes the values of the pixels and hence may alter the meaning of the corresponding data.) Setting either the QUALITY or the FORCE_BASELINE keyword implies this method.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1006482"></a><a name="HDF_1733484267_1025857_Keywords_HDF_DF24_ADDIMAGE_"></a>QUALITY</h3>
+        <p>Set this keyword equal to the JPEG “quality” desired. This value should be in the range 0 (terrible image quality but excellent compression) to 100 (excellent image quality but minimum compression). The default is 75. Setting this keyword implies that the JPEG keyword is set. Lower values of QUALITY produce higher compression ratios and smaller files.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1006485"></a><a name="HDF_1733484267_1025860_Keywords_HDF_DF24_ADDIMAGE_"></a>RLE</h3>
+        <p>Set this keyword to store the image using run length compression. RLE compression is lossless, and is recommended for images where data retention is critical.</p>
+        <h2 class="API"><a name="HDF_1733484267_1025918_PageTOC_HDF_DF24_ADDIMAGE_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="HDF_1733484267_1117424_PageTOC_HDF_DF24_ADDIMAGE_"></a>See Also</h2>
+        <p><a href="../../W/WRITE_JPEG.htm">WRITE_JPEG</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

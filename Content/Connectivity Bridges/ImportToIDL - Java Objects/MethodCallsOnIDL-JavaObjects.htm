@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|Java Import Bridge">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Method Calls On IDL-Java Objects</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Java Import Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Method Calls On IDL-Java Objects</span>
+        </div>
+        <h1><a name="Method_Calls_On_IDL-Java_Objects"></a><a name="kanchor5395"></a>Method Calls On IDL-Java Objects</h1>
+        <p>When a method is called on a Java-based IDL object, the method name and arguments are passed to the IDL-Java subsystem and the Java Reflection API to construct and invoke the method call on the underlying object.</p>
+        <p>IDL handles conversion between IDL and Java data types. Any results are returned in IDL variables of the appropriate type.</p>
+        <p>As with all IDL objects, the general syntax in IDL for an underlying Java method that returns a value (known as a function method in IDL) is:</p>
+        <p class="Code">result = ObjRef-&gt;Method([Arguments])</p>
+        <p>and the general syntax in IDL for an underlying Java method that does not return a value, a void method, (known as a procedure method in IDL) is:</p>
+        <p class="Code">ObjRef-&gt;Method[, Arguments]</p>
+        <p>where <i>ObjRef</i> is an object reference to an instance of a dynamic subclass of the IDLjavaObject class.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Besides other Java based objects, the value of an argument may be an IDL primitive type, an IDLjavaObject, or an IDL primitive type array. No complex types (structures, pointers, etc.) are supported as parameters to method calls.</p>
+        <h2><a name="What_Happens_When_a_Method_Call_Is_Made?"></a>What Happens When a Method Call Is Made?</h2>
+        <p>When a method is called on an instance of IDLjavaObject, IDL uses the method name and arguments to construct the appropriate method calls for the underlying Java object.</p>
+        <p>From the point of view of an IDL user issuing method calls on an instance of IDLjavaObject, this process is completely transparent. IDL handles the translation when the IDL user calls the Java object’s method.</p>
+        <p>Due to case-sensitivity incompatibilities between IDL and Java, Java’s ability to overload methods, and the fact that Java might promote certain data types, the Java bridge uses an algorithm to match the IDL method name and parameters to the corresponding Java object method.</p>
+        <p>Before the algorithm starts, IDL provides a case-insensitive &lt;METHODNAME&gt; and a reference to the Java object. For a given object and its parent classes, the Java bridge obtains a list of all the public method names, including static methods. This algorithm performs the following steps:</p>
+        <ol>
+            <li value="1">If the Java class has one method name matching the IDL &lt;METHODNAME&gt; (except for case insensitivity), this Java method name is used. At this point, signatures and overloaded functions are not taken into account.</li>
+            <li value="2">If the Java class has several method names that differ only in case and one is all uppercase, the uppercase name is used. Otherwise, the IDL-Java bridge issues an error that it has no method named &lt;METHODNAME&gt;.</li>
+            <li value="3">Once the method name has been determined, a promotion algorithm then matches the Java data parameters as closely as possible with the IDL parameters. Minimum data promotion from IDL to Java is preferred and only widening promotion is allowed. If no match is found, an error is issued.</li>
+        </ol>
+        <h2>Data Type Conversions</h2>
+        <p>IDL and Java use different data types. IDL’s dynamic type conversion facilities handle all conversion of data types between IDL and the Java system. The data type mappings are described in <a href="IDL-JavaBridgeDataTypeMapping.htm#IDL-Java_Bridge_Data_Type_Mapping">IDL-Java Bridge Data Type Mapping</a>.</p>
+        <p>For example, if the Java object has a method that requires a value of type <i>int</i> as an input argument, IDL would supply the value as an IDL Long. For any other IDL data type, IDL would first convert the value to an IDL Long using its normal data type conversion mechanism before passing the value to the Java object as an <i>int</i>.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

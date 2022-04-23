@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Overview: Random Number Generation</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1>Overview: Random Number Generation</h1>
+        <p>This chapter describes random number generation functions used for applications in Monte Carlo or simulation studies. Before using random number generators, the generator must be initialized by selecting a seed or starting value. You can do this by using IMSL_RANDOMOPT. If you do not select a seed, one is generated using the system clock. A seed needs to be selected only once in a program, unless two or more separate streams of random numbers are maintained. Utility functions in this chapter can be used to select the form of the basic generator to restart simulations and to maintain separate simulation streams.</p>
+        <p>In the following sections, the terms <i>random numbers</i>, <i>random deviates</i>, <i>deviates</i>, and <i>variates</i> are used interchangeably. The phrase pseudorandom is sometimes used to emphasize that the numbers generated are really not random since they result from a deterministic process. The usefulness of pseudorandom numbers is derived from the similarity, in a statistical sense, of samples of the pseudorandom numbers to samples of observations from the specified distributions. In short, while the pseudorandom numbers are deterministic and repeatable, they simulate the realizations of independent and identically distributed random variables.</p>
+        <h3>Basic Uniform Generator</h3>
+        <p>The default action of the IMSL_RANDOM function is the generation of uniform (0, 1) numbers. This function is portable in that, given the same seed, it produces the same sequence in all computer/compiler environments.</p>
+        <p>The random number generators in this chapter use either a multiplicative congruential method or a generalized feedback shift register (GFSR) method. The selection of the type of generator is made by calling the <a href="IMSL_RANDOMOPT.htm#IMSL_RANDOMOPT">IMSL_RANDOMOPT</a>. If no selection is made explicitly, a multiplicative generator (with multiplier 16807) is used. Whatever distribution is being simulated, uniform (0, 1) numbers are first generated and then transformed if necessary. These routines are portable in the sense that, given the same seed and for a given type of generator, they produce the same sequence in all computer/compiler environments. There are many other issues that must be considered in developing programs for the methods described below (see Gentle 1981 and 1990).</p>
+        <h3>Multiplicative Congruential Generators</h3>
+        <p>The form of the multiplicative congruential generators is:</p>
+        <p>x<sub>i</sub> ≡ cx<sub>i-1</sub>mod (2<sup>31</sup> - 1)</p>
+        <p>Each <i>x<sub>i</sub></i> is then scaled into the unit interval (0, 1). If the multiplier, c, is a primitive root modulo 2<sup>31</sup> - 1 (which is a prime), then the generator will have a maximal period of 2<sup>31</sup> - 2. There are several other considerations, however. See Knuth (1981) for a good general discussion. The possible values for c in the generators are 16807, 397204094, and 950706376. The selection is made by IMSL_RANDOMOPT. The choice of 16807 will result in the fastest execution time, but other evidence suggests that the performance of 950706376 is best among these three choices (Fishman and Moore 1982). If no selection is made explicitly, the functions use the multiplier 16807, which has been in use for some time (Lewis et al. 1969).</p>
+        <h3>Shuffled Generators</h3>
+        <p>You also can select a shuffled version of these generators using IMSL_RANDOMOPT. The shuffled generators use a scheme due to Learmonth and Lewis (1973). In this scheme, a table is filled with the first 128 uniform (0, 1) numbers resulting from the simple multiplicative congruential generator. Then, for each <i>x<sup>i</sup></i> from the simple generator, the low-order bits of <i>x<sup>i</sup></i> are used to select a random integer, <i>j</i>, from 1 to 128. The <i>j</i>-th entry in the table is then delivered as the random number; and <i>x<sup>i</sup></i>, after being scaled into the unit interval, is inserted into the <i>j</i>-th position in the table. This scheme is similar to that of Bays and Durham (1976), and their analysis is applicable to this scheme as well.</p>
+        <h3>Generalized Feedback Shift Register Generator</h3>
+        <p>The GFSR generator uses the recursion X<sub>t</sub> = X<sub>t-1563</sub> ⊕ X<sub>t-96</sub>. This generator, which is different from earlier GFSR generators, was proposed by Fushimi (1990), who discusses the theory behind the generator and reports on several empirical tests of it. Background discussions on this type of generator can be found in Kennedy and Gentle (1980), pages 150-162.</p>
+        <h3>Setting Seed</h3>
+        <p>The seed of the generator can be set and retrieved using IMSL_RANDOMOPT. Prior to invoking any generator in this section, you can call IMSL_RANDOMOPT to initialize the seed, which is an integer variable with a value between 1 and 2147483647. If it is not initialized by IMSL_RANDOMOPT, a random seed is obtained from the system clock. Once it is initialized, the seed need not be set again.</p>
+        <p>If you want to restart a simulation, IMSL_RANDOMOPT can be used to obtain the final seed value of one run to be used as the starting value in a subsequent run. Also, if two simultaneous random number streams are desired in one run, IMSL_RANDOMOPT can be used before and after the invocations of the generators in each stream.</p>
+        <p>If a shuffled generator or the GFSR generator is used, in addition to resetting the seed, you must also reset some values in a table. For the shuffled generators, this is done using the routine IMSL_RANDOM_TABLE. The tables for the shuffled generators are separate for single and double precision; so, if precisions are mixed in a program, it is necessary to manage each precision separately for the shuffled generators.</p>
+        <h3>Distributions Other than Uniform</h3>
+        <p>The nonuniform generators use a variety of transformation procedures. All of the transformations used are exact (mathematically). The most straightforward transformation is the inverse CDF technique, but it is often less efficient than others involving acceptance/rejection and mixtures. See Kennedy and Gentle (1980) for discussion of these and other techniques.</p>
+        <p>Many of the nonuniform generators in this chapter use different algorithms depending on the values of the parameters of the distributions. This is particularly true of the generators for discrete distributions. Schmeiser (1983) gives an overview of techniques for generating deviates from discrete distributions.</p>
+        <p>Although, as noted above, the uniform generators yield the same sequences on different computers, because of rounding, the nonuniform generators that use acceptance/rejection may occasionally produce different sequences on different computer/compiler environments.</p>
+        <p>Although the generators for nonuniform distributions use fast algorithms, if a very large number of deviates from a fixed distribution are to be generated, it might be worthwhile to consider a table sampling method, as implemented in the routines IMSL_RAND_GEN_CONT and IMSL_RAND_GEN_DISCR.</p>
+        <h3>Additional Notes on Syntax</h3>
+        <p>The generators for continuous distributions are available in both single and double precision versions. This is merely for your convenience; the double precision versions should not be considered more “accurate,” except possibly for the multivariate distributions.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

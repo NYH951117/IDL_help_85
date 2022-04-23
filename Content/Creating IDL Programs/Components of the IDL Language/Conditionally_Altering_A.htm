@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Arrays">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Conditionally Altering Array Elements</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Arrays.htm">Arrays</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Conditionally Altering Array Elements</span>
+        </div>
+        <h1><a name="arrays_3727706888_754337"></a><a name="arrays_3727706888_81321"></a>Conditionally Altering Array Elements</h1>
+        <p>The <a href="../../Reference Material/W/WHERE.htm#W_811389549_679886">WHERE</a> function can be used to select array elements that meet certain conditions. For example, the statement:</p>
+        <p class="Code">data[WHERE(data LT 0, /NULL)] = -1</p>
+        <p>sets all negative elements of data to -1 without changing the positive elements. The result of the function, <code>WHERE(data LT 0)</code>, is a vector composed of the subscripts of the negative elements of data. Using this vector as a subscript changes only the negative elements.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>The NULL keyword forces the WHERE function to return <a href="The_Null_Variable.htm">!NULL</a> if there are no matches. Since the use of !NULL&#160;as a subscript is quietly ignored, this allows the above line of code to execute successfully regardless of whether there are any values that meet the condition. For example, any values that are less than zero will be set to -1. If there are no values less than zero, then the data values will remain unchanged and execution continues.</p>
+        <p>Similarly, the WHERE function can be used to select elements of an array using expressions similar to <code>A[WHERE(A GT 0)]</code>, which results in a vector composed only of the elements of <code>A</code> that are greater than 0.</p>
+        <p>The following statements create and display a 5x5 identity matrix, which consists of ones along a diagonal, and zeros everywhere else:</p>
+        <p class="Code">A = FLTARR(5, 5)</p>
+        <p class="Code">A[INDGEN(5) * 6] = 1</p>
+        <p class="Code">PRINT, A</p>
+        <p>The following statement sets elements of <code>A</code> with values of zero or less to -1:</p>
+        <p class="Code">A[WHERE(A LE 0, /NULL)] = -1</p>
+        <p class="Code">PRINT, A</p>
+        <p>In this example, assume that the vector <code>data</code> contains data elements and that a data drop-out is denoted by a negative value. In addition, assume that there are never two or more adjacent drop-outs. The following statements replace all drop-outs with the average of the two adjacent good points:</p>
+        <p class="Code">; Subscript vector of drop-outs.</p>
+        <p class="Code">bad = WHERE(data LT 0, /NULL)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Replace drop-outs with average of previous and next point.</p>
+        <p class="Code">if (bad NE !NULL) data[bad] = (data[bad - 1] + data[bad + 1]) / 2</p>
+        <p>In this example, the following actions are performed:</p>
+        <ul>
+            <li value="1">We use the LT (less than) operator to create an array, with the same dimensions as data, that contains a 1 for every element of data that is less than zero and a zero for every element of data that is zero or greater. We use this “drop-out array” as a parameter for the WHERE function, which generates a vector that contains the one-dimensional <i>subscripts</i> of the elements of the drop-out array that are nonzero. The resulting vector, stored in the variable <code>bad</code>, contains the subscripts of the elements of data that are less than zero.</li>
+            <li value="2">The expression <code>data[bad - 1]</code> is a vector that contains the subscripts of the points immediately preceding the drop-outs; while similarly, the expression <br /><code>data[bad + 1]</code> is a vector containing the subscripts of the points immediately after the drop-outs.</li>
+            <li value="3">The average of these two vectors is stored in <code>data[bad]</code>, the points that originally contained drop-outs.</li>
+            <li value="4">The NULL keyword guarantees that !NULL is returned if there are no matches, and we check for this value before attempting to compute the average.</li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

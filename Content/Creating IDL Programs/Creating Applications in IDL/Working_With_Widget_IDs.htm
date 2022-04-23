@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|Creating Widget Applications">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Working With Widget IDs</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Application Programming/Creating Widget Applications.htm">Creating Widget Applications</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Working With Widget IDs</span>
+        </div>
+        <h1><a name="widget_apps_4063420628_1042151"></a><a name="widget_apps_4063420628_43085"></a>Working With Widget IDs</h1>
+        <p>Any <a name="kanchor4988"></a>widget application capable of doing real work will include one or more routines that are separate from the routine that creates the widget hierarchy, designed to handle and respond to user-generated events. <i>Event processing routines</i> — the routines that process information contained in widget event structures and respond accordingly — often retrieve information contained in the widget values of the widgets that make up the interface, perform calculations, and modify the widget interface itself in response to user actions.</p>
+        <p>Since a widget ID is required to retrieve information from or set values in a widget, you will need a way for your event processing routines to retrieve the ID of a specified widget. This section describes techniques you can use to pass widget IDs between the routines in your widget application — most notably between the widget creation routine (where widget IDs are generated) and the event processing routines.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_44317"></a>Use the Widget Event Structure</h2>
+        <p>Every time a user interacts with a <a name="kanchor4989"></a>widget using the mouse or keyboard, a <i>widget event structure</i> is generated. Widget event structures contain the widget ID of the widget that generated the event. In addition, widget event structures provide the widget ID of the top-level base in the widget hierarchy to which the widget the generated the event belongs.</p>
+        <p>Getting the widget ID of the appropriate widget from the event structure is almost always the preferred method for passing a widget ID from one routine to another within your application. Widget event processing is discussed in detail in <a href="Widget_Event_Processing.htm#widget_apps_4063420628_1042201">Widget Event Processing</a>.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_87732"></a>Pass the Widget ID Using a Widget User Value</h2>
+        <p>The widget event structure always includes two widget IDs: the ID of the widget that generated the event, and the ID of the top-level base widget. If you need to pass multiple widget IDs between routines, it is often useful to place the widget ID values in the <i>user value</i> of the top-level base widget. Widget user values are discussed in <a href="Widget_User_Values.htm#widget_apps_4063420628_1042184">Widget User Values</a>.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_91028"></a>Use a User Name to Locate the Widget</h2>
+        <p>One of the pieces of information you can specify when you create a widget is a <i>user name</i>. You can associate a name with each widget in a specific hierarchy, and then use that name to query the widget hierarchy and get the correct widget ID. To specify a user name, set the UNAME keyword to the widget creation routine equal to a string that can be used to identify the widget in your code. </p>
+        <p>To query the widget hierarchy, use the <a href="../../Reference Material/W/WIDGET_INFO.htm#W_811389549_680333">WIDGET_INFO</a> function with the widget ID of the top-level base widget and the FIND_BY_UNAME keyword. Note that user names must be unique within the widget hierarchy, because the FIND_BY_UNAME keyword returns the ID of the first widget with the specified name.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_92177"></a>Pass the Widget ID Explicitly</h2>
+        <p>In some cases, you may need to pass a specific widget ID available in one routine to a second routine. In this case, you can specify the widget ID as a parameter when calling the second routine from the first. While this method is not so general as using the widget event structure, it is useful in some circumstances.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_72888"></a>Use a COMMON Block</h2>
+        <p>In rare cases, it may be useful to store widget IDs in a COMMON block, making them available to all routines in the application. While using a COMMON block may seem like a good strategy on first inspection, this method has several drawbacks. Most importantly, using a COMMON block to hold widget IDs means that only one instance of a given widget application can be running at once.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

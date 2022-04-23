@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Multi-Monitor Configurations</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="Using_DG_66131095_1035780"></a><a name="kanchor5869"></a>Multi-Monitor Configurations</h1>
+        <p>IDL allows you to position windows on multiple monitors attached to the same computer. Such multi-monitor configurations may appear to the user (and to you as an IDL programmer) as a single extended desktop consisting of multiple physical monitors, or as a series of individual desktops appearing on multiple physical monitors.</p>
+        <p>IDL’s support for multi-monitor configurations includes the following:</p>
+        <ul>
+            <li value="1">The <a href="../Object Classes/Miscellaneous/IDLsysMonitorInfo.htm">IDLsysMonitorInfo</a> object, which allows you to query the system for the current monitor configuration and to determine the screen geometry of the various monitors.</li>
+            <li value="2">Keyword support for extended (or multiple) desktops within routines that draw a window on the monitor screen. For example, the XOFFSET, YOFFSET, and DISPLAY_NAME keywords to the <a href="../Reference Material/W/WIDGET_BASE.htm">WIDGET_BASE</a> function and <a href="../Reference Material/W/WIDGET_CONTROL.htm">WIDGET_CONTROL</a> procedure allow you to position widget applications anywhere on any available monitor. Similarly, the LOCATION and DISPLAY_NAME properties of the IDLgrWindow object afford you the same control for object graphics windows.</li>
+        </ul>
+        <p>It is important to note that support for multi-monitor configurations is quite different on Windows and UNIX systems, and that as a result IDL’s support varies by platform. By understanding how multi-monitor configurations are supported on each platform, you can create cross-platform IDL applications that will take advantage of multiple monitors when they are present. See the following sections for platform-specific details.</p>
+        <ul>
+            <li value="1"><a href="#Using_DG_66131095_1035806" class="selected">Windows Multi-Monitor Configurations</a>
+            </li>
+            <li value="2"><a href="#Using_DG_66131095_1035865" class="selected">UNIX Multi-Monitor Configurations</a>
+            </li>
+        </ul>
+        <p>See <a href="#Using_DG_66131095_1037425" class="selected">Example: Multi-Monitor Window Positioning</a> for example code that uses the IDL’s multi-monitor support.</p>
+        <h2 class="API"><a name="Using_DG_66131095_1036681"></a><a name="kanchor5870"></a>Multi-Monitor Terminology</h2>
+        <p>In this discussion of IDL’s multi-monitor support, the following terms are used with the meanings listed below.</p>
+        <h4>Desktop</h4>
+        <p>An onscreen user work area. Multiple desktops are generally managed either by the operating system itself or by a desktop management system and are dependant on the physical monitor configuration — that is, you can have multiple desktops on a single monitor.</p>
+        <h4>Display</h4>
+        <p>On UNIX systems, the word <i>Display</i> describes the connection between an X client and an X server. Do not confuse this with <i>monitor</i>. </p>
+        <h4>Extended Desktop</h4>
+        <p>A term for an onscreen user work area that may span multiple monitors. It is often used to describe the minimum bounding box that encloses the user work area defined by each monitor in the system. There may be “holes” in an extended desktop if two monitors with different display resolutions are used. Extended desktops are characterized by their ability to drag windows between monitors on the desktop.</p>
+        <h4>Monitor</h4>
+        <p>A physical display device such as a CRT or LCD. </p>
+        <h4>Primary Monitor</h4>
+        <p>In an extended desktop system, the primary monitor is the monitor that contains the origin (0,0). If the desktop is not extended, then the primary monitor is the one that is considered “default” by the graphics system.</p>
+        <h4>Screen</h4>
+        <p>On UNIX systems, the word <i>Screen</i> describes one of a display’s drawing surfaces. A single X server can control more than one <i>Screen</i>, but is generally operated or controlled by a single user with a single keyboard and pointing device.</p>
+        <h4>Secondary Monitor</h4>
+        <p>In an extended desktop system, a secondary monitor is any monitor that is not the primary monitor. If the desktop is not extended, then a secondary monitor is the one that is <i>not</i> considered “default” by the graphics system.</p>
+        <h4>Virtual Desktop</h4>
+        <p>A desktop configured so that it is larger than the monitor used to display it. The user can “pan” the desktop around to cause the desired parts of it to be visible on the monitor. </p>
+        <h4>X Server</h4>
+        <p>A program that runs on the machine to which the graphics adapter is attached. It owns the graphics adapter and is responsible for drawing on it.</p>
+        <h4>X Client</h4>
+        <p>A program that connects to an X server, sending commands to the X server to draw on the display device. The X client is typically the application and may or may not be executing on the same machine as the X server.</p>
+        <h4>X Multi-Screen</h4>
+        <p>The “core” method for an X server to handle more than one monitor. Each monitor is assigned a <i>Screen</i>; the user can move the pointing device from one monitor to another, but cannot drag windows between monitors. Each <i>Screen</i> is addressed by the final digit in the X Display name (e.g., the 1 in <code>ajax:0.1</code>). </p>
+        <h4>XINERAMA</h4>
+        <p>An X11 extension that allows a single X11 screen to be displayed across multiple monitors. This allows an application to open windows on any monitor using the same <i>Display</i>/<i>Screen</i> connection. This is an example of an extended desktop implementation for UNIX systems and is essentially a way to emulate the extended desktop that Windows presents to the user.</p>
+        <h2 class="API"><a name="Using_DG_66131095_1035806"></a><a name="kanchor5871"></a>Windows Multi-Monitor Configurations</h2>
+        <p>A multi-monitor configuration on a Windows system is always presented as an extended desktop, with the work area spanning the configured monitors. You can drag windows from one monitor to the other, or they can span monitors.</p>
+        <p>The extended desktop configuration works best when using a single graphics adapter with two video outputs. If you use multiple graphics adaptors, features such as 3D hardware video acceleration may only be available on one monitor.</p>
+        <p>To configure a multi-monitor configuration using the Windows Display applet; either:</p>
+        <ul>
+            <li value="1">Right-click on the desktop and select <b>Properties</b></li>
+            <li value="2">Select <b>Start&#160;&gt;&#160;Settings&#160;&gt;&#160;Control&#160;Panel&#160;&gt; Display</b></li>
+        </ul>
+        <p>The figure below shows the <b>Display Properties</b> control panel for a common dual-monitor configuration. The left-hand image shows the primary display selected and identified as monitor 1. The right-hand image shows the secondary display selected and identified as monitor 2. The coordinates of the upper-left corner of the secondary display are shown in the tool-tip (“Secondary Display (1600, 0)”). Also, the <b>Extend&#160;my&#160;Windows&#160;desktop&#160;onto&#160;this&#160;monitor</b> checkbox is selected to extend the desktop onto the secondary monitor. </p>
+        <p>
+            <img src="../Resources/Images/multi_mon01_02.gif" />
+        </p>
+        <p>The extended desktop configured above ppears as in the following figure, with a dotted line showing where the two monitors meet in one desktop.</p>
+        <p>
+            <img src="../Resources/Images/multi_mon03.gif" />
+        </p>
+        <p>In this example, there are no windows on the secondary monitor. The crosshatched area in the lower right exists because the monitor on the right has fewer pixel rows than the monitor on the left.</p>
+        <p>The <b>Display Properties</b> dialog allows you to change the location of the secondary monitor relative to the primary monitor. Note that pixel (0,0) is defined as being the upper left corner of the primary monitor. The following figure shows a configuration in which the secondary monitor is positioned “above” the primary monitor; the tooltip shows that the upper left corner of the secondary monitor is positioned 1480 pixels to the right of and -1024 pixels below pixel (0,0). The following figure shows the shape of the resulting extended desktop area. </p>
+        <p>
+            <img src="../Resources/Images/multi_mon04.gif" />
+        </p>
+        <p>
+            <img src="../Resources/Images/multi_mon05.gif" />
+        </p>
+        <p>There is now more “empty” space (represented by the crosshatched area). The handling of empty space depends on the graphics adapter vendor. For example, many desktop managers let you control whether or not an application can create a window in this empty space. (Remember that if you do create a window in empty space, there would be no way to drag the window back onto a visible portion of the desktop.) Many desktop managers also contain controls for opening windows and repositioning dialog boxes.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Third-party desktop managers may enforce their own positioning rules, overriding requests from other applications such as IDL. If you have trouble positioning windows on the screen using IDL, investigate whether your desktop manager’s control over other applications can be changed or relaxed.</p>
+        <h2 class="API"><a name="Using_DG_66131095_1035865"></a><a name="kanchor5872"></a>UNIX Multi-Monitor Configurations</h2>
+        <p>Because the UNIX platform encompasses multiple vendors, multi-monitor support can be more complex to configure. There are two primary multi-monitor solutions for UNIX platforms:</p>
+        <ul>
+            <li value="1">Use the <a name="kanchor5873"></a>X Multi-Screen mechanism, wherein a distinct X11 <i>Screen</i> is displayed on each monitor to create multiple desktops. IDL supports this mechanism on all UNIX systems.</li>
+            <li value="2">Use the <a name="kanchor5874"></a>XINERAMA extension to create a single extended desktop. IDL 6.3 provides client support for the XINERAMA extension Macintosh OS X and several Linux distributions.</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Configure your UNIX multi-monitor systems using XINERAMA wherever possible. This gives you the most functionality and increases commonality with Windows.</p>
+        <h3><a name="Using_DG_66131095_1037265"></a>Using X Multi-Screen</h3>
+        <p>An X server running on a computer using multiple monitors can be configured so that a different <i>Screen</i> is assigned to each monitor. This is the traditional way for a UNIX system to support multiple monitors, and it is the only option available on IDL platforms for which there is no XINERAMA support.</p>
+        <p>In a multi-screen configuration, windows and dialogs cannot be dragged between windows interactively, and cannot span multiple monitors. Each monitor has a different display name and coordinate system with its own origin.</p>
+        <h3><a name="Using_DG_66131095_1035872"></a>Using XINERAMA</h3>
+        <p>The XINERAMA extension creates an extended desktop similar to that presented on Windows systems. Windows and dialogs can be dragged between windows interactively, and can span multiple monitors. All configured monitors share the same display name and have a common origin.</p>
+        <p>Stable XINERAMA support is only available on selected X Windows System releases. As of the IDL 6.3 release, IDL provides client support on Macintosh OS X and several Linux distributions. In addition, If the X server is running Macintosh OS X, Linux, or Solaris 10, IDL can treat multiple monitors as an extended desktop even though no information about individual monitor geometries is available.</p>
+        <p>UNIX systems that provide XINERAMA support are rarely configured to do so by default; consult your operating system documentation for configuration information. Some vendors supply configuration tools and desktop management controls to help use their systems. In addition, some X window managers are “XINERAMA-aware” and let you configure some multi-monitor-related behaviors.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Third-party desktop managers may enforce their own positioning rules, overriding requests from other applications such as IDL. If you have trouble positioning windows on the screen using IDL, investigate whether your desktop manager’s control over other applications can be changed or relaxed.</p>
+        <h4>XINERAMA Client/Server Interactions</h4>
+        <p>When using networked UNIX systems, you are generally seated at an X workstation that is running an X server and some local programs such as command shells. You then log in remotely to another machine and execute X client programs (like IDL) with their DISPLAY environment variable pointing back to the X server you are using. The client program may be running on a machine that is of completely different architecture and capability than the machine running the X server. The following table shows the IDL X client’s interactions with X servers on systems that do or do not support XINERAMA.</p>
+        <table style="mc-table-style: url('../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td rowspan="2" class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Client supports<br />XINERAMA?</p>
+                    </td>
+                    <td colspan="2" class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Server supports XINERAMA?</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><b>Yes:</b>
+                            <br />IDL running on Linux, OS X</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>IDL detects extended desktop with monitor information for each physical monitor.</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>IDL detects independent desktops with monitor information for each physical monitor.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p><b>No:</b>
+                            <br />IDL running on other UNIX platforms</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>IDL detects extended desktop with monitor information for single desktop spanning all monitors. Individual monitor information is not available.</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>IDL detects independent desktops with monitor information for each physical monitor</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="Using_DG_66131095_1037425"></a><a name="kanchor5875"></a>Example: Multi-Monitor Window Positioning</h2>
+        <p>The IDL distribution contains example <code>.pro</code> code that illustrates how to use the IDLsysMonitorInfo object to position application windows on multiple monitors. With a little care, you can design the code to work on Windows, XINERAMA, and X Multi-Screen platforms and handle all monitor configurations.</p>
+        <p>The example code displays a simple splash screen in the middle of the primary monitor and opens a simple application GUI on the <i>n</i>th monitor in a system with <i>n</i> monitors.</p>
+        <p>The application window positioning for multi-monitor example is included in the file <code>multimon_ex1.pro<a name="kanchor5876"></a></code> in the <code> examples/doc/utilities </code>subdirectory of the IDL distribution.
+           </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span> Run this example procedure by entering <code>multimon_ex1</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT multimon_ex1.pro</code>.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

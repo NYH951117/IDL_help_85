@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|Creating Widget Applications">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Example: Compound Widget</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Application Programming/Creating Widget Applications.htm">Creating Widget Applications</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Example: Compound Widget</span>
+        </div>
+        <h1><a name="widget_apps_4063420628_1042518"></a><a name="widget_apps_4063420628_86477"></a>Example: Compound Widget</h1>
+        <p>The following example incorporates ideas from the previous sections to show how you might approach the task of <a name="kanchor5011"></a>writing a compound widget. The widget is called <a name="kanchor5012"></a>CW_DICE, and it simulates a single six-sided die. The figure below shows the appearance of XDICE, an application that uses two instances of CW_DICE. XDICE is discussed in <a href="#widget_apps_4063420628_1042758" class="selected">Using CW_DICE in a Widget Program</a>.</p>
+        <p class="ExampleCode">The <code>cw_dice.<a name="kanchor5013"></a>pro</code> can be found in the <code>lib</code> subdirectory of the IDL distribution. <code>xdice.pro</code> can be found in the<code> examples/doc/widgets </code>subdirectory of the IDL distribution. Run this example procedure by entering <code>cw_dice</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT cw_dice.pro</code>. You should examine these files for additional details and comments not included here. We present sections of the code here for didactic purposes—there is no need to re-create either of these files yourself. </p>
+        <p>The CW_DICE compound widget has the following features:</p>
+        <ul>
+            <li value="1">It uses a button widget. The current value of the die is displayed as a bitmap label on the button itself. When the user presses the button, the die “rolls” itself by displaying a sequence of bitmaps and then settles on a final value. An event is generated that returns this final value.</li>
+            <li value="2">Timer events are used to create the rolling effect. This allows the dice to give the same appearance on machines of varying performance levels. (Timer events are discussed in <a href="Working_with_Widget_Even.htm#widget_techniques_4218446668_96232">Working with Widget Events</a>.)</li>
+            <li value="3">The die can be set to a specific value via the SET_VALUE keyword to the WIDGET_CONTROL procedure. If the desired value is outside of the range 1 through 6, the die is rolled as if the user had pressed the button and a final value is selected randomly. Using WIDGET_CONTROL to set the value of the widget in this manner does not cause an event to be issued — IDL’s convention is that user actions cause events, while programmatic changes do not.</li>
+            <li value="4">The current value of the die can be obtained via the GET_VALUE keyword to the WIDGET_CONTROL procedure.</li>
+        </ul>
+        <p>Almost any compound widget will have an associated state. The following information is used by an instantiation of the CW_DICE compound widget:</p>
+        <ol>
+            <li value="1">The current value.</li>
+            <li value="2">The number of times the die should “tumble” before settling on a final value.</li>
+            <li value="3">The amount of time to take between tumbles.</li>
+            <li value="4">A count of how many tumbles are left before a final value is displayed, while a roll is in progress.</li>
+            <li value="5">The bitmaps to use for the 6 possible die values.</li>
+            <li value="6">The seed to use for the random number generator.</li>
+        </ol>
+        <p>The first four items are stored in a per-widget structure kept in one of the child widget’s user values. Since the bitmaps never change, it makes sense to keep them in a COMMON block to be accessed freely by all the CW_DICE routines. It also makes sense to use a single random number seed for the entire CW_DICE class rather than one per instance to avoid the situation where multiple dice, having been created at the same time, have the same seed and thus display the same value on each roll.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>It is rare that the use of a COMMON block in a compound widget makes sense. Notice, however, that we are not storing widget state information, but read-only data (bitmaps) and data that can be overwritten at any time with no negative effects (random number generator seed). The use of a COMMON block in this situation means that the read-only data can be created once and used by any number of instantiations of the CW_DICE widget. See <a href="Managing_Application_Sta.htm#widget_apps_4063420628_1042385">Managing Application State</a> for a discussion of techniques (including the per-widget structure used here) you can use to store and access widget-specific state information.</p>
+        <p>Given the above decisions, it is now possible to write the CW_DICE procedure.</p>
+        <p class="ExampleCode">The following sections discuss elements of the procedure’s source code, located in <code>cw_dice.pro</code> in the <code>lib</code> subdirectory of the IDL distribution. Run this example procedure by entering<code> cw_dice </code>at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT cw_dice.pro</code>. </p>
+        <p>In the CW_DICE function, beginning with <code>function CW_DICE, parent, value, UVALUE=uvalue</code>, notice that the code makes reference to two routines named CW_DICE_SET_VAL and CW_DICE_GET_VAL. </p>
+        <p>By using the FUNC_GET_VALUE and PRO_SET_VALUE keywords to WIDGET_BASE, WIDGET_CONTROL can call these routines whenever the user makes a WIDGET_CONTROL, SET_VALUE or GET_VALUE request. See the functions,<code> cw_dice_set_val</code> and <code>cw_dice_get_val</code> in the for details. </p>
+        <p>CW_DICE_SET_VALUE makes reference to a procedure named CW_DICE_ROLL that does the actual dice rolling. Rolling is implemented as follows:</p>
+        <ol>
+            <li value="1">If this is the initial call to CW_DICE_ROLL, then pick the final value that will end up being displayed and enter this into the widget’s state. Hence, WIDGET_CONTROL, /GET_VALUE reports the final value instead of one of the intermediate “tumble” values no matter when it is called.</li>
+            <li value="2">If this is not the final tumble, pick a random intermediate value and display that. Then, make another timer event request for the next tumble.</li>
+            <li value="3">If this is the final tumble, use the saved final value.</li>
+            <li value="4">CW_DICE_ROLL works in cooperation with the event handler function for CW_DICE. Each timer event causes the event handler to be called and the event handler in turn calls CW_DICE_ROLL to process the next tumble.</li>
+        </ol>
+        <p>The CW_DICE_ROLL procedure leads us to the event handler function, CW_DICE_EVENT. This event handler expects to see button press events generated from a user action as well as TIMER events from CW_DICE_ROLL. We only want to issue events for the button presses so if the tag name in the event structure is not WIDGET_TIMER, then create an event.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_1042758"></a><a name="widget_apps_4063420628_97725"></a>Using CW_DICE in a Widget Program</h2>
+        <p>We can use CW_DICE to implement an application named XDICE. <a name="kanchor5014"></a>XDICE displays two dice as well as a “Roll” button. Pressing either die causes it to roll individually. Pressing the “Roll” button causes both dice to roll together. A text widget at the bottom displays the current value.</p>
+        <p>
+            <img src="../../images/bldwid07.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 6.000477px;margin-bottom: 6.000469px;" />
+        </p>
+        <p class="ExampleCode"><code>xdice.<a name="kanchor5015"></a>pro</code> can be found in the <code>examples/doc/widgets</code> subdirectory of the IDL distribution. Run this example procedure by entering <code>xdice</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT xdice.pro</code>. </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

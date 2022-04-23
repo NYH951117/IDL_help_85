@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: G">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>GAUSS_SMOOTH</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="G_list.htm">Routines: G</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">GAUSS_SMOOTH</span>
+        </div>
+        <h1 class="Routine">GAUSS_SMOOTH</h1>
+        <p>The <a name="kanchor1013"></a>GAUSS_SMOOTH function smoothes using a Gaussian kernel. Also known as a Gaussian blur, it is typically used to reduce noise and detail in an image.</p>
+        <h2 class="API">Examples</h2>
+        <p class="Code">; Create test grid</p>
+        <p class="Code">x = 200 &amp; y = 200</p>
+        <p class="Code">img = FLTARR(x,y)</p>
+        <p class="Code">index = LINDGEN(LONG(x)*LONG(y))</p>
+        <p class="Code">img[WHERE(index MOD 20 LT 9)] += 125</p>
+        <p class="Code">img[WHERE(index/y MOD 10 LT 9)] += 125</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display image</p>
+        <p class="Code">im1 = IMAGE(img, LAYOUT=[3,1,1], MIN_VALUE=0)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Smooth image and display</p>
+        <p class="Code">img2 = GAUSS_SMOOTH(img ,2)</p>
+        <p class="Code">im2 = IMAGE(img2, /CURRENT, LAYOUT=[3,1,2], MIN_VALUE=0)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Smooth image using an edge keyword and display</p>
+        <p class="Code">img3 = GAUSS_SMOOTH(IMG, 2, /EDGE_TRUNCATE)</p>
+        <p class="Code">im3 = IMAGE(img3, /CURRENT, LAYOUT=[3,1,3], MIN_VALUE=0)</p>
+        <p>&#160;</p>
+        <p>
+            <img src="../images/gauss_smooth.gif" />
+        </p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result </i>= GAUSS_SMOOTH (<i>Data</i> [, <i>Sigma</i>] [, /<a href="#EDGE_MIR" class="selected">EDGE_MIRROR</a> | /<a href="#EDGE_TRU" class="selected">EDGE_TRUNCATE</a> | /<a href="#EDGE_WRA" class="selected">EDGE_WRAP</a> | /<a href="#EDGE_ZER" class="selected">EDGE_ZERO</a>]  [, <a href="#KERNEL" class="selected">KERNEL</a>=<i>value</i>] [, /<a href="#NAN" class="selected">NAN</a>[, <a href="#MISSING" class="selected">MISSING</a>=<i>value</i>]] [, <a href="#SIGMA" class="selected">WIDTH</a>=<i>value</i>])</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns an array of smoothed data of the same size and type as the input data.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Data</h3>
+        <p>The input data. The data must be a 1- or 2-dimensional array.</p>
+        <h3 class="Argument">Sigma</h3>
+        <p>The standard deviation value to be used in calculating the Gaussian kernel. <i>Sigma </i>can either be a scalar or a two-element vector. If <i>Sigma </i>is a scalar, the same sigma value is applied for each dimension that has length greater than 1 (dimensions of length 1 are skipped). If <i>Sigma </i>is a vector, each element of <i>Sigma </i>is used to specify the sigma value for each dimension of <i>Data</i>.  Unless the WIDTH keyword is set, the width of the kernel is determined by <i>Sigma </i>such that the kernel contains approximately three standard deviations in each dimension.  If <i>Sigma </i>is not supplied, a default value of 1.0 is used.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="EDGE_MIR"></a>EDGE_MIRROR</h3>
+        <p>Set this keyword to compute the values of elements at the edge of <i>Data </i>by mirroring the subscripts of <i>Data </i>at the edge.  If none of the EDGE_* keywords are set, the values of <i>Result </i>will be set to zero where the kernel extends beyond the edge.</p>
+        <h3 class="Keyword"><a name="EDGE_TRU"></a>EDGE_TRUNCATE</h3>
+        <p>Set this keyword to compute the values of elements at the edge of <i>Data </i>by repeating the subscripts of <i>Data </i>at the edge.  If none of the EDGE_* keywords are set, the values of <i>Result </i>will be set to zero where the kernel extends beyond the edge.</p>
+        <h3 class="Keyword"><a name="EDGE_WRA"></a>EDGE_WRAP</h3>
+        <p>Set this keyword to compute the values of elements at the edge of <i>Data </i>by wrapping the subscripts of <i>Data </i>at the edge.  If none of the EDGE_* keywords are set, the values of <i>Result </i>will be set to zero where the kernel extends beyond the edge.</p>
+        <h3 class="Keyword"><a name="EDGE_ZER"></a>EDGE_ZERO</h3>
+        <p>Set this keyword to compute the values of elements at the edge of <i>Data </i>by zeroing the subscripts of <i>Data </i>at the edge.  If none of the EDGE_* keywords are set, the values of <i>Result </i>will be set to zero where the kernel extends beyond the edge.</p>
+        <h3 class="Keyword"><a name="KERNEL"></a>KERNEL</h3>
+        <p>If this keyword is set to a named variable, the Gaussian kernel used will be returned.  By calling CONVOL with this kernel and by using the sum of the kernel as the scaling factor, you can obtain an equivalent result to calling GAUSS_SMOOTH. </p>
+        <h3 class="Keyword"><a name="MISSING"></a>MISSING</h3>
+        <p>Set this keyword to the numeric value to return for elements that contain no valid points within the kernel. The default value is 0 for byte or integer input, and NaN for floating point input. This keyword is used only if the NAN keyword is set.</p>
+        <h3 class="Keyword"><a name="NAN"></a>NAN</h3>
+        <p>Set this keyword to  check for occurrences of the IEEE floating point values <i>NaN</i> or <i>Infinity </i>in the input data. Elements with the value <i>NaN</i> or <i>Infinity </i>are treated as missing data. Missing data are ignored when computing neighboring elements. In <i>Result</i>, missing elements are replaced by the calculation of all other valid points within the kernel. If all points within the kernel are missing, the result at that point is given by the MISSING keyword.</p>
+        <h3 class="Keyword"><a name="SIGMA"></a>WIDTH</h3>
+        <p>The width of the smoothing window. This value can be used to override the value calculated from the <i>Sigma</i>. <i>Width </i>can either be a scalar or a two-element vector. If <i>Width </i>is a scalar, the same width is applied for each dimension that has length greater than 1 (dimensions of length 1 are skipped). If <i>Width </i>is a vector, each element of <i>Width </i>is used to specify the smoothing width for each dimension of <i>Data</i>. Values for <i>Width </i>must be smaller than the corresponding <i>Data </i>dimension. If a <i>Width </i>value is even, <i>Width</i>+1 will be used instead.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>A <i>Width </i>value of 0 or 1 implies no smoothing. However, if the NAN keyword is set, any NaN values within <i>Data </i>will be treated as missing data and will be replaced.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>For a multi-dimensional array, set widths to 1 within the Width vector for dimensions that you don't want smoothed.</p>
+        <h2 class="API">Version History&#160;</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="GAUSS2DFIT.htm">GAUSS2DFIT,</a><a href="GAUSSFIT.htm">GAUSSFIT</a>, <a href="GAUSSINT.htm">GAUSSINT,</a><a href="GAUSS_CVF.htm">GAUSS_CVF,</a><a href="GAUSS_PDF.htm">GAUSS_PDF</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

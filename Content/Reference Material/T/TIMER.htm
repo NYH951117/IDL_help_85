@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: T">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>TIMER</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="T_list.htm">Routines: T</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">TIMER</span>
+        </div>
+        <h1><a name="kanchor2548"></a>TIMER</h1>
+        <p>Asynchronous timers provide IDL with non-blocking timers.  They offer the following advantages over widget-based asynchronous timers:</p>
+        <ul>
+            <li value="1">Asynchronous timers work in headless environments (are independent of widgets)</li>
+            <li value="2">Higher theoretical resolution<ul><li value="1">Unix: nanoseconds</li><li value="2">Windows: milliseconds</li></ul></li>
+        </ul>
+        <p>Asynchronous timers can fire and have their callback invoked in these situations:</p>
+        <ul>
+            <li value="1">While IDL is idle.</li>
+            <li value="2">While IDL is processing statements in the interpreter.</li>
+        </ul>
+        <p>Asynchronous timers <b>will not fire</b> in these situations:</p>
+        <ul>
+            <li value="1">While IDL is processing C code, including both built-in routines and DLMs.</li>
+            <li value="2">While IDL is processing a call to wait.</li>
+            <li value="3">While native dialogs are onscreen [e.g., DIALOG_PICKFILE(), DIALOG_MESSAGE(), etc.], however, they will fire when dialogs built from IDL widgets have popped up.</li>
+            <li value="4">
+                <p>While system callbacks are executing.  Some examples of callbacks are: timer callbacks, widget event handlers, object cleanup methods, etc. When a timer fires while a  callback is executing, its callback will be invoked when the current one finishes.</p>
+            </li>
+            <li value="5">While explicitly blocked by the timer.Block method.</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Asynchronous timers in IDL are actually implemented as a collection of <a href="../../Objects/Static_Methods.htm">static methods</a>. Because of this, there are no "Creation" or "Syntax" sections in this document for creating timers.</p>
+        <h3>Methods and Additional Information</h3>
+        <ul>
+            <li value="1"><a href="#Timer::B" class="selected">Timer::Block (Block a Timer)</a>
+            </li>
+            <li value="2"><a href="#Cancel" class="selected">Timer::Cancel (Cancel a Timer)</a>
+            </li>
+            <li value="3"><a href="#Fire" class="selected">Timer::Fire (Launch a Timer)</a>
+            </li>
+            <li value="4"><a href="#Set" class="selected">Timer::Set (Create a Timer)</a>
+            </li>
+            <li value="5"><a href="#Timer::U" class="selected">Timer::Unblock (Unblock a Timer)</a>
+            </li>
+            <li value="6">
+                <p><a href="#Info" class="selected">Additional Information on Timers</a>
+                </p>
+                <ul>
+                    <li value="1">Widget vs. Asynchronous Timers</li>
+                    <li value="2">Resetting a Timer</li>
+                    <li value="3">Notes on Using Timers</li>
+                </ul>
+            </li>
+        </ul>
+        <h2 class="API">Examples</h2>
+        <h3>Example 1 - Callback Specified</h3>
+        <p class="Code">;--------------------------------------------------------------------</p>
+        <p class="Code">; This program demonstrates simple usage of IDL asynchronous timers.  A timer</p>
+        <p class="Code">; is created and it fires once.  User data is passed to the timer's callback.</p>
+        <p class="Code">; The callback prints the timer's identifier and user data.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO myTimerCallback, id, userData</p>
+        <p class="Code_Indented">COMPILE_OPT IDL2</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">PRINT, 'myTimerCallback( ', STRTRIM( id, 2 ), ', ', userData, ' )'</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">PRO async_timer_example_1</p>
+        <p class="Code_Indented">COMPILE_OPT IDL2</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Create a timer that will fire in 3.14 seconds.  The name of the callback is</p>
+        <p class="Code_Indented">; required but the user data is optional.  The user data can be a string,</p>
+        <p class="Code_Indented">; structure, hash, etc.</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">id = Timer.Set( 3.14, 'myTimerCallback', 'woof' )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <h3>Example 2 - Object Specified</h3>
+        <p class="Code">;--------------------------------------------------------------------</p>
+        <p class="Code">; This program demonstrates usage of IDL asynchronous timers with objects.</p>
+        <p class="Code">; A main program creates an object and then a timer is set on that object.</p>
+        <p class="Code">; When the timer fires, the object's "handleTimerEvent" method is invoked.</p>
+        <p class="Code">;</p>
+        <p class="Code">; Run this example by saving it as "asynctimerexample2__define.pro".</p>
+        <p class="Code">;--------------------------------------------------------------------</p>
+        <p class="Code">; AsyncTimerExample2 class</p>
+        <p class="Code">;</p>
+        <p class="Code">; The class must implement a method with the name "handleTimerEvent". This</p>
+        <p class="Code">; callback method's signature is the same as with timer callback procedures.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO AsyncTimerExample2::handleTimerEvent, id, userData</p>
+        <p class="Code_Indented">COMPILE_OPT IDL2</p>
+        <p class="Code_Indented">PRINT, 'AsyncTimerTester::handleTimerEvent( ', STRTRIM( id, 2 ), ', ', userData, ' )'</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO AsyncTimerExample2__define</p>
+        <p class="Code_Indented">COMPILE_OPT IDL2</p>
+        <p class="Code_Indented">!null = { AsyncTimerExample2, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;INHERITS IDL_Object $</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;--------------------------------------------------------------------</p>
+        <p class="Code">; main program</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">o = AsyncTimerExample2()</p>
+        <p class="Code">id = Timer.Set( 3.14, o, 'w' + 'o' + 'o' + 'f' )</p>
+        <p class="Code">END</p>
+        <h3><a name="Example"></a>Example 3 - Blocked Timers</h3>
+        <p class="Code">; This program demonstrates the use of timer.Block and timer.Unblock</p>
+        <p class="Code">; to create a region of code that will not be interrupted by timer</p>
+        <p class="Code">; callbacks.</p>
+        <p class="Code">;</p>
+        <p class="Code">; A pointer to some "critical data" is created.  Both the main</p>
+        <p class="Code">; routine and timer callback can modify this.  Calls to timer.Block</p>
+        <p class="Code">; and timer.Unblock prevent the timer from altering the value</p>
+        <p class="Code">; before the main routine is done with it.  As soon as the safe</p>
+        <p class="Code">; zone is exited, the timer is allowed to fire.</p>
+        <p class="Code">;</p>
+        <p class="Code">; Note that the "busyWait" routine gives the timer every chance to</p>
+        <p class="Code">; execute, because timers can interrupt PRO code execution.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO handleTimer, id, userData</p>
+        <p class="Code">COMPILE_OPT IDL2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRINT, '*** Timer Fired ***'</p>
+        <p class="Code">*userData = 0</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO busyWait, t</p>
+        <p class="Code">COMPILE_OPT IDL2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">t0 = SYSTIME( /SECONDS )</p>
+        <p class="Code">WHILE ( ( SYSTIME( /SECONDS ) - t0 ) lt t ) DO BEGIN</p>
+        <p class="Code">ENDWHILE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO async_timer_example_3</p>
+        <p class="Code">COMPILE_OPT IDL2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">criticalData = PRT_NEW( 1 )</p>
+        <p class="Code">!NULL = timer.Set( 1.0, 'handleTimer', criticalData )</p>
+        <p class="Code">PRINT, 'Data before safe zone: ', STRTRIM( *criticalData, 2 )</p>
+        <p class="Code">timer.Block</p>
+        <p class="Code">busyWait, 2.0</p>
+        <p class="Code">PRINT, 'Data in safe zone: ', STRTRIM( *criticalData, 2 )</p>
+        <p class="Code">timer.Unblock</p>
+        <p class="Code">PRINT, 'Data after safe zone: ', STRTRIM( *criticalData, 2 )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <h1 class="ObjMethod"><a name="Timer::B"></a><a name="kanchor2549"></a>Timer::Block</h1>
+        <p>The Timer::Block method allows you to block an asynchronous timer. If a timer's callback code could potentially interrupt and disrupt other code, the timer should be blocked. An example is when the timer's calleback code could access the same data as the code that it might interrupt. See <a href="#Example" class="selected">Example 3</a>.</p>
+        <p>Code that runs in between the calls to Block and <a href="#Timer::U" class="selected">Unblock</a> will not be interrupted by any timer. IDL automatically blocks timer callbacks from interrupting system callbacks, including timer callbacks, widget callbacks, drag and drop callbacks, etc. Explicit blocking is unnecessary in these types of callbacks.  Invocations of the <a href="#Fire" class="selected">Fire</a> method will work regardless of blocking.</p>
+        <p>The Block and Unblock methods must always be paired.  They can be nested.  If they are not paired, then timer blocking will not work as expected. To help debug mismatches, the procedures have a COUNT keyword that returns the current nesting level after the call to block or unblock.  The returned value typically ranges from 0 to&#160;<i>MaxLong</i>, where 0 means blocking will not occur and values greater than 0 indicate the nesting level. Negative values indicate that too many calls to Unblock have been made, and Block and Unblock have not been correctly paired.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax">Timer.Block [, <i>COUNT</i>]</p>
+        <h2 class="API">Arguments</h2>
+        <p>None</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">COUNT</h3>
+        <p>Set this keyword to a named variable that will contain a long integer with the nesting level of the Block and Unblock methods.</p>
+        <h1 class="ObjMethod"><a name="Cancel"></a><a name="kanchor2550"></a>Timer::Cancel</h1>
+        <p>The Timer::Cancel  method cancels a timer. Note that timers can be canceled, either one at a time or all at the same time.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result </i>= Timer.Cancel( <i>ID</i> )</p>
+        <p class="Syntax"><i>Result </i>= Timer.Cancel( ALL=<i>value</i> )</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns a 0 or 1 to indicate the success or failure of the call. A return value of 1 indicates the call was successful, while a 0 indicates that the identifier (id) was invalid and the call was not successful. </p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">ID</h3>
+        <p>A long integer that is the timer's identifier. This is the same value as returned by the "set" function.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">ALL</h3>
+        <p>Use in place of ID to indicate whether all timers should be canceled. Valid values are Boolean (1 for yes or 0 for no). </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you specify <code>/ALL</code> (or<code> ALL = 1</code>) in conjunction with the ID argument, the /ALL takes precedence and IDL ignores the<code> ID</code>.</p>
+        <h1 class="ObjMethod"><a name="Fire"></a><a name="kanchor2551"></a>Timer::Fire</h1>
+        <p>You can launch a timer immediately, before it expires, by using the <code>Timer.Fire</code> method.   If you originally supply user data, it is replaced with the new user data. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you use Timer::Fire, the timer will be "complete" and will not go off again.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax" style="font-style: normal;"><i>Result</i> = Timer.Fire( <i>ID</i> [, <i>UserData </i>] )</p>
+        <h2 class="API">Return Value </h2>
+        <p>Returns a 0 or 1 to indicate the success or failure of the call. A return value of 1 indicates the call was successful, while a 0 indicates that the identifier (ID) was invalid and the call was not successful. </p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">ID</h3>
+        <p>The timer's identifier (a long integer).   This is the same value as returned by the "set" function. </p>
+        <h3 class="Argument">UserData</h3>
+        <p>Optional data to supply to the callback when you invoke it.  This data replaces any user data specified when the timer was created. </p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="Set"></a><a name="kanchor2552"></a>Timer::Set</h1>
+        <p>The Timer::Set method allows you to create an asynchronous timer. </p>
+        <p>You have two options available to create a timer.  The first requires the specification of a callback procedure.  The second requires an object that must have a method named <code>handleTimerEvent</code>.  </p>
+        <p>In both cases user data is optional.  The returned value is the timer's identifier, which can be used to cancel the timer or fire the timer early.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Once IDL invokes the timer, its identifier is no longer valid. Namely, the <code>&lt;ID&gt;</code> cannot be used to cancel or fire the timer.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>ID </i>= Timer.Set( <i>Time</i>, <i>Callback</i> [,  <i>UserData</i>])</p>
+        <p class="Syntax"><i>ID </i>= Timer.Set( <i>Time</i>,  <i>Object</i> [, <i>UserData</i>])</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns the ID (identifier) of the timer. Use this ID with the <a href="#Cancel" class="selected">Timer::Cancel</a> and <a href="#Fire" class="selected">Timer::Fire</a> methods.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Time</h3>
+        <p>The amount of time in seconds until the timer should activate. </p>
+        <h3 class="Argument">Callback</h3>
+        <p>A string value specifying the name of the procedure that IDL should invoke when the timer activates. </p>
+        <p>The callback must have the following signature:</p>
+        <p>PRO <i>Name</i>, <i>ID</i> [, <i>UserData</i>]</p>
+        <table class="TableStyle_Description" style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <thead>
+                <tr class="Head-Header1">
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">Value</th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">Type</th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep"><i>Name</i>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">&#160;</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">Name of the routine.  When the timer is set using an object, this must be of the form <code>&lt;class&gt;::handleTimerEvent</code>. </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep"><i>ID</i>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">Long</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>The timer's identifier.   This is the same value as returned by the "set" function. </p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep"><i>UserData</i>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep"><i>Any</i>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd"> 	The data supplied when the timer was set. </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Argument">Object</h3>
+        <p>Object on which to call a method named <code>handleTimerEvent</code> when the timer activates. </p>
+        <h3 class="Argument">UserData</h3>
+        <p>Data to be delivered to the callback.  The delivered data will be a copy of the original.  If user data is not supplied then the callback receives <code>!NULL</code>. UserData can be any valid IDL value. Examples of valid IDL values include: a constant, variable, expression, an array, etc.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="Timer::U"></a><a name="kanchor2553"></a>Timer::Unblock</h1>
+        <p>The Timer::Block method allows you to unblock asynchronous timers that have been blocked.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax">Timer.Unblock [, <i>COUNT</i>]</p>
+        <h2 class="API">Arguments</h2>
+        <p>None</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">COUNT</h3>
+        <p>Set this keyword to a named variable that will contain a long integer with the nesting level of the Block and Unblock methods.</p>
+        <h1><a name="Info"></a><a name="kanchor2554"></a>Additional Information on Timers</h1>
+        <h2 class="API">Widget vs. Asynchronous Timers</h2>
+        <p>The table below lays out the main differences between Widget-based and Asynchronous Timers:</p>
+        <table class="TableStyle_Description" style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <thead>
+                <tr class="Head-Header1">
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">Feature</th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">Widget Timers</th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">Asynchronous Timers</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">Interrupt PRO code</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">No</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">Yes </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">Interrupt C code</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">No</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">No</td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">Interrupt WAIT</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">No</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">No</td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">Interrupt callbacks</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">No</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">No</td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">Modal bases</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">Will not fire until modal child dismissed.</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">Fires even when modal base is present.</td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">Floating base</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">Fires even when floating base is present.</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">Fires even when floating base is present.</td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">Native dialogs*</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">Will not fire until dialog is dismissed.</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">Will not fire until dialog is dismissed.</td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">Blocking Xmanager</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">No difference.</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">No difference.</td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">Runtime/VM mode</td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="font-style: italic;">* The set of native dialogs include:</p>
+        <ul>
+            <li style="font-style: italic;" value="1"><a href="../D/DIALOG_MESSAGE.htm">DIALOG_MESSAGE()</a>
+            </li>
+            <li style="font-style: italic;" value="2"><a href="../D/DIALOG_PICKFILE.htm">DIALOG_PICKFILE()</a>
+            </li>
+            <li style="font-style: italic;" value="3"><a href="../D/DIALOG_PRINTERSETUP.htm">DIALOG_PRINTERSETUP()
+</a>
+            </li>
+            <li style="font-style: italic;" value="4"><a href="../D/DIALOG_PRINTJOB.htm">DIALOG_PRINTJOB()
+</a>
+            </li>
+        </ul>
+        <h2 class="API">Resetting Timers</h2>
+        <p>You can reset timers using any of the following actions:</p>
+        <table class="TableStyle_Description" style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <thead>
+                <tr class="Head-Header1">
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">Action</th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">Effect</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep"><a href="../Dot Commands/_RESET_SESSION.htm">.RESET_SESSION</a>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">Cancels all pending timers and resets the timer identifiers back to a value of 1.</td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep"><a href="../Dot Commands/_FULL_RESET_SESSION.htm">.FULL_RESET_SESSION</a>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">Cancels all pending timers and resets the timer identifiers back to a value of 1.</td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep" style="font-family: monospace;">&lt;CTRL&gt;&lt;C&gt;</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">Cancels all pending timers.</td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep"><a href="../../DevelopmentEnvironment/QuickReference/MenubarToolbar.htm">"STOP" button in the IDL Workbench</a>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">Cancels all pending timers.</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">Notes on Using Timers</h2>
+        <ul>
+            <li value="1">
+                <p>Timers alone will not keep an IDL runtime or virtual machine running.  In those run modes, IDL runs a single routine and then exits, regardless of pending asynchronous timers.</p>
+            </li>
+            <li value="2">Each timer uses a thread. The number of timers is therefore limited by the number of threads that a process can have.  The default is system dependent which you can configure in your operating system.  Other threads (non-timer threads) are included in the total.</li>
+            <li value="3">Theoretical resolutions:<ul><li value="1">Unix: milliseconds (1/1000 second)</li><li value="2">Windows: centiseconds (1/100 second)</li></ul></li>
+        </ul>
+        <h2 class="API">Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>8.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added Block and Unblock methods; IDL no longer automatically interrupts callbacks.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="../../Objects/Static_Methods.htm">Static Methods</a> <![CDATA[ ]]></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|Java Export Bridge|Appendix - IDL Java Object API">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>JIDLCanvas</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Java Export Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="PackageSummary.htm">Appendix - IDL Java Object API</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">JIDLCanvas</span>
+        </div>
+        <h1><a name="JIDLCanvas"></a>JIDLCanvas</h1>
+        <h2>Declaration</h2>
+        <p class="Code">public abstract class JIDLCanvas extends java.awt.Canvas implements JIDLObjectI, java.awt.event.ComponentListener, java.awt.event.KeyListener, java.awt.event.MouseListener, java.awt.event.MouseMotionListener, JIDLMouseListener, JIDLMouseMotionListener, JIDLKeyListener, JIDLComponentListener, JIDLCursorSupport</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">java.lang.Object</p>
+        <p class="Code">|</p>
+        <p class="Code">+--java.awt.Component</p>
+        <p class="Code" style="text-indent: 20px;">|</p>
+        <p class="Code" style="text-indent: 20px;">+--java.awt.Canvas</p>
+        <p class="Code" style="text-indent: 40px;">|</p>
+        <p class="Code" style="text-indent: 40px;">+--com.idl.javaidl.JIDLCanvas</p>
+        <h2>All Implemented Interfaces</h2>
+        <p class="Code">javax.accessibility.Accessible, java.awt.event.ComponentListener, java.util.EventListener, java.awt.image.ImageObserver, JIDLComponentListener, JIDLCursorSupport, JIDLKeyListener, JIDLMouseListener, JIDLMouseMotionListener, JIDLObjectI, java.awt.event.KeyListener, java.awt.MenuContainer, java.awt.event.MouseListener, java.awt.event.MouseMotionListener, java.io.Serializable</p>
+        <h2>Description</h2>
+        <p>This class wraps an IDL object of type IDLitWindow in a java.awtCanvas providing direct rendering of the object from IDL.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>JIDLCanvas is not supported on Macintosh OS X.</p>
+        <p>In many of the methods of this class, one or more flags are required to be specified for parameters being passed to or from the bridge. These flags follow the following guidelines:</p>
+        <p>For all types of parameters (subclasses of JIDLNumber, JIDLString, JIDLObjectI and JIDLArray), a flag should be set that determines whether the parameter is in-only (const) or in-out (we expect it to be changed by IDL). The constants that determine this are either JIDLConst.PARMFLAG_CONST or JIDLConst.PARMFLAG_IN_OUT.</p>
+        <p>For parameters that are arrays, a flag should be set that tells the bridge whether the array is to be convolved when passed to IDL. If the PARM_IN_OUT flag is set, this flag will also tell the bridge whether to convolve the array when it is copied back to Java. The constants that determine this are either JIDLConst.PARMFLAG_CONVMAJORITY or JIDLConst.PARMFLAG_NO_CONVMAJORITY.</p>
+        <p>For example, if the parameter in question is an array that is to be modified by IDL (in-out) and needs to be convolved when passed to and from IDL, we would set its argpal array member as follows:</p>
+        <p class="Code">argpal[2] = JIDLConst.PARMFLAG_IN_OUT | JIDLConst.PARMFLAG_CONV MAJORITY;</p>
+        <h3>Member Summary</h3>
+        <h4>Fields</h4>
+        <h5>static int</h5>
+        <p class="Code">IDL_SOFTWARE_RENDERER</p>
+        <p class="indent">Internal use</p>
+        <h5>static int</h5>
+        <p class="Code">OPENGL_RENDERER</p>
+        <p class="indent">Internal use</p>
+        <h4>Constructors</h4>
+        <p class="Code">JIDLCanvas(java.lang.String sClass, int iOPSFlags, java.lang.String sProcessName)</p>
+        <p class="indent">Construct a JIDLCanvas</p>
+        <p class="Code">JIDLCanvas(java.lang.String sClass, java.lang.String sProcessName)</p>
+        <p class="indent">Construct a JIDLCanvas Note that constructing the JIDLObject does NOT create the object on the IDL-side of the bridge.</p>
+        <h4>Methods</h4>
+        <h5>void</h5>
+        <p class="Code">abort()</p>
+        <p class="indent">Requests that the IDL process containing the underlying IDL object abort its current activity.</p>
+        <h5>void</h5>
+        <p class="Code">addIDLComponentListener(JIDLComponentListener listener)</p>
+        <p class="indent">Adds the specified JIDLComponentListener to a list of listeners that receive notification of Component events.</p>
+        <h5>void</h5>
+        <p class="Code">addIDLKeyListener(JIDLKeyListener listener)</p>
+        <p class="indent">Adds the specified JIDLKeyListener to a list of listeners that receive notification of Key events.</p>
+        <h5>void</h5>
+        <p class="Code">addIDLMouseListener(JIDLMouseListener listener)</p>
+        <p class="indent">Adds the specified JIDLMouseListener to a list of listeners that receive notification of Mouse events.</p>
+        <h5>void</h5>
+        <p class="Code">addIDLMouseMotionListener(JIDLMouseMotionListener listener)</p>
+        <p class="indent">Adds the specified JIDLMouseMotionListener to a list of listeners that receive notification of MouseMotion events.</p>
+        <h5>void</h5>
+        <p class="Code">addIDLMouseWheelListener(JIDLMouseWheelListener listener)</p>
+        <p class="indent">Adds the specified JIDLMouseWheelListener to a list of listeners that receive notification of MouseWheel events.</p>
+        <h5>void</h5>
+        <p class="Code">addIDLNotifyListener(JIDLNotifyListener listener)</p>
+        <p class="indent">Adds the specified IDL notify listener to receive IDL notification events on this object.</p>
+        <h5>void</h5>
+        <p class="Code">addIDLOutputListener(JIDLOutputListener listener)</p>
+        <p class="indent">Adds the specified IDL output listener to receive IDL output events on this object.</p>
+        <h5>java.lang.Object</h5>
+        <p class="Code">callFunction(java.lang.String sMethodName, int iPalFlag)</p>
+        <p class="indent">Call IDL function that accepts zero parameters.</p>
+        <h5>java.lang.Object</h5>
+        <p class="Code">callFunction(java.lang.String sMethodName, int argc, java.lang.Object argv, int[] argpal, int iPalFlag)</p>
+        <p class="indent">Call IDL function.</p>
+        <h5>void</h5>
+        <p class="Code">callProcedure(java.lang.String sMethodName)</p>
+        <p class="indent">Call IDL procedure that accepts zero parameters.</p>
+        <h5>void</h5>
+        <p class="Code">callProcedure(java.lang.String sMethodName, int argc, java.lang.Object argv, int[] argpal)</p>
+        <p class="indent">Call IDL procedure.</p>
+        <h5>void</h5>
+        <p class="Code">componentHidden(java.awt.event.ComponentEvent e)</p>
+        <p class="indent">Called when the component is hidden.</p>
+        <h5>void</h5>
+        <p class="Code">componentMoved(java.awt.event.ComponentEvent e)</p>
+        <p class="indent">Called when the component is moved.</p>
+        <h5>void</h5>
+        <p class="Code">componentResized(java.awt.event.ComponentEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <h5>void</h5>
+        <p class="Code">componentShown(java.awt.event.ComponentEvent e)</p>
+        <p class="indent">Called when the component is shown.</p>
+        <h5>void</h5>
+        <p class="Code">createObject()</p>
+        <p class="indent">Create the wrapped object by calling IDL’s ::INIT method.</p>
+        <h5>void</h5>
+        <p class="Code">createObject(int argc, java.lang.Object argv, int[] argpal)</p>
+        <p class="indent">Create the wrapped object by calling IDL’s ::INIT method.</p>
+        <h5>void</h5>
+        <p class="Code">createObject(int argc, java.lang.Object argv, int[] argpal, com.idl.javaidl.JIDLProcessInitializer initializer)</p>
+        <p class="indent">Create the wrapped object by calling IDL’s ::INIT method.</p>
+        <h5>void</h5>
+        <p class="Code">createObject(com.idl.javaidl.JIDLProcessInitial izer initializer)</p>
+        <p class="indent">Create the wrapped object by calling IDL’s ::INIT method.</p>
+        <h5>void</h5>
+        <p class="Code">destroyObject()</p>
+        <p class="indent">Destroys the underlying IDL object associated with the wrapper.</p>
+        <h5>void</h5>
+        <p class="Code">draw()</p>
+        <p class="indent">Internal use.</p>
+        <h5>void</h5>
+        <p class="Code">executeString(java.lang.String sCmd)</p>
+        <p class="indent">Execute the given command string in IDL.</p>
+        <h5>java.lang.String</h5>
+        <p class="Code">getClassName()</p>
+        <p class="indent">Get the class name of the object.</p>
+        <h5>long</h5>
+        <p class="Code">getCookie()</p>
+        <p class="indent">Internal use.</p>
+        <h5>java.lang.String</h5>
+        <p class="Code">getIDLObjectClassName()</p>
+        <p class="indent">Retrieves the IDL object class name of the underlying IDL object.</p>
+        <h5>java.lang.String</h5>
+        <p class="Code">getIDLObjectVariableName()</p>
+        <p class="indent">When the underlying IDL object was created in the IDL process, it was assigned a variable name.</p>
+        <h5>java.lang.Object</h5>
+        <p class="Code">getIDLVariable(java.lang.String sVar)</p>
+        <p class="indent">Given a variable name, return the IDL variable.</p>
+        <h5>java.lang.String</h5>
+        <p class="Code">getObjVariableName()</p>
+        <p class="indent">Get the IDL Variable name of the given object</p>
+        <h5>java.lang.String</h5>
+        <p class="Code">getProcessName()</p>
+        <p class="indent">Returns the name of the process that contains the underlying IDL object.</p>
+        <h5>java.lang.Object</h5>
+        <p class="Code">getProperty(java.lang.String sProperty, int iPalFlag)</p>
+        <p class="indent">Call IDL getProperty method to get named property.</p>
+        <h5>void</h5>
+        <p class="Code">IDLcomponentExposed(JIDLObjectI obj)</p>
+        <p class="indent">Called when the JIDLCanvas is exposed.</p>
+        <h5>void</h5>
+        <p class="Code">IDLcomponentResized(JIDLObjectI obj, java.awt.event.ComponentEvent e)</p>
+        <p class="indent">Called when the JIDLCanvas is resized.</p>
+        <h5>void</h5>
+        <p class="Code">IDLkeyPressed(JIDLObjectI obj, java.awt.event.KeyEvent e, int x, int y)</p>
+        <p class="indent">Called when the JIDLCanvas has focus and a key is pressed.</p>
+        <h5>void</h5>
+        <p class="Code">IDLkeyReleased(JIDLObjectI obj, java.awt.event.KeyEvent e, int x, int y)</p>
+        <p class="indent">Called when the JIDLCanvas has focus and a key is released.</p>
+        <h5>void</h5>
+        <p class="Code">IDLmouseDragged(JIDLObjectI obj, java.awt.event.MouseEvent e)</p>
+        <p class="indent">Called when the mouse is dragged in a JIDLCanvas.</p>
+        <h5>void</h5>
+        <p class="Code">IDLmouseEntered(JIDLObjectI obj, java.awt.event.MouseEvent e)</p>
+        <p class="indent">Called when the mouse enters a JIDLCanvas.</p>
+        <h5>void</h5>
+        <p class="Code">IDLmouseExited(JIDLObjectI obj, java.awt.event.MouseEvent e)</p>
+        <p class="indent">Called when the mouse exits a JIDLCanvas.</p>
+        <h5>void</h5>
+        <p class="Code">IDLmouseMoved(JIDLObjectI obj, java.awt.event.MouseEvent e)</p>
+        <p class="indent">Called when the mouse is moved in a JIDLCanvas.</p>
+        <h5>void</h5>
+        <p class="Code">IDLmousePressed(JIDLObjectI obj, java.awt.event.MouseEvent e)</p>
+        <p class="indent">Called when the mouse is pressed in a JIDLCanvas.</p>
+        <h5>void</h5>
+        <p class="Code">IDLmouseReleased(JIDLObjectI obj, java.awt.event.MouseEvent e)</p>
+        <p class="indent">Called when the mouse is released in a JIDLCanvas.</p>
+        <h5>void</h5>
+        <p class="Code">initListeners()</p>
+        <p class="indent">Initialize listeners.</p>
+        <h5>boolean</h5>
+        <p class="Code">isFocusTraversable()</p>
+        <p class="indent">Internal use.</p>
+        <h5>boolean</h5>
+        <p class="Code">isObjCreated()</p>
+        <p class="indent">Determine if object has been created successfully.</p>
+        <h5>boolean</h5>
+        <p class="Code">isObjectCreated()</p>
+        <p class="indent">Determine if object has been created successfully.</p>
+        <h5>boolean</h5>
+        <p class="Code">isObjectDisplayable()</p>
+        <h5>void</h5>
+        <p class="Code">keyPressed(java.awt.event.KeyEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <h5>void</h5>
+        <p class="Code">keyReleased(java.awt.event.KeyEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <h5>void</h5>
+        <p class="Code">keyTyped(java.awt.event.KeyEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <h5>int</h5>
+        <p class="Code">mapIDLCursorToJavaCursor(java.lang.String idlCursor)</p>
+        <p class="indent">Maps the IDL cursor to a suitable Java cursor.</p>
+        <h5>void</h5>
+        <p class="Code">mouseClicked(java.awt.event.MouseEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <h5>void</h5>
+        <p class="Code">mouseDragged(java.awt.event.MouseEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <h5>void</h5>
+        <p class="Code">mouseEntered(java.awt.event.MouseEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <h5>void</h5>
+        <p class="Code">mouseExited(java.awt.event.MouseEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <h5>void</h5>
+        <p class="Code">mouseMoved(java.awt.event.MouseEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <h5>void</h5>
+        <p class="Code">mousePressed(java.awt.event.MouseEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <h5>void</h5>
+        <p class="Code">mouseReleased(java.awt.event.MouseEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <h5>void</h5>
+        <p class="Code">paint(java.awt.Graphics g)</p>
+        <p class="indent">Internal use.</p>
+        <h5>void</h5>
+        <p class="Code">removeIDLComponentListener(JIDLComponentListener listener)</p>
+        <p class="indent">Remove the specified JIDLComponentListener from a list of listeners that receive notification of Component events.</p>
+        <h5>void</h5>
+        <p class="Code">removeIDLKeyListener(JIDLKeyListener listener)</p>
+        <p class="indent">Removes the specified JIDLKeyListener from a list of listeners that receive notification of Key events.</p>
+        <h5>void</h5>
+        <p class="Code">removeIDLMouseListener(JIDLMouseListener listener)</p>
+        <p class="indent">Removes the specified JIDLMouseListener from a list of listeners that receive notification of Mouse events.</p>
+        <h5>void</h5>
+        <p class="Code">removeIDLMouseMotionListener(JIDLMouseMotionListener listener)</p>
+        <p class="indent">Removes the specified JIDLMouseMotionListener from a list of listeners that receive notification of MouseMotion events.</p>
+        <h5>void</h5>
+        <p class="Code">removeIDLMouseWheelListener(JIDLMouseWheelListener listener)</p>
+        <p class="indent">Removes the specified JIDLMouseWheelListener from a list of listeners that receive notification of MouseWheel events.</p>
+        <h5>void</h5>
+        <p class="Code">removeIDLNotifyListener(JIDLNotifyListener listener)</p>
+        <p class="indent">Removes the specified IDL notify listener so it no longer receives IDL notifications.</p>
+        <h5>void</h5>
+        <p class="Code">removeIDLOutputListener(JIDLOutputListener listener)</p>
+        <p class="indent">Removes the specified IDL output listener on this object.</p>
+        <h5>void</h5>
+        <p>setCursor(java.lang.String idlCursor)</p>
+        <p class="indent">Set the JIDLCanvas cursor.</p>
+        <h5>void</h5>
+        <p class="Code">setIDLVariable(java.lang.String sVar, java.lang.Object obj)</p>
+        <p class="indent">Set/Create an IDL variable of the given name and value.</p>
+        <h5>void</h5>
+        <p class="Code">setProcessName(java.lang.String process)</p>
+        <p class="indent">Set the process name that the object will be created in.</p>
+        <h5>void</h5>
+        <p class="Code">setProperty(java.lang.String sProperty, java.lang.Object obj, int iPalFlag)</p>
+        <p class="indent">Call IDL setProperty method to set named property.</p>
+        <h5>java.lang.String</h5>
+        <p class="Code">toString()</p>
+        <p class="indent">Returns a string representation of the object.</p>
+        <h5>void</h5>
+        <p class="Code">update(java.awt.Graphics g)</p>
+        <p class="indent">Internal use.</p>
+        <h3>Inherited Member Summary</h3>
+        <h4>Fields inherited from class Component</h4>
+        <p class="indent">BOTTOM_ALIGNMENT, CENTER_ALIGNMENT, LEFT_ALIGNMENT, RIGHT_ALIGNMENT, TOP_ALIGNMENT</p>
+        <h4>Fields inherited from interface ImageObserver</h4>
+        <p class="indent">ABORT, ALLBITS, ERROR, FRAMEBITS, HEIGHT, PROPERTIES, SOMEBITS, WIDTH</p>
+        <h4>Methods inherited from class Canvas</h4>
+        <p class="indent">addNotify(), createBufferStrategy(int, BufferCapabilities), createBufferStrategy(int, BufferCapabilities), getAccessibleContext(), getBufferStrategy()</p>
+        <h4>Methods inherited from class Component</h4>
+        <p class="indent">action(Event, Object), add(PopupMenu), addComponentListener(ComponentListener), addFocusListener(FocusListener), addHierarchyBoundsListener(HierarchyBoundsListener), addHierarchyListener(HierarchyListener), addInputMethodListener(InputMethodListener), addKeyListener(KeyListener), addMouseListener(MouseListener), addMouseMotionListener(MouseMotionListener), addMouseWheelListener(MouseWheelListener), addPropertyChangeListener(String, PropertyChangeListener), addPropertyChangeListener(String, PropertyChangeListener), applyComponentOrientation(ComponentOrientation), areFocusTraversalKeysSet(int), bounds(), checkImage(Image, ImageObserver), checkImage(Image, ImageObserver), contains(Point), contains(Point), createImage(ImageProducer), createImage(ImageProducer), createVolatileImage(int, int, ImageCapabilities), createVolatileImage(int, int, ImageCapabilities), deliverEvent(Event), disable(), dispatchEvent(AWTEvent), doLayout(), enable(boolean), enable(boolean), enableInputMethods(boolean), getAlignmentX(), getAlignmentY(), getBackground(), getBounds(Rectangle), getBounds(Rectangle), getColorModel(), getComponentAt(Point), getComponentAt(Point), getComponentListeners(), getComponentOrientation(), getCursor(), getDropTarget(), getFocusCycleRootAncestor(), getFocusListeners(), getFocusTraversalKeys(int), getFocusTraversalKeysEnabled(), getFont(), getFontMetrics(Font), getForeground(), getGraphics(), getGraphicsConfiguration(), getHeight(), getHierarchyBoundsListeners(), getHierarchyListeners(), getIgnoreRepaint(), getInputContext(), getInputMethodListeners(), getInputMethodRequests(), getKeyListeners(), getListeners(Class), getLocale(), getLocation(Point), getLocation(Point), getLocationOnScreen(), getMaximumSize(), getMinimumSize(), getMouseListeners(), getMouseMotionListeners(), getMouseWheelListeners(), getName(), getParent(), getPeer(), getPreferredSize(), getPropertyChangeListeners(String), getPropertyChangeListeners(String), getSize(Dimension), getSize(Dimension), getToolkit(), getTreeLock(), getWidth(), getX(), getY(), gotFocus(Event, Object), handleEvent(Event), hasFocus(), hide(), imageUpdate(Image, int, int, int, int, int), inside(int, int), invalidate(), isBackgroundSet(), isCursorSet(), isDisplayable(), isDoubleBuffered(), isEnabled(), isFocusCycleRoot(Container), isFocusOwner(), isFocusable(), isFontSet(), isForegroundSet(), isLightweight(), isOpaque(), isShowing(), isValid(), isVisible(), keyDown(Event, int), keyUp(Event, int), layout(), list(PrintWriter, int), list(PrintWriter, int), list(PrintWriter, int), list(PrintWriter, int), list(PrintWriter, int), locate(int, int), location(), lostFocus(Event, Object), minimumSize(), mouseDown(Event, int, int), mouseDrag(Event, int, int), mouseEnter(Event, int, int), mouseExit(Event, int, int), mouseMove(Event, int, int), mouseUp(Event, int, int), move(int, int), nextFocus(), paintAll(Graphics), postEvent(Event), preferredSize(), prepareImage(Image, ImageObserver), prepareImage(Image, ImageObserver), print(Graphics), printAll(Graphics), remove(MenuComponent), removeComponentListener(ComponentListener), removeFocusListener(FocusListener), removeHierarchyBoundsListener(HierarchyBoundsListener), removeHierarchyListener(HierarchyListener), removeInputMethodListener(InputMethodListener), removeKeyListener(KeyListener), removeMouseListener(MouseListener), removeMouseMotionListener(MouseMotionListener), removeMouseWheelListener(MouseWheelListener), removeNotify(), removePropertyChangeListener(String, PropertyChangeListener), removePropertyChangeListener(String, PropertyChangeListener), repaint(long, int, int, int, int), repaint(long, int, int, int, int), repaint(long, int, int, int, int), repaint(long, int, int, int, int), requestFocus(), requestFocusInWindow(), reshape(int, int, int, int), resize(Dimension), resize(Dimension), setBackground(Color), setBounds(Rectangle), setBounds(Rectangle), setComponentOrientation(ComponentOrientation), setCursor(Cursor), setDropTarget(DropTarget), setEnabled(boolean), setFocusTraversalKeys(int, Set), setFocusTraversalKeysEnabled(boolean), setFocusable(boolean), setFont(Font), setForeground(Color), setIgnoreRepaint(boolean), setLocale(Locale), setLocation(Point), setLocation(Point), setName(String), setSize(Dimension), setSize(Dimension), setVisible(boolean), show(boolean), show(boolean), size(), transferFocus(), transferFocusBackward(), transferFocusUpCycle(), validate()</p>
+        <h4>Methods inherited from class Object</h4>
+        <p class="indent">equals(Object), getClass(), hashCode(), notify(), notifyAll(), wait(long, int), wait(long, int), wait(long, int)</p>
+        <h2>Fields</h2>
+        <h3>IDL_SOFTWARE_RENDERER</h3>
+        <p class="Code">public static final int IDL_SOFTWARE_RENDERER</p>
+        <p class="indent">Internal use</p>
+        <h3>OPENGL_RENDERER</h3>
+        <p class="Code">public static final int OPENGL_RENDERER</p>
+        <p class="indent">Internal use</p>
+        <h2>Constructors</h2>
+        <h3>JIDLCanvas(String, int, String)</h3>
+        <p class="Code">public JIDLCanvas(java.lang.String sClass, int iOPSFlags, java.lang.String sProcessName)</p>
+        <h4 style="text-indent: 20px;">Deprecated.</h4>
+        <p class="indent">Replaced by constructor taking 2 parameters</p>
+        <p class="indent">Construct a JIDLCanvas</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">sClass - IDL Class name</p>
+        <p class="indent">iOPSFlags - Unused. The process name determines the OPS flags.</p>
+        <p class="indent">sProcessName - The process name. If null or “”, in-process is used.</p>
+        <h3>JIDLCanvas(String, String)</h3>
+        <p class="Code">public JIDLCanvas(java.lang.String sClass, java.lang.String sProcessName)</p>
+        <p class="indent">Construct a JIDLCanvas Note that constructing the JIDLObject does NOT create the object on the IDL-side of the bridge. This is done using the createObject method.</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">sClass - IDL Class name</p>
+        <p class="indent">sProcessName - The process name. If null or “”, in-process is used.</p>
+        <h2>Methods</h2>
+        <h3>abort()</h3>
+        <p class="Code">public void abort()</p>
+        <p class="indent">Requests that the IDL process containing the underlying IDL object abort its current activity.</p>
+        <p class="indent">This is only a request and IDL may take a long time before it actually stops.</p>
+        <p class="indent">The client can only Abort the current IDL activity if that wrapper object is the current “owner” of the underlying IDL.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">abort in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Throws:</h4>
+        <p class="indent">JIDLException - If IDL encounters an error.</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLAbortedException</p>
+        <h3>addIDLComponentListener(JIDLComponentListener)</h3>
+        <p class="Code">public void addIDLComponentListener(com.idl.javaidl.JIDLComponentListener listener)</p>
+        <p class="indent">Adds the specified JIDLComponentListener to a list of listeners that receive notification of Component events.</p>
+        <p class="indent">Note that registering/unregistering for events should happen in the initListeners method or AFTER the createObject method.</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">listener - the listener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLComponentListener</p>
+        <h3>addIDLKeyListener(JIDLKeyListener)</h3>
+        <p class="Code">public void addIDLKeyListener(com.idl.javaidl.JIDLKeyListener listener)</p>
+        <p class="indent">Adds the specified JIDLKeyListener to a list of listeners that receive notification of Key events.</p>
+        <p class="indent">Note that registering/unregistering for events should happen in the initListeners method or AFTER the createObject method.</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">listener - the listener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLKeyListener</p>
+        <h3>addIDLMouseListener(JIDLMouseListener)</h3>
+        <p class="Code">public void addIDLMouseListener(com.idl.javaidl.JIDLMouseListener listener)</p>
+        <p class="indent">Adds the specified JIDLMouseListener to a list of listeners that receive notification of Mouse events.</p>
+        <p class="indent">Note that registering/unregistering for events should happen in the initListeners method or AFTER the createObject method.</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">listener - the listener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLMouseListener</p>
+        <h3>addIDLMouseMotionListener(JIDLMouseMotionListener)</h3>
+        <p class="Code">public void addIDLMouseMotionListener(com.idl.javaidl.JIDLMouseMotionListener listener)</p>
+        <p class="indent">Adds the specified JIDLMouseMotionListener to a list of listeners that receive notification of MouseMotion events.</p>
+        <p class="indent">Note that registering/unregistering for events should happen in the initListeners method or AFTER the createObject method.</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">listener - the listener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLMouseMotionListener</p>
+        <h3>addIDLMouseWheelListener(JIDLMouseWheelListener)</h3>
+        <p class="Code">public void addIDLMouseWheelListener(com.idl.javaidl.JIDLMouseWheelListener listener)</p>
+        <p class="indent">Adds the specified JIDLMouseWheelListener to a list of listeners that receive notification of MouseWheel events.</p>
+        <p class="indent">Note that registering/unregistering for events should happen in the initListeners method or AFTER the createObject method.</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">listener - the listener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLMouseWheelListener</p>
+        <h3>addIDLNotifyListener(JIDLNotifyListener)</h3>
+        <p class="Code">public void addIDLNotifyListener(com.idl.javaidl.JIDLNotifyListener listener)</p>
+        <p class="indent">Adds the specified IDL notify listener to receive IDL notification events on this object.</p>
+        <p class="indent">Note that registering/unregistering for events should happen in the initListeners method or AFTER the createObject method.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">addIDLNotifyListener in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">listener - the listener</p>
+        <h3>addIDLOutputListener(JIDLOutputListener)</h3>
+        <p class="Code">public void addIDLOutputListener(com.idl.javaidl.JIDLOutputListener listener)</p>
+        <p class="indent">Adds the specified IDL output listener to receive IDL output events on this object. Note that registering/unregistering for events should happen in the initListeners method or AFTER the createObject method.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">addIDLOutputListener in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">listener - the listener</p>
+        <h3>callFunction(String, int)</h3>
+        <p class="Code">public java.lang.Object callFunction(java.lang.StringsMethodName, int iPalFlag)</p>
+        <p class="indent">Call IDL function that accepts zero parameters.</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">sMethodName - the function name</p>
+        <p class="indent">iPalFlag - a flag determining whether a returned array is convolved or not. If the returned value is not an array, this value is zero. See class description for more information.</p>
+        <h4 style="text-indent: 20px;">Returns:</h4>
+        <p class="indent">an Object of type JIDLNumber, JIDLString, JIDLObject or JIDLArray. The caller must know the type of the Object being returned and cast it to its proper type. May also return null.</p>
+        <h4 style="text-indent: 20px;">Throws:</h4>
+        <p class="indent">JIDLException - If IDL encounters an error.</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">callFunction(String, int, Object[], int[], int)</p>
+        <h3>callFunction(String, int, Object[], int[], int)</h3>
+        <p class="Code">public java.lang.Object callFunction(java.lang.String sMethodName, int argc, java.lang.Object[] argv, int[] argpal, int iPalFlag)</p>
+        <p class="indent">Call IDL function.</p>
+        <p class="indent">The argpal parameter is an array of flags created by OR-ing constants from class JIDLConst. Each array element corresponds to the equivalent parameter in argv.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">callFunction in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">sMethodName - the procedure name</p>
+        <p class="indent">argc - the number of parameters</p>
+        <p class="indent">argv - array of Objects to be passed to IDL. This array should be of length argc and should contain objects of type JIDLNumber, JIDLObject, JIDLString or JIDLObject.</p>
+        <p class="indent">argpal - array of flags denoting whether each argv parameter passed to be bridge is 1) in-out vs constant; or 2) a convolved or non-convolved array This array should be of length argc.</p>
+        <p class="indent">iPalFlag - a flag determining whether a returned array if convolved or not. If the returned value is not an array, this value is zero.</p>
+        <h4 style="text-indent: 20px;">Returns:</h4>
+        <p class="indent">an Object of type JIDLNumber, JIDLString, JIDLObjectI or JIDLArray. The caller must know the type of the Object being returned and cast it to its proper type.</p>
+        <h4 style="text-indent: 20px;">Throws:</h4>
+        <p class="indent">JIDLException - If IDL encounters an error.</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLNumber, JIDLObject, JIDLString, JIDLArray, JIDLConst.PARMFLAG_CONST, JIDLConst.PARMFLAG_IN_OUT, JIDLConst.PARMFLAG_CONVMAJORITY, JIDLConst.PARMFLAG_NO_CONVMAJORITY</p>
+        <h3>callProcedure(String)</h3>
+        <p class="Code">public void callProcedure(java.lang.String sMethodName)</p>
+        <p class="indent">Call IDL procedure that accepts zero parameters.</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">sMethodName - the procedure name</p>
+        <h4 style="text-indent: 20px;">Throws:</h4>
+        <p class="indent">JIDLException - If IDL encounters an error.</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">callProcedure(String, int, Object[], int[])</p>
+        <h3>callProcedure(String, int, Object[], int[])</h3>
+        <p class="Code">public void callProcedure(java.lang.String sMethodName, int argc, java.lang.Object[] argv, int[] argpal)</p>
+        <p class="indent">Call IDL procedure.</p>
+        <p class="indent">The argpal parameter is an array of flags created by OR-ing constants from class JIDLConst. Each array element corresponds to the equivalent parameter in argv.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">callProcedure in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">sMethodName - the procedure name</p>
+        <p class="indent">argc - the number of parameters</p>
+        <p class="indent">argv - array of Objects to be passed to IDL. This array should be of length argc and should contain objects of type JIDLNumber, JIDLObject, JIDLString or JIDLObject.</p>
+        <p class="indent">argpal - array of flags denoting whether each argv parameter passed to be bridge is 1) in-out vs constant; or 2) a convolved or non-convolved array This array should be of length argc.</p>
+        <h4 style="text-indent: 20px;">Throws:</h4>
+        <p class="indent">JIDLException - If IDL encounters an error.</p>
+        <p class="indent">JIDLNumber, JIDLObject, JIDLString, JIDLArray, JIDLConst.PARMFLAG_CONST, JIDLConst.PARMFLAG_IN_OUT, JIDLConst.PARMFLAG_CONVMAJORITY, JIDLConst.PARMFLAG_NO_CONVMAJORITY</p>
+        <h3>componentHidden(ComponentEvent)</h3>
+        <p class="Code">public void componentHidden(java.awt.event.ComponentEvent e)</p>
+        <p class="indent">Called when the component is hidden.</p>
+        <p class="indent">This method does nothing because IDL does not care about this event. This could be overridden by a child of JIDLCanvas if these events were of interest to the client application</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">componentHidden in interface ComponentListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">java.awt.event.ComponentListener</p>
+        <h3>componentMoved(ComponentEvent)</h3>
+        <p class="Code">public void componentMoved(java.awt.event.ComponentEvent e)</p>
+        <p class="indent">Called when the component is moved.</p>
+        <p class="indent">This method does nothing because IDL does not care about this event. This could be overridden by a child of JIDLCanvas if these events were of interest to the client application</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">componentMoved in interface ComponentListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">java.awt.event.ComponentListener</p>
+        <h3>componentResized(ComponentEvent)</h3>
+        <p class="Code">public final void componentResized(java.awt.event.ComponentEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <p class="indent">Called when the JIDLCanvas is resized.</p>
+        <p class="indent">If interested in resize events, use IDLcomponentResized. This method should NOT be overridden by a child of JIDLCanvas.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">componentResized in interface ComponentListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLComponentListener, IDLcomponentResized(JIDLObjectI, ComponentEvent)</p>
+        <h3>componentShown(ComponentEvent)</h3>
+        <p class="Code">public void componentShown(java.awt.event.ComponentEvent e)</p>
+        <p class="indent">Called when the component is shown.</p>
+        <p class="indent">This method does nothing because IDL does not care about this event. This could be overridden by a child of JIDLCanvas if these events were of interest to the client application</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">componentShown in interface ComponentListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">java.awt.event.ComponentListener</p>
+        <h3>createObject()</h3>
+        <p class="Code">public void createObject()</p>
+        <p class="indent">Create the wrapped object by calling IDL’s ::INIT method. Used for ::INIT methods that take zero parameters.</p>
+        <h4 style="text-indent: 20px;">Throws:</h4>
+        <p class="indent">JIDLException - If IDL encounters an error.</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">createObject(int, Object[], int[])</p>
+        <h3>createObject(int, Object[], int[])</h3>
+        <p class="Code">public void createObject(int argc, java.lang.Object[] argv, int[] argpal)</p>
+        <p class="indent">Create the wrapped object by calling IDL’s ::INIT method.</p>
+        <p class="indent">Note that the GUI that this Canvas lives in must be exposed before the createObject method is called.</p>
+        <p class="indent">createObject does the following:</p>
+        <ul>
+            <li class="Indent" value="1">call IDL ::INIT</li>
+            <li class="Indent" value="2">attach the IDL Window to this Canvas</li>
+            <li class="Indent" value="3">call initListeners to hook up default event handling</li>
+            <li class="Indent" value="4">repaint the canvas</li>
+        </ul>
+        <p class="indent">The argpal parameter is an array of flags created by OR-ing constants from class JIDLConst. Each array element corresponds to the equivalent parameter in argv. See the class description for more information.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">createObject in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">argc - the number of parameters</p>
+        <p class="indent">argv - array of Objects to be passed to IDL. This array should be of length argc and should contain objects of type JIDLNumber, JIDLObject, JIDLString or JIDLObject.</p>
+        <p class="indent">argpal - array of flags denoting whether each argv parameter passed to be bridge is 1) in-out vs constant; or 2) a convolved or non-convolved array This array should be of length argc.</p>
+        <h4 style="text-indent: 20px;">Throws:</h4>
+        <p class="indent">JIDLException - If IDL encounters an error.</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLConst, initListeners()</p>
+        <h3>createObject(int, Object[], int[], JIDLProcessInitializer)</h3>
+        <p class="Code">public void createObject(int argc, java.lang.Object[] argv, int[] argpal, com.idl.javaidl.JIDLProcessInitializer initializer)</p>
+        <p class="indent">Create the wrapped object by calling IDL’s ::INIT method.</p>
+        <p class="indent">Note that the GUI that this Canvas lives in must be exposed before the createObject method is called.</p>
+        <p class="indent">createObject does the following:</p>
+        <p class="indent2">•	Calls ::Init method in the IDL object</p>
+        <p class="indent2">•	Calls the superclass initListeners method to initialize any event handlers. The initListeners method has default behavior, which is different for graphical and non-graphical objects. If the default behavior is not desired, a sub-class to modify the listener initialization may override the initListeners method.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">createObject in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">argc - the number of parameters to be passed to INIT</p>
+        <p class="indent">argv - array of Objects to be passed to IDL. This array should be of length argc and should contain objects of type JIDLNumber, JIDLObject, JIDLString or JIDLArray.</p>
+        <p class="indent">argpal - array of flags denoting whether each argv parameter that is of type array should be convolved or not. For parameters that are not arrays, the value within the array will always be 0.</p>
+        <p class="indent">initializer - a JIDLProcessInitializer object that specifies IDL process initialization parameters such as the licensing mode to be used. See “IDL Licensing Modes” on page 136 for details on the default licensing mechanism used when no JIDLProcessInitializer is specified.</p>
+        <h4 style="text-indent: 20px;">Throws:</h4>
+        <p class="indent">JIDLException - If IDL encounters an error.</p>
+        <h3>createObject(JIDLProcessInitializer)</h3>
+        <p class="Code">public void createObject(com.idl.javaidl.JIDLProcessInitializer initializer)</p>
+        <p class="indent">Create the wrapped object by calling IDL’s ::INIT method. Used for ::INIT methods that take zero parameters.</p>
+        <p class="indent">The initializer parameter is used to supply IDL process initialization values.</p>
+        <p class="indent">Note that the GUI that this Canvas lives in must be exposed before the createObject method is called.</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">initializer - a JIDLProcessInitializer object that specifies IDL process initialization parameters such as the licensing mode to be used. See “IDL Licensing Modes” on page 136 for details on the default licensing mechanism used when no JIDLProcessInitializer is specified.</p>
+        <h4 style="text-indent: 20px;">Throws:</h4>
+        <p class="indent">JIDLException - If IDL encounters an error.</p>
+        <h3>destroyObject()</h3>
+        <p class="Code">public void destroyObject()</p>
+        <p class="indent">Destroys the underlying IDL object associated with the wrapper.</p>
+        <p class="indent">If the object being destroyed is the last object within an OPS process, the OPS process is also destroyed.</p>
+        <p class="indent">Note that this does not destroy the actual wrapper object. Because the wrapper object is a Java object, it follows all the Java reference counting/garbage collection schemes. Once all references to the wrapper object are released from Java code and once the Java Virtual Machine calls the garbage collector, the wrapper object may be deleted from memory.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">destroyObject in interface JIDLObjectI</p>
+        <h3>draw()</h3>
+        <p class="Code">public void draw()</p>
+        <p class="indent">Internal use.</p>
+        <p class="indent">Call IDL to inform the Canvas has been exposed to cause a redraw.</p>
+        <p class="indent">This in turn calls all the JIDLComponentListeners. Should not be overridden.</p>
+        <h3>executeString(String)</h3>
+        <p class="Code">public void executeString(java.lang.String sCmd)</p>
+        <p class="indent">Execute the given command string in IDL.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">executeString in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">sCmd - the single-line command to execute in IDL.</p>
+        <h4 style="text-indent: 20px;">Throws:</h4>
+        <p class="indent">JIDLException - If IDL encounters an error.</p>
+        <h3>getClassName()</h3>
+        <p class="Code">public java.lang.String getClassName()</p>
+        <p class="indent">Deprecated.</p>
+        <p class="indent">Replaced by getIDLObjectClassName() Get the class name of the object.</p>
+        <h4 style="text-indent: 20px;">Returns:</h4>
+        <p class="indent">class name (“” if object not created yet)</p>
+        <h3>getCookie()</h3>
+        <p class="Code">public long getCookie()</p>
+        <p class="indent">Internal use.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">getCookie in interface JIDLObjectI</p>
+        <h3>getIDLObjectClassName()</h3>
+        <p class="Code">public java.lang.String getIDLObjectClassName()</p>
+        <p class="indent">Retrieves the IDL object class name of the underlying IDL object.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">getIDLObjectClassName in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Returns:</h4>
+        <p class="indent">the IDL object class name</p>
+        <h3>getIDLObjectVariableName()</h3>
+        <p class="Code">public java.lang.String getIDLObjectVariableName()</p>
+        <p class="indent">When the underlying IDL object was created in the IDL process, it was assigned a variable name. This method retrieves that name.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">getIDLObjectVariableName in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Returns:</h4>
+        <p class="indent">the variable name</p>
+        <h3>getIDLVariable(String)</h3>
+        <p class="Code">public java.lang.Object getIDLVariable(java.lang.String sVar)</p>
+        <p class="indent">Given a variable name, return the IDL variable.</p>
+        <p class="indent">Note that in the case of arrays, the array will ALWAYS be convolved when passed between Java and IDL.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">getIDLVariable in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">sVar - The IDL variable name</p>
+        <h4 style="text-indent: 20px;">Returns:</h4>
+        <p class="indent">an Object of type JIDLNumber, JIDLString, JIDLObject or JIDLArray. The caller must know the type of the Object being returned and cast it to its proper type. May also return null.</p>
+        <h4 style="text-indent: 20px;">Throws:</h4>
+        <p class="indent">JIDLException - If IDL encounters an error.</p>
+        <h3>getObjVariableName()</h3>
+        <p class="Code">public java.lang.String getObjVariableName()</p>
+        <p class="indent">Deprecated.</p>
+        <p class="indent">Replaced by getIDLObjectVariableName()</p>
+        <p class="indent">Get the IDL Variable name of the given object</p>
+        <h4 style="text-indent: 20px;">Returns:</h4>
+        <p class="indent">a String representing the IDL Variable name</p>
+        <h3>getProcessName()</h3>
+        <p class="Code">public java.lang.String getProcessName()</p>
+        <p class="indent">Returns the name of the process that contains the underlying IDL object. For an in- process object, returns an empty string.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">getProcessName in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Returns:</h4>
+        <p class="indent">process name. Empty string if the process is in-process.</p>
+        <h3>getProperty(String, int)</h3>
+        <p class="Code">public java.lang.Object getProperty(java.lang.StringsProperty, int iPalFlag)</p>
+        <p class="indent">Call IDL getProperty method to get named property.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">getProperty in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">sProperty - the property name</p>
+        <p class="indent">iPalFlag - a flag determining whether a returned array will be convolved or not. If the returned value is not is ignored.</p>
+        <h4 style="text-indent: 20px;">Returns:</h4>
+        <p class="indent">an Object of type JIDLNumber, JIDLString, JIDLObject or JIDLArray. The caller must know the type of the Object being returned and cast it to its proper type. May also return null.</p>
+        <h4 style="text-indent: 20px;">Throws:</h4>
+        <p class="indent">JIDLException - If IDL encounters an error.</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLNumber, JIDLObjectI, JIDLString, JIDLArray, JIDLConst.PARMFLAG_CONVMAJORITY, JIDLConst.PARMFLAG_NO_CONVMAJORITY</p>
+        <h3>IDLcomponentExposed(JIDLObjectI)</h3>
+        <p class="Code">public void IDLcomponentExposed(com.idl.javaidl.JIDLObjectI obj)</p>
+        <p class="indent">Called when the JIDLCanvas is exposed.</p>
+        <p class="indent">The default behavior of this method is to lock the Canvas, pass the event on to IDL to handle (i.e. redraw), and then unlock the Canvas.</p>
+        <p class="indent">The behavior may be changed by overriding this method in a sub-class. For example, the sub-class may want to do something special before or after the redraw happens. The method would be implemented as follows:</p>
+        <p class="Code_Indented">public class mySubClass extends JIDLCanvas {</p>
+        <p class="Code_Indented" style="text-indent: 20px;">public void IDLcomponentExposed() {</p>
+        <p class="Code_Indented" style="text-indent: 40px;">// do something here before IDL is called</p>
+        <p class="Code_Indented" style="text-indent: 40px;">super.IDLcomponentExposed();</p>
+        <p class="Code_Indented" style="text-indent: 40px;">// do something if desired afterwards</p>
+        <p class="Code_Indented" style="text-indent: 20px;">}</p>
+        <p class="Code_Indented">}</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">IDLcomponentExposed in interface JIDLComponentListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLComponentListener, initListeners()</p>
+        <h3>IDLcomponentResized(JIDLObjectI, ComponentEvent)</h3>
+        <p class="Code">public void IDLcomponentResized(com.idl.javaidl.JIDLObjectI obj, java.awt.event.ComponentEvent e)</p>
+        <p class="indent">Called when the JIDLCanvas is resized.</p>
+        <p class="indent">The default behavior of this method is to send the resize event to IDL to handle.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">IDLcomponentResized in interface JIDLComponentListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLComponentListener, initListeners()</p>
+        <h3>IDLkeyPressed(JIDLObjectI, KeyEvent, int, int)</h3>
+        <p class="Code">public void IDLkeyPressed(com.idl.javaidl.JIDLObjectI obj, java.awt.event.KeyEvent e, int x, int y)</p>
+        <p class="indent">Called when the JIDLCanvas has focus and a key is pressed.</p>
+        <p class="indent">The default behavior of this method is pass the event to IDL which, if registered for the event will call ::OnKeyboard.</p>
+        <p class="indent">The behavior may be changed by overriding this method in a sub-class. For example, the sub-class may want to ignore the event by providing an empty implementation of the method. Or the sub-class may do something special before or after the event happens.</p>
+        <p class="indent">See IDLcomponentExposed for an example of how this would be done.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">IDLkeyPressed in interface JIDLKeyListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLKeyListener, IDLcomponentExposed(JIDLObjectI), initListeners()</p>
+        <h3>IDLkeyReleased(JIDLObjectI, KeyEvent, int, int)</h3>
+        <p class="Code">public void IDLkeyReleased(com.idl.javaidl.JIDLObjectI obj, java.awt.event.KeyEvent e, int x, int y)</p>
+        <p class="indent">Called when the JIDLCanvas has focus and a key is released.</p>
+        <p class="indent">The default behavior of this method is pass the event to IDL which, if registered for the event will call ::OnKeyboard. The behavior may be changed by overriding this method in a sub-class. For example, the sub-class may want to ignore the event by providing an empty implementation of the method. Or the sub-class may do something special before or after the event happens. See IDLcomponentExposed for an example of how this would be done.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">IDLkeyReleased in interface JIDLKeyListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLKeyListener, IDLcomponentExposed(JIDLObjectI), initListeners()</p>
+        <h3>IDLmouseDragged(JIDLObjectI, MouseEvent)</h3>
+        <p class="Code">public void IDLmouseDragged(com.idl.javaidl.JIDLObjectI obj, java.awt.event.MouseEvent e)</p>
+        <p class="indent">Called when the mouse is dragged in a JIDLCanvas.</p>
+        <p class="indent">The default behavior of this method is pass the event to IDL which, if registered for the event, will call ::OnMouseMotion.</p>
+        <p class="indent">The behavior may be changed by overriding this method in a sub-class. For example, the sub-class may want to ignore the event by providing an empty implementation of the method. Often our IDL IDLitWindow is only interested in one type of motion event and not another. Or the sub-class may do something special before or after the event happens.</p>
+        <p class="indent">See IDLcomponentExposed for an example of how this would be done.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">IDLmouseDragged in interface JIDLMouseMotionListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLMouseMotionListener, IDLcomponentExposed(JIDLObjectI), initListeners()</p>
+        <h3>IDLmouseEntered(JIDLObjectI, MouseEvent)</h3>
+        <p class="Code">public void IDLmouseEntered(com.idl.javaidl.JIDLObjectI obj, java.awt.event.MouseEvent e)</p>
+        <p class="indent">Called when the mouse enters a JIDLCanvas.</p>
+        <p class="indent">The default behavior of this method is to ignore the event.</p>
+        <p class="indent">The behavior may be changed by overriding this method in a sub-class.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">IDLmouseEntered in interface JIDLMouseListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLMouseListener, initListeners()</p>
+        <h3>IDLmouseExited(JIDLObjectI, MouseEvent)</h3>
+        <p class="Code">public void IDLmouseExited(com.idl.javaidl.JIDLObjectI obj, java.awt.event.MouseEvent e)</p>
+        <p class="indent">Called when the mouse exits a JIDLCanvas.</p>
+        <p class="indent">The default behavior of this method is to ignore the event.</p>
+        <p class="indent">The behavior may be changed by overriding this method in a sub-class.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">IDLmouseExited in interface JIDLMouseListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLMouseListener, initListeners()</p>
+        <h3>IDLmouseMoved(JIDLObjectI, MouseEvent)</h3>
+        <p class="Code">public void IDLmouseMoved(com.idl.javaidl.JIDLObjectI obj, java.awt.event.MouseEvent e)</p>
+        <p class="indent">Called when the mouse is moved in a JIDLCanvas.</p>
+        <p class="indent">The default behavior of this method is pass the event to IDL which, if registered for the event, will call ::OnMouseMotion.</p>
+        <p class="indent">The behavior may be changed by overriding this method in a sub-class. For example, the sub-class may want to ignore the event by providing an empty implementation of the method. Often our IDL IDLitWindow is only interested in one type of motion event and not another. Or the sub-class may do something special before or after the event happens.</p>
+        <p class="indent">See IDLcomponentExposed for an example of how this would be done.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">IDLmouseMoved in interface JIDLMouseMotionListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLMouseMotionListener, IDLcomponentExposed(JIDLObjectI), initListeners()</p>
+        <h3>IDLmousePressed(JIDLObjectI, MouseEvent)</h3>
+        <p class="Code">public void IDLmousePressed(com.idl.javaidl.JIDLObjectIobj, java.awt.event.MouseEvent e)</p>
+        <p class="indent">Called when the mouse is pressed in a JIDLCanvas.</p>
+        <p class="indent">The default behavior of this method is pass the event to IDL which, if registered for the event, will call ::OnMouseDown.</p>
+        <p class="indent">The behavior may be changed by overriding this method in a sub-class. For example, the sub-class may want to ignore the event by providing an empty implementation of the method. Or the sub-class may do something special before or after the event happens.</p>
+        <p class="indent">See IDLcomponentExposed for an example of how this would be done.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">IDLmousePressed in interface JIDLMouseListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLMouseListener, IDLcomponentExposed(JIDLObjectI), initListeners()</p>
+        <h3>IDLmouseReleased(JIDLObjectI, MouseEvent)</h3>
+        <p class="Code">public void IDLmouseReleased(com.idl.javaidl.JIDLObjectI obj, java.awt.event.MouseEvent e)</p>
+        <p class="indent">Called when the mouse is released in a JIDLCanvas.</p>
+        <p class="indent">The default behavior of this method is pass the event to IDL which, if registered for the event, will call ::OnMouseUp.</p>
+        <p class="indent">The behavior may be changed by overriding this method in a sub-class. For example, the sub-class may want to ignore the event by providing an empty implementation of the method. Or the sub-class may do something special before or after the event happens.</p>
+        <p class="indent">See IDLcomponentExposed for an example of how this would be done.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">IDLmouseReleased in interface JIDLMouseListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLMouseListener, IDLcomponentExposed(JIDLObjectI), initListeners()</p>
+        <h3>initListeners()</h3>
+        <p class="Code">public void initListeners()</p>
+        <p class="indent">Initialize listeners.</p>
+        <p class="indent">This method is always called by createObject. The JIDLCanvas listens to the following events:</p>
+        <p class="indent2">•	JIDLComponentListener</p>
+        <p class="indent2">•	JIDLKeyListener</p>
+        <p class="indent2">•	JIDLMouseListener</p>
+        <p class="indent2">•	JIDLMouseMotionListener</p>
+        <p class="indent">The method may be overridden by sub-classes to initialize a different set of listeners (or none at all). For example if a sub-class of JIDLCanvas only wished to listen to key and component events, it would override initListeners as follows:</p>
+        <p class="Code_Indented">public void initListeners()</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">addIDLComponentListener(this);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">addIDLKeyListener(this);</p>
+        <p class="Code_Indented">}</p>
+        <p class="indent">As another example, if a sub-class of JIDLCanvas wished to listen to key events, component events, and notify events, it would need to implement JIDLNotifyListener and register to listen for these events in initListeners, as follows:</p>
+        <p class="Code_Indented">public class newCanvas extends JIDLCanvas implements JIDLNotifyListener</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">public void initListeners()</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">addIDLComponentListener(this);</p>
+        <p class="Code_Indented" style="text-indent: 40px;">addIDLKeyListener(this);</p>
+        <p class="Code_Indented" style="text-indent: 40px;">addIDLNotifyListener(this);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">void OnIDLNotify(JIDLObjectI obj, String s1, String s2)</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">// do something with the notify</p>
+        <p class="Code_Indented" style="text-indent: 20px;">}</p>
+        <p class="Code_Indented">}</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">initListeners in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLComponentListener, JIDLKeyListener, JIDLMouseListener, JIDLMouseMotionListener, JIDLNotifyListener, JIDLOutputListener</p>
+        <h3>isFocusTraversable()</h3>
+        <p class="Code">public boolean isFocusTraversable()</p>
+        <p class="indent">Internal use.</p>
+        <h4 style="text-indent: 20px;">Overrides:</h4>
+        <p class="indent">isFocusTraversable in class Component</p>
+        <h3>isObjCreated()</h3>
+        <p class="Code">public boolean isObjCreated()</p>
+        <h4 style="text-indent: 20px;">Deprecated.</h4>
+        <p class="indent">Replaced by isObjectCreated()</p>
+        <p class="indent">Determine if object has been created successfully.</p>
+        <h4 style="text-indent: 20px;">Returns:</h4>
+        <p class="indent">true if object created successfully, or false if object not created or creation was unsuccessful.</p>
+        <h3>isObjectCreated()</h3>
+        <p class="Code">public boolean isObjectCreated()</p>
+        <p class="indent">Determine if object has been created successfully.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">isObjectCreated in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Returns:</h4>
+        <p class="indent">true if object created successfully, or false if object not created, destroyed, or creation was unsuccessful.</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">createObject()</p>
+        <h3>isObjectDisplayable()</h3>
+        <p class="Code">public boolean isObjectDisplayable()</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">isObjectDisplayable in interface JIDLObjectI</p>
+        <h3>keyPressed(KeyEvent)</h3>
+        <p class="Code">public final void keyPressed(java.awt.event.KeyEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <p class="indent">Called when a key is pressed when the JIDLCanvas has focus.</p>
+        <p class="indent">If interested in this event, use IDLkeyPressed. This method should NOT be overridden by a child of JIDLCanvas.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">keyPressed in interface KeyListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLKeyListener, IDLkeyPressed(JIDLObjectI, KeyEvent, int, int)</p>
+        <h3>keyReleased(KeyEvent)</h3>
+        <p class="Code">public final void keyReleased(java.awt.event.KeyEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <p class="indent">Called when a key is released when the JIDLCanvas has focus.</p>
+        <p class="indent">If interested in this event, use IDLkeyReleased. This method should NOT be overridden by a child of JIDLCanvas.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">keyReleased in interface KeyListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLKeyListener, IDLkeyReleased(JIDLObjectI, KeyEvent, int, int)</p>
+        <h3>keyTyped(KeyEvent)</h3>
+        <p class="Code">public void keyTyped(java.awt.event.KeyEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <p class="indent">Called when a key is typed.</p>
+        <p class="indent">This method does nothing because IDL does not care about this event, using keyPressed to trigger its mouse events. This method should NOT be overridden by a child of JIDLCanvas.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">keyTyped in interface KeyListener</p>
+        <h3>mapIDLCursorToJavaCursor(String)</h3>
+        <p class="Code">public int mapIDLCursorToJavaCursor(java.lang.String idlCursor)</p>
+        <p class="indent">Maps the IDL cursor to a suitable Java cursor. This is called internally by setCursor when the IDL drawable changes the cursor.</p>
+        <p class="indent">May be overridden to change the mapping. The default mapping is as follows:</p>
+        <ul>
+            <li class="Indent" value="1">“ARROW” → Cursor.DEFAULT_CURSOR;</li>
+            <li class="Indent" value="2">“UP_ARROW” → Cursor.DEFAULT_CURSOR;</li>
+            <li class="Indent" value="3">“IBEAM” → Cursor.TEXT_CURSOR;</li>
+            <li class="Indent" value="4">“ICON” → Cursor.TEXT_CURSOR;</li>
+            <li class="Indent" value="5">“CROSSHAIR” → Cursor.CROSSHAIR_CURSOR;</li>
+            <li class="Indent" value="6">“ORIGINAL” → Cursor.CROSSHAIR_CURSOR;</li>
+            <li class="Indent" value="7">“HOURGLASS” → Cursor.WAIT_CURSOR;</li>
+            <li class="Indent" value="8">“MOVE” → Cursor.MOVE_CURSOR;</li>
+            <li class="Indent" value="9">“SIZE_NW” → Cursor.NW_RESIZE_CURSOR;</li>
+            <li class="Indent" value="10">“SIZE_SE” → Cursor.SE_RESIZE_CURSOR;</li>
+            <li class="Indent" value="11">“SIZE_NE” → Cursor.NE_RESIZE_CURSOR;</li>
+            <li class="Indent" value="12">“SIZE_SW” → Cursor.SW_RESIZE_CURSOR;</li>
+            <li class="Indent" value="13">“SIZE_EW” → Cursor.E_RESIZE_CURSOR;</li>
+            <li class="Indent" value="14">“SIZE_NS” → Cursor.N_RESIZE_CURSOR;</li>
+            <li class="Indent" value="15">otherwise → Cursor.DEFAULT_CURSOR;</li>
+        </ul>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">mapIDLCursorToJavaCursor in interface JIDLCursorSupport</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">idlCursor - a String representing the IDL cursor</p>
+        <h4 style="text-indent: 20px;">Returns:</h4>
+        <p class="indent">the Cursor constant representing the Java Cursor style</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">setCursor(String)</p>
+        <h3>mouseClicked(MouseEvent)</h3>
+        <p class="Code">public void mouseClicked(java.awt.event.MouseEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <p class="indent">Called when the mouse is clicked.</p>
+        <p class="indent">This method does nothing because IDL does not care about this event, using mousePressed to trigger its mouse events. This method should NOT be overridden by a child of JIDLCanvas.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">mouseClicked in interface MouseListener</p>
+        <h3>mouseDragged(MouseEvent)</h3>
+        <p class="Code">public final void mouseDragged(java.awt.event.MouseEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <p class="indent">Called when the mouse is dragged in the JIDLCanvas.</p>
+        <p class="indent">If interested in this event, use IDLmouseDragged. This method should NOT be overridden by a child of JIDLCanvas.</p>
+        <h3>mouseEntered(MouseEvent)</h3>
+        <p class="Code">public final void mouseEntered(java.awt.event.MouseEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <p class="indent">Called when the mouse enters the JIDLCanvas.</p>
+        <p class="indent">If interested in this event, use IDLmouseEntered. This method should NOT be overridden by a child of JIDLCanvas.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">mouseEntered in interface MouseListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLMouseListener, IDLmouseEntered(JIDLObjectI, MouseEvent)</p>
+        <h3>mouseExited(MouseEvent)</h3>
+        <p class="Code">public final void mouseExited(java.awt.event.MouseEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <p class="indent">Called when the mouse exits the JIDLCanvas.</p>
+        <p class="indent">If interested in this event, use IDLmouseExited. This method should NOT be overridden by a child of JIDLCanvas.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">mouseExited in interface MouseListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLMouseListener, IDLmouseExited(JIDLObjectI, MouseEvent)</p>
+        <h3>mouseMoved(MouseEvent)</h3>
+        <p class="Code">public final void mouseMoved(java.awt.event.MouseEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <p class="indent">Called when the mouse moves in the JIDLCanvas.</p>
+        <p class="indent">If interested in this event, use IDLmouseMoved. This method should NOT be overridden by a child of JIDLCanvas.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">mouseMoved in interface MouseMotionListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLMouseMotionListener, IDLmouseMoved(JIDLObjectI, MouseEvent)</p>
+        <h3>mousePressed(MouseEvent)</h3>
+        <p class="Code">public final void mousePressed(java.awt.event.MouseEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <p class="indent">Called when the mouse is pressed.</p>
+        <p class="indent">If interested in this event, use IDLmousePressed. This method should NOT be overridden by a child of JIDLCanvas.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">mousePressed in interface MouseListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLMouseListener, IDLmousePressed(JIDLObjectI, MouseEvent)</p>
+        <h3>mouseReleased(MouseEvent)</h3>
+        <p class="Code">public final void mouseReleased(java.awt.event.MouseEvent e)</p>
+        <p class="indent">Internal use.</p>
+        <p class="indent">Called when the mouse is released.</p>
+        <p class="indent">If interested in this event, use IDLmouseReleased. This method should NOT be overridden by a child of JIDLCanvas.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">mouseReleased in interface MouseListener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLMouseListener, IDLmouseReleased(JIDLObjectI, MouseEvent)</p>
+        <h3>paint(Graphics)</h3>
+        <p class="Code">public void paint(java.awt.Graphics g)</p>
+        <p class="indent">Internal use. Paint the Canvas. (Do not override this method)</p>
+        <h4 style="text-indent: 20px;">Overrides:</h4>
+        <p class="indent">paint in class Canvas</p>
+        <h3>removeIDLComponentListener(JIDLComponentListener)</h3>
+        <p class="Code">public void removeIDLComponentListener(com.idl.javaidl.JIDLComponentListener listener)</p>
+        <p class="indent">Remove the specified JIDLComponentListener from a list of listeners that receive notification of Component events.</p>
+        <p class="indent">Note that registering/unregistering for events should happen in the initListeners method or AFTER the createObject method.</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">listener - the listener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLComponentListener</p>
+        <h3>removeIDLKeyListener(JIDLKeyListener)</h3>
+        <p class="Code">public void removeIDLKeyListener(com.idl.javaidl.JIDLKeyListener listener)</p>
+        <p class="indent">Removes the specified JIDLKeyListener from a list of listeners that receive notification of Key events.</p>
+        <p class="indent">Note that registering/unregistering for events should happen in the initListeners method or AFTER the createObject method.</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">listener - the listener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLKeyListener</p>
+        <h3>removeIDLMouseListener(JIDLMouseListener)</h3>
+        <p class="Code">public void removeIDLMouseListener(com.idl.javaidl.JIDLMouseListener listener)</p>
+        <p class="indent">Removes the specified JIDLMouseListener from a list of listeners that receive notification of Mouse events.</p>
+        <p class="indent">Note that registering/unregistering for events should happen in the initListeners method or AFTER the createObject method.</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">listener - the listener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLMouseListener</p>
+        <h3>removeIDLMouseMotionListener(JIDLMouseMotionListener)</h3>
+        <p class="Code">public void removeIDLMouseMotionListener(com.idl.javaidl.JIDLMouseMotionListen er listener)</p>
+        <p class="indent">Removes the specified JIDLMouseMotionListener from a list of listeners that receive notification of MouseMotion events.</p>
+        <p class="indent">Note that registering/unregistering for events should happen in the initListeners method or AFTER the createObject method.</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">listener - the listener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLMouseMotionListener</p>
+        <h3>removeIDLMouseWheelListener(JIDLMouseWheelListener)</h3>
+        <p class="Code">public void removeIDLMouseWheelListener(com.idl.javaidl.JIDLMouseWheelListener listener)</p>
+        <p class="indent">Removes the specified JIDLMouseWheelListener to a list of listeners that receive notification of MouseWheel events.</p>
+        <p class="indent">Note that registering/unregistering for events should happen in the initListeners method or AFTER the createObject method.</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">listener - the listener</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLMouseWheelListener</p>
+        <h3>removeIDLNotifyListener(JIDLNotifyListener)</h3>
+        <p class="Code">public void removeIDLNotifyListener(com.idl.javaidl.JIDLNotifyListener listener)</p>
+        <p class="indent">Removes the specified IDL notify listener so it no longer receives IDL notifications.</p>
+        <p class="indent">Note that registering/unregistering for events should happen in the initListeners method or AFTER the createObject method.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">removeIDLNotifyListener in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">listener - the listener</p>
+        <h3>removeIDLOutputListener(JIDLOutputListener)</h3>
+        <p class="Code">public void removeIDLOutputListener(com.idl.javaidl.JIDLOutputListener listener)</p>
+        <p class="indent">Removes the specified IDL output listener on this object.</p>
+        <p class="indent">Note that registering/unregistering for events should happen in the initListeners method or AFTER the createObject method.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">removeIDLOutputListener in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">listener - the listener</p>
+        <h3>setCursor(String)</h3>
+        <p class="Code">public void setCursor(java.lang.String idlCursor)</p>
+        <p class="indent">Set the JIDLCanvas cursor. Called automatically when the IDL cursor changes. This in turn calls mapIDLCursorToJavaCursor to map the IDL cursor name to a suitable Java cursor type.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">setCursor in interface JIDLCursorSupport</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">idlCursor - A String representing the IDL cursor name.</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">mapIDLCursorToJavaCursor(String)</p>
+        <h3>setIDLVariable(String, Object)</h3>
+        <p class="Code">public void setIDLVariable(java.lang.String sVar, java.lang.Object obj)</p>
+        <p class="indent">Set/Create an IDL variable of the given name and value.</p>
+        <p class="indent">Note that in the case of arrays, the array will ALWAYS be convolved when passed between Java and IDL.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">setIDLVariable in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">sVar - the IDL variable name</p>
+        <p class="indent">obj - object to be passed to IDL. Should be an object of type JIDLNumber, JIDLObject, JIDLString or JIDLArray.</p>
+        <h4 style="text-indent: 20px;">Throws:</h4>
+        <p class="indent">JIDLException - If IDL encounters an error.</p>
+        <h3>setProcessName(String)</h3>
+        <p class="Code">public void setProcessName(java.lang.String process)</p>
+        <p class="indent">Set the process name that the object will be created in.</p>
+        <p class="indent">The process name may only be set before createObject is called. If called after the object has been created, this method call does nothing.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">setProcessName in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">process - Process name. Empty String means create in same process (in-process).</p>
+        <h3>setProperty(String, Object, int)</h3>
+        <p class="Code">public void setProperty(java.lang.String sProperty, java.lang.Object obj, int iPalFlag)</p>
+        <p class="indent">Call IDL setProperty method to set named property.</p>
+        <p class="indent">The iPalFlag parameter is a set of flags that are or-ed together. Currently this parameter is only used to specify whether a JIDLArray being passed in to IDL is convolved or not. For arrays argpal should be set to either JIDLConst.PARMFLAG_CONVMAJORITY or JIDLConst.PARMFLAG_NO_CONVMAJORITY.</p>
+        <h4 style="text-indent: 20px;">Specified By:</h4>
+        <p class="indent">setProperty in interface JIDLObjectI</p>
+        <h4 style="text-indent: 20px;">Parameters:</h4>
+        <p class="indent">sProperty - the property name</p>
+        <p class="indent">obj - object to be passed to IDL. Should be an object of type JIDLNumber, JIDLObject, JIDLString or JIDLObject.</p>
+        <p class="indent">iPalFlag - flag denoting whether the passed in parameter is convolved or not. Note: setProperty does not allow obj to be modified by IDL</p>
+        <h4 style="text-indent: 20px;">Throws:</h4>
+        <p class="indent">JIDLException - If IDL encounters an error.</p>
+        <h4 style="text-indent: 20px;">See Also:</h4>
+        <p class="indent">JIDLNumber, JIDLObject, JIDLString, JIDLArray, JIDLConst.PARMFLAG_CONVMAJORITY, JIDLConst.PARMFLAG_NO_CONVMAJORITY</p>
+        <h3>toString()</h3>
+        <p class="Code">public java.lang.String toString()</p>
+        <p class="indent">Returns a string representation of the object.</p>
+        <h4 style="text-indent: 20px;">Overrides:</h4>
+        <p class="indent">toString in class Component</p>
+        <h3>update(Graphics)</h3>
+        <p class="Code">public void update(java.awt.Graphics g)</p>
+        <p class="indent">Internal use. Update the Canvas. (Do not override this method)</p>
+        <h4 style="text-indent: 20px;">Overrides:</h4>
+        <p class="indent">update in class Canvas</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

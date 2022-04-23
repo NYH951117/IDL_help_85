@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|COM Import Bridge and ActiveX|COM Import Bridge">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Passing Parameter Arrays By Reference</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">COM Import Bridge and ActiveX</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">COM Import Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Passing Parameter Arrays By Reference</span>
+        </div>
+        <h1><a name="Passing_Parameter_Arrays_By_Reference"></a><a name="kanchor5215"></a>Passing Parameter <a name="kanchor5216"></a>Arrays By Reference</h1>
+        <p>By default, IDL arrays are passed to and received from the COM subsystem “by value”, meaning the array is copied. When dealing with large arrays or a large number of arrays, performance may suffer due to the by value passing scheme. However, you can implement “by reference” array passing, which passes an IDL array to a COM object in such a way that the COM object can directly alter the IDL array memory without the cost of marshaling (copying) the array to or from the COM object. This can increase performance and save system memory allocation.</p>
+        <p>An IDL array parameter is passed by reference to a COM method when the parameter is defined as an IDL pointer to an array. For example:</p>
+        <p class="Code">myarr = LINDGEN(100)</p>
+        <p class="Code">myptr = PTR_NEW(myarr, /NO_COPY)</p>
+        <p>or</p>
+        <p class="Code">myptr = PTR_NEW(LINDGEN(100), /NO_COPY)</p>
+        <p>Then, the pointer is passed like a normal parameter:</p>
+        <p class="Code">PRINT, *myptr	; array before call </p>
+        <p class="Code">obj-&gt;UseArrayRef, myptr</p>
+        <p class="Code">PRINT, *myptr	; altered array after call</p>
+        <p>The IDL array must be large enough for the client's use. On the COM side:</p>
+        <ul>
+            <li value="1">The COM object cannot resize the array (although the COM object does not have to use or set all the elements in the array)</li>
+            <li value="2">The COM object cannot change the type of elements</li>
+            <li value="3">The COM object cannot change the dimensionality of the array</li>
+        </ul>
+        <p>Thus, for multidimensional arrays, IDL must define the source array with the same dimensions as the COM client expects.</p>
+        <p>In order for the IDL-COM subsystem to know that an IDL array should be passed by reference, it looks at the source IDL variable to make sure it is a pointer to an array, and that the destination COM method parameter is also declared as an array. Thus, it is important to properly declare the destination COM parameter as a SAFEARRAY(&lt;type&gt;), when implementing in C++.</p>
+        <p>For example, if the desire is to pass an IDL array of 32-bit integer values to a COM</p>
+        <p>client, the COM method parameter needs to be declared like this:</p>
+        <p class="Code">[in, out] SAFEARRAY(long) psa</p>
+        <p>For the code example above, the full method signature in C++/ATL is:</p>
+        <p class="indent">HRESULT UseArrayRef( [in, out] SAFEARRAY(long) psa);</p>
+        <p>When implementing a COM-callable class in C# and passing in an array of 32-bit integers, declare the method as:</p>
+        <p class="Code">public void UseArrayRef( [MarshalAs(UnmanagedType.SafeArray, SafeArraySubType=System.Runtime.InteropServices.VarEnum.VT_I4)] ref long [] arr)</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">arr[0] = 10;</p>
+        <p class="Code_Indented">arr[1] = 11;</p>
+        <p class="Code_Indented">// etc</p>
+        <p class="Code">}</p>
+        <p>It is critical to make sure that the element size of the IDL array matches the element size declared in the COM method signature. If they don't, a marshaling error occurs because the marshaler checks for consistency between the source and destination. This issue is notorious for causing problems with element types of “int” and “long”. For example, trying to call either of the two COM method signatures above with an IDL “integer” array would cause an error since IDL “integers” are 16-bits by default and C++/COM “ints” are 32-bits. Thus, in the code above, we declared the IDL array as “long” values, which are 32-bits and match the C++/COM “long” value in size.</p>
+        <h2><a name="kanchor5217"></a>Unsupported Array Types</h2>
+        <p>You cannot pass an array by reference if the array consists of one of the following types:</p>
+        <ul>
+            <li value="1">Strings</li>
+            <li value="2">Object references</li>
+            <li value="3">IDL pointers</li>
+            <li value="4">IDL structures</li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

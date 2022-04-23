@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Objects|Creating Object Classes">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>The Object Lifecycle</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Object Classes/ref_part2.htm">Objects</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Creating Custom Objects.htm">Creating Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">The Object Lifecycle</span>
+        </div>
+        <h1>The Object Lifecycle</h1>
+        <p>Objects are <i>persistent</i>, meaning they exist in memory until you destroy them. We can break the <a name="kanchor4881"></a>life of an object into three phases: creation and initialization, use, and destruction. Object <i>lifecycle routines</i> allow the creation and destruction of object references; <i>lifecycle methods</i> associated with an object allow you to control what happens when an object is created or destroyed. This section discusses the first and last phases of the object lifecycle.</p>
+        <h2 class="API"><a name="objects_custom_2374809850_27831"></a>Creation and Initialization</h2>
+        <p>Object references are created using one of two lifecycle routines: OBJ_NEW or OBJARR. Newly-created objects are initialized upon creation in two ways:</p>
+        <ol>
+            <li value="1">The object reference is created based on the class structure specified,</li>
+            <li value="2">The object’s Init method (if it has one) is called to initialize the object’s instance data (contained in fields defined by the class structure). If the object does not have an Init method, the object’s superclasses (if any) are searched for an Init method.</li>
+        </ol>
+        <h3>The Init Method</h3>
+        <p>An object’s lifecycle method Init is a function named <i>Class</i>::Init (where <i>Class</i> is the actual name of the class). The purpose of the Init method is to populate a newly-created object with instance data. Init should return a scalar TRUE value (such as 1) if the initialization is successful, and FALSE (such as 0) if the initialization fails.</p>
+        <p>The Init method is unusual in that it <i>cannot be called outside an object-creation operation</i>. This means that—unlike most object methods—you cannot call the Init method on an object directly. You can, however, call an object’s Init method from within the Init method of a subclass of that object. This allows you to specify parameters used by the superclass’ Init method along with those used by the Init method of the object being created. In practice, this is often done using the _EXTRA keyword.</p>
+        <h3>Implicit Object Creation and the OBJ_NEW Function</h3>
+        <p>You can create an object reference to a new object heap variable in one of two ways:</p>
+        <ul>
+            <li value="1">The implicit object creation method - use the class name as a function</li>
+            <li value="2">The OBJ_NEW function</li>
+        </ul>
+        <p>The implicit method uses the name of the class structure as a function that creates a new object.</p>
+        <p>With OBJ_NEW, you supply the name of a class structure as its argument, and OBJ_NEW creates a new object.</p>
+        <p>In both methods, the new object contains an instance of that class structure.</p>
+        <p>Note that the fields of the newly-created object's instance data structure will all be empty. For example, the following commands both create a new object heap variable that contains an instance of the class structure ClassName, and places an object reference to this heap variable in obj1:</p>
+        <p class="Code">obj1 = Classname([argument])</p>
+        <p>or</p>
+        <p class="Code">obj1 = OBJ_NEW('ClassName')</p>
+        <p>Either method creates a new object heap variable that contains an instance of the class structure ClassName, and places an object reference to this heap variable in obj1. If you do not supply an argument, the newly-created object will be a null object.</p>
+        <p>When creating an object from a class structure, object creation follows these steps:</p>
+        <ol>
+            <li value="1">If the class structure has not been defined, IDL will attempt to find and call a procedure to define it automatically. If the structure is still not defined, object creation fails and issues an error.</li>
+            <li value="2">If the class structure has been defined, object creation creates an object heap variable containing a zeroed instance of the class structure.</li>
+            <li value="3">Once the new object heap variable has been created, object creation looks for a <i>method</i> function named <i>Class</i>::Init (where <i>Class</i> is the actual name of the class). If an Init method exists, it is called with the new object as its implicit SELF argument, as well as any arguments and keywords specified in the call. If the class has no Init method, the usual method-searching rules are applied to find one from a superclass.</li>
+        </ol>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>OBJ_NEW does not call all the Init methods in an object’s class hierarchy. Instead, it simply calls the first one it finds. Therefore, the Init method for a class should call the Init methods of its direct superclasses as necessary. </p>
+        <ol>
+            <li value="1">If the Init method returns true, or if no Init method exists, OBJ_NEW returns an object reference to the heap variable. If Init returns false, OBJ_NEW destroys the new object and returns the NULL object reference, indicating that the operation failed. Note that in this case the Cleanup method is not called. </li>
+        </ol>
+        <p>See <a href="../Reference Material/O/OBJ_NEW.htm#O_828691053_889454">OBJ_NEW</a> for further details.</p>
+        <h3>The OBJARR Function</h3>
+        <p>Use the <a name="kanchor4882"></a>OBJARR function to create an array of objects of up to eight dimensions. Every element of the array created by OBJARR is set to the null object. For example, the following command creates a 3 x 3 element object reference array with each element containing the null object reference:</p>
+        <p class="Code">obj2 = OBJARR(3, 3)</p>
+        <p>See <a href="../Reference Material/O/OBJARR.htm#O_828691053_889533">OBJARR</a>for further details.</p>
+        <h2 class="API"><a name="objects_custom_2374809850_1030400"></a><a name="objects_custom_2374809850_14662"></a>Destruction</h2>
+        <p>Call the object's Cleanup method or use the OBJ_DESTROY procedure to  destroy an object. If the object’s class or one of its superclasses supplies a procedure method named Cleanup, that method is called and  all arguments and keywords passed by the user are passed to it. The  Cleanup method should perform any required cleanup on the object and  return. Whether a Cleanup method actually exists or not, IDL will  destroy the heap variable representing the object and return.</p>
+        <p>The Cleanup method <i>cannot be called outside an object-destruction operation</i>. This means that (unlike most object methods) you cannot call the Cleanup method on an object directly. You can, however, call an object's Cleanup method from within the Cleanup method of a subclass of that object.</p>
+        <p>See <a href="../Reference Material/O/OBJ_DESTROY.htm#O_828691053_889421">OBJ_DESTROY</a> for further details.</p>
+        <h3>Implicit Calling of Superclass Cleanup Methods</h3>
+        <p>If you create an object class and do not implement a <a name="kanchor4883"></a>Cleanup method for it, when you destroy an object of your class IDL will call the Cleanup method of the class’ superclass, if it has one.</p>
+        <p>If your class has multiple superclasses, on destruction IDL will attempt to call the Cleanup method of the first superclass. If that superclass has a Cleanup method, IDL will execute it and then destroy the object. If the first superclass does not have a Cleanup method, IDL will proceed through the list of superclasses in the order they are specified in the class structure definition statement until it either finds a Cleanup method to execute or reaches the end of the list.</p>
+        <p>To ensure that Cleanup methods from multiple superclasses are called, create a Cleanup method for your class and call the superclass’ Cleanup methods explicitly.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: P">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>PREF_COMMIT</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="P_list.htm">Routines: P</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">PREF_COMMIT</span>
+        </div>
+        <h1 class="Routine"><a name="P_817877613_1140982"></a><a name="P_817877613_27547"></a><a name="kanchor2078"></a>PREF_COMMIT</h1>
+        <p>The <a href="PREF_SET.htm#P_817877613_1141288">PREF_SET</a> procedure is used to set new values for IDL preferences. However, a preference value set in this way does not immediately take effect. Rather, it is put into a pending state, in which IDL remembers the change, but does not use it. To make a pending preference value take effect, IDL must commit it. To commit a preference, IDL takes the following steps:</p>
+        <ol>
+            <li value="1">Writes a new user preference file that merges the new changes with the previously specified preference values.</li>
+            <li value="2">Updates its internal state to make the pending values current.</li>
+            <li value="3">Notifies the various parts of IDL that depend on the altered preference so that they can adapt to the change. </li>
+        </ol>
+        <p>There are two ways to commit a preference:</p>
+        <ul>
+            <li value="1"><b>PREF_COMMIT</b> — used to commit preferences already in the pending state</li>
+            <li value="2"><b>COMMIT keyword to PREF_SET</b> — used to set and commit a specific preference in a single operation</li>
+        </ul>
+        <p>The pending state is useful for applications that let a user manipulate preferences. In such an application, the user can make changes, but those changes can be discarded without taking effect if the user clicks the <b>Cancel</b> button. <a href="PREF_SET.htm#P_817877613_1141288">PREF_SET</a> can be used to make the user’s changes. If the user clicks <b>Done</b> to confirm the changes, PREF_COMMIT is used to make them permanent. Otherwise, they are discarded by using the <a href="#P_817877613_1145261" class="selected">RESET</a> keyword. The pending state lifts the burden of tracking user changes from the high-level application and greatly simplifies its implementation.</p>
+        <p>For more information on IDL’s preferences, see <a href="../../Creating IDL Programs/Appendices/About_IDL_System_Prefere.htm#preferences_2247882535_1013589">About IDL System Preferences</a>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Authors of IDL applications should not use this routine in their code to make preference changes. See <a href="../../Creating IDL Programs/Appendices/About_IDL_System_Prefere.htm#preferences_2247882535_1032184">Using Preference Etiquette</a> for more information.</p>
+        <h2 class="API">Examples</h2>
+        <p>To commit all preferences with pending values:</p>
+        <p class="Code">PREF_COMMIT</p>
+        <p>To commit only the IDL_PATH preference (which supplies the value of the !PATH system variable), while leaving all other preferences in their current state:</p>
+        <p class="Code">PREF_COMMIT, 'IDL_PATH'</p>
+        <p>To discard the currently pending value for IDL_PATH:</p>
+        <p class="Code">PREF_COMMIT, /RESET, 'IDL_PATH'</p>
+        <p>To restore the !PATH system variable to the value given by the IDL_PATH preference (without discarding the pending value, if any):</p>
+        <p class="Code">PREF_COMMIT, /RESIGNAL, 'IDL_PATH'</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax">PREF_COMMIT [,&#160;<i>PreferenceName</i>] [,&#160;/<a href="#P_817877613_1145261" class="selected">RESET</a>] [,&#160;/<a href="#P_817877613_1145264" class="selected">RESIGNAL</a>]</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">PreferenceName</h3>
+        <p>A string scalar or array that supplies the names of the preferences to commit. If no arguments are supplied, all preferences currently in the pending state are committed. Any specified preferences that are not in the pending state are quietly ignored.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="P_817877613_1145261"></a><a name="P_817877613_86568"></a>RESET</h3>
+        <p>Set this keyword to have PREF_COMMIT discard the pending values, if any, for the specified preferences. The preferences leave the pending state and retain their previous value.</p>
+        <h3 class="Keyword"><a name="P_817877613_1145264"></a><a name="P_817877613_32731"></a>RESIGNAL</h3>
+        <p>Set this keyword to have PREF_COMMIT not check or alter the pending state of the specified preferences. Instead, the procedure behaves as if the current value of the preference had just been committed and signals the part of IDL that uses that preference to reset itself.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="PREF_GET.htm#P_817877613_1141264">PREF_GET</a>, <a href="PREF_SET.htm#P_817877613_1141288">PREF_SET</a>, <a href="../../Creating IDL Programs/Appendices/About_IDL_System_Prefere.htm#preferences_2247882535_1013589">About IDL System Preferences</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

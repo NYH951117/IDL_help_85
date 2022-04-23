@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-conditions="" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: T">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>TIC</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="T_list.htm">Routines: T</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">TIC</span>
+        </div>
+        <h1 class="Routine"><a name="kanchor2541"></a>TIC</h1>
+        <p>The TIC and TOC routines work together to allow you to check the running time of your IDL programs. The TIC routine stores the initial system time. TOC records the final system time, then calculates and displays the total elapsed time (final time - system time). </p>
+        <p>You may call the TIC routine  as either a procedure or a function. When you call TIC as a procedure, the TIC and TOC routines print out the elapsed time between the calls. When you call TIC as a function, the TOC routine measures the elapsed time for that specific call. This allows you to nest the TIC and TOC calls to measure the time within subroutines and loops.</p>
+        <h2 class="API">Example</h2>
+        <p>Following is a simple example of using TIC and TOC to measure the length of time it takes IDL to create a plot. Copy and paste  the following to the IDL command line:</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Calculate the length of time needed to graph a sinewave</p>
+        <p class="Code">TIC</p>
+        <p class="Code">sw = SIN(2.0*FINDGEN(200)*!PI/25.0) * EXP(-0.02*FINDGEN(200))</p>
+        <p class="Code">p1 = PLOT(sw, '-r')</p>
+        <p class="Code">TOC</p>
+        <p>IDL prints:</p>
+        <p class="Code">% Time elapsed: 0.94500017 seconds.</p>
+        <p>Now, call TIC as a function, to measure the time for nested subroutines. Be sure to copy and paste all of the lines at the same time.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Grab the initial system time with TIC</p>
+        <p class="Code">TIC </p>
+        <p class="Code">for i=0, 3 do begin &amp; $</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">; Start another clock named FFT</p>
+        <p class="Code_Indented">; combined with the iteration number</p>
+        <p class="Code_Indented">clock = TIC('FFT' + STRTRIM(i, 2)) &amp; $</p>
+        <p class="Code_Indented">r = FFT(RANDOMU(seed, 1729, 1729)) &amp; $</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; For each iteration grab the end system time, </p>
+        <p class="Code_Indented">; then calculate and and print out the elapsed time </p>
+        <p class="Code_Indented">TOC, clock &amp; $</p>
+        <p class="Code">endfor</p>
+        <p class="Code">; Grab the final system  for the entire loop</p>
+        <p class="Code">; and calculate and print the total elapsed time</p>
+        <p class="Code">TOC </p>
+        <p>IDL prints:</p>
+        <p class="Code">% Time elapsed FFT0: 1.0139999 seconds.</p>
+        <p class="Code">% Time elapsed FFT1: 0.98699999 seconds.</p>
+        <p class="Code">% Time elapsed FFT2: 1.0000000 seconds.</p>
+        <p class="Code">% Time elapsed FFT3: 0.99300003 seconds.</p>
+        <p class="Code">% Time elapsed: 4.9909999 seconds.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax">TIC [, /<a href="#PROFILER" class="selected">PROFILER</a>] </p>
+        <p><i>or</i>
+        </p>
+        <p class="Syntax"><i>ClockName</i> = TIC(  [<i>Name</i>] [, /<a href="#PROFILER" class="selected">PROFILER</a>] )</p>
+        <h2 class="API">Return Value</h2>
+        <p>If TIC is called as a function, the return value (<i>ClockName</i>) is an identifier associated with that particular call to TIC. This identifier can then be passed into the TOC routine to print out the elapsed time for that particular "clock."</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Name</h3>
+        <p>Set this optional argument to a string giving a name to be associated with this particular call to TIC. This name will then be printed out when the TOC routine is called using the <i>ClockName</i>. If Name is not specified then IDL uses a  null string in its place.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="PROFILER"></a>PROFILER</h3>
+        <p>Set this keyword to turn on the <a href="../P/PROFILER.htm">PROFILER</a> for all user and system routines. Before turning on PROFILER, IDL resets any previous profiling results. The PROFILER will automatically be turned off when you call the TOC routine  with no arguments. See <a href="TOC.htm">TOC</a> for an example of using the PROFILER.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Because the PROFILER introduces an overhead to all IDL function calls, the elapsed times will be slightly longer when PROFILER is on. You should also make sure to call the TOC routine with no arguments to disable profiling.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>If you are using the IDL Workbench, IDL will automatically refresh the <a href="../../DevelopmentEnvironment/QuickReference/ProfilerView.htm">Profiler View</a> when TOC is called.</p>
+        <h2 class="API">Version History</h2>
+        <table style="">
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">8.2.2</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">Introduced</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="../P/PROFILER.htm">PROFILER</a>, <a href="TOC.htm">TOC</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>CMYK_CONVERT</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">CMYK_CONVERT</span>
+        </div>
+        <h1 class="Routine"><a name="C_854643309_1297810"></a><a name="kanchor267"></a><a name="C_854643309_78940"></a><a name="kanchor268"></a>CMYK_CONVERT</h1>
+        <p>The CMYK_CONVERT procedure converts from the CMYK (cyan-magenta-yellow-black) color model to RGB (red-green-blue) and vice versa.</p>
+        <p>The procedure uses the following method to convert from CMYK to RGB:</p>
+        <p>&#160;&#160;&#160;R = (255 - C) (1 - K/255)</p>
+        <p>&#160;&#160;&#160;G = (255 - M) (1 - K/255)</p>
+        <p>&#160;&#160;&#160;B = (255 - Y) (1 - K/255)</p>
+        <p>To convert from RGB to CMYK, the procedure uses the following method:</p>
+        <p>&#160;&#160;&#160;K = minimum of (R, G, B)</p>
+        <p>&#160;&#160;&#160;C = 255 [1 - R/(255 - K)]   (if K=255 then C=0)</p>
+        <p>&#160;&#160;&#160;M = 255 [1 - G/(255 - K)]  (if K=255 then M=0)</p>
+        <p>&#160;&#160;&#160;Y = 255 [1 - B/(255 - K)]  (if K=255 then Y=0)</p>
+        <p>In both cases the CMYK and RGB values are assumed to be in the range 0 to 255.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>There is no single method that is used for CMYK/RGB conversion. The method used by CMYK_CONVERT is the simplest and, depending on printing inks and screen colors, might not be optimal in all situations.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>cmyk_convert.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API">Example</h2>
+        <p>This example converts an image file’s RGB data to CMYK, displays the image using different color tables, converts CMYK back to RGB, and displays the image again.</p>
+        <p class="Code">file = FILEPATH( 'rose.jpg', SUBDIRECTORY=['examples','data'] )<br />READ_JPEG, file, image<br />red = REFORM( image[0,*,*] )<br />green = REFORM( image[1,*,*] )<br />blue = REFORM( image[2,*,*] )<br /><br />; Convert from RGB to CMYK<br />CMYK_CONVERT, c, m, y, k, red, green, blue, /TO_CMYK<br /><br />; Display using cyan (green + blue) color table<br />IIMAGE, GREEN=c, BLUE=c, VIEW_GRID=[2,3], DIM=[600,800]<br />; Display using magenta (red + blue) color table<br />IIMAGE, RED=m, BLUE=m, /VIEW_NEXT<br />; Display using yellow (red + green) color table<br />IIMAGE, RED=y, GREEN=y, /VIEW_NEXT<br />; Display using inverted grayscale (like ink)<br />IIMAGE, 255b-k, /VIEW_NEXT<br /><br />; Convert from CMYK back to RGB<br />CMYK_CONVERT, c, m, y, k, r, g, b<br />IIMAGE, image, /VIEW_NEXT<br />IIMAGE, RED=r, GREEN=g, BLUE=b, /VIEW_NEXT</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax">CMYK_CONVERT, C, M, Y, K, R, G, B [,&#160;/<a href="#C_854643309_1304327" class="selected">TO_CMYK</a>]</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">C, M, Y, K</h3>
+        <p>To convert from CMYK to RGB, set these arguments to scalars or arrays containing the CMYK values in the range 0-255. To convert from RGB to CMYK (with the <a href="#C_854643309_1304327" class="selected">TO_CMYK</a> keyword set), set these arguments to named variables that will contain the converted values.</p>
+        <h3 class="Argument">R, G, B</h3>
+        <p>To convert from CMYK to RGB, set these arguments to named variables that will contain the converted values. To convert from RGB to CMYK (with the <a href="#C_854643309_1304327" class="selected">TO_CMYK</a> keyword set), set these arguments to scalars or arrays containing the RGB values.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="C_854643309_1304327"></a><a name="C_854643309_64345"></a>TO_CMYK</h3>
+        <p>If this keyword is set, the values contained in the RGB arguments are converted to CMYK. The default is to convert from CMYK to RGB.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="COLOR_QUAN.htm#C_854643309_676152">COLOR_QUAN</a>
+        </p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

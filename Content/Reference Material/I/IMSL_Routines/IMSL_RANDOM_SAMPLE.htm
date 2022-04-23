@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_RANDOM_SAMPLE</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="IMSL_RANDOM_SAMPLE"></a>IMSL_RANDOM_SAMPLE</h1>
+        <p>The IMSL_RANDOM_SAMPLE function generates a simple pseudorandom sample from a finite population.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>Routine IMSL_RANDOM_SAMPLE generates a pseudorandom sample from a given population, without replacement, using an algorithm due to McLeod and Bellhouse (1983).</p>
+        <p>The first <i>nsamp</i> items in the population are included in the sample. Then, for each successive item from the population, a random item in the sample is replaced by that item from the population with probability equal to the sample size divided by the number of population items that have been encountered at that time.</p>
+        <h2 class="API">Examples</h2>
+        <p>For additional information on using IMSL_RANDOM_SAMPLE, see <a href="#Additional_Examples" class="selected">Additional Examples</a>.</p>
+        <h3>Example 1</h3>
+        <p>In this example, IMSL_RANDOM_SAMPLE is used to generate a sample of size 5 from a population stored in the matrix population.</p>
+        <p class="Code">IMSL_RANDOMOPT, Set = 123457</p>
+        <p class="Code">pop = IMSL_STATDATA(2)</p>
+        <p class="Code">samp = IMSL_RANDOM_SAMPLE(5, pop)</p>
+        <p class="Code">PM, samp</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">1764.00 36.4000</p>
+        <p class="Code">1828.00 62.5000</p>
+        <p class="Code">1923.00 5.80000</p>
+        <p class="Code">1773.00 34.8000</p>
+        <p class="Code">1769.00 106.100</p>
+        <h2 class="API">Syntax</h2>
+        <p><i>Result</i> = IMSL_RANDOM_SAMPLE(<i>nsamp</i>, <i>population</i> [, /ADDITIONAL_CALL] [, /DOUBLE] [, /FIRST_CALL] [, INDEX=<i>array</i>] [, NPOP=<i>value</i>] [, SAMPLE=<i>array</i>] )</p>
+        <h2 class="API">Return Value</h2>
+        <p><i>nsamp</i> by <i>nvar</i> array containing the sample, where <i>nvar</i> is the number of columns in the argument population.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">nsamp</h3>
+        <p>The sample size desired.</p>
+        <h3 class="Argument">population</h3>
+        <p>A one or two dimensional array containing the population to be sampled. If either of the keywords FIRST_CALL or ADDITIONAL_CALL are specified, then population contains a different part of the population on each invocation, otherwise population contains the entire population.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">ADDITIONAL_CALL</h3>
+        <p>If present and nonzero, then this is an additional invocation of IMSL_RANDOM_SAMPLE, and updating for the subpopulation in population is performed. Keywords Index, NPOP, and Sample are required if ADDITIONAL_CALL is set.</p>
+        <p>It is not necessary to know the number of items in the population in advance. NPOP is used to cumulate the population size and should not be changed between calls to IMSL_RANDOM_SAMPLE. See Example 2.</p>
+        <h3 class="Keyword">DOUBLE</h3>
+        <p>If present and nonzero, double precision is used.</p>
+        <h3 class="Keyword">FIRST_CALL</h3>
+        <p>If present and nonzero, then this is the first invocation with this data; additional calls to IMSL_RANDOM_SAMPLE may be made to add to the population. Additional calls should be made using the keyword ADDITIONAL_CALL. Keywords Index and NPOP are required if FIRST_CALL is set. See Example 2.</p>
+        <h3 class="Keyword">INDEX</h3>
+        <p>A one-dimensional array of length <i>nsamp</i> containing the indices of the sample in the population. Output if keyword FIRST_CALL is used. Input/Output if keyword ADDITIONAL_CALL is used.</p>
+        <h3 class="Keyword">NPOP</h3>
+        <p>The number of items in the population. Output if keyword FIRST_CALL is used. Input/Output if keyword ADDITIONAL_CALL is used.</p>
+        <h3 class="Keyword">SAMPLE</h3>
+        <p>An array of size <i>nsamp</i> by <i>nvar</i> containing the sample. Initially, the result of calling IMSL_RANDOM_SAMPLE with keyword FIRST_CALL is used for Sample.</p>
+        <h2 class="API"><a name="Additional_Examples"></a>Additional Examples</h2>
+        <h3>Example 2</h3>
+        <p>Routine IMSL_RANDOM_SAMPLE is now used to generate a sample of size 5 from the same population as in the example above except the data are input to IMSL_RANDOM_SAMPLE one observation at a time. This is the way IMSL_RANDOM_SAMPLE may be used to sample from a file on disk or tape.</p>
+        <p>Notice that the number of records need not be known in advance.</p>
+        <p class="Code">IMSL_RANDOMOPT, SET = 123457</p>
+        <p class="Code">pop = IMSL_STATDATA(2)</p>
+        <p class="Code">samp = IMSL_RANDOM_SAMPLE(5, pop(0, *), /FIRST_CALL, INDEX = ii, $</p>
+        <p class="Code_Indented">NPOP=np)</p>
+        <p class="Code">FOR i=1,175 DO samp = IMSL_RANDOM_SAMPLE(5, pop(i, *), $</p>
+        <p class="Code_Indented">/ADDITIONAL_CALL, INDEX = ii, NPOP = np, SAMPLE = samp)</p>
+        <p class="Code">PM, samp</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">1764.00 36.4000</p>
+        <p class="Code">1828.00 62.5000</p>
+        <p class="Code">1923.00 5.80000</p>
+        <p class="Code">1773.00 34.8000</p>
+        <p class="Code">1769.00 106.100</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

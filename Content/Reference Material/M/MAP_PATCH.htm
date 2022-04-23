@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: M">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>MAP_PATCH </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="M_list.htm">Routines: M</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">MAP_PATCH</span>
+        </div>
+        <h1 class="Routine"><a name="dg_routines_3604229493_891842"></a><a name="dg_routines_3604229493_32545"></a>MAP_PATCH </h1>
+        <p><a name="kanchor1778"></a><a name="kanchor1779"></a>The MAP_PATCH function warps an image (or other dataset) to the current map projection. Mapping coordinates should be setup via a call to MAP_SET before using MAP_PATCH.</p>
+        <p>MAP_PATCH works in object (data) space. It divides the input data set, <i>Image_Orig</i>, into triangular patches, either directly from the implicit rectangular grid, or by triangulating the data points on the surface of the sphere using the TRIANGULATE procedure. These triangular patches are then projected to the map plane in the image space of the destination array and then interpolated. The time required by MAP_PATCH depends mainly on the number of elements in the input array. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>MAP_PATCH is more efficient than MAP_IMAGE when the destination area is large compared to the input data set. If the converse is true, MAP_IMAGE is more efficient.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>map_patch.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_891959"></a><a name="dg_routines_3604229493_887867_PageTOC_MAP_PATCH_"></a>Examples</h2>
+        <p class="Code">; Form a 24 x 24 dataset on a sphere:<br />n = 24<br /><br />; Specify equally gridded latitudes:<br />lat = replicate(180./(n-1),n) # findgen(n) - 90<br /><br />; Specify equally gridded longitudes:<br />lon = findgen(n) # replicate(360./(n-1), n)<br /><br />; Convert to Cartesian coordinates:<br />x = cos(lon * !dtor) * cos(lat * !dtor)<br />y = sin(lon * !dtor) * cos(lat * !dtor)<br />z = sin(lat * !dtor)<br /><br />; Set interpolation function to scaled distance squared <br />; from (1,1,0):<br />f = BYTSCL((x-1)^2 + (y-1)^2 + z^2)<br /><br />; Set up projection:<br />MAP_SET, 90, 0, /STEREO, /ISOTROPIC, /HORIZ<br /><br />; Grid and display the data:<br />TV, MAP_PATCH(f, XSTART=x0, YSTART=y0), x0, y0<br /><br />; Draw gridlines over the map and image:<br />MAP_GRID<br /><br />; Draw continent outlines:<br />MAP_CONTINENTS<br /><br />; Draw a horizon line:<br />MAP_HORIZON</p>
+        <h2 class="API"><a name="dg_routines_3604229493_891872"></a><a name="dg_routines_3604229493_887822_PageTOC_MAP_PATCH_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = MAP_PATCH( <i>Image_Orig</i> [,&#160;<i>Lons</i>, <i>Lats</i>] [,&#160;<a href="#dg_routines_3604229493_891926" class="selected">LAT0</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_891929" class="selected">LAT1</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_891932" class="selected">LON0</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_891935" class="selected">LON1</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_891938" class="selected">MAX_VALUE</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_891941" class="selected">MISSING</a>=<i>value</i>] [,&#160;/<a href="#dg_routines_3604229493_891944" class="selected">TRIANGULATE</a>] [,&#160;<a href="#dg_routines_3604229493_891947" class="selected">XSIZE</a>=<i>variable</i>] [,&#160;<a href="#dg_routines_3604229493_891950" class="selected">XSTART</a>=<i>variable</i>] [,&#160;<a href="#dg_routines_3604229493_891953" class="selected">YSIZE</a>=<i>variable</i>] [,&#160;<a href="#dg_routines_3604229493_891956" class="selected">YSTART</a>=<i>variable</i>] )</p>
+        <h2 class="API"><a name="dg_routines_3604229493_891908"></a><a name="dg_routines_3604229493_98401"></a>Return Value</h2>
+        <p>Returns the image or dataset warped to the current map projection.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_891911"></a><a name="dg_routines_3604229493_887824_PageTOC_MAP_PATCH_"></a>Arguments</h2>
+        <h3 class="Argument">Image_Orig</h3>
+        <p>A one- or two-dimensional array that contains the data to be overlaid on the map. If the TRIANGULATE keyword is not set, <i>Image_Orig</i> must be a two-dimensional array. Rows and columns must be arranged in increasing longitude and latitude order. Also, the corner points of each cell must be contiguous. This means that the seam of a map must lie on a cell boundary, not in its interior, splitting the cell.</p>
+        <h3 class="Argument">Lons</h3>
+        <p>An optional vector that contains the longitude value for each column in <i>Image_Orig</i>. If <i>Lons</i> is a one-dimensional vector, longitude (<i>Image_Orig</i>[i,j]) = <i>Lons</i>[i]; if <i>Lons</i> is a two-dimensional vector, longitude (<i>Image_Orig</i>[i,j]) = <i>Lons</i>[i,j].</p>
+        <p>This argument can be omitted if the longitudes are equally-spaced and the beginning and ending longitudes are specified with the LON0 and LON1 keywords.</p>
+        <h3 class="Argument">Lats</h3>
+        <p>An optional vector that contains the latitude value for each row in <i>Image_Orig</i>. If <i>Lats</i> is a one-dimensional vector, latitude (<i>Image_Orig</i>[i,j]) = <i>Lats</i>[i]; if <i>Lats</i> is a two-dimensional vector, latitude (<i>Image_Orig</i>[i,j]) = <i>Lats</i>[i,j].</p>
+        <p>This argument can be omitted if the latitudes are equally-spaced and the beginning and ending latitudes are specified with the LAT0 and LAT1 keywords.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_891921"></a><a name="dg_routines_3604229493_887833_PageTOC_MAP_PATCH_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891926"></a><a name="dg_routines_3604229493_958167_Keywords_MAP_PATCH__"></a>LAT0</h3>
+        <p>The latitude of the first row of data. The default is -90.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891929"></a><a name="dg_routines_3604229493_887838_Keywords_MAP_PATCH__"></a>LAT1</h3>
+        <p>The latitude of the last row of data. The default is +90.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891932"></a><a name="dg_routines_3604229493_887841_Keywords_MAP_PATCH__"></a>LON0</h3>
+        <p>The longitude of the first column of data. The default is -180.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891935"></a><a name="dg_routines_3604229493_887844_Keywords_MAP_PATCH__"></a>LON1</h3>
+        <p>The longitude of the last column of data. The default is 180 - (360/<i>number&#160;of&#160;rows</i>)</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891938"></a><a name="dg_routines_3604229493_928019_Keywords_MAP_PATCH__"></a>MAX_VALUE</h3>
+        <p>The largest data value to be warped. Values in <i>Image_Orig</i> greater than this value are considered missing. Pixels in the output image that correspond to these missing values are set to the value specified by the MISSING keyword.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891941"></a><a name="dg_routines_3604229493_887847_Keywords_MAP_PATCH__"></a>MISSING</h3>
+        <p>Set this keyword to a value to be used for areas outside the valid map coordinates (i.e., the “background color”). If the current plotting device is PostScript, the default is 255 (white). Otherwise, the default is 0 (usually black).</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891944"></a><a name="dg_routines_3604229493_887853_Keywords_MAP_PATCH__"></a>TRIANGULATE</h3>
+        <p>Set this keyword to convert the input data to device space and triangulate them. This keyword must be specified if the connectivity of the data points is not rectangular and monotonic in device space.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891947"></a><a name="dg_routines_3604229493_887856_Keywords_MAP_PATCH__"></a>XSIZE</h3>
+        <p>Set this keyword to a named variable in which the width of the output image is returned, in graphic coordinate units. If the current graphics device has scalable pixels (PostScript, for example), the values returned by XSIZE and YSIZE should be passed to the TV procedure.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891950"></a><a name="dg_routines_3604229493_887859_Keywords_MAP_PATCH__"></a>XSTART</h3>
+        <p>Set this keyword to a named variable in which the X coordinate where the left edge of the image should be placed on the screen is returned.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891953"></a><a name="dg_routines_3604229493_887862_Keywords_MAP_PATCH__"></a>YSIZE</h3>
+        <p>Set this keyword to a named variable in which the height of the output image is returned, in graphic coordinate units. If the current graphics device has scalable pixels (PostScript, for example), the values returned by XSIZE and YSIZE should be passed to the TV procedure.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_891956"></a><a name="dg_routines_3604229493_887865_Keywords_MAP_PATCH__"></a>YSTART</h3>
+        <p>Set this keyword to a named variable in which the Y coordinate where the bottom edge of the image should be placed on the screen is returned.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_891962"></a><a name="dg_routines_3604229493_887880_PageTOC_MAP_PATCH_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dg_routines_3604229493_891970"></a><a name="dg_routines_3604229493_972908_PageTOC_MAP_PATCH_"></a>See Also</h2>
+        <p><a href="MAP_CONTINENTS_Procedure.htm#dg_routines_3604229493_883696">MAP_CONTINENTS Procedure</a>, <a href="MAP_GRID_Procedure.htm">MAP_GRID Procedure</a>, <a href="MAP_IMAGE.htm">MAP_IMAGE</a>, <a href="MAP_SET_Procedure.htm#dg_routines_3604229493_892044">MAP_SET Procedure</a></p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

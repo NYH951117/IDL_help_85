@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Arrays">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Creating Arrays</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Arrays.htm">Arrays</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Creating Arrays</span>
+        </div>
+        <h1><a name="kanchor4438"></a>Creating Arrays</h1>
+        <p>IDL provides a variety of mechanisms to create arrays. IDL arrays can have up to 8 dimensions. Each dimension can have a length between 1 and the maximum integer value (either a 32-bit integer for 32-bit IDL or a 64-bit integer for 64-bit IDL).</p>
+        <h2>Array Concatenation</h2>
+        <p>Using square brackets, you can combine scalars or arrays into a single array. For example:</p>
+        <p class="Code">a = [1,2,3,4,5]</p>
+        <p class="Code">b = [6,7,8,9,10]</p>
+        <p class="Code">c = [a, b]</p>
+        <p class="Code">print, c</p>
+        <p>IDL prints:</p>
+        <p class="Code">1       2       3       4       5       6       7       8       9      10</p>
+        <p>You can also mix scalars and arrays as long as the arrays are one-dimensional vectors:</p>
+        <p class="Code">d = [c, 11, a + 11, 17, 18, 19, 20, c + 20]</p>
+        <p class="Code">print, d</p>
+        <p>IDL prints:</p>
+        <p class="Code"> 1       2       3       4       5       6       7       8       9      10 11      12      13      14      15      16      17      18      19      20 21      22      23      24      25      26      27      28      29      30</p>
+        <p>To concatenate second and third levels, you can nest the brackets. For example, <code>[[1,2],[3,4]]</code> is a 2-element by 2-element array with the first row containing 1 and 2 and the second row containing 3 and 4. The operands must have compatible dimensions: All dimensions must be equal except the dimension that is to be concatenated. For example:</p>
+        <p class="Code">; For concatenation to work, each row must have the same # of elements (5)</p>
+        <p class="Code">kernel1 = [[1,2,4,2,1], [2,4,8,4,2], [1,2,4,2,1]]</p>
+        <p class="Code">help, kernel1</p>
+        <p class="Code">print, kernel1</p>
+        <p>IDL prints:</p>
+        <p class="Code">KERNEL1          INT       = Array[5, 3]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">1       2       4       2       1</p>
+        <p class="Code">2       4       8       4       2</p>
+        <p class="Code">1       2       4       2       1</p>
+        <p>Now we can combine this kernel array with another array, along either the first or second dimension. The level of bracket nesting determines which dimension will be concatenated. For example:</p>
+        <p class="Code">kernel2 = [[-1,0,2,0,-1], [1,2,4,2,1], [-1,0,2,0,-1]]</p>
+        <p class="Code">kernelWide = [kernel1, kernel2] ; concatenate along first dimension</p>
+        <p class="Code">kernelTall = [[kernel1], [kernel2]] ; concatenate along second dimension</p>
+        <p class="Code">help, kernelWide</p>
+        <p class="Code">help, kernelTall</p>
+        <p>IDL&#160;prints:</p>
+        <p class="Code">KERNELWIDE      INT       = Array[10, 3]</p>
+        <p class="Code">KERNELTALL      INT       = Array[5, 6]</p>
+        <h3>Data Type for Array Concatenation</h3>
+        <p>When you use array concatenation, IDL will automatically choose the data type for the final array based upon the data types of the individual elements. Any elements which are not of the correct data type will be converted. For example:</p>
+        <p class="Code">a = [0.5, 1, 2, 3, 4] ; float with integers</p>
+        <p class="Code">help, a</p>
+        <p class="Code">b = [a, 5d] ; append a double-precision value</p>
+        <p class="Code">help, b</p>
+        <p>IDL&#160;prints:</p>
+        <p class="Code">A               FLOAT     = Array[5]</p>
+        <p class="Code">B               DOUBLE    = Array[6]</p>
+        <p>See <a href="Data_Type_and_Structure.htm">Data Type and Structure of Expressions</a> for the rules used when promoting types.</p>
+        <h2>Array Creation Functions</h2>
+        <p>The IDL&#160;functions for array creation fall into two groups:</p>
+        <ul>
+            <li value="1">The "*ARR" group (such as <a href="../../Reference Material/F/FLTARR.htm">FLTARR</a>) which are used to construct arrays filled with zero values, and</li>
+            <li value="2">The "*INDGEN" group (such as <a href="../../Reference Material/F/FINDGEN.htm">FINDGEN</a>) which are used to construct arrays filled with increasing (or decreasing) values.</li>
+        </ul>
+        <p>The prefix in front of each function determines the result type. For example BYTARR returns byte arrays, while UINTARR </p>
+        <p>All of these functions have the same general syntax. For example:</p>
+        <ul>
+            <li value="1"><i>Result</i> = FLTARR( <i>D</i><sub class="italic">1</sub><i>[</i>, ..., <i>D</i><sub class="italic">8</sub><i>]</i> [,&#160;/NOZERO] )</li>
+            <li value="2"><i>Result</i> = FINDGEN( <i>D</i><sub class="italic">1 </sub>[, ...,<i> D</i><sub class="italic">8</sub>] [, INCREMENT=<i>value</i>] [,&#160;START=<i>value</i>])</li>
+        </ul>
+        <p class="Syntax">Here, the <i>D</i><sub class="italic">1</sub><i>[</i>, ..., <i>D</i><sub class="italic">8</sub><i>]</i> represent the size of each dimension of the result. You can also specify the dimensions by providing an array for the first argument.</p>
+        <p class="Syntax">For the *ARR family, you can use the NOZERO keword to avoid setting each element to zero.</p>
+        <p class="Syntax">For the *INDGEN family, you can use the START and INCREMENT keywords to construct arrays that start at a non-zero value and have a spacing that is greater or smaller than 1.</p>
+        <p class="Syntax">For example:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Command</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Result</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep" style="font-family: monospace;">
+                        <p>print, FLTARR(5)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd" style="font-family: monospace;">
+                        <p>0.000000     0.000000     0.000000     0.000000     0.000000</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep" style="font-family: monospace;">
+                        <p>help, FLTARR(360, 180, 10)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd" style="font-family: monospace;">
+                        <p>&lt;Expression&gt;    FLOAT     = Array[360, 180, 10]</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep" style="font-family: monospace;">
+                        <p>print, INDGEN(10)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd" style="font-family: monospace;">
+                        <p>0       1       2       3       4       5       6       7       8       9</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep" style="font-family: monospace;">
+                        <p>print, MAX(LINDGEN(1000, 100))</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd" style="font-family: monospace;">
+                        <p> 99999</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep" style="font-family: monospace;">
+                        <p>print, INDGEN(5, START=10, INCREMENT=5)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd" style="font-family: monospace;">
+                        <p>10      15      20      25      30</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep" style="font-family: monospace;">
+                        <p>print, INDGEN(10, INCREMENT=0.5)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd" style="font-family: monospace;">
+                        <p>0       0       1       1       2       2       3       3       4       4 </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep" style="font-family: monospace;">print, FINDGEN(10, INCREMENT=0.5)
+</td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd" style="font-family: monospace;">     0.000000     0.500000      1.00000      1.50000      2.00000<br />    2.50000      3.00000      3.50000      4.00000      4.50000
+</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Syntax">You can also use the following routines to create more specialized arrays:</p>
+        <ul>
+            <li value="1"><a href="../../Reference Material/I/IDENTITY.htm">IDENTITY </a>- Returns an identity array (an array with ones along the main diagonal and zeros elsewhere).</li>
+            <li value="2"><a href="../../Reference Material/M/MAKE_ARRAY.htm">MAKE_ARRAY </a> - Returns an array of the specified type, dimensions, and initialization.</li>
+            <li value="3"><a href="../../Reference Material/R/REPLICATE.htm">REPLICATE </a>- Creates an array of given dimensions, filled with specified value.</li>
+            <li value="4"><a href="../../Reference Material/T/TIMEGEN.htm">TIMEGEN </a>- Returns an array of  Julian dates and times.</li>
+        </ul>
+        <p class="Syntax">See <a href="../../Reference Material/Functional List of IDL Routines/Array_Creation.htm">Array Creation</a> for a complete list of routines.</p>
+        <h2>Colon Operator</h2>
+        <p>You can use the colon ":" operator to construct arrays with increasing or decreasing values. The colon operator provides a more readable, short-hand syntax for the *<a href="../../Reference Material/I/INDGEN.htm">INDGEN</a> family of functions. </p>
+        <p>The operator has the following syntax:</p>
+        <p><i>Result</i> = [<i>start</i>: <i>finish</i>]</p>
+        <p>or</p>
+        <p><i>Result</i> = [<i>start</i>: <i>finish</i>: <i>increment</i>]</p>
+        <p>With the first form (without an increment), the increment is assumed to be 1 if <i>finish</i> is greater than or equal to <i>start</i>, or -1 if <i>finish</i> is less than <i>start</i>. For example,</p>
+        <p class="Code">PRINT, [0:9]</p>
+        <p class="Code">PRINT, [9:0]</p>
+        <p>IDL prints:</p>
+        <p class="Code">0       1       2       3       4       5       6       7       8       9</p>
+        <p class="Code">9       8       7       6       5       4       3       2       1       0</p>
+        <p>With the second form (with an increment), you are responsible for making sure that the <i>increment</i> has the correct sign. For example, if <i>finish</i> is less than <i>start</i> then your <i>increment</i> should be negative.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You will get a runtime error if <i>increment</i> is zero or is the wrong sign.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If any of the arguments is equal to <a href="The_Null_Variable.htm">!NULL</a> the result will also be !NULL.</p>
+        <h3>Data Type for Array Concatenation</h3>
+        <p>When you use the colon operator, IDL will automatically choose the data type for the final array based upon the data types of the arguments. For example:</p>
+        <p class="Code">a = [0: 1: 0.1] ; integers with a float stride</p>
+        <p class="Code">HELP, a</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">b = [0L: 10: 2] ; one of the integers is a long</p>
+        <p class="Code">HELP, b</p>
+        <p>IDL&#160;prints:</p>
+        <p class="Code">A               FLOAT     = Array[11]</p>
+        <p class="Code">B               LONG   = Array[6]</p>
+        <p>See <a href="Data_Type_and_Structure.htm">Data Type and Structure of Expressions</a> for the rules used when promoting types.</p>
+        <h3>Examples</h3>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">INDGEN Command</th>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Colon Operator</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Result</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep" style="font-family: monospace;">INDGEN(10)</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep" style="font-family: monospace;">
+                        <p>[0:9]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd" style="font-family: monospace;">
+                        <p>0       1       2       3       4       5       6       7       8       9</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep" style="font-family: monospace;">9 - INDGEN(10)</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep" style="font-family: monospace;">
+                        <p>[9:0]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd" style="font-family: monospace;">
+                        <p>9       8       7       6       5       4       3       2       1       0</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep" style="font-family: monospace;">INDGEN(10)</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep" style="font-family: monospace;">
+                        <p>[0:9:1]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd" style="font-family: monospace;">
+                        <p>0       1       2       3       4       5       6       7       8       9</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep" style="font-family: monospace;">9 - INDGEN(10)</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep" style="font-family: monospace;">
+                        <p>[9:0:-1]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd" style="font-family: monospace;">
+                        <p>9       8       7       6       5       4       3       2       1       0</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep" style="font-family: monospace;">10 + 5*INDGEN(5)</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep" style="font-family: monospace;">
+                        <p>[10:30:5]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd" style="font-family: monospace;">
+                        <p> 10      15      20      25      30</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep" style="font-family: monospace;">0.5*FINDGEN(7)</td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep" style="font-family: monospace;">
+                        <p>[0:3:0.5]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd" style="font-family: monospace;">
+                        <p>0.0 0.5 1.0 1.5 2.0 2.5 3.0</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>You can use the colon operator anywhere that you use an IDL&#160;expression. For example, you could combine array concatenation with the colon operator:</p>
+        <p class="Code">arr = [[1:5], [6:10], 11, [11:16], 17, 18, 19, 20, [21:30]]</p>
+        <p class="Code">HELP, arr</p>
+        <p>IDL prints:</p>
+        <p class="Code">ARR               INT       = Array[31]</p>
+        <p>You can create two and three-dimensional arrays by combining the colon operator with array concatenation. For example:</p>
+        <p class="Code">a = [[10:19], [20:29], [30:39]]</p>
+        <p class="Code">HELP, a</p>
+        <p class="Code">PRINT, a</p>
+        <p>IDL prints:</p>
+        <p class="Code">A               INT       = Array[10, 3]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">10 11 12 13 14 15 16 17 18 19</p>
+        <p class="Code">20 21 22 23 24 25 26 27 28 29</p>
+        <p class="Code">30 31 32 33 34 35 36 37 38 39</p>
+        <p>You can also use the colon operator as the argument in a <a href="../../Reference Material/F/FOREACH.htm">FOREACH</a> statement:</p>
+        <p class="Code">FOREACH x,[0:1:0.2] DO PRINT, x</p>
+        <p>IDL prints:</p>
+        <p class="Code">0.000000</p>
+        <p class="Code">0.200000</p>
+        <p class="Code">0.400000</p>
+        <p class="Code">0.600000</p>
+        <p class="Code">0.800000</p>
+        <p class="Code">1.00000</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

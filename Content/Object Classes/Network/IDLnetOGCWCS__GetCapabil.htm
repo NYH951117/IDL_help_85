@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|Network Object Classes|IDLnetOGCWCS">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLnetOGCWCS::GetCapabilities</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/NoLines.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_network.htm">Network Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLnetOGCWCS::GetCapabilities</span>
+        </div>
+        <h1 class="ObjMethod"><a name="objects_network_1009015_1384972"></a><a name="objects_network_1009015_27109"></a>I<a name="kanchor4142"></a>DLnetOGCWCS::GetCapabilities</h1>
+        <p>The IDLnetOGCWCS::GetCapabilities function method retrieves an XML file containing coverage offering briefs from a remote OGC WCS server, writes the file to disk, and parses the file contents before returning. The XML file is written to disk according to the <a href="IDLnetOGCWCS_Properties.htm#objects_network_1009015_1383772">CAPABILITIES_FILENAME</a> property, and will be overwritten if this property value remains unchanged between GetCapabilities requests. </p>
+        <p>You can parse the contents of an existing XML file by setting the <a href="#objects_network_1009015_1385052" class="selected">FROM_FILE</a> keyword. This avoids having to download the same information as that which exists on disk.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The <a href="IDLnetOGCWCS_Properties.htm#objects_network_1009015_1384457">URL_PATH</a> and <a href="IDLnetOGCWCS_Properties.htm#objects_network_1009015_1384418">URL_HOSTNAME</a> properties must be set before requesting information from a remote WCS server. You can either set these properties manually or pass a URL to the <a href="IDLnetOGCWCS__ParseUrl.htm#objects_network_1009015_1386464">IDLnetOGCWCS::ParseUrl</a> method prior to making a request. If you are dealing with a proxy server, you must also set the <a href="IDLnetOGCWCS_Properties.htm#objects_network_1009015_1384151">PROXY_HOSTNAME</a> and <a href="IDLnetOGCWCS_Properties.htm#objects_network_1009015_1384207">PROXY_PORT</a> properties to the correct values.</p>
+        <p>This method returns only when one of the following occur: </p>
+        <ul>
+            <li value="1">Completes retrieval and parsing of information from server</li>
+            <li value="2">Encounters an HTTP error</li>
+            <li value="3">Encounters an OGC exception</li>
+            <li value="4">Responds to a cancel request as specified in a callback return value</li>
+        </ul>
+        <p>You can implement a callback to return status information during the request by setting the <a href="IDLnetOGCWCS_Properties.htm#objects_network_1009015_1383740">CALLBACK_FUNCTION</a> property. You can also use a callback to cancel a request. See <a href="IDLnetOGCWCS.htm#objects_network_1009015_1402515">Using Callbacks with the IDLnetOGCWCS Object</a> for details. This method will throw an error if the GetCapabilities request fails. </p>
+        <p>After this method returns, you must use <a href="IDLnetOGCWCS__GetCoverag2.htm#objects_network_1009015_1386082">IDLnetOGCWCS::GetCoverageOfferingBriefs</a> to return information about the coverage offering briefs. The GetCapabilities method accesses and parses the information from the server and returns a count containing the number of briefs received, but does not provide immediate access to the detailed information. You can also use the <a href="IDLnetOGCWCS__GetService.htm#objects_network_1009015_1386264">IDLnetOGCWCS::GetServiceSection</a> method to access information about services contained in the XML file. </p>
+        <h2 class="API"><a name="objects_network_1009015_1385035"></a><a name="objects_network_1009015_20237"></a>Syntax</h2>
+        <p class="Syntax"><i>Result = Obj</i>-&gt;[<a href="IDLnetOGCWCS.htm#objects_network_1009015_1403015">IDLnetOGCWCS</a>::]GetCapabilities ([&#160;,<a href="#objects_network_1009015_1385052" class="selected">FROM_FILE</a>=<i>string</i>] [,<a href="#objects_network_1009015_1385065" class="selected">SCHEMA_CHECKING</a>=<i>value</i>] [,&#160;<a href="#objects_network_1009015_1400642" class="selected">VALIDATION_MODE</a>=<i>value</i>])</p>
+        <h2 class="API"><a name="objects_network_1009015_1385046"></a><a name="objects_network_1009015_76382"></a>Return Value</h2>
+        <p>Returns the number of coverage offering briefs received.</p>
+        <h2 class="API"><a name="objects_network_1009015_1385048"></a><a name="objects_network_1009015_43679"></a>Arguments</h2>
+        <p>None</p>
+        <h2 class="API"><a name="objects_network_1009015_1385050"></a><a name="objects_network_1009015_69580"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="objects_network_1009015_1385052"></a><a name="objects_network_1009015_35575"></a>FROM_FILE</h3>
+        <p>Set this keyword to a string containing the full path and filename of the XML file to parse for coverage offering briefs and services. This allows you use a previously downloaded capabilities file.</p>
+        <p>When you use the FROM_FILE keyword and the <a href="IDLnetOGCWCS_Properties.htm#objects_network_1009015_1383740">CALLBACK_FUNCTION</a> property is set, status information will be returned when the XML file is first accessed and when parsing has ended. The entire file contents are parsed.</p>
+        <h3 class="Keyword"><a name="objects_network_1009015_1385065"></a><a name="objects_network_1009015_52098"></a>SCHEMA_CHECKING</h3>
+        <p>XML <i>Schemas</i> describe the structure and allowed contents of an XML document. Schemas are more robust than, and are envisioned as a replacement for, Document Type Definitions (DTDs). Schemas are typically provided via a link to an external document, which must be downloaded before validation can occur.</p>
+        <p>Set this keyword to one of the following values to control the degree of error-checking the parser should perform: </p>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/NoLines.css');" class="TableStyle_NoLines" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>Turn schema checking off — the XML file is not checked for errors. Use this setting to avoid the delays associated with schema checking. This is the default.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>Check for fatal schema errors in the XML file — this setting requires more time since the XML file is checked against a WCS schema reference document accessed from the OGC server. </p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColEnd">
+                        <p>Check for fatal errors in the XML file and schema document — this setting checks both the XML file and the reference schema document for fatal errors, and requires a considerable amount of time.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Keyword"><a name="objects_network_1009015_1400642"></a><a name="objects_network_1009015_1400642_Keywords_IDLnetOGCWCS"></a>VALIDATION_MODE </h3>
+        <p>XML <i>Document Type Definitions</i> (DTDs) describe the structure and allowed contents of an XML document. A DTD can be embedded in an XML document or provided via a link to an external document, which must be downloaded before validation can occur. In most applications, <i>schemas</i> provide a more robust validation mechanism.</p>
+        <p>Set this keyword to one of the following values to control DTD-based validation of the XML document: </p>
+        <table style="margin-left: 0;margin-right: auto;caption-side: top;mc-table-style: url('../../Resources/TableStyles/NoLines.css');" class="TableStyle_NoLines" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>Turn DTD validation off — external DTDs are not loaded and the XML file is not checked for errors. Use this setting to avoid the delays associated with loading and checking an external DTD. This is the default.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>Validate only if an embedded DTD or a link to an external DTD is provided.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColEnd">
+                        <p>Always perform validation. If this option is in force and no DTD is provided, every XML element in the document will generate an error.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="objects_network_1009015_1385081"></a><a name="objects_network_1009015_65380"></a>Examples</h2>
+        <p>Parse a URL and then call GetCapabilities to return an XML file. Use a callback function to return status information about the query. See <a href="IDLnetOGCWCS__GetCoverag2.htm#objects_network_1009015_1386082">IDLnetOGCWCS::GetCoverageOfferingBriefs</a> for an example that retrieves information needed for a DescribeCoverage query.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You may need to replace the URL in the following example as there is no guarantee that the given OCG server will be available when you attempt to establish the connection. </p>
+        <p class="Code">FUNCTION ogcwcs_callback,  StatusInfo, CallbackData</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRINT, StatusInfo</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Indicate all is well.</p>
+        <p class="Code">RETURN, 1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO ogc_wcs_getcapabilities_doc</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; This example queries an OGC server at the following URL. Change </p>
+        <p class="Code">; the value of this variable to access a server of your choice.</p>
+        <p class="Code">url="http://data.exelisvis.com:80/cgi-bin" + $ </p>
+        <p class="Code">&#160;&#160;&#160;"/mapserv.exe?MAP=/OGC_Data/WCS/wcs_demo.map" + $</p>
+        <p class="Code">&#160;&#160;&#160;"&amp;SERVICE=WCS&amp;VERSION=1.0.0&amp;REQUEST=GetCapabilities"</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create object and define callback function. Adding /VERBOSE </p>
+        <p class="Code">; prints additional StatusInfo to the Output log.</p>
+        <p class="Code">oWcs = OBJ_NEW("IDLnetOGCWCS", $</p>
+        <p class="Code">   CALLBACK_FUNCTION="ogcwcs_callback", /VERBOSE)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Parse the URL.</p>
+        <p class="Code">oWcs-&gt;ParseUrl, url</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Call GetCapabilities with schema checking off since this is for </p>
+        <p class="Code">; example purposes.</p>
+        <p class="Code">count = oWcs-&gt;GetCapabilities(SCHEMA_CHECKING=0)</p>
+        <p class="Code">oWcs-&gt;GetProperty, LAST_FILE=lastfile</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Show the number of returned coverage offering briefs. </p>
+        <p class="Code">PRINT, "Query returned ", $</p>
+        <p class="Code">   + STRING(count) + "  coverage offering briefs"</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Cleanup.</p>
+        <p class="Code">OBJ_DESTROY, oWcs</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="objects_network_1009015_1387345"></a><a name="objects_network_1009015_52564"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="objects_network_1009015_1385100"></a><a name="objects_network_1009015_91500"></a>See Also</h2>
+        <p><a href="IDLnetOGCWCS__GetCoverag2.htm#objects_network_1009015_1386082">IDLnetOGCWCS::GetCoverageOfferingBriefs</a>, <a href="IDLnetOGCWCS__GetService.htm#objects_network_1009015_1386264">IDLnetOGCWCS::GetServiceSection</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

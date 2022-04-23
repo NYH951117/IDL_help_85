@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Programming with the ESE API</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Programming with the ESE API</span>
+        </div>
+        <h1>Programming with the ESE API</h1>
+        <p>The <a href="../Reference Material/Functional List of IDL Routines/ESE_Functions.htm">ESE API</a> enables IDL programs to perform remote processing using the ENVI Services Engine. To use the API, you need IDL and an ESE server that is running locally or remotely.</p>
+        <p>The benefits of remote processing are:</p>
+        <ul>
+            <li value="1">It allows processing to be performed where the data is located. Instead of bringing the data to the processing, the processing is brought to the data. This is especially important when the data is large, relative to the capacity of the network connection. </li>
+            <li value="2">It is often performed on a powerful server. </li>
+            <li value="3">Algorithms can be easily shared among users. The ENVI Services Engine makes tasks available to all users, who can use built-in ENVITasks or uploaded custom tasks. These tasks are well-defined, atomic units of processing, much like a function. See the ENVI Services Engine Help for details.</li>
+        </ul>
+        <p>The benefits of using the ESE API to run ESE tasks are:</p>
+        <ul>
+            <li value="1"><b>Simplified Web Services:</b> Programming is done in IDL, with little need to understand web technologies. The API forms HTTP requests, performs network communication, and manages execution. Error checking and robustness are built into the API.</li>
+            <li value="2"><b>Task Chaining:</b> The API makes it easy to chain tasks, taking the output from one task and using as the input to the next task.</li>
+            <li value="3"><b>Parallel Processing:</b> The API has methods that assist the synchronization of the client application and multiple, concurrent tasks.</li>
+        </ul>
+        <p>The API can be used by IDL desktop applications and tasks since they are written in IDL. For example, a task could be implemented as an amalgamation of several other tasks that are chained or even running concurrently.</p>
+        <h2>Getting Started with the ESE API</h2>
+        <p>The ESE API provides classes that represent "things" in the ENVI Services Engine. For example, there is an ESEServer class that represents an ESE installation. There are ESETask and ESEJob classes that mirror their counterparts in ESE. Folders and services have ESEFolder and ESEService objects. Applications need only use a handful of these classes.</p>
+        <p>One class that does not have an ENVI Services Engine counterpart is the ESE class. This is a static class that provides a starting point to writing an ESE client application. It is never instantiated and has only static methods. Typically applications will start by using ESE::FindTask, ESE::GetTask or ESE::GetServer, depending on whether you want to quickly run a task, or introspect the ESE installation. The ESE class also has mechanisms for controlling jobs that are running concurrently and for handling custom data types.</p>
+        <p>A common pattern for running a task is:</p>
+        <ul>
+            <li value="1"><b>Get the task.</b> Call ESE::FindTask or ESE::GetTask to get an ESETask object. ESE::FindTask searches the ESE installation for the named task. Regular expressions searches are possible. If a matching task is not found then, !null is returned.</li>
+            <li value="2"><b>Run the task.</b> Invoke the task's run method. The task's parameters are set by using them as keywords to run. A task's full set of parameters, both input and output, can be discovered using the ESE Admin Console. You can also use ESETask::GetParameters to introspect a task for its parameters. The return value from ESETask::Run is an ESEJob object. Every time a task object has its run method called, a new ESEJob object is generated. These job objects should match the ones visible in the admin console.</li>
+            <li value="3"><b>Check the job's status.</b> The ESEJob objects have metadata with the job's status, which indicates if they have run successfully or not.  All the possible states of a job are present as constants in the ESE class.  For example, to check for success, compare the job's status metadata to ESE.jobSucceeded.</li>
+            <li value="4"><b>Get the result.</b> Successful jobs have their output parameters presented as object properties. For example, the "ese_addition" task (which is included with ESE) has the output parameter "answer." Both input and output parameters can be accessed by using IDL's "dot" notation.</li>
+        </ul>
+        <p>For example:</p>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 8181, 'ese_addition' )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Job = Task.Run( a = 2, b = 2 )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Info = Job.Info()</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IF ( Info.Status eq ESE.jobSucceeded ) THEN&#160;BEGIN</p>
+        <p class="Code_Indented">PRINT, strtrim( job.a, 2 ) + ' + ' + strtrim( job.b, 2 ) + ' = ' + strtrim( job.answer, 2 )</p>
+        <p class="Code">ENDIF ELSE BEGIN</p>
+        <p class="Code_Indented">PRINT, 'Error: ' + Info.Status</p>
+        <p class="Code">ENDELSE</p>
+        <h2>Highlights of the ESE API</h2>
+        <p>As described previously, you can use the ESE API can to find tasks, run them, and get results. The <a href="../Reference Material/Functional List of IDL Routines/ESE_Functions.htm">ESE API topics</a> provide details of the API's capabilities. Some highlights of those capabilities are:</p>
+        <ul>
+            <li value="1">Run a job asynchronously by using the /ASYNC keyword of ESETask::Run.</li>
+            <li value="2">Synchronize on multiple concurrently executing jobs by invoking ESE::Join.</li>
+            <li value="3">Monitor a job without blocking by using ESEJob::Monitor.</li>
+            <li value="4">Upload and download data to a server by using ESEServer::UploadFile and ESEServer::DownloadFile. The best practice is to do the processing where the data resides.</li>
+            <li value="5">Handle custom task data types by using the serialization and deserialization mechanisms of the ESE class.</li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

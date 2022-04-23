@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: D">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>DERIVSIG </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="D_list.htm">Routines: D</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">DERIVSIG</span>
+        </div>
+        <h1 class="Routine"><a name="D_843829869_757924"></a><a name="kanchor492"></a><a name="D_843829869_22668"></a>DERIVSIG </h1>
+        <p>The DERIVSIG function computes the standard deviation of the uncertainty of the derivative found by the DERIV function, using the standard deviations of the estimated errors in the <i>X</i> and <i>Y</i> parameters.</p>
+        <p>The standard deviations are computed using the method of propagation of errors. Given a function of several variables, F(u, v, w), each of which has an uncertainty with standard deviations σ<sub>u</sub>, σ<sub>v</sub>, σ<sub>w</sub>, the approximation for the standard deviation σ of F is given by:</p>
+        <p>σ<sup>2</sup> ≈ σ<sub>u</sub><sup>2</sup> (∂F/∂u)<sup>2</sup> + σ<sub>v</sub><sup>2</sup> (∂F/∂v)<sup>2</sup> + σ<sub>w</sub><sup>2</sup> (∂F/∂w)<sup>2</sup></p>
+        <p>where it has been assumed that all of the cross terms are zero (in other words, the uncertainties in u, v, and w are uncorrelated).</p>
+        <p>For the DERIV function, the derivative at all points (except the first and last points) is given by:</p>
+        <p>y' = F(x<sub>0</sub>, x<sub>1</sub>, x<sub>2</sub>,  y<sub>0</sub>,  y<sub>1</sub>,  y<sub>2</sub>) =  y<sub>0</sub>x<sub>12</sub>/(x<sub>01</sub>x<sub>02</sub>) + y<sub>1</sub>(1/x<sub>12</sub> – 1/x<sub>01</sub>) – y<sub>2</sub>x<sub>01</sub>/(x<sub>02</sub>x<sub>12</sub>)</p>
+        <p>where x<sub>01</sub> = x<sub>0</sub> – x<sub>1</sub>, x<sub>02</sub> = x<sub>0</sub> – x<sub>2</sub>, and x<sub>12</sub> = x<sub>1</sub> – x<sub>2</sub></p>
+        <p>The error estimate σ<sup>2</sup> is computed by taking the partial derivative for each variable in F, multiplied by the error estimates for that variable, and then finding the sum of the squares.</p>
+        <p>If the <i>Y</i> values are evenly spaced with no error in the <i>X</i> locations then the equation reduces to:</p>
+        <p>σ<sup>2</sup> = (σ<sub>y0</sub><sup>2</sup> + σ<sub>y2</sub><sup>2</sup>)/4</p>
+        <p>If the <i>Y</i> values are not evenly spaced (the distance between the <i>X</i> locations is not the same), but there is still no error in the X values, then the error equation becomes:</p>
+        <p>σ<sup>2</sup> = σ<sub>y0</sub><sup>2</sup> [x<sub>12</sub>/(x<sub>01</sub>x<sub>02</sub>)]<sup>2</sup> + σ<sub>y1</sub><sup>2</sup> [1/x<sub>12</sub> – 1/x<sub>01</sub>]<sup>2</sup> + σ<sub>y2</sub><sup>2</sup> [x<sub>01</sub>/(x<sub>02</sub>x<sub>12</sub>)]<sup>2</sup></p>
+        <p>The above equation is valid for all points within Y except for the first and last point. For the equation for the first and last points see the source code for <code>derivsig.pro</code>, found in the <code>lib</code> subdirectory.</p>
+        <p>Finally, if there are errors in both the <i>X</i> and <i>Y</i> values, then the partial derivatives need to be computed for all six variables, x<sub>0</sub>, x<sub>1</sub>, x<sub>2</sub>,  y<sub>0</sub>,  y<sub>1</sub>,  y<sub>2</sub>. Consult the source code for details.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>derivsig.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <p>For a detailed example of using DERIVSIG see the <a href="DERIV.htm">DERIV</a> function.</p>
+        <h2 class="API"><a name="D_843829869_757927"></a><a name="D_843829869_757927_PageTOC_DERIVSIG_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = DERIVSIG( [ <i>X</i>, <i>Y</i>, <i>Sigx</i> ] <i>Sigy</i> ) </p>
+        <h2 class="API"><a name="D_843829869_1002713"></a><a name="D_843829869_46032"></a>Return Value</h2>
+        <p>Returns a one-dimensional array containing the standard deviations of the uncertainty in the derivative. Each value within <i>Result</i> gives the uncertainty of the corresponding value in the result from the DERIV function. If any of the input arguments are double precision then the result will be double precision, otherwise the result will be single precision.</p>
+        <h2 class="API"><a name="D_843829869_757929"></a><a name="D_843829869_757929_PageTOC_DERIVSIG_"></a>Arguments</h2>
+        <h3 class="Argument">X</h3>
+        <p>A one-dimensional array of data containing the X locations, as passed into DERIV. If <i>X</i>, <i>Y</i>, and <i>Sigx</i> are omitted then the <i>Y</i> points are assumed to be evenly spaced with no error in the <i>X</i> positions.</p>
+        <h3 class="Argument">Y</h3>
+        <p>A one-dimensional array of data containing the Y values, as passed into DERIV.</p>
+        <h3 class="Argument">Sigx</h3>
+        <p>A scalar or one-dimensional array containing the standard deviation of the <i>X</i> values. Use 0.0 if the abscissa is exact.</p>
+        <h3 class="Argument">Sigy</h3>
+        <p>A scalar or one-dimensional array containing the standard deviation of <i>Y</i>. <i>Sigy</i> must be a vector if the other arguments are omitted, but may be either a vector or a scalar if <i>X</i>, <i>Y</i>, and <i>Sigx</i> are supplied.</p>
+        <h2 class="API"><a name="D_843829869_1002738"></a><a name="D_843829869_38393"></a>Keywords</h2>
+        <p>None.</p>
+        <h2 class="API"><a name="D_843829869_757939"></a><a name="D_843829869_757939_PageTOC_DERIVSIG_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">8.3</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">Improve accuracy of the algorithm for unevenly-spaced data.</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">Resources and References</h2>
+        <p>F. B. Hildebrand, <i>Introduction to Numerical Analysis</i>, <i>2nd ed.</i>, Dover Books, 1987, p. 85.</p>
+        <p>P.R. Bevington and D. K. Robinson, <i>Data Analysis and Reduction for the Physical           Sciences, 3rd ed.</i>, McGraw-Hill, 2002, p. 39.</p>
+        <p><a name="D_843829869_997312"></a><a name="D_843829869_997312_PageTOC_DERIVSIG_"></a>
+        </p>
+        <h2 class="API">See Also</h2>
+        <p><a href="DERIV.htm#D_843829869_1032874">DERIV</a>, <a href="../I/INT_TABULATED.htm">INT_TABULATED</a>, <a href="../Q/QROMB.htm">QROMB</a>, <a href="../Q/QROMO.htm">QROMO</a>, <a href="../Q/QSIMP.htm">QSIMP</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

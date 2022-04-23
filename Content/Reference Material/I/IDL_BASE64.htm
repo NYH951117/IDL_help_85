@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: I">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDL_BASE64</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="I_list.htm">Routines: I</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDL_BASE64</span>
+        </div>
+        <h1 class="Routine"><a name="I_833016429_1051258"></a><a name="kanchor1519"></a><a name="I_833016429_65415"></a><a name="kanchor1520"></a>IDL_BASE64</h1>
+        <p>The IDL_BASE64 function uses MIME Base64 encoding to convert a byte array into a Base64 encoded scalar string, or to convert a Base64-encoded scalar string into a byte array.</p>
+        <p>The MIME Base64 encoding uses 64 characters, consisting of “A-Z”, “a-z”, “0-9”, “+”, and “/”. Every 3 bytes of the original array are converted into 4 characters. If the length of the final encoded string is not a multiple of 4, then it is padded with “=” characters. The 64 characters used in Base64 encoding were chosen because they are common to most character encodings, are printable, and are unlikely to be modified in transit through systems such as electronic mail.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>idl_base64.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="I_833016429_1052324"></a><a name="I_833016429_1052324_PageTOC_IDL_BASE64_"></a>Examples</h2>
+        <p>This example reads a JPEG image into a byte array, converts the array to a MIME Base64-encoded string, then converts the string back into a byte array and displays the two images side by side.</p>
+        <p class="Code">; Read an image into a byte array</p>
+        <p class="Code">READ_JPEG, FILEPATH('rose.jpg', $</p>
+        <p class="Code">&#160;&#160;&#160;SUBDIRECTORY=['examples', 'data']), rose</p>
+        <p class="Code">; View the size of the byte array</p>
+        <p class="Code">HELP, rose<br /><br />; Save the dimensions of the byte array</p>
+        <p class="Code">rs = SIZE(rose)</p>
+        <p class="Code">rose_dims = [rs[1], rs[2], rs[3]]</p>
+        <p class="Code">; Encode the byte array as a scalar string</p>
+        <p class="Code">rose_encoded = IDL_BASE64(rose)</p>
+        <p class="Code">; View information about the scalar string</p>
+        <p class="Code">HELP, rose_encoded</p>
+        <p class="Code">PRINT, 'rose_encoded is ' + STRING(STRLEN(rose_encoded)) $</p>
+        <p class="Code">&#160;&#160;&#160;+' characters long'<br /><br />;Decode the scalar string</p>
+        <p class="Code">rose2 = IDL_BASE64(rose_encoded)</p>
+        <p class="Code">; Note that the returned value is a byte vector </p>
+        <p class="Code">HELP, rose2<br /></p>
+        <p class="Code">; Reform the byte vector into an array of the</p>
+        <p class="Code">; same size as the original array</p>
+        <p class="Code">rose3 = REFORM(rose2, rose_dims)</p>
+        <p class="Code">HELP, rose3<br /><br />; Display the original and reconstituted images</p>
+        <p class="Code">WINDOW, XSIZE=rose_dims[1]*2, YSIZE=rose_dims[2], $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE='Original and Reconstituted images', /FREE</p>
+        <p class="Code">TV, rose, 0, /TRUE</p>
+        <p class="Code">TV, rose3, 1,  /TRUE</p>
+        <p>This example converts an “ordinary” string into a Base64-encoded string:</p>
+        <p class="Code">; Use any ordinary string, which can contain 'unsafe'</p>
+        <p class="Code">; characters like spaces or exclamation marks:</p>
+        <p class="Code">orig_string = 'IDL is fun!'</p>
+        <p class="Code">; Convert the string to a byte array</p>
+        <p class="Code">orig_bytes = BYTE(orig_string)<br /><br />; Note that the original string and byte array are the same size</p>
+        <p class="Code">HELP, orig_string</p>
+        <p class="Code">PRINT, STRLEN(orig_string)</p>
+        <p class="Code">HELP, orig_bytes</p>
+        <p class="Code">; Convert the byte array into an encoded string</p>
+        <p class="Code">new_string = IDL_BASE64(orig_bytes)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Notice that the encoded string is larger than</p>
+        <p class="Code">; the original, and contains only 'safe' characters</p>
+        <p class="Code">PRINT, new_string</p>
+        <p class="Code">; To recover the original string:</p>
+        <p class="Code">PRINT, STRING(IDL_BASE64(new_string))</p>
+        <h2 class="API"><a name="I_833016429_1051277"></a><a name="I_833016429_1051277_PageTOC_IDL_BASE64_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = IDL_BASE64(<i>Input</i>)</p>
+        <h2 class="API"><a name="I_833016429_1051280"></a><a name="I_833016429_1051280_PageTOC_IDL_BASE64_"></a>Return Value</h2>
+        <p>If <i>Input</i> is a byte array, <i>Result</i> is a scalar string containing the Base64 encoded data. </p>
+        <p>If <i>Input</i> is a Base64 encoded string, <i>Result</i> is a byte vector containing the decoded data.</p>
+        <h2 class="API"><a name="I_833016429_1051283"></a><a name="I_833016429_1051283_PageTOC_IDL_BASE64_"></a>Arguments</h2>
+        <h3 class="Argument">Input</h3>
+        <p>Input must be either an array of type byte or a Base64 encoded scalar string.</p>
+        <h2 class="API"><a name="I_833016429_1051287"></a><a name="I_833016429_1051287_PageTOC_IDL_BASE64_"></a>Keywords</h2>
+        <p>None</p>
+        <h2 class="API"><a name="I_833016429_1051329"></a><a name="I_833016429_1051329_PageTOC_IDL_BASE64_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>7.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

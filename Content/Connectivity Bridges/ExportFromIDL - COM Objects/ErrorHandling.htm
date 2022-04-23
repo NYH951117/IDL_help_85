@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|COM Export Bridge|Examples">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>COM Error Handling</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">COM Export Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Examples</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">COM Error Handling</span>
+        </div>
+        <h1><a name="Error_Handling"></a><a name="kanchor5160"></a>COM Error <a name="kanchor5161"></a>Handling</h1>
+        <p>Each method of a wrapper object returns an HRESULT value. If the method call was successful, it returns S_OK; otherwise it returns a standard COM failure. If any of the methods calls return an HRESULT error code, the client can then call the GetLastError method to retrieve an error string, which is generally the actual IDL error message string.</p>
+        <p>The table below describes the error return values and their meaning when they are returned within the context of the wrapper method calls.</p>
+        <table style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Error Code</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Meaning</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>E_ACCESSDENIED</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">This error return value occurs in one of two situations:<ul><li value="1"> IDL is busy. The client made a method call on a wrapper object, but the underlying IDL is still busy processing a previous request (method call) and has not finished yet. For more information, see <a href="../ExportFromIDL - IDL Objects/IDLAccess.htm#IDL_Ownership_and_Blocking">IDL Ownership and Blocking</a>.</li><li value="2"> The client called the Abort method on a wrapper object, but that wrapper object is not the current owner of the underlying IDL; therefore it is not allowed to abort IDL.</li></ul></td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>E_ABORT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>	This error return value occurs in one of two situations:</p>
+                        <ul>
+                            <li value="1"> It is returned from the original wrapper method call whose operation was aborted by a successful call to the Abort method.</li>
+                            <li value="2"> It occurs when the client has created several wrapper instances whose underlying IDL objects all live in the same IDL process. During a method call on one of those wrapper instances, the IDL pro code issues the IDL EXIT command. When this occurs, the OPS process is destroyed, which also destroys all the underlying IDL objects. However, the client needs to be notified of this event so that it can consider all those wrapper instances as invalid and not use them again. First, each listener (event subscriber) for each wrapper instances will receive an OnIDLNotify callback with the first string set to “OPS_NOTIFY_EXIT”. Then, the method call (if any) that is in progress at the time of the EXIT command will return with the specified error code.</li>
+                        </ul>
+                        <p>Upon receiving the notification and after receiving this error code, the user must not make any other method calls on the wrapper instance, as the underlying IDL object no longer exits.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>E_FAIL</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>	This error return value occurs in one of two situations:</p>
+                        <ul>
+                            <li value="1"> The client called the Abort method on a wrapper object, but the underlying IDL is not currently busy, so there is nothing to abort.</li>
+                            <li value="2"> An IDL error occurred. In this case, the error message will be the same as the IDL error message.</li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

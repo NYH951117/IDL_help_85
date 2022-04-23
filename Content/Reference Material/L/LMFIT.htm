@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: L">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>LMFIT </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="L_list.htm">Routines: L</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">LMFIT</span>
+        </div>
+        <h1 class="Routine"><a name="L_826528365_831031"></a><a name="kanchor1689"></a><a name="L_826528365_38447"></a>LMFIT </h1>
+        <p>The LMFIT function does a non-linear least squares fit to a function with an arbitrary number of parameters. LMFIT uses the Levenberg-Marquardt algorithm, which combines the steepest descent and inverse-Hessian function fitting methods. The function may be any non-linear function.</p>
+        <p>Iterations are performed until three consecutive iterations fail to change the chi-square value by more than the specified tolerance amount, or until a maximum number of iterations have been performed. The LMFIT function returns a vector of values for the dependent variables, as fitted by the function fit.</p>
+        <p>The initial guess of the parameter values should be as close to the actual values as possible or the solution may not converge. Test the value of the variable specified by the CONVERGENCE keyword to determine whether the algorithm converged, failed to converge, or encountered a singular matrix. </p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>lmfit.pro</code> in the <code>lib</code> subdirectory of the IDL distribution. LMFIT is based on the routine <code>mrqmin</code> described in section 15.5 of <i>Numerical Recipes in C: The Art of Scientific Computing</i> (Second Edition), published by Cambridge University Press, and is used by permission.</p>
+        <h2 class="API"><a name="L_826528365_831169"></a><a name="L_826528365_831169_PageTOC_LMFIT_"></a>Examples</h2>
+        <p>In this example, we fit a function of the form:</p>
+        <p>f(x)=a[0] * exp(a[1]*x) + a[2] + a[3] * sin(x)</p>
+        <p class="Code">FUNCTION myfunct, X, A<br /><br />; First, define a return function for LMFIT:<br />&#160;&#160;&#160;bx = A[0]*EXP(A[1]*X)<br />&#160;&#160;&#160;RETURN,[ [bx+A[2]+A[3]*SIN(X)], [EXP(A[1]*X)], [bx*X], $<br />&#160;&#160;&#160;&#160;&#160;&#160;[1.0] ,[SIN(X)] ]<br />END<br /><br />PRO lmfit_example<br /><br />; Compute the fit to the function we have just defined. First,<br />; define the independent and dependent variables:<br />X = FINDGEN(40)/20.0<br />Y = 8.8 * EXP(-9.9 * X) + 11.11 + 4.9 * SIN(X)<br />measure_errors = 0.05 * Y<br /><br />; Provide an initial guess for the function's parameters:<br />A = [10.0, -0.1, 2.0, 4.0]<br />fita = [1,1,1,1]<br /><br />; Plot the initial data, with error bars:<br />PLOTERR, X, Y, measure_errors<br />coefs = LMFIT(X, Y, A, MEASURE_ERRORS=measure_errors, /DOUBLE, $<br />&#160;&#160;&#160;FITA = fita, FUNCTION_NAME = 'myfunct')<br /><br />; Overplot the fitted data:<br />OPLOT, X, coefs<br /><br />END<br /><br />lmfit_example</p>
+        <h2 class="API"><a name="L_826528365_831056"></a><a name="L_826528365_831056_PageTOC_LMFIT_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = LMFIT( <i>X</i>, <i>Y</i>, <i>A</i> [,&#160;<a href="#L_826528365_849263" class="selected">ALPHA</a>=<i>variable</i>] [,&#160;<a href="#L_826528365_831462" class="selected">CHISQ</a>=<i>variable</i>] [,&#160;<a href="#L_826528365_831464" class="selected">CONVERGENCE</a>=<i>variable</i>] [,&#160;<a href="#L_826528365_831689" class="selected">COVAR</a>=<i>variable</i>] [,&#160;/<a href="#L_826528365_831466" class="selected">DOUBLE</a>] [,&#160;<a href="#L_826528365_831077" class="selected">FITA</a>=<i>vector</i>] [,&#160;<a href="#L_826528365_831083" class="selected">FUNCTION_NAME</a>=<i>string</i>] [,&#160;<a href="#L_826528365_831471" class="selected">ITER</a>=<i>variable</i>] [,&#160;<a href="#L_826528365_831092" class="selected">ITMAX</a>=<i>value</i>] [,&#160;<a href="#L_826528365_831094" class="selected">ITMIN</a>=<i>value</i>] [,&#160;<a href="#L_826528365_941497" class="selected">MEASURE_ERRORS</a>=<i>vector</i>] [,&#160;<a href="#L_826528365_940586" class="selected">SIGMA</a>=<i>variable</i>] [,&#160;<a href="#L_826528365_940573" class="selected">TOL</a>=<i>value</i>] )</p>
+        <h2 class="API"><a name="L_826528365_962939"></a><a name="L_826528365_79492"></a>Return Value</h2>
+        <p>Returns a vector of values for the dependent variable, resulting from the function fit.</p>
+        <h2 class="API"><a name="L_826528365_831060"></a><a name="L_826528365_831060_PageTOC_LMFIT_"></a>Arguments</h2>
+        <h3 class="Argument">X</h3>
+        <p>An <i>n</i>-element vector containing the independent variable values. <i>X</i> may be of type integer, floating point, or double-precision floating-point. </p>
+        <h3 class="Argument">Y</h3>
+        <p>A row vector containing the dependent variables.</p>
+        <h3 class="Argument">A</h3>
+        <p>A vector that contains the initial estimate for each coefficient. Upon return, <i>A</i> will contain the final estimates for the coefficients.</p>
+        <h2 class="API"><a name="L_826528365_849261"></a><a name="L_826528365_849261_PageTOC_LMFIT_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="L_826528365_849263"></a><a name="L_826528365_849263_Keywords_LMFIT__"></a>ALPHA</h3>
+        <p>Set this keyword equal to a named variable that will contain the value of the curvature matrix.</p>
+        <h3 class="Keyword"><a name="L_826528365_831462"></a><a name="L_826528365_831462_Keywords_LMFIT__"></a>CHISQ</h3>
+        <p>Set this keyword equal to a named variable that will contain the value of the unreduced chi&#8209;square goodness&#8209;of&#8209;fit statistic.</p>
+        <h3 class="Keyword"><a name="L_826528365_831464"></a><a name="L_826528365_831464_Keywords_LMFIT__"></a>CONVERGENCE</h3>
+        <p>Set this keyword equal to a named variable that will indicate whether the LMFIT algorithm converged. The possible returned values are:</p>
+        <ul>
+            <li value="1">&#160;1 = the algorithm converged.</li>
+            <li value="2">&#160;0 = the algorithm did not converge.</li>
+            <li value="3">-1 = the algorithm encountered a singular matrix and did not converge.</li>
+        </ul>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>If LMFIT fails to converge, try setting the DOUBLE keyword.</p>
+        <h3 class="Keyword"><a name="L_826528365_831689"></a><a name="L_826528365_831689_Keywords_LMFIT__"></a>COVAR</h3>
+        <p>Set this keyword equal to a named variable that will contain the value of the covariance matrix.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The COVAR matrix depends only upon the independent variable X and (optionally) the MEASURE_ERRORS. The values do not depend upon Y. See section 15.4 of <i>Numerical Recipes in C</i> (Second Edition) for details.</p>
+        <h3 class="Keyword"><a name="L_826528365_831466"></a><a name="L_826528365_831466_Keywords_LMFIT__"></a>DOUBLE</h3>
+        <p>Set this keyword to force the computations to be performed in double precision.</p>
+        <h3 class="Keyword"><a name="L_826528365_831077"></a><a name="L_826528365_831077_Keywords_LMFIT__"></a>FITA</h3>
+        <p>Set this keyword equal to a vector, with as many elements as <i>A</i>, which contains a zero for each fixed parameter, and a non-zero value for elements of <i>A</i> to fit. If FITA is not specified, all parameters are taken to be non-fixed.</p>
+        <h3 class="Keyword"><a name="L_826528365_831083"></a><a name="L_826528365_831083_Keywords_LMFIT__"></a>FUNCTION_NAME</h3>
+        <p>Use this keyword to specify the name of the function to fit. If this keyword is omitted, LMFIT assumes that the IDL routine LMFUNCT is to be used. If LMFUNCT is not already compiled, IDL compiles the function from the file <code>lmfunct.pro</code>, located in the <code>lib</code> subdirectory of the IDL distribution. LMFUNCT is designed to fit a quadratic equation.</p>
+        <p>The function to be fit must be written as an IDL function and compiled prior to calling LMFIT. The function must accept a vector <i>X</i> (the independent variables) and a vector <i>A</i> containing the fitted function’s parameter values. It must return an N_ELEMENTS(<i>A)</i>+1-element vector in which the first (zeroth) element is the evaluated function value and the remaining elements are the partial derivatives with respect to each parameter in <i>A</i>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The returned value must be of the same data type as the input <i>X</i> value.</p>
+        <h3 class="Keyword"><a name="L_826528365_831471"></a><a name="L_826528365_831471_Keywords_LMFIT__"></a>ITER</h3>
+        <p>Set this keyword equal to a named variable that will contain the actual number of iterations which were performed</p>
+        <h3 class="Keyword"><a name="L_826528365_831092"></a><a name="L_826528365_831092_Keywords_LMFIT__"></a>ITMAX</h3>
+        <p>Set this keyword equal to the maximum number of iterations. The default is 50.</p>
+        <h3 class="Keyword"><a name="L_826528365_831094"></a><a name="L_826528365_831094_Keywords_LMFIT__"></a>ITMIN</h3>
+        <p>Set this keyword equal to the minimum number of iterations. The default is 5.</p>
+        <h3 class="Keyword"><a name="L_826528365_941497"></a><a name="L_826528365_941497_Keywords_LMFIT__"></a><a name="L_826528365_34958"></a>MEASURE_ERRORS</h3>
+        <p>Set this keyword to a vector containing standard measurement errors for each point <i>Y</i>[<i>i</i>]. This vector must be the same length as <i>X</i> and <i>Y</i>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For Gaussian errors (e.g., instrumental uncertainties), MEASURE_ERRORS should be set to the standard deviations of each point in <i>Y</i>. For Poisson or statistical weighting, MEASURE_ERRORS should be set to SQRT(ABS(<i>Y</i>)).</p>
+        <h3 class="Keyword"><a name="L_826528365_940586"></a><a name="L_826528365_940586_Keywords_LMFIT__"></a>SIGMA</h3>
+        <p>Set this keyword to a named variable that will contain the 1-sigma uncertainty estimates for the returned parameters</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If MEASURE_ERRORS is omitted, then you are assuming that your user-supplied model (or the default quadratic) is the correct model for your data, and therefore, no independent goodness-of-fit test is possible. In this case, the values returned in SIGMA are multiplied by SQRT(CHISQ/(<i>N</i>–<i>M</i>)), where <i>N</i> is the number of points in <i>X</i>, and <i>M</i> is the number of coefficients. See section 15.2 of <i>Numerical Recipes in C</i> (Second Edition) for details.</p>
+        <h3 class="Keyword"><a name="L_826528365_940573"></a><a name="L_826528365_940573_Keywords_LMFIT__"></a>TOL</h3>
+        <p>Set this keyword to the convergence tolerance. The routine returns when the relative decrease in chi-squared is less than TOL in an iteration. The default is 1.0&#160;x&#160;10<sup>-6</sup> for single-precision, and 1.0&#160;x&#160;10<sup>-12</sup> for double-precision.</p>
+        <h2 class="API"><a name="L_826528365_831715"></a><a name="L_826528365_831715_PageTOC_LMFIT_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>5.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre 6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Deprecated WEIGHTS keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="L_826528365_952392"></a><a name="L_826528365_952392_PageTOC_LMFIT_"></a>See Also</h2>
+        <p><a href="../C/CURVEFIT.htm#C_854643309_749660">CURVEFIT</a>, <a href="../G/GAUSSFIT.htm#G_845992557_749954">GAUSSFIT</a>, <a href="LINFIT.htm#L_826528365_53763">LINFIT</a>, <a href="../P/POLY_FIT.htm#P_817877613_753815">POLY_FIT</a>, <a href="../R/REGRESS.htm#R_822202989_1102676">REGRESS</a>, <a href="../S/SFIT.htm#S_820040301_36073">SFIT</a>, <a href="../S/SVDFIT.htm#S_820040301_154010">SVDFIT</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

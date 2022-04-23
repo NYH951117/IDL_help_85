@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: H|HDF5 Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>H5_CREATE</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../H_list.htm">Routines: H</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../HDF5_Routines.htm">HDF5 Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">H5_CREATE</span>
+        </div>
+        <h1 class="Routine"><a name="HDF5_209170119_1005503"></a><a name="HDF5_209170119_53906"></a>H5_CREATE</h1>
+        <p>The H5_CREATE<a name="kanchor1339"></a> function creates and closes a new HDF5 file. This is a simplified routine that encapsulates some of the routines listed in the following sections. Dataspaces are all defined as the full extent of the data, and datatypes are created automatically based on the type of the data.</p>
+        <p>There are two primary scenarios for the use of H5_CREATE. The first is a new HDF5 file being created from structures created in IDL. The second is an HDF5 file being read using H5_PARSE modifications that are made to the structure with the resulting structure being written to a new file.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Passing the output structure of H5_PARSE to H5_CREATE may not always completely reproduce the original file. These routines do not handle references or user-defined datatypes. Additionally, dataset chunking is not supported and thus operations that require chunking are also not supported, for example: dataset extensibility and compression.</p>
+        <h2 class="API"><a name="HDF5_209170119_37379"></a>Examples</h2>
+        <p>As mentioned, there are two primary use cases for H5_CREATE. These are shown in the following example cases.</p>
+        <p>In the first case, a new HDF5 file is created from structures created in IDL. For example: to create an HDF5 file containing a single data set with a palette attached as an attribute the following code could be used:</p>
+        <p class="Code">grey_scale = byte(bindgen(256)##(bytarr(3)+1b))</p>
+        <p class="Code">palette = {_TYPE:'Attribute', _DATA:grey_scale}</p>
+        <p class="Code">dataset = {_NAME:'Hanning', _TYPE:'Dataset', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;_DATA:hanning(100,200), PALETTE:palette}</p>
+        <p class="Code">H5_CREATE, 'myfile.h5', dataset</p>
+        <p>In the second case an HDF5 file is read using H5_PARSE, modifications are made to the structure and the resulting structure is written to a new file. For example, to change the palette in the example file created above so that the colors are reversed:</p>
+        <p class="Code">result = H5_PARSE('myfile.h5', /READ_DATA)</p>
+        <p class="Code">newpalette = reverse(result.hanning.palette._data, 2)</p>
+        <p class="Code">result.hanning.palette._data = newpalette</p>
+        <p class="Code">H5_CREATE, 'myNEWfile.h5', result</p>
+        <h2 class="API"><a name="HDF5_209170119_29109"></a>Syntax</h2>
+        <p class="Syntax">H5_CREATE, <i>Filename</i>, <i>Structure</i></p>
+        <h2 class="API"><a name="HDF5_209170119_35403"></a>Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>The full path name of the file to create. If the file exists it will be overwritten.</p>
+        <h3 class="Argument">Structure</h3>
+        <p>An IDL structure variable (such as one that could be from H5_PARSE) that conforms to the following:</p>
+        <p>To create an HDF5 Group the following tags can be used:</p>
+        <table style="mc-table-style: url('../../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Field</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>_NAME</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>String: Object name</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>_TYPE (required)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>String: “GROUP” (case insensitive)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>_COMMENT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>String: Any user defined string</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>STRUCTURES</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Any number of additional structures describing datasets, attributes, groups, or links contained with this group</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>To create a top level group in the file the _NAME field must be defined as the single character /, an empty string, or left undefined, otherwise a group underneath the top level group will be created.</p>
+        <p>To create an HDF5 Dataset the following tags can be used:</p>
+        <table style="mc-table-style: url('../../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Field</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>_NAME</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>String: Object name</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>_TYPE (required)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>String: “DATASET” (case insensitive)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>_DATA (required)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Any IDL variable (except HDF5 references) accepted by H5D_WRITE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>_DIMENSIONS</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>A vector containing the dimensions for the dataspace. If not supplied the dimensions will be taken directly from the data.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p><i>STRUCTURES</i>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Any number of additional structures describing attributes contained with this dataset</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>To create an HDF5 Datatype the following tags can be used:</p>
+        <table style="mc-table-style: url('../../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Field</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>_NAME</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>String: Object name</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>_TYPE (required)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>String: “DATATYPE” (case insensitive)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>_DATA (required)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Any IDL variable (except HDF5 references)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>STRUCTURE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Any number of additional structures describing attributes contained within this datatype or describing the individual elements of a compound datatype.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When creating a DATATYPE structure the _DATA tag is required. However, the structure returned from H5_PARSE can also be used and a proper datatype will be created without the _DATA tag as long as the _DATATYPE, _STORAGESIZE, and _SIGN tags returned are intact. If a compound datatype is being created, and the _DATA tag is not present, the additional structures define the fields of the datatype and the _STORAGESIZE and _SIGN tags are ignored.</p>
+        <p>To create an HDF5 Attribute the following tags can be used:</p>
+        <table style="mc-table-style: url('../../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Field</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>_NAME</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>String: Object name</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>_TYPE (required)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>String: “ATTRIBUTE” (case insensitive)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>_DATA (required)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Any IDL variable (except HDF5 references) accepted by H5A_WRITE</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Note: The ATTRIBUTE structure must be contained within a GROUP or DATASET structure, it cannot be a top level structure.</p>
+        <p>To create an HDF5 Link the following tags can be used:</p>
+        <table style="mc-table-style: url('../../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Field</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>_NAME</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>String: Object name</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>_TYPE (required)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>String: “LINK” (case insensitive)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>_DATA (required)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>(required)	String: The name (with path information) of the object to which the link will point</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>_LINK_TYPE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>String: “SOFT” or “HARD” (case insensitive). If not supplied a soft link is created by default</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The _DATA field must contain the full path information, from the top level group, to the object to which the link will point while _NAME contains the name that will appear in the group in which the link structure exists. For example: <br /><br /><code>{_NAME : "Link1", _TYPE : "LINK", _DATA : "/Group1/MyDataset"}</code></p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the _NAME field is not supplied then the name of the structure tag will be used. Additional tags may exist in the structure(s) but will be ignored.</p>
+        <h2 class="API"><a name="HDF5_209170119_73023"></a>Keywords</h2>
+        <p>None</p>
+        <h2 class="API"><a name="HDF5_209170119_31320"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="HDF5_209170119_91602"></a>See Also</h2>
+        <p><a href="H5_PARSE.htm#HDF5_209170119_1005805">H5_PARSE</a>, <a href="H5A_WRITE.htm#HDF5_209170119_1006656">H5A_WRITE</a>, <a href="H5D_WRITE.htm#HDF5_209170119_1007408">H5D_WRITE</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

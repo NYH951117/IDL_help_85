@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Translating, Rotating, and Scaling Objects</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1>Translating, Rotating, and Scaling Objects</h1>
+        <p>An <a href="../Object Classes/Graphics/IDLgrModel.htm">IDLgrModel object</a> is a container for any visualization objects that are to be rotated, translated, or scaled. Each IDLgrModel object has a transformation property (set via the TRANSFORM keyword to the <a href="../Object Classes/Graphics/IDLgrModel__Init.htm">IDLgrModel::Init</a> or <a href="../Object Classes/Graphics/IDLgrModel__SetProperty.htm">SetProperty</a> method), which is a 4 x 4 floating-point matrix. For a general discussion of transformation matrices and three-dimensional graphics, see Coordinates of 3-D Graphics.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>A model object's transformation matrix is akin to the transformation matrix used by IDL Direct Graphics and stored in the !P.T system variable field. Transformation matrices associated with a model object do not use the value of !P.T, however, and are not affected by the T3D procedure used in Direct Graphics.</p>
+        <p>By default, a model object's transformation matrix is set equal to a 4-by-4 identity matrix:</p>
+        <p class="Code">[[1.0, 0.0, 0.0, 0.0],</p>
+        <p class="Code">[&#160;0.0, 1.0, 0.0, 0.0],</p>
+        <p class="Code">[&#160;0.0, 0.0, 1.0, 0.0],</p>
+        <p class="Code">[&#160;0.0, 0.0, 0.0, 1.0]]</p>
+        <p>You can change the transformation matrix of a model object directly, using the TRANSFORM keyword to the IDLgrModel::Init or SetProperty method:</p>
+        <p class="Code">myModel = OBJ_NEW('IDLgrModel', TRANSFORM = tmatrix)</p>
+        <p>where<code> tmatrix</code> is a 4-by-4 transformation matrix. </p>
+        <p>Alternatively, you can use the Translate, Rotate, and Scale methods to the <a href="../Object Classes/Graphics/IDLgrModel.htm">IDLgrModel object</a> to alter the model's transformation matrix.</p>
+        <h2>Translation</h2>
+        <p>The <a href="../Object Classes/Graphics/IDLgrModel__Translate.htm">IDLgrModel::Translate</a> method takes three arguments specifying the amount to translate the model object and its contents in the X, Y, and Z directions. For example, to translate a model and its contents by 1 unit in the X-direction, you could use the following statements:</p>
+        <p class="Code">dx = 1 &amp; dy = 0 &amp; dz = 0</p>
+        <p class="Code">myModel-&gt;Translate, dx, dy, dz</p>
+        <p>How does this affect the transformation matrix? Notice that we could change the transformation matrix in an identical way using the following statements:</p>
+        <p class="Code">; Define translation values:</p>
+        <p class="Code">dx = 1 &amp; dy = 0 &amp; dz = 0</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Get existing transformation matrix:</p>
+        <p class="Code">myModel-&gt;GetProperty, TRANSFORM = oldT</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Provide a transformation matrix that performs the translation:</p>
+        <p class="Code">transT = [[1.0, 0.0, 0.0, dx], $</p>
+        <p class="Code">[0.0, 1.0, 0.0, dy], $</p>
+        <p class="Code">[0.0, 0.0, 1.0, dz], $</p>
+        <p class="Code">[0.0, 0.0, 0.0, 1.0]]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Multiply the existing transformation matrix by</p>
+        <p class="Code">; the matrix that performs the translation:</p>
+        <p class="Code">newT = oldT # transT</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Apply the new transformation matrix to the model object:</p>
+        <p class="Code">myModel-&gt;SetProperty, TRANSFORM = newT</p>
+        <h2>Rotation</h2>
+        <p>The <a href="../Object Classes/Graphics/IDLgrModel__Rotate.htm">IDLgrModel::Rotate</a> method takes two arguments specifying the axis about which to rotate and the number of degrees to rotate the model object and its contents. For example, to rotate a model and its contents by 90 degrees around the y-axis, you could use the following statements:</p>
+        <p class="Code">axis = [0,1,0] &amp; angle = 90</p>
+        <p class="Code">myModel-&gt;Rotate, axis, angle</p>
+        <p>How does this affect the transformation matrix? Notice that we could change the transformation matrix in an identical way using the following statements:</p>
+        <p class="Code">; Define rotation values:</p>
+        <p class="Code">axis = [0,1,0] &amp; angle = 90</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Get existing transformation matrix:</p>
+        <p class="Code">myModel-&gt;GetProperty, TRANSFORM = oldT</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Define sine and cosine of angle:</p>
+        <p class="Code">cosa = COS(!DTOR*angle)</p>
+        <p class="Code">sina = SIN(!DTOR*angle)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Provide a transformation matrix that performs the rotation:</p>
+        <p class="Code">rotT = [[cosa, 0.0, sina, 0.0], $</p>
+        <p class="Code">[0.0, 1.0, 0.0, 0.0], $</p>
+        <p class="Code">[-sina, 0.0, cosa, 0.0], $</p>
+        <p class="Code">[0.0, 0.0, 0.0, 1.0]]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Multiply the existing transformation matrix</p>
+        <p class="Code">; by the matrix that performs the rotation.</p>
+        <p class="Code">newT = oldT # rotT</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Apply the new transformation matrix to the model object:</p>
+        <p class="Code">myModel-&gt;SetProperty, TRANSFORM = newT</p>
+        <h2>Scaling</h2>
+        <p>The <a href="../Object Classes/Graphics/IDLgrModel__Scale.htm">IDLgrModel::Scale</a> method takes three arguments specifying the amount to scale the model object and its contents in the x, y, and z directions. For example, to scale a model and its contents by 2 units in the y direction, you could use the following statements:</p>
+        <p class="Code">sx = 1 &amp; sy = 2 &amp; sz = 1</p>
+        <p class="Code">myModel-&gt;Scale, sx, sy, sz</p>
+        <p>How does this affect the transformation matrix? Notice that we could change the transformation matrix in an identical way using the following statements:</p>
+        <p class="Code">; Define scaling values:</p>
+        <p class="Code">sx = 1 &amp; sy = 2 &amp; sz = 1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Get existing transformation matrix:</p>
+        <p class="Code">myModel-&gt;GetProperty, TRANSFORM = oldT</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Provide a transformation matrix that performs the scaling:</p>
+        <p class="Code">scaleT = [[sx, 0.0, 0.0, 0.0], $</p>
+        <p class="Code">[0.0, sy, 0.0, 0.0], $</p>
+        <p class="Code">[0.0, 0.0, sz, 0.0], $</p>
+        <p class="Code">[0.0, 0.0, 0.0, 1.0]]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Multiply the existing transformation matrix</p>
+        <p class="Code">; by the matrix that performs the scaling.</p>
+        <p class="Code">newT = oldT # scaleT</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Apply the new transformation matrix to the model object:</p>
+        <p class="Code">myModel-&gt;SetProperty, TRANSFORM = newT</p>
+        <h2>Combining Transformations</h2>
+        <p>Note that model transformations are cumulative. That is, a model object contained in another model is subject to both its own transformation and to that of its container. All transformation matrices that apply to a given model object are multiplied together when the object is rendered. For example, consider a model that contains another model:</p>
+        <p class="Code">model1 = OBJ_NEW('IDLgrModel', TRANSFORM = trans1)</p>
+        <p class="Code">model2 = OBJ_NEW('IDLgrModel', TRANSFORM = trans2)</p>
+        <p class="Code">model2-&gt;Add, model1</p>
+        <p>The <code>model1 </code>object is now subject to both its own transformation matrix (<code>trans1</code>) and to that of its container (<code>trans2</code>). The result is that when <code>model1</code> is rendered, it will be rendered with a transformation <code>matrix = trans1 # trans2</code>.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

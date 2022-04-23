@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>CANNY</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">CANNY</span>
+        </div>
+        <h1 class="Routine"><a name="C_854643309_1362211"></a><a name="C_854643309_46024"></a>CANNY</h1>
+        <p>The <a name="kanchor161"></a>CANNY function implements the Canny edge-detection algorithm.</p>
+        <p>The Canny edge-detection algorithm has the following steps:</p>
+        <ol>
+            <li value="1">Smooth the image with a Gaussian filter. A 5x5 kernel with a given sigma is used.</li>
+            <li value="2">
+                <p>Compute the gradient orientation and magnitude. A pair of 3x3 convolution masks are used, one for estimating the gradient in the x-direction (<i>G</i><sub class="italic">x</sub>):</p>
+                <p>
+                    <img src="../../images/9_26.jpg" />
+                </p>
+                <p>and the other for estimating the gradient in the y-direction (<i>G</i><sub class="italic">y</sub>):</p>
+                <p>
+                    <img src="../../images/9_28.jpg" />
+                </p>
+                <p>The magnitude of the gradient is approximated using <img src="../../images/9_27.jpg" />.</p>
+            </li>
+            <li value="3">
+                <p>The edge direction is calculated using ATAN(<i>G</i><sub class="italic">y</sub>, <i>G</i><sub class="italic">x</sub>).</p>
+                <p>This edge direction is then related to a direction that can be traced in an image, assigning each value to one of four sectors (0, 1, 2, or 3) as follows: </p>
+                <p>
+                    <img src="../../images/9_18.jpg" />
+                </p>
+                <li value="4">An edge point is defined to be a point whose gradient magnitude is locally maximum in the direction of the gradient. This process, which results in ridges one pixel wide, is called <i>nonmaxima suppression</i>. After nonmaxima suppression one ends up with an image which is zero everywhere except at the local maxima points. At the local maxima points the value of the gradient magnitude is preserved.</li>
+                <li value="5">Hysteresis is applied to eliminate gaps. Any pixel in the nonmaxima suppression image that has a value greater than T_HIGH (high threshold calculated from <a href="#C_854643309_1362362" class="selected">HIGH</a>) is presumed to be an edge pixel, and is marked as such immediately. Then any pixels that are connected to this edge pixel and that have a value greater than T_LOW (low threshold calculated from <a href="#C_854643309_1362368" class="selected">LOW</a>) are also selected as edge pixels. All edges are followed until the value drops below T_LOW.</li>
+            </li>
+        </ol>
+        <h2 class="API"><a name="C_854643309_1378568"></a><a name="C_854643309_83956"></a>Example</h2>
+        <p>The following example peforms Canny edge detection on an image of Manhattan island, using the default values for the HIGH, LOW, and SIGMA keywords:</p>
+        <p class="Code">; Read a greyscale image<br />nyny = READ_TIFF(FILEPATH('image.tif', $<br />&#160;&#160;&#160;SUBDIRECTORY=['examples', 'data']))<br />; Resize the image<br />nyny = REBIN(nyny, 384, 256)<br />; Perform edge detection using defaults<br />filtered = CANNY(nyny)<br />; Create a window<br />WINDOW, XSIZE=384, YSIZE=512<br />; Display the original and filtered images<br />TVSCL, nyny, 0<br />TVSCL, filtered, 1</p>
+        <h2 class="API"><a name="C_854643309_1362223"></a><a name="C_854643309_1362223_PageTOC_CANNY_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = CANNY(<i>Image</i> [,&#160;<a href="#C_854643309_1362362" class="selected">HIGH</a>=<i>value</i>] [,&#160;<a href="#C_854643309_1362368" class="selected">LOW</a>=<i>value</i>] [,&#160;<a href="#C_854643309_1362372" class="selected">SIGMA</a>=<i>value</i>])</p>
+        <h2 class="API"><a name="C_854643309_1362316"></a><a name="C_854643309_1362316_PageTOC_CANNY_"></a>Return Value</h2>
+        <p>The result is a byte array containing the edges in the image.</p>
+        <h2 class="API"><a name="C_854643309_1362321"></a><a name="C_854643309_1362321_PageTOC_CANNY_"></a>Arguments</h2>
+        <h3 class="Argument">Image</h3>
+        <p>A 2D image array.</p>
+        <h2 class="API"><a name="C_854643309_1362358"></a><a name="C_854643309_1362358_PageTOC_CANNY_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="C_854643309_1362362"></a><a name="C_854643309_25162"></a>HIGH</h3>
+        <p>The high value used to calculate the high threshold during edge detection, given as a factor of the histogram of the magnitude array. The input range is [0-1]. The default value is 0.8. If the input value is outside the allowable range of [<a href="#C_854643309_1362368" class="selected">LOW</a>-1], it is silently clipped to fall into that range.</p>
+        <h3 class="Keyword"><a name="C_854643309_1362368"></a><a name="C_854643309_92541"></a>LOW</h3>
+        <p>The low value used to calculate the low threshold during edge detection, given as a factor of the <a href="#C_854643309_1362362" class="selected">HIGH</a> value. The input range is [0-1]. The default value is 0.4. If the input value is outside the allowable range of [0-1], it is clipped to fall into that range.</p>
+        <h3 class="Keyword"><a name="C_854643309_1362372"></a><a name="C_854643309_69621"></a>SIGMA</h3>
+        <p>The sigma value used when creating the Gaussian kernel. The default value is 0.6</p>
+        <h2 class="API"><a name="C_854643309_1362562"></a><a name="C_854643309_1362562_PageTOC_CANNY_"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

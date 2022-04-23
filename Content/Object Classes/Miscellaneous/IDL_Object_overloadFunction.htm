@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|Miscellaneous Object Classes|IDL_Object">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDL_Object::_overloadFunction</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_misc.htm">Miscellaneous Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDL_Object::_overloadFunction</span>
+        </div>
+        <h1 class="ObjMethod"><a name="kanchor4039"></a>IDL_Object::_overloadFunction</h1>
+        <p>The IDL_Object::_overloadFunction function method allows you to create "function pointers" in IDL. By implementing the _overloadFunction method on your class, users can then make a function call on an object reference. This function call could then execute different code based upon the object's current state.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This method is designed to replicate the default behavior of objects that do not use operator overloading. As a result, object classes that <i>do</i> inherit from the IDL_Object class but that do not override this particular method will simply throw an error when you try to call the object as a function.</p>
+        <h2 class="API">Example</h2>
+        <p>Let's create an IDL_SMOOTH class that wraps various smoothing functions. Save the following code in a file called <span style="font-family: monospace;">idl_smooth__define.pro</span>:</p>
+        <p class="Code">function IDL_Smooth::Init, BOXCAR=boxcar, LEE=lee, MEDIAN=median</p>
+        <p class="Code_Indented">if (KEYWORD_SET(boxcar)) then self.method = 0</p>
+        <p class="Code_Indented">if (KEYWORD_SET(lee)) then self.method = 1</p>
+        <p class="Code_Indented">if (KEYWORD_SET(median)) then self.method = 2</p>
+        <p class="Code_Indented">return, 1</p>
+        <p class="Code">end</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">function IDL_Smooth::_overloadFunction, data, width, _EXTRA=extra</p>
+        <p class="Code_Indented">case self.method of</p>
+        <p class="Code_Indented2">0: result = SMOOTH(data, width, _EXTRA=extra)</p>
+        <p class="Code_Indented2">1: result = LEEFILT(data, width, _EXTRA=extra)</p>
+        <p class="Code_Indented2">2: result = MEDIAN(data, width, _EXTRA=extra)</p>
+        <p class="Code_Indented">endcase</p>
+        <p class="Code_Indented">return, result</p>
+        <p class="Code">end</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">pro IDL_Smooth__define</p>
+        <p class="Code_Indented">void = {IDL_Smooth, inherits IDL_Object, method: 0}</p>
+        <p class="Code">end</p>
+        <p>Now execute the following code to create an IDL_Smooth object and call it like a function:</p>
+        <p class="Code">COMPILE_OPT idl2</p>
+        <p class="Code">FUNC = IDL_Smooth(/MEDIAN)</p>
+        <p class="Code">x = RANDOMU(seed,100)</p>
+        <p class="Code">result = FUNC(x, 9, /DOUBLE)</p>
+        <p class="Code">HELP, result</p>
+        <p>IDL prints:</p>
+        <p class="Code">RESULT          DOUBLE    = Array[100]</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>We need to ensure that <a href="../../Reference Material/C/COMPILE_OPT.htm">compile_opt idl2</a> is set so that parentheses are treated like a function call instead of array indexing.</p>
+        <h2 class="API">Syntax</h2>
+        <p>In most cases, this method is called indirectly when you make a function call on your object reference. When called explicitly, the syntax is:</p>
+        <p class="Syntax"><i>Result = Obj</i>-&gt;[<a href="IDL_Object.htm#objects_misc_904195448_1098343">IDL_Object</a>::]_overloadFunction( <i>Arg1, Arg2, ..., Keyword1=..., Keyword2=...</i> )</p>
+        <h2 class="API">Return Value</h2>
+        <p>The return value is an IDL&#160;variable containing whatever result your method decides to return.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Arg1...ArgN</h3>
+        <p>The input arguments to your function.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">Keywords</h3>
+        <p>The keyword values for your function.</p>
+        <h2 class="API">Routine Signature</h2>
+        <p>To overload this function method for an object class, implement a method with the following signature:</p>
+        <p class="Code">FUNCTION class::_overloadFunction, <i>arg1, arg2, ..., Keyword1=...</i></p>
+        <h2 class="API">Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.5</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="IDL_Object_overloadMethod.htm">IDL_Object::_overloadMethod</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

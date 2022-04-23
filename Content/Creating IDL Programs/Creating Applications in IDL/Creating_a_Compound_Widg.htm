@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|Creating Widget Applications">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Creating a Compound Widget</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Application Programming/Creating Widget Applications.htm">Creating Widget Applications</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Creating a Compound Widget</span>
+        </div>
+        <h1><a name="widget_apps_4063420628_1042476"></a><a name="widget_apps_4063420628_20035"></a><a name="widget_apps_4063420628_86463"></a>Creating a Compound Widget<a name="kanchor5010"></a></h1>
+        <p>Widget primitives can be used to construct many varied user interfaces, but complex programs written with them suffer the following drawbacks:</p>
+        <ul>
+            <li value="1">Large widget applications become difficult to maintain. As an application grows, it becomes more difficult to properly write and test. The resulting program suffers from poor organization.</li>
+            <li value="2">Good ideas can be difficult to reuse. Most larger applications are constructed from smaller sub-units. For example, a color table editor might contain control panel, color selection and color-index selection sub-units. These sub-units are often complicated tools that could be used profitably in other programs. To reuse such sub-units, the programmer must understand the existing application and then transplant the interesting parts into the new program — at best a tedious and error-prone proposition.</li>
+        </ul>
+        <p><i>Compound widgets</i> solve these problems. A compound widget is a complete, self-contained, reusable widget sub-tree that behaves to a large degree just like a primitive widget. Complex widget applications written with compound widgets are much easier to maintain than the same application written without them. Using compound widgets is analogous to using subroutines and functions in programming languages.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_1042483"></a><a name="widget_apps_4063420628_33298"></a>Writing Compound Widgets</h2>
+        <p>Compound widgets are written in the same way as any other widget application. They are distinguished from regular widget applications in the following ways:</p>
+        <ul>
+            <li value="1">
+                <p>Compound widgets usually have a base widget at the root of their hierarchies. This base contains the subwidgets that make up the compound widget. From the user’s point of view, this single widget <i>is</i> the compound widget — its children are not programmatically accessible on their own.</p>
+                <p>Notice that the base widget at the root of a compound widget is <i>not</i> a top-level base. When used, a compound widget must always have a parent widget.</p>
+            </li>
+            <li value="2">It is important that the compound widget not make use of the base’s user value. In order to preserve the illusion that the compound widget works just like any of the widget primitives, the user value of the compound widget’s top-level base should be reserved for use by the caller of the compound widget. Instead, the compound widget should use the user value of one of its child widgets.</li>
+            <li value="3">The widget at the root of the compound widget’s hierarchy <i>always</i> has an event handler function associated with it via the EVENT_FUNC keyword to the widget creating function or the WIDGET_CONTROL procedure. This event handler manages events from its sub-widgets and generates events for the compound widget. By swallowing events from the widgets that comprise the compound widget and generating events that represent the compound widget, it presents the illusion that the compound widget is acting like a widget primitive.</li>
+            <li value="4">If the compound widget has a value that can be set, it should be assigned a value setting procedure via the PRO_SET_VALUE keyword to the widget creating function or the WIDGET_CONTROL procedure.</li>
+            <li value="5">If the compound widget has a value that can be retrieved, it should be assigned a value retrieving function via the FUNC_GET_VALUE keyword to the widget creating function or the WIDGET_CONTROL procedure.</li>
+        </ul>
+        <p>For an example of how a compound widget might be written, see <a href="Example__Compound_Widget.htm#widget_apps_4063420628_1042518">Example: Compound Widget</a>.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_65690"></a>The HANDLER Field of the Widget Event Structure</h2>
+        <p>Recall that when WIDGET_EVENT finds an event to return, it moves up the widget hierarchy looking for an event-handling routine registered to the widgets in between its current position and the top-level base of the widget application. If such a routine is found, it is called with the event as its argument, and the <code>HANDLER</code> field of this event is set to the widget ID of the widget where the event routine was found. Since compound widgets have event handlers associated with their root widget, the <code>HANDLER</code> field gives the event handler the widget ID of the root widget. This allows the event handler for a compound widget instance to easily locate the location of its state information relative to this root.</p>
+        <h3>Storing State Information</h3>
+        <p>IDL programmers are often tempted to store the state information directly in the user value of the root widget, but this is not a good idea. The user value of a compound widget is reserved for the user of the widget, just like any basic widget. Therefore, you should store the state information in the user value of one of the child widgets below the root. As a convention, the user value of the first child is often used, leading to event handlers structured as follows:</p>
+        <p class="Code">FUNCTION EVENT_FUNC, event</p>
+        <p class="Code">&#160;&#160;; Get state from the first child of the compound widget root:</p>
+        <p class="Code">&#160;&#160;child = WIDGET_INFO(event.HANDLER, /CHILD)</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, child, GET_UVALUE=state, /NO_COPY</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Execute event-handling code here.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Restore the state information before exiting routine:</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, child, SET_UVALUE=state, /NO_COPY</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Return result of function</p>
+        <p class="Code">&#160;&#160;RETURN, result</p>
+        <p class="Code">END</p>
+        <p>Sometimes, an application will find that it needs to use the user value of all its child widgets for some other purpose, and there is no convenient place to keep the state information. One way to work around this problem is to interpose an extra base between the root base and the rest of the widgets:</p>
+        <p class="Code">ROOT = WIDGET_BASE(parent)</p>
+        <p class="Code">EXTRA = WIDGET_BASE(root)</p>
+        <p>In such an approach, the remaining widgets would all be children of EXTRA rather than ROOT.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

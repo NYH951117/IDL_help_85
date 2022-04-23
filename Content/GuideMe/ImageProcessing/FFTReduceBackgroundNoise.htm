@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Image Analysis">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Fast Fourier Transform</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/image_analysis_gallery1.htm">Image Analysis</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Fast Fourier Transform</span>
+        </div>
+        <h1>Fast Fourier Transform</h1>
+        <p>The <a href="BackgroundFastFourierTransform.htm">Fast Fourier Transform (FFT)</a> is used to transform an image from the spatial domain to the frequency domain, most commonly to reduce background noise from the image. The following example shows how to remove background noise from an image of the M-51 whirlpool galaxy, using the following steps:</p>
+        <ul>
+            <li value="1">Perform a forward FFT to transform the image to the frequency domain</li>
+            <li value="2">Compute a power spectrum and determine threshold to filter out noise</li>
+            <li value="3">Apply a mask to the FFT-transformed image</li>
+            <li value="4">Perform an inverse FFT to transform the image back to the spatial domain</li>
+        </ul>
+        <p>See <a href="BackgroundFastFourierTransform.htm">Fast Fourier Transform (FFT) Background</a> for a more complete description of this process.</p>
+        <p>The example data is available in the <code>examples/data</code> directory of your IDL installation. The code shown below creates the following images, each displayed in separate windows. Below is the original image of M-51 galaxy (left) and inverse-FFT-transformed image (right). The red background pixels have been reduced in the second image.</p>
+        <p>
+            <img src="../images/fft_m51_original.gif" /> <img src="../images/fft_m51_final.gif" /></p>
+        <p style="font-weight: bold;">Intermediate results:</p>
+        <p style="font-weight: normal;">Power spectrum image (left) and surface plot (right).</p>
+        <p style="font-weight: normal;">
+            <img src="../images/fft_m51_transformed.gif" /> <img src="../images/fft_m51_powerspectrum.gif" /></p>
+        <p class="Code">; Open the image.</p>
+        <p class="Code">imageSize = [340, 440]</p>
+        <p class="Code">file = FILEPATH('m51.dat', $</p>
+        <p class="Code">&#160;&#160;&#160;SUBDIRECTORY = ['examples', 'data'])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use READ_BINARY to read the image as a binary file.</p>
+        <p class="Code">binary_img = READ_BINARY(file, DATA_DIMS = imageSize)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the original image</p>
+        <p class="Code">img01 = image(binary_img, RGB_TABLE = 6)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Transform the image into the frequency domain and</p>
+        <p class="Code">; shift the zero-frequency location from (0,0) to</p>
+        <p class="Code">; the center of the data.</p>
+        <p class="Code">ffTransform = FFT(binary_img, /CENTER)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Compute the power spectrum of the transform and</p>
+        <p class="Code">; apply a log scale.</p>
+        <p class="Code">powerSpectrum = ABS(ffTransform)^2</p>
+        <p class="Code">scaledPowerSpect = ALOG10(powerSpectrum)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the log-scaled power spectrum as an image.</p>
+        <p class="Code">img02 = IMAGE(scaledPowerSpect, RGB_TABLE = 6)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Scale the power spectrum to make its maximum value</p>
+        <p class="Code">; equal to 0.</p>
+        <p class="Code">scaledPS0 = scaledPowerSpect - MAX(scaledPowerSpect)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the log-scaled power spectrum as a surface.</p>
+        <p class="Code">s3 = SURFACE(scaledPS0, $</p>
+        <p class="Code">&#160;&#160;&#160;AXIS_STYLE = 0, $</p>
+        <p class="Code">&#160;&#160;&#160;ZTITLE = 'Max-Scaled(Log(Squared Amplitude))', $</p>
+        <p class="Code">&#160;&#160;&#160;FONT_SIZE = 8, $</p>
+        <p class="Code">&#160;&#160;&#160;COLOR = 'aquamarine')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add the z-axis.</p>
+        <p class="Code">ax = AXIS('Z', LOCATION = [0, imageSize[1], 0])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Apply a mask to remove values less than -7, just</p>
+        <p class="Code">; below the peak of the power spectrum. The data type</p>
+        <p class="Code">; of the array returned by the FFT function is complex,</p>
+        <p class="Code">; which contains real and imaginary parts. In image </p>
+        <p class="Code">; processing, we are more concerned with the amplitude, </p>
+        <p class="Code">; which is the real part. The amplitude is the only part</p>
+        <p class="Code">; represented in the surface and displays the results of</p>
+        <p class="Code">; the transformation.</p>
+        <p class="Code">mask = REAL_PART(scaledPS0) GT -7</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Apply the mask to the transform to exclude the noise.</p>
+        <p class="Code">maskedTransform = ffTransform*mask</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Perform an inverse FFT to the masked transform, to</p>
+        <p class="Code">; transform it back to the spatial domain.</p>
+        <p class="Code">inverseTransform = REAL_PART(FFT(maskedTransform, $</p>
+        <p class="Code">&#160;&#160;&#160;/INVERSE, /CENTER))</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the result of the inverse transformation.</p>
+        <p class="Code">img03 = IMAGE(inverseTransform, RGB_TABLE = 6)</p>
+        <h2 class="API">Resources</h2>
+        <ul>
+            <li value="1"><a href="../../Reference Material/F/FFT.htm">FFT function</a>
+            </li>
+            <li value="2"><a href="../../Reference Material/R/READ_BINARY.htm">READ_BINARY function</a>
+            </li>
+            <li value="3"><a href="../../Reference Material/I/IMAGE.htm">IMAGE function</a>
+            </li>
+            <li value="4"><a href="../../Reference Material/S/SURFACE.htm">SURFACE function</a>
+            </li>
+            <li value="5"><a href="../../LoadingDefaultColorTables.htm">Loading Default Color Tables</a>
+            </li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

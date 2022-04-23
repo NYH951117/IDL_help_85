@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: R">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>READ_JPEG </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="R_list.htm">Routines: R</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">READ_JPEG</span>
+        </div>
+        <h1 class="Routine"><a name="kanchor2215"></a><a name="kanchor2216"></a><a name="kanchor2217"></a><a name="R_822202989_678446"></a><a name="R_822202989_14040"></a>READ_JPEG </h1>
+        <p>The READ_JPEG procedure reads JPEG (Joint Photographic Experts Group) format compressed images from files or memory. JPEG is a standardized compression method for full-color and gray-scale images. This procedure reads JFIF, the JPEG File Interchange Format, including those produced by WRITE_JPEG. Such files are usually simply called JPEG files</p>
+        <p>READ_JPEG can optionally quantize TrueColor images contained in files to a pseudo-color palette with a specified number of colors, and with optional color dithering.</p>
+        <p>This procedure is based in part on the work of the Independent JPEG Group. For a brief explanation of JPEG, see <a href="../W/WRITE_JPEG.htm#W_811389549_959943">WRITE_JPEG</a>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>All JPEG files consist of byte data. Input data is converted to bytes before being written to a JPEG file.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>To find information about a potential JPEG file before trying to read its data, use the <a href="../Q/QUERY_JPEG.htm#Q_815714925_1068561">QUERY_JPEG </a>function.</p>
+        <h2 class="API"><a name="R_822202989_279703"></a><a name="R_822202989_279703_PageTOC_READ_JPEG_"></a>Examples</h2>
+        <p class="Code">; Read a JPEG grayscale image:</p>
+        <p class="Code">READ_JPEG, 'test.jpg', a</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the image:</p>
+        <p class="Code">TV, a</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Read and display a JPEG TrueColor image on a TrueColor display:</p>
+        <p class="Code">READ_JPEG, 'test.jpg', a, TRUE=1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the image returned with pixel interleaving</p>
+        <p class="Code">; (i.e., with dimensions 3, m, n):</p>
+        <p class="Code">TV, a, TRUE=1</p>
+        <p>Read the image, setting the number of colors to be quantized to the maximum number of available colors. </p>
+        <p class="Code">; Read a JPEG TrueColor image on an 8-bit pseudo-color display:</p>
+        <p class="Code">READ_JPEG, 'test.jpg', a, ctable, COLORS=!D.N_COLORS-1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the image:</p>
+        <p class="Code">TV, a</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Load the quantized color table:</p>
+        <p class="Code">TVLCT, ctable</p>
+        <p>We could have also included the TWO_PASS_QUANTIZE and DITHER keywords to improve the image’s appearance.</p>
+        <p>Using the BUFFER keyword.</p>
+        <p class="Code">; Initialize buffer:</p>
+        <p class="Code">buff = 0</p>
+        <p class="Code">OPENR, 1, 'images.jpg'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Process each image:</p>
+        <p class="Code">FOR i=1, nimages DO BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;; Read next image:</p>
+        <p class="Code">&#160;&#160;&#160;READ_JPEG, UNIT=1, BUFFER=buff, a</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Display the image:</p>
+        <p class="Code">&#160;&#160;&#160;&#160;TV, a</p>
+        <p class="Code">ENDFOR</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Done:</p>
+        <p class="Code">CLOSE, 1</p>
+        <h2 class="API"><a name="R_822202989_279829"></a><a name="R_822202989_279829_PageTOC_READ_JPEG_"></a>Syntax</h2>
+        <p class="Syntax">READ_JPEG [,&#160;<i>Filename</i>], <i>Image</i> [,&#160;<i>Colortable</i>] [,&#160;<a href="#R_822202989_279694" class="selected">BUFFER</a>=<i>variable</i>] [,&#160;<a href="#R_822202989_279696" class="selected">COLORS</a>=<i>value</i>{8 to 256}] [,&#160;<a href="#R_822202989_279697" class="selected">DITHER</a>={0 | 1 | 2}] [,&#160;/<a href="#R_822202989_1064444" class="selected">GRAYSCALE</a>] [,&#160;/<a href="#R_822202989_868283" class="selected">ORDER</a>] [,&#160;<a href="#R_822202989_279699" class="selected">TRUE</a>={1 | 2 | 3}] [,&#160;<a href="#R_822202989_279701" class="selected">UNIT</a>=<i>lun</i>][,&#160;/<a href="#R_822202989_279700" class="selected">TWO_PASS_QUANTIZE</a>]</p>
+        <h2 class="API"><a name="R_822202989_279843"></a><a name="R_822202989_279843_PageTOC_READ_JPEG_"></a>Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>A scalar string specifying the full pathname of the JFIF format (JPEG) file to be read. If this parameter is not present, the UNIT and/or the BUFFER keywords must be specified.</p>
+        <h3 class="Argument">Image</h3>
+        <p>A named variable that will contain the image data read from the file.</p>
+        <h3 class="Argument">Colortable</h3>
+        <p>A named variable that will contain a colormap created by color-quantizing the TrueColor image being read. On completion, this variable contains a byte array with dimensions (<i>nColors</i>, 3), where <i>nColors</i> is derived from the value of the <a href="#R_822202989_279696" class="selected">COLORS</a> keyword. If this argument is not present, or if the specified JPEG image is grayscale, no color-quantization is performed.</p>
+        <h2 class="API"><a name="R_822202989_843736"></a><a name="R_822202989_843736_PageTOC_READ_JPEG_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="R_822202989_279694"></a><a name="R_822202989_279694_Keywords_READ_JPEG__"></a>BUFFER</h3>
+        <p>Set this keyword to a named variable that is used for a buffer. A buffer variable need only be supplied when reading multiple images per file. Initialize the buffer variable to empty by setting it to 0.</p>
+        <h3 class="Keyword"><a name="R_822202989_279696"></a><a name="R_822202989_279696_Keywords_READ_JPEG__"></a>COLORS</h3>
+        <p>If the image file contains a TrueColor image that is to be displayed on an indexed color destination, set COLORS to the desired number of colors to be quantized. COLORS can be set to a value from 8 to 256. The DITHER and TWO_PASS_QUANTIZE keywords affect the method, speed, and quality of the color quantization. These keywords have no effect if the file contains a grayscale image.</p>
+        <h3 class="Keyword"><a name="R_822202989_279697"></a><a name="R_822202989_279697_Keywords_READ_JPEG__"></a>DITHER</h3>
+        <p>Set this keyword to use dithering with color quantization (i.e., if the COLORS keyword is in use). Dithering is a method that distributes the color quantization error to surrounding pixels, to achieve higher-quality results. Set the DITHER keyword to one of the following values:</p>
+        <ul>
+            <li value="1">0 = No dithering. Images are read quickly, but quality is low.</li>
+            <li value="2">1 = Floyd-Steinberg dithering. This method is relatively slow, but produces the highest quality results. This is the default behavior.</li>
+            <li value="3">2 = Ordered dithering. This method is faster than Floyd-Steinberg dithering, but produces lower quality results.</li>
+        </ul>
+        <h3 class="Keyword"><a name="R_822202989_1064444"></a><a name="R_822202989_1064444_Keywords_READ_JPEG__"></a>GRAYSCALE</h3>
+        <p>Set this keyword to return a monochrome (grayscale) image, regardless of whether the file contains an RGB or grayscale image.</p>
+        <h3 class="Keyword"><a name="R_822202989_868283"></a><a name="R_822202989_868283_Keywords_READ_JPEG__"></a>ORDER</h3>
+        <p>JPEG/JFIF images are normally written in top-to-bottom order. If the image is to be stored into the <i>Image</i> array in the standard IDL order (from bottom-to-top) set ORDER to 0. This is the default. If the image array is to be top-to-bottom order, set ORDER to 1.</p>
+        <h3 class="Keyword"><a name="R_822202989_279699"></a><a name="R_822202989_279699_Keywords_READ_JPEG__"></a>TRUE</h3>
+        <p>Use this keyword to specify the index of the dimension for color interleaving when reading a TrueColor image. The default is 1, for pixel interleaving, (3, <i>m</i>, <i>n</i>). A value of 2 indicates line interleaving (<i>m</i>, 3, <i>n</i>), and 3 indicates band interleaving, (<i>m</i>, <i>n</i>, 3).</p>
+        <h3 class="Keyword"><a name="R_822202989_279700"></a><a name="R_822202989_279700_Keywords_READ_JPEG__"></a>TWO_PASS_QUANTIZE</h3>
+        <p>Set this keyword to use a two-pass color quantization method when quantization is in effect (i.e., the COLORS keyword is in use). This method requires more memory and time, but produces superior results to the default one-pass quantization method. </p>
+        <h3 class="Keyword"><a name="R_822202989_279701"></a><a name="R_822202989_279701_Keywords_READ_JPEG__"></a>UNIT</h3>
+        <p>This keyword can be used to designate the logical unit number of an already open JFIF file, allowing the reading of multiple images per file or the embedding of JFIF images in other data files. When using this keyword, <i>Filename</i> should not be specified.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When opening a file intended for use with the UNIT keyword, if the filename does not end in <code>.jpg</code>, or <code>.jpeg</code>, you must specify the STDIO keyword to OPEN in order for the file to be compatible with READ_JPEG.</p>
+        <h2 class="API"><a name="R_822202989_798733"></a><a name="R_822202989_798733_PageTOC_READ_JPEG_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre-4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="R_822202989_1092950"></a><a name="R_822202989_1092950_PageTOC_READ_JPEG_"></a>See Also</h2>
+        <p><a href="../I/IOPEN.htm">IOPEN</a>, <a href="../W/WRITE_JPEG.htm#W_811389549_959943">WRITE_JPEG</a>,&#160; <a href="../Q/QUERY_JPEG.htm#Q_815714925_1068561">QUERY_JPEG</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

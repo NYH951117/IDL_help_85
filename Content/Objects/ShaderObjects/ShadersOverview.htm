@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Objects|ShaderObjects">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Overview of Shader Objects</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../Object Classes/ref_part2.htm">Objects</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="ShaderTOC.htm">ShaderObjects</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Overview of Shader Objects</span>
+        </div>
+        <h1>Overview of Shader Objects</h1>
+        <p>The shader functionality provides access to the advantages of the hardware-based, OpenGL Shading Language (GLSL). Using a shader, computationally-intensive image processing operations can be off-loaded to the graphics card, making the time and processing resources of the host computer available to other application elements. Additionally, the OpenGL Shading Language greatly expands on the capabilities of the fixed OpenGL rendering pipeline to produce advanced visual effects. </p>
+        <p>Whereas native IDL object graphics expose OpenGL capabilities through fixed object properties, GLSL offers the ability to modify virtually any object characteristic. Using shaders lets you implement realistic material and lighting effects, create animations by modifying object vertices, and achieve image processing performance rates that far exceed what is possible using the system CPU.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This functionality only exposes the ability to use OpenGL Shading Language within an IDL application. It does not implement the shading language nor does this online help explain how to write shader language code. However, numerous GLSL publications and internet resources are available.</p>
+        <h2>Why Use Shaders?</h2>
+        <p>You can use shaders to produce elaborate 3D graphics, but shaders also offer increased performance and interactivity in image processing applications. Think about an application that performs the following operations on an image:</p>
+        <ul>
+            <li value="1">Convolution filter</li>
+            <li value="2">Scale and offset bias</li>
+            <li value="3">Tonal compensation (LUT)</li>
+            <li value="4">Display compensation (LUT or <a href="../../Reference Material/B/BYTSCL.htm">BYTSCL</a>)</li>
+        </ul>
+        <p>Using the system CPU as the primary processor in a software-based solution, it is only possible to achieve a display rate of a few frames per second. However, if you use a shader program, IDL shifts the processing to the graphics card GPU and display rates of over 100 frames per second are possible. The shader program applies these operations on every draw so there is no performance penalty for altering parameters during rapid drawing sequence. This means that a user can change a parameter of the operation and see the results nearly instantaneously, which makes the image processing application highly responsive to interactive changes. See “How Shaders Enhance Performance” for details.</p>
+        <p>Shaders also provide a way to solve a wider range of image processing problems than what is possible using only the fixed functionality of the OpenGL pipeline in the standard IDL procedures and functions. </p>
+        <h2>Hardware Requirements for Shaders</h2>
+        <p>In general, shader programs will work on graphics cards and drivers that support the OpenGL 2.0 (or better) interface. Note that performance varies greatly between low- and high-end graphics cards, and also varies with the implementation and content of the shader program. Always use the most up-to-date drivers available for your graphics card when developing IDL applications using shaders.</p>
+        <p>Use the SHADING_LANGUAGE_VERSION keyword to <a href="../../Object Classes/Graphics/IDLgrWindow__GetDeviceIn.htm">IDLgrWindow::GetDeviceInfo</a> to determine whether or not a card supports shader functionality. Executing the following code in IDL will briefly create an <a href="../../Object Classes/Graphics/IDLgrWindow.htm">IDLgrWindow</a> object and report on whether hardware shaders are available on your system:</p>
+        <p class="Code">oWin = OBJ_NEW('IDLgrWindow')</p>
+        <p class="Code">oWin-&gt;GetDeviceInfo, SHADING_LANGUAGE_VERSION=v</p>
+        <p class="Code">OBJ_DESTROY, oWin</p>
+        <p class="Code">PRINT, 'Shading language version: ', v</p>
+        <p class="Code">IF FLOAT(v) GE 1 THEN PRINT, 'Hardware shaders are available' $</p>
+        <p class="Code">&#160;&#160;ELSE PRINT, 'Hardware shaders are not available'</p>
+        <p>A shader-equipped graphics card will not use the shader hardware if IDL is using software rendering. To make sure you are using the shading hardware, be sure to specify hardware rendering (for example, set the IDLgrWindow RENDERER property to 0 or set your graphics Preferences in the IDL Workbench).</p>
+        <p>Image processing applications can provide a software-based alternative in case the system graphics card does not support OpenGL 2.0. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If there is insufficient support for the shader program, IDL draws the scene as if there was no shader object present unless a software fallback exists.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Setting the IDLgrWindow property RETAIN to 2 disables hardware shaders. Software shaders are used if available.</p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

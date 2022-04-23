@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Variables">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Creating an Array from Existing Data</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDLInternalVariables.htm">IDLInternals - Variables</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Creating an Array from Existing Data</span>
+        </div>
+        <h1>Creating an Array from Existing Data</h1>
+        <p>There are two functions that allow you to create an IDL array variable whose data points at data you supply rather than having IDL allocate the data space. The routine <b>IDL_ImportArray()</b> returns a temporary variable, while <b>IDL_ImportNamedArray()</b> returns a named variable in the current execution scope, creating the new variable if necessary. Your data must already exist in memory. The data area, which can be quite large, is not copied. These functions simply create variable and array descriptors that point to the data you supply and return the pointer to the resulting variable. Their definitions are:</p>
+        <p class="Code">IDL_VPTR IDL_ImportArray(int n_dim, IDL_MEMINT dim[], int type, </p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;UCHAR *data, IDL_ARRAY_FREE_CB free_cb, void *s)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IDL_VPTR IDL_ImportNamedArray(char *name, int n_dim, IDL_MEMINT dim[],</p>
+        <p class="Code"> &#160;&#160;&#160;&#160;&#160;&#160;int type, UCHAR *data, IDL_ARRAY_FREE_CB free_cb, void *s)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">typedef void (* IDL_ARRAY_FREE_CB) (UCHAR *);</p>
+        <p>where:</p>
+        <h3>name</h3>
+        <p>The name of the variable to be created or modified.</p>
+        <h3>n_dim</h3>
+        <p>The number of dimensions in the array.</p>
+        <h3>dim</h3>
+        <p>An array of <b>IDL_MAX_ARRAY_DIM</b> elements, containing the size of each dimension.</p>
+        <h3>type</h3>
+        <p>The IDL type code describing the data. See “<a href="../IDLInternals - Types/Types.htm">Type Codes</a>".</p>
+        <h3>data</h3>
+        <p>A pointer to your array data. Your data will not be modified unless the user explicitly modifies elements of the array using subscripts.</p>
+        <p>The temporary variable returned by <b>IDL_ImportArray()</b> can be used immediately in an expression, in which case the descriptors are freed immediately. It can also be assigned to a longer-lived variable using <b>IDL_VarCopy()</b>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDL frees only the memory that it allocates for the descriptors, not the memory that you supply containing your data. You can arrange to be notified when IDL is finished with your data by using the <b>free_cb</b> argument, described below.</p>
+        <h3>free_cb</h3>
+        <p>If non-NULL, <b>free_cb</b> is a pointer to a function that will be called when IDL frees the array. This feature gives the caller a sure way to know when IDL is no longer referencing data. Use the called function to perform any required cleanup such as freeing dynamic memory or releasing shared or mapped memory. The called function should have no return value and should accept as its argument a (<b>uchar *</b>), which is a pointer to the memory to be freed.</p>
+        <h3>s</h3>
+        <p>If the type of the variable is <b>IDL_TYP_STRUCT</b>, <b>s</b> points to the opaque structure definition, as returned by <b>IDL_MakeStruct()</b>.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

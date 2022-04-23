@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: F">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>FFT_POWERSPECTRUM</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="F_list.htm">Routines: F</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">FFT_POWERSPECTRUM</span>
+        </div>
+        <h1 class="Routine"><a name="I_833016429_1051258"></a><a name="kanchor889"></a><a name="I_833016429_65415"></a><a name="kanchor890"></a>FFT_POWERSPECTRUM</h1>
+        <p>The FFT_POWERSPECTRUM function computes the Fourier power spectrum of an array.</p>
+        <p>For a given input signal array, the power spectrum computes the portion of a signal's power (energy per unit time) falling within given frequency bins. Power is calculated as the average of the squared signal. In the frequency domain, this is the square of the FFT's magnitude.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>fft_powerspectrum.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="I_833016429_1052324_PageTOC_IDL_BASE64_"></a>Example</h2>
+        <p>This example plots the power spectrum of a noisy sinusoidal signal with two specified frequency components.</p>
+        <p class="Code">; Specify the time interval </p>
+        <p class="Code">dt = 1/16000.</p>
+        <p class="Code">; Create an array of time indices</p>
+        <p class="Code">t = [0:3:dt]</p>
+        <p class="Code">; Create a signal with two frequencies</p>
+        <p class="Code">freq1 = 2100</p>
+        <p class="Code">freq2 = 6400</p>
+        <p class="Code">x = cos(2*!pi*t * freq1)+ sin(2*!pi*t * freq2)</p>
+        <p class="Code">; Add some random noise</p>
+        <p class="Code">x += randomn(seed, t.length)</p>
+        <p class="Code">; Compute the power spectrum of the signal</p>
+        <p class="Code">f = FFT_PowerSpectrum(x, dt, FREQ=freq)</p>
+        <p class="Code">; Plot the results</p>
+        <p class="Code">p = plot(freq/1000, f, /YLOG, XTITLE='Frequency (kHz)')</p>
+        <p>IDL produces the following plot:</p>
+        <p>
+            <img src="../../Resources/Images/powerspectrum.png" />
+        </p>
+        <h2 class="API"><a name="I_833016429_1051277_PageTOC_IDL_BASE64_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = FFT_POWERSPECTRUM(<i>Input</i> [, <i>dt</i>])</p>
+        <h2 class="API"><a name="I_833016429_1051280_PageTOC_IDL_BASE64_"></a>Return Value</h2>
+        <p>If <i>Input</i> is an N-element array, <i>Result</i> is a vector of length N/2 + 1.</p>
+        <p>If <i>Input</i> is a double, <i>Result</i> is a double vector containing the computed values. Otherwise <i>Result</i> is a float vector.</p>
+        <h2 class="API"><a name="I_833016429_1051283_PageTOC_IDL_BASE64_"></a>Arguments</h2>
+        <h3 class="Argument">Input</h3>
+        <p>A vector of time series values, of length N.</p>
+        <h3 class="Argument">dt</h3>
+        <p>The time interval between measurements. If not supplied a default value of 1.0 is used.</p>
+        <h2 class="API"><a name="I_833016429_1051287_PageTOC_IDL_BASE64_"></a>Keywords</h2>
+        <h3 class="Argument">AMP</h3>
+        <p>If set to a named variable, this keyword will contain a vector of length N/2 + 1 containing the Fourier amplitude.</p>
+        <h3 class="Argument">BANDWIDTH</h3>
+        <p>If set to a named variable, this keyword will contain the width of the Tukey smoothing filter, in units of frequency. If TUKEY&#160;is not set, this keyword has no effect.</p>
+        <h3 class="Argument">DOF</h3>
+        <p>If set to a named variable, this keyword will contain the degrees of freedom for the chi-square distribution for the significances. If TUKEY smoothing is not used, this value is 2.0. If TUKEY smoothing is used, the value is 2*N*BANDWIDTH.</p>
+        <h3 class="Argument">FRACTION</h3>
+        <p>If this keyword is set, return the fractional power spectral density; calculated as Result/TOTAL(Result).</p>
+        <h3 class="Argument">FREQ</h3>
+        <p>If set to a named variable, this keyword will contain a vector of the frequencies at which the power spectral density is evaluated.</p>
+        <h3 class="Argument">LAG</h3>
+        <p>The autocorrelation lag value used when calculating significance values. If not supplied a default value of 0.0 is used. If SIGNIFICANCE is not used, this keyword has no effect.</p>
+        <h3 class="Argument">PERIOD</h3>
+        <p>If set to a named variable, this keyword will contain a vector of the periodic components at which the power spectral density is evaluated. Period[n] = 1/Freq[n]</p>
+        <h3 class="Argument">PHASE</h3>
+        <p>If set to a named variable, this keyword will contain a vector of length N/2 + 1 containing the Fourier phase.</p>
+        <h3 class="Argument">SIG_LEVEL</h3>
+        <p>The significance level used when calculating significance values. If not supplied a default value of 0.05 (5%) is used. If SIGNIFICANCE is not used, this keyword has no effect.</p>
+        <h3 class="Argument">SIGNIFICANCE</h3>
+        <p>If set to a named variable, this keyword will contain a vector of length N/2 + 1 containing the significance levels as a function of FREQ. The default 5% significance level (95% confidence level) implies that for a random time series, 5% of the points will, by chance, be above that threshold.</p>
+        <h3 class="Argument">TUKEY</h3>
+        <p>If this keyword is set, smooth the result using a Tukey filter. The default is no smoothing.</p>
+        <h3 class="Argument">WIDTH</h3>
+        <p>The effective width of the Tukey filter, as a fraction of the number of points N. If not supplied a default value of 0.02 is used. If TUKEY&#160;is not set, this keyword has no effect.</p>
+        <h2 class="API"><a name="I_833016429_1051329_PageTOC_IDL_BASE64_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

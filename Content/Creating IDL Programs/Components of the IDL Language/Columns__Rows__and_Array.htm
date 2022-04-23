@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Arrays">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Columns, Rows, and Array Majority</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Arrays.htm">Arrays</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Columns, Rows, and Array Majority</span>
+        </div>
+        <h1><a name="arrays_3727706888_737332"></a><a name="kanchor4447"></a>Columns, Rows, and Array Majority</h1>
+        <p>Computer hardware does not directly support the concept of multidimensional arrays. Computer memory is unidimensional, providing memory addresses that start at zero and increase serially to the highest available location. Multidimensional arrays are therefore a software concept: software (IDL in this case) maps the elements of a multi-dimensional array into a contiguous linear span of memory addresses. There are two ways that such an array can be represented in one-dimensional linear memory. These two options, which are explained below, are commonly called <i><a name="kanchor4448"></a>row major</i> and <i><a name="kanchor4449"></a>column major</i>. All programming languages that support multidimensional arrays must choose one of these two possibilities. This choice is a fundamental property of the language, and it affects how programs written in different languages share data with each other.</p>
+        <p>Before describing the meaning of these terms and IDL’s relationship to them, it is necessary to understand the conventions used when referring to the dimensions of an array. For mnemonic reasons, people find it useful to associate higher level meanings with the dimensions of multi-dimensional data. For example, a 2-D variable containing measurements of ozone concentration on a uniform grid covering the earth might associate latitude with the first dimension, and longitude with the second dimension. Such associations help people understand and reason about their data, but they are not fundamental properties of the language itself. It is important to realize that no matter what meaning you attach to the dimensions of an array, IDL is only aware of the number of dimensions and their size, and does not work directly in terms of these higher order concepts. Another way of saying this is that <code>arr[d1, d2]</code> addresses the same element of variable arr no matter what meaning you associate with the two dimensions.</p>
+        <p>In the IDL world, there are two such conventions that are widely used:</p>
+        <ul>
+            <li value="1">In image processing, the first dimension of an image array is the column, and the second dimension is the row. IDL is widely used for image processing, and has deep roots in this area. Hence, the dominant convention in IDL documentation is to refer to the first dimension of an array as the column and the second dimension as the row.</li>
+            <li value="2">In the standard mathematical notation used for linear algebra, the first dimension of an array (or <i>matrix</i>) is the row, and the second dimension is the column. Note that this is the exact opposite of the image processing convention.</li>
+        </ul>
+        <p>In computer science, the way array elements are mapped to memory is always defined using the mathematical [<i>row</i>, <i>column</i>] notation. Much of the following discussion utilizes the <i>m x n</i> array shown in the following figure, with <i>m</i> rows and <i>n</i> columns:</p>
+        <p>
+            <img src="../../images/64_2.jpg" />
+        </p>
+        <p>Given such a 2-dimensional matrix, there are two ways that such an array can be represented in 1-dimensional linear memory — either row by row (<i>row major)</i>, or column by column (<i>column major</i>):</p>
+        <ul>
+            <li value="1"><b>Contiguous First Dimension (Column Major)</b>: In this approach, all elements of the first dimension (<i>m</i> in this case) are stored contiguously in memory. The 1-D linear address of element A<sub>d1, d2</sub> is therefore given by the formula <code>(d2*m&#160;+&#160;d1)</code>. As you move linearly through the memory of such an array, the first (leftmost) dimension changes the fastest, with the second dimension (<i>n</i>, in this case) incrementing every time you come to the end of the first dimension:</li>
+        </ul>
+        <p class="indent">A<sub>0,0</sub>,&#160;&#160;A<sub>1,0</sub>,&#160;&#160;…,&#160;&#160;A<sub class="italic">m</sub><sub>-1,0</sub>,&#160;&#160;A<sub>0,1</sub>,&#160;&#160;A<sub>1,1</sub>,&#160;&#160;…,&#160;&#160;A<sub class="italic">m</sub><sub>-1,1</sub>,&#160;&#160;…</p>
+        <p class="indent">Computer languages that map multidimensional arrays in this manner are called <i>column major, </i>following the mathematical [<i>row</i>,&#160;<i>column</i>] notation. IDL and Fortran are both examples of column-major languages.</p>
+        <ul>
+            <li value="1"><b>Contiguous Second Dimension (Row Major)</b>: In this approach, all elements of the second dimension (<i>n</i>, in this case) are stored contiguously in memory. The 1-D linear address of element A<sub>d1, d2</sub> is therefore given by the formula <code>(d1*n&#160;+&#160;d2)</code>. As you move linearly through the memory of such an array, the second dimension changes the fastest, with the first dimension (<i>m</i> in this case) incrementing every time you come to the end of the second dimension:</li>
+        </ul>
+        <p class="indent">A<sub>0,0</sub>,&#160;&#160;A<sub>0,1</sub>,&#160;&#160;…,&#160;&#160;A<sub>0,</sub><sub class="italic">n</sub><sub>-1</sub>,&#160;A<sub>1,0</sub>,&#160;&#160;A<sub>1,1</sub>,&#160;&#160;…,&#160;&#160;A<sub>1,</sub><sub class="italic">n</sub><sub>-1</sub>,&#160;&#160;…</p>
+        <p class="indent">Computer languages that map multidimensional arrays in this manner are known as <i>row major</i>. Examples of row-major languages include C and C++. </p>
+        <p>The terms <i>row major</i> and <i>column major</i> are widely used to categorize programming languages. It is important to understand that when programming languages are discussed in this way, the mathematical convention — in which the first dimension represents the row and the second dimension represents the column — is used. If you use the image-processing convention — in which the first dimension represents the column and the second dimension represents the row — you should be careful to make note of the distinction.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDL users who are comfortable with the IDL image-processing-oriented array notation [<i>column</i>, <i>row</i>] frequently follow the reasoning outlined above and incorrectly conclude that IDL is a row-major language. The often-overlooked cause of this mistake is that the standard definition of the terms <i>row major</i> and <i>column major</i> assume the mathematical [<i>row</i>, <i>column</i>] notation. In such cases, it can be helpful to look beyond the row/column terminology and think in terms of which dimension is contiguous in memory.</p>
+        <p>Note that the <i>m x n</i> array shown above could be represented with equal accuracy as having <i>m</i> columns and <i>n</i> rows, as shown in the figure below. This corresponds to the image-processing [<i>column</i>, <i>row</i>] notation. It is important to note that while the representation shown is the transpose of the representation in the figure above, the data stored in the computer memory are identical. Only the two-dimensional representation, which takes its form from the notational convention used, has changed. The figure below shows an m x n array represented in image-processing notation.</p>
+        <p>
+            <img src="../../images/64_3.jpg" />
+        </p>
+        <p>IDL’s choice of column-major array layout reflects its roots as an image processing language. The fact that the elements of the first dimension are contiguous means that the elements of each row of an image array (using [<i>column</i>, <i>row</i>] notation, as shown in the second figure, are contiguous. This is the order expected by most graphics hardware, providing an efficiency advantage for languages that naturally store data that way. Also, this ordering minimizes virtual memory overhead, since images are accessed linearly.</p>
+        <p>It should be clear that the higher-level meanings associated with array dimensions (row, column, latitude, longitude, <i>etc.</i>) are nothing more than a human notational device. In general, you can assign any meaning you wish to the dimensions of an array, and as long as your use of those dimensions is consistent, you will get the correct answer, regardless of the order in which IDL chooses to store the actual array elements in computer memory. Thus, it is usually possible to ignore these issues. There are times however, when understanding memory layout can be important:</p>
+        <h4>Sharing Data With Other Languages</h4>
+        <p>If binary data written by a row major language is to be input and used by IDL, transposition of the data is usually required first. Similarly, if IDL is writing binary data for use by a program written in a row major language, transposition of the data before writing (or on input by the other program) is often required.</p>
+        <h4>Calling Code Written In Other Languages</h4>
+        <p>When passing IDL data to code written in a row major language via dynamic linking (CALL_EXTERNAL, LINKIMAGE, DLMs), it is often necessary to transpose the data before passing it to the called code, and to transpose the results.</p>
+        <h4>Matrix Multiplication</h4>
+        <p>Understanding the difference between the IDL # and ## operators requires an understanding of array layout. For a discussion of how the ordering of such data relates to IDL mathematics routines, see <a href="Manipulating_Arrays.htm#arrays_3727706888_752335">Manipulating Arrays</a>.</p>
+        <h4>1-D Subscripting Of Multidimensional Array</h4>
+        <p>IDL allows you to index multidimensional arrays using a single 1-D subscript. For example, given a two dimensional 5x7 array, <code>ARRAY[2,3]</code> and <code>ARRAY[17]</code> refer to the same array element. Knowing this requires an understanding of the actual array layout in memory (<code>d2*m + d1</code>, or 3*5+2, which yields 17).</p>
+        <h4>Efficiency</h4>
+        <p>Accessing memory in the wrong order can impose a severe performance penalty if your data is larger than the physical memory in your computer. Accessing elements of an array along the contiguous dimension minimizes the amount of memory paging required by the virtual memory subsystem of your computer hardware, and will therefore be the most efficient. Accessing memory across the non-contiguous dimension can cause each such access to occur on a different page of system memory. This forces the virtual memory subsystem into a cycle in which it must continually force current pages of memory to disk in order to make room for new pages, each of which is only momentarily accessed. This inefficient use of virtual memory is commonly known as <i>thrashing</i>.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

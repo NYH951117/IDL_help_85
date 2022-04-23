@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Image Analysis|Image Filters">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>High Pass Filtering</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/image_analysis_gallery1.htm">Image Analysis</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">High Pass Filters</span>
+        </div>
+        <h1>High Pass Filtering<a name="kanchor4221"></a></h1>
+        <p>A high pass filter is the basis for most sharpening methods. An image is <a href="SharpenImages.htm">sharpened</a> when contrast is enhanced between adjoining areas with little variation in brightness or darkness. A high pass filter tends to retain the high frequency information within an image while reducing the low frequency information. The kernel of the high pass filter is designed to increase the brightness of the center pixel relative to neighboring pixels. The kernel array usually contains a single positive value at its center, which is completely surrounded by negative values. The following array is an example of a 3 by 3 kernel for a high pass filter:</p>
+        <p>
+            <img src="../images/highpass_filter_matrix.gif" />
+        </p>
+        <p>The above array is just an example of one possible kernel for a high pass filter. Other filters may include more weighting for the center point.</p>
+        <p>The following example uses the <a href="../../Reference Material/C/CONVOL.htm">CONVOL</a> function with a 3 by 3 high pass filter to sharpen a whirlpool galaxy M51 image. This example data is available in the <code>examples/data</code> directory of your IDL installation. The code shown below creates the following images:</p>
+        <p>
+            <img src="../images/highpassfilt.gif" />
+        </p>
+        <p class="Code">; Import the image from the file.</p>
+        <p class="Code">file = FILEPATH('m51.dat', $</p>
+        <p class="Code">&#160;&#160;&#160;SUBDIRECTORY = ['examples', 'data'])</p>
+        <p class="Code">orig_imageSize = [340, 440]</p>
+        <p class="Code">orig_image = READ_BINARY(file, DATA_DIMS = orig_imageSize)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">im = IMAGE(orig_image, RGB_TABLE=5, $</p>
+        <p class="Code">&#160;&#160;TITLE = "Original Galaxy Image", $</p>
+        <p class="Code">&#160;&#160;POSITION = [.10, .025, .50, .55], DIMENSIONS=[800, 800])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">croppedSize = [56, 56]</p>
+        <p class="Code">croppedImage = orig_image[200:(croppedSize[0] - 1) + 200, $</p>
+        <p class="Code">&#160;&#160;180:(croppedSize[1] - 1) + 180]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">im01 = IMAGE(croppedImage, RGB_TABLE=5, $</p>
+        <p class="Code">&#160;&#160;TITLE = "Cropped Galaxy Image", $</p>
+        <p class="Code">&#160;&#160;POSITION = [.10, .625, .40, .925], /CURRENT)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a kernel for a high pass filter.</p>
+        <p class="Code">kernelSize = [3, 3]</p>
+        <p class="Code">kernel = REPLICATE(-1., kernelSize[0], kernelSize[1])</p>
+        <p class="Code">kernel[1, 1] = 8</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Apply the filter to the image.</p>
+        <p class="Code">filteredImage = CONVOL(FLOAT(croppedImage), kernel, $</p>
+        <p class="Code">&#160;&#160;/CENTER, /EDGE_TRUNCATE)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">im02 = IMAGE(filteredImage, $</p>
+        <p class="Code">&#160;&#160;RGB_TABLE = 5, $</p>
+        <p class="Code">&#160;&#160;TITLE = "High-Pass Filtered Galaxy Image", $</p>
+        <p class="Code">&#160;&#160;POSITION = [.60, .625, .90, .925], /CURRENT)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">im03 = IMAGE(croppedImage + filteredImage, $</p>
+        <p class="Code">&#160;&#160;RGB_TABLE = 5, $</p>
+        <p class="Code">&#160;&#160;TITLE = "Filtered and Cropped Images Combined", $</p>
+        <p class="Code">&#160;&#160;POSITION = [.60, .125, .90, .45], /CURRENT)</p>
+        <h2 class="API">Resources</h2>
+        <ul>
+            <li value="1"><a href="../../Reference Material/C/CONVOL.htm">CONVOL</a>
+            </li>
+            <li value="2"><a href="../../Reference Material/I/IMAGE.htm">IMAGE</a>
+            </li>
+            <li value="3"><a href="../../Reference Material/R/READ_BINARY.htm">READ_BINARY</a>
+            </li>
+            <li value="4"><a href="../../Reference Material/R/REPLICATE.htm">REPLICATE</a>
+            </li>
+            <li value="5"><a href="../../LoadingDefaultColorTables.htm">Loading Default Color Tables</a>
+            </li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|COM Export Bridge|Multidimensional Array Storage and Access">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Storage and Access in COM and IDL</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">COM Export Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="MASAOverview.htm">Multidimensional Array Storage and Access</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Storage and Access in COM and IDL</span>
+        </div>
+        <h1><a name="Storage_and_Access_in_COM_and_IDL"></a><a name="kanchor5145"></a>Storage and <a name="kanchor5146"></a>Access in COM and IDL</h1>
+        <p>There is a difference between storage and access. Storage focuses on the way a multidimensional array of items gets arranged in linear memory. Since all memory is linear memory, it is paramount to understand how arrays are arranged in linear memory. Access is the way a language allows interaction with a multidimensional array.</p>
+        <p>Since we are creating and reading arrays from a computer language, we must understand the language’s perspective on the array and how to access it.</p>
+        <h2><a name="kanchor5147"></a>Arrays in COM</h2>
+        <p>In order to move an array around within the COM world, it must be described by a SAFEARRAY descriptor whose dimensions are defined by SAFEARRAYBOUND descriptors.</p>
+        <h3>SAFEARRAY Descriptors</h3>
+        <p>The SAFEARRAY descriptor has the following definition:</p>
+        <p class="Code">typedef struct SAFEARRAY</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">USHORT cDims;</p>
+        <p class="Code_Indented">USHORT fFeatures;</p>
+        <p class="Code_Indented">ULONG cbElements;</p>
+        <p class="Code_Indented">ULONG cLocks;</p>
+        <p class="Code_Indented">PVOID pvData;</p>
+        <p class="Code_Indented">SAFEARRAYBOUND rgsabound[ 1 ];</p>
+        <p class="Code">}</p>
+        <p class="Code">SAFEARRAY;</p>
+        <p>This structure describes different aspects of the safe array, such as total number of dimensions, <i>cDims</i>, flags indicating if the array is fixed and cannot be resized, <i>fFeatures</i>, if there are any locks on the array, <i>cLocks</i>, and then a pointer to the actual array data itself, <i>pvData</i>.</p>
+        <p>Usually, the SAFEARRAY descriptor is wrapped by the OLE Automation data type</p>
+        <p>Variant, and the Variant itself is passed around as the data type in method calls.</p>
+        <p>Either way, an array must be wrapped by a SAFEARRAY before it can be marshaled.</p>
+        <h3>SAFEARRAYBOUND Descriptors</h3>
+        <p>A SAFEARRAY can have an unlimited number of dimensions, whose dimension count is stored in <i>cDims</i>. For each dimension, there must an element of type SAFEARRAYBOUND, which stores the lower bound and number of elements in the dimension, as given by the structure:</p>
+        <p class="Code">typedef struct SAFEARRAYBOUND</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">ULONG cElements; LONG lLbound;</p>
+        <p class="Code">}</p>
+        <p class="Code">SAFEARRAYBOUND;</p>
+        <p>The SAFEARRAY descriptor member <i>rgsabound</i>[] is an array of SAFEARRAYBOUND elements. (Visual Basic lets you define an element range such as “10 to 20” or “-10 to 10” such that the <i>lLbound</i> item on the dimension is not zero, but 10 and –10, respectively. For all of our examples, we assume the lower bound is zero.)</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In COM, items are frequently in reverse order than what you would expect, which is the case with the SAFEARRAY descriptor’s <i>rgsabound</i>[] member array.</p>
+        <p>You must specify the dimensions in reverse order. For example, if you are constructing an array of 3 rows by 5 columns (3x5), the first SAFEARRAYBOUND array item would have its <i>cElements</i> member set to 5, and the second item <i>rgsabound</i>[] array item would have its <i>cElements</i> member set to 3.</p>
+        <p>However, you rarely set <i>rgsabound</i>[] yourself. All the Win32 API calls to create safe arrays set these values for you, from information specified in the expected order (i.e., 3 and 5). Do be aware that if you look in memory at the actual SAFEARRAY descriptor data, you will see the <i>rgsabound</i>[] member array in reverse order.</p>
+        <h2><a name="kanchor5148"></a>Arrays in IDL</h2>
+        <p>IDL arrays are stored in “scanline majority,” meaning that each scanline is contiguous in memory. Additionally, the dimensions are listed backwards from standard computer-science notation.</p>
+        <p>For example, if you want to create an array of bytes with 5 columns and 3 rows, you use the following code:</p>
+        <p class="Code">myarr = BYTARR(5, 3)</p>
+        <p>Simply put: SAFEARRAYs and IDL arrays are arranged differently in linear memory. Thus, when you create an array in the COM world that you want to give to IDL, you must “convert the majority.” For how to do so in three programming languages, see <a href="2DArrayExamples.htm#2D_Array_Examples">2D Array Examples</a>.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

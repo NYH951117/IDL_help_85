@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Using CALL_EXTERNAL">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Basic C Examples</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="CALL_EXTERNAL.htm">Using CALL_EXTERNAL</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Basic C Examples</span>
+        </div>
+        <h1><a name="kanchor5430"></a>Basic C Examples</h1>
+        <p>All of the code for the examples in this section can be found in the <code>/external/call_external/C </code>subdirectory of the IDL distribution. Please read the README file in that directory for details on how to run the examples. In many cases, the files in that directory go into more detail, and are more fully commented than the versions shown here. Also, the examples provide IDL wrapper routines that perform the necessary <a href="CALL_EXTERNAL.htm">CALL_EXTERNAL</a> calls, while the examples shown here use <b>CALL_EXTERNAL</b> directly in order to explain how it is used. It is worth reading the contents of the .c and IDL .pro files in that directory in addition to reading the code shown here.</p>
+        <h2>Example: Passing Parameters by Reference to IDL</h2>
+        <p>The following routine, found in <code>simple_vars.c</code>, accepts several of IDL’s basic data types as arguments. The parameters are passed in by reference and the new squared values of the numbers are passed back to IDL. This is implemented as a function with a natural C interface, and a second glue routine that implements the</p>
+        <p>IDL portable convention, using the one with the natural interface to do the actual work.</p>
+        <p>&#160;</p>
+        <p class="Code">#include &lt;stdio.h&gt;</p>
+        <p class="Code">#include "idl_export.h"	/* IDL external definitions */</p>
+        <p class="Code_Indented">int simple_vars_natural(char *byte_var, short *short_var, </p>
+        <p class="Code_Indented">&#160;&#160;&#160;IDL_LONG *long_var, float *float_var, double *double_var)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented">/* Square each variable. */</p>
+        <p class="Code_Indented">*byte_var	*= *byte_var;</p>
+        <p class="Code_Indented">*short_var	*= *short_var;</p>
+        <p class="Code_Indented">*long_var	*= *long_var;</p>
+        <p class="Code_Indented">*float_var	*= *float_var;</p>
+        <p class="Code_Indented">*double_var	*= *double_var;</p>
+        <p class="Code_Indented">return 1;</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">int simple_vars(int argc, void* argv[])</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented">/* Insure that the correct number of arguments were passed in */</p>
+        <p class="Code_Indented">if(argc != 5) return 0;</p>
+        <p class="Code_Indented">return simple_vars_natural((char *) argv[0], (short *) argv[1], (IDL_LONG *) argv[2], (float *) argv[3],</p>
+        <p class="Code_Indented">(double *) argv[4]);</p>
+        <p class="Code">}</p>
+        <p>&#160;</p>
+        <p>The IDL statements necessary to call the simple_vars() function from IDL can be written:</p>
+        <p class="Code">B=2B &amp; I=3 &amp; L=3L &amp; F=0.0 &amp; D=0.0D</p>
+        <p class="Code">R = CALL_EXTERNAL(GET_CALLEXT_EXLIB(), ’simple_vars’, $</p>
+        <p class="Code">&#160;&#160;&#160;b,i,l,f,d, /CDECL)</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>GET_CALLEXT_EXLIB() is a function provided with the CALL_EXTERNAL examples; it builds the necessary sharable library of external C code and returns the path to the library as its result.</p>
+        <p>Using the <b>AUTO_GLUE</b> keyword to <b>CALL_EXTERNAL</b>, you can call the function with the natural C interface directly:</p>
+        <p class="Code">B=2B &amp; I=3 &amp; L=3L &amp; F=0.0 &amp; D=0.0D</p>
+        <p class="Code">R = CALL_EXTERNAL(GET_CALLEXT_EXLIB(), ’simple_vars_natural’, $</p>
+        <p class="Code"> &#160;&#160;b,i,l,f,d, /CDECL, /AUTO_GLUE)</p>
+        <h2>Example: Calling a C Routine to Perform Computation</h2>
+        <p>The following example demonstrates an external function that returns the sum of a floating point array. It is similar in function to the <a href="../../Reference Material/T/TOTAL.htm">TOTAL</a> function in IDL. The code for this example is found in the file sum_array.c in the IDL distribution. As with the previous example, this function is implemented by a function that has a natural C interface, and a second glue function is provided that matches the IDL portable calling convention to the natural interface:</p>
+        <p class="Code">#include &lt;stdio.h&gt;</p>
+        <p class="Code">#include "idl_export.h"</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">float sum_array_natural(float *fp, IDL_LONG n)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented">float s = 0.0;</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">	while (n--) s += *fp++;</p>
+        <p class="Code_Indented">	return(s);</p>
+        <p class="Code_Indented">	}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">	float sum_array(int argc, void *argv[])</p>
+        <p class="Code_Indented">	{</p>
+        <p class="Code_Indented">	return sum_array_natural((float *) argv[0], (IDL_LONG) argv[1]);</p>
+        <p class="Code">	}</p>
+        <p>The IDL statements necessary to call the <b>sum_array()</b> function from IDL can be written:</p>
+        <p class="Code">X = FINDGEN(10)</p>
+        <p class="Code">S = CALL_EXTERNAL(GET_CALLEXT_EXLIB(), ’sum_array’$</p>
+        <p class="Code">&#160;&#160;&#160;X, N_ELEMENTS(X),VALUE=[0,1], /F_VALUE, /CDECL)</p>
+        <p>&#160;</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>GET_CALLEXT_EXLIB() is a function provided with the CALL_EXTERNAL examples; it builds the necessary sharable library of external C code and returns the path to the library as its result.</p>
+        <p>Using the <b>AUTO_GLUE</b> keyword, you can call the function with the natural C interface directly:</p>
+        <p class="Code">X = FINDGEN(10)</p>
+        <p class="Code">S = CALL_EXTERNAL(GET_CALLEXT_EXLIB(), ’sum_array_natural’$</p>
+        <p class="Code">&#160;&#160;&#160;X, N_ELEMENTS(X),VALUE=[0,1], /F_VALUE,/CDECL,$</p>
+        <p class="Code">&#160;&#160;&#160;/AUTO_GLUE)</p>
+        <p>In this example, sum_array and sum_array_natural are the names of the entry points for the external functions, and <b>X</b> and <b>N_ELEMENTS(X)</b> are passed to the called routine as parameters. The <b>F_VALUE</b> keyword specifies that the returned value is a floating-point number rather than an <b>IDL_LONG</b>.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

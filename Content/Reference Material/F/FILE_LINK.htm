@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: F">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>FILE_LINK </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="F_list.htm">Routines: F</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">FILE_LINK</span>
+        </div>
+        <h1 class="Routine"><a name="F_848155245_894186"></a><a name="kanchor919"></a><a name="F_848155245_42816"></a>FILE_LINK </h1>
+        <p><a name="kanchor920"></a><a name="kanchor921"></a><a name="kanchor922"></a>The FILE_LINK procedure creates UNIX file links, both regular (hard) and symbolic. FILE_LINK is available only under UNIX.</p>
+        <p>A hard link is a directory entry that references a file. UNIX allows multiple such links to exist simultaneously, meaning that a given file can be referenced by multiple names. All such links are fully equivalent references to the same file (there are no concepts of primary and secondary names). All files carry a reference count that contains the number of hard links that point to them; deleting a link to a file does not remove the actual file from the filesystem until the last hard link to the file is removed. The following limitations on hard links are enforced by the operating system:</p>
+        <ul>
+            <li value="1">Hard links may not span filesystems, as hard linking is only possible within a single filesystem.</li>
+            <li value="2">Hard links may not be created between directories, as doing so has the potential to create infinite circular loops within the hierarchical UNIX filesystem. Such loops will confuse many system utilities, and can even cause filesystem damage.</li>
+        </ul>
+        <p>A symbolic link is an indirect pointer to a file; its directory entry contains the name of the file to which it is linked. Symbolic links may span filesystems and may refer to directories.</p>
+        <p>Many users find symbolic links easier to understand and use. Due to their generality and lack of restriction, use symbolic links over hard links for most purposes. FILE_LINK creates symbolic links by default.</p>
+        <p>Create a symbolic link named <code>current.dat</code> in the current working directory, pointing to the file <code>/master/data/saturn7.dat</code>:</p>
+        <p class="Code">FILE_LINK, '/master/data/saturn7.dat', 'current.dat'</p>
+        <h2 class="API"><a name="F_848155245_894204"></a><a name="F_848155245_894204_PageTOC_FILE_LINK_"></a>Syntax</h2>
+        <p class="Syntax">FILE_LINK, <i>SourcePath</i>, <i>DestPath</i> [,&#160;/<a href="#F_848155245_906533" class="selected">ALLOW_SAME</a>] [,&#160;/<a href="#F_848155245_906535" class="selected">HARDLINK</a>] [,&#160;/<a href="#F_848155245_906537" class="selected">NOEXPAND_PATH</a>] [,&#160;/<a href="#F_848155245_906542" class="selected">VERBOSE</a>]</p>
+        <h2 class="API"><a name="F_848155245_894206"></a><a name="F_848155245_894206_PageTOC_FILE_LINK_"></a>Arguments</h2>
+        <h3 class="Argument">SourcePath</h3>
+        <p>A scalar string or string array containing the names of the files or directories to be linked.</p>
+        <h3 class="Argument">DestPath</h3>
+        <p>A scalar string or string array containing the names of the destinations to which the files and directories given by <i>SourcePath</i> are to be linked. If more than one file is to be linked to a given destination, that destination must exist and be a directory.</p>
+        <h2 class="API"><a name="F_848155245_894211"></a><a name="F_848155245_894211_PageTOC_FILE_LINK_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="F_848155245_906533"></a><a name="F_848155245_906533_Keywords_FILE_LINK__"></a>ALLOW_SAME</h3>
+        <p>Attempting to link a file to itself by specifying the same file for <i>SourcePath</i> and <i>DestPath</i> is usually considered to be an error. If the ALLOW_SAME keyword is set, no link is created and the operation is considered to be successful.</p>
+        <h3 class="Keyword"><a name="F_848155245_906535"></a><a name="F_848155245_906535_Keywords_FILE_LINK__"></a>HARDLINK</h3>
+        <p>Set this keyword to create hard links. By default, FILE_LINK creates symbolic links.</p>
+        <h3 class="Keyword"><a name="F_848155245_906537"></a><a name="F_848155245_906537_Keywords_FILE_LINK__"></a>NOEXPAND_PATH</h3>
+        <p>Set this keyword to cause FILE_LINK to use <i>SourcePath</i> and <i>DestPath</i> exactly as specified, without expanding any wildcard characters or environment variable names included in the paths. See <a href="FILE_SEARCH.htm#F_848155245_893545">FILE_SEARCH</a> for details on path expansion.</p>
+        <h3 class="Keyword"><a name="F_848155245_906542"></a><a name="F_848155245_906542_Keywords_FILE_LINK__"></a>VERBOSE</h3>
+        <p>Set this keyword to cause FILE_LINK to issue an informative message for every file link operation it carries out.</p>
+        <h2 class="API"><a name="F_848155245_906548"></a><a name="F_848155245_68463"></a>Rules Used by FILE_LINK</h2>
+        <p>The following rules govern how FILE_LINK operates:</p>
+        <ul>
+            <li value="1">The arguments to FILE_LINK can be scalar or array. If both arguments are arrays, they must contain the same number of elements, and the files are paired, with each file from <i>SourcePath</i> being linked to the corresponding file in the <i>DestPath</i>. If <i>SourcePath</i> is an array and <i>DestPath</i> is a scalar, all links are created in the single location given by <i>DestPath</i>, which must exist and be a directory.</li>
+            <li value="2">Elements of <i>SourcePath</i> may use wildcard characters (as accepted by the <a href="FILE_SEARCH.htm#F_848155245_893545">FILE_SEARCH</a> function) to specify multiple files. All the files matched for a given element of <i>SourcePath</i> are linked to the corresponding element of <i>DestPath</i>. If multiple files are linked to a single element of <i>DestPath</i>, that element must exist and be a directory.</li>
+            <li value="3">If a file specified in <i>DestPath</i> does not exist, the corresponding file from <i>SourcePath</i> is linked using the name specified by <i>DestPath</i>. Any parent directories to the filename specified by <i>DestPath</i> must already exist.</li>
+            <li value="4">If <i>DestPath</i> names an existing regular file, FILE_LINK will not overwrite it.</li>
+            <li value="5">If <i>DestPath</i> names an existing directory, a link with the same name as the source file is created in the directory. This is primarily of interest with hard links.</li>
+        </ul>
+        <h2 class="API"><a name="F_848155245_894223"></a><a name="F_848155245_894223_PageTOC_FILE_LINK_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.6</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="F_848155245_894225"></a><a name="F_848155245_894225_PageTOC_FILE_LINK_"></a>See Also</h2>
+        <p><a href="../C/COPY_LUN.htm#C_854643309_1058915">COPY_LUN</a>, <a href="FILE_COPY.htm#F_848155245_894462">FILE_COPY</a>, <a href="FILE_MOVE.htm#F_848155245_894357">FILE_MOVE</a>, <a href="FILE_READLINK.htm#F_848155245_894244">FILE_READLINK</a>, <a href="../Functional List of IDL Routines/Input_Output.htm#funclisting_2438760872_1213961">General File Access</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

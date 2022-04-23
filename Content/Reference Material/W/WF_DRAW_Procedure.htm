@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: W">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>WF_DRAW Procedure</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="W_list.htm">Routines: W</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">WF_DRAW Procedure</span>
+        </div>
+        <h1 class="Routine"><a name="dg_routines_3604229493_890069"></a><a name="kanchor2694"></a>WF_DRAW Procedure</h1>
+        <p><a name="kanchor2695"></a>The WF_DRAW procedure draws weather fronts of various types using parametric spline interpolation to smooth the lines. WF_DRAW uses the POLYFILL routine to make the annotations on the front lines.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>wf_draw.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_890209"></a><a name="dg_routines_3604229493_787728_PageTOC_WF_DRAW_"></a>Examples</h2>
+        <p>This example draws various fronts on a map of the United States. To draw the map, first define the <code>test_wf_draw</code> procedure by pasting the following code into a file named <code>test_wf_draw.pro</code> and saving the file in a directory in IDL’s path. (If you are using the IDL Workbench, you can compile the procedure by clicking on the code.)</p>
+        <p class="Code">PRO test_wf_draw<br /><br />&#160;MAP_SET, LIMIT = [25, -125, 50, -70], /GRID, /USA<br />&#160;WF_DRAW, [ -120, -110, -100], [30, 50, 45], /COLD, /DATA, THICK=2<br />&#160;WF_DRAW, [ -80, -80, -75], [ 50, 40, 35], /WARM, /DATA, THICK=2<br />&#160;WF_DRAW, [ -80, -80, -75]-10., [ 50, 40, 35], /OCCLUDED, /DATA,$<br />&#160;&#160;&#160;&#160;THICK=2<br />&#160;WF_DRAW, [ -120, -105], [ 40,35], /STATION, /DATA, THICK=2<br />&#160;WF_DRAW, [ -100, -90, -90], [ 30,35,40], /CONVERG, /DATA, THICK=2<br /><br />&#160;names=['None','Cold','Warm','Occluded','Stationary','Convergent']<br />&#160;x = [.015, .30]<br />&#160;y = 0.04<br />&#160;dy = 0.05<br />&#160;ty = N_ELEMENTS(names) * dy + y<br />&#160;POLYFILL, x[[0,1,1,0]],[0, 0, ty, ty],/NORM, COLOR=!P.BACKGROUND<br />&#160;FOR i=0, N_ELEMENTS(names)-1 DO BEGIN<br />&#160;&#160;&#160;&#160;WF_DRAW, x, y, /NORM, FRONT_TYPE=i, THICK=2<br />&#160;&#160;&#160;&#160;XYOUTS, x[1]+0.015, y[0], names[i], /NORM, CHARS=1.5<br />&#160;&#160;&#160;&#160;y = y + dy<br />&#160;ENDFOR<br /><br />END</p>
+        <p>Next, execute the procedure:</p>
+        <p class="Code">test_wf_draw</p>
+        <h2 class="API"><a name="dg_routines_3604229493_890095"></a><a name="dg_routines_3604229493_787674_PageTOC_WF_DRAW_"></a>Syntax</h2>
+        <p class="Syntax">WF_DRAW, <i>X</i>, <i>Y</i> [[,&#160;/<a href="#dg_routines_3604229493_890161" class="selected">COLD</a> | , <a href="#dg_routines_3604229493_890176" class="selected">FRONT_TYPE</a>=1] | [,&#160;/<a href="#dg_routines_3604229493_890206" class="selected">WARM</a> | , <a href="#dg_routines_3604229493_890176" class="selected">FRONT_TYPE</a>=2] | [,&#160;/<a href="#dg_routines_3604229493_890185" class="selected">OCCLUDED</a> | , <a href="#dg_routines_3604229493_890176" class="selected">FRONT_TYPE</a>=3] | [,&#160;/<a href="#dg_routines_3604229493_890194" class="selected">STATIONARY</a> | , <a href="#dg_routines_3604229493_890176" class="selected">FRONT_TYPE</a>=4] | [,&#160;/<a href="#dg_routines_3604229493_890167" class="selected">CONVERGENCE</a> | , <a href="#dg_routines_3604229493_890176" class="selected">FRONT_TYPE</a>=5]] [,&#160;<a href="#dg_routines_3604229493_890164" class="selected">COLOR</a>=<i>value</i>]  [,&#160;/<a href="#dg_routines_3604229493_890170" class="selected">DATA</a> | , /<a href="#dg_routines_3604229493_890173" class="selected">DEVICE</a> | , /<a href="#dg_routines_3604229493_890182" class="selected">NORMAL</a>] [,&#160;<a href="#dg_routines_3604229493_890179" class="selected">INTERVAL</a>=<i>value</i>]  [,&#160;<a href="#dg_routines_3604229493_890188" class="selected">PSYM</a>=<i>value</i>]  [,&#160;<a href="#dg_routines_3604229493_890197" class="selected">SYM_HT</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_890200" class="selected">SYM_LEN</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_890203" class="selected">THICK</a>=<i>value</i>]</p>
+        <h2 class="API"><a name="dg_routines_3604229493_890155"></a><a name="dg_routines_3604229493_787676_PageTOC_WF_DRAW_"></a>Arguments</h2>
+        <h3 class="Argument">X, Y</h3>
+        <p>Vectors of abscissae and ordinates defining the front to be drawn.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_890159"></a><a name="dg_routines_3604229493_787679_PageTOC_WF_DRAW_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_890161"></a><a name="dg_routines_3604229493_787681_Keywords_WF_DRAW__"></a>COLD</h3>
+        <p>Set this keyword to draw a cold front. The default is a plain line with no annotations. A cold front can also be specified by setting the keyword FRONT_TYPE = 1.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_890164"></a><a name="dg_routines_3604229493_787684_Keywords_WF_DRAW__"></a>COLOR</h3>
+        <p>Use this keyword to specify the color to use. The default = !P.COLOR. </p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_890167"></a><a name="dg_routines_3604229493_787687_Keywords_WF_DRAW__"></a>CONVERGENCE</h3>
+        <p>Set this keyword to draw a convergence line. A convergence line can also be specified by setting the keyword FRONT_TYPE = 5.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_890170"></a><a name="dg_routines_3604229493_787690_Keywords_WF_DRAW__"></a>DATA</h3>
+        <p>Set this keyword if X and Y are specified in data coordinates. </p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_890173"></a><a name="dg_routines_3604229493_787693_Keywords_WF_DRAW__"></a>DEVICE</h3>
+        <p>Set this keyword if X and Y are specified in device coordinates. </p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_890176"></a><a name="dg_routines_3604229493_787696_Keywords_WF_DRAW__"></a>FRONT_TYPE</h3>
+        <p>Set this keyword equal to the numeric index of type of front to draw. Front type indices are as follows: COLD=1, WARM=2, OCCLUDED=3, STATIONARY=4, CONVERGENCE = 5. Not required if plain line is desired or if an explicit front type keyword is specified. </p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_890179"></a><a name="dg_routines_3604229493_787699_Keywords_WF_DRAW__"></a>INTERVAL</h3>
+        <p>Use this keyword to specify the spline interpolation interval, in normalized units. The default = 0.01. Larger values give coarser approximations to curves, smaller values make more interpolated points.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_890182"></a><a name="dg_routines_3604229493_787702_Keywords_WF_DRAW__"></a>NORMAL</h3>
+        <p>Set this keyword if X and Y are specified in normalized coordinates. This is the default. </p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_890185"></a><a name="dg_routines_3604229493_787705_Keywords_WF_DRAW__"></a>OCCLUDED</h3>
+        <p>Set this keyword to draw an occluded front. An occluded front can also be specified by setting the keyword FRONT_TYPE = 3.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_890188"></a><a name="dg_routines_3604229493_787708_Keywords_WF_DRAW__"></a>PSYM</h3>
+        <p>Set this keyword a standard PSYM value to draw a marker on each actual (<i>X</i>, <i>Y</i>) data point. See <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_367154">PSYM</a> for a list of the symbol types.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_890194"></a><a name="dg_routines_3604229493_787714_Keywords_WF_DRAW__"></a>STATIONARY</h3>
+        <p>Set this keyword to draw a stationary front. A stationary front can also be specified by setting the keyword FRONT_TYPE = 4.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_890197"></a><a name="dg_routines_3604229493_787717_Keywords_WF_DRAW__"></a>SYM_HT</h3>
+        <p>Use this keyword to specify the height of front symbols, in normalized units. The default = 0.02.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_890200"></a><a name="dg_routines_3604229493_787720_Keywords_WF_DRAW__"></a>SYM_LEN</h3>
+        <p>Use this keyword to specify the length and spacing factor for front symbols, in normalized units. The default = 0.15. </p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_890203"></a><a name="dg_routines_3604229493_787723_Keywords_WF_DRAW__"></a>THICK</h3>
+        <p>Use this keyword to specify the line thickness. The default = 1.0. </p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_890206"></a><a name="dg_routines_3604229493_787726_Keywords_WF_DRAW__"></a>WARM</h3>
+        <p>Set this keyword to draw a warm front. A warm front can also be specified by setting the keyword FRONT_TYPE = 2.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_890215"></a><a name="dg_routines_3604229493_787731_PageTOC_WF_DRAW_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre-4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dg_routines_3604229493_890223"></a><a name="dg_routines_3604229493_983392_PageTOC_WF_DRAW_"></a>See Also</h2>
+        <p><a href="../A/ANNOTATE.htm#dg_routines_3604229493_878155">ANNOTATE Procedure</a>, <a href="../X/XYOUTS_Procedure.htm#dg_routines_3604229493_890672">XYOUTS Procedure</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

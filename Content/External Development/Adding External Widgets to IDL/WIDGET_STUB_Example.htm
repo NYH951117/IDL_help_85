@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Adding External Widgets to IDL">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>UNIX&#160;WIDGET_STUB Example: WIDGET_ARROWB</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="ExternalWidgets.htm">Adding External Widgets to IDL</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">UNIX&#160;WIDGET_STUB Example: WIDGET_ARROWB</span>
+        </div>
+        <h1>UNIX&#160;WIDGET_STUB Example: WIDGET_ARROWB</h1>
+        <p>The following example adds the Motif ArrowButton widget to UNIX IDL in the form of an IDL program named <code>widget_arrowb.pro</code>.</p>
+        <p>The primary user interface to our arrow button widget is the WIDGET_ARROWB function. It presents an interface much like any of the built in WIDGET_* functions provided by <b>IDL. WIDGET_ARROWB</b> uses the <b>MAKE_DLL</b> procedure, and the <b>AUTO_GLUE</b> keyword to <b>CALL_EXTERNAL</b> to automatically build and load the C code required for this widget. This building and loading process is transparent to the IDL user, requiring only that you have a C compiler installed on your system. All the user has to do to use an arrow button widget is to call <b>WIDGET_ARROWB</b></p>
+        <p>The <b>WIDGET_ARROWB</b> widget acts like a normal pushbutton. Events are sent when the button is pressed (VALUE=1) and released (VALUE=0). If the <b>USE_OWN_SIZE</b> keyword is set to zero, IDL performs its default sizing on the stub widget. A non-zero value causes a special routine provided by the <b>WIDGET_ARROWB</b> implementation to be registered to handle such sizing.</p>
+        <p>All of the code used in this example is available in the <code>external/widstub</code> directory of the UNIX IDL distribution. To run it, execute the following statements from IDL:</p>
+        <p class="Code">PUSHD, FILEPATH(’’, SUBDIRECTORY=[’external’,’widstub’]) </p>
+        <p class="Code">WIDGET_ARROWB_TEST</p>
+        <p class="Code">POPD</p>
+        <p>When running WIDGET_ARROWB_TEST, you can specify the VERBOSE keyword to show you the compilation and linking steps it takes to build the sharable library from the C code. The use of PUSHD and POPD are due to the fact that your IDL search path (!PATH) is unlikely to have the directory containing these examples in it. PUSHD changes your working directory to the location where these files are found, and POPD restores it to its original location afterwards.</p>
+        <h2>The IDL Program for WIDGET_ARROWB</h2>
+        <p>The following text is the IDL program for <b>WIDGET_ARROWB</b>. It is found in the file named <code>WIDGET_ARROWB.PRO</code>:</p>
+        <p class="Code">FUNCTION WIDGET_ARROWB, parent, use_own_size, UVALUE=uvalue, $</p>
+        <p class="Code"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;VERBOSE=verbose, _EXTRA=extra</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Uses WIDGET_STUB, and a sharable library containing</p>
+        <p class="Code">; the necessary C support code, to provide the IDL user</p>
+        <p class="Code">; with a Motif Arrow Button widget. The interface is consistent</p>
+        <p class="Code">; with that presented by the built in IDL widgets.</p>
+        <p class="Code">;</p>
+        <p class="Code">; If the sharable library does not exist, it is built using</p>
+        <p class="Code">; MAKE_DLL.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">common WIDGET_ARROWB_BLK, shlib</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Build sharable lib if first call or lib </p>
+        <p class="Code">; doesn’t exist </p>
+        <p class="Code">&#160;</p>
+        <p class="Code">build_lib = N_ELEMENTS(shlib) eq 0</p>
+        <p class="Code">IF (not build_lib) THEN build_lib = not FILE_TEST(shlib, /READ)</p>
+        <p class="Code">IF (build_lib) THEN BEGIN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">; Location of the widget_arrowb files from IDL distribution </p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">arrowb_dir = FILEPATH(’’,SUBDIRECTORY=[’external’,’widstub’])</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Use MAKE_DLL to build the widget_arrowb sharable library</p>
+        <p class="Code_Indented">; in the !MAKE_DLL.COMPILE_DIRECTORY directory.</p>
+        <p class="Code_Indented">;</p>
+        <p class="Code_Indented">; Normally, you wouldn’t use VERBOSE, or SHOW_ALL_OUTPUT</p>
+        <p class="Code_Indented">; once your work is debugged, but as a learning exercize it</p>
+        <p class="Code_Indented">; can be useful to see all the underlying work that gets</p>
+        <p class="Code_Indented">; done. If the user specified VERBOSE, then use those</p>
+        <p class="Code_Indented">; keywords to show what MAKE_DLL is doing. </p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">MAKE_DLL,’widget_arrowb’, ’widget_arrowb’, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;DLL_PATH=shlib, INPUT_DIR=arrowb_dir, $ </p>
+        <p class="Code_Indented">&#160;&#160;&#160;VERBOSE=verbose,SHOW_ALL_OUTPUT=verbose</p>
+        <p class="Code">ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use a stub widget along with the C code in the library to</p>
+        <p class="Code">; create an arrow button widget. The use of the AUTO_GLUE</p>
+        <p class="Code">; keyword simplifies the call to the sharable library by</p>
+        <p class="Code">; eliminating the need to use the CALL_EXTERNAL portable</p>
+        <p class="Code">; calling convention. </p>
+        <p class="Code">&#160;</p>
+        <p class="Code">l_parent = LONG(parent) </p>
+        <p class="Code">l_use_own_size = $</p>
+        <p class="Code">&#160;&#160;&#160;(n_elements(use_own_size) eq 0) ? 0L: LONG(use_own_size)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">result = WIDGET_STUB(parent, _extra=extra)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IF (N_ELEMENTS(uvalue) ne 0) then $ </p>
+        <p class="Code">&#160;&#160;&#160;WIDGET_CONTROL, result, set_UVALUE=uvalue</p>
+        <p class="Code">JUNK = CALL_EXTERNAL(shlib, ’widget_arrowb’,l_parent,result,$ <br />&#160;&#160;&#160;l_use_own_size, VALUE=[1, 1, 1], /AUTO_GLUE)</p>
+        <p class="Code">RETURN, result </p>
+        <p class="Code">END</p>
+        <p>&#160;</p>
+        <h2>The C Program for widget_arrowb.c</h2>
+        <p>The C code invoked by the call to <a href="../Using CALL_EXTERNAL/CALL_EXTERNAL.htm">CALL_EXTERNAL</a> in the above IDL code is contained in a file named <code>widget_arrowb.c</code> This file can be found in the widstub subdirectory of the external subdirectory of the IDL distribution. The contents of this file are shown below:</p>
+        <p class="Code">/*</p>
+        <p class="Code">* widget_arrowb.c - This file contains C code to be called from</p>
+        <p class="Code">* UNIX IDL via CALL_EXTERNAL. It uses the IDL stub widget to add</p>
+        <p class="Code">* a Motif ArrowButton to an IDL created widget hierarchy. The</p>
+        <p class="Code">* button issues a WIDGET_STUB_EVENT every time the button is</p>
+        <p class="Code">* released.</p>
+        <p class="Code">*</p>
+        <p class="Code">* While this code is Motif-centric, the principles apply across </p>
+        <p class="Code">* platforms and could be adapted to Microsoft Windows.</p>
+        <p class="Code">*/</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">#include &lt;stdio.h&gt;</p>
+        <p class="Code">#include &lt;X11/keysym.h&gt; /* Keysyms for text widget events */</p>
+        <p class="Code">#include &lt;X11/Intrinsic.h&gt;</p>
+        <p class="Code">#include &lt;X11/StringDefs.h&gt;</p>
+        <p class="Code">#include &lt;X11/Shell.h&gt;</p>
+        <p class="Code">#include &lt;Xm/ArrowB.h&gt;</p>
+        <p class="Code">#include "idl_export.h"</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">/*ARGSUSED*/</p>
+        <p class="Code">static void arrowb_CB(Widget w, caddr_t client_data, </p>
+        <p class="Code">&#160;&#160;&#160;caddr_t call_data)</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">char *rec; </p>
+        <p class="Code_Indented">XmArrowButtonCallbackStruct *abcs;</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">IDL_WidgetStubLock(TRUE);</p>
+        <p class="Code">if (rec = IDL_WidgetStubLookup((unsigned long) client_data)) </p>
+        <p class="Code">&#160;&#160;&#160;{ </p>
+        <p class="Code">&#160;&#160;&#160;abcs = (XmArrowButtonCallbackStruct *) call_data; </p>
+        <p class="Code">&#160;&#160;&#160;IDL_WidgetIssueStubEvent(rec, abcs-&gt;reason == XmCR_ARM);</p>
+        <p class="Code">&#160;&#160;&#160;}</p>
+        <p class="Code">&#160;&#160;&#160;IDL_WidgetStubLock(FALSE);</p>
+        <p class="Code">}</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">static void arrowb_size_func(IDL_ULONG stub, int width, </p>
+        <p class="Code">&#160;&#160;&#160;int height)</p>
+        <p class="Code">{</p>
+        <p class="Code">char *stub_rec;</p>
+        <p class="Code">unsigned long t_id, b_id;</p>
+        <p class="Code">char buf[128];</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IDL_WidgetStubLock(TRUE);</p>
+        <p class="Code">if (stub_rec = IDL_WidgetStubLookup(stub)) { </p>
+        <p class="Code">&#160;&#160;&#160;IDL_WidgetGetStubIds(stub_rec, &amp;t_id, &amp;b_id);</p>
+        <p class="Code">&#160;&#160;&#160;sprintf(buf, "Setting WIDGET %d to width %d and height %d",</p>
+        <p class="Code"> &#160;&#160;&#160;&#160;&#160;&#160;stub, width, height);</p>
+        <p class="Code">&#160;&#160;&#160;IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_INFO, buf);</p>
+        <p class="Code">&#160;&#160;&#160;XtVaSetValues((Widget) b_id, XmNwidth, width, XmNheight, </p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;height, NULL);</p>
+        <p class="Code">&#160;&#160;&#160;}</p>
+        <p class="Code">&#160;&#160;&#160;IDL_WidgetStubLock(FALSE);</p>
+        <p class="Code">&#160;&#160;&#160;}</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">int widget_arrowb(IDL_LONG parent, IDL_LONG stub, IDL_LONG</p>
+        <p class="Code">&#160;&#160;&#160;use_own_size_func)</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">Widget parent_w; </p>
+        <p class="Code_Indented">Widget stub_w; </p>
+        <p class="Code_Indented">char *parent_rec; </p>
+        <p class="Code_Indented">char *stub_rec;</p>
+        <p class="Code_Indented">unsigned long t_id, b_id;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IDL_WidgetStubLock(TRUE);</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">if ((parent_rec = IDL_WidgetStubLookup(parent))</p>
+        <p class="Code">&#160;&#160;&#160;&amp;&amp; (stub_rec = IDL_WidgetStubLookup(stub))) {</p>
+        <p class="Code">&#160;&#160;&#160;/* Bottom widget of parent is parent to arrow button */ </p>
+        <p class="Code">&#160;&#160;&#160;IDL_WidgetGetStubIds(parent_rec, &amp;t_id, &amp;b_id);</p>
+        <p class="Code">&#160;&#160;&#160;parent_w = (Widget) b_id;</p>
+        <p class="Code">&#160;&#160;&#160;stub_w = XtVaCreateManagedWidget("arrowb"</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;xmArrowButtonWidgetClass, </p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;parent_w, NULL);</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IDL_WidgetSetStubIds(stub_rec, (unsigned long) stub_w,</p>
+        <p class="Code">&#160;&#160;&#160;(unsigned long) stub_w); </p>
+        <p class="Code">XtAddCallback(stub_w, XmNarmCallback,</p>
+        <p class="Code">&#160;&#160;&#160;(XtCallbackProc) arrowb_CB, (XtPointer) stub);</p>
+        <p class="Code">XtAddCallback(stub_w, XmNdisarmCallback,</p>
+        <p class="Code">&#160;&#160;&#160;(XtCallbackProc) arrowb_CB, (XtPointer) stub);</p>
+        <p class="Code">if (use_own_size_func) </p>
+        <p class="Code">&#160;&#160;&#160;IDL_WidgetStubSetSizeFunc(stub_rec, arrowb_size_func);</p>
+        <p class="Code">&#160;&#160;&#160;} </p>
+        <p class="Code">&#160;&#160;&#160;IDL_WidgetStubLock(FALSE); </p>
+        <p class="Code">&#160;&#160;&#160;return stub;</p>
+        <p class="Code">}</p>
+        <p class="Code">&#160;</p>
+        <h2>An IDL Program to Test the External Widget</h2>
+        <p>This is an IDL widget program to test the ARROWB widget. This program is found in the file <code>widget_arrowb_test.pro</code> in the IDL distribution:</p>
+        <p class="Code">PRO widget_arrowb_test_event, ev </p>
+        <p class="Code">&#160;&#160;&#160;WIDGET_CONTROL, GET_UVALUE=val, ev.id </p>
+        <p class="Code">&#160;&#160;&#160;IF (val EQ 0) THEN&#160;BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;WIDGET_CONTROL, /DESTROY, ev.top</p>
+        <p class="Code">&#160;&#160;&#160;ENDIF ELSE&#160;BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;HELP, /STRUCT, ev</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;IF (ev.value EQ 1) THEN&#160;BEGIN </p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;WIDGET_CONTROL, val, SET_VALUE=’New label string’ </p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;tmp = WIDGET_INFO(ev.id, /GEOMETRY) </p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;WIDGET_CONTROL, XSIZE=tmp.xsize+25, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;YSIZE=tmp.ysize+25, ev.id</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;ENDIF </p>
+        <p class="Code">&#160;&#160;&#160;ENDELSE</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO widget_arrowb_test, VERBOSE=verbose </p>
+        <p class="Code_Indented">a = WIDGET_BASE(/COLUMN)</p>
+        <p class="Code_Indented">b = WIDGET_BUTTON(a, VALUE=’Done’, UVALUE=0)</p>
+        <p class="Code_Indented">label = WIDGET_LABEL(a, VALUE=’A label’)</p>
+        <p class="Code_Indented">arrow_w = WIDGET_ARROWB(a, 0, XSIZE=100, YSIZE=100, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;UVALUE=label, VERBOSE=verbose)</p>
+        <p class="Code_Indented">arrow_w = WIDGET_ARROWB(a, 1, XSIZE=100, YSIZE=50, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;UVALUE=label, VERBOSE=verbose)</p>
+        <p class="Code_Indented">WIDGET_CONTROL,/REAL, a</p>
+        <p class="Code_Indented">xmanager, ’WIDGET_ARROWB_TEST’, a, /NO_BLOCK</p>
+        <p class="Code">end</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Overview">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Multiple Graphics in One Window</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Graphics Overview.htm">Graphics Overview</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Multiple Graphics in One Window</span>
+        </div>
+        <h1><a name="kanchor4196"></a>Multiple Graphics in One Window</h1>
+        <p>IDL&#160;provides several ways to display multiple graphics in one window. The following keywords are common to all the IDL&#160;graphics:</p>
+        <ul>
+            <li value="1"><a href="#LAYOUT" class="Heading selected">LAYOUT</a>- this keyword  allows you to define a grid and then place multiple graphics within cells in the grid using the CURRENT&#160;keyword</li>
+            <li value="2"><a href="#POSITION" class="Heading selected">POSITION</a> - this keyword allows you to specify exactly where in the window to place graphics using the CURRENT keyword</li>
+            <li value="3"><a href="#POSITION2" class="selected">OVERPLOT</a> - this keyword allows you to place one graphic over another </li>
+            <li value="4"><a href="#_EXTRA" class="selected">_EXTRA</a> - this keyword lets you inherit properties from one graphic to use for other graphics</li>
+        </ul>
+        <h2 class="API"><a name="LAYOUT"></a>LAYOUT<a name="kanchor4197"></a></h2>
+        <p>The LAYOUT&#160;property specifies a grid within a graphics window, and determines where the graphic should appear. The syntax of LAYOUT is three numbers: [<code>ncolumns</code>, <code>nrows</code>, <code>location</code>].  The grid is determined by the number of columns (ncolumns) by the number of rows (nrows). The location of the graphic is determined by the third number. The grid numbering starts in the upper left (1) and goes sequentially by column and then by row.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For each graphic after the first one, you must use the CURRENT&#160;property to direct IDL&#160;to place the graphic in the same window.</p>
+        <p>The following example shows precipitation and temperature data for Denver, Colorado.</p>
+        <p>
+            <img src="../Resources/Images/plot_multi.png" />
+        </p>
+        <p>The code shown below creates the graphic shown above. You can copy the entire block and paste it into the IDL&#160;command line to run it.</p>
+        <p class="Code">PRECIP = [0.5,0.7,1.2,1.8,2.5,1.6,1.9,1.5,1.2,1.0,0.8,0.6]</p>
+        <p class="Code">TEMP = [30, 34, 38, 47, 57, 67, 73, 71, 63, 52, 39, 33]</p>
+        <p class="Code">DAY = FINDGEN(12) * 30 + 15</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Plot #1: In position #1 on the grid defined by LAYOUT</p>
+        <p class="Code">&#160;&#160;&#160;&#160;myPlot = PLOT(DAY, PRECIP, 'ro--',$</p>
+        <p class="Code">&#160;&#160;&#160;&#160;TITLE='Denver Precipitation', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;YTITLE='Inches', XTITLE='Day of Year', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;LAYOUT=[2,2,1])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Plot #2: In position #4 on the grid defined by LAYOUT</p>
+        <p class="Code">&#160;&#160;&#160;&#160;myPlotToo = PLOT(DAY, TEMP, 'bS:', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;TITLE='Denver Temperature', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;XTITLE='Day of Year', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;YTITLE='Degrees Fahrenheit', /CURRENT, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;LAYOUT=[2,2,4])</p>
+        <p>Both plots appear in the same window, as defined by LAYOUT.</p>
+        <p>&#160;</p>
+        <h3>LAYOUT&#160;Example Using the CONTOUR Function With OVERPLOT</h3>
+        <p>The following example shows how to use LAYOUT as a simple grid.</p>
+        <p>
+            <img src="../Resources/Images/layout_example.gif" />
+        </p>
+        <p>The code shown below creates the graphic shown above. You can copy the entire block and paste it into the IDL&#160;command line to run it.</p>
+        <p class="Code">; Open the Maroon Bells elevation data</p>
+        <p class="Code">RESTORE, FILEPATH('marbells.dat', SUBDIR=['examples','data'])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the data as an image in the first cell</p>
+        <p class="Code">; and define the cell grid as two columns, one row.</p>
+        <p class="Code">myImage = IMAGE(elev, LAYOUT=[2,1,1],$</p>
+        <p class="Code"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;MARGIN=[0.05, 0.22, 0.05, 0.22], $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;TITLE='Maroon Bells Image')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use CURRENT to display the visualization in</p>
+        <p class="Code">; the same window, in the next cell.</p>
+        <p class="Code">myImageToo = IMAGE(elev, /CURRENT, LAYOUT=[2,1,2],$</p>
+        <p class="Code">&#160;&#160;&#160;&#160;MARGIN=[0.05, 0.22, 0.05, 0.22], $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;TITLE='Maroon Bells Image with Contours')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the contour lines as an overplot in the same cell.</p>
+        <p class="Code">myContour = CONTOUR(elev, N_LEVELS=10, /OVERPLOT)</p>
+        <h2 class="API"><a name="POSITION"></a>POSITION</h2>
+        <p>The POSITION property (common to all the graphics functions) allows you to position one or more graphics within one graphic window. Set this property to either a two-element or four-element vector. For two elements, the POSITION gives the location of the lower-left corner of the graphic, in normalized coordinates [x0, y0]. For four elements, the POSITION gives the lower left and upper right corners of the graphic, in the form [x0, y0, x1, y1]. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For each graphic after the first one, you must use the CURRENT&#160;property to tell IDL&#160;to place the graphic in the same window.          </p>
+        <h2 class="API"><a name="POSITION2"></a>POSITION&#160;Example Using the OVERPLOT&#160;Keyword</h2>
+        <p>The following example displays how to use POSITION in a freeform layout.</p>
+        <p>
+            <img src="../Resources/Images/position_example.png" />
+        </p>
+        <p>The code shown below creates the graphic shown above. You can copy the entire block and paste it into the IDL&#160;command line to run it. </p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Define the data.</p>
+        <p class="Code">sinewave = SIN(2.0*FINDGEN(200)*!PI/25.0)*EXP(-0.02*FINDGEN(200))</p>
+        <p class="Code">cosine = COS(2.0*FINDGEN(200)*!PI/25.0)*EXP(-0.02*FINDGEN(200))</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use the PLOT function, defining the plot line </p>
+        <p class="Code">; as a red dash using '-r', and use </p>
+        <p class="Code">; POSITION to define three cells.</p>
+        <p class="Code">myPlot = PLOT(sinewave, '-r',$</p>
+        <p class="Code">&#160;&#160;&#160;&#160;POSITION=[.05,.55,.40,.95], TITLE='Sinewave')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Plot the cosine data, defining the plot symbol </p>
+        <p class="Code">; as a blue dash. Use CURRENT to draw  in the same window.</p>
+        <p class="Code">myPlotToo = PLOT(cosine, '-b',$</p>
+        <p class="Code">&#160;&#160;&#160;&#160;/CURRENT, POSITION=[.25,.05,.65,.45],$</p>
+        <p class="Code">&#160;&#160;&#160;&#160;TITLE='Cosine')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the sine and cosine data combined. </p>
+        <p class="Code">myThirdPlot = PLOT(sinewave, '-r',$</p>
+        <p class="Code">&#160;&#160;&#160;&#160;/CURRENT, POSITION=[.50,.55,.90,.95])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Draw the cosine plot. Use OVERPLOT to draw </p>
+        <p class="Code">; on top of the previous plot.</p>
+        <p class="Code">aPlot = PLOT(cosine, '-b', /OVERPLOT, TITLE='Combined plots')</p>
+        <p class="Code">&#160;</p>
+        <h3><a name="POSITION3"></a>POSITION Example Showing a Plot with a Subplot</h3>
+        <p>
+            <img src="../Resources/Images/subplot.png" />
+        </p>
+        <p>Using the same data as the example above, the following example shows how to position a large plot with a subplot:</p>
+        <p class="Code">; Define plot data</p>
+        <p class="Code">sinewave = SIN(2.0*FINDGEN(200)*!PI/25.0)*EXP(-0.02*FINDGEN(200))</p>
+        <p class="Code">cosine = COS(2.0*FINDGEN(200)*!PI/25.0)*EXP(-0.02*FINDGEN(200))</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Define the first visualization using the PLOT function.</p>
+        <p class="Code">; Display the sine data.</p>
+        <p class="Code">; Position the plot to cover most of the graphic window.</p>
+        <p class="Code">myPlot = PLOT(sinewave, '-r', AXIS_STYLE=1, $</p>
+        <p class="Code">POSITION=[.075,.075,.90,.90], $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;TITLE='Sine with cosine subplot')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Define the second plot.</p>
+        <p class="Code">; Position the plot to display as a subplot in the same space.</p>
+        <p class="Code">myPlotTwo = PLOT(cosine, '-b', AXIS_STYLE=1, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;/CURRENT, POSITION=[.60,.60,.90,.90])</p>
+        <h2 class="API"><a name="_EXTRA"></a>_EXTRA</h2>
+        <p>Use the _EXTRA keyword to inherit keywords from one plot command to store and set properties for other plots.</p>
+        <h2 class="API">Keyword Inheritance Example using the _EXTRA Keyword</h2>
+        <p>
+            <img src="../Resources/Images/keyword_inheritance_plots.png" alt="Multiple plots in one window" />
+        </p>
+        <p>The following example shows how to define the properties for the first plot, then how to use the _EXTRA keyword to apply the same properties to the remaining plots. The example places all plots in the same graphics window.</p>
+        <p class="Code">y1 = FINDGEN(10)</p>
+        <p class="Code">y2 = y1 * 5</p>
+        <p class="Code">y3 = -2 * y1 + 40</p>
+        <p class="Code">y4 = 0.5 * y1^2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Put four plots in the same window </p>
+        <p class="Code">; and use the same color, linestyle, </p>
+        <p class="Code">; symbol and yrange.</p>
+        <p class="Code">props = {current:1, color:'blue', $</p>
+        <p class="Code">&#160;&#160;linestyle:'dashed', symbol:'triangle', $</p>
+        <p class="Code">&#160;&#160;yrange:[0,50]}</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">myWindow = WINDOW( $</p>
+        <p class="Code">&#160;&#160;WINDOW_TITLE='Four plots with common properties')</p>
+        <p class="Code">&#160;&#160;myPlotOne = PLOT(y1, LAYOUT=[2,2,1], _EXTRA=props)</p>
+        <p class="Code">&#160;&#160;myPlotToo = PLOT(y2, LAYOUT=[2,2,2], _EXTRA=props)</p>
+        <p class="Code">&#160;&#160;myPlotThree = PLOT(y3, LAYOUT=[2,2,3], _EXTRA=props)</p>
+        <p class="Code">&#160;&#160;myPlotFour = PLOT(y4, LAYOUT=[2,2,4], _EXTRA=props)</p>
+        <h2 class="API">Resources</h2>
+        <ul>
+            <li value="1"><a href="propChanges.htm" class="Heading">Change graphics properties</a>
+            </li>
+            <li value="2"><a href="ImageGuideMe/SaveImage.htm" class="Heading">Save a graphic</a>
+            </li>
+            <li value="3"><a href="PlotGuideMe/barplots.htm" class="Heading">Bar plots</a>
+            </li>
+            <li value="4"><a href="../Reference Material/C/CONTOUR.htm">CONTOUR</a>
+            </li>
+            <li value="5"><a href="../Reference Material/C/COS.htm">COS</a>
+            </li>
+            <li value="6"><a href="../Reference Material/E/ERRORPLOT.htm">ERRORPLOT</a>
+            </li>
+            <li value="7"><a href="../Reference Material/F/FINDGEN.htm">FINDGEN</a>
+            </li>
+            <li value="8"><a href="../Reference Material/I/IMAGE.htm">IMAGE</a>
+            </li>
+            <li value="9"><a href="../Reference Material/P/PLOT.htm" class="Heading">PLOT</a>
+            </li>
+            <li value="10"><a href="../Reference Material/S/SIN.htm">SIN</a>
+            </li>
+            <li value="11"><a href="../Reference Material/W/WINDOW.htm">WINDOW</a>
+            </li>
+            <li value="12"><a href="../Reference Material/Functional List of IDL Routines/Graphics.htm" class="Heading">IDL Graphics Functions</a>
+            </li>
+            <li value="13"><a href="../IDL Graphics/FormattingSymsAndLines.htm" class="Heading">Formatting IDL&#160;Graphics Symbols and Lines</a>
+            </li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

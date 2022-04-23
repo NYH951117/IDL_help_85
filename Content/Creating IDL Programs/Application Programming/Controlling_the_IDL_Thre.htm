@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Environment|Miscellaneous Environment Topics">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Controlling the IDL Thread Pool</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Concepts.htm">Environment</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../MiscellaneousEnvironmentTopics.htm">Miscellaneous Environment Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Controlling the IDL Thread Pool</span>
+        </div>
+        <h1><a name="threading_2361397167_998463"></a><a name="threading_2361397167_28390"></a><a name="kanchor4316"></a>Controlling the IDL Thread Pool</h1>
+        <p>IDL allows you to programmatically control the use of thread pool. This section discusses the following aspects of thread pool use:</p>
+        <ul>
+            <li value="1"><a href="#threading_2361397167_999510" class="selected">Viewing the Current Thread Pool Settings</a>
+            </li>
+            <li value="2"><a href="#threading_2361397167_998482" class="selected">Using the Default Thread Pool Settings</a>
+            </li>
+            <li value="3"><a href="#threading_2361397167_998492" class="selected">Changing Global Thread Pool Settings</a>
+            </li>
+            <li value="4"><a href="#threading_2361397167_998592" class="selected">Changing Thread Pool Settings for a Specific Computation</a>
+            </li>
+            <li value="5"><a href="#threading_2361397167_998627" class="selected">Disabling the Thread Pool</a>
+            </li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Multithreading does not offer the possibility of increased execution speed for all IDL routines. For a list of the routines that have been implemented to use multithreading when possible, see <a href="Routines_that_Use_the_Th.htm#threading_2361397167_998638">Routines that Use the Thread Pool</a>.</p>
+        <h2 class="API"><a name="threading_2361397167_999510"></a><a name="threading_2361397167_34216"></a>Viewing the Current Thread Pool Settings</h2>
+        <p>The current values of the parameters that control IDL’s use of the thread pool for computations are always available in the read-only !CPU system variable. !CPU is initialized by IDL at startup with default values for the number of CPUs (threads) to use, as well as the minimum and maximum number of data elements. To view the settings, use the following command:</p>
+        <p class="Code">HELP, /STRUCTURE, !CPU</p>
+        <p>The values of the fields in the !CPU system variable are explained in <a href="../Appendices/IDL_Environment_System_V.htm#sysvars_272074529_1014201">!CPU</a>.</p>
+        <h2 class="API"><a name="threading_2361397167_998482"></a><a name="threading_2361397167_59255"></a>Using the Default Thread Pool Settings</h2>
+        <p>If you have more than one processor on your system, if the routine you are using is able to use the thread pool, and if the number of data elements in your computation falls into the allowed range (neither too few nor too many), then IDL will employ the thread pool in that calculation.</p>
+        <p>If the above requirements are met, IDL will automatically use the thread pool for the computation. You do not need to do anything special to enable IDL’s multithreading capabilities.</p>
+        <h2 class="API"><a name="threading_2361397167_998492"></a><a name="threading_2361397167_18842"></a>Changing Global Thread Pool Settings</h2>
+        <p><a name="kanchor4317"></a><a name="kanchor4318"></a><a name="kanchor4319"></a>Unless they are overridden by thread pool keywords supplied at the time of execution, the values contained in the !CPU system variable control IDL’s use of the thread pool. !CPU is a “read-only” system variable, which means that you cannot assign values to its structure fields directly, either at the command line or within a program. However, you can set the default number of threads prior to starting IDL by using the IDL_CPU_TPOOL_NTHREADS preference. See <a href="../Appendices/prefs_cpu.htm#preferences_2247882535_1024551">!CPU Settings Preferences</a> for details. You can also change the values of the !CPU system variable for the duration of the current IDL session by using the <a href="../../Reference Material/C/CPU.htm#C_854643309_1032355">CPU </a>procedure.</p>
+        <p>The CPU procedure accepts the following keywords:</p>
+        <h4>TPOOL_MAX_ELTS</h4>
+        <p>Set this keyword to a non-zero value to set the maximum number of data elements involved in a computation that uses the thread pool. If the number of elements in the computation exceeds the number you specify, IDL will not use the thread pool for the computation. Setting this value to 0 removes any limit on maximum number of elements, and any computation with at least TPOOL_MIN_ELTS will use the thread pool.</p>
+        <p>This keyword changes the value returned by !CPU.TPOOL_MAX_ELTS.</p>
+        <h4>TPOOL_MIN_ELTS</h4>
+        <p>Set this keyword to a non-zero value to set the minimum number of data elements involved in a computation that uses the thread pool. If the number of elements in the computation is less than the number you specify, IDL will not use the thread pool for the computation. Use this keyword to prevent IDL from using the thread pool on tasks that are too small to benefit from it.</p>
+        <p>This keyword changes the value returned by !CPU.TPOOL_MIN_ELTS.</p>
+        <h4>TPOOL_NTHREADS</h4>
+        <p>Set this keyword to the number of threads IDL should use when performing computations that take advantage of the thread pool. By default, IDL will use !CPU.HW_NCPU threads, so that each thread will have the potential to run in parallel with the others. Set this keyword equal to 0 (zero) to ensure that !CPU.HW_NCPU threads will be used. Set this keyword equal to 1 (one) to disable use of the thread pool.</p>
+        <p>This keyword changes the value returned by !CPU.TPOOL.NTHREADS.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For numerical computation, there is no benefit to using more threads than your system has CPUs. However, depending on the size of the problem and the number of other programs running on the system, there may be a performance advantage to using <i>fewer</i> CPUs. See <a href="The__Thread_Pool.htm#threading_2361397167_998454">Possible Drawbacks to the Use of the  Thread Pool</a> for a discussion of the circumstances under which using fewer than the maximum number of CPUs makes sense.</p>
+        <p>For more information on the CPU procedure, see <a href="../../Reference Material/C/CPU.htm#C_854643309_1032355">CPU</a>.</p>
+        <h3>Examples</h3>
+        <p>The following examples illustrate use of the CPU procedure to modify IDL’s global thread pool settings.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The following examples are designed for systems with more than one processor. The examples will generate correct results on single-processor systems, but may run more slowly than the same operations performed without the thread pool.</p>
+        <h4>Example 1</h4>
+        <p>As a first example, imagine that we want to ensure that the thread pool is not used unless there are at least 50,000 data elements. We set the minimum to 50,000 since we know, for our system, that at least 50,000 floating point data elements are required before the use of the thread pool will exceed the overhead required to use it.</p>
+        <p>In addition, we want to ensure that the thread pool is not used if a calculation involves more than 1,000,000 data elements. We set the maximum to 1,000,000 since we know that 1,000,000 floating point data elements will exceed the maximum amount of memory available for the computation, requiring the use of virtual memory.</p>
+        <p>The following IDL statements use the CPU procedure to modify the minimum and maximum number of elements used in thread pool computations, create an array of floating-point values, and perform a computation on the array:</p>
+        <p class="Code">; Modify the thread pool settings</p>
+        <p class="Code">CPU, TPOOL_MAX_ELTS = 1000000, TPOOL_MIN_ELTS = 50000</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create 65,341 elements of floating point data</p>
+        <p class="Code">theta = FINDGEN(361, 181)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Perform computation</p>
+        <p class="Code">sineSquared = 1. - (COS(!DTOR*theta))^2</p>
+        <p>In this example, the thread pool will be used since we are performing a computation on an array of 361 x 181 = 65,341 data elements, which falls between the minimum and maximum thresholds. Note that we altered the <i>global</i> thread pool parameters in such a way that the computation was allowed. The values set by the CPU procedure will remain in effect, either until they are changed again by another call to CPU or until the end of the IDL session. An alternative approach that does not change the global defaults in shown in <a href="#threading_2361397167_998592" class="selected">Changing Thread Pool Settings for a Specific Computation</a>.</p>
+        <h4>Example 2</h4>
+        <p>In this example, we will:</p>
+        <ol>
+            <li value="1">Save the current thread pool settings from the !CPU system variable.</li>
+            <li value="2">Modify the thread pool settings so that IDL is configured, for our particular system, to efficiently perform a floating point computation.</li>
+            <li value="3">Perform several floating point computations.</li>
+            <li value="4">Modify the thread pool settings so that IDL is configured, for our particular system, to efficiently perform a double precision computation.</li>
+            <li value="5">Perform several double precision computations.</li>
+            <li value="6">Restore the thread pool settings to their original values.</li>
+        </ol>
+        <p>The first computation will use the thread pool since it does not exceed any of the specified parameters. The second computation, since it exceeds the maximum number of data elements, will not use the thread pool.</p>
+        <p class="Code">; Retrieve the current thread pool settings</p>
+        <p class="Code">threadpool = !CPU</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Modify the thread pool settings</p>
+        <p class="Code">CPU, TPOOL_MAX_ELTS = 1000000, TPOOL_MIN_ELTS = 50000, $</p>
+        <p class="Code">&#160;&#160;&#160;TPOOL_NTHREADS = 2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create 65,341 elements of floating point data</p>
+        <p class="Code">theta = FINDGEN(361, 181)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Perform computations, using 2 threads</p>
+        <p class="Code">sineSquared = 1. - (COS(!DTOR*theta))^2</p>
+        <p class="Code"><i>next computation</i>
+        </p>
+        <p class="Code"><i>next computation</i>
+        </p>
+        <p class="Code"><i>etc.</i>
+        </p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Modify thread pool settings for new data type</p>
+        <p class="Code">CPU, TPOOL_MAX_ELTS = 50000, TPOOL_MIN_ELTS = 10000</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create 65,341 elements of double precision data</p>
+        <p class="Code">theta = DINDGEN(361, 181)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Perform computation</p>
+        <p class="Code">sineSquared = 1. - (COS(!DTOR*theta))^2</p>
+        <p class="Code"><i>next computation</i>
+        </p>
+        <p class="Code"><i>next computation</i>
+        </p>
+        <p class="Code"><i>etc.</i>
+        </p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Return thread pool settings to their initial values</p>
+        <p class="Code">CPU, TPOOL_MAX_ELTS = threadpool.TPOOL_MAX_ELTS, $</p>
+        <p class="Code">&#160;&#160;&#160;TPOOL_MIN_ELTS = threadpool.TPOOL_MIN_ELTS, $</p>
+        <p class="Code">&#160;&#160;&#160;TPOOL_NTHREADS = threadpool.HW_NCPU</p>
+        <p>Again, in this example we altered the <i>global</i> thread pool parameters. In cases where you plan to perform multiple computations that take advantage of the same thread pool configuration, changing the global thread pool parameters is convenient. In cases where only a single computation uses the specified thread pool configuration, it is easier to use the thread pool keywords to the routine that performs the computation, as described in the following section.</p>
+        <h2 class="API"><a name="threading_2361397167_998592"></a><a name="threading_2361397167_71339"></a>Changing Thread Pool Settings for a Specific Computation</h2>
+        <p>All routines that have been implemented to use the thread pool accept keywords that allow you to override the thread pool settings stored in !CPU for a single invocation of the routine. This allows you to modify the settings for a particular computation without affecting the global default settings of your session. See <a href="Routines_that_Use_the_Th.htm">Routines that Use the Thread Pool</a> for more information.</p>
+        <p>The thread pool keywords are:</p>
+        <h4>TPOOL_MAX_ELTS</h4>
+        <p>Set this keyword to a non-zero value to set the maximum number of data elements involved in a computation that uses the thread pool. If the number of elements in the computation exceeds the number you specify, IDL will not use the thread pool for the computation. Setting this value to 0 removes any limit on the maximum number of elements, and any computation with at least TPOOL_MIN_ELTS will use the thread pool.</p>
+        <p>This keyword overrides the default value, given by !CPU.TPOOL_MAX_ELTS.</p>
+        <h4>TPOOL_MIN_ELTS</h4>
+        <p>Set this keyword to a non-zero value to set the minimum number of data elements involved in a computation that uses the thread pool. If the number of elements in the computation is less than the number you specify, IDL will not use the thread pool for the computation. Use this keyword to prevent IDL from using the thread pool on tasks that are too small to benefit from it.</p>
+        <p>This keyword overrides the default value, given by !CPU.TPOOL_MIN_ELTS.</p>
+        <h4>TPOOL_NOTHREAD</h4>
+        <p>Set this keyword to explicitly prevent IDL from using the thread pool for the current computation. If this keyword is set, IDL will use the non-threaded implementation of the routine even if the current settings of the !CPU system variable would allow use of the threaded implementation.</p>
+        <h3>Example</h3>
+        <p>We can use the TPOOL_MIN_ELTS and TPOOL_MAX_ELTS keywords to the COS function to modify the example used in the previous section so that our changes to the thread pool settings do not alter the global default.</p>
+        <p class="Code">; Create 65,341 elements of floating point data</p>
+        <p class="Code">theta = FINDGEN(361, 181)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Perform computation and override session settings for maximum</p>
+        <p class="Code">; and minimum number of elements</p>
+        <p class="Code">sineSquared = 1. - (COS(!DTOR*theta, TPOOL_MAX_ELTS = 1000000, $</p>
+        <p class="Code">&#160;&#160;&#160;TPOOL_MIN_ELTS = 50000))^2</p>
+        <h2 class="API"><a name="threading_2361397167_998627"></a><a name="threading_2361397167_98052"></a>Disabling the Thread Pool</h2>
+        <p><a name="kanchor4320"></a>There are two ways to disable the thread pool in IDL:</p>
+        <ul>
+            <li value="1"><a name="kanchor4321"></a>Use the CPU procedure to alter the global thread pool parameters.</li>
+            <li value="2">Use the TPOOL_NOTHREAD keyword to a routine to disable the thread pool for a specific single computation.</li>
+        </ul>
+        <p>In the first example, we will disable the thread pool for the session by setting the number of threads to use to one:</p>
+        <p class="Code">CPU, TPOOL_NTHREADS = 1</p>
+        <p>In the next example, we will disable the thread pool for a specific computation using the TPOOL_NOTHREAD keyword:</p>
+        <p class="Code">sineSquared = 1. - (COS(!DTOR*theta, /TPOOL_NOTHREAD))^2</p>
+        <h2 class="API">See Also</h2>
+        <p><a href="The__Thread_Pool.htm">The IDL&#160;Thread Pool</a>, <a href="Routines_that_Use_the_Th.htm">Routines that Use the Thread Pool</a>, <a href="../Appendices/tpoolkeyw.htm">Thread Pool Keywords</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: Z">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>ZLIB_COMPRESS</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Z_list.htm">Routines: Z</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">ZLIB_COMPRESS</span>
+        </div>
+        <h1 class="Routine"><a name="kanchor3088"></a>ZLIB_COMPRESS</h1>
+        <p>The ZLIB_COMPRESS function compresses a given input array using the DEFLATE compression algorithm, and returns a byte array containing the compressed data, along with a header and trailer describing the compressed data. The compression is done using the ZLIB library, written by Jean-Loup Gailly and Mark Adler.</p>
+        <p>The compressed data can be uncompressed using the <a href="ZLIB_UNCOMPRESS.htm">ZLIB_UNCOMPRESS</a> function.</p>
+        <h2 class="API">Examples</h2>
+        <p>Here, we compress and uncompress a float array:</p>
+        <p class="Code">data = FINDGEN(100, 200)</p>
+        <p class="Code">zdata = ZLIB_COMPRESS(data)</p>
+        <p class="Code">HELP, zdata</p>
+        <p class="Code">dataout = ZLIB_UNCOMPRESS(zdata, TYPE=4, DIMENSIONS=[100, 200])</p>
+        <p class="Code">PRINT, ARRAY_EQUAL(dataout, data)</p>
+        <p>IDL prints:</p>
+        <p class="Code">ZDATA           BYTE      = Array[23379]</p>
+        <p class="Code_Indented">1</p>
+        <p>Since the float array has a total of 80,000 bytes, the compression space savings is 71%.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = ZLIB_COMPRESS( <i>Array</i> [,&#160;/<a href="#GZIP_HEADER" class="selected">GZIP_HEADER</a>]
+ [,&#160;<a href="#LEVEL" class="selected">LEVEL</a>=value] [,&#160;/<a href="#NO_HEADER" class="selected">NO_HEADER</a>]
+			)</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Array</h3>
+        <p>Set this argument to an array of any IDL numeric type.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="GZIP_HEADER"></a>GZIP_HEADER</h3>
+        <p>Set this keyword to output the results using a GZIP-style header and trailer, instead of the default ZLIB header/trailer. In this case, the resulting array could be written out to a disk file which would be fully compatible with the GZIP file format.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>Unlike the default ZLIB header/trailer, the GZIP trailer has a field containing the uncompressed data size. Therefore, when ZLIB_UNCOMPRESS is called, IDL will be able to immediately allocate an output array of the correct size, which can significantly reduce memory overhead.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you set /GZIP_HEADER in ZLIB_COMPRESS, you must set /GZIP_HEADER when calling ZLIB_UNCOMPRESS on the compressed stream.</p>
+        <h3 class="Keyword"><a name="LEVEL"></a>LEVEL</h3>
+        <p>Set this keyword to an integer in the range 0-9 giving the desired compression level. A value of LEVEL=0 gives no compression, while LEVEL=9 gives the highest compression. Higher values for LEVEL will result in better compression ratios but slower compress and uncompress speeds. The default is LEVEL=6, which is a good compromise between compression and speed. Note that for low compression levels (or highly-random data), the size of the compressed result may be larger than the original data.</p>
+        <h3 class="Keyword"><a name="NO_HEADER"></a>NO_HEADER</h3>
+        <p>Set this keyword to not include any header or trailer, instead of the default ZLIB header/trailer.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you set /NO_HEADER in ZLIB_COMPRESS, you must set /NO_HEADER when calling ZLIB_UNCOMPRESS on the compressed stream.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 27px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.2.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="../F/FILE_GZIP.htm">FILE_GZIP</a>, <a href="../F/FILE_GUNZIP.htm"><a href="../F/FILE_GUNZIP.htm">FILE_GUNZIP</a></a>, <a href="../F/FILE_TAR.htm">FILE_TAR</a>, <a href="../F/FILE_UNTAR.htm">FILE_UNTAR</a>, <a href="../F/FILE_ZIP.htm"><a href="../F/FILE_ZIP.htm">FILE_ZIP</a></a>, <a href="../F/FILE_UNZIP.htm"><a href="../F/FILE_UNZIP.htm">FILE_UNZIP</a></a>, <a href="../O/OPEN.htm"><a href="../O/OPEN.htm">OPEN</a></a>, <a href="ZLIB_UNCOMPRESS.htm">ZLIB_UNCOMPRESS</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: J">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>JSON_SERIALIZE</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="J_list.htm">Routines: J</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">JSON_SERIALIZE</span>
+        </div>
+        <h1 class="Routine"><a name="kanchor1568"></a>JSON_SERIALIZE</h1>
+        <p>The JSON_SERIALIZE function takes a HASH, LIST, or structure variable and converts it into a JSON (JavaScript Object Notation) string.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>json_serialize.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>The JSON_SERIALIZE converts a LIST or HASH into raw JSON with no "pretty" printing. If you want to output prettified JSON (with appropriate indenting and line breaks), you can simply bypass JSON_SERIALIZE and print out your LIST or HASH using <a href="../../Creating IDL Programs/Components of the IDL Language/ImpliedPrint.htm">Implied Print</a>.</p>
+        <h2 class="API">Examples</h2>
+        <h4>Convert a LIST of IDL values into a JSON string</h4>
+        <p class="Code">mylist = LIST(!TRUE, !NULL, 42, 3.14, "Hello")</p>
+        <p class="Code">json = JSON_SERIALIZE(mylist)</p>
+        <p class="Code">PRINT, json</p>
+        <p>IDL prints:</p>
+        <p class="Code">[true,null,42,3.14,"Hello"]</p>
+        <h4>Convert a HASH of key-value pairs into a JSON string</h4>
+        <p class="Code">myhash = HASH("Planet", "Jupiter", "Index", 5, "Mass", 1.9d27, "Units", "kg")</p>
+        <p class="Code">json = JSON_SERIALIZE(myhash)</p>
+        <p class="Code">PRINT, json</p>
+        <p>IDL prints:</p>
+        <p class="Code">{"Planet":"Jupiter","Index":5,"Units":"kg","Mass":1.9e27}</p>
+        <h4>Convert an IDL structure into a JSON string</h4>
+        <p class="Code">struct = {PLANET: "Jupiter", INDEX: 5, MASS: 1.9d27, UNITS: "kg"}</p>
+        <p class="Code">json = JSON_SERIALIZE(struct)</p>
+        <p class="Code">PRINT, json</p>
+        <p>IDL prints:</p>
+        <p class="Code">{"PLANET":"Jupiter","INDEX":5,"MASS":1.9e27,"UNITS":"kg"}</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = JSON_SERIALIZE(<i>Value</i>, /LOWERCASE)</p>
+        <h2 class="API">Return Value</h2>
+        <p>The result is a string containing the JSON string. If the input value is a LIST, then the JSON string will be encoded as a JSON <i>array</i>, with square brackets and comma-separated values. If the input value is a HASH, then the JSON string will be encoded as a JSON <i>object</i>, with curly braces and key-value pairs.</p>
+        <p>When converting IDL variables, the following rules are used:</p>
+        <ul>
+            <li value="1">Undefined variables (or !NULL) become "null".</li>
+            <li value="2">Boolean variables are passed on as "true" or "false".</li>
+            <li value="3">All bytes and integers are passed on unchanged (if these are converted back using JSON_PARSE, they will be type LONG64).</li>
+            <li value="4">All floating-point numbers are passed on unchanged (if these are converted back using JSON_PARSE, they will be type DOUBLE).</li>
+            <li value="5">All strings are surrounded by double-quotes. The following special characters will be escaped: \\ (backslash), \" (double quote), \b (backspace 8b), \f (form feed 12b), \n (line feed 10b), \r (carriage return 13b), \t (tab 9b). Note that forward slash characters are not escaped - this allows URL's to still look normal in the resulting JSON. Also note that the string "!NULL" is a special case, and will be converted into the "null" value.</li>
+            <li value="6">LIST values become JSON <i>arrays</i>, with each list element being converted using the above rules.</li>
+            <li value="7">Structure tagname-value pairs become JSON <i>objects</i>, with each value being converted using the above rules. You can use the LOWERCASE keyword to change the tagnames to lowercase.</li>
+            <li value="8">HASH key-value pairs become JSON <i>objects</i>, with each value being converted using the above rules.</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Since the HASH stores its key-value pairs in an arbitrary order, the key-value pairs in the resulting JSON string may be in a different order than the order in which the keys were added to the hash.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Value</h3>
+        <p><i>Value</i> must be a <a href="../H/HASH.htm">HASH</a>, <a href="../L/LIST.htm">LIST</a>, or structure variable.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">LOWERCASE</h3>
+        <p>By default, when serializing an IDL structure, all of the structure tag names are in uppercase within the resulting JSON string. Set the LOWERCASE keyword to use lowercase for the structure tag names.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>8.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">8.4</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>All byte values are now encoded as integers (instead of true/false).</p>
+                        <p>Added LOWERCASE keyword.</p>
+                        <p>Boolean variables are encoded as true/false.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">Resources and References</h2>
+        <p>JSON (JavaScript Object Notation) is a lightweight data-interchange format that is easy for humans to read and write, and for machines to parse and generate. JSON was designed as an alternative to XML, and is based on a subset of the JavaScript Programming Language, Standard ECMA-262 3rd Edition - December 1999. Further details can be found at <a href="http://www.json.org/">http://www.json.org</a>.</p>
+        <h2 class="API">See Also</h2>
+        <p><a href="JSON_PARSE.htm">JSON_PARSE</a>, <a href="../H/HASH.htm">HASH</a>, <a href="../L/LIST.htm">LIST</a>, <a href="../../Object Classes/Network/IDLnetURL.htm">IDLnetURL</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

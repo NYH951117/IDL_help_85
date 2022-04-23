@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: A">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>AMOEBA </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="A_list.htm">Routines: A</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">AMOEBA</span>
+        </div>
+        <h1 class="Routine"><a name="A_850317933_992475"></a><a name="kanchor30"></a><a name="A_850317933_40822"></a>AMOEBA </h1>
+        <p>The AMOEBA function performs multidimensional minimization of a function <i>Func</i>(<i>x</i>), where <i>x</i> is an <i>n</i>-dimensional vector, using the downhill simplex method <sup><a href="#Resource" class="selected">1</a></sup>. </p>
+        <p>The downhill simplex method is not as efficient as Powell’s method, and usually requires more function evaluations. However, the simplex method requires only function evaluations—not derivatives—and may be more reliable than Powell’s method.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>amoeba.pro</code> in the <code>lib</code> subdirectory of the IDL distribution <sup><a href="#Resource" class="selected">2</a></sup>.</p>
+        <h2 class="API"><a name="A_850317933_864143"></a><a name="A_850317933_864143_PageTOC_AMOEBA_"></a>Examples</h2>
+        <p>Use AMOEBA to find the slope and intercept of a straight line that fits a given set of points, minimizing the maximum error. The function to be minimized (FUNC, in this case) returns the maximum error, given p[0] = intercept, and p[1] = slope. </p>
+        <p class="Code">; First define the function FUNC:<br />FUNCTION FUNC, P<br />COMMON FUNC_XY, X, Y<br />RETURN, MAX(ABS(Y - (P[0] + P[1] * X)))<br />END<br /><br />; Put the data points into a common block so they are accessible to<br />; the function: <br />COMMON FUNC_XY, X, Y<br /><br />; Define the data points:<br />X = FINDGEN(17)*5<br />Y = [ 12.0,  24.3,  39.6,  51.0,  66.5,  78.4,  92.7, 107.8, $<br />&#160;&#160;&#160;&#160;120.0, 135.5, 147.5, 161.0, 175.4, 187.4, 202.5, 215.4, 229.9]<br /><br />; Call the function. Set the fractional tolerance to 1 part in<br />; 10^5, the initial guess to [0,0], and specify that the minimum<br />; should be found within a distance of 100 of that point: <br />R = AMOEBA(1.0e-5, SCALE=1.0e2, P0 = [0, 0], FUNCTION_VALUE=fval)<br /><br />; Check for convergence:<br />IF N_ELEMENTS(R) EQ 1 THEN MESSAGE, 'AMOEBA failed to converge'<br /><br />; Print results:<br />PRINT, 'Intercept, Slope:', r, $<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;'Function value (max error): ', fval[0]<br />END</p>
+        <p>IDL prints:</p>
+        <p class="Code">Intercept, Slope:      11.4100      2.72800</p>
+        <p class="Code">Function value:       1.33000</p>
+        <h2 class="API"><a name="A_850317933_864066"></a><a name="A_850317933_864066_PageTOC_AMOEBA_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = AMOEBA( <i>Ftol</i> [,&#160;<a href="#A_850317933_864079" class="selected">FUNCTION_NAME</a>=<i>string</i>] [,&#160;<a href="#A_850317933_864085" class="selected">FUNCTION_VALUE</a>=<i>variable</i>] [,&#160;<a href="#A_850317933_864089" class="selected">NCALLS</a>=<i>value</i>] [,&#160;<a href="#A_850317933_864091" class="selected">NMAX</a>=<i>value</i>] [,&#160;<a href="#A_850317933_864094" class="selected">P0</a>=<i>vector</i>, <a href="#A_850317933_864103" class="selected">SCALE</a>=<i>vector</i> | , <a href="#A_850317933_864424" class="selected">SIMPLEX</a>=<i>array</i>] )</p>
+        <h2 class="API"><a name="A_850317933_992497"></a><a name="A_850317933_33946"></a>Return Value </h2>
+        <p>If the minimum is found, AMOEBA returns an <i>n</i>-element vector corresponding to the function’s minimum value. If a minimum within the given tolerance is not found within the specified number of iterations, AMOEBA returns a scalar value of -1. Results are returned with the same precision (single- or double-precision floating-point) as is returned by the user-supplied function to be minimized.</p>
+        <h2 class="API"><a name="A_850317933_864070"></a><a name="A_850317933_864070_PageTOC_AMOEBA_"></a>Arguments</h2>
+        <h3 class="Argument">Ftol</h3>
+        <p>The fractional tolerance to be achieved in the function value—this is the fractional range between the maximum and minimum values of the function at the simplex points [2*abs(max-min)/[abs(max) + abs(min)]]. If the function you supply returns a single-precision result, <i>Ftol</i> should never be less than your machine’s floating-point precision—the value contained in the EPS field of the structure returned by the MACHAR function. If the function you supply returns a double-precision floating-point value, Ftol should not be less than your machine's double-precision floating-point precision. See <a href="../M/MACHAR.htm#M_824365677_887317">MACHAR</a>for details.</p>
+        <h2 class="API"><a name="A_850317933_864077"></a><a name="A_850317933_864077_PageTOC_AMOEBA_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="A_850317933_864079"></a><a name="A_850317933_864079_Keywords_AMOEBA__"></a>FUNCTION_NAME</h3>
+        <p>Set this keyword equal to a string containing the name of the function to be minimized. If this keyword is omitted, AMOEBA assumes that an IDL function named “FUNC” is to be used.</p>
+        <p>The function to be minimized must be written as an IDL function and compiled prior to calling AMOEBA. This function must accept an <i>n</i>-element vector as its only parameter and return a scalar single- or double precision floating-point value as its result.</p>
+        <p>See the <i>Example</i> section below for an example function.</p>
+        <h3 class="Keyword"><a name="A_850317933_864085"></a><a name="A_850317933_864085_Keywords_AMOEBA__"></a>FUNCTION_VALUE</h3>
+        <p>Set this keyword equal to a named variable that will contain an (<i>n</i>+1)-element vector of the function values at the simplex points. The first element contains the function minimum. </p>
+        <h3 class="Keyword"><a name="A_850317933_864089"></a><a name="A_850317933_864089_Keywords_AMOEBA__"></a>NCALLS</h3>
+        <p>Set this keyword equal to a named variable that will contain a count of the number of times the function was evaluated.</p>
+        <h3 class="Keyword"><a name="A_850317933_864091"></a><a name="A_850317933_864091_Keywords_AMOEBA__"></a>NMAX</h3>
+        <p>Set this keyword equal to a scalar value specifying the maximum number of function evaluations allowed before terminating. The default is 5000.</p>
+        <h3 class="Keyword"><a name="A_850317933_864094"></a><a name="A_850317933_864094_Keywords_AMOEBA__"></a>P0</h3>
+        <p>Set this keyword equal to an <i>n</i>-element single- or double-precision floating-point vector specifying the initial starting point. Note that if you specify P0, you must also specify SCALE.</p>
+        <p>For example, in a 3-dimensional problem, if the initial guess is the point [0,0,0], and you know that the function’s minimum value occurs in the interval: </p>
+        <p class="Code">-10 &lt; X[0] &lt; 10, -100 &lt; X[1] &lt; 100, -200 &lt; X[(2] &lt; 200,</p>
+        <p>specify: P0=[0,0,0] and SCALE=[10, 100, 200]. </p>
+        <p>Alternately, you can omit P0 and SCALE and specify SIMPLEX.</p>
+        <h3 class="Keyword"><a name="A_850317933_864103"></a><a name="A_850317933_864103_Keywords_AMOEBA__"></a>SCALE</h3>
+        <p>Set this keyword equal to a scalar or <i>n</i>-element vector containing the problem’s characteristic length scale for each dimension. SCALE is used with P0 to form an initial (<i>n</i>+1) point simplex. If all dimensions have the same scale, set SCALE equal to a scalar.</p>
+        <p>If SCALE is specified as a scalar, the function’s minimum lies within a distance of SCALE from P0. If SCALE is an N-dimensional vector, the function's minimum lies within the Ndim+1 simplex with the vertices P0, P0 + [1,0,...,0] * SCALE, P0 + [0,1,0,...,0] * SCALE, ..., and P0+[0,0,...,1] * SCALE. </p>
+        <h3 class="Keyword"><a name="A_850317933_864424"></a><a name="A_850317933_864424_Keywords_AMOEBA__"></a>SIMPLEX</h3>
+        <p>Set this keyword equal to an <i>n</i> by <i>n</i>+1 single- or double-precision floating-point array containing the starting simplex. After AMOEBA has returned, the SIMPLEX array contains the simplex enclosing the function minimum. The first point in the array, SIMPLEX[*,0], corresponds to the function’s minimum. This keyword is ignored if the P0 and SCALE keywords are set.<br /></p>
+        <h2 class="API"><a name="A_850317933_864346"></a><a name="A_850317933_864346_PageTOC_AMOEBA_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="Resource"></a>Resources and References</h2>
+        <p>1. Nelder and Mead, 1965, <i>Computer Journal</i>, Vol 7, pp 308-313.</p>
+        <p>2. AMOEBA is based on the routine <code>amoeba</code> described in section 10.4 of <i>Numerical Recipes in C: The Art of Scientific Computing</i> (Second Edition), published by Cambridge University Press, and is used by permission.</p>
+        <h2 class="API"><a name="A_850317933_991325"></a><a name="A_850317933_991325_PageTOC_AMOEBA_"></a>See Also</h2>
+        <p><a href="../D/DFPMIN.htm#D_843829869_861630">DFPMIN</a>, <a href="../P/POWELL.htm#P_817877613_51436">POWELL</a>, <a href="../S/SIMPLEX.htm#S_820040301_1103717">SIMPLEX</a></p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Basic Plots">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Scatterplots</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/basic_plots_gallery.htm">Basic Plots</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Scatterplots</span>
+        </div>
+        <h1>Scatterplots</h1>
+        <p>This topic presents two basic examples using the SCATTERPLOT function. The first plots impact crater data with a regression line and the second creates a plot of pixel values in two different bands of an image.</p>
+        <h2>Scatterplot with Simple Regression Line</h2>
+        <p>The <code>\examples\data</code> directory of your IDL installation contains a file named "VenusCraterData.csv", which, oddly enough, contains basic information about impact craters on Venus. We will use this data to construct a simple <a href="../../Reference Material/S/SCATTERPLOT.htm">SCATTERPLOT</a> and accompanying regression line using <a href="../../Reference Material/L/LINFIT.htm">LINFIT</a> and <a href="../../Reference Material/P/PLOT.htm">PLOT</a>.</p>
+        <p>"VenusCraterData.csv" contains the following fields:</p>
+        <ul>
+            <li value="1">Name: the official IAU name of the crater.</li>
+            <li value="2">Latitude : latitude of crater's center. Error is ±0.05°.</li>
+            <li value="3">Longitude: longitude of crater's center. Error is ±0.05°.</li>
+            <li value="4">Rim-to-Rim Diameter (d): mean diameter of the crater, in kilometers.</li>
+            <li value="5">dnd: difference in backscatter between a representative location on the crater floor (dni)and of a location in the terrain surrounding the crater (dno). One DN = 0.2 dB of RADAR backscatter.</li>
+            <li value="6">Ejecta Radius (erad): mean radius of the ejecta apron of the crater, in kilometers.</li>
+            <li value="7">Central Structure Diameter (Cd): diameter of a circle with an area equivalent to that encompassing any central structure, in kilometers.</li>
+        </ul>
+        <p>
+            <img src="../images/scatterplot_regression.png" />
+        </p>
+        <p>&#160;</p>
+        <p>To generate the plot above, simply copy and paste the following code at the IDL command line.</p>
+        <p class="Code">; Create the base template. Navigate to 'VenusCraterData.csv'</p>
+        <p class="Code">; in the \examples\data directory of your IDL installation.</p>
+        <p class="Code">; Fields are: Name, lat, long, diameter, dnd, erad, cstruct</p>
+        <p class="Code">myTemplate = ASCII_TEMPLATE()</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Read in the data. Make sure that \examples\data is in your IDL path.</p>
+        <p class="Code">craters = READ_ASCII('VenusCraterData.csv', TEMPLATE=myTemplate)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Re-assign the crater variables to make them easier to type.</p>
+        <p class="Code">x = craters.diameter</p>
+        <p class="Code">y = craters.erad</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">;;----------------------------------------</p>
+        <p class="Code_Indented">;; This block is optional and uses an alternate read method.</p>
+        <p class="Code_Indented">;; Replaces the above lines of code.</p>
+        <p class="Code_Indented">;; Uncomment this block before copying/pasting</p>
+        <p class="Code_Indented">;; to the IDL command line.</p>
+        <p class="Code_Indented">;file = FILEPATH( "VenusCraterData.csv", $</p>
+        <p class="Code_Indented">;&#160;&#160;&#160;SUBDIRECTORY=['examples','data'] )</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">;craters = READ_CSV(file, COUNT=nRows, N_TABLE_HEADER=1)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">;PRINT, nRows</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">;; Show information on the file structure</p>
+        <p class="Code_Indented">;HELP, craters, /STRUCTURES</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">;; Create aliases for the field names we want to use.</p>
+        <p class="Code_Indented">;x = craters.FIELD4 ;crater diameter</p>
+        <p class="Code_Indented">;y = craters.FIELD6 ;ejecta radius</p>
+        <p class="Code_Indented">;;----------------------------------------</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Now create the SCATTERPLOT, setting the XRANGE to mirror the</p>
+        <p class="Code">; actual range of the data in the file. </p>
+        <p class="Code">myPlot = SCATTERPLOT(x, y,  SYMBOL='*', XRANGE=[10,300], $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE='Venus Crater Diameters* vs. Ejecta Radius (km)', $</p>
+        <p class="Code">&#160;&#160;&#160;XTITLE='Crater Diameter (km)', $</p>
+        <p class="Code">&#160;&#160;&#160;SYM_SIZE=1.0, YTITLE='Ejecta Radius (km)')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Calculate the values to fit into the regression line equation</p>
+        <p class="Code">; of y = A + Bx. Set up variables to hold the other values</p>
+        <p class="Code">; generated by LINFIT. </p>
+        <p class="Code">myLine = LINFIT(x, y, CHISQR=chisqr, COVAR=covar, $</p>
+        <p class="Code">&#160;&#160;&#160;MEASURE_ERRORS=measures, PROB=prob, SIGMA=sigma, $</p>
+        <p class="Code">&#160;&#160;&#160;YFIT=yfit)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Plot the regression line by plugging the calculated A and B</p>
+        <p class="Code">; values into the equation y = A + Bx. See below.</p>
+        <p class="Code">; Use FINDGEN(250) to generate the x values to plug </p>
+        <p class="Code">; into the equation.</p>
+        <p class="Code">myX = FINDGEN(250)</p>
+        <p class="Code">myY = (5.046 + (0.626)*(myX))</p>
+        <p class="Code">myLineEq = PLOT(myX, myY, /OVERPLOT, COLOR='green', $</p>
+        <p class="Code">&#160;&#160;&#160;THICK=2, LINESTYLE=3, XRANGE=[10,300])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add some text to display the regression equation and a</p>
+        <p class="Code">; notation about the data included in the plot.</p>
+        <p class="Code">myText = TEXT(210, 130, 'y = 5.046 + (0.626)x', FONT_COLOR='green', $</p>
+        <p class="Code">&#160;&#160;&#160;FONT_SIZE=9, FONT_STYLE='italic', /DATA, TARGET=myPlot)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">myText2=TEXT(1, 1, '*for craters &gt;10km', FONT_COLOR='black', $</p>
+        <p class="Code">&#160;&#160;&#160;FONT_SIZE=8, FONT_STYLE='italic', /DEVICE, TARGET=myPlot)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the A and B values of the regression line.</p>
+        <p class="Code">PRINT, myLine</p>
+        <p class="Code">&#160;</p>
+        <p>IDL displays:</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">5.04582     &#160;&#160;&#160;0.626086</p>
+        <p class="Code">&#160;</p>
+        <p>Notice that we did not use the other variables generated by the LINFIT function (such as CHISQR, etc.). You may optionally use TEXT to display them on your plot or simply use them in your paper or presentation.</p>
+        <h2>Scatterplot of Image Data</h2>
+        <p>You can create a <a href="../../Reference Material/S/SCATTERPLOT.htm">SCATTERPLOT</a> using two bands of image data. Two-dimensional (2D) scatterplots show the range of pixel values in each band, creating a visual way to assess data variance.</p>
+        <p>
+            <img src="../../Resources/Images/scatterplot.png" />
+        </p>
+        <p>The code shown below creates the graphic shown above. Copy the entire block and paste it into the IDL&#160;command line to run it. </p>
+        <p class="Code">; Read in a 2-band image.</p>
+        <p class="Code">file = FILE_WHICH('glowing_gas.jpg')</p>
+        <p class="Code">!null = QUERY_IMAGE(file, info)</p>
+        <p class="Code">gas = READ_IMAGE(file)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">red_band_pixels = REFORM(gas[0,*,*], PRODUCT(info.dimensions))</p>
+        <p class="Code">green_band_pixels = REFORM(gas[1,*,*], PRODUCT(info.dimensions))</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Plot red versus green band.</p>
+        <p class="Code">myPlot = SCATTERPLOT(red_band_pixels, green_band_pixels, $</p>
+        <p class="Code">&#160;&#160;SYMBOL = 'dot', /SYM_FILLED, SYM_COLOR = 'purple', $</p>
+        <p class="Code">&#160;&#160;XTITLE = 'Red band value', $</p>
+        <p class="Code">&#160;&#160;YTITLE = 'Green band value', $</p>
+        <p class="Code">&#160;&#160;TITLE = 'Red vs. green band of "glowing_gas.jpg"')</p>
+        <p class="Code">&#160;</p>
+        <h2>Resources and References</h2>
+        <p>The version of the Venus Crater database in this example is excerpted from the one accompanying the chapter in the Venus II book entitled "Morphology and Morphometry of Impact Craters", by Robert R. Herrick, Virgil L. Sharpton, Michael C. Malin, Suzanne N. Lyons, and Kimberly Feely (1997, U. of Arizona Press, eds. S. W. Bougher, D. M. Hunten, and R. J. Phillips, pp. 1015-1046). </p>
+        <p>The original version of the database (release 1) was used for an article by Robert R. Herrick and Roger J. Phillips (1994, Implications of a global survey of Venusian impact craters, Icarus, v. 111, 387-416).</p>
+        <h2>See Also</h2>
+        <ul>
+            <li value="1"><a href="../../Reference Material/F/FILE_WHICH.htm">FILE_WHICH</a>
+            </li>
+            <li value="2"><a href="../../Reference Material/F/FINDGEN.htm">FINDGEN</a>
+            </li>
+            <li value="3"><a href="../../IDL Graphics/FormattingSymsAndLines.htm">Formatting Symbols and Lines</a>
+            </li>
+            <li value="4"><a href="../../Reference Material/L/LINFIT.htm">LINFIT</a>
+            </li>
+            <li value="5"><a href="../../Reference Material/P/PLOT.htm">PLOT</a>
+            </li>
+            <li value="6"><a href="../../Reference Material/P/PRODUCT.htm">PRODUCT</a>
+            </li>
+            <li value="7"><a href="../../Reference Material/Q/QUERY_IMAGE.htm">QUERY_IMAGE</a>
+            </li>
+            <li value="8"><a href="../../Reference Material/R/READ_IMAGE.htm">READ_IMAGE</a>
+            </li>
+            <li value="9"><a href="../../Reference Material/R/REFORM.htm">REFORM</a>
+            </li>
+            <li value="10"><a href="../../Reference Material/S/SCATTERPLOT.htm">SCATTERPLOT</a>
+            </li>
+            <li value="11"><a href="../../Reference Material/T/TEXT.htm">TEXT</a>
+            </li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

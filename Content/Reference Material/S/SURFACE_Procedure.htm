@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: S">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>SURFACE Procedure</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="S_list.htm">Routines: S</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">SURFACE Procedure</span>
+        </div>
+        <h1 class="Routine"><a name="dg_routines_3604229493_886816"></a><a name="kanchor2480"></a>SURFACE Procedure</h1>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Please see the <a href="SURFACE.htm" class="Heading">SURFACE</a> function, which replicates the functionality of this routine and offers an interactive interface.</p>
+        <p>The SURFACE procedure draws a wire-mesh representation of a two-dimensional array projected into two dimensions, with hidden lines removed. SURFACE accepts a two-dimensional array of <i>z</i> (elevation) values, and optionally <i>x</i> and <i>y</i> parameters indicating the location of each <i>z</i> element. SURFACE depicts the surface created by interpreting each element value as an elevation. These three-dimensional, wire-mesh surface plots can have almost any rotation about the <i>x</i>- and <i>z</i>-axes (the data <i>z</i>-axis must project parallel to the device’s <i>y</i>-axis).</p>
+        <p>SURFACE projects the three-dimensional array of points into two dimensions after rotating about the <i>z</i>- and then the <i>x</i>-axes. Each point is connected to its neighbors by lines. Hidden lines are suppressed. The rotation about the <i>x</i>- and <i>z</i>-axes can be specified with keywords or a complete three-dimensional transformation matrix can be stored in the field !P.T for use by SURFACE.</p>
+        <h3><a name="dg_routines_3604229493_886846"></a>Restrictions</h3>
+        <p>If the <i>(X, Y)</i> grid is not regular or nearly regular, errors in hidden line removal occur. The TRIGRID and TRIANGULATE routines can be used to interpolate irregularly-gridded data points to a regular grid before plotting.</p>
+        <p>If the T3D keyword is set, the 3-D to 2-D transformation matrix contained in !P.T must project the Z axis to a line parallel to the device Y axis, or errors will occur.</p>
+        <p>The surface lines may blend together when drawing large arrays, especially on low or medium resolution displays. Use the REBIN or CONGRID procedure to resample the array to a lower resolution before plotting.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_886851"></a>Syntax</h2>
+        <p class="Syntax">SURFACE, <i>Z</i> [,&#160;<i>X</i>, <i>Y</i>] [,&#160;<a href="#dg_routines_3604229493_886925" class="selected">AX</a>=<i>degrees</i>] [,&#160;<a href="#dg_routines_3604229493_886932" class="selected">AZ</a>=<i>degrees</i>] [,&#160;<a href="#dg_routines_3604229493_886935" class="selected">BOTTOM</a>=<i>index</i>] [,&#160;/<a href="#dg_routines_3604229493_886938" class="selected">HORIZONTAL</a>] [,&#160;/<a href="#dg_routines_3604229493_886941" class="selected">LEGO</a>] [,&#160;/<a href="#dg_routines_3604229493_886946" class="selected">LOWER_ONLY</a> | , /<a href="#dg_routines_3604229493_886995" class="selected">UPPER_ONLY</a>] [,&#160;<a href="#dg_routines_3604229493_886949" class="selected">MAX_VALUE</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_886956" class="selected">MIN_VALUE</a>=<i>value</i>] [,&#160;/<a href="#dg_routines_3604229493_886962" class="selected">SAVE</a>] [,&#160;<a href="#dg_routines_3604229493_886981" class="selected">SHADES</a>=<i>array</i>] [,&#160;<a href="#dg_routines_3604229493_893959" class="selected">SKIRT</a>=<i>value</i>] [,&#160;/<a href="#dg_routines_3604229493_886998" class="selected">XLOG</a>] [,&#160;/<a href="#dg_routines_3604229493_887002" class="selected">YLOG</a>] [,&#160;<a href="#dg_routines_3604229493_887006" class="selected">ZAXIS</a>={1 | 2 | 3 | 4}] [,&#160;/<a href="#dg_routines_3604229493_887010" class="selected">ZLOG</a>] </p>
+        <p class="Syntax"><b>Graphics Keywords:</b> Accepts all graphics keywords accepted by PLOT except for: PSYM, SYMSIZE. See <a href="#dg_routines_3604229493_887015" class="selected">Graphics Keywords Accepted</a>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Many of the graphic keyword parameters correspond directly to fields in the system variables !P, !X, !Y, or !Z. When specifying a keyword parameter name and value in a call that value affects only the current call, the corresponding system-variable field is not changed. Changing the value of a system-variable field changes the default for that particular parameter and remains in effect until explicitly changed. .</p>
+        <h2 class="API"><a name="dg_routines_3604229493_886911"></a>Arguments</h2>
+        <h3 class="Argument">Z</h3>
+        <p>The two-dimensional array to be displayed. If <i>X</i> and <i>Y</i> are provided, the surface is plotted as a function of the (<i>X</i>, <i>Y</i>) locations specified by their contents. Otherwise, the surface is generated as a function of the array index of each element of <i>Z</i>.</p>
+        <p>This argument is converted to double-precision floating-point before plotting. Plots created with SURFACE are limited to the range and precision of double-precision floating-point values.</p>
+        <h3 class="Argument">X</h3>
+        <p>A vector or two-dimensional array specifying the X coordinates of the grid. If this argument is a vector, each element of <i>X</i> specifies the X coordinate for a column of <i>Z</i> (e.g., <code>X[0]</code> specifies the X coordinate for <code>Z[0,*]</code>). If <i>X</i> is a two-dimensional array, each element of <i>X</i> specifies the X coordinate of the corresponding point in <i>Z</i> (<i>X</i><sub class="italic">ij</sub> specifies the X coordinate for <i>Z</i><sub class="italic">ij</sub>).</p>
+        <p>This argument is converted to double-precision floating-point before plotting.</p>
+        <h3 class="Argument">Y</h3>
+        <p>A vector or two-dimensional array specifying the Y coordinates of the grid. If this argument is a vector, each element of <i>Y</i> specifies the Y coordinate for a row of <i>Z</i> (e.g., <code>Y[0]</code> specifies the Y coordinate for <code>Z[*,0]</code>). If <i>Y</i> is a two-dimensional array, each element of <i>Y</i> specifies the Y coordinate of the corresponding point in <i>Z</i> (<i>Y</i><sub class="italic">ij </sub>specifies the Y coordinate for <i>Z</i><sub class="italic">ij</sub>).</p>
+        <p>This argument is converted to double-precision floating-point before plotting.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_886922"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_886925"></a>AX</h3>
+        <p>This keyword specifies the angle of rotation, about the X axis, in degrees towards the viewer. This keyword is effective only if !P.T3D is not set. If !P.T3D is set, the three-dimensional to two-dimensional transformation used by SURFACE is taken from the 4 by 4 array !P.T.</p>
+        <p>The surface represented by the two-dimensional array is first rotated, AZ (see below) degrees about the Z axis, then by AX degrees about the X axis, tilting the surface towards the viewer (AX &gt; 0), or away from the viewer.</p>
+        <p>The AX and AZ keyword parameters default to +30 degrees if omitted and !P.T3D is 0.</p>
+        <p>The three-dimensional to two-dimensional transformation represented by AX and AZ, can be saved in !P.T by including the SAVE keyword.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_886932"></a>AZ</h3>
+        <p>This keyword specifies the counterclockwise angle of rotation about the Z axis. This keyword is effective only if !P.T3D is not set. The order of rotation is AZ first, then AX.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_886935"></a>BOTTOM</h3>
+        <p>The color index used to draw the bottom surface. If not specified, the bottom is drawn with the same color as the top.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_886938"></a>HORIZONTAL</h3>
+        <p>A keyword flag which if set causes SURFACE to only draw lines across the plot perpendicular to the line of sight. The default is for SURFACE to draw both across the plot and from front to back.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_886941"></a><a name="kanchor2481"></a>LEGO</h3>
+        <p>Set this keyword to produce stacked histogram-style plots. Each data value is rendered as a box covering the XY extent of the cell and with a height proportional to the Z value. </p>
+        <p>If the <i>X</i> and <i>Y</i> arguments are specified, only <i>N</i><sub class="italic">x</sub>-1 columns and <i>N</i><sub class="italic">y</sub>-1 rows are drawn. (This means that the last row and column of array data are not displayed.) The rectangular area covered by <i>Z</i>[<i>i</i>, <i>j</i>] is given by <i>X</i>[<i>i</i>], <i>X</i>[<i>i</i>+1], <i>Y</i>[<i>j</i>], and <i>Y</i>[<i>j</i>+1].</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_886946"></a>LOWER_ONLY</h3>
+        <p>Set this keyword to draw only the lower surface of the object. By default, both surfaces are drawn.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_886949"></a><a name="kanchor2482"></a>MAX_VALUE</h3>
+        <p>The maximum value to be plotted. If this keyword is present, data values greater than the value of MAX_VALUE are treated as missing and are not plotted. Note that the IEEE floating-point value NaN is also treated as missing data.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_886956"></a>MIN_VALUE</h3>
+        <p>The minimum value to be plotted. If this keyword is present, data values less than the value of MIN_VALUE are treated as missing and are not plotted. Note that the IEEE floating-point value NaN is also treated as missing data.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_886962"></a>SAVE</h3>
+        <p>Set this keyword to save the 3-D to 2-D transformation matrix established by SURFACE in the system variable field !P.T. Use this keyword when combining the output of SURFACE with additional output from other routines in the same plot.</p>
+        <p>When used with AXIS, the SAVE keyword parameter saves the scaling parameters established by the call in the appropriate axis system variable, !X, !Y, or !Z. This causes subsequent overplots to be scaled to the new axis.</p>
+        <p>For example, to display a two-dimensional array using SURFACE, and to then superimpose contours over the surface (this example assumes that !P.T3D is zero, its default value.), enter the following commands:</p>
+        <p class="Code">; Make a surface plot and save the transformation:</p>
+        <p class="Code">SURFACE, Z, /SAVE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Make contours, don’t erase, use the 3-D to 2-D transform placed </p>
+        <p class="Code">; in !P.T by SURFACE:</p>
+        <p class="Code">CONTOUR, Z, /NOERASE, /T3D</p>
+        <p>To display a surface and to then display a flat contour plot, registered above the surface:</p>
+        <p class="Code">; Make the surface, save transform:</p>
+        <p class="Code">SURFACE, Z, /SAVE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Now display a flat contour plot, at the maximum Z value </p>
+        <p class="Code">; (normalized coordinates):</p>
+        <p class="Code">CONTOUR, Z, /NOERASE, /T3D, ZVALUE=1.0</p>
+        <p>You can display the contour plot below the surface with by using a ZVALUE of 0.0.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_886981"></a>SHADES</h3>
+        <p>This keyword allows user-specified coloring of the mesh surfaces. Set this keyword to an array that specifies the color index of the lines emanating from each data point toward the top and right.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When using the SHADES keyword on True Color devices, we recommend that decomposed color support be turned off, by setting<code> DEVICE, DECOMPOSED=0</code>. See <a href="../D/DEVICE_Procedure.htm#dg_routines_3604229493_882302">DEVICE Procedure</a> and <a href="../../Direct Graphics/Keywords_Accepted_by_the.htm#devices_517620971_144834">DECOMPOSED</a>.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_893959"></a>SKIRT</h3>
+        <p>This keyword represents a Z-value at which to draw a skirt around the array. The Z value is expressed in data units. The default is no skirt.</p>
+        <p>If the skirt is drawn, each point on the four edges of the surface is connected to a point on the skirt which has the given Z value, and the same X and Y values as the edge point. In addition, each point on the skirt is connected to its neighbor.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_886995"></a>UPPER_ONLY</h3>
+        <p>Set this keyword to draw only the upper surface of the object. By default, both surfaces are drawn.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_886998"></a>XLOG<a name="kanchor2483"></a></h3>
+        <p>Set this keyword to specify a logarithmic X axis.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_887002"></a><a name="dg_routines_3604229493_158414_Keywords_SURFACE__"></a>YLOG</h3>
+        <p>Set this keyword to specify a logarithmic Y axis.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_887006"></a>ZAXIS</h3>
+        <p>This keyword specifies the placement of the Z axis for the SURFACE plot. </p>
+        <p>By default, SURFACE draws the Z axis at the upper left corner of the axis box. To suppress the Z axis, use <code>ZAXIS=-1</code> in the call. The position of the Z axis is determined from the value of ZAXIS as follows: 1 = lower right, 2 = lower left, 3 = upper left, and 4 = upper right.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_887010"></a>ZLOG</h3>
+        <p>Set this keyword to specify a logarithmic Z axis.</p>
+        <h3><a name="dg_routines_3604229493_887015"></a>Graphics Keywords Accepted</h3>
+        <p>See <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_317209">Direct Graphics Keywords</a> for the description of the following graphics and plotting keywords:</p>
+        <p><a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_328424">BACKGROUND</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_266973">CHARSIZE</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_331668">CHARTHICK</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_315949">CLIP</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_371352">COLOR</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_315961">DATA</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_369990">DEVICE</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_331795">FONT</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_331728">LINESTYLE</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_370050">NOCLIP</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_371086">NODATA</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316024">NOERASE</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_315963">NORMAL</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316026">POSITION</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316057">SUBTITLE</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_315956">T3D</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316006">THICK</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332207">TICKLEN</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332238">TITLE</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_331699">[XYZ]CHARSIZE</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332009">[XYZ]GRIDSTYLE</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332038">[XYZ]MARGIN</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332061">[XYZ]MINOR</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332090">[XYZ]RANGE</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332116">[XYZ]STYLE</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332298">[XYZ]THICK</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_370350">[XYZ]TICKFORMAT</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332463">[XYZ]TICKINTERVAL</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332488">[XYZ]TICKLAYOUT</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332513">[XYZ]TICKLEN</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332536">[XYZ]TICKNAME</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332559">[XYZ]TICKS</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332586">[XYZ]TICKUNITS</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332628">[XYZ]TICKV</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332321">[XYZ]TICK_GET</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316100">[XYZ]TITLE</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316102">ZVALUE</a></p>
+        <h2 class="API"><a name="dg_routines_3604229493_887133"></a>Examples</h2>
+        <h3><a name="dg_routines_3604229493_887139"></a>Surface of a Gaussian Function</h3>
+        <p>The following IDL code illustrates the most basic call to SURFACE. ; Create a 40 by 40 array in which each element is</p>
+        <p class="Code">; equal to the Euclidean distance from the center:<br />Z = SHIFT(DIST(40), 20, 20)<br />; Make Gaussian with a 1/e width of 10:<br />Z = EXP(-(Z/10)^2) <br />; Call SURFACE to display plot:<br />SURFACE, Z</p>
+        <p>In the example above, the DIST function creates an (<i>n</i>, <i>n</i>) array in which each element is set to its Euclidean distance from the origin. It produces a two-dimensional Gaussian function, then calls SURFACE to produce the figure below.</p>
+        <p>
+            <img src="../../Resources/Images/mult07.gif" />
+        </p>
+        <p>Another simple example is created with the following statements:</p>
+        <p class="Code">; Create a simple dataset to display:<br />D = DIST(30)<br /><br />; Plot a simple wire-mesh surface representation of D:<br />SURFACE, D<br /><br />; Create a wire-mesh plot of D with a title and a "skirt" around<br />; the edges of the dataset at Z=0:<br />SURFACE, D, SKIRT=0.0, TITLE = 'Surface Plot', CHARSIZE = 2</p>
+        <h3><a name="dg_routines_3604229493_887158"></a>Surface of Elevation Data</h3>
+        <p>The figures below illustrate the application of the SURFACE procedure to the Maroon Bells elevation data. As with CONTOUR, it is often useful to reduce the number of individual data values, so that the surface is not obscured by excessive detail.</p>
+        <p>
+            <img src="../../Resources/Images/mult08.gif" />
+        </p>
+        <p>The left illustration in the figure above was produced by the following statements:</p>
+        <p class="Code">; Restore variables.</p>
+        <p class="Code">@cntour01</p>
+        <p class="Code">; Resize the original data into a 72 x 92 array, setting</p>
+        <p class="Code">; all data values which are less than 2650 (the lowest</p>
+        <p class="Code">; elevation we wish to show) to 2650.</p>
+        <p class="Code">surf = REBIN(elev &gt; 2650, 350/5, 450/5)</p>
+        <p class="Code">; Display the surface, drawing a skirt down to 2650 meters:</p>
+        <p class="Code">SURFACE, surf, X, Y, SKIRT = 2650</p>
+        <p class="ExampleCode">Alternatively, run the batch file <code>surf01<a name="kanchor2484"></a></code> with the following command at the IDL prompt:<br /><code>&#160;&#160;&#160;@surf01</code></p>
+        <p>The right illustration in the figure shows the Maroon Peaks area looking from the back row to the front row (north to the south) of the Maroon Peaks area. This perspective on the data is created by setting the angle of rotation around the <i>z</i>-axis to 210 degrees (setting <code>AZ</code> = 210), and increasing the azimuth from the default 30 degrees to 45 (setting <code>AX</code> = 45). Also, only the horizontal lines are drawn because the /HORIZONTAL keyword is present in the following call:</p>
+        <p class="Code">SURFACE, surf, X, Y, SKIRT = 2650, /HORIZ, AZ = 210, AX = 45</p>
+        <p>Because the axes are rotated 210 degrees about the original <i>z</i>-axis, the annotation is reversed and the <i>x</i>-axis is behind and obscured by the surface. This undesirable effect can be eliminated by reversing the minimum and maximum values of the X and Y ranges used when drawing the surface:</p>
+        <p class="Code">; As above, but reverse the data rather than the axes:</p>
+        <p class="Code">SURFACE, surf, X, Y, SKIRT = 2650, /HORIZONTAL, AX = 45, $</p>
+        <p class="Code">&#160;&#160;&#160;YRANGE = [MAX(Y), MIN(Y)], XRANGE=[MAX(X), MIN(X)]</p>
+        <h3><a name="dg_routines_3604229493_887197"></a>Transformation Created by SURFACE</h3>
+        <p>The SURFACE procedure creates a transformation matrix from its keyword parameters AX and AZ as follows:</p>
+        <ol>
+            <li value="1">Starting with the identity transformation, SURFACE translates the center of the normalized cube to the origin.</li>
+            <li value="2">SURFACE rotates 90 degrees about the <i>x</i>-axis to make the + <i>z</i>-axis of the data the +<i>y</i> axis of the display. The +<i>y</i> data axis extends from the front of the display to the rear.</li>
+            <li value="3">SURFACE rotates AZ degrees about the <i>y</i>-axis. This rotates the result counter-clockwise, as seen from above the page.</li>
+            <li value="4">SURFACE rotates AX degrees about the <i>x</i>-axis, tilting the data towards the viewer.</li>
+            <li value="5">The procedure then removes the translation applied in the first step and scales the data so that the data are still contained within the normal coordinate unit cube after transformation.</li>
+        </ol>
+        <p>These transformations can be created using <a href="../T/T3D_Procedure.htm#dg_routines_3604229493_887435">T3D Procedure</a> as shown below. The <a href="SCALE3_Procedure.htm#dg_routines_3604229493_884691">SCALE3 Procedure</a> mimics the transformation matrix created by SURFACE using the following method:</p>
+        <p class="Code">; Translate to move center of cube to origin.</p>
+        <p class="Code">T3D, /RESET, TRANSLATE = [-.5, -.5, -.5]</p>
+        <p class="Code">; Rotate 90 degrees about x-axis, so +z axis is now +y.</p>
+        <p class="Code">; Then rotate AZ degrees about y-axis.</p>
+        <p class="Code">T3D, ROTATE = [-90, AZ, 0]</p>
+        <p class="Code">; Rotate AX about x axis:</p>
+        <p class="Code">T3D, ROTATE = [AX, 0, 0]</p>
+        <p class="Code">; Restore origin.</p>
+        <p class="Code">T3D, TRANSLATE = [0.5, 0.5, 0.5]</p>
+        <p>The SCALE3 procedure, scales the unit cube by a fixed factor, 1/SQRT(3) to ensure that the corners of the rotated cube fit within the drawing area. If requested, it also will set the data scaling. Animations involving rotations or the SURFACE procedure should have their scaling and viewing transformation set by SCALE3 rather than the obsolete SURFR procedure, so that the scaling does not vary between frames.</p>
+        <h3><a name="dg_routines_3604229493_887223"></a>Combining CONTOUR and SURFACE</h3>
+        <p>It is easy to combine the results of SURFACE with the other IDL graphics procedures. The keyword parameter SAVE causes SURFACE to save the graphic transformation it used in !P.T. Then, when either CONTOUR or PLOT is called with the keyword parameter T3D, its output is transformed with the same projection. For example, the figure below illustrates how SURFACE and CONTOUR can be combined. In essence, this is a combination of figures from 2 previous sections. </p>
+        <p>
+            <img src="../../Resources/Images/mult13.gif" style="margin-left: 2.25px;margin-right: 9.749542px;" />
+        </p>
+        <p>Using the same variables as in the earlier sections of this section, the figure was produced with the following statements:</p>
+        <p class="Code">; Restore variables.</p>
+        <p class="Code">@cntour01</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Resize the original data into a 72 x 92 array,</p>
+        <p class="Code">; setting all data values which are less than</p>
+        <p class="Code">; 2650 (the lowest elevation we wish to show) to 2650.</p>
+        <p class="Code">surf = REBIN(elev &gt; 2650, 360/5, 460/5)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Make the mesh.</p>
+        <p class="Code">SURFACE, surf, X, Y, SKIRT=2650, /SAVE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Specify T3D to align with SURFACE, at ZVALUE of 1.0.</p>
+        <p class="Code">; Suppress clipping as the plot is outside the normal plot window.</p>
+        <p class="Code">CONTOUR, surf, X, Y, /T3D, /NOERASE, TITLE = 'Contour Plot', $</p>
+        <p class="Code">&#160;&#160;&#160;MAX_VAL = 5000., ZVALUE = 1.0, /NOCLIP, $</p>
+        <p class="Code">&#160;&#160;&#160;LEVELS = 2750. + FINDGEN(6) * 250</p>
+        <h2 class="API"><a name="dg_routines_3604229493_887257"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2><a name="dg_routines_3604229493_887265"></a>See Also</h2>
+        <p><a href="../C/CONTOUR_Procedure.htm#dg_routines_3604229493_879040">CONTOUR Procedure</a>,<a href="SHADE_SURF_Procedure.htm#dg_routines_3604229493_885128">SHADE_SURF Procedure</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

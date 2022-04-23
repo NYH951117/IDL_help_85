@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|COM Export Bridge|COM Object Creation">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>C++ Client Code Sample</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">COM Export Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="COMObjectCreation.htm">COM Object Creation</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">C++ Client Code Sample</span>
+        </div>
+        <h1><a name="C++_Client_Code_Sample"></a><a name="kanchor5121"></a>C++ <a name="kanchor5122"></a>Client Code <a name="kanchor5123"></a>Sample</h1>
+        <p>The C++ project must somewhere include the following line, in order to pull in the CoClass and Interface definitions for the wrapper object:</p>
+        <p class="Code">#import "IDLexFoo.tlb" no_namespace no_implementation raw_interfaces_only named_guids</p>
+        <p>For details about the object parameters, see <a href="SampleIDLObject.htm#Sample_IDL_Object">Sample IDL Object</a>.</p>
+        <h2><a name="kanchor5124"></a>Initiation Without Parameters in C++</h2>
+        <p>Use the following code to initialize the object with no parameters.</p>
+        <p class="Code">CComPtr&lt;IIDLexFoo&gt; spFoo;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">if ( FAILED(spFoo.CoCreateInstance(  uuidof(IDLexFoo)) || !spFoo)) return E_FAIL;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">CComVariant vtNULL(0);</p>
+        <p class="Code">HRESULT hr = spFoo-&gt;CreateObject(0,vtNULL,vtNULL);</p>
+        <p class="Code">if ( FAILED(hr) )</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">CComBSTR bstrErr;</p>
+        <p class="Code_Indented">spFoo-&gt;GetLastError(&amp;bstrErr);</p>
+        <p class="Code_Indented">return E_FAIL;</p>
+        <p class="Code">}</p>
+        <h2><a name="kanchor5125"></a>Initiation with Parameters in C++</h2>
+        <p>Use the following code to initialize the object with its three parameters (a string, a 32-bit long value, and an array that has two rows and three columns, containing 32- bit long values).</p>
+        <p class="Code">CComPtr&lt;IIDLexFoo&gt; spFoo;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">if ( FAILED(spFoo.CoCreateInstance(  uuidof(IDLexFoo)) || !spFoo)) return E_FAIL;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">CComSafeArrayBound bound[2];</p>
+        <p class="Code">bound[0].SetLowerBound(0);</p>
+        <p class="Code">bound[0].SetCount(2); // two rows</p>
+        <p class="Code">bound[1].SetLowerBound(0);</p>
+        <p class="Code">bound[1].SetCount(3); // three cols</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">CComSafeArray&lt;VARIANT&gt; parmArr(bound,2);</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">long	ndx[2];</p>
+        <p class="Code">long lData[2][3] = { {10, 11, 12}, {20, 21, 22} };</p>
+        <p class="Code">for ( int i = 0; i &lt; 2; i++ ) // row</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">for ( int j = 0; j &lt; 3; j++ )  // col</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented">ndx[0] = i; ndx[1] = j;</p>
+        <p class="Code_Indented">parmArr.MultiDimSetAt(ndx, CComVariant(lData[i][j]));</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code">}</p>
+        <p class="Code">CComBSTR	parmStr = "I am a string parameter";</p>
+        <p class="Code">CComVariant parmVal = (long)24;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">CComSafeArray&lt;VARIANT&gt; argval(3);</p>
+        <p class="Code">CComSafeArray&lt;long&gt;	argpal(3);</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">argval[0] = parmStr;</p>
+        <p class="Code"> argpal[0] = IDLBML_PARMFLAG_CONST;</p>
+        <p class="Code">argval[1] = parmVal;</p>
+        <p class="Code"> argpal[1] = IDLBML_PARMFLAG_CONST;</p>
+        <p class="Code">argval[2] = parmArr;</p>
+        <p class="Code"> argpal[2] = IDLBML_PARMFLAG_CONST | IDLBML_PARMFLAG_CONVMAJORITY;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">long argc = 3;</p>
+        <p class="Code">CComVariant vargval = argval;</p>
+        <p class="Code">CComVariant vargpal = argpal;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">HRESULT hr = spFoo-&gt;CreateObject(argc,vargval,vargpal);</p>
+        <p class="Code">if ( FAILED(hr) )</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">CComBSTR bstrErr;</p>
+        <p class="Code_Indented">spFoo-&gt;GetLastError(&amp;bstrErr);</p>
+        <p class="Code_Indented">return E_FAIL;</p>
+        <p class="Code">}</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: H">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>HEAP_REFCOUNT</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="H_list.htm">Routines: H</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">HEAP_REFCOUNT</span>
+        </div>
+        <h1 class="Routine"><a name="H_835179117_925652"></a><a name="H_835179117_25312"></a>HEAP_REFCOUNT</h1>
+        <p><a name="kanchor1469"></a>The HEAP_REFCOUNT function returns the current reference count for a pointer or object reference (a heap variable). It can also be used to disable garbage collection for a heap variable, or for all heap variables.</p>
+        <p>See Heap Variables and <a href="../../Creating IDL Programs/Components of the IDL Language/Automatic_Garbage_Collec.htm#pointers_3224653378_1018570">Automatic Garbage Collection</a> for in-depth discussions of these topics.</p>
+        <h2 class="API">Examples</h2>
+        <p class="Code">; Create an array of heap pointers<br />ptr = PTRARR(3)<br />ptr[0] = PTR_NEW(10)<br />ptr[1] = PTR_NEW(20)<br />ptr[2] = PTR_NEW(30)<br /><br />; Each pointer has a reference count of 1<br />PRINT, HEAP_REFCOUNT(ptr)</p>
+        <p>IDL prints:</p>
+        <p class="Code">1           1           1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Automatic garbage collection destroys the pointer<br />ptr[0] = PTR_NEW()<br />; Create another reference to the heap variable pointed to<br />; by ptr[1]<br />ptrNew = ptr[1]<br /><br />; The reference counts have changed<br />PRINT, HEAP_REFCOUNT(ptr)</p>
+        <p>IDL prints:</p>
+        <p class="Code">0           2           1</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = HEAP_REFCOUNT( [<i>Heaprefs</i>] [,&#160;/<a href="#H_835179117_933148" class="selected">DISABLE</a>] [,&#160;/<a href="#H_835179117_933182" class="selected">ENABLE</a>] [,&#160;<a href="#H_835179117_933188" class="selected">IS_ENABLED</a>=<i>variable</i>] )</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns a result of the same shape as the input argument, containing the current reference count for the associated heap variables. Invalid heap variables return a reference count of zero.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Heaprefs</h3>
+        <p><i>Heaprefs</i> can either be a scalar or array of pointer or object references, or a scalar or array of integer heap identifiers. If <i>Heaprefs</i> is not supplied, the DISABLE, ENABLE, and IS_ENABLED keywords apply to the entire automatic garbage collection system for <i>all</i> heap variables.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="H_835179117_933148"></a><a name="H_835179117_60609"></a>DISABLE</h3>
+        <p>Set this keyword to disable automatic garbage collection for <i>Heaprefs</i>.  If <i>Heaprefs</i> is not supplied, automatic garbage collection is disabled for all heap variables.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you disable reference counting for a particular heap variable or variables, then the reference count will still be incremented or decremented appropriately for those heap variables, but the heap variables will not be destroyed when the reference count reaches zero. If you then re-enable reference counting for those heap variables, and the reference count has reached zero, then the heap variables will be destroyed the next time they are accessed.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you disable reference counting for <i>all</i> heap variables, then the reference counts will no longer be incremented or decremented. If you then re-enable reference counting, the reference counts for any existing heap variables may be incorrect, and these heap variables may be unexpectedly destroyed.</p>
+        <h3 class="Keyword"><a name="H_835179117_933182"></a><a name="H_835179117_33555"></a>ENABLE</h3>
+        <p>Set this keyword to re-enable automatic garbage collection for <i>Heaprefs</i>. This keyword is necessary only if garbage collection for <i>Heaprefs</i> was turned off using the DISABLE keyword. If <i>Heaprefs</i> is not supplied, automatic garbage collection is re-enabled for all heap variables.</p>
+        <h3 class="Keyword"><a name="H_835179117_933188"></a><a name="H_835179117_80416"></a>IS_ENABLED</h3>
+        <p>Set this keyword to a named variable which will contain the value 1 if garbage collection is enabled for the heap variable, or 0 if garbage collection is disabled. If <i>Heaprefs</i> is an array, the variable will contain an array of 1s or 0s.</p>
+        <p>If <i>Heaprefs</i> is not supplied, the variable value reflects the state of garbage collection for all heap variables (1 if automatic garbage collection is enabled, 0 if garbage collection is disabled).</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="../P/PTR_FREE.htm#P_817877613_845045">PTR_FREE</a>, <a href="../O/OBJ_DESTROY.htm#O_828691053_889421">OBJ_DESTROY</a>, <a href="HEAP_FREE.htm#H_835179117_877451">HEAP_FREE</a>, <a href="HEAP_GC.htm#H_835179117_852187">HEAP_GC</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

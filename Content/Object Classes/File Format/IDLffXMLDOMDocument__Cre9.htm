@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|File Format Object Classes|IDLffXMLDOMDocument">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLffXMLDOMDocument::CreateTreeWalker</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_ff.htm">File Format Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLffXMLDOMDocument::CreateTreeWalker</span>
+        </div>
+        <h1 class="ObjMethod"><a name="objects_ff_3755668711_1263707"></a><a name="objects_ff_3755668711_81129"></a>IDLffXMLDOMDocument::CreateTreeWalker</h1>
+        <p>The IDLffXMLDOMDocument::<a name="kanchor3340"></a>CreateTreeWalker function method is used to create an instance of an <a href="IDLffXMLDOMTreeWalker.htm#objects_ff_3755668711_1264264">IDLffXMLDOMTreeWalker</a> object. This function returns an object reference to that instance.</p>
+        <p>Please note the following exceptions in tree-walking:</p>
+        <ul>
+            <li value="1">Attributes are never children of DOM nodes, so they are not visited by the tree walker. Showing attributes is only meaningful when the walker root node is an attribute.</li>
+            <li value="2">Entities are not part of the DOM tree, so they are not visited by the tree walker. Showing entities is only meaningful when the walker root node is an entity.</li>
+            <li value="3">Notations are not part of the DOM tree, so they are not visited by the tree walker. Showing notations is only meaningful when the walker root node is a notation.</li>
+        </ul>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>-&gt;[<a href="IDLffXMLDOMDocument.htm#objects_ff_3755668711_1104965">IDLffXMLDOMDocument</a>::]CreateTreeWalker( <i>RootNode</i><br />[,&#160;<a href="#objects_ff_3755668711_1272710" class="selected">FILTER_NAME</a>=<i>string</i>] [,&#160;<a href="#objects_ff_3755668711_1272762" class="selected">FILTER_USERDATA</a>=<i>variable</i>] [,&#160;<a href="#objects_ff_3755668711_1272769" class="selected">WHAT_TO_SHOW</a>=<i>value</i>] ) </p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">RootNode</h3>
+        <p>An object reference to an object that is a subclass of <a href="IDLffXMLDOMNode.htm#objects_ff_3755668711_1105014">IDLffXMLDOMNode</a> that refers to a node in the DOM tree. The tree walkers's current position is set at this node. If the object reference is NULL, the walker’s current position is set to the document node.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="objects_ff_3755668711_1272710"></a><a name="objects_ff_3755668711_72508"></a>FILTER_NAME</h3>
+        <p>Set this keyword to a scalar string containing the name of an IDL function that is called each time the tree walker is about to visit a node. The purpose of this function is to allow the walker to ask the IDL application if it should visit a particular node, and hence return it in response to a call to one of the tree walker’s navigation methods (e.g., <a href="IDLffXMLDOMTreeWalker__N.htm#objects_ff_3755668711_1272320">IDLffXMLDOMTreeWalker::NextNode</a>). The code in this function should analyze the incoming node and then return a value that instructs the walker to accept or reject the node.</p>
+        <p>If this keyword is not specified, the tree walker visits every node.</p>
+        <p>The various tree-walker movement methods return nodes that are accepted by the filter function. The movement methods do not return nodes that are rejected or skipped by the filter function. The walker does not consider nodes that are children of a rejected node, but does consider children of nodes that are skipped.</p>
+        <p>The tree walker calls the filter function for the given node after making determinations with respect to the <a href="#objects_ff_3755668711_1272769" class="selected">WHAT_TO_SHOW</a> setting. However, unlike the node iterator, the walker still calls the filter function for nodes not meeting the <a href="#objects_ff_3755668711_1272769" class="selected">WHAT_TO_SHOW</a> criteria. This is required so that the filter function can direct the walker to either REJECT or SKIP a node whose type is not in the <a href="#objects_ff_3755668711_1272769" class="selected">WHAT_TO_SHOW</a> list. If the filter function returns ACCEPT for a node not meeting the <a href="#objects_ff_3755668711_1272769" class="selected">WHAT_TO_SHOW</a> criteria, the walker SKIPs the node. That is, a filter function cannot override the rejection of a node because of the <a href="#objects_ff_3755668711_1272769" class="selected">WHAT_TO_SHOW</a> setting; it can only direct the walker to REJECT or SKIP such a node.</p>
+        <p>The filter function specified by FILTER_NAME must have the following parameters:</p>
+        <ul>
+            <li value="1"><b>Node Object</b> — an object reference to an instance of an <a href="IDLffXMLDOMNode.htm#objects_ff_3755668711_1105014">IDLffXMLDOMNode</a> subclass. This parameter is required and is supplied by the tree walker on every call.</li>
+            <li value="2"><b>USERDATA</b> — an optional keyword parameter set by the tree walker to a variable containing a copy of the data provided in the <a href="#objects_ff_3755668711_1272762" class="selected">FILTER_USERDATA</a> keyword. If <a href="#objects_ff_3755668711_1272762" class="selected">FILTER_USERDATA</a> is not specified, USERDATA is not passed by the walker.</li>
+        </ul>
+        <p>The function must return one of three scalar integer values:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Function</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>ACCEPT: the tree walker visits this node</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>REJECT: the tree walker does not visit this node or its children</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>SKIP: the tree walker does not visit this node, but considers the node’s children for visiting</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>If the function returns a value that is not supported, the tree walker visits the node, as if the return value were 1 (ACCEPT). If the function returns a value that cannot be converted to a scalar, IDL throws an error. </p>
+        <p>The function should not destroy the node object passed as the first parameter.</p>
+        <h3 class="Keyword"><a name="objects_ff_3755668711_1272762"></a><a name="objects_ff_3755668711_19803"></a>FILTER_USERDATA</h3>
+        <p>Set this keyword to an IDL variable containing data to pass to the filter function each time the tree walker calls the filter function.</p>
+        <p>Supplying this keyword without <a href="#objects_ff_3755668711_1272710" class="selected">FILTER_NAME</a> produces no effect on the tree walker.</p>
+        <h3 class="Keyword"><a name="objects_ff_3755668711_1272769"></a><a name="objects_ff_3755668711_11362"></a>WHAT_TO_SHOW</h3>
+        <p>Set this keyword to a scalar unsigned integer containing a bitmask, where each bit indicates types of nodes that the tree walker visits. If this keyword is not specified, the walker visits every node.</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Type</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value (Hex)</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Value (Decimal)</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>ALL</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>‘ffff’xu</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>65535U</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Element</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>‘0001’xu</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1U</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Attribute</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>‘0002’xu</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>2U</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Text</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>‘0004’xu</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>4U</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>CDATA Section</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>‘0008’xu</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>8U</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Entity Reference</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>‘0010’xu</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>16U</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Entity</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>‘0020’xu</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>32U</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Processing Instruction</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>‘0040’xu</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>64U</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Comment</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>‘0080’xu</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>128U</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Document</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>‘0100’xu</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>256U</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Document Type</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>‘0200’xu</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>512U</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Document Fragment</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>‘0400’xu</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1024U</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>Notation</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>‘0800’xu</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>2048U</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>The tree walker performs the WHAT_TO_SHOW test for a node before calling any user-provided filter function.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Objects|Creating Object Classes">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Method Overriding</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Object Classes/ref_part2.htm">Objects</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Creating Custom Objects.htm">Creating Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Method Overriding</span>
+        </div>
+        <h1>Method Overriding</h1>
+        <p>Unlike <a name="kanchor4889"></a>data fields, method names can be duplicated. This is an important feature that allows method overriding, which in turn facilitates polymorphism in the design of object-oriented programs. Method overriding allows a subclass to provide its own implementation of a method already provided by one of its superclasses. When a method is called on an object, IDL searches for a method of that class with that name. If found, the method is called. If not, the methods of any inherited object classes are examined in the order their INHERITS specifiers appear in the structure definition, and the first method found with the correct name is called. If no method of the specified name is found, an error occurs.</p>
+        <p>The method search proceeds <i>depth first, left to right</i>. This means that if an object’s class does not provide the method called directly, IDL searches through inherited classes by first searching the left-most included class—and all of its superclasses—before proceeding to the next inherited class to the right. If a method is defined by more than a single inherited structure definition, the first one found is used and no warning is generated. This means that class designers should pick non-generic names for their methods as well as their data fields. For example, suppose we have defined the following classes:</p>
+        <p class="Code">struct = { class1, data1}</p>
+        <p class="Code">struct = { class2, data2a:0, data2b:0.0, inherits class1 }</p>
+        <p class="Code">struct = { class3, data3:'', inherits class2, inherits class1 }</p>
+        <p class="Code">struct = { class4, data4:0L, inherits class2, inherits class3 }</p>
+        <p>Furthermore, suppose that both class1 and class3 have a method called Print defined.</p>
+        <p>Now suppose that we create an object of class4, and call the Print method:</p>
+        <p class="Code">A = OBJ_NEW('class4')</p>
+        <p class="Code">A-&gt;Print</p>
+        <p>IDL takes the following steps:</p>
+        <ol>
+            <li value="1">Searches class4 for a Print method. It does not find one.</li>
+            <li value="2">Searches the left-most inherited class (class2) in the class definition structure for a Print method. It does not find one.</li>
+            <li value="3">Searches any superclasses of class2 for a Print method. It finds the class1 Print method and calls it on A.</li>
+        </ol>
+        <p>Notice that IDL stops searching when it finds a method with the proper name. Thus, IDL doesn’t find the Print method that belongs to class3.</p>
+        <h2 class="API">When are Methods Associated with Object Classes?</h2>
+        <p>It is important to note that IDL will associate a method with objects of a given class the first time the method is called on an object of that class. This means that if a new method definition is compiled <i>after</i> the first time a method with a particular name is called, the new definition will not be used until a new IDL session begins.</p>
+        <p>Extending the example above, suppose that <i>after</i> calling the Print method you compile a new class4::Print method. Subsequent calls to the Print method will still invoke the class1::Print method even though the object instance A’s “own” Print method now exists. Once an association has been formed between an object class and a method, that association is not changed for the duration of the IDL session.</p>
+        <p>To ensure that the correct method is selected, either ensure that the method is compiled before the first time it is called or explicitly specify the class name when calling the method, as described below.</p>
+        <h2 class="API"><a name="objects_custom_2374809850_1030632"></a><a name="objects_custom_2374809850_45353"></a>Specifying Class Names in Method Calls</h2>
+        <p>If you specify a class name when calling an object method, like so:</p>
+        <p class="Code">ObjRef-&gt;<i>classname</i>::<i>method</i></p>
+        <p>Where <i>classname</i> is the name of one of the object’s superclasses, IDL will search <i>classname</i> and any of <i>classname’s</i> superclasses for the method name. IDL will <i>not</i> search the object’s own class or any other classes the object inherits from.</p>
+        <p>This type of method call is especially useful when a class has a method that overrides a superclass method and does its job by calling the superclass method and then adding functionality. In our simple example from <a href="Creating_Custom_Object_M_1.htm#objects_custom_2374809850_1030571">Calling Method Routines</a>, we could have defined a Print method for each class, as follows:</p>
+        <p class="Code">PRO class1::Print</p>
+        <p class="Code">&#160;&#160;&#160;&#160;PRINT, self.data1</p>
+        <p class="Code">END</p>
+        <p class="Code">PRO class2::Print</p>
+        <p class="Code">&#160;&#160;&#160;&#160;self-&gt;class1::Print</p>
+        <p class="Code">&#160;&#160;&#160;&#160;PRINT, self.data2a, self.data2b</p>
+        <p class="Code">END</p>
+        <p>In this case, to duplicate the behavior of the Print1 and Print2 methods, we make the following method calls:</p>
+        <p class="Code">A-&gt;Print</p>
+        <p>IDL prints:</p>
+        <p class="Code">0.00000</p>
+        <p>And now the B:</p>
+        <p class="Code">B-&gt;Print</p>
+        <p>IDL prints:</p>
+        <p class="Code">0.00000</p>
+        <p class="Code">0           0</p>
+        <p>Now we’ll use the second method:</p>
+        <p class="Code">B-&gt;class1::Print</p>
+        <p>IDL prints:</p>
+        <p class="Code">0.00000</p>
+        <p>And now A:</p>
+        <p class="Code">A-&gt;class2::Print</p>
+        <p>IDL prints:</p>
+        <p class="Code">% CLASS2 is not a superclass of object class CLASS1.</p>
+        <p class="Code">% Execution halted at:  $MAIN$</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

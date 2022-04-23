@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Adding System Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>DLMs</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="AddingSystRoutines.htm">Adding System Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">DLMs</span>
+        </div>
+        <h1><a name="kanchor5520"></a>DLMs</h1>
+        <p>This section covers the following topics:</p>
+        <ul>
+            <li value="1"><a href="#DLM" class="selected">DLM Concepts</a>
+            </li>
+            <li value="2"><a href="#How" class="selected">How DLMs Work</a>
+            </li>
+            <li value="3"><a href="#The" class="selected">The Module Description (.dlm) File</a>
+            </li>
+            <li value="4"><a href="#The2" class="selected">The IDL_Load() function</a>
+            </li>
+            <li value="5"><a href="#DLM2" class="selected">DLM Example</a>
+            </li>
+            <li value="6"><a href="#Packagin" class="selected">Packaging and Installing DLMs</a>
+            </li>
+        </ul>
+        <h2><a name="DLM"></a>DLM Concepts</h2>
+        <p>The <b>IDL_SYSFUN_DEF2</b> structure, which is described in “<a href="RegisterRoutines.htm">Registering Routines</a>," contains all the information required for IDL to compile calls to a given system routine:</p>
+        <ul>
+            <li value="1">A routine signature (Name, minimum and maximum number of arguments, whether the routine accepts keywords).</li>
+            <li value="2">A pointer to a compiled language function (usually C) that supplies the standard IDL system routine interface (<code>argc, argv, argk</code>) and which implements the desired operation.</li>
+        </ul>
+        <p>IDL does not require the actual code that implements the function until the routine is called: it is able to compile other routines and statements that reference it based only on its signature.</p>
+        <p>DLMs exploit this fact to load system routines on an “as needed” basis. The routines in a DLM are not loaded by IDL unless the user calls one of them. A DLM consists of two files:</p>
+        <ol>
+            <li value="1">A module description file (human readable text) that IDL reads when it starts running. This file tells IDL the signature for all system routines contained in the loadable module.</li>
+            <li value="2">A sharable library that implements the actual system routines.This library must be coded to present a specific IDL mandated interface (described below) that allows IDL to automatically load it when necessary without user intervention.</li>
+        </ol>
+        <p>DLMs are a powerful way to extend IDL’s built-in system routines. This form of packaging offers many advantages:</p>
+        <ul>
+            <li value="1">Unlike <a href="LinkImage.htm">LINKIMAGE</a>, IDL automatically discovers DLMs when it starts up without any user intervention. This makes them easy to install — you simply copy the two files into a directory on your system where IDL will look for them.</li>
+            <li value="2">DLM routines work exactly like standard built-in routines and are indistinguishable from them. There is no need for the user to load them (for example, using LINKIMAGE) before compiling code that references them.</li>
+            <li value="3">As the amount of code added to IDL grows, using sharable libraries in this way prevents name collisions in unrelated compiled code from fooling the linker into linking the wrong code together. DLMs thus act as a firewall between unrelated code. For example, there are instances where unrelated routines both use a common third party library, but they require different versions of this library. A specific example is that the HDF support in IDL requires its own version of the NetCDF library. The NetCDF support uses a different incompatible version of this library with the same names. Use of DLMs allows each module to link with its own private copy of such code.</li>
+            <li value="4">Since DLMs are separate from the IDL program, they can be built and distributed on their own schedule independent of IDL releases.</li>
+            <li value="5">System routines packaged as DLMs are effectively indistinguishable from routines built-into IDL.</li>
+        </ul>
+        <h2><a name="How"></a>How DLMs Work</h2>
+        <p>IDL manages DLMs in the following manner:</p>
+        <ol>
+            <li value="1">
+                <p>When IDL starts, it looks in the current working directory for module definition (.dlm) files. It reads any file found and adds the routines and structure definitions defined to its internal routine and structure lookup tables as “stubs”. In the system routine dispatch table, stubs are entries that inform IDL of the routine’s existence, but which lack an actual compiled function to call. They contain sufficient information for IDL to properly compile calls to the routines, but not to actually call them. Similarly, stub entries in the structure definition table allow IDL to know that the DLM supplies the structure definition, but the actual definition is not present.</p>
+                <p>After it looks in the current working directory, IDL searches <b>!DLM_PATH</b> for .dlm files and adds them to the table in the same manner. The default value of !DLM_PATH is the directory in the IDL distribution where the binary executables are kept (bin/bin.platform). This default can be changed by defining the IDL_DLM_PATH preference (this is similar to the way the <b>IDL_PATH</b> preference works with <b>!PATH</b>).</p>
+                <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you redefine the <a href="../../Creating IDL Programs/Appendices/prefs_directory.htm#preferences_2247882535_1025503">IDL_DLM_PATH</a> preference, be sure to include the <code>&lt;IDL_DEFAULT&gt;</code> token. IDL will not run correctly if the default DLM directories are not included in <a href="../../Creating IDL Programs/Appendices/IDL_Environment_System_V.htm#!DLM_PATH">!DLM_PATH</a>.</p>
+                <p>See <a href="#Packagin" class="MCXref xref selected">Packaging and Installing DLMs</a> for additional information about how IDL selects sharable libraries on different platforms.</p>
+                <p>&#160;</p>
+            </li>
+            <li value="2">  The IDL session then continues in the usual fashion until a call to a routine from a loadable module occurs. At that time, the IDL interpreter notices the fact that the routine is a stub, and loads the sharable library for the loadable module that supplies the routine. It then looks up and calls a function named <a href="#The2" class="MCXref xref selected">The IDL_Load() function</a>, which is required to exist within your library. The IDL_Load's job is to replace the stubs from that module with real entries (using <a href="RegisterRoutines.htm">IDL_SysRtnAdd</a>) and otherwise prepare the module for use.</li>
+            <li value="3">Once the module is loaded, the interpreter looks up the routine that caused the load one more time. If it is still a stub then the module has failed to load properly and an error is issued. Normally, a full routine entry is found and the interpreter successfully calls the routine.</li>
+            <li value="4">  At this point the module is fully loaded, and cannot be distinguished from a compiled part of IDL. A module is only loaded once, and additional calls to any routine, or access to any structure definition, from the module are made immediately and without requiring any additional loading.</li>
+        </ol>
+        <h2><a name="The"></a>The Module Description (.dlm) File</h2>
+        <p>The module description file is a simple text file that is read by IDL when it starts or when the !DLM_PATH variable is changed. Module description files have the file suffix .dlm. The information in the .dlm file tells IDL everything it needs to know about the routines supplied by a loadable module. With this information, IDL can compile calls to these routines and otherwise behave as if it contains the actual routine. The loadable module itself remains unloaded until a call to one of its routines is made, or until the user forces the module to load by calling the <a href="../../Reference Material/D/DLM_LOAD.htm">DLM_LOAD</a> procedure.</p>
+        <p>Empty lines are allowed in DLM files. Comments are indicated using the # character. All text from a # to the end of the line is a comment and ignored by IDL.</p>
+        <p>All other lines start with a keyword indicating the type of information being conveyed, possibly followed by arguments. The syntax of each line depends on the keyword. Possible lines are:</p>
+        <h3>MODULE Name</h3>
+        <p>Gives the name of the DLM. This should always be the first non-comment line in a .dlm file. This is the name used by <a href="../../Reference Material/D/DLM_LOAD.htm">DLM_LOAD</a> to manually load the module and is displayed with <a href="../../Reference Material/H/HELP.htm">HELP, /DLM</a>. There can only be one MODULE line.</p>
+        <p class="Code">MODULE JPEG</p>
+        <h3>DESCRIPTION	DescriptiveText</h3>
+        <p>Supplies a short one line description of the purpose of the module. This information is also displayed by <code>HELP, /DLM</code>. This line is optional.</p>
+        <p class="Code">DESCRIPTION IDL JPEG support</p>
+        <h3>VERSION	VersionString</h3>
+        <p>Supplies a version string that can be used by the IDL user to determine which version of the module will be used. IDL does not interpret this string, it only displays it as part of <code>HELP, /DLM</code>. This line is optional.</p>
+        <p class="Code">VERSION 6a</p>
+        <h3>BUILD_DATE	DateString</h3>
+        <p>If present, IDL will display this information as part of the output from <code>HELP, /DLM</code>. This line is optional.</p>
+        <p class="Code">BUILD_DATE JAN 8 1998</p>
+        <h3>SOURCE	SourceString</h3>
+        <p>A short one line description of the person or organization that is supplying the module. This line is optional.</p>
+        <p class="Code">SOURCE My Company Name</p>
+        <h3>CHECKSUM CheckSumValue</h3>
+        <p>This directive is used internally by IDL to sign the authenticity of the DLMs included within the IDL release. It is not required for user-written DLMs.</p>
+        <h3>STRUCTURE StructureName</h3>
+        <p>There should be one STRUCTURE line in the DLM file for every named structure definition supplied by the loadable module. If you refer to such a structure before the DLM is loaded, IDL uses this information to cause the DLM to load. The <b>IDL_Init()</b> function for the DLM will define the structure.</p>
+        <h3>GLOBAL_SYMBOLS</h3>
+        <p>This line is optional. Including this line in the DLM file will cause the shared library to load all of its symbols (functions or procedures) as globally accessible rather than locally accessible. If a symbol is globally accessible, then libraries that are loaded later will be able to access the symbol. In practice, adding this line to the DLM file will cause IDL to set the <b>RTLD_GLOBAL</b> flag when calling the dlopen() operating system function to load the module.</p>
+        <p>On Microsoft Windows and Macintosh OS X systems, symbols are automatically loaded as global. A GLOBAL_SYMBOLS line in the DLM file will be quietly ignored.</p>
+        <p>Use caution when making a DLM’s symbols globally accessible. Judicious naming of the DLM’s symbol names will help ensure that symbols exported by the DLM will not cause namespace collisions with symbols from other libraries.</p>
+        <h3>FUNCTION	RtnName [MinArgs] [MaxArgs] [Options...] </h3>
+        <h3>PROCEDURE	RtnName [MinArgs] [MaxArgs] [Options...]</h3>
+        <p>There should be one FUNCTION or PROCEDURE line in the DLM file for every IDL routine supplied by the loadable module. These lines give IDL the information it needs to compile calls to these routines before the module is loaded.</p>
+        <h4>RtnName</h4>
+        <p>The IDL user level name for the routine. The routine name can be a simple procedure or function name (e.g. <code>MY_PROCEDURE</code> or <code>MY_FUNCTION</code>), or the name of an object method (e.g. <code>MY_OBJECT::PROCEDURE_METHOD</code> or <code>MY_OBJECT::FUNCTION_METHOD</code>).</p>
+        <h4>MinArgs</h4>
+        <p>The minimum number of arguments accepted by this routine. If not supplied, 0 is assumed.</p>
+        <h4>MaxArgs</h4>
+        <p>The maximum number of arguments accepted by this routine. If not supplied, 0 is assumed.</p>
+        <h4>Options</h4>
+        <p>Zero or more of the following:</p>
+        <p>OBSOLETE — IDL should issue a warning message if this routine is called and !WARN.OBS_ROUTINE is set.</p>
+        <p>KEYWORDS — This routine accepts keywords as well as plain arguments. For example, a procedure named READ_JPEG that accepts a minimum of one argument, a maximum of three arguments, and also accepts keyword arguments would have the following definition in the .dlm file:</p>
+        <p class="Code">PROCEDURE	READ_JPEG	1	3	KEYWORDS</p>
+        <h2><a name="The2"></a>The IDL_Load() function</h2>
+        <p>Every loadable module's sharable library must export a single symbol called <b>IDL_Load()</b>. IDL calls this function when it loads the module and is expected to do all the work required to load real definitions for the routines supplied by the function and prepare the module for use. This always requires at least one call to <a href="RegisterRoutines.htm">IDL_SysRtnAdd()</a>. It usually also requires a call to <a href="../IDLInternals - Error Handling/MessageBlocks.htm">IDL_MessageDefineBlock()</a> if the module defines any messages. Any other initialization needed would also go here:</p>
+        <p class="Code">int IDL_Load(void)</p>
+        <p>This function takes no arguments. It returns True (non-zero) if it was successful, and False (0) if an initialization step failed.</p>
+        <h2><a name="DLM2"></a>DLM Example</h2>
+        <p>This example creates a loadable module named TESTMODULE. Code for this example is included in the <code>external/dlm</code> subdirectory of the IDL</p>
+        <p>installation. TESTMODULE provides 2 routines:</p>
+        <h3>TESTFUN</h3>
+        <p>A function that issues a message indicating that it was called, and then returns the string “TESTFUN” This function accepts between 0 and IDL_MAXPARAMS arguments, but it does not use them for anything.</p>
+        <h3>TESTPRO</h3>
+        <p>A procedure that issues a message indicating that it was called. This procedure accepts between 0 and IDL_MAX_ARRAY_DIM arguments, but it does not use them for anything.</p>
+        <p>The intent of this example is to show the support code required to write a DLM. This framework can be easily adapted to real modules by replacing TESTFUN and TESTPRO with other routines.</p>
+        <p>The first step is to create the module definition file for TESTMODULE, named <code>testmodule.dlm</code>:</p>
+        <p class="Code">MODULE testmodule</p>
+        <p class="Code">DESCRIPTION Test code for loadable modules</p>
+        <p class="Code">VERSION 1.0</p>
+        <p class="Code">SOURCE <span class="DocumentTitleCompanyName">Exelis VIS</span></p>
+        <p class="Code">BUILD_DATE JAN	8 1998</p>
+        <p class="Code">FUNCTION TESTFUN 0 IDL_MAXPARAMS </p>
+        <p class="Code">PROCEDURE TESTPRO 0 IDL_MAX_ARRAY_DIM</p>
+        <p>The next step is to write the code for the sharable library <code>testmodule.c</code>: </p>
+        <p>&#160;</p>
+        <p class="Code">#include &lt;stdio.h&gt;</p>
+        <p class="Code">#include "idl_export.h"</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">/* Define message codes and their corresponding printf(3) format strings. Note that message codes start at zero and each one is one less that the previous one. Codes must be monotonic and</p>
+        <p class="Code">contiguous. */</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">static IDL_MSG_DEF msg_arr[] = {</p>
+        <p class="Code">#define M_TM_INPRO	0</p>
+        <p class="Code">{ "M_TM_INPRO",	"%NThis is from a loadable module procedure.” },</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">#define M_TM_INFUN	-1</p>
+        <p class="Code">{ "M_TM_INFUN”,	"%NThis is from a loadable module function.” },</p>
+        <p class="Code">};</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">/* The load function fills in this message block handle with the opaque handle to the message block used for this module. Th other routines can then use it to throw errors from this </p>
+        <p class="Code">block. */</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">static IDL_MSG_BLOCK msg_block;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">/* Implementation of the TESTPRO IDL procedure */</p>
+        <p class="Code">static void testpro(int argc, IDL_VPTR *argv)</p>
+        <p class="Code">{ IDL_MessageFromBlock(msg_block, M_TM_INPRO, IDL_MSG_RET); }</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">/* Implementation of the TESTFUN IDL function */</p>
+        <p class="Code">static IDL_VPTR testfun(int argc, IDL_VPTR *argv)</p>
+        <p class="Code">{</p>
+        <p class="Code">IDL_MessageFromBlock(msg_block, M_TM_INFUN, IDL_MSG_RET);</p>
+        <p class="Code">return IDL_StrToSTRING("TESTFUN");</p>
+        <p class="Code">}</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">int IDL_Load(void)</p>
+        <p class="Code">{</p>
+        <p class="Code">/* These tables contain information on the functions and procedures</p>
+        <p class="Code">that make up the TESTMODULE DLM. The information contained in these tables must be identical to that contained in testmodule.dlm.</p>
+        <p class="Code">*/</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">static IDL_SYSFUN_DEF2 function_addr[] = {</p>
+        <p class="Code">{ testfun, "TESTFUN”, 0, IDL_MAXPARAMS, 0, 0},</p>
+        <p class="Code">};</p>
+        <p class="Code">static IDL_SYSFUN_DEF2 procedure_addr[] = {</p>
+        <p class="Code">{ (IDL_SYSRTN_GENERIC) testpro, "TESTPRO”, 0, IDL_MAX_ARRAY_DIM, 0, 0},</p>
+        <p class="Code">};</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">/* Create a message block to hold our messages. Save its handle where the other routines can access it. */</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">if (!(msg_block = IDL_MessageDefineBlock("Testmodule”,</p>
+        <p class="Code">IDL_CARRAY_ELTS(msg_arr),</p>
+        <p class="Code">msg_arr))) return IDL_FALSE;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">/* Register our routine. The routines must be specified exactly the same as in testmodule.dlm. */</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">return IDL_SysRtnAdd(function_addr, TRUE,</p>
+        <p class="Code">IDL_CARRAY_ELTS(function_addr))</p>
+        <p class="Code">&amp;&amp; IDL_SysRtnAdd(procedure_addr, FALSE,</p>
+        <p class="Code">IDL_CARRAY_ELTS(procedure_addr));</p>
+        <p class="Code">}</p>
+        <p class="Code">&#160;</p>
+        <p>If building a DLM for Microsoft Windows, a linker definition file (<code>testmodule.def</code>) is also needed. All of these files, along with the commands required to build the module can be found in the <code>dlm</code> subdirectory of the external directory of the IDL distribution.</p>
+        <p>Once the loadable module is built, you can cause IDL to find it by doing one of the following:</p>
+        <ul>
+            <li value="1">Move to the directory containing the .dlm and sharable library for the module.</li>
+            <li value="2">Define the IDL_DLM_PATH preference to include the directory. Running IDL to demonstrate the resulting module:</li>
+        </ul>
+        <p class="Code">IDL&gt; HELP,/DLM,’testmodule’</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">** TESTMODULE - Test code for loadable modules (not loaded) Version:1.0,Build Date:JAN 8 1998,Source:<span class="DocumentTitleCompanyName">Exelis VIS</span>.</p>
+        <p class="Code">Path: /home/user/testmodule/external/testmodule.so</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IDL&gt; testpro</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">% Loaded DLM: TESTMODULE.</p>
+        <p class="Code">% TESTPRO: This is from a loadable module procedure. IDL&gt; HELP,/DLM,’testmodule’</p>
+        <p class="Code">** TESTMODULE - Test code for loadable modules (loaded) Version:1.0,Build Date:JAN 8 1998,Source:<span class="DocumentTitleCompanyName">Exelis VIS</span>.</p>
+        <p class="Code">Path: /home/user/testmodule/external/testmodule.so</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IDL&gt; print, testfun()</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">% TESTFUN: This is from a loadable module function. </p>
+        <p class="Code">TESTFUN</p>
+        <p>The initial HELP output shows that the module starts out unloaded. The call to TESTPRO causes the module to be loaded. As IDL loads the module, it prints an announcement of the fact (similar to the way it announces the .pro files it automatically compiles to satisfy calls to user routines). Once the module is loaded, subsequent calls to HELP show that it is present. Calls to routines from this module do not cause the module to be reloaded (notice that calling TESTFUN did not cause an announcement message to be issued).</p>
+        <h2><a name="Packagin"></a>Packaging and Installing DLMs</h2>
+        <p>Once you have created sharable library (.so or .dll) and module description (.dlm) files, you will need to ensure that the files are installed in a location where IDL can find and load the libraries. </p>
+        <h3>Single-Platform DLMs</h3>
+        <p>If your module will be installed only on computers of a single architecture (32-bit Windows machines, for example, or 64-bit Linux machines), the process is relatively simple:</p>
+        <ol>
+            <li value="1">Create the sharable library file. The file will have the extension .dll for Microsoft Windows platforms, or .so for UNIX-like platforms (Macintosh, Linux, Solaris).</li>
+            <li value="2">Create the module description file (.dlm) as described in “The Module Description (.dlm) File” (above).</li>
+            <li value="3">Place both the sharable library file and the module description file in a directory included in IDL’s <b>IDL_DLM_PATH</b> preference. See “Installing DLMs Using the IDL Workbench Update Mechanism” for additional notes.</li>
+            <li value="4">Restart IDL.</li>
+        </ol>
+        <p>Even if your module supports only one platform, consider following the naming rules described in “How IDL Selects the Correct Sharable Library File”. Using the multi-platform naming rules incurs no performance penalty, and may save effort if you end up supporting other platforms in the future.</p>
+        <h3>Multi-Platform DLMs</h3>
+        <p>If your module will be installed on computers of different architectures, you must create a unique sharable library file for each architecture. To install the DLM on a user’s machine, you have the following options:</p>
+        <h4>Create Platform-Specific Installations</h4>
+        <p>If you create a separate installation package for each architecture, creating a multi- platform DLM is essentially just creating a series of Single-Platform DLMs, one for each platform. Use caution with this approach, since you will have to ensure that if your end-user installs more than one platform’s version of the DLM, the module description and shared library files for the different platforms are installed in the correct directories.</p>
+        <h4>Create a Multi-Platform Installation</h4>
+        <p>You can create a single installation package that supports multiple architectures if you follow a simple set of naming rules when creating your sharable library files. To create a multi-platform installation package:</p>
+        <ol>
+            <li value="1">Create a sharable library file for each platform, following the naming rules described in “How IDL Selects the Correct Sharable Library File” (below).</li>
+            <li value="2">Create a single module description file (.dlm) as described in “The Module Description (.dlm) File”.</li>
+            <li value="3">Place the module description file and all of the sharable libraries in a single directory included in IDL’s <b>IDL_DLM_PATH</b> preference. See “Installing DLMs Using the IDL Workbench Update Mechanism”  for additional notes.</li>
+            <li value="4">Restart IDL.</li>
+        </ol>
+        <h3>How IDL Selects the Correct Sharable Library File</h3>
+        <p>When IDL starts, it searches for DLMs in the directories included in IDL’s <b>IDL_DLM_PATH</b> preference as described in “How DLMs Work” (above). When IDL finds a module description file, it adds the routines and structure definitions defined by the DLM to its internal routine and structure lookup tables.</p>
+        <p>It is not until later, when a user calls a routine defined by the DLM, that IDL actually loads the sharable library. At this point, IDL searches for a sharable library file built for the current platform.</p>
+        <p>IDL uses the following process to search for the sharable library file:</p>
+        <ol>
+            <li value="1">  IDL constructs the base name of the library file by removing the <code>.dlm</code> suffix from the module definition file’s name.</li>
+            <li value="2">
+                <p>  To the library’s base name, IDL appends a platform-specific string. The specific strings are shown in the table below. The string is the concatenation of the name of the platform’s platform-specific bin subdirectory, along with the suffix <code>.dll</code> on Windows systems or <code>.so</code> on all UNIX-based systems.</p>
+                <p>For example, if the name of the DLM file is</p>
+                <p class="Code">my_module.dlm</p>
+                <p>then the platform-specific sharable library file name for a 64-bit Linux platform would be</p>
+                <p class="Code">my_module.linux.x86_64.so</p>
+            </li>
+            <li value="3">  IDL searches the directory that contains the module definition file for a library file with the platform-specific sharable library file name. If it finds a matching file, it loads the library and executes the routine called by the user.</li>
+            <li value="4">
+                <p>  If IDL does not find the platform-specific library file, it searches the directory that contains the module definition file for a library file with the same base name as the module definition file, replacing the <code>.dlm</code> extension with the suffix <code>.dll</code> or <code>.so</code>.</p>
+                <p>For example, if the name of the DLM file is</p>
+                <p class="Code">my_module.dlm</p>
+                <p>then the generically-named sharable library file name would be</p>
+                <p class="Code">my_module.dll</p>
+                <p>on a Windows system, or</p>
+                <p class="Code">my_module.so</p>
+                <p>on a UNIX system.</p>
+                <p>If IDL finds a generically-named sharable library file, it attempts to load the library and execute the routine called by the user. Note that IDL will only be able to successfully load the library if the generically-named library file was built for the current platform.</p>
+            </li>
+            <li value="5">
+                <p>  If IDL fails to find either the platform-specific sharable library file or the generically-named library file, it will issue one of the following error messages:</p>
+                <p>If a platform-specific sharable library file for a different platform exists in the same directory, the error message is</p>
+                <p>Dynamically loadable module is unavailable on this platform:</p>
+                <p class="Code">my_module.</p>
+                <p>If no platform-specific sharable library files for any platform are present, the error message is</p>
+                <p class="Code">Dynamically loadable module failed to load: my_module.</p>
+                <p>The first message indicates that the DLM exists but is not supported for the current platform, the second indicates that the DLM does not exist, despite the presence of the .dlm file.</p>
+                <p>One benefit of this file naming and search procedure is that you can distribute a DLM package that includes library files for several platforms in a single directory. IDL will load the correct shared library for the end-user’s platform, or provide a sensible error message if the platform is not supported.</p>
+            </li>
+        </ol>
+        <h3>Platform-Specific Sharable Library File Suffixes</h3>
+        <p>The following table lists the platform-specific file suffixes for IDL’s supported platforms:</p>
+        <p>Windows 32-bit:	<code>.x86.dll</code></p>
+        <p>Windows 64-bit:	<code>.x86_64.dll</code></p>
+        <p>Solaris SPARC 64-bit:	<code>.solaris2.sparc64.so</code></p>
+        <p>Solaris x86 64-bit:	<code>.solaris2.x86_64.so</code></p>
+        <p>Linux 64-bit:	<code>.linux.x86_64.so</code></p>
+        <p>Macintosh OS X Intel 64-bit:	<code>.darwin.x86_64.so</code></p>
+        <h3>Example DLM Distribution</h3>
+        <p>For example, suppose you have created a dynamically loadable module named my_cool_module, and created sharable libraries for Windows (32- and 64-bit) and Linux (64-bit) but not for Macintosh OS X or Solaris. Your DLM installation directory would contain the following files:</p>
+        <p class="Code">my_cool_module.dlm </p>
+        <p class="Code">my_cool_module.x86.dll </p>
+        <p class="Code">my_cool_module.x86_64.dll </p>
+        <p class="Code">my_cool_module.linux.x86_64.so</p>
+        <p>If a user on a Macintosh OS X or Solaris system attempts to call a routine from the my_cool_module DLM, the fact that sharable libraries for other platforms exist informs IDL that the DLM intentionally does not provide support for that platform. If a user on one of these unsupported platforms attempts to use the functionality from the DLM, IDL will issue the message</p>
+        <p class="Code">Dynamically loadable module is unavailable on this platform:</p>
+        <p class="Code">my_cool_module.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

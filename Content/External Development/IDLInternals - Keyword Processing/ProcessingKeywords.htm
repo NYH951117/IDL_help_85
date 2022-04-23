@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Keyword Processing">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Processing Keywords - IDL_KWProcessByOffset()</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDLKeywordProcessing.htm">IDLInternals - Keyword Processing</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Processing Keywords - IDL_KWProcessByOffset()</span>
+        </div>
+        <h1><a name="kanchor5448"></a>Processing Keywords - IDL_KWProcessByOffset()</h1>
+        <p>The <b>IDL_KWProcessByOffset()</b> function is used to process keywords. <b>IDL_KWProcessByOffset()</b> performs the following actions on behalf of the calling system routine:</p>
+        <ul>
+            <li value="1">Verify that the keywords passed to the routine are all allowed by the routine.</li>
+            <li value="2">Carry out the type checking and conversions required for each keyword.</li>
+            <li value="3">Find the positional (non-keyword) arguments that are scattered among the keyword arguments in argv and copy them in order into the <b>plain_args</b> array.</li>
+            <li value="4">Return the number of plain arguments copied into <b>plain_args</b>.</li>
+        </ul>
+        <p><b>IDL_KWProcessByOffset()</b> has the form:</p>
+        <p class="Code">int IDL_KWProcessByOffset(int argc, IDL_VPTR *argv, </p>
+        <p class="Code">&#160;&#160;&#160;char *argk, </p>
+        <p class="Code">&#160;&#160;&#160;IDL_KW_PAR *kw_list,</p>
+        <p class="Code">&#160;&#160;&#160;IDL_VPTR plain_args[], </p>
+        <p class="Code">&#160;&#160;&#160;int mask,</p>
+        <p class="Code">&#160;&#160;&#160;void * base)</p>
+        <p>where:</p>
+        <h3>argc</h3>
+        <p>The number of arguments passed to the caller. This is the first parameter to all system routines.</p>
+        <h3>argv</h3>
+        <p>The array of <b>IDL_VPTR</b> to arguments that was passed to the caller. This is the second parameter to all system routines.</p>
+        <h3>argk</h3>
+        <p>The pointer to the keyword list that was passed to the caller. This is the third parameter to all system routines that accept keyword arguments.</p>
+        <h3>kw_list</h3>
+        <p>An array of <b>IDL_KW_PAR</b> structures (see <a href="OverviewIDLKeywordProcessing.htm">Overview Of IDL Keyword Processing</a>) that specifies the acceptable keywords for this routine. This array is terminated by setting the keyword field of the final struct to NULL ((char *) 0).</p>
+        <h3>plain_args</h3>
+        <p>NULL, or an array of <b>IDL_VPTR</b> into which the <b>IDL_VPTR</b>s of the positional arguments will be copied. This array must have enough elements to hold the maximum possible number of positional arguments, as defined in <b>IDL_SYSFUN_DEF2</b>. See <a href="../Adding System Routines/RegisterRoutines.htm">Registering Routines</a>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span><b>IDL_KWProcessByOffset()</b> sorts the plain arguments into the front of the input argv argument. Hence, plain_args is often not necessary, and can be set to NULL.</p>
+        <h3>mask</h3>
+        <p>Mask enable. This variable is ANDed with the mask field of each <b>IDL_KW_PAR</b> struct in the array given by <b>kw_list</b>. If the result is non-zero, the keyword is accepted as a valid keyword for the called system routine. If the result is zero, the keyword is ignored.</p>
+        <h3>base</h3>
+        <p>Address of the user supplied <b>KW_RESULT</b> structure, which must be named kw.</p>
+        <h2><a name="Speeding"></a>Speeding Keyword Processing</h2>
+        <p>As mentioned above, the <b>kw_list</b> argument to <b>IDL_KWProcessByOffset()</b> is a null terminated list of <b>IDL_KW_PAR</b> structures. The time required to scan each item of the keyword array and zero the required fields (those fields specified, and value fields with <b>IDL_KW_ZERO</b> set), can become significant, especially when more than a few keyword array elements (e.g., 5 to 10 elements) are present.</p>
+        <p>To speed things up, specify <b>IDL_KW_FAST_SCAN</b> as the first keyword array element. If <b>IDL_KW_FAST_SCAN</b> is the first keyword array element, the keyword array is compiled by <b>IDL_KWProcessByOffset()</b> into a more efficient form the first time it is used. Subsequent calls use this efficient version, greatly speeding keyword processing. Usage of <b>IDL_KW_FAST_SCAN</b> is optional, and is not worthwhile for small lists. For longer lists, however, the improvement in speed is noticeable. For example, the following list does not use fast scanning:</p>
+        <p class="Code">static IDL_KW_PAR	kw_pars[] = {</p>
+        <p class="Code_Indented">{ "DOUBLE", IDL_TYP_DOUBLE, 1, 0, </p>
+        <p class="Code_Indented">&#160;&#160;&#160;IDL_KW_OFFSETOF(d_there), IDL_KW_OFFSETOF(d) },</p>
+        <p class="Code_Indented">{ "FLOAT", IDL_TYP_FLOAT, 1,IDL_KW_ZERO,0,</p>
+        <p class="Code_Indented">&#160;&#160;&#160;IDL_KW_OFFSETOF(f) },</p>
+        <p class="Code_Indented">{ NULL }</p>
+        <p class="Code">};</p>
+        <p>To use fast scanning, it would be written as:</p>
+        <p class="Code">static IDL_KW_PAR	kw_pars[] = { IDL_KW_FAST_SCAN,</p>
+        <p class="Code">{ "DOUBLE", IDL_TYP_DOUBLE, 1, 0, </p>
+        <p class="Code">&#160;&#160;&#160;IDL_KW_OFFSETOF(d_there), IDL_KW_OFFSETOF(d) },</p>
+        <p class="Code">{"FLOAT", IDL_TYP_FLOAT, 1, IDL_KW_ZERO, 0,<br /> &#160;&#160;IDL_KW_OFFSETOF(f) },</p>
+        <p class="Code">{ NULL }</p>
+        <p class="Code">};</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

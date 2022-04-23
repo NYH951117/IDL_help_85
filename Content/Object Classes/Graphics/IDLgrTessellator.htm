@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|Graphics Object Classes">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLgrTessellator</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_gr.htm">Graphics Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLgrTessellator</span>
+        </div>
+        <h1 class="ObjClass"><a name="objects_gr_2157407275_1016107"></a><a name="objects_gr_2157407275_27071"></a>IDLgrTessellator</h1>
+        <p data-mc-conditions="Reference Material.Online_Help_Only">
+            <MadCap:conditionalText data-mc-conditions="Reference Material.Online_Help_Only"><a href="#objects_gr_2157407275_1016159" class="selected">Superclasses</a> | <a href="#objects_gr_2157407275_1016162" class="selected">Creation</a> | <a href="#objects_gr_2157407275_1044110" class="selected">Properties</a> | <a href="#objects_gr_2157407275_1016168" class="selected">Methods</a> | <a href="#objects_gr_2157407275_1016192" class="selected">Version History</a></MadCap:conditionalText>
+        </p>
+        <p>A <a name="kanchor3855"></a>tessellator object decomposes a polygon description into a set of triangles. Use the tessellator object to convert complex and/or concave polygons into a form suitable for drawing with the IDLgrPolygon object. IDLgrPolygon can draw only convex polygons correctly.</p>
+        <p>The polygon contours may intersect each other and may be self-intersecting. The contours may be disjoint, overlapping, or contained within other contours. The contours may also be degenerate, may contain repeated points, and may or may not be closed. The order of the vertices may be either counter-clockwise or clockwise. Tesselation may produce unexpected results if the input polygon contours are not coplanar, or if a contour is not planar.</p>
+        <p>The tessellator object uses the “odd-winding rule” to determine if a point is in the interior of the polygon and therefore contained in a triangle output by the tessellator. With this rule, a point is in the interior if it is circled an odd number of times as we travel around each of the contours. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The INTERIOR keyword for the AddPolygon method is no longer needed to inform the tessellator that the polygon defines an exterior or interior boundary. This keyword is ignored by the tessellator because it now performs the interior testing using the odd-winding rule.</p>
+        <p>Specify polygon contours with calls to the <a href="IDLgrTessellator__AddPol.htm#objects_gr_2157407275_1016197">IDLgrTessellator::AddPolygon</a> method. After adding all the contours, use the IDLgrTessellator::Tessellate method to perform the tessellation and retrieve the resulting list of vertices and connectivity array.</p>
+        <p>If the polygon contours contain intersecting or self-intersecting contours, the tessellator may return vertices that were not in the original set of vertices specified with the <a href="IDLgrTessellator__AddPol.htm#objects_gr_2157407275_1016197">IDLgrTessellator::AddPolygon</a> method. These vertices are created by the intersecting contours.</p>
+        <p>If your vertex data also includes other information, such as a color for each vertex, then you may wish for this extra information to be created for any new vertices generated by the tessellator. Use the AUXDATA keywords for <a href="IDLgrTessellator__AddPol.htm#objects_gr_2157407275_1016197">IDLgrTessellator::AddPolygon</a> and <a href="IDLgrTessellator__Tessel.htm#objects_gr_2157407275_1016344">IDLgrTessellator::Tessellate</a> to pass in and retrieve your per-vertex data. The tessellator object interpolates the per-vertex data from neighboring vertices to create new per-vertex data for the new vertices it generates.</p>
+        <p>In the following example of handling per-vertex data with generated vertices, the polygon is a simple self-intersecting “bow-tie” polygon. It is submitted to the tessellator with four vertices, but the tessellator returns a fifth at the point of self-intersection. Color data for the four original vertices is also supplied, and the tessellator returns a fifth color.</p>
+        <p class="Code">PRO tessaux    </p>
+        <p class="Code">&#160;&#160;&#160;oTess = OBJ_NEW('IDLgrTessellator')</p>
+        <p class="Code">&#160;&#160;&#160;colors = [[0,255,0],[0,255,0],[0,64,0],[0,64,0]]</p>
+        <p class="Code">&#160;&#160;&#160;oTess-&gt;AddPolygon, [0,1,0,1], [0,0,1,1], AUXDATA=colors</p>
+        <p class="Code">&#160;&#160;&#160;result = oTess-&gt;Tessellate(v, c, AUXDATA=aux)</p>
+        <p class="Code">&#160;&#160;&#160;PRINT, v[*,4]</p>
+        <p class="Code">&#160;&#160;&#160;PRINT, aux[*,4]</p>
+        <p class="Code">&#160;&#160;&#160;oPoly = OBJ_NEW('IDLgrPolygon', v, POLYGONS=c, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;VERT_COLORS=aux, SHADING=1)</p>
+        <p class="Code">&#160;&#160;&#160;XOBJVIEW, oPoly, /BLOCK</p>
+        <p class="Code">&#160;&#160;&#160;OBJ_DESTROY, [oTess, oPoly]</p>
+        <p class="Code">END</p>
+        <p>The generated output will be:</p>
+        <p class="Code">0.500000     0.500000</p>
+        <p class="Code">&#160;&#160;&#160;0     159       0</p>
+        <h2 class="API"><a name="objects_gr_2157407275_1016159"></a><a name="objects_gr_2157407275_1033252_PageTOC_IDLgrTessellator__"></a>Superclasses</h2>
+        <p>None</p>
+        <h2 class="API"><a name="objects_gr_2157407275_1016162"></a><a name="objects_gr_2157407275_1033259_PageTOC_IDLgrTessellator__"></a>Creation</h2>
+        <p>See <a href="objects_gr1.htm#objects_gr_2157407275_1880124">IDLgrTessellator::Init</a>.</p>
+        <h2 class="API"><a name="objects_gr_2157407275_1044110"></a><a name="objects_gr_2157407275_79946"></a>Properties</h2>
+        <p>Objects of this class have no properties of their own.</p>
+        <h2 class="API"><a name="objects_gr_2157407275_1016168"></a><a name="objects_gr_2157407275_1033264_PageTOC_IDLgrTessellator__"></a>Methods<a name="kanchor3856"></a></h2>
+        <p>This class has the following methods:</p>
+        <ul>
+            <li value="1"><a href="IDLgrTessellator__AddPol.htm#objects_gr_2157407275_1016197">IDLgrTessellator::AddPolygon</a>
+            </li>
+            <li value="2"><a href="IDLgrTessellator__Cleanu.htm#objects_gr_2157407275_1016242">IDLgrTessellator::Cleanup</a>
+            </li>
+            <li value="3"><a href="objects_gr1.htm#objects_gr_2157407275_1880124">IDLgrTessellator::Init</a>
+            </li>
+            <li value="4"><a href="IDLgrTessellator__Reset.htm#objects_gr_2157407275_1016312">IDLgrTessellator::Reset</a>
+            </li>
+            <li value="5"><a href="IDLgrTessellator__Tessel.htm#objects_gr_2157407275_1016344">IDLgrTessellator::Tessellate</a>
+            </li>
+        </ul>
+        <p>In addition, this class inherits the methods of its superclasses (if any).</p>
+        <h2 class="API"><a name="objects_gr_2157407275_1016192"></a><a name="objects_gr_2157407275_1395075_PageTOC_IDLgrTessellator__"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

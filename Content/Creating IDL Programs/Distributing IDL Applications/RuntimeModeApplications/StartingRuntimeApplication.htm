@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Environment|Distributing IDL Applications|Runtime Mode Applications">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Starting a Runtime Application</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../IDL Concepts.htm">Environment</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../DistributingIDLApplications.htm">Distributing IDL Applications</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="DistributingRuntimeModeApplicationsIntro.htm">Runtime Mode Applications</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Starting a Runtime Application</span>
+        </div>
+        <h1>Starting a Runtime Application<a name="kanchor4283"></a></h1>
+        <p>You must provide your end users with instructions describing how to start your application. You may choose to provide users with the name and location of your application executable along with a launch command to execute, or (if you are using an installer for your application) with shell scripts, shortcuts, or Start menu items.</p>
+        <p>The application startup process differs depending on whether you are supplying an IDL runtime distribution (created using the IDL Project interface or the make_rt script) or are relying on your user to install a full (if potentially unlicensed) IDL distribution. The following sections describe the process for each of these situations.</p>
+        <h2>Using an IDL Runtime Distribution</h2>
+        <p>If you use the <a href="../CreateRuntimeDistribution/CreatingDistributionUsingMAKE_RT.htm">MAKE_RT procedure to create a runtime distribution</a>, specifying a SAVE file for your application, application launch scripts for your application are created automatically. (You may need to modify the launch scripts.) If you do not use MAKE_RT, you can still create application launch scripts based on generic scripts included in the IDL distribution.</p>
+        <h2>Using an Existing IDL Distribution</h2>
+        <p>If you are relying on your end user to install an IDL distribution (licensed or not) before running your application, you can either give your users instructions based on the following information or create scripts to launch your application. The specifics depend on your end user’s platform.</p>
+        <h3>Windows</h3>
+        <p>To start a runtime application if you are not providing a runtime IDL distribution, either change directories to <code><i>IDL_DIR</i>\bin\bin.<i>platform</i></code> directory (where <code style="font-style: italic;">IDL_DIR</code> is the main IDL directory and <code style="font-style: italic;">platform</code> is the platform-specific <code>bin</code> directory) or ensure that this directory is included in the Windows PATH environment variable. Do one of the following:</p>
+        <ul>
+            <li value="1">If your application runs in the IDL Virtual Machine, enter the following:</li><pre xml:space="preserve">idlrt -vm=&lt;<i>path</i>&gt;&lt;<i>filename</i>&gt;</pre>
+            <li value="2">If your application uses a runtime license, enter the following:</li><pre xml:space="preserve">idlrt &lt;<i>path</i>&gt;&lt;<i>filename</i>&gt;</pre>
+            <li value="3">If your application uses an embedded license, enter the following:</li><pre xml:space="preserve">idlrt -em=&lt;<i>path</i>&gt;&lt;<i>filename</i>&gt;</pre>
+            <p>where <code>&lt;<i>path</i>&gt;</code> is the path to the SAVE file, and <code>&lt;<i>filename</i>&gt;</code> is the name of the SAVE file.</p>
+        </ul>
+        <p>To simplify startup of your application, you can use the <a href="../CreateRuntimeDistribution/RuntimeApplicationLaunchScripts.htm#Windows">Windows launch script</a>. Alternately, you can create a batch file that changes directories to the IDL <code>bin</code> directory and invokes <code>idlr</code>t with the SAVE file name. Such a batch file might look something like the following:</p>
+        <p xml:space="preserve" class="Code">@ECHO OFF</p>
+        <p xml:space="preserve" class="Code">
+REM This batch file launches the IDL runtime application myapp</p>
+        <p xml:space="preserve" class="Code">
+cd C:\Exelis\IDL82\bin\bin.x86</p>
+        <p xml:space="preserve" class="Code">
+idlrt C:\mydir\myapp.sav</p>
+        <h3>UNIX / Macintosh</h3>
+        <p>To start a runtime application if you are not providing a runtime IDL distribution, first ensure that the environment variable IDL_DIR is set to the path to the main directory of the IDL installation. For example, if IDL is installed in <code>/usr/local/Exelis/idl82</code>, you would set the IDL_DIR environment variable to this value. When the IDL_DIR environment variable is set, do one of the following:</p>
+        <ul>
+            <li value="1">If your application runs in the IDL Virtual Machine, enter the following:</li><pre xml:space="preserve">idl -vm=&lt;<i>path</i>&gt;&lt;<i>filename</i>&gt;</pre>
+            <li value="2">If your application uses a runtime license, enter the following:</li><pre xml:space="preserve">idl -rt=&lt;<i>path</i>&gt;&lt;<i>filename</i>&gt;</pre>
+            <li value="3">If your application uses an embedded license, enter the following:</li><pre xml:space="preserve">idl -em=&lt;<i>path</i>&gt;&lt;<i>filename</i>&gt;</pre>
+            <p>where <code>&lt;<i>path</i>&gt;</code> is the path to the SAVE file, and <code>&lt;<i>filename</i>&gt;</code> is the name of the SAVE file.</p>
+        </ul>
+        <p>To simplify startup of your application, you can use the <a href="../CreateRuntimeDistribution/RuntimeApplicationLaunchScripts.htm#Linux/So">UNIX</a> or <a href="../CreateRuntimeDistribution/RuntimeApplicationLaunchScripts.htm#Macintos">Macintosh</a> launch script. Alternately, you can create a shell script that sets the IDL_DIR environment variable and calls IDL with the correct flag and SAVE file name. Such a script might look something like the following:</p>
+        <p xml:space="preserve" class="Code">#!/bin/sh</p>
+        <p xml:space="preserve" class="Code">
+# This script launches the IDL runtime application myapp</p>
+        <p xml:space="preserve" class="Code">
+IDL_DIR=/usr/local/exelis/idl82</p>
+        <p xml:space="preserve" class="Code">
+idl -rt=/mydir/myapp.sav</p>
+        <h2>Specifying Application Preferences at Startup</h2>
+        <p>You can specify the values of IDL preferences in your startup command by including either the <code>-pref</code> command line option or by specifying individual preference values on the command line.</p>
+        <p>For example, suppose your application is installed in the directory <code>/mydir</code>. To have IDL load the preference values contained in a file named <code>myapp.pref</code> in the same directory when the application starts, you might modify your the UNIX startup script described above to read:</p>
+        <p xml:space="preserve" class="Code">#!/bin/sh</p>
+        <p xml:space="preserve" class="Code">
+# This script launches the IDL runtime application myapp</p>
+        <p xml:space="preserve" class="Code">
+IDL_DIR=/usr/local/exelis/idl82</p>
+        <p xml:space="preserve" class="Code">
+idl -rt=/mydir/myapp.sav -pref=/mydir/myapp.pref</p>
+        <p>Similarly, to force a Windows runtime application to use software rendering, you could explicitly specify the preference value in a batch file that starts the application:</p>
+        <p xml:space="preserve" class="Code">@ECHO OFF</p>
+        <p xml:space="preserve" class="Code">
+REM This batch file launches the IDL runtime application myapp</p>
+        <p xml:space="preserve" class="Code">
+cd C:\Exelis\IDL<i>xx</i>\bin\bin.x86</p>
+        <p xml:space="preserve" class="Code">
+idlrt C:\mydir\myapp.sav -IDL_GR_WIN_RENDERER 1</p>
+        <p>See <a href="PreferencesRuntimeApplications.htm">Preferences for Runtime Applications</a> for details.</p>
+        <h2>What Happens When IDL Runs Your Application</h2>
+        <p>When you launch an IDL runtime application, IDL does the following:</p>
+        <ul>
+            <li value="1">IDL restores the specified SAVE file, if one is specified at the command line or when creating the distribution via the IDL Project interface or <code>make_rt</code> script.</li>
+            <li value="2">On Windows, if no SAVE file is specified, IDL restores the SAVE file specified by the IDL_WIN_RT preference.</li>
+            <li value="3">If no SAVE file is specified, restores the file runtime.sav</li>
+        </ul>
+        <p>IDL then calls the main procedure. This is one of the following:</p>
+        <ul>
+            <li value="1">A procedure named <code>main</code> in the restored SAVE file</li>
+            <li value="2">A procedure with the same name as the SAVE file</li>
+        </ul>
+        <p>When the main procedure returns, IDL exits.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

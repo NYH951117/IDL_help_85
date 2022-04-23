@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|Java Import Bridge">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Creating IDL-Java Objects</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Java Import Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Creating IDL-Java Objects</span>
+        </div>
+        <h1><a name="Creating_IDL-Java_Objects"></a><a name="kanchor5385"></a>Creating IDL-Java Objects</h1>
+        <p>As with all IDL objects, a Java object is created using the IDL OBJ_NEW function. Keying off the provided Java class name, the underlying implementation uses the IDL Java subsystem to call the constructor on the desired Java object. The following line of code demonstrates the basic syntax for calling OBJ_NEW to create a <a name="kanchor5386"></a>Java object within IDL:</p>
+        <p class="Code">oJava = OBJ_NEW('IDLjavaObject$JAVACLASSNAME', 'JavaClassName' [, Arg1, Arg2, ..., ArgN])</p>
+        <p>where <i>JAVACLASSNAME</i> is the class name token used by IDL to create the object, JavaClassName is the class name used by Java to initialize the object, and <i>Arg1</i> through <i>ArgN</i> are any data parameters required by the constructor. See <a href="#Java_Class_Names_in_IDL" class="selected">Java Class Names in IDL</a> for more information.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The example <i>hellojava.pro</i> is located in the <i>resource/bridges/import/java/examples</i> directory of the IDL distribution and shows a simple example of an IDL-Java object creation. Run the example procedure by entering <i>hellojava</i> at the IDL command prompt or view the file in an IDL Editor window by entering <i>.EDIT hellojava.pro</i>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you edit and recompile a Java class used by IDL during an IDL-Java bridge session, you must first exit and restart IDL before your modified Java class will be recognized by IDL.</p>
+        <p>The IDL-Java bridge also provides the ability to access static Java methods and data members. See <a href="#Java_Static_Access" class="selected">Java Static Access</a> for more information.</p>
+        <h2><a name="Java_Class_Names_in_IDL"></a><a name="kanchor5387"></a>Java Class Names in IDL</h2>
+        <p>The underlying Java interpreter recognizes the Java class name including all objects contained within the Java interpreter’s class path.</p>
+        <p>To identify a proper Java object, the fully-qualified package name should be used when creating the IDL class name. For example, a class of type String would be referred to as <i>java.lang.String</i>.</p>
+        <p>In the IDL class name, the Java class separator ('.') should be replaced with an underscore ('_'). If a Java class of type String were created, the following IDL OBJ_NEW call would be used:</p>
+        <p class="Code">oJString = OBJ_NEW('IDLJavaObject$JAVA_LANG_STRING', 'java.lang.String', 'My String')</p>
+        <p>The class name is provided twice because IDL is case-insensitive whereas Java is case-sensitive, see <a href="OverviewOfUsingJavaObjects.htm#IDL-Java_Bridge_Architecture">IDL-Java Bridge Architecture</a> for more information.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDL objects use method names (INIT and CLEANUP) to identify and call object lifecycle methods. As such, these method names should be considered reserved. If an underlying Java object implements a method using either INIT or CLEANUP, those methods will be overridden by the IDL methods and not accessible from IDL. In Java, you can wrap these methods with different named methods to work around this limitation.</p>
+        <h2><a name="Java_Static_Access"></a><a name="kanchor5388"></a>Java Static Access</h2>
+        <p>In Java, a program can call a static method or access static data members on a Java class without first having to create the object.</p>
+        <p>IDL contains a special wrapper object type for calling static methods. This IDL object wrapper references the underlying Java class, allowing the object to call static methods on the class or allowing the object to use the Get/Set Property calls to access static data members. The following line of code demonstrates the basic syntax for calling OBJ_NEW to create a static proxy within IDL:</p>
+        <p class="Code">oJava = OBJ_NEW('IDLjavaObject$Static$JAVACLASSNAME', 'JavaClassName')</p>
+        <p>where JAVACLASNAME is the class name token used by IDL to create the object and JavaClassName is the class name used by Java to initialize the object. See <a href="#Java_Class_Names_in_IDL" class="selected">Java Class Names in IDL</a> for more information.</p>
+        <p>A special static object would not need to be created to call an instantiated <i>IDLJavaObject</i> with static methods:</p>
+        <p class="Code">oNotStatic = OBJ_NEW('IDLjavaObject$JAVACLASSNAME', 'JavaClassName')</p>
+        <p class="Code">oNotStatic-&gt;aStaticMethod ; this is OK</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The <i>javaprops.pro</i> file is located in the <i>resource/bridges/import/java/examples</i> directory of the IDL distribution and shows an example of working with static data members. Run the example procedure by entering <i>javaprops</i> at the IDL command prompt or view the file in an IDL Editor window by entering <i>.EDIT javaprops.pro</i>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>All  restrictions on creating Java objects apply to this static object.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

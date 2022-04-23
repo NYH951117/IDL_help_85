@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>What's New in IDL&#160;8.2.1</title>
+        <link href="../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1>What's New in IDL&#160;8.2.1</h1>
+        <h2>Graphics</h2>
+        <h4>Antialiasing</h4>
+        <p>By default, antialiasing is now used when drawing all lines, polygons, shapes, contours, and surface lines in Graphics. The ANTIALIAS property can be used to turn off the default behavior.</p>
+        <p>A new ANTIALIAS property has also been added to <a href="Object Classes/Graphics/IDLgrPolygon_Properties.htm">IDLgrPolygon</a> and <a href="Object Classes/Graphics/IDLgrSurface_Properties.htm">IDLgrSurface</a>. The default value for IDLgrPolygon and IDLgrSurface objects is 0.</p>
+        <h4>Colorbar and Legend</h4>
+        <p>You can now insert a colorbar and a legend from the toolbar in a Graphics window.</p>
+        <h4>Color Tables</h4>
+        <ul>
+            <li value="1">Custom color tables can now be created using the <a href="Reference Material/C/COLORTABLE.htm">COLORTABLE</a> function.</li>
+            <li value="2">Additional color tables based on ColorBrewer schemes are available.</li>
+        </ul>
+        <h4>Graphics Event Handler</h4>
+        <p>You can now easily override the default event-handling behavior on graphics windows. The new EVENT_HANDLER property lets you pass in an object reference to an IDL class that can implement the following methods: ::MouseDown, ::MouseUp, ::MouseMotion, ::MouseWheel, ::KeyHandler, and ::SelectChange. When one of these events is received by the graphics window, the appropriate method is called on your object first. Your object can then perform any necessary actions, and then return either 1 to continue processing the event, or 0 to swallow the event. The EVENT_HANDLER property is available on both the <a href="Reference Material/W/WINDOW.htm">WINDOW</a> object and the <a href="Reference Material/W/WIDGET_WINDOW.htm">WIDGET_WINDOW</a> function. See&#160;<a href="GuideMe/GraphicsEventHandler.htm">Creating an Event Handler Class to Control Events</a> for details on how to write this object class.</p>
+        <h4>PLOT&#160;HISTOGRAM property</h4>
+        <p>
+            <img src="Resources/Images/ex_histogram.png" style="float: right;" />
+        </p>
+        <p>With the HISTOGRAM property, the PLOT&#160;function can now display data in a histogram style, with horizontal and vertical lines connecting each point. For example:</p>
+        <p class="Code">a = findgen(11)</p>
+        <p class="Code">b = 20./(a+1)^2</p>
+        <p class="Code">p1 = PLOT(a, b, '4', /HISTOGRAM, NAME='Theoretical', $</p>
+        <p class="Code_Indented">/YLOG, YRANGE=[0.01,100])</p>
+        <p class="Code">p2 = PLOT(RANDOMU(-1, 11), '4r', NAME='Experimental', $</p>
+        <p class="Code_Indented">TRANSPARENCY=50, /HISTOGRAM, /OVERPLOT)</p>
+        <p class="Code">h = LEGEND(POSITION=[9,50], /DATA)</p>
+        <p>See <a href="Reference Material/P/PLOT.htm">PLOT</a> for more information.</p>
+        <h4>Multiple Plot Layout</h4>
+        <p>When displaying multiple plots in a window, IDL&#160;now automatically calculates margins. You can specify just the order of the plots using the LAYOUT keyword, rather than specifying exact locations using POSITION, as shown below:</p>
+        <p>
+            <img src="Resources/Images/w1.png" />
+        </p>
+        <p class="Code">fn = exp(SIN(FINDGEN(100))^FINDGEN(100))</p>
+        <p class="Code">w1 = WINDOW()</p>
+        <p class="Code">p1 = PLOT(fn, LAYOUT = [1, 2, 1], /CURRENT, TITLE = '1')</p>
+        <p class="Code">p2 = PLOT(fn, LAYOUT = [2, 2, 3], xrange=[25, 42], /CURRENT, TITLE = '2')</p>
+        <p class="Code">p3 = PLOT(fn, LAYOUT = [2, 2, 4], xrange=[50, 60], /CURRENT, TITLE = '3')</p>
+        <p>&#160;</p>
+        <p>The next example displays several plots in a 3x3 matrix in a single window:</p>
+        <p>&#160;</p>
+        <p>
+            <img src="Resources/Images/w2.png" />
+        </p>
+        <p class="Code">w2 = WINDOW(DIMENSIONS=[1200,900])</p>
+        <p class="Code">p = PLOT(/test, LAYOUT=[3, 3, 1], /CURRENT, COLOR='Dark Violet',  TITLE = '1')</p>
+        <p class="Code">p = PLOT(/test, LAYOUT=[3, 3, 2], /CURRENT, COLOR='Dark Orange',  TITLE = '2')</p>
+        <p class="Code">p = PLOT(/test, LAYOUT=[3, 3, 3], /CURRENT, COLOR='Cornflower',  TITLE = '3')</p>
+        <p class="Code">p = PLOT(SQRT(FINDGEN(100)), LAYOUT = [1, 3, 2], COLOR='Lime', /CURRENT, TITLE = '4')</p>
+        <p class="Code">p = PLOT(SIN(FINDGEN(100)), LAYOUT = [3, 3, 7], COLOR='Red', /CURRENT, TITLE = '5')</p>
+        <p class="Code">p = PLOT(SIN(FINDGEN(100)), LAYOUT = [3, 3, 8], COLOR='Dodger Blue', /CURRENT, TITLE = '6')</p>
+        <p class="Code">p = PLOT(SIN(FINDGEN(100)), LAYOUT = [3, 3, 9], COLOR='Forest Green', /CURRENT, TITLE = '7')</p>
+        <p class="Code">&#160;</p>
+        <h4>Miscellaneous Graphics Changes</h4>
+        <ul>
+            <li value="1"><b>Tick Format</b> - The AXIS_STYLE "exponent" value is now available to show exponential notation in plots.</li>
+            <li value="2"><b>Abbreviated Keywords</b> - IDL&#160;Graphics keywords can be abbreviated.</li>
+            <li value="3"><b>POLYGON</b> - Added the RGB_TABLE and VERT_COLORS properties to POLYGON</li>
+            <li value="4"><b>NCDF_CREATE</b> - Added of the NETCDF3_64BIT keyword to NCDF_CREATE</li>
+        </ul>
+        <h2>Widgets</h2>
+        <ul>
+            <li value="1"><b>Combobox</b> - New LIST_EVENTS keyword allows events to be generated when using the arrow keys to navigate combobox items. </li>
+            <li value="2"><b>Table Cell Events</b> - On Windows platforms, the ALL_EVENTS keyword now works as it does in UNIX platforms, returning cell events with keyboard arrow navigation.</li>
+            <li value="3"><b>Tree Scrolling</b> - Tree widgets can be scrolled using a mouse scroll wheel on UNIX&#160;as well as on Windows platforms.</li>
+        </ul>
+        <h2>Workbench</h2>
+        <h4>Class Hierarchy Browser</h4>
+        <p>The Class Hierarchy browser is a view that displays the structure of the object hierarchy. To expose this feature, select <b>Window</b> &gt; <b>Class Hierarchy</b>. </p>
+        <p>
+            <img src="Resources/Images/class_hierarchy.png" />
+        </p>
+        <h4>Macros</h4>
+        <p><b>Macros</b> is a menu option now available in the IDL&#160;Workbench. Macros allow you to assign IDL&#160;code to icons and  keyboard shortcuts. You can use macros for tasks that you repeat often or want to simplify. When you add custom macros, you can define:</p>
+        <ul>
+            <li value="1">The IDL&#160;code that the macro runs</li>
+            <li value="2">The macro name and menu label</li>
+            <li value="3">An icon to display on the macro toolbar</li>
+            <li value="4">A custom tooltip to display on the toolbar icon</li>
+            <li value="5">A keyboard shortcut to run the macro</li>
+        </ul>
+        <h2>Miscellaneous</h2>
+        <ul>
+            <li value="1">The IDLffJPEG2000 object has a new <a href="Object Classes/File Format/IDLffJPEG2000_Properties.htm#GML_ROOT">GML_ROOT_INSTANCE property</a> that provides georeferencing information for JPEG2000 files.</li>
+        </ul>
+        <h4>Proleptic Gregorian Calendar</h4>
+        <p>The <a href="Reference Material/J/JUL2GREG.htm">JUL2GREG</a> and <a href="Reference Material/G/GREG2JUL.htm">GREG2JUL</a> routines let you convert from Julian dates to the proleptic Gregorian calendar and vice versa. The proleptic Gregorian calendar is produced by extending the Gregorian calendar backwards to dates preceding its introduction in 1582. In the proleptic Gregorian calendar, there are no missing days in October 1582, every 4 years is a leap year, except if the year ends in a "00" then it is not a leap year, unless it is also divisible by 400 (in which case it is a leap year).</p>
+        <p>The proleptic Gregorian calendar is usually required for information exchange between international partners, as defined by ISO 8601:2004 (clause 3.2.1). The proleptic Gregorian calendar is not used by astronomers, who instead use the Julian Day Number, as given by the <a href="Reference Material/J/JULDAY.htm">JULDAY</a> function.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

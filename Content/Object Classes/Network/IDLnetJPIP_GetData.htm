@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|Network Object Classes|IDLnetJPIP">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLnetJPIP::GetData</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_network.htm">Network Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLnetJPIP::GetData</span>
+        </div>
+        <h1>IDLnetJPIP::GetData</h1>
+        <p>Use this method to stream image data from a remote JPIP server, or to fetch any portion of the image.  Whether you use this method in the asynchronous or synchronous mode, it does not return until it retrieves and locally decompresses all of the requested image data  from the remote server.</p>
+        <p>Prior to calling GetData,you must set the <a href="IDLnetJPIP_Properties.htm#SERVERNAME">SERVER_NAME</a> property  and call the <a href="IDLnetJPIP_Open.htm">Open method</a>.  IDL will throw an error  if you do not call the Open method prior to calling GetData. You can call GetData  multiple times to retrieve various portions of the image.</p>
+        <p>GetData has two modes of operation: asynchronous and synchronous.  By default GetData operates in the asynchronous mode.   See the SYNCHRONOUS keyword for details.</p>
+        <p>In the asynchronous mode GetData can make two different callbacks.  The first callback provides progressive image updates to the user.  The second callback provides status updates to the user.  Both callbacks provide a way to cancel the GetData request.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This method will throw an error if there is a failure.  Use a catch statement to trap errors.</p>
+        <h2 class="API">Syntax</h2>
+        <p><i>Result</i> = Obj-&gt;[IDLnetJPIP::]GetData(		[, <a href="#COMPONENT" class="selected">COMPONENT</a>=<i>value</i>] [, <a href="#DISCARDLEVELS" class="selected">DISCARD_LEVELS</a>=<i>value</i>]  [, <a href="#INTERVAL" class="selected">INTERVAL</a>=<i>value</i>][, <a href="#MAXLAYERS" class="selected">MAX_LAYERS</a>=<i>value</i>] [, <a href="#NCOMPONENTS" class="selected">N_COMPONENTS</a>=<i>value</i>] [, <a href="#ORDER" class="selected">ORDER</a>=<i>value</i>] [, <a href="#REGION" class="selected">REGION</a>=<i>value</i>]  [, <a href="#SYNCHRONOUS" class="selected">SYNCHRONOUS</a>=<i>value</i>] )</p>
+        <h2 class="API">Return Value</h2>
+        <p>An array with two or three dimensions containing the image data streamed from the remote JPIP server. Dimensions of the result are: [3, Width, Height] if three components were requested or [Width, Height] if one component was requested.</p>
+        <p>The data type of the result is automatically determined using the bit-depth and signed properties of the returned components. For bit-depths &lt;= 8, the result will be of type byte. For bit-depths &gt;= 9 and &lt;= 16, the result will be of type integer or uint. Components with differing bit-depths are not supported. Components which are a mix of signed and unsigned data are not supported.</p>
+        <h2 class="API">Arguments</h2>
+        <p>None</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="COMPONENT"></a>COMPONENT</h3>
+        <p>This keyword is optional integer input. Set this keyword to the desired starting component to be returned.  The default is 0. The number of components can be determined by checking the value of the <a href="IDLnetJPIP_Properties.htm#NCOMPONENTS">N_COMPONENTS</a> property.</p>
+        <h3 class="Keyword"><a name="DISCARDLEVELS"></a>DISCARD_LEVELS</h3>
+        <p>This keyword is optional integer input. Set this keyword to the level desired.  The default is 0 which means no data will be discarded. For example, if the requested region has the dimensions of 1024 x 1024 and this keyword is 0, the returned data will be 1024 x 1024. If the requested region has the dimensions of 1024 x 1024 and this keyword is 1,  the returned data will be 512 x 512.  If the requested region has the dimensions of 1024 x 1024 and the discard level is 2 then the returned data will be 256 x 256.</p>
+        <p>The number of discard levels can be determined by checking the value of the <a href="IDLnetJPIP_Properties.htm#NLEVELS">N_LEVELS</a> property.</p>
+        <h3 class="Keyword"><a name="INTERVAL"></a>INTERVAL</h3>
+        <p>This keyword is an integer and optional.  This keyword, in milliseconds, determines how frequently the progressive callback function is called.  The default value is 1000 (1 second).  To receive progressive callbacks, you must set the <a href="IDLnetJPIP_Properties.htm#PROGRESSIVECALLBACKFUNCTION">PROGRESSIVE_CALLBACK_FUNCTION</a> property.  The progressive callback function is called when the interval elapses and there is new data available.  If the interval elapses and no new data is available, IDL does not call the progressive callback function.  If the <a href="#SYNCHRONOUS" class="selected">SYNCHRONOUS</a> keyword is set,IDL will not make callbacks.</p>
+        <h3 class="Keyword"><a name="MAXLAYERS"></a>MAX_LAYERS</h3>
+        <p>This keyword is optional integer input. Set this keyword to the highest quality layer desired. The default is the value of the <a href="IDLnetJPIP_Properties.htm#NLAYERS">N_LAYERS</a> property, which means IDL combines all of the available layers.  For example, when the MAX_LAYERS keyword is 1 then IDL returns only the data from the first layer. When the MAX_LAYERS keyword is 3, then IDL combines the data from the first, second, and third layers  to form the returned data. </p>
+        <p>You can determine the number of quality layers in a image  by checking the value of the <a href="IDLnetJPIP_Properties.htm#NLAYERS">N_LAYERS property</a>.</p>
+        <h3 class="Keyword"><a name="NCOMPONENTS"></a>N_COMPONENTS</h3>
+        <p>This keyword is and optional integer with possible values of either 1 or 3.  The starting component is set by the <a href="#COMPONENT" class="selected">COMPONENT keyword</a>.</p>
+        <h3 class="Keyword"><a name="ORDER"></a>ORDER</h3>
+        <p>This keyword is optional integer input. JPEG2000 images are stored in top-to-bottom order, while IDL usually assumes images are in bottom-to-top order. By default (ORDER = 0), GetData will automatically flip the JPEG2000 image data to match IDL's bottom-to-top order. Setting ORDER to a nonzero value will return the  image data without doing a vertical flip.</p>
+        <h3 class="Keyword"><a name="REGION"></a>REGION</h3>
+        <p>Optional. Set this keyword to a four-element vector containing the rectangular region of the image to read. The region is specified as [StartX, StartY, Width, Height].  The region must lie with the image boundaries, otherwise IDL produces an error. If you do not set REGION, the StartX will be set to 0, StartY will be set to 0, Width will be set to the Image Width, and Height will be set to the Image Height.</p>
+        <h3 class="Keyword"><a name="SYNCHRONOUS"></a>SYNCHRONOUS</h3>
+        <p>This keyword is an optional boolean input and defaults to 0. Set SYNCHRONOUS to 0 to operate GetData in asynchronous mode, and to 1 to operate in synchronous mode. Whether you use this method in the asynchronous or synchronous mode, it does not return until it retrieves and decompresses all of the requested image data from the server.</p>
+        <p>In the asynchronous mode, GetData can provide:</p>
+        <ul>
+            <li value="1">progressive image callbacks,</li>
+            <li value="2">status callbacks,</li>
+            <li value="3">and the ability to cancel the request.</li>
+        </ul>
+        <p>In the synchronous mode, GetData <b>does not provide</b> any of the above functionality (progressive callbacks, status callbacks, or ability to cancel a request).</p>
+        <h2 class="API">Additional Information on GetData</h2>
+        <h3>Canceling a GetData</h3>
+        <p>You can cancel GetData  via the return value of the callback function. See the callback operation description, below, for details.</p>
+        <h3>Status Callback Operation</h3>
+        <p>The caller must set the <a href="IDLnetJPIP_Properties.htm#STATUSCALLBACKFUNCTION">STATUS_CALLBACK_FUNCTION</a> property to receive status callbacks from this method.  GetData only issues callbacks in the asynchronous mode. The callback is made to a PRO code function which takes two IDL variables as input parameters and returns an integer.</p>
+        <h4>Pro Code Callback Prototype</h4>
+        <p class="Code">Function  Callback_Function_Name, StatusInfo, CallbackData</p>
+        <p class="Code">:		:</p>
+        <p class="Code">: 		:</p>
+        <p class="Code">return vCancelFlag</p>
+        <h4>Callback Prototype Details</h4>
+        <ul>
+            <li value="1"><b>Callback_Function_Name:</b> The name of the PRO code function called is set in the <a href="IDLnetJPIP_Properties.htm#STATUSCALLBACKFUNCTION">STATUS_CALLBACK_FUNCTION</a> property.</li>
+            <li value="2"><b>Status_Info:</b> The first input parameter is an array of IDL strings that contain status information about GetData.  When the caller is a user interface (UI), it will typically display the array of strings in a text widget.</li>
+            <li value="3"><b>Callback_Data:</b> The second input parameter is the <a href="IDLnetJPIP_Properties.htm#STATUSCALLBACKDATA">STATUS_CALLBACK_DATA</a> property that can be set prior to calling GetData. The callback data property is passed onto the callback function unmodified. The contents of the callback data are determined by the user.   When the caller is a UI, the callback data will typically contain a pointer to a structure containing all the info needed to display the status info strings. If the callback data property has not been set, the callback data will be an integer  set to 0.</li>
+            <li value="4"><b>Return Value:</b> The return value is an integer.  You can use the return value to cancel GetData.  When the return value is 1 GetData will continue and when  0, GetData will be canceled.  When the return value indicates that the GetData is to be canceled this method will cancel the stream from the remote server.  When the caller is a UI and it has a cancel button, the UI can check for a cancel widget event during each callback.</li>
+        </ul>
+        <h3>Progressive Callback Operation</h3>
+        <p>The caller must set the <a href="IDLnetJPIP_Properties.htm#PROGRESSIVECALLBACKFUNCTION">PROGRESSIVE_CALLBACK_FUNCTION</a> property to receive progressive callbacks from this method. GetData only issues callbacks in the asynchronous mode.  The callback is made to a PRO code function.  The function takes two IDL variables as input parameters and returns an integer.</p>
+        <h4>Pro Code Callback Prototype</h4>
+        <p class="Code">Function  Callback_Function_Name, ImageBuffer, CallbackData</p>
+        <p class="Code">:		:</p>
+        <p class="Code">: 		:</p>
+        <p class="Code">return vCancelFlag</p>
+        <h4>Callback Prototype Details</h4>
+        <ul>
+            <li value="1"><b>Callback_Function_Name:</b> Set the name of the PRO code function called in the <a href="IDLnetJPIP_Properties.htm#PROGRESSIVECALLBACKFUNCTION">PROGRESSIVE_CALLBACK_FUNCTION</a> property.</li>
+            <li value="2"><b>ImageBuffer:</b> The first input parameter is an ImageBuffer containing the current state of the requested data.  During each progressive callback, the image data will become progressively more complete. Display the progressive image updates in a UI so that the user sees the image build up to its final results as more of the image data is streamed from the remote JPIP server.  The ImageBuffer is an array with two or three dimensions containing the image data streamed from the remote JPIP server. Dimensions of the result are: [3, Width, Height] if three components were requested or [Width, Height] if one component was requested. The data type of the ImageBuffer is automatically determined using the bit-depth and signed properties of the returned components. For bit-depths &lt;= 8 the result will be of type byte. For bit-depths &gt;= 9 and &lt;= 16 the result will be of type integer or uint. Components with differing bit-depths are not supported. Components which are a mix of signed and unsigned data are not supported</li>
+            <li value="3"><b>Callback_Data:</b> The second input parameter is the <a href="IDLnetJPIP_Properties.htm#PROGRESSIVECALLBACKDATA">PROGRESSIVE_CALLBACK_DATA</a> property that can be set prior to calling GetData. The callback data property is passed onto the callback function unmodified. The contents of the callback data is determined by the user.   When the caller is a UI, the callback data will typically contain a pointer to a structure containing all the info needed to display the image data.  If the callback data property has not been set then the callback data will be an integer  set to 0.</li>
+            <li value="4"><b>Return Value:</b> The return value is an integer.  The return value can be used to cancel GetData.  When the return value is 1 GetData will continue and when 0, GetData will be canceled.  When the return value indicates that GetData is to be canceled this method will cancel the stream from the remote server.  When the caller is a UI and it has a cancel button, the UI can check for a cancel widget event during each callback.</li>
+        </ul>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 32px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

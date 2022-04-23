@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: L">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>LSODE </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="L_list.htm">Routines: L</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">LSODE</span>
+        </div>
+        <h1 class="Routine"><a name="L_826528365_916288"></a><a name="kanchor1713"></a><a name="L_826528365_26443"></a>LSODE </h1>
+        <p><a name="kanchor1714"></a>The LSODE function uses adaptive numerical methods to advance a solution to a system of ordinary differential equations one time-step H, given values for the variables <i>Y</i> and <i>X</i>.</p>
+        <h2 class="API"><a name="L_826528365_859140"></a><a name="L_826528365_859140_PageTOC_LSODE_"></a>Examples</h2>
+        <p>To integrate the example system of differential equations:</p>
+        <p class="Code">FUNCTION spring_friction, t, xv</p>
+        <p class="Code_Indented">v = xv[1]</p>
+        <p class="Code_Indented">x = xv[0]</p>
+        <p class="Code_Indented">RETURN, [v, -v - x]</p>
+        <p class="Code">END</p>
+        <p class="Code">
+            <br />
+        </p>
+        <p class="Code">PRO LSODETEST</p>
+        <p class="Code_Indented">; Define the step size</p>
+        <p class="Code_Indented">H = 0.1</p>
+        <p class="Code_Indented">; Define x position of the spring</p>
+        <p class="Code_Indented">X = 0.0</p>
+        <p class="Code_Indented">
+            <br />
+        </p>
+        <p class="Code_Indented">; y[0] is your starting point</p>
+        <p class="Code_Indented">; y[1] is the amplitude of the first bump</p>
+        <p class="Code_Indented">yy=10</p>
+        <p class="Code_Indented">y = [1, 2*yy/10.]</p>
+        <p class="Code_Indented">result = fltarr(2,100)</p>
+        <p class="Code_Indented">FOR i=0,99 DO BEGIN</p>
+        <p class="Code_Indented">x = i*h</p>
+        <p class="Code_Indented">result[*,i] = LSODE(Y, X, H, 'spring_friction')</p>
+        <p class="Code_Indented">y = result[*,i]</p>
+        <p class="Code_Indented">ENDFOR</p>
+        <p class="Code_Indented">p=plot(findgen(100)*h, result[0,*])</p>
+        <p class="Code">END</p>
+        <p class="Code">
+            <br />
+        </p>
+        <p class="Code">LSODETEST</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="L_826528365_859118"></a><a name="L_826528365_859118_PageTOC_LSODE_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = LSODE( <i>Y</i>,<i> X</i>,<i> H</i>,<i> Derivs</i>[,&#160;<i>Status</i>] [,&#160;<a href="#L_826528365_904984" class="selected">ATOL</a>=<i>value</i>] [,&#160;/<a href="#L_826528365_1014877" class="selected">QUIET</a>] [,&#160;<a href="#L_826528365_905036" class="selected">RTOL</a>=<i>value</i>] )</p>
+        <h2 class="API"><a name="L_826528365_963173"></a><a name="L_826528365_92021"></a>Return Value</h2>
+        <p>Returns the solution in a vector with the same number of elements as Y.</p>
+        <h2 class="API"><a name="L_826528365_859120"></a><a name="L_826528365_859120_PageTOC_LSODE_"></a>Arguments</h2>
+        <h3 class="Argument">Y</h3>
+        <p>A vector of values for Y at X</p>
+        <h3 class="Argument">X</h3>
+        <p>A scalar value for the initial condition.</p>
+        <h3 class="Argument">H</h3>
+        <p>A scalar value giving interval length or step size.</p>
+        <h3 class="Argument">Derivs</h3>
+        <p>A scalar string specifying the name of a user-supplied IDL function that calculates the values of the derivatives <i>Dydx</i> at X. This function must accept two arguments: A scalar floating value <i>X</i>, and an <i>n</i>-element vector <i>Y</i>. It must return an <i>n</i>-element vector result.</p>
+        <p>For example, suppose the values of the derivatives are defined by the following relations:</p>
+        <p class="indent"><i>dy</i><sub>0 </sub>/ <i>dx</i> = –0.5<i>y</i><sub>0,</sub>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<i>dy</i><sub>1</sub> / <i>dx</i> = 4.0 – 0.3<i>y</i><sub>1</sub> – 0.1<i>y</i><sub>0</sub></p>
+        <p>We can write a function called <code>differential</code> to express these relationships in the IDL language:</p>
+        <p class="Code">FUNCTION differential, X, Y</p>
+        <p class="Code">&#160;&#160;&#160;RETURN, [-0.5 * Y[0], 4.0 - 0.3 * Y[1] - 0.1 * Y[0]]</p>
+        <p class="Code">END</p>
+        <h3 class="Argument">Status</h3>
+        <p>The status of the result. This argument contains a positive value if the function was successfully completed. Negative values indicate different errors.</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Output Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p> Nothing occurred.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>The integration was performed successfully, and no roots were found.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The integration was successful, and one or more roots were found.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>-1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>An excessive amount of work was done on this call, but the integration was otherwise successful. </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>-2 </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The precision of the machine being used is insufficient for the requested amount of accuracy. Integration was successful. </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>-3 </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Illegal input was detected, before processing any integration steps. If the solver detects an infinite loop of calls to the solver with illegal input, it will cause the run to stop.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>-4 </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>There were repeated error test failures on one attempted step, before completing the requested task, but the integration was successful. The problem may have a singularity, or the input may be inappropriate.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>-5 </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>There were repeated convergence test failures on one attempted step, before completing the requested task, but the integration was successful. This may be caused by an inaccurate jacobian matrix, if one is being used.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>-6 </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Error weight vector for element <i>i</i> became zero during the integration. Pure relative error control was requested on a variable which has now vanished. Integration was successful.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="L_826528365_904981"></a><a name="L_826528365_904981_PageTOC_LSODE_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="L_826528365_904984"></a><a name="L_826528365_904984_Keywords_LSODE__"></a>ATOL</h3>
+        <p>A scalar or array value that specifies the absolute tolerance. The default value is 1.0e-7. Use ATOL&#160;=&#160;0.0 (or ATOL[<i>i</i>]&#160;=&#160;0.0) for pure relative error control, and use RTOL&#160;=&#160;0.0 for pure absolute error control. For an explanation of how to use ATOL and RTOL together, see RTOL below.</p>
+        <h3 class="Keyword"><a name="L_826528365_1014877"></a><a name="L_826528365_1014877_Keywords_LSODE__"></a>QUIET</h3>
+        <p>Set this keyword to suppress warning messages. By default, warning messages will be output to the screen.</p>
+        <h3 class="Keyword"><a name="L_826528365_905036"></a><a name="L_826528365_905036_Keywords_LSODE__"></a>RTOL</h3>
+        <p>A scalar value that specifies the relative tolerance. The default value is 1.0e-7. Use RTOL&#160;=&#160;0.0 for pure absolute error control, and use ATOL&#160;=&#160;0.0 (or ATOL[<i>i</i>]&#160;=&#160;0.0) for pure relative error control. </p>
+        <p>The estimated local error in the Y[<i>i</i>] argument will be controlled to be less than</p>
+        <p class="Code">ewt[i] = RTOL*abs(Y[i]) + ATOL &#160;&#160;&#160;; If ATOL is a scalar.</p>
+        <p class="Code">ewt[i] = RTOL*abs(Y[i]) + ATOL[i] ; If ATOL is an array.</p>
+        <p>Thus, the local error test passes if, in each component, either the absolute error is less than ATOL (or ATOL[<i>i</i>]), or if the relative error is less than RTOL.</p>
+        <p class="Warning">Actual, or global, errors might exceed these local tolerances, so choose values for ATOL and RTOL conservatively.</p>
+        <h2 class="API"><a name="L_826528365_881529"></a><a name="L_826528365_881529_PageTOC_LSODE_"></a>See Also</h2>
+        <p><a href="../D/DERIV.htm#D_843829869_1032874">DERIV</a>, <a href="../D/DERIVSIG.htm#D_843829869_757924">DERIVSIG</a>, <a href="../R/RK4.htm#R_822202989_51742">RK4</a></p>
+        <h2 class="API"><a name="L_826528365_881785_PageTOC_LSODE_"></a>References</h2>
+        <ol>
+            <li value="1">Alan C. Hindmarsh, ODEPACK, A Systematized Collection of ODE Solvers, in Scientific Computing, R. S. Stepleman et al. (eds.), North-Holland, Amsterdam, 1983, pp. 55-64. </li>
+            <li value="2">Linda R. Petzold, Automatic Selection of Methods for Solving Stiff and Nonstiff Systems of Ordinary Differential Equations, SIAM J. SCI. STAT. COMPUT. 4 (1983), pp. 136-148. </li>
+            <li value="3">Kathie L. Hiebert and Lawrence F. Shampine, Implicitly Defined Output Points for Solutions of ODE’s, Sandia Report SAND80-0180, February, 1980.</li>
+        </ol>
+        <h2 class="API"><a name="L_826528365_952439"></a><a name="L_826528365_952439_PageTOC_LSODE_"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>5.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added QUIET keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

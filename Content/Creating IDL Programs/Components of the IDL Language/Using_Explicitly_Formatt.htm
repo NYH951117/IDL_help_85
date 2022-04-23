@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Miscellaneous Topics">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Using Formatted Input and Output</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../MiscellaneousLanguageTopics.htm">Miscellaneous Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Formatted Input and Output</span>
+        </div>
+        <h1><a name="files_2839720996_168597"></a><a name="files_2839720996_50524"></a><a name="kanchor4799"></a>Using Formatted Input and Output</h1>
+        <p>The FORMAT keyword can be used with the <a name="kanchor4800"></a>formatted input/output routines to explicitly specify the appearance of the data. The standard syntax of IDL format strings is similar to that used in FORTRAN; a C printf()-style syntax is also supported, as described in <a href="Format_Codes.htm#files_2839720996_2841070">C printf-Style Quoted String Format Code</a>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDL uses the standard I/O function <code>sprintf</code> to do its formatting. Different platforms implement this function in different ways, which may lead to slight inconsistencies in the appearance of the output.</p>
+        <p>The format string specifies the format in which data is to be transferred as well as the data conversion required to achieve that format. The format specification strings supplied by the FORMAT keyword have the form:</p>
+        <p class="Code">FORMAT = '(q<sub>1</sub>f<sub>1</sub>s<sub>1</sub>f<sub>2</sub>s<sub>2</sub> ... f<sub class="italic">n</sub>q<sub class="italic">n</sub>)'</p>
+        <p>where <i>q</i>, <i>f</i>, and <i>s</i> are described below.</p>
+        <h3>Record Terminators</h3>
+        <p><i>q</i> is zero or more slash (/) record terminators. On output, each record terminator causes the output to move to a new line. On input, each record terminator causes the next line of input to be read.</p>
+        <h3>Format Codes</h3>
+        <p><i>f</i> is a format code. Some format codes specify how data should be transferred while others control some other function related to how input/output is handled.<i></i>The code <i>f</i> can also be a nested format specification enclosed in parentheses. This is called a <i>group specification</i> and has the following form:</p>
+        <p class="Code">...[n](q<sub>1</sub>f<sub>1</sub>s<sub>1</sub>f<sub>2</sub>s<sub>2</sub> ... f<sub class="italic">n</sub>q<sub class="italic">n</sub>) ...</p>
+        <p>A group specification consists of an optional repeat count <code>n</code> followed by a format specification enclosed in parentheses. Use of group specifications allows more compact format specifications to be written. For example, the format specification:</p>
+        <p class="Code">FORMAT = '("Result: ", "&lt;",I5,"&gt;", "&lt;",I5,"&gt;")'</p>
+        <p>can be written more concisely using a group specification:</p>
+        <p class="Code">FORMAT = '("Result: ", 2("&lt;",I5,"&gt;"))'</p>
+        <p>If the repeat count is 1 or is not given, the parentheses serve only to group format codes for use in format reversion (discussed in the next section). Format codes and their syntax are described in detail in <a href="Format_Codes.htm#files_2839720996_168633">Format Codes</a>.</p>
+        <h3>Field Separators</h3>
+        <p><i>s</i> is a field separator. A field separator consists of one or more commas (,) and/or slash record terminators (/). The only restriction is that two commas cannot occur side-by-side.</p>
+        <p>The arguments provided in a call to a formatted input/output routine are called the <i>argument list</i>. The argument list specifies the data to be moved between memory and the file. All data are handled in terms of basic IDL components. Thus, an array is considered to be a collection of scalar data elements, and a structure is processed in terms of its basic components. Complex scalar values are treated as two floating-point values.</p>
+        <h2 class="API"><a name="files_2839720996_81579"></a>Rules for Explicitly Formatted Input/Output</h2>
+        <p>IDL uses the following rules to process explicitly formatted input/output:</p>
+        <ol>
+            <li value="1">Traverse the format string from left to right, processing each record terminator and format code until an error occurs or no data is left in the argument list. The comma field separator serves no purpose except to delimit the format codes.</li>
+            <li value="2">It is an error to specify an argument list with a format string that does not contain a format code that transfers data to or from the argument list because an infinite loop would result.</li>
+            <li value="3">When a slash record terminator (/) is encountered, the current record is completed, and a new one is started. For output, this means that a new line is started. For input, it means that the rest of the current input record is ignored, and the next input record is read.</li>
+            <li value="4">
+                <p>When a format code that does not transfer data to or from the argument list is encountered, process it according to its meaning. The format codes that do not transfer data to or from the argument list are summarized here.</p>
+                <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+                    <col />
+                    <col />
+                    <thead>
+                        <tr>
+                            <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                                <p>Code</p>
+                            </td>
+                            <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                                <p>Action</p>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                                <p>Quoted String</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                                <p>On output, the contents of the string are written out. On input, quoted strings are ignored.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                                <p style="margin-bottom: 3pt;font-family: Courier;font-size: 10pt;"><code>:</code>
+                                </p>
+                            </td>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                                <p>The colon format code in a format string terminates format processing if no more items remain in the argument list. It has no effect if data still remains on the list.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                                <p style="margin-bottom: 3pt;font-family: Courier;font-size: 10pt;"><code>$</code>
+                                </p>
+                            </td>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                                <p>On output, if a <code>$</code> format code is placed anywhere in the format string, the new line implied by the closing parenthesis of the format string is suppressed. On input, the <code>$</code> format code is ignored. </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                                <p><i>n</i><code>H</code>
+                                </p>
+                            </td>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                                <p>FORTRAN-style Hollerith string. Hollerith strings are treated exactly like quoted strings.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                                <p><i>n</i><code>X</code>
+                                </p>
+                            </td>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                                <p>Skips <i>n</i> character positions.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                                <p><code>T</code><i>n</i>
+                                </p>
+                            </td>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                                <p>Tab. Sets the character position of the next item to the <i>n</i>-th position in the current record.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                                <p><code>TL</code><i>n</i>
+                                </p>
+                            </td>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                                <p>Tab Left. Specifies that the next character to be transferred to or from the current record is the <i>n</i>-th character to the left of the current position.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                                <p><code>TR</code><i>n</i>
+                                </p>
+                            </td>
+                            <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                                <p>Tab Right. Specifies that the next character to be transferred to or from the current record is the <i>n</i>-th character to the right of the current position.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </li>
+            <li value="5">
+                <p>When a format code that transfers data to or from the argument list is encountered, it is matched up with the next datum in the argument list. The format codes that transfer data to or from the argument list are summarized in the following table.</p>
+                <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+                    <col />
+                    <col />
+                    <thead>
+                        <tr>
+                            <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                                <p>Code</p>
+                            </td>
+                            <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                                <p>Action</p>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                                <p>A</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                                <p>Transfer character data.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                                <p>B</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                                <p>Transfer binary data.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                                <p>C()</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                                <p>Transfer calendar (Julian date and/or time) data.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                                <p>D</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                                <p>Transfer double-precision, floating-point data.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                                <p>E</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                                <p>Transfer floating-point data using scientific (exponential) notation.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                                <p>F</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                                <p>Transfer floating-point data.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                                <p>G</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                                <p>Use F or E format depending on the magnitude of the value being processed.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                                <p>I</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                                <p>Transfer integer data.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                                <p>O</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                                <p>Transfer octal data.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                                <p>Q</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                                <p>Obtain the number of characters in the input record remaining to be transferred during a read operation. In an output statement, the Q format code has no effect except that the corresponding input/output list element is skipped.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                                <p>Z</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                                <p>Transfer Hexadecimal data.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </li>
+            <li value="6">On input, read data from the file and format it according to the format code. If the data type of the input data does not agree with the data type of the variable that is to receive the result, do the type conversion if possible; otherwise, issue a type conversion error and stop.</li>
+            <li value="7">On output, write the data according to the format code. If the data type does not agree with the format code, do the type conversion prior to doing the output if possible. If the type conversion is not possible, issue a type conversion error and stop.</li>
+            <li value="8">If the last closing parenthesis of the format string is reached and there are no data left on the argument list, then format processing terminates. If, however, there are still data to be processed on the argument list, then part or all of the format specification is reused. This process is called <i>format reversion</i>.</li>
+        </ol>
+        <h2 class="API"><a name="kanchor4801"></a><a name="files_2839720996_12342"></a>Format Reversion</h2>
+        <p>In format reversion, the current record is terminated, a new one is initiated, and format control reverts to the group repeat specification whose opening parenthesis matches the next-to-last closing parenthesis of the format string. If the format does not contain a group repeat specification, format control returns to the initial opening parenthesis of the format string. For example, the IDL command:</p>
+        <p class="Code">PRINT, FORMAT = '("The values are: ", 2("&lt;", I1, "&gt;"))', $</p>
+        <p class="Code">&#160;&#160;&#160;INDGEN(6)</p>
+        <p>results in the output</p>
+        <p class="Code">The values are: &lt;0&gt;&lt;1&gt;</p>
+        <p class="Code">&lt;2&gt;&lt;3&gt;</p>
+        <p class="Code">&lt;4&gt;&lt;5&gt;</p>
+        <p>The process involved in generating this output is as follows:</p>
+        <ol>
+            <li value="1">Output the string “The values are: ”.</li>
+            <li value="2">Process the group specification and output the first two values. The end of the format specification is encountered, so end the output record. Data are remaining, so move back to the group specification<br /><code>&#160;&#160;&#160;&#160;&#160;&#160;&#160;2("&lt;", I1, "&gt;")</code><br />by format reversion.</li>
+            <li value="3">Repeat Step 2 until no data remain. End the output record. Format processing is complete.</li>
+        </ol>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

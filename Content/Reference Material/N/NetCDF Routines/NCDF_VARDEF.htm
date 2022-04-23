@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: N|NCDF Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>NCDF_VARDEF</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../N_list.htm">Routines: N</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../NCDF_Routines.htm">NCDF Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">NCDF_VARDEF</span>
+        </div>
+        <h1 class="Routine"><a name="netCDF_2618656010_1007227"></a><a name="netCDF_2618656010_10272"></a>NCDF_VARDEF</h1>
+        <p>The <a name="kanchor1940"></a>NCDF_VARDEF function adds a new variable to an open NetCDF file in define mode.</p>
+        <p>By default, a new NetCDF variable is chunked (meaning that the data is copied from disk into memory in discrete chunks). You can change the data chunk size with the CHUNK_DIMENSIONS keyword, or set the variable to be stored contiguously.</p>
+        <h2 class="API"><a name="netCDF_2618656010_1000528_PageTOC_NCDF_VARDEF_"></a>Examples</h2>
+        <p>For more information on using NCDF_VARDEF, see <a href="#Addition" class="selected">Additional Examples</a>.</p>
+        <h3>Example 1</h3>
+        <p>In the following example, we create a NetCDF file, define its structure, and populate it with data. Click on both sections to execute the entire sample.</p>
+        <p class="Code">id = NCDF_CREATE('test.nc', /CLOBBER) ; Create the NetCDF file.<br />NCDF_ATTPUT, id, 'TITLE', 'Incredibly Important Data', /GLOBAL<br />NCDF_ATTPUT, id, 'GALAXY', 'Milky Way', /GLOBAL<br />NCDF_ATTPUT, id, 'PLANET', 'Earth', /GLOBAL<br />xid = NCDF_DIMDEF(id, 'x', 100) ; Define the X dimension.<br />yid = NCDF_DIMDEF(id, 'y', 200) ; Define the Y dimension.<br />zid = NCDF_DIMDEF(id, 'z', /UNLIMITED) ; Define the Z dimension.<br />vid0 = NCDF_VARDEF(id, 'image0', [yid, xid], /FLOAT)<br />vid1 = NCDF_VARDEF(id, 'image1', [yid, xid], /FLOAT)</p>
+        <p>&#160;</p>
+        <p class="Code">; Rename image0 to dist_image:<br />dist_id = NCDF_VARID(id, 'image0')<br />NCDF_VARRENAME, id, vid0, 'dist_image'<br />NCDF_ATTPUT, id, vid0, 'TITLE', 'DIST_IMAGE'<br />NCDF_CONTROL, id, /ENDEF ; Put the file into data mode.<br />image = CONGRID(DIST(200), 200, 100)<br />NCDF_VARPUT, id, vid0, image<br />INQ_VID = NCDF_VARINQ(id, 'dist_image')<br />HELP, INQ_VID, /STRUCTURE<br />file_inq = NCDF_INQUIRE(id)<br />HELP, file_inq, /STRUCTURE<br />NCDF_CLOSE, id ; Close the NetCDF file.</p>
+        <h4>IDL Output</h4>
+        <p class="Code">** Structure &lt;415a7d8&gt;, 5 tags, length=40, data length=40, refs=1:</p>
+        <p class="Code">   NAME            STRING    'dist_image'</p>
+        <p class="Code">   DATATYPE        STRING    'FLOAT'</p>
+        <p class="Code">   NDIMS           LONG                 2</p>
+        <p class="Code">   NATTS           LONG                 1</p>
+        <p class="Code">   DIM             LONG      Array[2]**</p>
+        <p class="Code">** Structure &lt;412da40&gt;, 4 tags, length=16, data length=16, refs=1:</p>
+        <p class="Code">   NDIMS           LONG                 3</p>
+        <p class="Code">   NVARS           LONG                 2</p>
+        <p class="Code">   NGATTS          LONG                 3</p>
+        <p class="Code">   RECDIM          LONG                 2</p>
+        <h2 class="API"><a name="netCDF_2618656010_997446_PageTOC_NCDF_VARDEF_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = NCDF_VARDEF(<i> Cdfid</i>, <i>Name</i> [,&#160;<i>Dim</i>] [,&#160;/<a href="#netCDF_2618656010_1007308" class="selected">BYTE</a> | , /<a href="#netCDF_2618656010_1007311" class="selected">CHAR</a> | , /<a href="#netCDF_2618656010_1007330" class="selected">DOUBLE</a> | , /<a href="#netCDF_2618656010_1007333" class="selected">FLOAT</a> | , /<a href="#netCDF_2618656010_1007343" class="selected">LONG</a> | , /<a href="#netCDF_2618656010_1007346" class="selected">SHORT</a>] [,&#160;<a href="#netCDF_2618656010_1007314" class="selected">CHUNK_DIMENSIONS</a>] [,&#160;/<a href="#netCDF_2618656010_1007324" class="selected">CONTIGUOUS</a>] [,&#160;<a href="#netCDF_2618656010_1007336" class="selected">GZIP</a>=<i>value</i>] [,&#160;/<a href="#netCDF_2618656010_1007349" class="selected">SHUFFLE</a>] [, /<a href="#STRING" class="selected">STRING</a>] [, /<a href="#UBYTE" class="selected">UBYTE</a>] [, /<a href="#UINT64" class="selected">UINT64</a>] [, /<a href="#ULONG" class="selected">ULONG</a>] [, /<a href="#USHORT" class="selected">USHORT</a>])</p>
+        <h2 class="API"><a name="netCDF_2618656010_1020201_PageTOC_NCDF_VARDEF_"></a>Return Value</h2>
+        <p>If successful, the variable ID is returned. If a new variable cannot be defined, NCDF_VARDEF returns -1.</p>
+        <h2 class="API"><a name="netCDF_2618656010_997448_PageTOC_NCDF_VARDEF_"></a>Arguments</h2>
+        <h3 class="Argument">Cdfid</h3>
+        <p>The NetCDF ID, returned from a previous call to <a href="NCDF_OPEN.htm#netCDF_2618656010_1007165">NCDF_OPEN</a>, <a href="NCDF_CREATE.htm#netCDF_2618656010_1006152">NCDF_CREATE</a>, or <a href="NCDF_GROUPDEF.htm#netCDF_2618656010_1006704">NCDF_GROUPDEF</a>.</p>
+        <h3 class="Argument">Name</h3>
+        <p>A scalar string containing the variable name.</p>
+        <h3 class="Argument">Dim</h3>
+        <p>An optional vector containing the dimension IDs corresponding to the variable dimensions. If the ID of the unlimited dimension is included, it must be the rightmost element in the array. If <i>Dim</i> is omitted, the variable is assumed to be a scalar.</p>
+        <h2 class="API"><a name="netCDF_2618656010_997455_PageTOC_NCDF_VARDEF_"></a>Keywords</h2>
+        <p>The following keywords specify the data type for the variable. Only one of these keywords can be used. If no data type keyword is specified, FLOAT is used by default.</p>
+        <h3 class="Keyword"><a name="netCDF_2618656010_1007308"></a><a name="netCDF_2618656010_997458_Keywords_NCDF_VARDEF_"></a>BYTE</h3>
+        <p>Set this keyword to indicate that the data is composed of bytes.</p>
+        <h3 class="Keyword"><a name="netCDF_2618656010_1007311"></a><a name="netCDF_2618656010_997461_Keywords_NCDF_VARDEF_"></a>CHAR</h3>
+        <p>Set this keyword to indicate that the data is composed of bytes (assumed to be ASCII).</p>
+        <h3 class="Keyword"><a name="netCDF_2618656010_1007314"></a><a name="netCDF_2618656010_33199"></a>CHUNK_DIMENSIONS</h3>
+        <p>Set this keyword equal to a vector containing the chunk dimensions for the variable.</p>
+        <p>A new NetCDF variable is chunked by default, using a default chunk value that is the full dimension size for limited dimensions, and 1 for unlimited dimensions.</p>
+        <p>CHUNK_DIMENSIONS must have the same number of elements as the number of dimensions specified by <i>Dim</i>.</p>
+        <p>If the CONTIGUOUS keyword is set, the value of the CHUNK_DIMENSIONS keyword is ignored.</p>
+        <h3 class="Keyword"><a name="netCDF_2618656010_1007324"></a><a name="netCDF_2618656010_64159"></a>CONTIGUOUS</h3>
+        <p>Set this keyword to store a NetCDF variable as a single array in a file. Contiguous storage works well for smaller variables such as coordinate variables. </p>
+        <p>Contiguous storage works only for fixed-sized datasets (those without any unlimited dimensions). You can’t use compression or other filters with contiguous data.</p>
+        <p>If the CONTIGUOUS keyword is set, the value of the CHUNK_DIMENSIONS keyword is ignored.</p>
+        <p>The CONTIGUOUS keyword is ignored if the GZIP keyword is set.</p>
+        <h3 class="Keyword"><a name="netCDF_2618656010_1007330"></a><a name="netCDF_2618656010_997464_Keywords_NCDF_VARDEF_"></a>DOUBLE</h3>
+        <p>Set this keyword to indicate that the data is composed of double-precision floating-point numbers.</p>
+        <h3 class="Keyword"><a name="netCDF_2618656010_1007333"></a><a name="netCDF_2618656010_997467_Keywords_NCDF_VARDEF_"></a>FLOAT</h3>
+        <p>Set this keyword to indicate that the data is composed of floating-point numbers.</p>
+        <h3 class="Keyword"><a name="netCDF_2618656010_1007336"></a><a name="netCDF_2618656010_28776"></a>GZIP</h3>
+        <p>Set this keyword to an integer between zero and nine to specify the level of GZIP compression applied to the variable. Lower compression values result in faster but less efficient compression.</p>
+        <p>This keyword is ignored if the CHUNK_DIMENSIONS keyword is not set.</p>
+        <p>This keyword is ignored if the CONTIGUOUS keyword is set.</p>
+        <p>If the GZIP keyword is set, the CONTIGUOUS keyword is ignored.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You can only use GZIP compression with NCDF 4 files.</p>
+        <h3 class="Keyword"><a name="netCDF_2618656010_1007343"></a><a name="netCDF_2618656010_997470_Keywords_NCDF_VARDEF_"></a>LONG</h3>
+        <p>Set this keyword to indicate that the data is composed of longword integers.</p>
+        <h3 class="Keyword"><a name="netCDF_2618656010_1007346"></a><a name="netCDF_2618656010_997473_Keywords_NCDF_VARDEF_"></a>SHORT</h3>
+        <p>Set this keyword to indicate that the data is composed of 2-byte integers.</p>
+        <h3 class="Keyword"><a name="netCDF_2618656010_1007349"></a><a name="netCDF_2618656010_66226"></a>SHUFFLE</h3>
+        <p>Set this keyword to apply the shuffle filter to the variable. If the GZIP keyword is not set, this keyword is ignored.</p>
+        <p>The shuffle filter de-interlaces blocks of data by reordering individual bytes. Byte shuffling can sometimes increase compression density because bytes in the same block positions often have similar values, and grouping similar values together often leads to more efficient compression.</p>
+        <p>&#160;</p>
+        <p />
+        <p>The previous diagram shows three elements of Array A, where each element variable consists of four bytes. Before byte shuffling, the three variables are represented contiguously in memory as the sequence 012301230123. After byte shuffling, all the bytes in byte position 0 are grouped together, all the bytes in byte position 1 are grouped together, and so on. Now the three variables are represented in memory by the sequence 000111222333.</p>
+        <h3 class="Keyword"><a name="STRING"></a>STRING</h3>
+        <p>Set this keyword to indicate that the data is composed of string.</p>
+        <h3 class="Keyword"><a name="UBYTE"></a>UBYTE</h3>
+        <p>Set this keyword to indicate that the data is composed of unsigned bytes.</p>
+        <h3 class="Keyword"><a name="UINT64"></a>UINT64</h3>
+        <p>Set this keyword to indicate that the data is composed of unsigned eight-byte integers.</p>
+        <h3 class="Keyword"><a name="ULONG"></a>ULONG</h3>
+        <p>Set this keyword to indicate that the data is composed of unsigned four-byte integers.</p>
+        <h3 class="Keyword"><a name="USHORT"></a>USHORT</h3>
+        <p>Set this keyword to indicate that the data is composed of unsigned two-byte integers.</p>
+        <h2 class="API"><a name="netCDF_2618656010_89830"></a>Data Chunking</h2>
+        <h3>Overview</h3>
+        <p>A data chunk is a hyper-rectangle of any size. When a dataset is chunked, each chunk is read or written as a single I/O operation, and is individually passed from stage to stage of the pipeline and filters.</p>
+        <p>Upon creation, a NCDF 4 variable is chunked by default (although you can choose to create a contiguous variable). A variable’s chunking setting is established when the variable is created, and can never be changed. You must chunk a variable that uses one or more unlimited dimensions, compression, or a filter.</p>
+        <h3>Choosing Chunk Sizes</h3>
+        <p>When choosing chunk sizes, you should consider:</p>
+        <ul>
+            <li value="1">The dataset size</li>
+            <li value="2">The data size</li>
+            <li value="3">How the data will be read</li>
+            <li value="4">The operating system</li>
+        </ul>
+        <p>Improper chunk sizes can drastically inflate the size of the resulting file or greatly slow the reading of the data. Choose a chunk size such that the subsets of data you are accessing fit into a chunk (the chunks should be as large, or larger than, the subsets you are reading/writing). For an immutable dimension, a rule of thumb is to choose a value that is evenly divisible into the dimension size. Values of less than 100 for variables with dimensions greater than 1000 can result in bloated file sizes.</p>
+        <p>When creating a NCDF 4 variable, the default chunk value is the full dimension size for limited dimensions, and 1 for unlimited dimensions. However, these values are inefficient for high-performance applications, or for very large (&gt; 2 GB) variables.</p>
+        <p>You can improve chunking performance by ensuring the cache is large enough to hold at least one chunk. If your machine has a large amount of RAM, you can increase your chunk and cache sizes so that your program reads and writes data in large blocks.</p>
+        <h2 class="API"><a name="Addition"></a>Additional Examples</h2>
+        <h3>Example 2</h3>
+        <p>This code sample shows how one might chunk a NetCDF 4 file dataset. Click on both sections to execute the entire sample.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Wait for the first section of the code sample to complete before executing the second section (there may be a delay while reading and writing the large amount of data involved).</p>
+        <p class="Code">filename = FILEPATH('nc_chunking_test.nc', /TMP)<br /><br />; Create the NCDF 4 file. If the file already exists, destroy<br />; it and create a new one.<br />id = NCDF_CREATE(filename, /NETCDF4_FORMAT, /CLOBBER)<br /><br />; Create some sample data. Think of this as 2,000<br />; 10 X 10 squares<br />inData = BINDGEN(100, 2000)<br /><br />; Define the file variable dimensions. We don't know the<br />; final size of dimy (it could be variable-size weather data<br />; that we constantly add to, for example), so we are defining<br />; this dimension as UNLIMITED<br />dimx = NCDF_DIMDEF(id,'dimx', 100)<br />dimy = NCDF_DIMDEF(id,'dimy', /UNLIMITED)<br /><br />; Define a variable and its dimensions, and add it to the file.<br />; One way to interpret the chunking setting is that 10 slices<br />; of the 10 x 10 squares will be read or written at each<br />; interval<br />v1 = NCDF_VARDEF(id, 'v1', [dimx, dimy], $<br />&#160;&#160;&#160;/BYTE, CHUNK_DIMENSIONS=[100, 10])</p>
+        <p>&#160;</p>
+        <p class="Code">; Take the file out of define mode, and into data mode<br />NCDF_CONTROL, id, /ENDEF<br /><br />; Populate the variable with data<br />NCDF_VARPUT, id, 'v1', inData<br /><br />; Close the file<br />NCDF_CLOSE, id<br /><br />; Open the file back up in read-only mode<br />oid = NCDF_OPEN(filename, /NOWRITE)<br /><br />; Get the file variable ID, read the file variable, and close<br />; the file <br />vid = NCDF_VARID(oid,'v1')<br />NCDF_VARGET, oid, vid, outData<br />NCDF_CLOSE, oid<br /><br />; Compare the input and output data<br />IF TOTAL(inData NE outData) EQ 0 THEN PRINT, $<br />&#160;&#160;&#160;'The data read from file is correct.'</p>
+        <h2 class="API"><a name="netCDF_2618656010_1019085_PageTOC_NCDF_VARDEF_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">
+                        <p>8.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">
+                        <p>Added CHUNK_DIMENSIONS, CONTIGUOUS, GZIP, and SHUFFLE keywords</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">8.1</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">Added STRING, UBYTE, UINT64, ULONG, and USHORT keywords</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

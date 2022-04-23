@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-conditions="" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Objects|Creating an Object Graphics Display">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Creating an Object Graphics Display </title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Object Classes/ref_part2.htm">Objects</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Creating an Object Graphics Display</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Creating an Object Graphics Display</span>
+        </div>
+        <h1><a name="obj_graphics_348174843_996870"></a><a name="obj_graphics_348174843_12292"></a><a name="obj_graphics_348174843_39831"></a><a name="obj_graphics_348174843_20053"></a>Creating an Object Graphics Display </h1>
+        <p>All Object Graphics applications require at least two basic building blocks. These include: </p>
+        <ul>
+            <li value="1">A destination object - the device (such as a window, memory buffer, file, clipboard, or printer) to which the visualization is to be rendered. </li>
+            <li value="2">A view object - the viewport rectangle (within the destination) within which the rendering is to appear (as well as how data should be projected into that rectangle).</li>
+        </ul>
+        <p>For example:</p>
+        <p class="Code">; Create a destination object, in this case a window:</p>
+        <p class="Code">oWindow = OBJ_NEW('IDLgrWindow')</p>
+        <p class="Code">; Create a viewport that fills the entire window:</p>
+        <p class="Code">oView = OBJ_NEW('IDLgrView')</p>
+        <p class="Code">; Draw the view within the window:</p>
+        <p class="Code">OWindow-&gt;Draw, oView</p>
+        <p>By themselves, a window and a single view are not particularly enlightening, but you will find that these two types of objects are utilized by all Object Graphics applications. To change an attribute of an object, you do not have to create a new instance of that object. Instead, use the SetProperty method on the original object to modify the value of the attribute.</p>
+        <p>For example, to change the color of the view to gray:</p>
+        <p class="Code">; Set the color property of the view:</p>
+        <p class="Code">OView-&gt;SetProperty, COLOR=[60,60,60]</p>
+        <p class="Code">; Redraw:</p>
+        <p class="Code">OWindow-&gt;Draw, oView</p>
+        <p>If more than one view is to be drawn to the destination, then an additional object is required:</p>
+        <ul>
+            <li value="1">A scene object - a container of views</li>
+        </ul>
+        <p>For example:</p>
+        <p class="Code">; Create a scene and add our original view to it:</p>
+        <p class="Code">OScene = OBJ_NEW(’IDLgrScene’)</p>
+        <p class="Code">oScene-&gt;Add, oView</p>
+        <p class="Code">; Modify our original view so that it covers</p>
+        <p class="Code">; the upper left quadrant of the window.</p>
+        <p class="Code">OView-&gt;SetProperty, LOCATION=[0.0,0.5], DIMENSIONS=[0.5,0.5], $</p>
+        <p class="Code">&#160;&#160;&#160;UNITS=3</p>
+        <p class="Code">; Create and add a second red view that covers</p>
+        <p class="Code">; the right half of the window.</p>
+        <p class="Code">OView2 = OBJ_NEW(’IDLgrView’, LOCATION=[0.5,0.0], $</p>
+        <p class="Code">&#160;&#160;&#160;DIMENSIONS=[0.5,1.0], UNITS=3,COLOR=[255,0,0])</p>
+        <p class="Code">OScene-&gt;Add, oView2</p>
+        <p class="Code">; Now draw the scene, rather than the view, to the window:</p>
+        <p class="Code">OWindow-&gt;Draw, oScene</p>
+        <p>In the examples so far, the views have been empty canvases. For data visualization applications, these views will need some graphical content. To draw visual representations within the views, two additional types of objects are required:</p>
+        <ul>
+            <li value="1">A model object - a transformation node</li>
+            <li value="2">A visualization graphic object - a graphical representation of data (such as an axis, plot line, or surface mesh). For more information, see <a href="Visualization_Objects.htm#obj_graphics_348174843_1018699">Visualization Objects</a>.</li>
+        </ul>
+        <p>For example, to include a text label within a view:</p>
+        <p class="Code">; Create a model and add it to the original view:</p>
+        <p class="Code">oModel = OBJ_NEW('IDLgrModel')</p>
+        <p class="Code">oView-&gt;Add, oModel</p>
+        <p class="Code">; Create a text object and add it to the model:</p>
+        <p class="Code">oText = OBJ_NEW('IDLgrText','Hello World',ALIGNMENT=0.5)</p>
+        <p class="Code">oModel-&gt;Add, oText</p>
+        <p class="Code">; Redraw the scene:</p>
+        <p class="Code">OWindow-&gt;Draw, oScene</p>
+        <p>Notice that the scene, views, model, and text are all combined together into a self-contained hierarchy. It is the overall hierarchy that is drawn to the destination object. </p>
+        <p>The transformation associated with the model can be modified to impact the text it contains. For example:</p>
+        <p class="Code">; Rotate by 90 degrees about the Z-axis:</p>
+        <p class="Code">oModel-&gt;Rotate, [0,0,1], 90</p>
+        <p class="Code">; Redraw:</p>
+        <p class="Code">OWindow-&gt;Draw, oScene</p>
+        <p>When the objects are no longer required, they need to be destroyed. Destination objects must be destroyed separately, but the graphic hierarchies can be destroyed in full by simply destroying the root of the hierarchy. For example:</p>
+        <p class="Code">OBJ_DESTROY, oWindow</p>
+        <p class="Code">OBJ_DESTROY, oScene</p>
+        <p>In this example, the destruction of the scene will cause the destruction of all of its children (including the views, model, and text).</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

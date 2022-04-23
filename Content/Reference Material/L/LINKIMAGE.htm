@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: L">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>LINKIMAGE </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="L_list.htm">Routines: L</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">LINKIMAGE</span>
+        </div>
+        <h1 class="Routine"><a name="L_826528365_840842"></a><a name="kanchor1672"></a><a name="L_826528365_83640"></a>LINKIMAGE </h1>
+        <p><a name="kanchor1673"></a>The LINKIMAGE procedure merges routines written in other languages with IDL at runtime. Each call to LINKIMAGE defines a new system procedure or function by specifying the routine’s name, the name of the file containing the code, and the entry point name. The name of your routine is added to IDL’s internal system routine table, making it available in the same manner as any other IDL built-in routine. LINKIMAGE can also be used to add graphics device drivers.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Using LINKIMAGE requires intimate knowledge of the internals of IDL, and is not for use by the novice user. We recommend use of CALL_EXTERNAL, which has a simpler interface, instead of LINKIMAGE unless your application specifically requires it. To use LINKIMAGE, you should be familiar with the material in the IDL <span class="Reference MaterialbkEDG">External Development Guide</span>.</p>
+        <p>LINKIMAGE uses the dynamic linking interface supported by the operating system to do its work. Programmers should be familiar with the services supported by their system in order to better understand LINKIMAGE:</p>
+        <ul>
+            <li value="1">Under UNIX, LINKIMAGE uses the <code>dlopen()</code> interface to the dynamic linker.</li>
+            <li value="2">Under Windows, LINKIMAGE uses <code>LoadLibrary()</code> to load a DLL.</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Modules must be merged via LINKIMAGE before other procedures and functions that call them are compiled, or the compilation of those routines will fail. Note that because routines merged via LINKIMAGE are considered built-in routines by IDL, declaring the routine with the FORWARD_FUNCTION statement will not eliminate this restriction.</p>
+        <h2 class="API"><a name="L_826528365_855645"></a><a name="L_826528365_855645_PageTOC_LINKIMAGE_"></a>Examples</h2>
+        <p>To add a procedure called MY_PROC, whose entry symbol is named <code>my_proc</code>, that is contained in the file <code>/home/smith/my_proc.so</code>:</p>
+        <p class="Code">LINKIMAGE, 'MY_PROC', '/home/smith/my_proc.so'</p>
+        <h2 class="API"><a name="L_826528365_855590"></a><a name="L_826528365_855590_PageTOC_LINKIMAGE_"></a>Syntax</h2>
+        <p class="Syntax">LINKIMAGE, <i>Name</i>, <i>Image</i> [,&#160;<i>Type</i> [,&#160;<i>Entry</i>]] [,&#160;/<a href="#L_826528365_855619" class="selected">DEVICE</a>] [,&#160;/<a href="#L_826528365_855622" class="selected">FUNCT</a>] [,&#160;/<a href="#L_826528365_855625" class="selected">KEYWORDS</a>] [,&#160;<a href="#L_826528365_855628" class="selected">MAX_ARGS</a>=<i>value</i>] [,&#160;<a href="#L_826528365_855632" class="selected">MIN_ARGS</a>=<i>value</i>]</p>
+        <h2 class="API"><a name="L_826528365_855592"></a><a name="L_826528365_855592_PageTOC_LINKIMAGE_"></a>Arguments</h2>
+        <h3 class="Argument">Name</h3>
+        <p>A string containing the IDL name of the function, procedure or device routine which is to be merged. When loading a device driver, <i>Name</i> contains the name of the global DEVICE_DEF structure in the driver. Upon successful loading of the routine, a new procedure or function with the given name will exist, or the new device driver will be loaded.</p>
+        <h3 class="Argument">Image</h3>
+        <p>A string containing the full path specification of the dynamically loaded object file. See your system documentation on sharable libraries or DLLs for details.</p>
+        <h3 class="Argument">Type</h3>
+        <p>An optional scalar integer parameter that contains 0 (zero) for a procedure, 1 (one) for a function, and 2 for a device driver. The keyword parameters DEVICE and FUNCT can also be used to indicate the type of routine being merged. The default value is 0, for procedure.</p>
+        <h3 class="Argument">Entry</h3>
+        <p>An optional string that contains the name of the symbol which is the entry point of the procedure or function. With some compilers or operating systems, this name may require the addition of leading or trailing characters. For example, some UNIX C compilers add a leading underscore to the beginning of a function name, and some UNIX FORTRAN compilers add a trailing underscore.</p>
+        <p>If <i>Entry</i> is not supplied, LINKIMAGE will provide a default name by converting the value suppled for <i>Name</i> to lower case and adding any special characters (leading or trailing underscores) typical of the system.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Under Microsoft Windows operating systems, only <code>cdecl</code> functions can by used with LINKIMAGE. Attempting to use routines with other calling conventions will yield undefined results, including memory corruption or even IDL crashing.<br /><br />The Windows operating system has two distinct system defined standards that govern how routines pass arguments: <code>stdcall</code>, which is used by much of the operating system as well as languages such as Visual Basic, and <code>cdecl</code>, which is used widely for programming in the C language. These standards differ in how and when arguments are pushed onto the system stack. The standard used by a given function is determined when the function is compiled, and can be controlled by the programmer. LINKIMAGE can only be used with <code>cdecl</code> functions. Unfortunately, there is no way for IDL to know which convention a given function uses, meaning that LINKIMAGE will quietly accept an entry point of the wrong type. The LINKIMAGE user is responsible for ensuring that Entry is a <code>cdecl</code> function.</p>
+        <h2 class="API"><a name="L_826528365_855611"></a><a name="L_826528365_855611_PageTOC_LINKIMAGE_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="L_826528365_855619"></a><a name="L_826528365_855619_Keywords_LINKIMAGE__"></a>DEVICE</h3>
+        <p>Set this keyword to indicate that the module being loaded contains a device driver.</p>
+        <h3 class="Keyword"><a name="L_826528365_855622"></a><a name="L_826528365_855622_Keywords_LINKIMAGE__"></a>FUNCT</h3>
+        <p>Set this keyword to indicate that the module being loaded contains a function.</p>
+        <h3 class="Keyword"><a name="L_826528365_855625"></a><a name="L_826528365_855625_Keywords_LINKIMAGE__"></a>KEYWORDS</h3>
+        <p>Set this keyword to indicate that the procedure or function being loaded accepts keyword parameters.</p>
+        <h3 class="Keyword"><a name="L_826528365_855628"></a><a name="L_826528365_855628_Keywords_LINKIMAGE__"></a>MAX_ARGS</h3>
+        <p>Set this keyword equal to the maximum number of non-keyword arguments the procedure or function accepts. If this keyword is not present, the maximum number of parameters is not checked when the routine is called.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>It is a very good idea to specify a value for MAX_ARGS. Passing the wrong number of arguments to an external routine may cause unexpected results, including causing IDL to crash. By forcing IDL to check the number of arguments before passing them to the linked routine, you will avoid parameter mismatch problems.</p>
+        <h3 class="Keyword"><a name="L_826528365_855632"></a><a name="L_826528365_855632_Keywords_LINKIMAGE__"></a>MIN_ARGS</h3>
+        <p>Set this keyword equal to the minimum number of non-keyword arguments accepted by the procedure or function.</p>
+        <h2 class="API"><a name="L_826528365_855652"></a><a name="L_826528365_855652_PageTOC_LINKIMAGE_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre 6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Deprecated DEFAULT keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="L_826528365_952303"></a><a name="L_826528365_952303_PageTOC_LINKIMAGE_"></a>See Also</h2>
+        <p><a href="../C/CALL_EXTERNAL.htm#C_854643309_106442">CALL_EXTERNAL</a>, <a href="../S/SPAWN.htm#S_820040301_1076218">SPAWN</a>, and the IDL <span class="Reference MaterialbkEDG">External Development Guide</span>.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

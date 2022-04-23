@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: M">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>MAKE_RT</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="M_list.htm">Routines: M</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">MAKE_RT</span>
+        </div>
+        <h1 class="Routine"><a name="M_824365677_1135149"></a><a name="M_824365677_48331"></a><a name="kanchor1761"></a>MAKE_RT</h1>
+        <p>The MAKE_RT procedure creates a stand-alone IDL runtime distribution for one or more platforms. In addition to the IDL binary and resource files required to execute an IDL program in runtime mode, MAKE_RT creates platform-specific launching scripts that allow an end-user to easily launch a runtime application.</p>
+        <p>MAKE_RT creates a runtime distribution for the specified platforms by copying files from an installed IDL distribution. If the files for the specified platforms are not available in the local IDL installation, you can use the IDLDIR keyword to specify another installation location from which files should be copied.</p>
+        <p>For further discussion of how MAKE_RT creates a runtime distribution, read the following sections:</p>
+        <ul>
+            <li value="1"><a href="#M_824365677_1135318" class="selected">How MAKE_RT Builds its Manifest</a>
+            </li>
+            <li value="2"><a href="#M_824365677_1135333" class="selected">Application Launchers</a>
+            </li>
+            <li value="3"><a href="#M_824365677_1135340" class="selected">Working with the manifest_rt.txt File</a>
+            </li>
+        </ul>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>make_rt.pro</code> in the <code>lib/utilities</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="M_824365677_1135345"></a><a name="M_824365677_1135345_PageTOC_MAKE_RT_"></a>Example</h2>
+        <p>Suppose you have a multi-platform UNIX installation, and wish to create a runtime distribution that runs on Macintosh OS X and 64-bit Linux. The following command will create a runtime distribution in the <code>/home/dave/myApp</code> directory, generating Macintosh and Linux scripts that launch IDL in Virtual Machine mode and load the file <code>myapp.sav</code>:</p>
+        <p class="Code">MAKE_RT, 'myApp', '/home/dave', SAVEFILE='myapp.sav', /VM, $</p>
+        <p class="Code">&#160;&#160;&#160;/MACINT64, /LIN64</p>
+        <h2 class="API"><a name="M_824365677_1135180"></a><a name="M_824365677_1135180_PageTOC_MAKE_RT_"></a>Syntax</h2>
+        <p class="Syntax">MAKE_RT, <i>Appname</i>, <i>Outdir</i>, [,&#160;/<a href="#M_824365677_1135261" class="selected">DATAMINER</a>] [,&#160;/<a href="#M_824365677_1135268" class="selected">DICOMEX</a>]&#160;[/<a href="#M_824365677_1140541" class="selected">EMBEDDED</a>] [, /<a href="#GRIB" class="selected">GRIB</a>] [,&#160;/<a href="#M_824365677_1135272" class="selected">HIRES_MAPS</a>] [, /<a href="#HIRES_SH" class="selected">HIRES_SHAPEFILES</a>] [,&#160;<a href="#M_824365677_1135243" class="selected">IDLDIR</a>=<i>path</i>]  [,&#160;/<a href="#M_824365677_1135293" class="selected">LIN32</a>] [,&#160;/<a href="#M_824365677_1135297" class="selected">LIN64</a>]  [,&#160;<a href="#M_824365677_1135247" class="selected">LOGFILE</a>=<i>path</i>] [,&#160;/<a href="#M_824365677_1158097" class="selected">MACINT64</a>] [,&#160;<a href="#M_824365677_1135250" class="selected">MANIFEST</a>=<i>path</i>] [,&#160;/<a href="#M_824365677_1160029" class="selected">OVERWRITE</a>] [,&#160;<a href="#M_824365677_1135253" class="selected">SAVEFILE</a>=<i>path</i>] [,&#160;/<a href="#M_824365677_1135309" class="selected">SUN64</a>] [,&#160;/<a href="#M_824365677_1160225" class="selected">SUNX86_64</a>] [, /<a href="#VIDEO" class="selected">VIDEO</a>] [,&#160;/<a href="#M_824365677_1135256" class="selected">VM</a>&#160;] [,&#160;/<a href="#M_824365677_1135312" class="selected">WIN32</a>] [,&#160;/<a href="#M_824365677_1135315" class="selected">WIN64</a>] </p>
+        <h2 class="API"><a name="M_824365677_1135236"></a><a name="M_824365677_1135236_PageTOC_MAKE_RT_"></a>Arguments</h2>
+        <h3 class="Argument">Appname</h3>
+        <p>A string specifying the name of the application. An <i>Appname</i> directory will be created in the <i>Outdir</i> directory, and launch scripts (if any) will be renamed using <i>Appname</i> as the base.</p>
+        <h3 class="Argument">Outdir</h3>
+        <p>A string specifying the full path of the directory where the runtime distribution should be created. <i>Outdir</i> must exist; a directory named <i>Appname</i> will be created in <i>Outdir</i> to contain the distribution.</p>
+        <h2 class="API"><a name="M_824365677_1135241"></a><a name="M_824365677_1135241_PageTOC_MAKE_RT_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="M_824365677_1140541"></a><a name="M_824365677_1140541_Keywords_MAKE_RT_"></a>EMBEDDED</h3>
+        <p>Set this keyword to modify the launch scripts so that the application specified by the SAVEFILE keyword is always invoked in embedded license mode. By default, IDL will attempt to run the application in Runtime mode. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If this keyword is set, the <a href="#M_824365677_1135256" class="selected">VM</a> keyword is ignored.</p>
+        <h3 class="Keyword"><a name="M_824365677_1135243"></a><a name="M_824365677_998888_Keywords_MAKE_RT_"></a>IDLDIR</h3>
+        <p>Set this keyword equal to the full path to the IDL installation directory from which files should be copied. If this keyword is not specified, files are copied from the directory specified by the !DIR system variable.</p>
+        <p>This keyword may be useful if you are creating a multi-platform runtime distribution, and installation directories for all of the required platforms are available on a single network.</p>
+        <h3 class="Keyword"><a name="M_824365677_1135247"></a><a name="M_824365677_998876_Keywords_MAKE_RT_"></a>LOGFILE</h3>
+        <p>Set this keyword equal to the full path name of the file that will contain log results produced while creating the runtime distribution. If this keyword is not specified, a file named <code>log.txt</code> is created in the <i>Outdir/Appname</i> directory.</p>
+        <h3 class="Keyword"><a name="M_824365677_1135250"></a><a name="M_824365677_998778_Keywords_MAKE_RT_"></a>MANIFEST</h3>
+        <p>Set this keyword equal to the full path to the manifest file specifying the files to be copied into the runtime distribution. If this keyword is not specified, <code>!DIR/bin/make_rt/manifest_rt.txt</code> will be used.</p>
+        <h3 class="Keyword"><a name="M_824365677_1160029"></a><a name="M_824365677_80068"></a>OVERWRITE</h3>
+        <p>Set this keyword to overwrite existing files in the output directory. If this keyword is not set and the output directory is not empty, an error is generated and the existing files in the output directory are not overwritten.</p>
+        <p>If there are files in the output directory that are not part of the manifest, they will remain in the output directory even when OVERWRITE is set.</p>
+        <h3 class="Keyword"><a name="M_824365677_1135253"></a><a name="M_824365677_998882_Keywords_MAKE_RT_"></a>SAVEFILE</h3>
+        <p>Set this keyword equal to the full path to the IDL SAVE file that contains your IDL application. The SAVE file is copied into the <i>Outdir/Appname</i> directory, and launch scripts are modified to invoke this file.</p>
+        <p>If this keyword is not set, no SAVE file is copied and generic launch scripts are created. In this case, running the launch script opens a file selection dialog allowing the user to select a SAVE file to restore and run.</p>
+        <h3 class="Keyword"><a name="M_824365677_1135256"></a><a name="M_824365677_998781_Keywords_MAKE_RT_"></a>VM</h3>
+        <p>Set this keyword to modify the launch scripts so that the application specified by the SAVEFILE keyword is always invoked in Virtual Machine mode. By default, IDL will attempt to run the application in Runtime mode. See Runtime Licensing for more information.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This keyword is ignored if the <a href="#M_824365677_1140541" class="selected">EMBEDDED</a> keyword is set.</p>
+        <h2 class="API"><a name="M_824365677_1135259"></a><a name="M_824365677_1135259_PageTOC_MAKE_RT_"></a><a name="M_824365677_19441"></a>Feature Keywords</h2>
+        <h3 class="Keyword"><a name="M_824365677_1135261"></a><a name="M_824365677_999566_Keywords_MAKE_RT_"></a>DATAMINER</h3>
+        <p>Set this keyword to include support for the IDL Dataminer. Note that the Dataminer is a licensed feature, which means that end-users must have a Dataminer license available to use Dataminer features.</p>
+        <h3 class="Keyword"><a name="M_824365677_1135268"></a><a name="M_824365677_999567_Keywords_MAKE_RT_"></a>DICOMEX</h3>
+        <p>Set this keyword to include support for the IDLffDicomEx object. Note that the IDLffDicomEx functionality is a licensed feature, which means that end-users must have a DicomEx license available to use the IDLffDicomEx object.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The IDLffDicom object is included along with IDL, and will run with a regular IDL license and in the IDL Virtual Machine. If your application uses IDLffDicom rather than IDLffDicomEx, you do not need to set this keyword.</p>
+        <h3 class="Keyword"><a name="GRIB"></a>GRIB&#160;&#160;</h3>
+        <p>Set this keyword to include support for <a href="../G/GRIB Routines.htm">GRIB Routines</a>.</p>
+        <h3 class="Keyword"><a name="M_824365677_1135272"></a><a name="M_824365677_998869_Keywords_MAKE_RT_"></a>HIRES_MAPS</h3>
+        <p>Set this keyword to include the high-resolution maps from your runtime distribution. IDL’s high-resolution map files consume about 45 megabytes of disk space, and are not included in a runtime distribution by default.id.</p>
+        <h3 class="Keyword"><a name="HIRES_SH"></a>HIRES_SHAPEFILES</h3>
+        <p>Set this keyword to include the high-resolution shapefiles used with the HIRES keyword to Graphics functions.</p>
+        <h2 class="API"><a name="M_824365677_1135289"></a><a name="M_824365677_1135289_PageTOC_MAKE_RT_"></a><a name="M_824365677_42954"></a>Platform Keywords</h2>
+        <p>If any of the following platform keywords are set, distributions for the specified platforms are created. If none of the platform keywords are set, a distribution that matches the platform on which IDL is currently running is created.</p>
+        <h3 class="Keyword"><a name="M_824365677_1135293"></a><a name="M_824365677_999124_Keywords_MAKE_RT_"></a><a name="M_824365677_998785_Keywords_MAKE_RT_"></a>LIN32</h3>
+        <p>Create a distribution for Linux machines running IDL in 32-bit mode.</p>
+        <h3 class="Keyword"><a name="M_824365677_1135297"></a><a name="M_824365677_999127_Keywords_MAKE_RT_"></a><a name="M_824365677_998786_Keywords_MAKE_RT_"></a>LIN64</h3>
+        <p>Create a distribution for Linux machines running IDL in 64-bit mode.</p>
+        <h3 class="Keyword"><a name="M_824365677_1158097"></a><a name="M_824365677_1158097_Keywords_MAKE_RT_"></a>MACINT64</h3>
+        <p>Create a distribution for Intel-based Macintoshes running IDL in 64-bit mode.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>64-bit IDL on Intel-based Macintoshes requires OS X version 10.5 or later.</p>
+        <h3 class="Keyword"><a name="M_824365677_1135309"></a><a name="M_824365677_999141_Keywords_MAKE_RT_"></a><a name="M_824365677_998788_Keywords_MAKE_RT_"></a>SUN64</h3>
+        <p>Create a distribution for Solaris Sparc machines running IDL in 64-bit mode.</p>
+        <h3 class="Keyword"><a name="M_824365677_1160225"></a><a name="M_824365677_1160225_Keywords_MAKE_RT_"></a>SUNX86_64</h3>
+        <p>Create a distribution for Solaris X86 machines running IDL in 64-bit mode.</p>
+        <h3 class="Keyword"><a name="VIDEO"></a>VIDEO&#160;</h3>
+        <p>Set this keyword to include support for <a href="../../Object Classes/File Format/IDLffVideoWrite.htm">IDLffVideoWrite</a>. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDLffVideoWrite is a licensed feature, which means that you must have a IDLffVideoWrite license available to use IDLffVideoWrite features. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDLffVideoWrite/Read functionality is not available in IDL Virtual Machine (VM) mode if the end user of a distributed IDL VM app does not already have a purchased IDL license with the "idl_video_write" license feature. This functionality may appear to work for the developer since an IDL VM session can access auxiliary license features from the developer's full IDL<code> license.dat</code> file. However when used on a machine without such a license, the the IDLffVideoWrite/Read functionality will fail.</p>
+        <h3 class="Keyword"><a name="M_824365677_1135312"></a><a name="M_824365677_998782_Keywords_MAKE_RT_"></a>WIN32</h3>
+        <p>Create a distribution for Windows machines running IDL in 32-bit mode.</p>
+        <h3 class="Keyword"><a name="M_824365677_1135315"></a><a name="M_824365677_998783_Keywords_MAKE_RT_"></a>WIN64</h3>
+        <p>Create a distribution for Windows machines running IDL in 64-bit mode.</p>
+        <h2 class="API"><a name="M_824365677_1135318"></a><a name="M_824365677_1135318_PageTOC_MAKE_RT_"></a><a name="M_824365677_62191"></a>How MAKE_RT Builds its Manifest</h2>
+        <p>The list of files to be copied (known as the <i>manifest</i>) is constructed at the time MAKE_RT runs using the following process:</p>
+        <ol>
+            <li value="1">MAKE_RT reads the contents of the specified manifest file. If no manifest file is specified, MAKE_RT uses the <code>manifest_rt.txt</code> file located in the <code>bin/make_rt</code> subdirectory of the IDL distribution.</li>
+            <li value="2">Entries in the manifest file that begin with the IDL comment character (the semicolon) are discarded.</li>
+            <li value="3">Entries for platforms that are not specifically selected via the <a href="#M_824365677_1135289" class="selected">Platform Keywords</a> are discarded. (If no platforms are specified by keyword, a distribution is created for the platform on which the MAKE_RT routine is running.)</li>
+            <li value="4">Entries for optional features that are not specifically selected via the <a href="#M_824365677_1135259" class="selected">Feature Keywords</a> are discarded.</li>
+        </ol>
+        <p>Once the <code>manifest_rt.txt</code> file has been trimmed according to these rules, the files are copied to <i>Outdir</i>.</p>
+        <h2 class="API"><a name="M_824365677_1135333"></a><a name="M_824365677_1135333_PageTOC_MAKE_RT_"></a><a name="M_824365677_55244"></a>Application Launchers</h2>
+        <p>If you include the SAVEFILE keyword in a call to MAKE_RT, the procedure will generate a <i>launch script</i> for each platform specified. Launch scripts are small programs that invoke IDL in Runtime or Virtual Machine mode, loading the SAVE file you specify to run the application.</p>
+        <p>The launch scripts generated by MAKE_RT are based on generic scripts located in the <code><i>IDL_DIR</i></code><code>/bin/make_rt</code> directory (where <code><i>IDL_DIR</i></code> is the IDL installation directory).</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you do not specify the SAVEFILE keyword, MAKE_RT generates a generic launch script that invokes IDL in runtime or virtual machine mode and opens a file selection dialog, allowing the end-user to select a <code>.sav</code> file to restore and run.</p>
+        <h2 class="API"><a name="M_824365677_1135340"></a><a name="M_824365677_1135340_PageTOC_MAKE_RT_"></a><a name="M_824365677_23771"></a>Working with the manifest_rt.txt File</h2>
+        <p>The default <code>manifest_rt.txt</code> file contains entries for all of the files necessary to create a runtime IDL distribution for all supported platforms. In most cases, you can use the <code>manifest_rt.txt</code> file without modification, and the MAKE_RT procedure will select the appropriate files to build the distribution you specify. If you need to modify the list of files copied to your runtime distribution, you can create a custom manifest file. </p>
+        <h2 class="API"><a name="M_824365677_1135353"></a><a name="M_824365677_1135353_PageTOC_MAKE_RT_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>7.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">
+                        <p>7.0.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">
+                        <p>Added MACINT64 keyword</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>7.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Added OVERWRITE and SUNX86_64 keywords</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">8.0</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">Removed the IDL_ASSISTANT, MACPPC32 keywords</td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">8.1</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Added GRIB, HIRES_SHAPEFILES, and VIDEO&#160;keywords</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">8.2.3</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">Removed the /SUN32, /MACINT32 and /MACPPC32 keywords</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="M_824365677_1135360"></a><a name="M_824365677_1135360_PageTOC_MAKE_RT_"></a>See Also</h2>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

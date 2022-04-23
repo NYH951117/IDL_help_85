@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Keyword Processing">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDL_KW_PAR</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDLKeywordProcessing.htm">IDLInternals - Keyword Processing</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDL_KW_PAR</span>
+        </div>
+        <h1><a name="kanchor5444"></a>IDL_KW_PAR</h1>
+        <p>The <b>IDL_KW_PAR</b> struct provides the basic specification for keyword processing. The <b>IDL_KWProcessByOffset()</b> function is passed a null-terminated array of these structures. <b>IDL_KW_PAR</b> structures specify which keywords a routine accepts, the attributes required of them, and the kinds of processing that should be done to them. <b>IDL_KW_PAR</b> structures must be defined in lexical order according to the value of the keyword field.</p>
+        <p>The definition of IDL_KW_PAR is:</p>
+        <p class="Code">typedef struct { char *keyword; </p>
+        <p class="Code">&#160;&#160;&#160;UCHAR type;</p>
+        <p class="Code">&#160;&#160;&#160;unsigned short mask;</p>
+        <p class="Code">&#160;&#160;&#160;unsigned short flags;</p>
+        <p class="Code">&#160;&#160;&#160;int *specified;</p>
+        <p class="Code">&#160;&#160;&#160;char *value;</p>
+        <p class="Code">} IDL_KW_PAR;</p>
+        <p>where:</p>
+        <h3>keyword</h3>
+        <p>A pointer to a null-terminated string. This is the name of the keyword, and must be entirely upper case. The array of <b>IDL_KW_PAR</b> structures passed to <b>IDL_KWProcessByOffset()</b> must be lexically sorted by the strings pointed to by this field. The final element in the array is signified by setting the keyword field to NULL ((char *) 0).</p>
+        <h3>type</h3>
+        <p><b>IDL_KWProcessByOffset()</b> automatically converts the keywords to the IDL type specified by the type field. Specify 0 (<b>IDL_TYPE_UNDEF</b>) in cases where <b>ID_KW_VIN</b> or <b>IDL_KW_OUT</b> are specified in the flags field.</p>
+        <h3>mask</h3>
+        <p>The enable mask. This field is ANDed with the mask argument to <b>IDL_KWProcessByOffset()</b> and if the result is non-zero, the keyword is accepted. If the result is 0, the keyword is ignored. This ability allows you to share an array of <b>IDL_KW_PAR</b> structures between several routines, and enable or disable the keywords used by each one.</p>
+        <p>As an example of this, the IDL graphics and plotting routines have a large number of keywords in common. In addition, each routine has a few keywords that are unique to it. Keywords are implemented using a single shared array of <b>IDL_KW_PAR</b> with appropriate values of the mask field. This technique dramatically reduces the amount of data that would otherwise be required by graphics keyword processing, and makes IDL easier to maintain.</p>
+        <h3>flags</h3>
+        <p>This field specifies special processing instructions. It is a bit mask made by ORing the following values:</p>
+        <ul>
+            <li value="1">IDL_KW_ARRAY — Set this bit to specify that the keyword must be an array. Otherwise, a scalar is required. If IDL_KW_ARRAY is specified, the value field must point at an associated IDL_KW_ARR_DESC_R structure.</li>
+            <li value="2">IDL_KW_OUT — Set this bit to indicate that the keyword specifies an output parameter, passed by reference. Expressions and constants are excluded. In other words, the routine is going to change the value of the keyword argument, as opposed to the more usual case of simply reading it. The address of the IDL_VARIABLE will be placed in a user supplied field of type IDL_VPTR in the KW_RESULT structure (kw). The offset of this field in the KW_RESULT structure is specified by the value field (discussed below). IDL_KW_OUT implies that no type checking or processing will be performed on the keyword—it is up to the routine to perform the same sort of type checking normally carried out for plain positional arguments. A standard approach to find out if an IDL_KW_OUT parameter is present in a call to a system routine is to specify IDL_TYP_UNDEF (0) for the type field and IDL_KW_OUT | IDL_KW_ZERO for flags. The IDL_VPTR referenced by the value field will either contain NULL, or a pointer to the IDL_VARIABLE.</li>
+            <li value="3">IDL_KW_VIN — Set this bit to indicate that the keyword parameter is an input parameter (expressions and/or constants are valid) passed by reference. The address of the IDL_VARIABLE or expression is stored in a user-supplied field of the KW_RESULT structure (kw) referenced by the value field, as with IDL_KW_OUT. IDL_KW_VIN implies that no type checking or processing will be performed on the keyword—it is up to the routine to perform the same sort of type checking normally carried out for plain positional arguments.</li>
+            <li value="4">IDL_KW_ZERO — Set this bit in order to zero the C variable pointed to by the value field before parsing the keywords. This means that the object pointed to by value will always be zero unless it was specified by the user. Use this technique to create keywords that have Boolean (on or off) meanings.</li>
+            <li value="5">IDL_KW_VALUE — If this bit is set and the specified keyword is present and non-zero, the low 12 bits of this field (flags) will be bitwise ORed with the IDL_LONG field of the KW_RESULT structure referenced by the value field. Note that this implies the IDL_TYP_LONG type code, and is incompatible with the IDL_KW_ARRAY, IDL_KW_VIN, and IDL_KW_OUT flags.</li>
+        </ul>
+        <h3>specified</h3>
+        <p>NULL, or the offset of the user supplied field within the KW_RESULT structure (kw) of a C int variable that will be set to TRUE (non-zero) or FALSE (0) based on whether the routine was called with the keyword present. The IDL_KW_OFFSETOF() macro should be used to calculate the offset. Setting this field to NULL (0) indicates that this information is not needed.</p>
+        <h3>value</h3>
+        <p>If the keyword is a read-only scalar, this field is the offset of the user supplied field in the KW_RESULT structure (kw) into which the keyword value will be copied. The IDL_KW_OFFSETOF() macro should be used to calculate the offset.</p>
+        <p>In the case of a read-only array, value is the memory address of an IDL_KW_ARR_DESC_R, structure, which is discussed in <a href="IDL_KW_ARR_DESC.htm">The IDL_KW_ARR_DESC_R Structure</a>.</p>
+        <p>In the case of an input (IDL_KW_VIN) or output (IDL_KW_OUT) variable, this field should contain the offset to the IDL_VPTR field within the user supplied KW_RESULT that will be filled by IDL_KWProcessByOffset() with the address of the keyword argument. The IDL_KW_OFFSETOF() macro should be used to calculate the offset.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

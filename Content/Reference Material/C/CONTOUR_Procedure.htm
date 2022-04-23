@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>CONTOUR Procedure</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/NoLines.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">CONTOUR Procedure</span>
+        </div>
+        <h1 class="Routine"><a name="dg_routines_3604229493_879040"></a><a name="kanchor319"></a><a name="dg_routines_3604229493_88445"></a>CONTOUR Procedure</h1>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Please see the <a href="CONTOUR.htm" class="Heading">CONTOUR</a> function, which replicates the functionality of this routine and offers an interactive interface.</p>
+        <p>The CONTOUR procedure draws a contour plot from data stored in a rectangular array or from a set of unstructured points. Both line contours and filled contour plots can be created. Note that outline and fill contours cannot be drawn at the same time. To create a contour plot with both filled contours and outlines, first create the filled contour plot, then add the outline contours by calling CONTOUR a second time with the OVERPLOT keyword.</p>
+        <p>In its simplest form, CONTOUR makes a contour plot given a two-dimensional array of <i>z</i> values. In more complicated forms, CONTOUR accepts, in addition to <i>z</i>, arrays containing the <i>x</i> and <i>y</i> locations of each column, row, or point, plus many keyword parameters. In more sophisticated applications, the output of CONTOUR can be projected from three dimensions to two dimensions, superimposed over an image, or combined with the output of SURFACE. </p>
+        <p><a name="kanchor320"></a>Using various keywords, described below, it is possible to specify contour levels, labeling, colors, line styles, and other options. CONTOUR draws contours by searching for each contour line and then following the line until it reaches a boundary or closes.</p>
+        <h3><a name="dg_routines_3604229493_879066"></a><a name="kanchor321"></a><a name="kanchor322"></a>Smoothing Contours</h3>
+        <p>Contours can be smoothed by using the <a href="../M/MIN_CURVE_SURF.htm">MIN_CURVE_SURF</a> function on the contour data before contouring. The MIN_CURVE_SURF function can be used to smoothly interpolate both regularly and irregularly sampled surfaces before contouring. This function replaces the older SPLINE keyword to CONTOUR, which was inaccurate and is no longer supported. MIN_CURVE_SURF interpolates the entire surface to a relatively fine grid before drawing the contours.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_879074"></a><a name="dg_routines_3604229493_676262_PageTOC_CONTOUR_"></a>Syntax</h2>
+        <p class="Syntax">CONTOUR, <i>Z</i> [,&#160;<i>X</i>, <i>Y</i>] [,&#160;<a href="#dg_routines_3604229493_879188" class="selected">C_ANNOTATION</a>=<i>vector_of_strings</i>] [,&#160;<a href="#dg_routines_3604229493_879197" class="selected">C_CHARSIZE</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_879200" class="selected">C_CHARTHICK</a>=<i>integer</i>] [,&#160;<a href="#dg_routines_3604229493_879203" class="selected">C_COLORS</a>=<i>vector</i>] [,&#160;<a href="#dg_routines_3604229493_879211" class="selected">C_LABELS</a>=<i>vector</i>{each element 0 or 1}] [,&#160;<a href="#dg_routines_3604229493_879219" class="selected">C_LINESTYLE</a>=<i>vector</i>] [,&#160;<a href="#dg_routines_3604229493_879229" class="selected">C_ORIENTATION</a>=<i>degrees</i>] [,&#160;<a href="#dg_routines_3604229493_879232" class="selected">C_SPACING</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_879235" class="selected">C_THICK</a>=<i>vector</i>] [,&#160;/<a href="#dg_routines_3604229493_879238" class="selected">CELL_FILL</a> | ,&#160;/<a href="#dg_routines_3604229493_879252" class="selected">FILL</a>] [,&#160;/<a href="#dg_routines_3604229493_879243" class="selected">CLOSED</a>] [,&#160;/<a href="#dg_routines_3604229493_879246" class="selected">DOWNHILL</a>] [,&#160;/<a href="#dg_routines_3604229493_879259" class="selected">FOLLOW</a>] [,&#160;/<a href="#dg_routines_3604229493_879262" class="selected">IRREGULAR</a>] [,&#160;/<a href="#dg_routines_3604229493_879274" class="selected">ISOTROPIC</a>] [,&#160;<a href="#dg_routines_3604229493_879281" class="selected">LEVELS</a>=<i>vector</i>] [, <a href="#dg_routines_3604229493_879302" class="selected">NLEVELS</a>=<i>integer</i>{1 to 60}] [,&#160;<a href="#dg_routines_3604229493_879289" class="selected">MAX_VALUE</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_879296" class="selected">MIN_VALUE</a>=<i>value</i>] [,&#160;/<a href="#dg_routines_3604229493_879305" class="selected">OVERPLOT</a>] [{,&#160;/<a href="#dg_routines_3604229493_879318" class="selected">PATH_DATA_COORDS</a>, <a href="#dg_routines_3604229493_879324" class="selected">PATH_FILENAME</a>=<i>string</i>, <a href="#dg_routines_3604229493_879365" class="selected">PATH_INFO</a>=<i>variable</i>, <a href="#dg_routines_3604229493_879413" class="selected">PATH_XY</a>=<i>variable</i>} | , <a href="#dg_routines_3604229493_879417" class="selected">TRIANGULATION</a>=<i>variable</i>] [,&#160;/<a href="#dg_routines_3604229493_879321" class="selected">PATH_DOUBLE</a>] [,&#160;/<a href="#dg_routines_3604229493_879420" class="selected">XLOG</a>] [,&#160;/<a href="#dg_routines_3604229493_879424" class="selected">YLOG</a>] [,&#160;<a href="#dg_routines_3604229493_879429" class="selected">ZAXIS</a>={0&#160;|&#160;1&#160;|&#160;2&#160;|&#160;3&#160;|&#160;4}]</p>
+        <p>&#160;</p>
+        <p class="Syntax"><b>Graphics Keywords:</b> Accepts all graphics keywords accepted by PLOT except for: LINESTYLE, PSYM, SYMSIZE. See <a href="#dg_routines_3604229493_879454" class="selected">Graphics Keywords Accepted</a>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Many of the keyword parameters correspond directly to fields in the system variables !P, !X, !Y, or !Z. When specifying a keyword parameter name and value in a call that value affects only the current call, the corresponding system-variable field is not changed. Changing the value of a system-variable field changes the default for that particular parameter and remains in effect until explicitly changed. The system variables involving graphics and their corresponding keywords are detailed in !PI.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_879176"></a><a name="dg_routines_3604229493_676264_PageTOC_CONTOUR_"></a>Arguments</h2>
+        <h3 class="Argument">Z</h3>
+        <p>A one- or two-dimensional array containing the values that make up the contour surface. If arguments <i>X</i> and <i>Y</i> are provided, the contour is plotted as a function of the (X, Y) locations specified by their contents. Otherwise, the contour is generated as a function of the two-dimensional array index of each element of <i>Z</i>.</p>
+        <p>If the IRREGULAR keyword is set, X, Y, Z are all required, and are treated as vectors. Each point has a value of Z[<i>i</i>] and a location of (X[<i>i</i>], Y[<i>i</i>]).</p>
+        <p>This argument is converted to double-precision floating-point before plotting. Plots created with CONTOUR are limited to the range and precision of double-precision floating-point values.</p>
+        <h3 class="Argument">X</h3>
+        <p>A vector or two-dimensional array specifying the X coordinates for the contour surface. If <i>X</i> is a vector, each element of <i>X</i> specifies the X coordinate for a column of <i>Z</i> (e.g., X[0] specifies the X coordinate for Z[0,*]). If X is a two-dimensional array, each element of X specifies the X coordinate of the corresponding point in Z (i.e., <i>X</i><sub class="italic">ij</sub> specifies the X coordinate for <i>Z</i><sub class="italic">ij</sub>).</p>
+        <h3 class="Argument">Y</h3>
+        <p>A vector or two-dimensional array specifying the Y coordinates for the contour surface. If <i>Y</i> a vector, each element of <i>Y</i> specifies the Y coordinate for a row of Z (e.g., Y[0] specifies the Y coordinate for Z[*,0]). If <i>Y</i> is a two-dimensional array, each element of <i>Y</i> specifies the Y coordinate of the corresponding point in Z (<i>Y</i><sub class="italic">ij</sub> specifies the Y coordinate for <i>Z</i><sub class="italic">ij</sub>).</p>
+        <h2 class="API"><a name="dg_routines_3604229493_879186"></a><a name="dg_routines_3604229493_676272_PageTOC_CONTOUR_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879188"></a><a name="dg_routines_3604229493_1023103_Keywords_CONTOUR__"></a>C_ANNOTATION</h3>
+        <p>The label to be drawn on each contour. Usually, contours are labeled with their value. This parameter, a vector of strings, allows any text to be specified. The first label is used for the first contour drawn, and so forth. If the LEVELS keyword is specified, the elements of C_ANNOTATION correspond directly to the levels specified, otherwise, they correspond to the default levels chosen by the CONTOUR procedure. If there are more contour levels than elements in C_ANNOTATION, the remaining levels are labeled with their values.</p>
+        <p>Use of this keyword implies use of the FOLLOW keyword.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This keyword has no effect if the FILL or CELL_FILL keyword is set (i.e., if the contours are drawn with solid-filled or line-filled polygons).</p>
+        <h4>Example</h4>
+        <p>To produce a contour plot with three levels labeled “low”, “medium”, and “high”:</p>
+        <p class="Code">CONTOUR, Z, LEVELS = [0.0, 0.5, 1.0], $</p>
+        <p class="Code">&#160;&#160;&#160;C_ANNOTATION = ['low', 'medium', 'high']</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879197"></a><a name="dg_routines_3604229493_676279_Keywords_CONTOUR__"></a>C_CHARSIZE</h3>
+        <p>The size of the characters used to annotate contour labels. Normally, contour labels are drawn at 3/4 of the size used for the axis labels (specified by the CHARSIZE keyword or !P.CHARSIZE system variable. This keyword allows the contour label size to be specified directly. Use of this keyword implies use of the FOLLOW keyword.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879200"></a><a name="dg_routines_3604229493_905138_Keywords_CONTOUR__"></a>C_CHARTHICK</h3>
+        <p>The thickness of the characters used to annotate contour labels. Set this keyword equal to an integer value specifying the line thickness of the vector drawn font characters. This keyword has no effect when used with the hardware drawn fonts. The default value is 1. Use of this keyword implies use of the FOLLOW keyword.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879203"></a><a name="dg_routines_3604229493_676281_Keywords_CONTOUR__"></a>C_COLORS</h3>
+        <p>The color index used to draw each contour. This parameter is a vector, converted to integer type if necessary. If there are more contour levels than elements in C_COLORS, the elements of the color vector are cyclically repeated.</p>
+        <h4>Example</h4>
+        <p>If C_COLORS contains three elements, and there are seven contour levels to be drawn, the colors <i>c</i><sub>0</sub>, <i>c</i><sub>1</sub>, <i>c</i><sub>2</sub>, <i>c</i><sub>0</sub>, <i>c</i><sub>1</sub>, <i>c</i><sub>2</sub>, <i>c</i><sub>0</sub> will be used for the seven levels. To call CONTOUR and set the colors to [100,150,200], use the command:</p>
+        <p class="Code">CONTOUR, Z, C_COLORS = [100,150,200]</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879211"></a><a name="dg_routines_3604229493_676286_Keywords_CONTOUR__"></a>C_LABELS</h3>
+        <p>Specifies which contour levels should be labeled. By default, every other contour level is labeled. C_LABELS allows you to override this default and explicitly specify the levels to label. This parameter is a vector, converted to integer type if necessary. If the LEVELS keyword is specified, the elements of C_LABELS correspond directly to the levels specified, otherwise, they correspond to the default levels chosen by the CONTOUR procedure. Setting an element of the vector to zero causes that contour label to not be labeled. A nonzero value forces labeling.</p>
+        <p>Use of this keyword implies use of the FOLLOW keyword.</p>
+        <h4>Example</h4>
+        <p>To produce a contour plot with four levels where all but the third level is labeled:</p>
+        <p class="Code">CONTOUR, Z, LEVELS = [0.0, 0.25, 0.75, 1.0], $</p>
+        <p class="Code">&#160;&#160;&#160;C_LABELS = [1, 1, 0, 1]</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879219"></a><a name="dg_routines_3604229493_676292_Keywords_CONTOUR__"></a>C_LINESTYLE</h3>
+        <p>The line style used to draw each contour. As with C_COLORS, C_LINESTYLE is a vector of line style indices. If there are more contour levels than line styles, the line styles are cyclically repeated. See <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_331728">LINESTYLE</a> for a list of available styles.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The cell drawing contouring algorithm draws all the contours in each cell, rather than following contours. Since an entire contour is not drawn as a single operation, the appearance of the more complicated linestyles will suffer. Use of the contour following method (selected with the FOLLOW keyword) will give better looking results in such cases.</p>
+        <h4>Example</h4>
+        <p>To produce a contour plot, with the contour levels directly specified in a vector V, with all negative contours drawn with dotted lines, and with positive levels in solid lines:</p>
+        <p class="Code">CONTOUR, Z, LEVELS = V, C_LINESTYLE = (V LT 0.0)</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879229"></a><a name="dg_routines_3604229493_676298_Keywords_CONTOUR__"></a>C_ORIENTATION</h3>
+        <p>If the FILL or CELL_FILL keyword is set, this keyword can be set to the angle, in degrees counterclockwise from the horizontal, of the lines used to fill contours. If neither C_ORIENTATION nor C_SPACING are specified, the contours are solid filled.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879232"></a><a name="dg_routines_3604229493_676300_Keywords_CONTOUR__"></a>C_SPACING</h3>
+        <p>If the FILL or CELL_FILL keyword is set, this keyword can be used to control the distance, in centimeters, between the lines used to fill the contours.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879235"></a><a name="dg_routines_3604229493_676302_Keywords_CONTOUR__"></a>C_THICK</h3>
+        <p>The line used to draw each contour level. As with C_COLORS, C_THICK is a vector of line thickness values, although the values are floating point. If there are more contours than thickness elements, elements are repeated. If omitted, the overall line thickness specified by the THICK keyword parameter or !P.THICK is used for all contours.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879238"></a><a name="dg_routines_3604229493_892176_Keywords_CONTOUR__"></a>CELL_FILL</h3>
+        <p>Set this keyword to produce a filled contour plot using a “cell filling” algorithm. Use this keyword instead of FILL when you are drawing filled contours over a map, when you have missing data, or when contours that extend off the edges of the contour plot. CELL_FILL is less efficient than FILL because it makes one or more polygons for each data cell. It also gives poor results when used with patterned (line) fills, because each cell is assigned its own pattern. Otherwise, this keyword operates identically to the FILL keyword, described below.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>In order for CONTOUR to fill the contours properly when using a map projection, the X and Y arrays (if supplied) must be arranged in increasing order. This ensures that the polygons generated will be in counterclockwise order, as required by the mapping graphics pipeline.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Do not draw filled contours over the poles on Cylindrical map projections. In this case, the polar points map to lines on the map, and the interpolation becomes ambiguous, causing errors in filling. One possible work-around is to limit the latitudes to the range of -89.9 degrees to + 89.9 degrees, avoiding the poles.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879243"></a><a name="dg_routines_3604229493_676304_Keywords_CONTOUR__"></a>CLOSED</h3>
+        <p>Set this keyword to a nonzero value to close contours that intersect the plot boundaries. After a contour hits a boundary, it follows the plot boundary until it connects with its other boundary intersection. Set CLOSED=0 along with PATH_INFO and/or PATH_XY to return path information for contours that are not closed.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879246"></a><a name="dg_routines_3604229493_676306_Keywords_CONTOUR__"></a>DOWNHILL</h3>
+        <p>Set this keyword to label each contour with short, perpendicular tick marks that point in the “downhill” direction, making the direction of the grade readily apparent. If this keyword is set, the contour following method is used in drawing the contours. For example:</p>
+        <p class="Code">CONTOUR, data, /DOWNHILL</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879252"></a><a name="dg_routines_3604229493_676308_Keywords_CONTOUR__"></a><a name="dg_routines_3604229493_22631"></a>FILL</h3>
+        <p>Set this keyword to produce a filled contour plot. The contours are filled with solid or line-filled polygons. For solid polygons, use the C_COLOR keyword to specify the color index of the polygons for each contour level. For line fills, use C_ORIENTATION, C_SPACING, C_COLOR, C_LINESTYLE, and/or C_THICK to specify attributes for the lines.</p>
+        <p>If the current device is not a pen plotter, each polygon is erased to the background color before the fill lines are drawn, to avoid superimposing one pattern over another.</p>
+        <p>Contours that are not closed cannot be filled because their interior and exterior are undefined. Contours created from data sets with missing data may not be closed; many map projections can also produce contours that are not closed. You should not use filled contours in these cases.</p>
+        <p>You should not use this keyword when you are drawing filled contours over a map, when you have missing data, or when contours extend off the edges of the contour plot. In these cases, you should use CELL_FILL instead.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the current graphics device is the Z-buffer, the algorithm used when the FILL keyword is specified will not work when a Z value is also specified with the graphics keyword ZVALUE. In this situation, use the CELL_FILL keyword instead of the FILL keyword.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879259"></a><a name="dg_routines_3604229493_676311_Keywords_CONTOUR__"></a>FOLLOW</h3>
+        <p>In IDL version 5, CONTOUR always uses a line-following method. The FOLLOW keyword remains available for compatibility with existing code, but is no longer necessary. As in previous versions of IDL, setting FOLLOW will cause CONTOUR to draw contour labels.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879262"></a><a name="dg_routines_3604229493_879096_Keywords_CONTOUR__"></a>IRREGULAR</h3>
+        <p>Set this keyword to indicate that the input data is irregularly gridded. Setting IRREGULAR is the same as performing an explicit triangulation. That is:</p>
+        <p class="Code">CONTOUR, Z, X, Y, /IRREGULAR</p>
+        <p>is the same as</p>
+        <p class="Code">TRIANGULATE, X, Y, tri&#160;&#160;&#160;;Get triangulation</p>
+        <p class="Code">CONTOUR, Z, X, Y, TRIANGULATION=tri</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If a mapping projection is enabled when CONTOUR is called with this keyword, the <i>X</i> and <i>Y</i> parameters are interpreted as latitude and longitude values. This implies that spherical triangulation should be performed, which in turn implies that the <i>X</i> and <i>Y</i> parameters will be converted to double precision and rearranged to match the spherical triangulation. See the SPHERE keyword to <a href="../T/TRIANGULATE.htm">TRIANGULATE</a> for details.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879274"></a><a name="dg_routines_3604229493_676316_Keywords_CONTOUR__"></a>ISOTROPIC</h3>
+        <p>Set this keyword to force the scaling of the X and Y axes to be equal.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The X and Y axes will be scaled isotropically and then fit within the rectangle defined by the POSITION keyword; one of the axes may be shortened. See <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316026">POSITION</a> for more information.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879281"></a><a name="dg_routines_3604229493_927695_Keywords_CONTOUR__"></a>LEVELS</h3>
+        <p>Specifies a vector containing the contour levels drawn by the CONTOUR procedure. A contour is drawn at each level in LEVELS.</p>
+        <h4>Example</h4>
+        <p>To draw a contour plot with levels at 1, 100, 1000, and 10000:</p>
+        <p class="Code">CONTOUR, Z, LEVELS = [1, 100, 1000, 10000]</p>
+        <p>To draw a contour plot with levels at 50, 60, ..., 90, 100:</p>
+        <p class="Code">CONTOUR, Z, LEVELS = FINDGEN(6) * 10 + 50</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879289"></a><a name="dg_routines_3604229493_676323_Keywords_CONTOUR__"></a>MAX_VALUE</h3>
+        <p>Data points with values above this value are ignored (i.e., treated as <a name="kanchor323"></a>missing data) when contouring. Cells containing one or more corners with values above MAX_VALUE will have no contours drawn through them. Note that the IEEE floating-point value NaN is also treated as missing data.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879296"></a><a name="dg_routines_3604229493_47033_Keywords_CONTOUR__"></a>MIN_VALUE</h3>
+        <p>Data points with values less than this value are ignored (i.e., treated as missing data) when contouring. Cells containing one or more corners with values below MIN_VALUE will have no contours drawn through them. Note that the IEEE floating-point value NaN is also treated as missing data.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879302"></a><a name="dg_routines_3604229493_676325_Keywords_CONTOUR__"></a>NLEVELS</h3>
+        <p>The number of equally spaced contour levels that are produced by CONTOUR. If the LEVELS parameter, which explicitly specifies the value of the contour levels, is present, this keyword has no effect. If neither parameter is present, approximately six levels are drawn. NLEVELS should be a positive integer.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879305"></a><a name="dg_routines_3604229493_861732_Keywords_CONTOUR__"></a>OVERPLOT</h3>
+        <p>Set this keyword to make CONTOUR “overplot”. That is, the current graphics screen is not erased, no axes are drawn and the previously established scaling remains in effect. You must explicitly specify either the values of the contour levels or the number of levels (via the <a href="#dg_routines_3604229493_879302" class="selected">NLEVELS</a> keyword) when using this option, unless geographic mapping coordinates are in effect.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When specifying overplot levels with the <a href="#dg_routines_3604229493_879302" class="selected">NLEVELS</a> keyword, keep in mind that the levels are calculated according to the range set by the original CONTOUR call. If the overplot dataset has a different range, you might want to set your levels more explicitly with the <a href="#dg_routines_3604229493_879302" class="selected">NLEVELS</a> keyword.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879318"></a><a name="dg_routines_3604229493_879089_Keywords_CONTOUR__"></a>PATH_DATA_COORDS</h3>
+        <p>Set this keyword to cause the output contour positions to be measured in data units rather than the default normalized units. This keyword is useful only if the PATH_XY or PATH_FILENAME keywords are set.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879321"></a><a name="dg_routines_3604229493_1015046_Keywords_CONTOUR__"></a>PATH_DOUBLE</h3>
+        <p>Set this keyword to indicate that the PATH_FILENAME, PATH_INFO, and PATH_XY keywords should return vertex and contour value information as double-precision floating-point values. The default is to return this information as single-precision floating-point values.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879324"></a><a name="dg_routines_3604229493_676329_Keywords_CONTOUR__"></a>PATH_FILENAME</h3>
+        <p>Specifies the name of a file to contain the contour positions. If PATH_FILENAME is present, CONTOUR does not draw the contours, but rather, opens the specified file and writes the coordinates of the contours, into it. The file consists of a series of logical records containing binary data. Each record is preceded with a header structure defining the contour as follows:</p>
+        <p>If the PATH_DOUBLE keyword is not set:</p>
+        <p class="Code">{CONTOUR_HEADER, TYPE:0B, HIGH:0B, LEVEL:0,&#160;NUM:0L, VALUE:0.0}</p>
+        <p>If the PATH_DOUBLE keyword is set:</p>
+        <p class="Code">{CONTOUR_DBL_HEADER, TYPE:0B, HIGH:0B, LEVEL:0, NUM:0L, VALUE:0.0D}</p>
+        <p>The fields are:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Field</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>TYPE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>A byte that is zero if the contour is open, and one if it is closed.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>HIGH</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>A byte that is 1 if the contour is closed and above its surroundings, and is 0 if the contour is below. This field is meaningless if the contour is not closed.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>LEVEL</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>A short integer with value greater or equal to zero (It is an index into the LEVELS array).</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>NUM</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>The longword number of data points in the contour.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>VALUE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>The contour value. If the PATH_DOUBLE keyword is not set, this is a single-precision floating-point value; if the PATH_DOUBLE keyword is set, this is a double-precision floating-point value.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Following the header in each record are NUM X-coordinate values followed by NUM Y-coordinate values. By default, these values are specified in normalized coordinates unless the PATH_DATA_COORDS keyword is set.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879365"></a><a name="dg_routines_3604229493_746342_Keywords_CONTOUR__"></a>PATH_INFO</h3>
+        <p>Set this keyword to a named variable that will return path information for the contours. This information can be used, along with data stored in a variable named by the PATH_XY keyword, to trace closed contours. To get PATH_INFO and PATH_XY with contours that are not closed, set the CLOSED keyword to 0. If PATH_INFO is present, CONTOUR does not draw the contours, but rather records the path information in an array of structures of the following type:</p>
+        <p>If the PATH_DOUBLE keyword is not set:</p>
+        <p class="Code">{CONTOUR_PATH_STRUCTURE, TYPE:0B, HIGH_LOW:0B, $</p>
+        <p class="Code">&#160;&#160;&#160;LEVEL:0, N:0L, OFFSET:0L, VALUE:0.0}</p>
+        <p>If the PATH_DOUBLE keyword is set:</p>
+        <p class="Code">{COUNTOUR_DBL_PATH_STRUCTURE, TYPE:0B, HIGH_LOW:0B, LEVEL:0, </p>
+        <p class="Code">&#160;&#160;&#160;N: 0L, OFFSET:0L, VALUE:0.0D}</p>
+        <p>The fields are:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Field</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>TYPE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>A byte that is zero if the contour is open, and one if it is closed.</p>
+                        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the CLOSED keyword is not explicitly set equal to zero, all contours will be closed.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>HIGH_LOW</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>A byte that is 1 if the contour is above its surroundings, and is 0 if the contour is below.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>LEVEL</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>A short integer indicating the index of the contour level, from zero to the number of levels minus one.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>N</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>A long integer indicating the number of XY pairs in the contour’s path.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>OFFSET</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>A long integer that is the offset into the array defined by PATH_XY, representing the first XY coordinate for this contour. </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>VALUE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>The contour value. If the PATH_DOUBLE keyword is not set, this is a single-precision floating-point value; if the PATH_DOUBLE keyword is set, this is a double-precision floating-point value. </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>See the examples section below for an example using the PATH_INFO and PATH_XY keywords to return contour path information.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879413"></a><a name="dg_routines_3604229493_746343_Keywords_CONTOUR__"></a>PATH_XY</h3>
+        <p>Set this keyword to a named variable that returns the coordinates of a set of closed polygons defining the closed paths of the contours. This information can be used, along with data stored in a variable named by the PATH_INFO keyword, to trace closed contours. To get PATH_XY and PATH_INFO with contours that are not closed, set the CLOSED keyword to 0. If PATH_XY is present, CONTOUR does not draw the contours, but rather records the path coordinates in the named array. If the PATH_DOUBLE keyword is not set, the array will contain single-precision floating point values; if the PATH_DOUBLE keyword is set, the array will contain double-precision floating point values. By default, the values in the array are specified in normalized coordinates unless the PATH_DATA_COORDS keyword is set.</p>
+        <p>See the examples section below for an example using the PATH_INFO and PATH_XY keywords to return contour path information.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879417"></a><a name="dg_routines_3604229493_746344_Keywords_CONTOUR__"></a>TRIANGULATION</h3>
+        <p>Set this keyword to a variable that contains an array of triangles returned from the TRIANGULATE procedure. Providing triangulation data allows you to contour irregularly gridded data directly, without gridding.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879420"></a><a name="dg_routines_3604229493_158329_Keywords_CONTOUR__"></a>XLOG</h3>
+        <p>Set this keyword to specify a logarithmic X <a name="kanchor324"></a>axis.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879424"></a><a name="dg_routines_3604229493_158344_Keywords_CONTOUR__"></a>YLOG</h3>
+        <p>Set this keyword to specify a <a name="kanchor325"></a>logarithmic Y axis.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_879429"></a><a name="dg_routines_3604229493_676344_Keywords_CONTOUR__"></a>ZAXIS</h3>
+        <p>Set this keyword to an integer value to draw a Z axis for the CONTOUR plot. CONTOUR draws no Z axis by default. This keyword is of use only if a three-dimensional transformation is established. Possible values are: </p>
+        <table style="margin-left: 0;margin-right: auto;caption-side: top;mc-table-style: url('../../Resources/TableStyles/NoLines.css');" class="TableStyle_NoLines" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>No Z axis is drawn (the default)</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>Draws Z axis from the lower right-hand corner of the plot</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>Draws Z axis from the lower left-hand corner of the plot</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">&#160;</td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">
+                        <p>4</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColEnd">
+                        <p>Draws Z axis from the upper right-hand corner of the plot</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3><a name="dg_routines_3604229493_879454"></a>Graphics Keywords Accepted</h3>
+        <p>See <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_317209">Graphics Keywords</a> for the description of the following graphics and plotting keywords:</p>
+        <p><a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_328424">BACKGROUND</a>, 
+		<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_266973">CHARSIZE</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_331668">CHARTHICK</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_315949">CLIP</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_371352">COLOR</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_315961">DATA</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_369990">DEVICE</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_331795">FONT</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_370050">NOCLIP</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_371086">NODATA</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316024">NOERASE</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_315963">NORMAL</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316026">POSITION</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316057">SUBTITLE</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_315956">T3D</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316006">THICK</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332207">TICKLEN</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332238">TITLE</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_331699">[XYZ]CHARSIZE</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332009">[XYZ]GRIDSTYLE</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332038">[XYZ]MARGIN</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332061">[XYZ]MINOR</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332090">[XYZ]RANGE</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332116">[XYZ]STYLE</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332298">[XYZ]THICK</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_370350">[XYZ]TICKFORMAT</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332463">[XYZ]TICKINTERVAL</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332488">[XYZ]TICKLAYOUT</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332513">[XYZ]TICKLEN</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332536">[XYZ]TICKNAME</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332559">[XYZ]TICKS</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332586">[XYZ]TICKUNITS</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332628">[XYZ]TICKV</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_332321">[XYZ]TICK_GET</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316100">[XYZ]TITLE</a>, 
+			<a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316102">ZVALUE</a></p>
+        <h2 class="API"><a name="dg_routines_3604229493_893777"></a>Examples</h2>
+        <p>In addition to the following examples, also see the <a href="../P/PLOT_Procedure.htm#dg_routines_3604229493_883230">PLOT Procedure</a> routine for samples that control plot position, configure axes and position multiple plots on a page. This section includes the following information:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/NoLines.css');" cellspacing="0" class="TableStyle_NoLines">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="#dg_routines_3604229493_879638" class="selected">Using CONTOUR</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="#dg_routines_3604229493_879687" class="selected">Contour Irregularly-gridded with TRIANGULATE</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="#dg_routines_3604229493_879649" class="selected">Contouring Methods</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="#dg_routines_3604229493_879691" class="selected">Contour of Digital Elevation Data</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="#dg_routines_3604229493_879657" class="selected">Label Ten Contour Levels</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="#dg_routines_3604229493_879759" class="selected">Labeling Contours</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="#dg_routines_3604229493_879661" class="selected">Polygon Filling and Smoothing</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="#dg_routines_3604229493_879800" class="selected">Overlaying Images and Contour Plots</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="#dg_routines_3604229493_879671" class="selected">Plotting Closed Contour Paths</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="#dg_routines_3604229493_879873" class="selected">Displaying Date/Time Data on a Contour Display</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">
+                        <p><a href="#dg_routines_3604229493_879677" class="selected">Filling Contours</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Several of the following examples use batch files.</p>
+        <h3><a name="dg_routines_3604229493_879638"></a><a name="dg_routines_3604229493_14207"></a>Using CONTOUR</h3>
+        <p>The basic call to CONTOUR is as follows:</p>
+        <p class="Code">CONTOUR, Z</p>
+        <p>where <i>Z</i> is a two-dimensional array. This call labels the <i>x</i>- and <i>y</i>-axes with the subscript along each dimension. For example, when contouring a 10 ∞ 20 array, the <i>x</i>-axis ranges from 0 to 9, and the <i>y</i>-axis ranges from 0 to 19.</p>
+        <p>You can explicitly specify the <i>x</i> and <i>y</i> locations of each cell as follows:</p>
+        <p class="Code">CONTOUR, Z, X, Y</p>
+        <p>where the <i>X</i> and <i>Y</i> arrays can be either vectors or two-dimensional arrays of the same size as <i>Z</i>. If they are vectors, the element <i>z</i><sub>i</sub><sub>,</sub><i><sub>j</sub></i> has a coordinate location of (<i>x</i><sub>i</sub>, <i>y</i><sub>j</sub>). Otherwise, if the <i>x</i> and <i>y</i> arrays are two-dimensional, the element <i>z</i><sub>i</sub><sub>,</sub><i><sub>j</sub></i> has the location (<i>x</i><sub>i</sub><sub>,</sub><i><sub>j</sub></i>, <i>y</i><sub>i</sub><sub>,</sub><i><sub>j</sub></i>). Thus, vectors should be used if the <i>x</i> location of <i>z</i><sub>i</sub><sub>,</sub><i><sub>j</sub></i> does not depend upon <i>j</i> and the <i>y</i> location of <i>z</i><sub>i</sub><sub>,</sub><i><sub>j</sub></i> does not depend upon <i>i</i>.</p>
+        <p>Dimensions must be compatible. In the one-dimensional case, <i>X</i> must have a dimension equal to the number of columns in <i>Z</i>, and <i>Y</i> must have a dimension equal to the number of rows in <i>Z</i>. In the two- dimensional case, all three arrays must have the same dimensions.</p>
+        <p>IDL uses linear interpolation to determine the <i>x</i> and <i>y</i> locations of the contour lines that pass between grid elements. The cells must be regular in that the <i>x</i> and <i>y</i> arrays must be monotonic over rows and columns, respectively. The lines describing the quadrilateral enclosing each cell and whose vertices are (<i>x</i><sub>i</sub><sub>,</sub><i><sub>j</sub></i>, <i>y</i><sub>i</sub><sub>,</sub><i><sub>j</sub></i>), (<i>x</i><sub>i</sub><sub>+1,</sub><i><sub>j</sub></i>, <i>y</i><sub>i</sub><sub>+1,</sub><i><sub>j</sub></i>), (<i>x</i><sub>i</sub><sub>+1,</sub><i><sub>j</sub></i><sub>+1</sub>, <i>y</i><sub>i</sub><sub>+1,</sub><i><sub>j</sub></i><sub>+1</sub>), and (<i>x</i><sub>i</sub><sub>,</sub><i><sub>j</sub></i><sub>+1</sub>, <i>y</i><sub>i</sub><sub>,</sub><i><sub>j</sub></i><sub>+1</sub>) must intersect only at the four corners and the quadrilateral must not contain other nodes.</p>
+        <h3><a name="dg_routines_3604229493_879649"></a><a name="dg_routines_3604229493_71688"></a>Contouring Methods</h3>
+        <p>In order to provide a wide range of options, CONTOUR uses one of two contouring algorithms. The algorithm used depends on the keywords specified, and is one of the two following methods.</p>
+        <h4>Cell Drawing</h4>
+        <p>The first algorithm, used by default, examines each array cell and draws all contours emanating from that cell before proceeding to the next cell. This method is efficient in terms of computer resources, but does not allow options such as contour labeling or smoothing.</p>
+        <h4>Contour Following</h4>
+        <p>The second method searches for each contour line, then follows the line until it reaches a boundary or closes. This method gives better looking results with dashed linestyles and allows contour labeling and bi-cubic spline interpolation, but requires more computer time. The contour following method is used if any of these keywords are specified: C_ANNOTATION, &#160;C_CHARSIZE, &#160;C_LABELS, &#160;CLOSED, FOLLOW, &#160;PATH_FILENAME, or DOWNHILL.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Due to their differing algorithms, these two methods will often draw slightly different, yet correct, contour maps for the same data. This difference is a direct result of the fact that there is often more than one valid way to draw contours and should not be a cause for concern.</p>
+        <h3><a name="dg_routines_3604229493_879657"></a><a name="dg_routines_3604229493_676349_Keywords_CONTOUR__"></a>Label Ten Contour Levels</h3>
+        <p>This example creates a contour plot with 10 contour levels where every other contour is labeled:</p>
+        <p class="Code">; Create a simple dataset to plot:<br />Z = DIST(100)<br /><br />; Draw the plot:<br />CONTOUR, Z, NLEVELS=10, /FOLLOW, TITLE='Simple Contour Plot'</p>
+        <h3><a name="dg_routines_3604229493_879661"></a><a name="dg_routines_3604229493_1023112_Keywords_CONTOUR__"></a>Polygon Filling and Smoothing</h3>
+        <p>This example shows the use of polygon filling and smoothing.</p>
+        <p class="Code">; Handle TrueColor displays:<br />DEVICE, DECOMPOSED=0<br /><br />; Create a surface to contour (2D array of random numbers):<br />A = RANDOMU(seed, 5, 6)<br /><br />; Smooth the dataset before contouring:<br />B = MIN_CURVE_SURF(A)<br /><br />; Load discrete colors for contours:<br />TEK_COLOR<br /><br />; Draw filled contours:<br />CONTOUR, B, /FILL, NLEVELS=5, C_COLOR=INDGEN(5)+2<br /><br />; Overplot the contour lines with tickmarks:<br />CONTOUR, B, NLEVELS=5, /DOWNHILL, /OVERPLOT</p>
+        <p class="Code">&#160;</p>
+        <p>Alternatively, we could draw line-filled contours by replacing the last two commands with:</p>
+        <p class="Code">CONTOUR, B, C_ORIENTATION=[0, 22, 45]<br /><br />CONTOUR, B, /OVERPLOT, NLEVELS=5</p>
+        <p>The following short example shows the difference between a smoothed and an unsmoothed contour plot:</p>
+        <p class="Code">; Create a simple dataset:<br />data = RANDOMU(seed, 7, 7)<br /><br />; Plot two contours side by side<br />WINDOW, 0, XSIZE=800, YSIZE=300<br />!P.MULTI = [0,2,1]<br /><br />; Plot the unsmoothed data:<br />CONTOUR, data, TITLE='Unsmoothed'<br />; Plot the smoothed data:<br />CONTOUR, MIN_CURVE_SURF(data), TITLE='Smoothed'<br /><br />; Restore the window settings<br />!P.MULTI=0</p>
+        <p class="Code">&#160;</p>
+        <h3><a name="dg_routines_3604229493_879671"></a><a name="dg_routines_3604229493_1023147_Keywords_CONTOUR__"></a>Plotting Closed Contour Paths</h3>
+        <p>The following example saves the closed path information of a set of contours and plots the result:</p>
+        <p class="Code">; Create a 2D array of random numbers:<br />A = RANDOMU(seed, 8, 10)<br /><br />; Smooth the dataset before contouring:<br />B = MIN_CURVE_SURF(A)<br /><br />; Compute contour paths:<br />CONTOUR, B, PATH_XY=xy, PATH_INFO=info<br /><br />FOR I = 0, (N_ELEMENTS(info) - 1 ) DO BEGIN $<br />&#160;&#160;&#160;S = [INDGEN(info(I).N), 0] &amp; $<br />&#160;&#160;&#160;PLOTS, xy(*,INFO(I).OFFSET + S ), /NORM</p>
+        <p class="Code">&#160;</p>
+        <h3><a name="dg_routines_3604229493_879677"></a><a name="kanchor326"></a><a name="dg_routines_3604229493_39655"></a>Filling Contours</h3>
+        <p>Set the FILL keyword to produce a filled contour plot. The contours are filled with solid or line-filled polygons. For solid polygons, use the C_COLOR keyword to specify the color index of the polygons for each contour level. For line fills, use C_ORIENTATION, &#160;C_SPACING, &#160;C_COLOR, &#160;C_LINESTYLE, and/or C_THICK to specify attributes for the lines.</p>
+        <p>If the current device is not a pen plotter, each polygon is erased to the background color before the fill lines are drawn, to avoid superimposing one pattern over another.</p>
+        <p>The FILL keyword replaces the use of the PATH_FILENAME keyword and POLYFILL procedure from previous versions of IDL. Setting the FILL keyword also closes any open contours before filling.</p>
+        <p>The following example illustrates various filled contour plot options.</p>
+        <p class="Code">; Create a simple, random dataset for contouring:<br />data = RANDOMU(seed, 7, 7)<br />; Create a basic, solid-color, filled CONTOUR plot<br />; with 6 evenly-spaced levels.<br />CONTOUR, data, NLEVELS=6, /FILL<br />; Overplot contour outlines:<br />CONTOUR, data, NLEVELS=6, /NOERASE</p>
+        <p>Instead of solid colors, contours can be filled with lines:</p>
+        <p class="Code">; Create a vector of orientations for the fill lines:<br />ANGLES = [0, 45, -45]<br />; Create a vector of colors to use:<br />C = [70, 120, 200, 255]<br />; Create contours filled with lines.<br />CONTOUR, data, NLEVELS=10, C_ORIENT=ANGLES, C_COLORS=C<br />; Overplot contour outlines:<br />CONTOUR, data, NLEVELS=10, /NOERASE</p>
+        <p>There are many other controls for filled contour plots. The C_COLORS, C_LINESTYLE, C_SPACING, and C_THICK keywords can also be used to control the type of fill. </p>
+        <h3><a name="dg_routines_3604229493_879687"></a><a name="dg_routines_3604229493_1023171_Keywords_CONTOUR__"></a>Contour Irregularly-gridded with TRIANGULATE</h3>
+        <p>This example contours irregularly-gridded data without having to call TRIGRID. First, use the TRIANGULATE procedure to get the Delaunay triangulation of your data, then pass the triangulation array to CONTOUR:</p>
+        <p class="Code">; Make 50 normal X, Y points:<br />x = RANDOMN(seed, 50)<br />y = RANDOMN(seed, 50)<br /><br />; Make the Gaussian:<br />Z = EXP(-(x^2 + y^2))<br /><br />; Get triangulation:<br />TRIANGULATE, X, Y, tri<br /><br />; Draw the contours:<br />CONTOUR, Z, X, Y, TRIANGULATION = tri</p>
+        <h3><a name="dg_routines_3604229493_879691"></a><a name="dg_routines_3604229493_44850"></a>Contour of Digital Elevation Data </h3>
+        <p>Digital elevation data of the Maroon Bells area, near Aspen, Colorado, are used to illustrate the CONTOUR procedure. The data set was obtained from a United States Geological Survey Digital Elevation Model tape. This data provides terrain elevation data over a 7.5-minute square (approximately 11 ∞ 13.7 kilometers at the latitude of Maroon Bells), with 30-meter sampling.</p>
+        <p>The data are contained in a 360 ∞ 460 array A, sampled in 30-meter square intervals, measured in Universal Transverse Mercator (UTM) coordinates. The rectangular array is not completely filled with data because the 7.5-minute square is not perfectly oriented to the UTM grid system. Missing data are represented as zeroes. Elevation measurements range from 2658 to 4241 meters or from 8720 to 13,914 feet.</p>
+        <p>The Maroon Bells data are used in a number of examples in this section, and is included in an IDL SAVE file called <code>marbells.dat</code> in the <code>examples/data</code> subdirectory of the IDL distribution. To restore the save file, issue the following commands at the IDL prompt (change the path separator characters as necessary for your platform):</p>
+        <p class="Code">CD, !DIR+'/examples/data'</p>
+        <p class="Code">RESTORE, 'marbells.dat'</p>
+        <p class="ExampleCode">The batch file <code>cntour01<a name="kanchor327"></a></code>, located in the <code>examples/doc/plot</code> subdirectory of the IDL distribution, restores this data and defines several variables used in the following examples. Typing <code>@cntour01</code> at the IDL command prompt creates an IDL variable named elev that contains the 360 x 460 integer array. </p>
+        <p>The figure below is the result of applying the CONTOUR procedure to the data, using the default settings:</p>
+        <p class="Code">CONTOUR, elev</p>
+        <p>
+            <img src="../../Resources/Images/mult01.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 6.000484px;margin-bottom: 6.000484px;" />
+        </p>
+        <p>A number of problems are apparent with this simple contour plot.</p>
+        <ul>
+            <li value="1">IDL selected six contour levels, by default, for the elevation from 0 to 4241; that’s roughly 4241divided into 7 intervals or approximately 605 meters in elevation between contour levels. The levels are 605, 1250, ..., 3635 meters, even though the range of valid data is from 2658 to 4241 meters. This is because the missing data values of 0 were considered when selecting the intervals. It is generally more appropriate to select contour levels only within the range of valid data.</li>
+            <li value="2">The vertical contours along the left edge are an invalid artifact due to contouring missing data and should not be present.</li>
+            <li value="3">For most display systems and for contour intervals of approximately 200 meters, the data has too many samples in the <i>x</i>-<i>y</i> direction. This oversampling has two adverse effects: the contours appear jagged, and a large number of short vectors are produced.</li>
+            <li value="4">The axes are labeled by point number, but should be in UTM coordinates.</li>
+            <li value="5">It is difficult to visualize the terrain and to discern maxima from minima because each contour is drawn with the same type of line.</li>
+        </ul>
+        <p>The above problems are readily solved using the following simple techniques:</p>
+        <ul>
+            <li value="1">Specify the contour levels directly using the LEVELS keyword parameter. Selecting contour intervals of 250 meters, at elevation levels of [2750, 3000, 3250, 3500, 3750, 4000], results in six levels within the range of valid data.</li>
+            <li value="2">Use the REBIN function to decrease the sampling in <i>x</i> and <i>y</i> by a factor of 5:</li>
+        </ul>
+        <p class="Code_Indented">new = REBIN(elev, 360/5, 460/5)</p>
+        <p>This smooths the contours, because the call to REBIN averages 5<sup>2</sup>=25 bins when resampling. The number of vectors transmitted to the display also are decreased by a factor of approximately 25. The variable <code>new</code> is now a 70 ∞ 90 array.</p>
+        <p>The <i>x</i> and <i>y</i> vectors are constructed containing the UTM coordinates for each row and column. From the USGS data tape, the UTM coordinate of the lower-left corner of the array is (326,850: 4,318,500) meters. As the data spacing is 30 meters in both directions, the <i>x</i> and <i>y</i> vectors, in kilometers, are easily formed using the FINDGEN function, as shown in the example below.</p>
+        <p>Contour levels at each multiple of 500 meters (every other level) are drawn with a solid line style, while levels that fall between are drawn with a dotted line. In addition, the 4000-meter contour is drawn with a triple thick line, emphasizing the top contour.</p>
+        <p>The result of these improvements is shown in the figure below. </p>
+        <p>
+            <img src="../../Resources/Images/mult02.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 5.999752px;margin-bottom: 5.999767px;" />
+        </p>
+        <p>This figure was produced with the <code>cntour02</code> batch file.</p>
+        <p class="Code">; Restore variables:<br />@cntour01<br />; REBIN down to a 70 x 90 matrix:<br />new = REBIN(elev, 350/5, 450/5)<br />; Make the x and y vectors specifying the position<br />; of each column and row.<br />X = 326.850 + .030 * FINDGEN(70)<br />Y = 4318.500 + .030 * FINDGEN(90)<br />; Make the plot, specifying the contour levels,<br />; missing data value, linestyles, etc.<br />; Set the STYLE keywords to 1, obtaining exact axes.<br />CONTOUR, new, X, Y, LEVELS = 2750 + FINDGEN(6) * 250., $<br />&#160;&#160;&#160;XSTYLE = 1, YSTYLE = 1, YMARGIN = 5, MAX_VALUE = 5000, $<br />&#160;&#160;&#160;C_LINESTYLE = [1, 0], $<br />&#160;&#160;&#160;C_THICK = [1, 1, 1, 1, 1, 3], $<br />&#160;&#160;&#160;TITLE = 'Maroon Bells Region', $<br />&#160;&#160;&#160;SUBTITLE = '250 meter contours', $<br />&#160;&#160;&#160;XTITLE = 'UTM Coordinates (KM)'<br /></p>
+        <p class="ExampleCode">See <code>cntour02<a name="kanchor328"></a></code> located in the <code>examples/doc/plot</code> subdirectory of the IDL installation directory for the example code. You can also run the batch file <code>cntour02</code> by entering the following command at the IDL prompt:<br /><code>@cntour02</code></p>
+        <h3><a name="dg_routines_3604229493_879759"></a><a name="dg_routines_3604229493_68740"></a>Labeling Contours</h3>
+        <p>The C_ANNOTATION, C_CHARSIZE, and C_LABELS keywords are used to control contour labeling. Using them, possibly in conjunction with the LEVELS keyword, it is possible to specify which contours should be labeled, the size of the labels, and the actual labels that should be used.</p>
+        <p>In the following discussion, a variable named DATA is contoured. This variable contains uniformly distributed random numbers obtained using the following statement:</p>
+        <p class="Code">SEED = 20 &amp; DATA = RANDOMU(SEED, 6, 6)</p>
+        <p>To label contours using the defaults for label size and contours to label, it is sufficient to select the FOLLOW keyword. In this case, CONTOUR labels every other contour using the default label size (three-fourths of the plot axis label size). Each contour is labeled with its value. </p>
+        <p>
+            <img src="../../Resources/Images/mult05.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 15.00048px;margin-bottom: 6.000469px;" />
+        </p>
+        <p>The preceding figure was produced using the following statement:</p>
+        <p class="Code">CONTOUR, /FOLLOW, DATA </p>
+        <p>The C_CHARSIZE keyword is used to specify the size of the characters used for labeling in the same manner that SIZE is used to control plot axis label size. The C_LABELS keyword can be used to select the contours to be labeled. For example, suppose that we want to contour the variable DATA at 0.2, 0.5, and 0.8, and we want all three levels labeled. In addition, we wish to make each label larger. This can be accomplished with the statement below.</p>
+        <p class="Code">CONTOUR, LEVEL=[0.2, 0.5, 0.8], C_LABELS=[1, 1, 1], $<br />&#160;&#160;&#160;C_CHARSIZE = 1.25, DATA</p>
+        <p>The result is the plot on the left in the figure below. </p>
+        <p>Finally, it is possible to specify the text to be used for the contour labels using the C_ANNOTATION keyword, as shown in the statements below.</p>
+        <p class="Code">CONTOUR, LEVEL=[0.2, 0.5, 0.8], C_LABELS=[1, 1, 1], $<br />&#160;&#160;&#160;C_ANNOTATION = ["Low", "Medium", "High"], $<br />&#160;&#160;&#160;C_CHARSIZE = 1.25, DATA</p>
+        <p>To display the last two plots side by side::</p>
+        <p class="Code">SEED = 20 &amp; DATA = RANDOMU(SEED, 6, 6)<br />WINDOW, 0, XSIZE=800, YSIZE=300<br />!P.MULTI=[0,2,1]<br />CONTOUR, LEVEL=[0.2, 0.5, 0.8], C_LABELS=[1, 1, 1], $<br />&#160;&#160;&#160;C_CHARSIZE = 1.25, DATA<br />CONTOUR, LEVEL=[0.2, 0.5, 0.8], C_LABELS=[1, 1, 1], $<br />&#160;&#160;&#160;C_ANNOTATION = ["Low", "Medium", "High"], $<br />&#160;&#160;&#160;C_CHARSIZE = 1.25, DATA<br />!P.MULTI=0</p>
+        <p class="Code">&#160;</p>
+        <p>The result is the plot on the right in the figure below.</p>
+        <p>
+            <img src="../../Resources/Images/mult06.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 16.50024px;margin-bottom: 5.999767px;" />
+        </p>
+        <h3><a name="dg_routines_3604229493_879800"></a><a name="dg_routines_3604229493_28318"></a><a name="kanchor329"></a>Overlaying Images and Contour Plots</h3>
+        <p>Superimposing an image and its contour plot combines the best of both worlds: the image allows easy visualization and the contour lines provide a semi-quantitative display. The programs presented in the rest of this section are for advanced computing only. </p>
+        <p>A combined contour and image display, such as that discussed in this section, can be created with the IMAGE_CONT procedure. The following material is intended to illustrate the ways in which images and graphics can be combined using IDL.</p>
+        <p>The technique used to overlay plots and images depends on whether or not the device is able to represent pixels of variable size, as does PostScript, or if it has pixels of a fixed size. If the device does not have scalable pixels, the image must be resized to fit within the plotting area if it is not already of a size suitable for viewing. This leads to three separate cases that are illustrated in the following examples.</p>
+        <h3><a name="dg_routines_3604229493_879815"></a><a name="dg_routines_3604229493_53032"></a><a name="kanchor330"></a>Overlaying with Scalable Pixels</h3>
+        <p>Certain devices, notably PostScript, can display pixels of varying sizes. With these devices, it is easy to set the size and position of an image so that it exactly overlays the plot window. In creating the next figure, the actual dimensions of the contour plot window (contained in the !X.WINDOW and !Y.WINDOW system variables) were used to calculate the new size of the image.</p>
+        <p>
+            <img src="../../Resources/Images/mult04.gif" style="margin-left: 5.99976px;margin-top: 1.49976px;margin-right: 4.500027px;margin-bottom: 0.75024px;" />
+        </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In order to do this successfully, you must establish the size of the plot window before scaling the image. This means that you must make a call to CONTOUR before displaying the image, to set the window size, and another call to CONTOUR after displaying the image, to draw the contour lines on top of the image data.</p>
+        <p class="ExampleCode">Inspect the batch file <code>cntour03<a name="kanchor331"></a></code> located in the <code>examples/doc/plot </code>subdirectory of the IDL distribution to see how the figure was created. </p>
+        <p>Note that the aspect ratio of the image was changed to fit that of the plot window. To retain the original image aspect ratio, the plot window must be resized to an identical aspect ratio using the POSITION keyword parameter.</p>
+        <h3><a name="dg_routines_3604229493_879840"></a><a name="dg_routines_3604229493_28375"></a><a name="kanchor332"></a>Overlaying with Fixed Pixels</h3>
+        <p>If the pixel size is fixed (as is true on most displays), we can either resize the image to fit the plotting window or size the plotting window to fit the image dimensions.</p>
+        <h4>Method 1: Scale the Image to Fit the Display</h4>
+        <p>We can use the CONGRID function to create an image of the same size as the plotting window. The REBIN function also can be used to resample the original image if the plot window dimensions are an integer multiple or factor of the original image dimensions. REBIN is always faster than CONGRID. The following IDL procedure creates an image of the same size as the window, displays it, then overlays the contour plot.</p>
+        <p>Note that we first use the CONTOUR procedure with the NODATA keyword to create the plot window <i>before</i> resizing the image data, then resize the data, then call CONTOUR again with the NOERASE keyword to draw in the previously-created window.</p>
+        <p class="Code">; Restore variables:<br />@cntour01<br />; REBIN down to a 70 x 90 matrix.<br />new = REBIN(elev, 350/5, 450/5)<br />; Scale image intensities:<br />image = BYTSCL(elev, MIN=2658, MAX=4241)<br /><br />CONTOUR, new, X, Y, LEVELS = 2750 + FINDGEN(6) * 250., $<br />&#160;&#160;&#160;MAX_VALUE = 5000, XSTYLE = 1, YSTYLE = 1, $<br />&#160;&#160;&#160;TITLE = 'Maroon Bells Region', $<br />&#160;&#160;&#160;SUBTITLE = '250 meter contours', $<br />&#160;&#160;&#160;XTITLE = 'UTM Coordinates (KM)', /NODATA<br />; Get size of plot window in device pixels.<br />PX = !X.WINDOW * !D.X_VSIZE<br />PY = !Y.WINDOW * !D.Y_VSIZE<br />; Desired size of image in pixels.<br />SX = PX[1] - PX[0] + 1	<br />SY = PY[1] - PY[0] + 1<br />; Display the image with its lower-left corner at<br />; the origin of the plot window and with its size<br />; scaled to fit the plot window.<br />TVSCL, CONGRID(image, SX, SY), PX[0], PY[0]<br />CONTOUR, new, X, Y, LEVELS = 2750 + FINDGEN(6) * 250., $<br />&#160;&#160;&#160;MAX_VALUE = 5000, XSTYLE = 1, YSTYLE = 1, $<br />&#160;&#160;&#160;TITLE = 'Maroon Bells Region', $<br />&#160;&#160;&#160;SUBTITLE = '250 meter contours', $<br />&#160;&#160;&#160;XTITLE = 'UTM Coordinates (KM)', /NOERASE</p>
+        <p class="ExampleCode">See the <code>cntour04<a name="kanchor333"></a></code> batch file located in the <code>examples/doc/plot </code>subdirectory of the IDL distribution for the example code. You can also run the batch file <code>cntour04</code> with the following command at the IDL prompt:<br />&#160;&#160;&#160;<code>@cntour04</code></p>
+        <h4>Method 2: Scale the Display to Fit the Image</h4>
+        <p>If the image is already close to the proper display size, it is simpler and more efficient to change the plot window size to that of the image. The following procedure displays the image at the window origin, then sets the plot window to the image size, leaving its origin unchanged.</p>
+        <p class="Code">; Restore variables:<br />@cntour01<br />; REBIN down to a 70 x 90 matrix.<br />new = REBIN(elev, 350/5, 450/5) <br />; Scale image intensities.<br />image = BYTSCL(elev, MIN=2658, MAX=4241) <br />; Get the size of the image.<br />SZ= SIZE(image)<br />; Create a graphics window sized slightly larger than the image<br />WINDOW, /FREE, XSIZE=SZ[1]+100, YSIZE=SZ[2]+100<br />; Set up plotting coordinates, but do not draw the contour \<br />; or axes yet<br />CONTOUR, new, X, Y, XSTYLE = 4, YSTYLE = 4, /NODATA, /DEVICE<br />; Get size of plotting window in device pixels. Add an<br />; extra margin on the bottom to allow for the subtitle<br />PX = !X.WINDOW * !D.X_VSIZE <br />PY = !Y.WINDOW * !D.Y_VSIZE +!Y.MARGIN*4</p>
+        <p>Now, draw the image and contour:</p>
+        <p class="Code">TVSCL, image, PX[0], PY[0]<br />; Write the contours over the image, being sure to use <br />; the exact axis styles so that the contours fill the plot <br />; window. Inhibit erasing.<br />CONTOUR, new, X, Y, XSTYLE = 1, YSTYLE = 1, $<br />&#160;&#160;&#160;POSITION = [PX[0], PY[0], PX[0]+SZ[1]-1, PY[0]+SZ[2]-1], $<br />&#160;&#160;&#160;LEVELS = 2750 + FINDGEN(6) * 250., MAX_VALUE = 5000, $<br />&#160;&#160;&#160;TITLE='Maroon Bells Region', SUBTITLE = '250 meter contours', $<br />&#160;&#160;&#160;XTITLE = 'UTM Coordinates (KM)', /NOERASE, /DEVICE</p>
+        <p class="ExampleCode">See the <code>cntour05<a name="kanchor334"></a></code> batch file located in the <code>examples/doc/plot </code>subdirectory of the IDL distribution for the example code. You can also run the batch file <code>cntour05</code> with the following command at the IDL prompt:<br />&#160;&#160;&#160;<code>@cntour05</code></p>
+        <h3><a name="dg_routines_3604229493_879873"></a><a name="dg_routines_3604229493_77991"></a><a name="kanchor335"></a>Displaying Date/Time Data on a Contour Display</h3>
+        <p>Suppose you want to display the date and time on a contour display. The following example plots the surface temperature (in degrees Celsius) of each degree of a single circle on a sphere recorded at every second for 37 seconds after the initial recording of 59 minutes and 30 seconds after 2 o’clock pm (14 hundred hours) on the 30th day of March in the year 2000.</p>
+        <p class="Code">number_samples = 37<br />date_time = TIMEGEN(number_samples, UNITS = 'Seconds', $<br />&#160;&#160;&#160;START = JULDAY(3, 30, 2000, 14, 59, 30))<br />angle = 10.*FINDGEN(number_samples)<br />temperature = BYTSCL(SIN(10.*!DTOR* $<br />&#160;&#160;&#160;FINDGEN(number_samples)) # COS(!DTOR*angle))</p>
+        <p>Since the final contour display will be filled, we should define a color table:</p>
+        <p class="Code">DEVICE, GET_DECOMPOSED=old_decomposed, DECOMPOSED = 0<br />LOADCT, 5</p>
+        <p>The call to the DEVICE command with the DECOMPOSED keyword set to zero allows color tables to be used on TrueColor displays, which may be the default setting on some systems. The call to the LOADCT routine loads the Standard Gamma-II (number 5) color table, which is a part of IDL's libraries.</p>
+        <p>As with the one-dimensional case, the format of the date/time values is specified through the <a href="../L/LABEL_DATE.htm" class="Heading">LABEL_DATE</a> routine as follows</p>
+        <p class="Code">date_label = LABEL_DATE(DATE_FORMAT = $<br />&#160;&#160;&#160;['%I:%S', '%H', '%D %M, %Y'])</p>
+        <p>where %I represents minutes, %S represents seconds, %H represents hours, %D represents days, %M represents months, and %Y represents years.</p>
+        <p>The first level (closest to the axis) will contain minute and second values separated by a colon (%I:%S). The second level (just below the first level) will contain the hour values(%H). The third level (the final level farthest from the axis) will contain the day and month values separated by a space and year value separated from the day and month values by a comma (%D %M, %Y).</p>
+        <p>The resulting format is specified by using the CONTOUR routine with the XTICKFORMAT keyword:</p>
+        <p class="Code">CONTOUR, temperature, angle, date_time, $<br />&#160;&#160;&#160;LEVELS = BYTSCL(INDGEN(8)), /XSTYLE, /YSTYLE, $<br />&#160;&#160;&#160;C_COLORS = BYTSCL(INDGEN(8)), /FILL, $<br />&#160;&#160;&#160;TITLE = 'Measured Temperature (degrees Celsius)', $<br />&#160;&#160;&#160;XTITLE = 'Angle (degrees)', $<br />&#160;&#160;&#160;YTITLE = 'Time (seconds)', $<br />&#160;&#160;&#160;POSITION = [0.25, 0.2, 0.9, 0.9], $<br />&#160;&#160;&#160;YTICKFORMAT = ['LABEL_DATE', 'LABEL_DATE', 'LABEL_DATE'], $<br />&#160;&#160;&#160;YTICKUNITS = ['Time', 'Hour', 'Day'], $<br />&#160;&#160;&#160;YTICKINTERVAL = 5, $<br />&#160;&#160;&#160;YTICKLAYOUT = 2<br />; Applying contour lines over the original contour display.<br />CONTOUR, temperature, angle, date_time, /OVERPLOT, $<br />&#160;&#160;&#160;LEVELS = BYTSCL(INDGEN(8))<br />DEVICE, DECOMPOSED=old_decomposed</p>
+        <p>As in the plot example, the POSITION keyword is set to allow the resulting display to contain all three levels and the title of the date/time axis. The YTICKUNITS keyword is set to note the unit of each level. And the YTICKINTERVAL keyword is set to place the major tick marks at every five second interval.</p>
+        <p>This example also contains the YTICKLAYOUT keyword. By default, this keyword is set to 0, which provides the date/time layout shown in the plot example. </p>
+        <p>In this example, YTICKLAYOUT is set to 2, which rotates and boxes the tick labels to provide the following results: </p>
+        <p>
+            <img src="../../Resources/Images/plng13d.gif" style="margin-left: 1.97208px;margin-top: 2.82096px;margin-bottom: 1.712167px;" /> </p>
+        <h2 class="API"><a name="dg_routines_3604229493_879905"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dg_routines_3604229493_879913"></a>See Also</h2>
+        <p><a href="../I/ICONTOUR.htm">ICONTOUR</a>, <a href="../I/IMAGE_CONT_Procedure.htm#dg_routines_3604229493_883235">IMAGE_CONT Procedure</a>, <a href="../S/SHADE_SURF_Procedure.htm#dg_routines_3604229493_885128">SHADE_SURF Procedure</a>, <a href="../S/SHOW3_Procedure.htm#dg_routines_3604229493_885793">SHOW3 Procedure</a>, <a href="../S/SURFACE_Procedure.htm#dg_routines_3604229493_886816">SURFACE Procedure</a>, <a href="../../Object Classes/Graphics/IDLgrContour.htm">IDLgrContour</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

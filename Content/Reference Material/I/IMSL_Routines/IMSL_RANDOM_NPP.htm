@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_RANDOM_NPP</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="IMSL_RANDOM_NPP"></a>IMSL_RANDOM_NPP</h1>
+        <p>The IMSL_RANDOM_NPP function generates pseudorandom numbers from a nonhomogeneous Poisson process.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>Routine IMSL_RANDOM_NPP simulates a one-dimensional nonhomogeneous Poisson process with rate function theta in a fixed interval (<i>tend</i> - <i>tbegin</i>).</p>
+        <p>Let λ(<i>t</i>) be the rate function and <i>t<sub>0</sub></i> = <i>tbegin</i> and <i>t<sub>1</sub></i> = <i>tend</i>. Routine IMSL_RANDOM_NPP uses a method of thinning a nonhomogeneous Poisson process {N*(<i>t</i>), <i>t</i> ≥ <i>t<sub>0</sub></i>} with rate function λ*(<i>t</i>) ≥ λ(<i>t</i>) in (<i>t<sub>0</sub></i>, <i>t<sub>1</sub></i>), where the number of events, N*, in the interval (<i>t<sub>0</sub></i>, <i>t<sub>1</sub></i>) has a Poisson distribution with parameter:</p>
+        <p>
+            <img src="images/IMSL_RANDOM_NPP1.svg" />
+        </p>
+        <p>The function:</p>
+        <p>
+            <img src="images/IMSL_RANDOM_NPP2.svg" />
+        </p>
+        <p>is called the integrated rate function. In IMSL_RANDOM_NPP, λ*(<i>t</i>) is taken to be a constant λ*(= <i>theta_max</i>) so that at time <i>t<sub>i</sub></i>, the time of the next event <i>t<sub>i</sub></i> + 1 is obtained by generating and cumulating exponential random numbers:</p>
+        <p>
+            <img src="images/IMSL_RANDOM_NPP3.svg" />
+        </p>
+        <p>with parameter λ*, until for the first time:</p>
+        <p>
+            <img src="images/IMSL_RANDOM_NPP4.svg" />
+        </p>
+        <p>where the <i>u<sub>j,i</sub></i> are independent uniform random numbers between 0 and 1. This process is continued until the specified number of events, <i>neub</i>, is realized or until the time, tend, is exceeded. This method is due to Lewis and Shedler (1979), who also review other methods. The most straightforward (and most efficient) method is by inverting the integrated rate function, but often this is not possible.</p>
+        <p>If <i>theta_max</i> is actually greater than the maximum of λ(<i>t</i>) in (<i>t<sub>0</sub></i>, <i>t<sub>1</sub></i>), the routine will work, but less efficiently. Also, if λ(<i>t</i>) varies greatly within the interval, the efficiency is reduced. In that case, it may be desirable to divide the time interval into subintervals within which the rate function is less variable. This is possible because the process is without memory.</p>
+        <p>If no time horizon arises naturally, tend must be set large enough to allow for the required number of events to be realized. Care must be taken, however, that <i>ftheta</i> is defined over the entire interval.</p>
+        <p>After simulating a given number of events, the next event can be generated by setting <i>tbegin</i> to the time of the last event (the sum of the elements in the result) and calling IMSL_RANDOM_NPP again. Cox and Lewis (1966) discuss modeling applications of nonhomogeneous Poisson processes.</p>
+        <h2 class="API">Examples</h2>
+        <h3>Example 1</h3>
+        <p>In this example, IMSL_RANDOM_NPP is used to generate the first five events in the time 0 to 20 (if that many events are realized) in a nonhomogeneous process with rate function:</p>
+        <p>λ (<i>t</i>) = 0.6342 e0.001427<sup>t</sup></p>
+        <p>for 0 &lt; <i>t</i> ≤ 20.</p>
+        <p>Since this is a monotonically increasing function of <i>t</i>, the minimum is at <i>t</i> = 0 and is 0.6342, and the maximum is at <i>t</i> = 20 and is 0.6342 e0.02854 = 0.652561.</p>
+        <p class="Code">.RUN</p>
+        <p class="Code">FUNCTION ftheta_npp, t</p>
+        <p class="Code">RETURN, .6342*exp(.001427*t)</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">randomopt, set=123457</p>
+        <p class="Code">neub = 5</p>
+        <p class="Code">tmax = .652561</p>
+        <p class="Code">tmin = .6342</p>
+        <p class="Code">tbegin=0</p>
+        <p class="Code">tend=20</p>
+        <p class="Code">r = IMSL_RANDOM_NPP(tbegin, tend, 'ftheta_npp', tmin, tmax, neub)</p>
+        <p class="Code">PM, r</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">0.0526598</p>
+        <p class="Code">0.407979</p>
+        <p class="Code">0.258399</p>
+        <p class="Code">0.0197666</p>
+        <p class="Code">0.167641</p>
+        <h2 class="API">Syntax</h2>
+        <p><i>Result</i> = IMSL_RANDOM_NPP(<i>tbegin</i>, <i>tend</i>, <i>ftheta</i>, <i>theta_min</i>, <i>theta_max</i>, <i>neub</i> [, /DOUBLE])</p>
+        <h2 class="API">Return Value</h2>
+        <p>A one dimensional array containing the times to events. If the length of the result is less that <i>neub</i>, the time tend is reached before <i>neub</i> events are realized.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">neub</h3>
+        <p>Upper bound on the number of events to be generated. In order to be reasonably sure that the full process through time tend is generated, calculate neub as neub = X + 10.0 * SQRT(X), where X = <i>theta_max</i> * (<i>tend</i> - <i>tbegin</i>).</p>
+        <h3 class="Argument">ftheta</h3>
+        <p>Scalar string specifying a user-supplied function to provide the value of the rate of the process as a function of time. This function accepts one argument and must be defined over the interval from <i>tbegin</i> to <i>tend</i> and must be nonnegative in that interval.</p>
+        <h3 class="Argument">tbegin</h3>
+        <p>Lower endpoint of the time interval of the process. <i>tbegin</i> must be nonnegative. Usually, <i>tbegin</i> = 0.</p>
+        <h3 class="Argument">tend</h3>
+        <p>Upper endpoint of the time interval of the process. <i>tend</i> must be greater than <i>tbegin</i>.</p>
+        <h3 class="Argument">theta_max</h3>
+        <p>Maximum value of the rate function <i>ftheta</i> in the interval (<i>tbegin</i>, <i>tend</i>). If the actual maximum is unknown, set <i>theta_max</i> to a known upper bound of the maximum. The efficiency of IMSL_RANDOM_NPP is less the greater <i>theta_max</i> exceeds the true maximum.</p>
+        <h3 class="Argument">theta_min</h3>
+        <p>Minimum value of the rate function ftheta() in the interval (<i>tbegin</i>, <i>tend</i>). If the actual minimum is unknown, set <i>theta_min</i> = 0.0.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">DOUBLE</h3>
+        <p>If present and nonzero, double precision is used.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

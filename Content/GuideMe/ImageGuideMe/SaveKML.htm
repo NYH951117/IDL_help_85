@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Images">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Save Images as KML Files</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/images_gallery.htm">Images</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Saving Images as KML Files</span>
+        </div>
+        <h1><a name="top"></a>Save Images as KML Files</h1>
+        <p>If you create an Image graphic by projecting a graphic file onto a map, you can convert the IDL graphic into other graphic types, including the Open Geospatial Consortium's Keyhole Markup Language (KML). KML is an XML-based schema that visualizes geographic data and annotations on Internet-based two-dimensional maps and three-dimensional Earth browsers (including the Google Earth™ mapping service).</p>
+        <p>This topic shows how to use a graphic's Save method to convert an Image graphic to a KML file.</p>
+        <h2 class="API"><a name="Arctic"></a>Arctic Research Flight Example</h2>
+        <p>In this example we project a portion of a JPG&#160;image of the world onto a globe, and add a line showing a research airplane's flight path between Thule Air Force Base in Greenland and Alaska's Elmendorf Air Force Base. We also add a polygon to the Image graphic showing the magnetic anomaly detected during the flight. Finally, we save this Image graphic with the added annotations to a KML file and load the file into the Google Earth™ mapping service.</p>
+        <p>
+            <img src="../images/arctic_1.gif" />
+        </p>
+        <p>This code creates a KML file that, when loaded into the Google Earth™ mapping service, creates the image shown above. You can copy the entire block and paste it into the IDL&#160;command line to run it.</p>
+        <p class="Code">; Determine the path to Day.jpg in the IDL distribution</p>
+        <p class="Code">world =  FILEPATH('Day.jpg', SUBDIRECTORY=['examples','data'])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create the arctic Image graphic.</p>
+        <p class="Code">arctic = IMAGE(world, LIMIT=[51,-161,78,-52], $</p>
+        <p class="Code">&#160;&#160;GRID_UNITS=2, IMAGE_LOCATION=[-180,-90], $</p>
+        <p class="Code">&#160;&#160;IMAGE_DIMENSIONS=[360,180], MAP_PROJECTION='Stereographic', $</p>
+        <p class="Code">&#160;&#160;/CURRENT, NAME='Arctic Research')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add a polyline annotation to the graphic connecting Thule</p>
+        <p class="Code">; to Elmendorf</p>
+        <p class="Code">polyline = POLYLINE([[-149.81,61.25],[-68.70,76.53]], $</p>
+        <p class="Code">&#160;&#160;/DATA, COLOR='red', NAME='Thule to Elmendorf', $</p>
+        <p class="Code">&#160;&#160;THICK=2, TARGET=arctic)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add the magnetic anomaly polygon</p>
+        <p class="Code">x = [-119.017, -124.82, -129.22, -118.23, -113.03, -113.183]</p>
+        <p class="Code">y = [66.25, 64.65, 61.43, 62.3, 63.783, 65.11]</p>
+        <p class="Code">polygon = POLYGON(x, y, /DATA, COLOR='purple', $</p>
+        <p class="Code">&#160;&#160;FILL_COLOR='purple', FILL_TRANSPARENCY=0, $</p>
+        <p class="Code">&#160;&#160;NAME='Magnetic Anomaly', TARGET=arctic)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Save the Image graphic as a KML file</p>
+        <p class="Code">arctic.SAVE, 'arctic_map.kml'</p>
+        <p>&#160;</p>
+        <p>In this example we start with the two-dimensional <code>Day.jpg</code> file (included in the IDL&#160;distribution):</p>
+        <p>
+            <img src="../images/Day.jpg" />
+        </p>
+        <p class="Code">; Determine the path to Day.jpg in the IDL distribution</p>
+        <p class="Code">world =  FILEPATH('Day.jpg', SUBDIRECTORY=['examples','data'])</p>
+        <p>&#160;</p>
+        <p>We then call the IMAGE function,which does the following things:</p>
+        <ul>
+            <li value="1">Maps the two-dimensional <code>Day.jpg</code> using a stereographic projection</li>
+            <li value="2">Defines a polygon on the globe using the two opposing corner coordinates</li>
+            <li value="3">Maps the polygon back to a two-dimensional surface</li>
+        </ul>
+        <p class="Code">; Create the arctic Image graphic.</p>
+        <p class="Code">arctic = IMAGE(world, LIMIT=[51,-161,78,-52], $</p>
+        <p class="Code">&#160;&#160;GRID_UNITS=2, IMAGE_LOCATION=[-180,-90], $</p>
+        <p class="Code">&#160;&#160;IMAGE_DIMENSIONS=[360,180], MAP_PROJECTION='Stereographic', $</p>
+        <p class="Code">&#160;&#160;/CURRENT, NAME='Arctic Research')</p>
+        <p>&#160;</p>
+        <p>Next we add a polyline annotation representing the research airplane's flight path, and a polygon showing the magnetic anomaly detected on the flight:</p>
+        <p class="Code">; Add a polyline annotation to the graphic connecting Thule</p>
+        <p class="Code">; to Elmendorf</p>
+        <p class="Code">polyline = POLYLINE([[-149.81,61.25],[-68.70,76.53]], $</p>
+        <p class="Code">&#160;&#160;/DATA, COLOR='red', NAME='Thule to Elmendorf', $</p>
+        <p class="Code">&#160;&#160;THICK=2, TARGET=arctic)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add the magnetic anomaly polygon</p>
+        <p class="Code">x = [-119.017, -124.82, -129.22, -118.23, -113.03, -113.183]</p>
+        <p class="Code">y = [66.25, 64.65, 61.43, 62.3, 63.783, 65.11]</p>
+        <p class="Code">polygon = POLYGON(x, y, /DATA, COLOR='purple', $</p>
+        <p class="Code">&#160;&#160;FILL_COLOR='purple', FILL_TRANSPARENCY=0, $</p>
+        <p class="Code">&#160;&#160;NAME='Magnetic Anomaly', TARGET=arctic)</p>
+        <p>&#160;</p>
+        <p>The resulting Image graphic shows the polygon section of the globe projected stereographically:</p>
+        <p>
+            <img src="../images/arctic.gif" />
+        </p>
+        <p>&#160;</p>
+        <p>Finally, we save the Image graphic as a KML file using the Image object's Save method and load the file into the Google Earth™ mapping service, where it is superimposed upon a globe.</p>
+        <p>
+            <img src="../images/arctic_1.gif" />
+        </p>
+        <h2 class="API"><a name="Contour"></a>ContourExample</h2>
+        <p>
+            <img src="../images/world_contour.gif" />
+        </p>
+        <p>In this example we create a map of the world using the Mollweide projection, and overplot that map with two 3-D contour plots (one that displays filled contour levels with different colors, and one that just shows the contour boundaries). We then use the CONTOUR function's SAVE method to create a KML file and load the file into the Google Earth™ mapping service.</p>
+        <p>This code creates a KML file that creates the image shown above. You can copy the entire block and paste it into the IDL&#160;command line to run it.</p>
+        <p class="Code">; Create the contour data</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; X-coordinates of the Z data (-180 to 180)</p>
+        <p class="Code">longitude = FINDGEN(360) - 180</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; y-coordinates of the Z data (-90 to 90)</p>
+        <p class="Code">latitude = FINDGEN(180) - 90</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; A 2-D array containing the contour data</p>
+        <p class="Code">cntrdata = SIN(longitude/30) # COS(latitude/30)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a map graphic as a canvas for the contour plot</p>
+        <p class="Code">worldmap = MAP('Mollweide', LIMIT=[-90,-180,90,180])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Overplot a ten-level contour plot, where each contour level is</p>
+        <p class="Code">; filled with a color. The levels are 50% opaque and the colors</p>
+        <p class="Code">; are taken from the Rainbow color table</p>
+        <p class="Code">cntr1 = CONTOUR(cntrdata, longitude, latitude, $</p>
+        <p class="Code">&#160;&#160;GRID_UNITS=2, N_LEVELS=10, RGB_TABLE=13, /OVERPLOT, $</p>
+        <p class="Code">&#160;&#160;/FILL, TRANSPARENCY=50)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Overplot another contour plot, this time displaying only</p>
+        <p class="Code">; contour boundaries. These boundaries are two points thick</p>
+        <p class="Code">; and are colored with the Rainbow + White color table</p>
+        <p class="Code">cntr2 = CONTOUR(cntrdata, longitude, latitude, $</p>
+        <p class="Code">&#160;&#160;GRID_UNITS=2, N_LEVELS=10, RGB_TABLE=39, $</p>
+        <p class="Code">&#160;&#160;/OVERPLOT, C_THICK=[2])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Save the graphic as a KML file</p>
+        <p class="Code">worldmap.SAVE, 'contour_map.kml'</p>
+        <p>At this point you can load <code>contour_map.kml</code> into the Google Earth™ mapping service, and the map and overplotted contour plots are projected on a globe.</p>
+        <h2 class="API">Resources</h2>
+        <ul>
+            <li value="1"><a href="SaveImage.htm">Saving Graphics</a>
+            </li>
+            <li value="2"><a href="../../IDL Graphics/Save Method.htm">Save Method</a>
+            </li>
+            <li value="3"><a href="../../Reference Material/C/CONTOUR.htm">CONTOUR</a>
+            </li>
+            <li value="4"><a href="../../Reference Material/F/FINDGEN.htm">FINDGEN</a>
+            </li>
+            <li value="5"><a href="../../Reference Material/I/IMAGE.htm">IMAGE</a>
+            </li>
+            <li value="6"><a href="../../Reference Material/M/MAP.htm">MAP</a>
+            </li>
+            <li value="7"><a href="../../Reference Material/P/POLYGON.htm">POLYGON</a>
+            </li>
+            <li value="8"><a href="../../Reference Material/P/POLYLINE.htm">POLYLINE</a>
+            </li>
+            <li value="9"><a href="../../Reference Material/S/SIN.htm">SIN</a>
+            </li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

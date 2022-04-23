@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-conditions="" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Environment|Using Procedures, Functions, SAVE Files">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Recognizing Potential Naming Conflicts</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Concepts.htm">Environment</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../IDL Program Types.htm">Using Procedures, Functions, SAVE Files</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Recognizing Potential Naming Conflicts</span>
+        </div>
+        <h1><a name="library_2989941225_769964"></a><a name="library_2989941225_96109"></a>Recognizing Potential <a name="kanchor4420"></a>Naming Conflicts</h1>
+        <p>IDL favors simple names, and it blurs the user level distinction between system routine<a name="kanchor4421"></a>s and user routines. See <a href="../Managing IDL Paths.htm">Managing IDL Paths</a> for more on how IDL&#160;finds routine names on its path. </p>
+        <p> Names should make sense, be easy to remember, and not require too much typing. Language transparency also results in very human-readable code. In conjunction with the way IDL searches for routines, this may cause either user level or system level conflicts. </p>
+        <h3>User Level Conflicts</h3>
+        <p>In the user level case, an IDL user writes a routine that is not part of the base release of IDL, and places it in a local library. At some later date, a new version of IDL is installed that contains a new IDL library routine with the same name as the user's routine. Depending on the order of the directories in the user’s path, one of these two routines is executed. If the user’s routine is used, IDL library code that calls the routine will get the wrong version and fail in strange and mysterious ways. If the IDL routine is used, the IDL library will be satisfied, but the user's library will get the wrong version, also with bad results. </p>
+        <h3>System Level Conflicts</h3>
+        <p>The system level case is similar, but harder to work around. In this case, the user creates a local routine, as before. However, the new version of IDL contains a system routine with the same name. In this case, IDL will always choose to use the system routine, and the user routine simply vanishes from view never to be called again. The order of the search path is meaningless in this case because the search path is not even consulted. A system routine always has precedence over a user routine. </p>
+        <h3>The Workbench Recognizes Duplicate Routine Names</h3>
+        <p>The IDL Workbench now automatically checks for duplicate routine names and displays a warning icon at the relevant code line, and in the Problems View. There is also a preference setting that allows you to control this behavior.</p>
+        <h2 class="API">Choosing Routine Names to Avoid Conflicts</h2>
+        <p>We recommend devising a routine naming strategy to avoid naming conflicts. The core idea of this convention (described in detail in <a href="Advice_for_Library_Autho.htm#library_2989941225_770004">Advice for Library Authors</a>) is to pref<a name="kanchor4422"></a>ix all lib<a name="kanchor4423"></a>rary routine names with a unique identifier, one indicative of your organization or project. We reserve routine names that are generic, and those with an “IDL” prefix on behalf of the entire IDL community. Prefixing your user library routines significantly reduces the risk of namespace collisions with IDL routines. </p>
+        <p>As a library author, your decision to follow a routine prefixing strategy benefits the entire IDL community. This convention translates into simplicity and reliability, allowing IDL system routines to always take precedence over user routines. It also raises the visibility of your routines, readily distinguishing them as part of your library. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For instructions on how to prefix an existing user library, see <a href="Converting_Existing_Libr.htm#library_2989941225_770045">Converting Existing Libraries</a>. </p>
+        <h2 class="API">Cros<a name="kanchor4424"></a>s-Platform <a name="library_2989941225_91799"></a>Naming of IDL .pro Files</h2>
+        <p>When naming IDL <code>.pro</code> files used in cross-platform applications, be aware of the various platforms’ file naming conventions and limitations. For example, the “:” character is not allowed in a filename under Microsoft Windows.</p>
+        <p>Be careful with case when naming files. For example, while Microsoft Windows systems present file names using mixed case, file names are in fact case-insensitive. Under Unix, file names are case sensitive—<code>file.pro</code> is different from <code>File.pro</code>. </p>
+        <p>When writing cross-platform applications, you should avoid using filenames that are different only in case. The safest course is to use filenames that are all lower case.</p>
+        <p>Remember, too, that IDL commands are themselves case-insensitive. If entered at the IDL command prompt, the following are equivalent:</p>
+        <p class="Code"><b>IDL&gt;</b> command</p>
+        <p class="Code"><b>IDL&gt;</b> COMMAND</p>
+        <p class="Code"><b>IDL&gt;</b> CommanD</p>
+        <h3>Automatic Compilation and Case Sensitivity</h3>
+        <p>On UNIX platforms, where filename case matters, IDL looks for a lower-case filename when you enter the name of a user-written routine at the IDL command prompt. Thus, if you save your program file as <code>myprogram.pro</code> and enter the following at the IDL command prompt:</p>
+        <p class="Code"><b>IDL&gt;</b> MyProgram</p>
+        <p>IDL will compile the file <code>myprogram.pro</code> and attempt to execute a procedure named <code>myprogram</code>.</p>
+        <p>If you save your program file as <code>MyProgram.pro</code> and enter the following at the IDL command prompt:</p>
+        <p class="Code"><b>IDL&gt;</b> MyProgram</p>
+        <p>IDL will <i>not</i> compile the file <code>MyProgram.pro</code> and will issue an error that looks like:</p>
+        <p class="Code">% Attempt to call undefined procedure/function: 'MYPROGRAM'.</p>
+        <p class="Code">% Execution halted at: $MAIN$</p>
+        <p>You can compile and run a program with a mixed- or upper-case file name on a UNIX platform by using IDL’s .COMPILE or .RUN executive commands:</p>
+        <p class="Code"><b>IDL&gt;</b> .COMPILE MyProgram</p>
+        <p class="Code"><b>IDL&gt;</b> MyProgram</p>
+        <p>or, if <code>MyProgram.pro</code> contains a main-level program:</p>
+        <p class="Code"><b>IDL&gt;</b> .RUN MyProgram</p>
+        <p>In general we recommend that you use lower-case file names on platforms where case matters.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

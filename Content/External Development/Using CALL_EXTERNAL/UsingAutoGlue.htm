@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Using CALL_EXTERNAL">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Using Auto Glue</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="CALL_EXTERNAL.htm">Using CALL_EXTERNAL</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Using Auto Glue</span>
+        </div>
+        <h1><a name="kanchor5429"></a>Using Auto Glue</h1>
+        <p>Users of <b>CALL_EXTERNAL</b> frequently write small functions with the sole purpose of matching the <b>CALL_EXTERNAL</b> portable calling convention with its (argc, argv) interface to the actual interface presented by some existing function that they wish to call. Such functions are often called glue functions.</p>
+        <p>It quickly becomes obvious to anyone who has written a few glue functions that there isn’t much to them, and that producing such functions is a purely mechanical operation. As you read the examples in this chapter, you will see many such functions, and will notice that they are all essentially the same. Further examination should serve to convince you that IDL already has all of the information, in the form of the arguments and keywords specified to the <b>CALL_EXTERNAL</b> function, to generate such functions without requiring human intervention. Examining the <b>CALL_EXTERNAL</b> routine’s interface, we see that:</p>
+        <ul>
+            <li value="1">the number and types of arguments to the <b>CALL_EXTERNAL</b> function provide the same information about the arguments for the target external function;</li>
+            <li value="2">the <b>VALUE</b> keyword, and <b>CALL_EXTERNAL</b>’s built in rules for deciding whether or not to pass arguments by value or by reference determine how the arguments should be passed;</li>
+            <li value="3">in the case of Microsoft Windows, the <b>CDECL</b> keyword tells it which system calling convention to employ;</li>
+            <li value="4">keywords to <b>CALL_EXTERNAL</b> determine the result type.</li>
+        </ul>
+        <p>Furthermore, other than the actual name of the user function being called, these glue functions are generic in the sense that they could be used to call any function that accepted arguments of the same types and produce a result of the same type.</p>
+        <p>The <b>AUTO_GLUE</b> keyword to <b>CALL_EXTERNAL</b> exploits these facts to allow you to call functions with natural interfaces, without the need to write, compile, and load a glue function to do the job. The sole requirement is that your system must have a C compiler installed that is compatible with the compiler described by the IDL <b>!MAKE_DLL</b> system variable. This is almost always the case if you are interested in calling external code, since a compiler is necessary to compile such code.</p>
+        <p><b>AUTO_GLUE</b> automatically writes the C code for the glue function, uses the <b>MAKE_DLL</b> procedure to build a sharable library containing it, loads that library, and then calls the glue function, passing it a pointer to the target function and all of its arguments. It maintains a cache of glue functions that have been built previously, and never builds the same glue function more than once. From the user perspective, there is a slight pause the first time a given glue function is used. In that brief moment, <b>AUTO_GLUE</b> performs the steps described above, and then makes the call to the user function. All of this happens transparently to the IDL user — no user interaction is required, and no output is produced by the process. Subsequent calls to the same glue function happen instantaneously, as IDL loads the existing glue function from the MAKE_DLL cache without rebuilding it. In principle, it is similar to the way IDL automatically compiles IDL language programs on demand, only with C code instead of IDL code.</p>
+        <p>See <a href="../../Reference Material/C/CALL_EXTERNAL.htm">CALL_EXTERNAL</a> for additional details about how <b>AUTO_GLUE</b> works, and the options for controlling its use.</p>
+        <h2 class="API">Generating Glue Without Executing It</h2>
+        <p><b>AUTO_GLUE</b> is the preferred option for most calls to functions with natural interfaces, due to it’s simplicity and ease of use. However, you might find yourself in a situation where you would like your glue functions to be automatically generated, but wish to simply get the resulting C code so that you can modify it or incorporate it into a larger library. For example, you might have a large library of IDL specific code, and wish to give it all IDL callable interfaces without requiring the overhead of <b>AUTO_GLUE</b> for all of them.</p>
+        <p>The WRITE_WRAPPER keyword to <b>CALL_EXTERNAL</b> can be used to produce such code without compiling or using the results. See <a href="../../Reference Material/C/CALL_EXTERNAL.htm">CALL_EXTERNAL</a> (IDL Reference Guide) for additional information on this keyword.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

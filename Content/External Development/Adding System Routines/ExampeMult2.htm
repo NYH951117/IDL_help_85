@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Adding System Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Example: MULT2</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="AddingSystRoutines.htm">Adding System Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Example: MULT2</span>
+        </div>
+        <h1>Example: MULT2</h1>
+        <p>The system function example shown in the following figure expects a single argument (an array). It returns a single-precision, floating-point array that contains the values from the argument, multiplied by two.</p>
+        <p class="Code">#Include the required header files.</p>
+        <p class="Code">#include &lt;stdio.h&gt;</p>
+        <p class="Code">#include "idl_export.h"</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"># Every system routine takes the same two or three arguments. </p>
+        <p class="Code"># argc is the number of arguments, argv is an array of </p>
+        <p class="Code"># arguments. This routine does not accept keywords, </p>
+        <p class="Code"># so argk is not present. </p>
+        <p class="Code">IDL_VPTR mult2(int argc, IDL_VPTR argv[])</p>
+        <p class="Code">	{</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"># dst will become a pointer to the resulting variable’s </p>
+        <p class="Code"># descriptor. src points at the input variable which is </p>
+        <p class="Code"># found in argv[0].</p>
+        <p class="Code">IDL_VPTR dst, src;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"># src_d and dst_d will point to the source and </p>
+        <p class="Code"># destination data areas.</p>
+        <p class="Code">float *src_d, *dst_d;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"># n will contain the number of elements in src</p>
+        <p class="Code">int n;</p>
+        <p class="Code">src = dst = argv[0];</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"># The input variable will serve as both the source </p>
+        <p class="Code"># and destination. This will only be true if the </p>
+        <p class="Code"># parameter is a temporary floating-point array.</p>
+        <p class="Code"># Screen out any input that is not of a basic type, </p>
+        <p class="Code"># and only allow arrays. A better version of this </p>
+        <p class="Code"># routine would handle scalar input also, but we want </p>
+        <p class="Code"># to keep the example simple.</p>
+        <p class="Code">IDL_ENSURE_SIMPLE(src);</p>
+        <p class="Code">IDL_ENSURE_ARRAY(src);</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"># If the input is not of IDL_TYP_FLOAT, we call </p>
+        <p class="Code"># the IDL_CvtFlt() function to create a floating-point </p>
+        <p class="Code"># copy of the argument (see “Converting to Specific </p>
+        <p class="Code"># Types” for information about converting types).</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">	&#160;&#160;if (src-&gt;type != IDL_TYP_FLOAT)</p>
+        <p class="Code">	&#160;&#160;&#160;&#160;&#160;src = dst = IDL_CvtFlt(1, argv);</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"># Initialize the pointers to the source </p>
+        <p class="Code"># and destination data areas from the array block </p>
+        <p class="Code"># structure pointed to by the input variable descriptor.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">	&#160;&#160;src_d = dst_d = (float *) src-&gt;value.arr-&gt;data;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"># If the input variable is not a temporary variable, </p>
+        <p class="Code"># we cannot change its value and return it as the function </p>
+        <p class="Code"># result. Instead, allocate a new temporary floating point </p>
+        <p class="Code"># array into which the result will be placed. Notice how </p>
+        <p class="Code"># the number of dimensions and their sizes are taken from </p>
+        <p class="Code"># the source variable array block.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">	&#160;&#160;if (!(src-&gt;flags &amp; IDL_V_TEMP))</p>
+        <p class="Code">	&#160;&#160;&#160;&#160;&#160;dst_d = (float *)</p>
+        <p class="Code">	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;IDL_MakeTempArray(IDL_TYP_FLOAT,src-&gt;value.arr-&gt;n_dim,</p>
+        <p class="Code">	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;src-&gt;value.arr-&gt;dim,</p>
+        <p class="Code">	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;IDL_ARR_INI_NOP, &amp;dst);</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"># Loop over each element of the arrays.</p>
+        <p class="Code"># Do the multiplication for each element.</p>
+        <p class="Code"># Return the temporary variable containing the result.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;for (n = src-&gt;value.arr-&gt;n_elts; n--; )</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;*dst_d++ = 2.0 * *src_d++;</p>
+        <p class="Code"> &#160;&#160;return(dst);</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"> }</p>
+        <p class="Code">&#160;</p>
+        <p>Note that the routine could also be written more efficiently with a SWITCH statement in C, which would handle each of the eight possible data types and eliminate  conversion of the input parameter. </p>
+        <h3>Testing the Example</h3>
+        <p>Once we have compiled the function and linked it into IDL (possibly using <a href="LinkImage.htm">LINKIMAGE</a>), we can use the built-in IDL function <a href="../../Reference Material/I/INDGEN.htm">INDGEN</a> to test the new function, which we name MULT2. INDGEN returns an array of values with each element set to the value of its array index. Therefore, the statement:</p>
+        <p class="Code">PRINT, INDGEN(5)</p>
+        <p>prints the following on the screen:</p>
+        <p class="Code">0 1 2 3 4</p>
+        <p>To test our new function we use INDGEN to provide an input argument:</p>
+        <p class="Code">PRINT, MULT2(INDGEN(5))</p>
+        <p>The result, as expected, is:</p>
+        <p class="Code">0.00000 2.00000 4.00000 6.00000 8.00000</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

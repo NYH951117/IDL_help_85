@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: H|HDF5 Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>H5F_CREATE</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../H_list.htm">Routines: H</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../HDF5_Routines.htm">HDF5 Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">H5F_CREATE</span>
+        </div>
+        <h1 class="Routine"><a name="HDF5_209170119_1007521"></a><a name="HDF5_209170119_92159"></a>H5F_CREATE</h1>
+        <p>The H5F_CREATE<a name="kanchor1367"></a> function is the primary function for creating HDF5 files.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>As an alternative, see <a href="H5_CREATE.htm#HDF5_209170119_1005503">H5_CREATE</a>.</p>
+        <h2 class="API"><a name="HDF5_209170119_76207"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = H5F_CREATE(<i>Filename</i>)</p>
+        <h2 class="API"><a name="HDF5_209170119_51541"></a>Return Value</h2>
+        <p><i>Result</i> is a file identifier for the newly-created file; this file identifier should be closed by calling H5F_CLOSE when it is no longer needed.</p>
+        <h2 class="API"><a name="HDF5_209170119_18247"></a>Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>A string giving the name of the file to create.</p>
+        <h2 class="API"><a name="HDF5_209170119_79293"></a>Keywords</h2>
+        <p>None</p>
+        <h2 class="API"><a name="HDF5_209170119_86664"></a>Example</h2>
+        <p class="Code">; create HDF5 file</p>
+        <p class="Code">file = 'hdf5_out.h5'</p>
+        <p class="Code">fid = H5F_CREATE(file)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; create some data</p>
+        <p class="Code">data = hanning(100,200)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; create a datatype</p>
+        <p class="Code">datatype_id = H5T_IDL_CREATE(data)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; create a dataspace, allow the dataspace to be extendable</p>
+        <p class="Code">dataspace_id = $</p>
+        <p class="Code">&#160;&#160;&#160;H5S_CREATE_SIMPLE([100,100],max_dimensions=[200,200])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; create the dataset</p>
+        <p class="Code">dataset_id = H5D_CREATE(fid,'Hanning',datatype_id,dataspace_id, $</p>
+        <p class="Code">&#160;&#160;&#160;chunk_dimensions=[20,20])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; extend the size of the dataset to fit the data</p>
+        <p class="Code">H5D_EXTEND,dataset_id,size(data,/dimensions)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; write the data to the dataset</p>
+        <p class="Code">H5D_WRITE,dataset_id,data</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; close some identifiers</p>
+        <p class="Code">H5S_CLOSE,dataspace_id</p>
+        <p class="Code">H5T_CLOSE,datatype_id</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; create a reference attribute attached to the dataset</p>
+        <p class="Code">dataspace_id = H5S_CREATE_SIMPLE(size(data,/dimensions))</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; select a 30x30 element region of interest in the dataset</p>
+        <p class="Code">H5S_SELECT_HYPERSLAB,dataspace_id,[40,40],[1,1], $</p>
+        <p class="Code">&#160;&#160;&#160;block=[30,30],/reset</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; create a dataspace region reference</p>
+        <p class="Code">ref = H5R_CREATE(fid,'Hanning',dataspace=dataspace_id)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; create a datatype for the reference</p>
+        <p class="Code">datatype_id = H5T_REFERENCE_CREATE(/region)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; create a one element dataspace for the single reference</p>
+        <p class="Code">dataspace_id = H5S_CREATE_SIMPLE(1)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; make the reference an attribute of the dataset </p>
+        <p class="Code">attr_id = H5A_CREATE(dataset_id,'Ref',datatype_id,dataspace_id)</p>
+        <p class="Code">H5A_WRITE,attr_id,ref</p>
+        <p class="Code">H5A_CLOSE,attr_id</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; create a dummy attribute and delete it</p>
+        <p class="Code">attr_id2 = $</p>
+        <p class="Code">H5A_CREATE(dataset_id,'Dummy',datatype_id,dataspace_id)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; attribute must be closed before it can be deleted</p>
+        <p class="Code">H5A_CLOSE,attr_id2</p>
+        <p class="Code">H5A_DELETE,dataset_id,'Dummy'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; create a group to hold sample datatypes and links</p>
+        <p class="Code">group_id = H5G_CREATE(fid,'Datatypes and links')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; add a comment to the group</p>
+        <p class="Code">H5G_SET_COMMENT,fid,'Datatypes and links', $</p>
+        <p class="Code">&#160;&#160;&#160;'This is a sample comment'</p>
+        <p class="Code">; add a datatype to the group</p>
+        <p class="Code">datatype_id2 = H5T_IDL_CREATE(1)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; add the datatype to the group and give it a name</p>
+        <p class="Code">H5T_COMMIT,group_id,'Integer',datatype_id2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; create an array datatype and add it to the group with a name</p>
+        <p class="Code">datatype_id3 = H5T_ARRAY_CREATE(datatype_id2,[3,4])</p>
+        <p class="Code">H5T_COMMIT,group_id,'Integer 2',datatype_id3</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; rename previous datatype</p>
+        <p class="Code">H5G_MOVE,group_id,'Integer 2','Integer Array'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; close temporary datatypes</p>
+        <p class="Code">H5T_CLOSE,datatype_id3</p>
+        <p class="Code">H5T_CLOSE,datatype_id2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; create a compound datatype and add it to the group</p>
+        <p class="Code">struct = {float:1.0, double:1.0d}</p>
+        <p class="Code">datatype_id4 = $</p>
+        <p class="Code">&#160;&#160;&#160;H5T_IDL_CREATE(struct,member_names=['Float','Double'])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; create an integer datatype and insert it in the </p>
+        <p class="Code">; compound datatype</p>
+        <p class="Code">datatype_id5 = H5T_IDL_CREATE(1)</p>
+        <p class="Code">H5T_INSERT,datatype_id4,'Integer',datatype_id5</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; add the datatype to the group and give it a name</p>
+        <p class="Code">H5T_COMMIT,group_id,'Compound',datatype_id4</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; close datatype identifiers</p>
+        <p class="Code">H5T_CLOSE,datatype_id5</p>
+        <p class="Code">H5T_CLOSE,datatype_id4</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; add a hard link from the group to the Hanning dataset </p>
+        <p class="Code">H5G_LINK,fid,'Hanning','Link to Hanning',new_loc_id=group_id</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; add a dummy link</p>
+        <p class="Code">H5G_LINK,group_id,'Integer','Link to Integer'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; remove dummy link</p>
+        <p class="Code">H5G_UNLINK,group_id,'Link to Integer'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; close remaining open identifiers</p>
+        <p class="Code">H5G_CLOSE,group_id</p>
+        <p class="Code">H5D_CLOSE,dataset_id</p>
+        <p class="Code">H5T_CLOSE,datatype_id</p>
+        <p class="Code">H5S_CLOSE,dataspace_id</p>
+        <p class="Code">H5F_CLOSE,fid</p>
+        <h2 class="API"><a name="HDF5_209170119_56055"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="HDF5_209170119_99643"></a>See Also</h2>
+        <p><a href="H5F_CLOSE.htm#HDF5_209170119_1007477">H5F_CLOSE</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

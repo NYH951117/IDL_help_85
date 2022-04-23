@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|File Format Object Classes">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLffVideoRead</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_ff.htm">File Format Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLffVideoRead</span>
+        </div>
+        <h1><a name="kanchor3292"></a>IDLffVideoRead</h1>
+        <p>The IDLffVideoRead class can be used to open video files in a variety of formats and read out frames of video, samples of audio, and packets of data.</p>
+        <p>The process for reading a video file is:</p>
+        <ul>
+            <li value="1">Create the object and open associated video with <a href="#Init" class="selected">IDLffVideoRead::Init.</a></li>
+            <li value="2">Use <a href="#GetNext" class="selected">IDLffVideoRead::GetNext</a> in a loop to increment through the file.</li>
+            <li value="3">Destroy the object and close the file with <a href="#Cleanup" class="selected">IDLffVideoRead::CleanUp</a>.</li>
+        </ul>
+        <p>For more information on video, please see the <a href="../../Creating IDL Programs/Application Programming/CreatingVideo.htm">Creating Video topic</a>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Frame counts may vary slightly depending on the method used to obtain the count. Variabilities in timestamps and video standards, discontinuities in the videos themselves, or differences in the types of frames may influence the apparent frame count.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDLffVideoRead is not available with the <a href="../../Creating IDL Programs/Distributing IDL Applications/VirtualMachineApplications/VirtualMachineApplicationsIntro.htm">IDL Virtual Machine</a>.</p>
+        <h2 class="API">Superclasses</h2>
+        <p>None.</p>
+        <h2 class="API">Creation</h2>
+        <p>See IDLffVideoRead::Init</p>
+        <h2 class="API">Methods</h2>
+        <p>This class has the following methods:</p>
+        <p><a href="#Init" class="selected">IDLffVideoRead::Init</a>
+        </p>
+        <p><a href="#GetCodecs" class="selected">IDLffVideoRead::GetCodecs</a>
+        </p>
+        <p><a href="#GetNext" class="selected">IDLffVideoRead::GetNext</a>
+        </p>
+        <p><a href="#GetFormats" class="selected">IDLffVideoRead::GetFormats</a>
+        </p>
+        <p><a href="#GetMetadata" class="selected">IDLffVideoRead::GetMetadata</a>
+        </p>
+        <p><a href="#GetStreams" class="selected">IDLffVideoRead::GetStreams</a>
+        </p>
+        <p><a href="#Seek" class="selected">IDLffVideoRead::Seek</a>
+        </p>
+        <p><a href="#Cleanup" class="selected">IDLffVideoRead::Cleanup</a>
+        </p>
+        <p>In addition, this class inherits the methods of its superclasses (if any).</p>
+        <h2 class="API">Examples</h2>
+        <p>The following example uses a NASA video displaying the coronal mass ejection (CME) event of Aug. 31, 2012, available online (see Resources and References, below) or in the <code>\examples\data</code> directory of your IDL installation.</p>
+        <p><i>CME.mp4 video courtesy NASA's Solar Dynamics Observatory (SDO)and Solar Heliospheric Observatory (SOHO).</i>
+        </p>
+        <p class="Code">PRO video_read_example2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">file = FILEPATH('CME.mp4', SUBDIRECTORY=['examples','data'])</p>
+        <p class="Code_Indented">oVid = IDLffVideoRead(file)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Open up an image window, with no data for now</p>
+        <p class="Code_Indented">img = IMAGE(BYTARR(2,2), /NODATA)       </p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">        ; Get the next packet of data from the file,</p>
+        <p class="Code_Indented">REPEAT BEGIN</p>
+        <p class="Code_Indented">&#160;&#160;&#160;data = oVid-&gt;GetNext(TYPE=type) </p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">    &#160;&#160;&#160;; If we got a frame of video, display it.</p>
+        <p class="Code_Indented">&#160;&#160;&#160;IF type EQ 1 THEN img.SetData, data </p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">                  ; Keep going until we reach the end of the file.</p>
+        <p class="Code_Indented">; Note: End of file is where TYPE=-1.</p>
+        <p class="Code_Indented">ENDREP UNTIL type EQ -1                   </p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">img.CLOSE</p>
+        <p class="Code">END</p>
+        <h1 class="ObjMethod"><a name="Init"></a>IDLffVideoRead::Init</h1>
+        <p>Initializes the video read object.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = IDLffVideoRead([<i>Filename</i>], /VERBOSE )</p>
+        <p class="Syntax"><i>or</i>
+        </p>
+        <p class="Syntax"><i>Result</i> = <a href="../../Reference Material/O/OBJ_NEW.htm">OBJ_NEW</a>('IDLffVideoRead' [, <i>Filename</i>], /VERBOSE )</p>
+        <p class="Syntax">&#160;</p>
+        <h2 class="API">Return Value</h2>
+        <p>When this method is called indirectly, as in the previous syntax, the return value is an object reference to the newly-created object.</p>
+        <p>When called directly within a subclass Init method, the return value is 1 if initialization was successful, or zero otherwise.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>An optional string that specifies the full path and name of the video file (container format) to read. If you do not specify a filename, IDL will still create the object which can be used with the <a href="#GetCodecs" class="selected">::GetCodecs</a> or <a href="#GetFormats" class="selected">::GetFormats</a> methods.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">VERBOSE</h3>
+        <p>By default, if the video file contains any video or audio codecs that are not supported, then IDL&#160;will quietly ignore these codecs and continue to open the file. Set the VERBOSE keyword to force IDL&#160;to issue informational messages when it encounters any unsupported codecs.</p>
+        <h1 class="ObjMethod"><a name="GetCodecs"></a>IDLffVideoRead::GetCodecs</h1>
+        <p>This method returns the list of codecs supported by IDLffVideoRead.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>You can call IDLffVideoRead::GetCodecs as a <a href="../../Objects/Static_Methods.htm">static method</a>, without needing to create an IDLffVideoRead object. For example:</p>
+        <p class="Code">print, IDLffVideoRead.GetCodecs()</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><em>Result </em>= <em>Obj</em>.[IDLffVideoRead::]GetCodecs([/LONG_NAMES] [, /AUDIO,] [, /VIDEO])</p>
+        <p>or, calling as a static method:</p>
+        <p class="Syntax"><em>Result </em>= IDLffVideoRead.GetCodecs([/LONG_NAMES] [, /AUDIO,] [, /VIDEO])</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns an array of strings listing the supported video formats.</p>
+        <h2 class="API">Arguments</h2>
+        <p>None</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">LONG_NAMES</h3>
+        <p>Set this keyword to return longer, more descriptive names.</p>
+        <h3 class="Keyword">AUDIO</h3>
+        <p>Set this keyword to output only audio codecs.</p>
+        <h3 class="Keyword">VIDEO</h3>
+        <p>Set this keyword to output only video codecs.</p>
+        <h1 class="ObjMethod"><a name="GetNext"></a>IDLffVideoRead::GetNext</h1>
+        <p>Continue to decode the video file until one of the decoders yields a result.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><em>Result </em>= <em>Obj</em>.[IDLffVideoRead::]GetNext(/AUDIO, /DATA, ONLY_STREAM=<i>value</i>, STREAM=<i>variable</i>, TYPE=<i>variable</i>, TIME=<i>variable</i>, /VERBOSE, /VIDEO)</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns the decoded data: a [3, <i>w</i>, <i>h</i>] array of bytes for a frame of video (with <i>w</i> width and <i>h</i> height in pixels); a [<i>c</i>, <i>n</i>] array of integers for audio (with <i>c</i> channels and <i>n</i> samples); or an array of bytes for streamed data.</p>
+        <h2 class="API">Arguments</h2>
+        <p>None</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">AUDIO</h3>
+        <p>Set this keyword to indicate that only audio data should be returned.</p>
+        <h3 class="Keyword">DATA</h3>
+        <p>Set this keyword to indicate that only auxiliary data should be returned.</p>
+        <h3 class="Keyword">ONLY_STREAM</h3>
+        <p>Set this keyword to the index value of the stream of interest so that IDL returns only that stream.</p>
+        <h3 class="Keyword">STREAM</h3>
+        <p>Set this keyword to a named variable to specify the index value of the data stream you want to retrieve (see the <a href="#GetStreams" class="selected">::GetStreams</a> method for information on retrieving streams indices).</p>
+        <h3 class="Keyword">TYPE</h3>
+        <p>Set this keyword to a named variable to capture an integer value representing the data type: 0=unknown, 1=video, 2=audio, 3=data, -1=EOF (end of file).</p>
+        <h3 class="Keyword">TIME</h3>
+        <p>Set this keyword to a named variable to capture the data's place in the file, in seconds from the beginning.</p>
+        <h3 class="Keyword">VERBOSE</h3>
+        <p>By default, any warnings or non-fatal errors will be quietly ignored. Set the VERBOSE keyword to issue informational messages for these warnings.</p>
+        <h3 class="Keyword">VIDEO</h3>
+        <p>Set this keyword to indicate that only video data should be returned.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>One, two, or more of DATA, AUDIO, and VIDEO may be set to filter on those types. If none are set, all are assumed.</p>
+        <h1 class="ObjMethod"><a name="GetFormats"></a>IDLffVideoRead::GetFormats</h1>
+        <p>This method returns the list of formats supported by IDLffVideoRead.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>You can call IDLffVideoRead::GetFormats as a <a href="../../Objects/Static_Methods.htm">static method</a>, without needing to create an IDLffVideoRead object. For example:</p>
+        <p class="Code">print, IDLffVideoRead.GetFormats()</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><em>Result </em>= <em>Obj</em>.[IDLffVideoRead::]GetFormats([/LONG_NAMES])</p>
+        <p>or, calling as a static method:</p>
+        <p class="Syntax"><em>Result </em>= IDLffVideoRead.GetFormats([/LONG_NAMES])</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns an array of strings listing every supported format.</p>
+        <h2 class="API">Arguments</h2>
+        <p>None</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">LONG_NAMES</h3>
+        <p>Set this keyword to return longer, more descriptive names.</p>
+        <h1 class="ObjMethod"><a name="GetMetadata"></a>IDLffVideoRead::GetMetadata</h1>
+        <p>Retrieves metadata values corresponding to the given key, such as 'title', 'copyright', 'author', etc.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><em>Result </em>= <em>Obj</em>.[IDLffVideoRead::]GetMetadata([<i>Key</i>] [, /<i>KEYS</i>])</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns an array of strings listing the metadata for the key specified.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Key</h3>
+        <p>Set "Key" to a string value indicating the key for which you wish to retrieve metadata.</p>
+        <p>The following table lists the typpical metadata keys recognized by the IDL-supported video file formats. Other formats may have their own list of recognized metadata keys.</p>
+        <table class="TableStyle_Description" style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0">
+            <col class="Column-Column1" />
+            <thead>
+                <tr class="Head-Header1">
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Key</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>album
+</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>artist
+</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>comment
+</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>copyright
+</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>genre</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>title</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Either the Key argument or the /KEYS keyword must be specified when calling ::GetMetadata.</p>
+        <p>::GetMetadata will error if the "key" you specify is not present in the file.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">KEYS</h3>
+        <p>Set this keyword to return an array of all available metadata keys.</p>
+        <h1 class="ObjMethod"><a name="GetStreams"></a>IDLffVideoRead::GetStreams</h1>
+        <p>The ::GetStreams() method returns an array of structures describing the streams in the current file.</p>
+        <p>These structures are of the following format:</p>
+        <p class="Code">{</p>
+        <p class="Code">PID, &#160;&#160;&#160;&#160;&#160;; Program ID - The internal identifier for the stream</p>
+        <p class="Code">TYPE, &#160;&#160;&#160;&#160;; 0=unknown, 1=video, 2=audio, 3=data</p>
+        <p class="Code">RATE, &#160;&#160;&#160;&#160;; Rate in Hertz.  For example, 25 FPS for video, or 44100 Hz for audio</p>
+        <p class="Code">WIDTH, &#160;&#160;&#160;; Video only.  Width in pixels</p>
+        <p class="Code">HEIGHT, &#160;&#160;; Video only.  Height in pixels</p>
+        <p class="Code">CHANNELS, ; Audio only. Number of audio channels</p>
+        <p class="Code">CODEC, &#160;&#160;&#160;; String identifying the codec used</p>
+        <p class="Code">LENGTH, &#160;&#160;; Stream length in seconds</p>
+        <p class="Code">COUNT&#160;&#160;&#160;&#160;&#160;; Number of frames of that stream in the file</p>
+        <p class="Code">}</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Animated GIF files do not contain header information on the frame rate, duration, or the number of frames. These values are estimated from other header information and may be incorrect.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The LENGTH, COUNT,&#160;and RATE fields are best guess approximations given by the FFMPEG library. This is due to the reported RATE&#160;of some files being slightly different than the actual RATE. For example, an NTSC file might have a reported RATE of 30 but an actual RATE of 29.97. These differences vary by formats and codecs.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><em>Result </em>= <em>Obj</em>.[IDLffVideoRead::]GetStreams()</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns an array of structures describing the current file's streams.</p>
+        <h2 class="API">Arguments</h2>
+        <p>None.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="Seek"></a>IDLffVideoRead::Seek</h1>
+        <p>Repositions the current location in the file to as close as possible to the input time.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><em>Obj</em>.[IDLffVideoRead::]Seek, <i>Time</i></p>
+        <h2 class="API">Return Value</h2>
+        <p>None.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Time</h3>
+        <p>Desired position in the file, in seconds from the beginning.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="Cleanup"></a>IDLffVideoRead::Cleanup</h1>
+        <p>This method closes the file and destroys the object. </p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><em>Obj</em>.[IDLffVideoRead::]Cleanup</p>
+        <p class="Syntax"><i>or</i>
+        </p>
+        <p class="Syntax"><a href="../../Reference Material/O/OBJ_DESTROY.htm">OBJ_DESTROY</a>, <i>Obj</i></p>
+        <h2 class="API">Additional Example</h2>
+        <p>Read in the same file as in our original example, above, and show the use of the ::GetMetadata method.</p>
+        <p class="Code">; Specify the file and create an IDLffVideoRead object</p>
+        <p class="Code">; to hold the file.</p>
+        <p class="Code">file = 'C:\Users\nrynes\IDLWorkspace82\CME.mp4'</p>
+        <p class="Code">oVid = OBJ_NEW('IDLffVideoRead', file)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Obtain array of all available metadata for the file.</p>
+        <p class="Code">meta = oVid.GetMetadata(/KEYS)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">HELP, meta</p>
+        <p class="Code">PRINT, meta</p>
+        <p class="Code">&#160;</p>
+        <p>IDL&#160;displays:</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">META &#160;&#160;&#160;           STRING    = Array[5]</p>
+        <p class="Code">major_brand minor_version&#160; compatible_brands creation_time encoder</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Get and display some metadata based on the results above.</p>
+        <p class="Code">brand = oVid.GetMetadata("major_brand")</p>
+        <p class="Code">PRINT, brand</p>
+        <p class="Code">&#160;</p>
+        <p>IDL&#160;displays:</p>
+        <p class="Code">mp42</p>
+        <h2 class="API">Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>8.2.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">
+                        <p>8.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">
+                        <p>Allow ::GetCodecs and ::GetFormats to be called as static methods.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added VERBOSE keyword to ::Init</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">Resources and References</h2>
+        <p>The NASA "CME.mp4" video used in the example is courtesy of the Solar Dynamics Observatory (SDO) and the Solar and Heliospheric Observatory (SOHO). The file is available for download here:</p>
+        <p><a href="http://www.nasa.gov/multimedia/videogallery/index.html?media_id=160387251" title="NASA Coronal Mass Ejection video" alt="NASA Coronal Mass Ejection video">http://www.nasa.gov/multimedia/videogallery/index.html?media_id=160387251</a>
+        </p>
+        <p>&#160;</p>
+        <p>A longer, similar video that can be substituted in the example code, is available for download here:</p>
+        <p><a href="http://www.nasa.gov/mission_pages/sdo/news/coronal-rain.html" target="_blank">http://www.nasa.gov/mission_pages/sdo/news/coronal-rain.html</a>
+        </p>
+        <h2 class="API">See Also</h2>
+        <p><a href="../../Creating IDL Programs/Application Programming/CreatingVideo.htm">Creating Video</a>, <a href="IDLffVideoWrite.htm">IDLffVideoWrite</a>, <a href="../../Reference Material/O/OBJ_DESTROY.htm">OBJ_DESTROY</a>, <a href="../../Reference Material/O/OBJ_NEW.htm">OBJ_NEW</a>, <a href="../../Reference Material/Q/QUERY_VIDEO.htm">QUERY_VIDEO</a>, <a href="../../Reference Material/R/READ_VIDEO.htm">READ_VIDEO</a>, <a href="../../Reference Material/W/WRITE_VIDEO.htm">WRITE_VIDEO</a> <![CDATA[ ]]></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

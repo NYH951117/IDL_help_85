@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: S">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>SCOPE_VARNAME</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="S_list.htm">Routines: S</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">SCOPE_VARNAME</span>
+        </div>
+        <h1 class="Routine"><a name="S_820040301_1196741"></a><a name="S_820040301_43846"></a>SCOPE_VARNAME</h1>
+        <p><a name="kanchor2336"></a>The SCOPE_VARNAME function returns the names of variables outside the local scope of the currently running procedure or function. Given a variable within the local scope of the currently running routine, SCOPE_VARNAME can supply the name under which it is known in an earlier routine in the current chain of active routines. Similarly, given the positional index of a common block variable, SCOPE_VARNAME can report the name that the variable was given in the routine that first defined that common block within the current IDL session.</p>
+        <p>In normal IDL operation, routines are not allowed to see variables outside their own scope. This restriction is a fundamental and important property of structured modular programming. Code that accesses non-local scope to alter variables within other active routines can quickly become extremely difficult to understand and maintain. For this reason, avoid using the IDL scope routines. </p>
+        <p>Despite this warning, there is an important class of application that requires the functionality provided by these routines. Programs, usually with graphical user interfaces, that import and export data from the callers’ scope need to be able to access the user’s data variables directly, and without requiring them to explicitly pass those variables to the application as parameters. The <a href="SCOPE_VARFETCH.htm#S_820040301_1214985">SCOPE_VARFETCH</a> function is used to access those variables, and SCOPE_VARNAME is used to obtain the correct names with which to refer to them. <a href="SCOPE_LEVEL.htm#S_820040301_1197681">SCOPE_LEVEL</a> returns the scope level of the currently executing routine. The IDL iTools and the ENVI image processing software are examples of programs that need to be able to perform these operations. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For more information, see <a href="SCOPE_VARFETCH.htm#S_820040301_1215081">Interpreter Frames, Level, and Variable Scope</a>.</p>
+        <h2 class="API"><a name="S_820040301_1215331"></a><a name="S_820040301_1215331_PageTOC_SCOPE_VARNAME_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = SCOPE_VARNAME( [<i>Var</i><i><sub>1</sub></i>[<i>, ..., Var</i><i><sub>n</sub></i>]] [,&#160;<a href="#S_820040301_1215382" class="selected">COMMON</a>=<i>string</i>] [,&#160;<a href="#S_820040301_1215393" class="selected">COUNT</a>=<i>variable</i>] [,&#160;<a href="#S_820040301_1215399" class="selected">LEVEL</a>=<i>value</i>] )</p>
+        <h2 class="API"><a name="S_820040301_1215342"></a><a name="S_820040301_1215342_PageTOC_SCOPE_VARNAME_"></a>Return Value</h2>
+        <p>The value returned by SCOPE_VARNAME depends on whether or not the <a href="#S_820040301_1215382" class="selected">COMMON</a> keyword is set, and whether or not plain arguments are provided in the call. In all cases, the result is of a scalar string or a string array of variable names. </p>
+        <h3>COMMON Keyword Not Set</h3>
+        <h4>Arguments Present</h4>
+        <p>The result is a string array, with each element giving the name of the corresponding argument variable within the scope of the routine specified by the <a href="#S_820040301_1215399" class="selected">LEVEL</a> keyword. If an argument does not exist within the target scope, a scalar null string is returned. </p>
+        <h4>Arguments Not Present</h4>
+        <p>The result is a string array containing the names of all known variables within the scope of the routine specified by the <a href="#S_820040301_1215399" class="selected">LEVEL</a> keyword. If the specified scope has no variables, a scalar null string is returned.</p>
+        <p>See the description of the <a href="#S_820040301_1215399" class="selected">LEVEL</a> keyword for additional information. </p>
+        <h3>COMMON Keyword Set</h3>
+        <h4>Arguments Present</h4>
+        <p>Each argument supplies the positional index of a variable within the common block. The result is a string array, with each element giving the name of the corresponding variable with that index within that common block. </p>
+        <h4>Arguments Not Present</h4>
+        <p>The result is a string array containing the names of all known variables defined within a specified common block, given in the order in which they exist in the block.</p>
+        <h2 class="API"><a name="S_820040301_1215367"></a><a name="S_820040301_1215367_PageTOC_SCOPE_VARNAME_"></a>Arguments</h2>
+        <h3 class="Argument">Var<sub>i</sub></h3>
+        <p>If the <a href="#S_820040301_1215382" class="selected">COMMON</a> keyword is not set, the arguments to SCOPE_VARNAME are variables for which names are to be returned relative to the scope specified by the <a href="#S_820040301_1215399" class="selected">LEVEL</a> keyword. </p>
+        <p>If the <a href="#S_820040301_1215382" class="selected">COMMON</a> keyword is set, the arguments to SCOPE_VARNAME are integers, giving the positional index of variables within the specified common block for which names are to be returned.</p>
+        <h2 class="API"><a name="S_820040301_1215380"></a><a name="S_820040301_1215380_PageTOC_SCOPE_VARNAME_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="S_820040301_1215382"></a><a name="S_820040301_1215382_Keywords_SCOPE_VARNAME_"></a>COMMON</h3>
+        <p>Set this keyword to a string containing the name of a common block to cause SCOPE_VARNAME to return the names of variables contained within the specified block. If COMMON is set, the arguments to SCOPE_VARNAME are integers that give the positional index of variables within the specified common block for which names are to be returned.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>See <a href="#S_820040301_1215427" class="selected">COMMON Variable Names</a> for more information on the names returned.</p>
+        <p>The COMMON keyword cannot be used in conjunction with the <a href="#S_820040301_1215399" class="selected">LEVEL</a> keyword.</p>
+        <h3 class="Keyword"><a name="S_820040301_1215393"></a><a name="S_820040301_1215393_Keywords_SCOPE_VARNAME_"></a>COUNT</h3>
+        <p>Set this keyword to a named variable that will contain the number of elements returned in the array value returned by SCOPE_VARNAME. If SCOPE_VARNAME returns a null string, a 0 is returned. This circumstance will occur if there are no arguments, the <a href="#S_820040301_1215382" class="selected">COMMON</a> keyword is not set, and the specified scope has no variables.</p>
+        <h3 class="Keyword"><a name="S_820040301_1215399"></a><a name="S_820040301_1215399_Keywords_SCOPE_VARNAME_"></a>LEVEL </h3>
+        <p>Set this keyword to an integer that specifies the scope within which the desired variable should be found. The level can be either an absolute value or relative to the current scope, as shown in the following table:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Meaning</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Level 0 always refers to the frame for the currently executing routine. This is the default value.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&lt; 0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Negative levels are a relative specification and refer to the frames of active routines relative to the currently executing routine. Level -1 is the direct caller of the current routine, -2 is the caller of the caller of the current routine, and so forth. If you specify a level that is deeper than the current call stack, SCOPE_VARNAME clips the value not to go past $MAIN$.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>&gt; 0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Positive levels are an absolute specification and refer directly to the specified frame. Level 1 is $MAIN$, level 2 is the routine called from $MAIN$, and so forth. If you specify a level that is past the currently executing routine, SCOPE_VARNAME clips the value to the level of the current routine.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>The LEVEL keyword cannot be used in conjunction with the <a href="#S_820040301_1215382" class="selected">COMMON</a> keyword.</p>
+        <h2 class="API"><a name="S_820040301_1215427"></a><a name="S_820040301_1215427_PageTOC_SCOPE_VARNAME_"></a><a name="S_820040301_95793"></a>COMMON Variable Names</h2>
+        <p>Variables in IDL common blocks do not actually have names. Rather, IDL represents common blocks internally as an array of variables, and these variables are referenced by their positional index. Hence, the first variable is at position 0, the second at position 1, and so forth. When you specify a COMMON declaration in an IDL routine, you specify names to be used for these variables <i>within the scope of that routine</i>. In fact, different routines are allowed to use entirely different names to refer to a given variable. However, this can quickly become confusing, and most programmers use the same names in every case. </p>
+        <p>The first routine in which a COMMON block is defined is remembered by IDL as part of the state of that block. When another routine defines the same common block, it is allowed to omit the variable names. In this case, IDL uses the same names used in the original defining routine. </p>
+        <p>When the COMMON keyword is specified to the SCOPE_VARNAME function, the names returned are the names that were defined by the originally defining routine. Because good programming practice dictates that the same names be used everywhere, this result usually causes no confusion. However, in an environment where different names are in use in different scopes, you should be aware of the difference. For example, execute the following COMMON statement at the IDL prompt: </p>
+        <p class="Code">COMMON DOGS, poodle, spaniel, retriever</p>
+        <p>Now execute the following IDL routine: </p>
+        <p class="Code">PRO dogs<br /><br />&#160;&#160;&#160;COMMON DOGS, breed1, breed2, breed3<br /><br />&#160;&#160;&#160;PRINT, 'In this scope: ', SCOPE_VARNAME(breed1, breed2, breed3)<br />&#160;&#160;&#160;PRINT, 'In $MAIN$: ', SCOPE_VARNAME(breed1, breed2, breed3, $<br />&#160;&#160;&#160;&#160;&#160;&#160;LEVEL=-1)<br />&#160;&#160;&#160;PRINT, 'In COMMON: ', SCOPE_VARNAME(COMMON='dogs', 0, 1, 2)<br />END</p>
+        <p>The following output is produced when procedure DOGS is called: </p>
+        <p class="Code">In this scope:  BREED1 BREED2 BREED3</p>
+        <p class="Code">In $MAIN$:  POODLE SPANIEL RETRIEVER</p>
+        <p class="Code">In COMMON:  POODLE SPANIEL RETRIEVER</p>
+        <p>If you do not specify the COMMON keyword, SCOPE_VARNAME translates the names of all variables, common or regular, relative to the specified scope. Hence, the variables in the DOGS common block appear as POODLE, SPANIEL, and RETRIEVER in $MAIN$, and as BREED1, BREED2, and BREED3 within procedure DOGS, despite the fact that they refer to the same variables. When you direct SCOPE_VARNAME to work from the common block instead of from an interpreter frame, the function uses the names from the scope of the routine that defined the common block, which in this example is $MAIN$. </p>
+        <p>Following this advice can minimize confusion: </p>
+        <ul>
+            <li value="1">Use the same names for common block variables in all definitions. A convenient way to do so is to take advantage of the abbreviated form of the COMMON declaration, in which second and following declarations can leave off the variable names, and IDL will substitute the names from the initial definition. </li>
+            <li value="2">When possible, routines that use SCOPE_VARNAME should not specify the COMMON keyword. Instead, translate their names relative to the caller’s scope. </li>
+        </ul>
+        <h2 class="API"><a name="S_820040301_1215450"></a><a name="S_820040301_1215450_PageTOC_SCOPE_VARNAME_"></a>Example</h2>
+        <p>The following procedure outputs the names of all variables currently defined in the IDL main program, $MAIN$. It also prints the name of its argument, in its own scope, in that of its caller, and in that of $MAIN$. </p>
+        <p class="Code">PRO test_scope_varname, arg</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;PRINT, 'All variables in $MAIN$: ', SCOPE_VARNAME(LEVEL=1)</p>
+        <p class="Code">&#160;&#160;&#160;PRINT, 'Argument name in local scope: ', SCOPE_VARNAME(arg)</p>
+        <p class="Code">&#160;&#160;&#160;PRINT, 'Argument name in caller scope: ', SCOPE_VARNAME(arg, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;LEVEL=-1)</p>
+        <p class="Code">&#160;&#160;&#160;PRINT, 'Argument name in $MAIN$ scope: ', SCOPE_VARNAME(arg, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;LEVEL=1)</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="S_820040301_1215461"></a><a name="S_820040301_1215461_PageTOC_SCOPE_VARNAME_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="S_820040301_1215463"></a><a name="S_820040301_1215463_PageTOC_SCOPE_VARNAME_"></a>See Also</h2>
+        <p><a href="../H/HELP.htm#H_835179117_748700">HELP</a>, <a href="SCOPE_LEVEL.htm#S_820040301_1197681">SCOPE_LEVEL</a>, <a href="SCOPE_TRACEBACK.htm#S_820040301_1279496">SCOPE_TRACEBACK</a>, <a href="SCOPE_VARFETCH.htm#S_820040301_1214985">SCOPE_VARFETCH</a>, <a href="../R/ROUTINE_INFO.htm#R_822202989_845681">ROUTINE_INFO</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

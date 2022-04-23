@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-conditions="" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Error Handling">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Math Errors</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ErrorHandling.htm">Error Handling</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Math Errors</span>
+        </div>
+        <h1><a name="debug_2348412560_543477"></a><a name="kanchor4578"></a><a name="debug_2348412560_73043"></a>Math Errors</h1>
+        <p>The detection of math errors, such as division by zero, overflow, and attempting to take the logarithm of a negative number, is hardware and operating system dependent. Some systems trap more errors than other systems. On systems that implement the IEEE floating-point standard, IDL substitutes the special floating-point values NaN and Infinity when it detects a floating point math error. (See <a href="#debug_2348412560_543508" class="selected">Special Floating-Point Values</a>.) Integer overflow and underflow is not detected. Integer divide by zero is detected on all platforms.</p>
+        <h3>A Note on Floating-Point Underflow Errors</h3>
+        <p><a name="kanchor4579"></a>Floating-point underflow errors occur when a non-zero result is so close to zero that it cannot be expressed as a normalized floating-point number. In the vast majority of cases, floating-point underflow errors are harmless and can be ignored. </p>
+        <h2 class="API"><a name="debug_2348412560_66011"></a>Accumulated Math Error Status</h2>
+        <p>IDL handles math errors by keeping an accumulated math error status. This status, which is implemented as a longword, contains a bit for each type of math error that is detected by the hardware. When IDL automatically checks and clears this indicator depends on the value of the system variable <a href="../Appendices/Error_Handling_System_Va.htm#sysvars_272074529_1002623">!EXCEPT</a>. The <a href="../../Reference Material/C/CHECK_MATH.htm#C_854643309_676079">CHECK_MATH</a> function also allows you to check and clear the accumulated math error status when desired. </p>
+        <p>!EXCEPT has three possible values:</p>
+        <h4>!EXCEPT=0</h4>
+        <p>Do not report exceptions.</p>
+        <h4>!EXCEPT=1</h4>
+        <p>The default. Report exceptions when the IDL interpreter returns to an interactive prompt. Any math errors that occurred since the last interactive prompt (or call to CHECK_MATH) are printed in the IDL command log. A typical message looks like:</p>
+        <p class="Code">% Program caused arithmetic error: Floating divide by 0</p>
+        <h4>!EXCEPT=2</h4>
+        <p>Report exceptions after each IDL statement is executed. This setting also allows IDL to report on the program context in which the error occurred, along with the line number in the procedure. A typical message looks like:</p>
+        <p class="Code">% Program caused arithmetic error: Floating divide by 0</p>
+        <p class="Code">% Detected at  JUNK                3 junk.pro</p>
+        <h2 class="API"><a name="debug_2348412560_543508"></a><a name="debug_2348412560_29444"></a>Special Floating-Point Values</h2>
+        <p>Machines which implement the <a name="kanchor4580"></a>IEEE standard for binary floating-point arithmetic have two special values for undefined results:<a name="kanchor4581"></a> NaN (Not A Number) and <a name="kanchor4582"></a>Infinity. Infinity results when a result is larger than the largest representation. NaN is the result of an undefined computation such as zero divided by zero, taking the square-root of a negative number, or the logarithm of a non-positive number. In many cases, when IDL encounters the value NaN in a data set, it treats it as “missing data.” The special values NaN and Infinity are also accessible in the read-only system variable <a href="../Appendices/Constant_System_Variable.htm#sysvars_272074529_996962">!VALUES</a>. These special operands propagate throughout the evaluation process—the result of any term involving these operands is one of these two special values.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For the minimum (&lt;) and maximum (&gt;) operators with NaN operands, the result is undefined and may not necessarily be the special value NaN.</p>
+        <p>For example:</p>
+        <p class="Code">; Multiply NaN by 3</p>
+        <p class="Code">PRINT, 3 * !VALUES.F_NAN</p>
+        <p>IDL prints:</p>
+        <p class="Code">NaN</p>
+        <p>It is important to remember that the value NaN is literally not a number, and as such cannot be compared with a number. For example, suppose you have an array that contains the value NaN:</p>
+        <p class="Code">A = [1.0, 2.0, !VALUES.F_NAN, 3.0]</p>
+        <p class="Code">PRINT, A</p>
+        <p>IDL prints:</p>
+        <p class="Code">1.00000&#160;&#160;&#160;&#160;&#160;2.00000&#160;&#160;&#160;&#160;&#160;NaN&#160;&#160;&#160;&#160;&#160;3.0000</p>
+        <p>If you try to select elements of this array by comparing them with a number (using the <a href="../../Reference Material/W/WHERE.htm#W_811389549_679886">WHERE</a> function, for example), IDL might generate an error (depending on the hardware and operating system):</p>
+        <p class="Code">; Print the indices of A that are not equal to 1</p>
+        <p class="Code">PRINT, WHERE( A NE 1.0 )</p>
+        <p>IDL prints:</p>
+        <p class="Code">1&#160;&#160;&#160;&#160;&#160;2&#160;&#160;&#160;&#160;&#160;3</p>
+        <p class="Code">% Program caused arithmetic error: Floating illegal operand</p>
+        <p>(Depending on your hardware and operating system, you may not see the floating-point error.)</p>
+        <p>To avoid this problem, use the <a href="../../Reference Material/F/FINITE.htm#F_848155245_676884">FINITE</a> function to make sure arguments to be compared are in fact valid floating-point numbers:</p>
+        <p class="Code">PRINT, WHERE( FINITE(A) ) </p>
+        <p>IDL prints the indices of the finite elements of A:</p>
+        <p class="Code">0&#160;&#160;&#160;&#160;&#160;1&#160;&#160;&#160;&#160;&#160;3</p>
+        <p>To then print the indices of the elements of A that are both finite and not equal to 1.0, you could use the command:</p>
+        <p class="Code">good = WHERE( FINITE(A) )</p>
+        <p class="Code">PRINT, good[WHERE(A[good] NE 1.0)]</p>
+        <p>IDL prints:</p>
+        <p class="Code">1&#160;&#160;&#160;&#160;&#160;3</p>
+        <p>Similarly, if you wanted to find out which elements of an array were <i>not</i> valid floating-point numbers, you could use a command like:</p>
+        <p class="Code">; Print the indices of the elements of A that are not valid </p>
+        <p class="Code">; floating-point numbers.</p>
+        <p class="Code">PRINT, WHERE( ~FINITE(A) )</p>
+        <p>IDL prints:</p>
+        <p class="Code">2</p>
+        <p>Note that the special value Infinity <i>can</i> be compared to a floating point number. Thus, if:</p>
+        <p class="Code">B = [1.0, 2.0, !VALUES.F_INFINITY]</p>
+        <p class="Code">PRINT, B</p>
+        <p>IDL prints:</p>
+        <p class="Code">1.00000      2.00000          Inf</p>
+        <p>and</p>
+        <p class="Code">PRINT, WHERE(B GT 1.0)</p>
+        <p>IDL prints:</p>
+        <p class="Code">1           2</p>
+        <p>You can also compare numbers directly with the special value Infinity:</p>
+        <p class="Code">PRINT, WHERE(B EQ !VALUES.F_INFINITY)</p>
+        <p>IDL prints:</p>
+        <p class="Code">2</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>On Windows, using relational operators such as EQ and NE with the values infinity or NaN (Not a Number) causes an “illegal operand” error. The FINITE function’s INFINITY and NAN keywords can be used to perform comparisons involving infinity and NaN values. For more information, see <a href="../../Reference Material/F/FINITE.htm#F_848155245_676884">FINITE</a>.</p>
+        <h2 class="API"><a name="debug_2348412560_59525"></a>The <a name="kanchor4583"></a>FINITE Function</h2>
+        <p>Use the FINITE function to explicitly check the validity of floating-point or double-precision operands on machines which use the IEEE floating-point standard. For example, to check the result of the EXP function for validity, use the following statement:</p>
+        <p class="Code">;Perform exponentiation.</p>
+        <p class="Code">A = EXP(EXPRESSION)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Print error message.</p>
+        <p class="Code">IF ~ FINITE(A) THEN PRINT, 'Overflow occurred'</p>
+        <p>If A is an array, use the statement:</p>
+        <p class="Code">IF TOTAL(FINITE(A)) NE N_ELEMENTS(A) THEN</p>
+        <h2 class="API"><a name="kanchor4584"></a><a name="debug_2348412560_68617"></a>Integer Conversions</h2>
+        <p>It must be stressed that when converting from floating to any of the integer types (byte, signed or unsigned short integer, signed or unsigned longword integer, or signed or unsigned 64-bit integer) if overflow is important, you must explicitly check to be sure the operands are in range. Conversions to the above types from floating point, double precision, complex, and string types do not check for overflow—they simply convert the operand to the target integer type, discarding any significant bits of information that do not fit.</p>
+        <p>When run on a Sun workstation, the program:</p>
+        <p class="Code">A = 2.0 ^ 31 + 2</p>
+        <p class="Code">PRINT, LONG(A), LONG(-A), FIX(A), FIX(-A), BYTE(A), BYTE(-A)</p>
+        <p>(which creates a floating-point number 2 larger than the largest positive longword integer), prints the following:</p>
+        <p class="Code">2147483647 -2147483648 -1 0 255 0</p>
+        <p class="Code">% Program caused arithmetic error: Floating illegal operand</p>
+        <p>This result is incorrect.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>No error message will appear if you attempt to convert a floating number whose absolute value is between 2<sup>15</sup> and 2<sup>31</sup> - 1 to short integer even though the result is incorrect. Similarly, converting a number in the range of 256 to 2<sup>31 </sup>- 1 from floating, complex, or double to byte type produces an incorrect result, but no error message. Furthermore, integer <a name="kanchor4585"></a>overflow is usually not detected. Your programs must guard explicitly against it.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

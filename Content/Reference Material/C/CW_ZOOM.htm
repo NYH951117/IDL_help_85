@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>CW_ZOOM </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">CW_ZOOM</span>
+        </div>
+        <h1 class="Routine"><a name="dg_routines_3604229493_881684"></a><a name="dg_routines_3604229493_46430"></a>CW_ZOOM<a name="kanchor460"></a> <![CDATA[ ]]></h1>
+        <p><a name="kanchor461"></a><a name="kanchor462"></a>The CW_ZOOM function creates a compound widget that displays two images: an original image in one window and a zoomed portion of the original image in another. The user can select the center of the zoom region, the zoom scale, the interpolation style, and the method of indicating the zoom center.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>cw_zoom.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h3><a name="dg_routines_3604229493_881716"></a>Using CW_ZOOM</h3>
+        <p>The value of the CW_ZOOM widget is the original, un-zoomed image to be displayed (a two-dimensional array). To change the contents of the CW_ZOOM widget, use the command:</p>
+        <p class="Code">WIDGET_CONTROL, id, SET_VALUE = array</p>
+        <p>where <code>id</code> is the widget ID of the CW_ZOOM widget and <code>array</code> is the image array. The value of CW_ZOOM cannot be set until the widget has been realized. Note that the size of the original window, set with the XSIZE and YSIZE keywords to CW_ZOOM, must be the size of the input array.</p>
+        <p>To return the current zoomed image as displayed by CW_ZOOM in the variable <code>array</code>, use the command:</p>
+        <p class="Code">WIDGET_CONTROL, id, GET_VALUE = array</p>
+        <h2 class="API"><a name="dg_routines_3604229493_881897"></a><a name="dg_routines_3604229493_755933_PageTOC_CW_ZOOM_"></a>Examples</h2>
+        <p>The following code samples illustrate a use of the CW_ZOOM widget. First, create an event-handler. Note that clicking on the widget’s “Zoom” button displays IDL’s help output on the console.</p>
+        <p class="Code">PRO widzoom_event, event</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;WIDGET_CONTROL, event.id, GET_UVALUE=uvalue</p>
+        <p class="Code">&#160;&#160;&#160;CASE uvalue OF</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;'ZOOM': HELP, /STRUCT, event</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;'DONE': WIDGET_CONTROL, event.top, /DESTROY</p>
+        <p class="Code">&#160;&#160;&#160;ENDCASE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>Next, create the widget program:</p>
+        <p class="Code">PRO widzoom</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;OPENR, lun, FILEPATH('people.dat', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;SUBDIR = ['examples','data']), /GET_LUN</p>
+        <p class="Code">&#160;&#160;&#160;image=BYTARR(192,192, /NOZERO)</p>
+        <p class="Code">&#160;&#160;&#160;READU, lun, image</p>
+        <p class="Code">&#160;&#160;&#160;FREE_LUN, lun</p>
+        <p class="Code">&#160;&#160;&#160;sz = SIZE(image)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;base=WIDGET_BASE(/COLUMN)</p>
+        <p class="Code">&#160;&#160;&#160;zoom=CW_ZOOM(base, XSIZE=sz[1], YSIZE=sz[2], UVALUE='ZOOM')</p>
+        <p class="Code">&#160;&#160;&#160;done=WIDGET_BUTTON(base, VALUE='Done', UVALUE='DONE')</p>
+        <p class="Code">&#160;&#160;&#160;WIDGET_CONTROL, base, /REALIZE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;WIDGET_CONTROL, zoom, SET_VALUE=image</p>
+        <p class="Code">&#160;&#160;&#160;XMANAGER, 'widzoom', base</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>Once you have entered these programs, type “widzoom” at the IDL command prompt to run the widget application.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_881723"></a><a name="dg_routines_3604229493_755841_PageTOC_CW_ZOOM_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = CW_ZOOM( <i>Parent</i> [,&#160;/<a href="#dg_routines_3604229493_881783" class="selected">FRAME</a>] [,&#160;<a href="#dg_routines_3604229493_881786" class="selected">MAX</a>=<i>scale</i>] [,&#160;<a href="#dg_routines_3604229493_881789" class="selected">MIN</a>=<i>scale</i>] [,&#160;<a href="#dg_routines_3604229493_881792" class="selected">RETAIN</a>={0 | 1 | 2}] [,&#160;<a href="#dg_routines_3604229493_881799" class="selected">SAMPLE</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_881802" class="selected">SCALE</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_881805" class="selected">TAB_MODE</a>=<i>value</i>] [,&#160;/<a href="#dg_routines_3604229493_881842" class="selected">TRACK</a>] [,&#160;<a href="#dg_routines_3604229493_881845" class="selected">UNAME</a>=<i>string</i>] [,&#160;<a href="#dg_routines_3604229493_881852" class="selected">UVALUE</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_881855" class="selected">XSIZE</a>=<i>width</i>] [,&#160;<a href="#dg_routines_3604229493_881858" class="selected">X_SCROLL_SIZE</a>=<i>width</i>] [,&#160;<a href="#dg_routines_3604229493_881861" class="selected">X_ZSIZE</a>=<i>zoom_width</i>] [,&#160;<a href="#dg_routines_3604229493_881864" class="selected">YSIZE</a>=<i>height</i>] [,&#160;<a href="#dg_routines_3604229493_881867" class="selected">Y_SCROLL_SIZE</a>=<i>height</i>] [,&#160;<a href="#dg_routines_3604229493_881870" class="selected">Y_ZSIZE</a>=<i>zoom_height</i>] )</p>
+        <h2 class="API"><a name="dg_routines_3604229493_881774"></a><a name="dg_routines_3604229493_755843_PageTOC_CW_ZOOM_"></a>Return Value</h2>
+        <p>This function returns the widget ID of the newly-created zoom widget.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_881777"></a><a name="dg_routines_3604229493_1027122_PageTOC_CW_ZOOM_"></a>Arguments</h2>
+        <h3 class="Argument">Parent</h3>
+        <p>The widget ID of the parent widget.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_881781"></a><a name="dg_routines_3604229493_755846_PageTOC_CW_ZOOM_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_881783"></a><a name="dg_routines_3604229493_755848_Keywords_CW_ZOOM__"></a>FRAME</h3>
+        <p>If set, a frame will be drawn around the widget. The default is FRAME = 0.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_881786"></a><a name="dg_routines_3604229493_755851_Keywords_CW_ZOOM__"></a>MAX</h3>
+        <p>The maximum zoom scale, which must be greater than or equal to 1. The default is 20.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_881789"></a><a name="dg_routines_3604229493_755854_Keywords_CW_ZOOM__"></a>MIN</h3>
+        <p>The minimum zoom scale, which must be greater than or equal to 1. The default is 1.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_881792"></a><a name="dg_routines_3604229493_755857_Keywords_CW_ZOOM__"></a>RETAIN</h3>
+        <p><a name="kanchor463"></a>Set this keyword to zero, one, or two to specify how backing store should be handled for both windows. RETAIN=0 specifies no backing store. RETAIN=1 requests that the server or window system provide backing store. RETAIN=2 specifies that IDL provide backing store directly.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_881799"></a><a name="dg_routines_3604229493_755885_Keywords_CW_ZOOM__"></a>SAMPLE</h3>
+        <p>Set to zero for bilinear interpolation, or to a non-zero value for nearest neighbor interpolation. Bilinear interpolation gives higher quality results, but requires more time. The default is 0.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_881802"></a><a name="dg_routines_3604229493_755888_Keywords_CW_ZOOM__"></a>SCALE</h3>
+        <p>The initial integer scale factor to use for the zoomed image. The default is SCALE = 4. The scale must be greater than or equal to 1.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_881805"></a><a name="dg_routines_3604229493_67917"></a>TAB_MODE</h3>
+        <p>Set this keyword to one of the values shown in the table below to determine how the widget hierarchy can be navigated using the <b>Tab</b> key. The TAB_MODE setting is inherited by lower-level bases and child widgets unless it is explicitly set on an individual widget.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>It is not possible to tab to disabled (SENSITIVE=0) or hidden (MAP=0) widgets.</p>
+        <p>Valid settings are:</p>
+        <table style="caption-side: bottom;mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <caption valign="bottom" style="padding-bottom: 12pt;">
+                <p>&#160;</p>
+            </caption>
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Disable navigation onto or off of the widget. This is the default. Child widgets automatically inherit the tab mode of the parent base as described in <a href="../../Creating IDL Programs/Creating Applications in IDL/Enhancing_Widget_Applica.htm#Specifyi">Inheriting the TAB_MODE Value</a>.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Enable navigation onto and off of the widget.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Navigate only onto the widget.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Navigate only off of the widget.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In widget applications on the UNIX platform, the Motif library controls what widgets are brought into and released from focus using tabbing. The TAB_MODE keyword value is always zero, and any attempt to change it is ignored when running a widget application on the UNIX platform. Tabbing behavior may vary significantly between UNIX platforms; do not rely on a particular behavior being duplicated on all UNIX systems.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_881842"></a><a name="dg_routines_3604229493_755891_Keywords_CW_ZOOM__"></a>TRACK</h3>
+        <p>Set this keyword and events will be generated continuously as the cursor is moved across the original image. If not set, events will only be generated when the mouse button is released. Note: On slow systems, /TRACK performance can be inadequate. The default is 0.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_881845"></a><a name="dg_routines_3604229493_996700_Keywords_CW_ZOOM__"></a>UNAME </h3>
+        <p>Set this keyword to a string that can be used to identify the widget in your code. You can associate a name with each widget in a specific hierarchy, and then use that name to query the widget hierarchy and get the correct widget ID.</p>
+        <p>To query the widget hierarchy, use the <a href="../W/WIDGET_INFO.htm">WIDGET_INFO</a> function with the FIND_BY_UNAME keyword. The UNAME should be unique to the widget hierarchy because the FIND_BY_UNAME keyword returns the ID of the first widget with the specified name.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_881852"></a><a name="dg_routines_3604229493_755894_Keywords_CW_ZOOM__"></a>UVALUE</h3>
+        <p>The “user value” to be assigned to the widget.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_881855"></a><a name="dg_routines_3604229493_755897_Keywords_CW_ZOOM__"></a>XSIZE</h3>
+        <p>The width of the window (in pixels) for the original image. The default is XSIZE = 500. Note that XSIZE <i>must</i> be set to the width of the original image array for the image to display properly.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_881858"></a><a name="dg_routines_3604229493_755900_Keywords_CW_ZOOM__"></a>X_SCROLL_SIZE</h3>
+        <p>The width of the visible part of the original image. This may be smaller than the actual width controlled by the XSIZE keyword. The default is 0, for no scroll bar.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_881861"></a><a name="dg_routines_3604229493_755903_Keywords_CW_ZOOM__"></a>X_ZSIZE</h3>
+        <p>The width of the window for the zoomed image. The default is 250.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_881864"></a><a name="dg_routines_3604229493_755906_Keywords_CW_ZOOM__"></a>YSIZE</h3>
+        <p>The height of the window (in pixels) for the original image. The default is 500. Note that YSIZE <i>must</i> be set to the height of the original image array for the image to display properly.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_881867"></a><a name="dg_routines_3604229493_755909_Keywords_CW_ZOOM__"></a>Y_SCROLL_SIZE</h3>
+        <p>The height of the visible part of the original image. This may be smaller than the actual height controlled by the YSIZE keyword. The default is 0, for no scroll bar.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_881870"></a><a name="dg_routines_3604229493_755912_Keywords_CW_ZOOM__"></a>Y_ZSIZE</h3>
+        <p>The height of the window for the zoomed image. The default is 250.</p>
+        <h3><a name="dg_routines_3604229493_881873"></a><a name="dg_routines_3604229493_837907_Keywords_CW_ZOOM__"></a>Keywords to WIDGET_CONTROL and WIDGET_INFO</h3>
+        <p>The widget ID returned by most compound widgets is actually the ID of the compound widget’s base widget. This means that many keywords to the <a href="../W/WIDGET_CONTROL.htm">WIDGET_CONTROL</a> and <a href="../W/WIDGET_INFO.htm">WIDGET_INFO</a> routines that affect or return information on base widgets can be used with compound widgets.</p>
+        <p>In addition, you can use the GET_VALUE and SET_VALUE keywords to WIDGET_CONTROL to obtain or set the value of the zoom widget. The value of the CW_ZOOM widget is the original, un-zoomed image to be displayed (a two-dimensional array). To change the contents of the CW_ZOOM widget, use the command:</p>
+        <p class="Code">WIDGET_CONTROL, id, SET_VALUE = array</p>
+        <p>where <code>id</code> is the widget ID of the CW_ZOOM widget and <code>array</code> is the image array. The value of CW_ZOOM cannot be set until the widget has been realized. Note that the size of the original window, set with the XSIZE and YSIZE keywords to CW_ZOOM, must be the size of the input array.</p>
+        <p>To return the current zoomed image as displayed by CW_ZOOM in the variable <code>array</code>, use the command:</p>
+        <p class="Code">WIDGET_CONTROL, id, GET_VALUE = array</p>
+        <p>Creating a Compound Widget for a more complete discussion of controlling compound widgets using WIDGET_CONTROL and WIDGET_INFO.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_881891"></a><a name="dg_routines_3604229493_94895"></a>Widget Events Returned by the CW_ZOOM Widget</h2>
+        <p>When the “Report Zoom to Parent” button is pressed, this widget generates event structures with the following definition:</p>
+        <p class="Code">event = {ZOOM_EVENT, ID:0L, TOP:0L, HANDLER:0L, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;XSIZE:0L, YSIZE:0L, X0:0L, Y0:0L, X1:0L, Y1:0L }</p>
+        <p>This specifies the dimensions of the zoomed image and the corresponding coordinates within the original image. The XSIZE and YSIZE fields contain the dimensions of the zoomed image. The X0 and Y0 fields contain the coordinates of the lower left corner of the original image, and the X1 and Y1 fields contain the coordinates of the upper right corner of the original image.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_881929"></a><a name="dg_routines_3604229493_920521_PageTOC_CW_ZOOM_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added TAB_MODE keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dg_routines_3604229493_881941"></a><a name="dg_routines_3604229493_1052393_PageTOC_CW_ZOOM_"></a>See Also</h2>
+        <p><a href="../Z/ZOOM_Procedure.htm#dg_routines_3604229493_890963">ZOOM Procedure</a>, <a href="../Z/ZOOM_24_Procedure.htm#dg_routines_3604229493_891125">ZOOM_24 Procedure</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

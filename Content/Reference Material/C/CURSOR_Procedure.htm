@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>CURSOR Procedure</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">CURSOR Procedure</span>
+        </div>
+        <h1 class="Routine"><a name="dg_routines_3604229493_880371"></a><a name="kanchor386"></a><a name="dg_routines_3604229493_58964"></a><a name="kanchor387"></a>CURSOR Procedure</h1>
+        <p data-mc-conditions="Direct Graphics.Online_Help_Only"><a name="kanchor388"></a><a name="kanchor389"></a>The CURSOR procedure is used to read the position of the interactive graphics cursor from the current graphics device. Note that not all graphics devices have interactive cursors. CURSOR enables the graphic cursor on the device and optionally waits for the operator to position it. On devices that have a mouse, CURSOR normally waits until a mouse button is pressed (or already down). If no mouse buttons are present, CURSOR waits for a key on the keyboard to be pressed. The <i>X </i>and <i>Y </i>arguments are named variables that receive the cursor position. Normally, the position is reported in data coordinates, but the DATA, DEVICE, and NORMAL keywords can be used to explicitly specify the coordinate system.</p>
+        <p><a name="kanchor390"></a><a name="kanchor391"></a>When CURSOR returns, the <code>button</code> field of the system variable !MOUSE is set to the button status. Each mouse button is assigned a bit in the button field. Bit 0 is the leftmost button (value = 1), bit 1 is the middle button (value = 2), and bit 3 is the rightmost button (value = 4) for the typical three-button mouse.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_880515"></a><a name="dg_routines_3604229493_676474_PageTOC_CURSOR_"></a>Examples</h2>
+        <p>Activate the graphics cursor, select a point in the graphics window, and return the position of the cursor in device coordinates. Enter:</p>
+        <p class="Code">CURSOR, X, Y, /DEVICE</p>
+        <p>Move the cursor over the graphics window and press the mouse button. The position of the cursor in device coordinates is stored in the variables X and Y. To label the location, enter:</p>
+        <p class="Code">XYOUTS, X, Y, 'X marks the spot.', /DEVICE</p>
+        <p>The following two programs demonstrate simple applications of the interactive graphics cursor and the CURSOR procedure. </p>
+        <p>The first routine is a simple drawing program. Straight lines are connected to positions marked with the left or middle mouse buttons until the right button is pressed.</p>
+        <p class="Code">PRO EX_DRAW</p>
+        <p class="Code">&#160;&#160;&#160;; Start with a blank screen:</p>
+        <p class="Code">&#160;&#160;&#160;ERASE</p>
+        <p class="Code">&#160;&#160;&#160;; Get the initial point in normalized coordinates:</p>
+        <p class="Code">&#160;&#160;&#160;CURSOR, X, Y, /NORMAL, /DOWN</p>
+        <p class="Code">&#160;&#160;&#160;; Repeat until right button is pressed. Get the second point.</p>
+        <p class="Code">&#160;&#160;&#160;; Draw the line. Make the current second point be the new first.</p>
+        <p class="Code">&#160;&#160;&#160;WHILE (!MOUSE.button NE 4) DO BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;CURSOR, X1, Y1, /NORM, /DOWN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;PLOTS,[X,X1], [Y,Y1], /NORMAL</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;X = X1 &amp; Y = Y1</p>
+        <p class="Code">&#160;&#160;&#160;ENDWHILE</p>
+        <p class="Code">END</p>
+        <p>The second simple procedure can be used to label plots using the cursor to position the text:</p>
+        <p class="Code">; Text is the string to be written on the screen:</p>
+        <p class="Code">PRO LABEL, TEXT</p>
+        <p class="Code">&#160;&#160;&#160;; Ask the user to mark the position:</p>
+        <p class="Code">&#160;&#160;&#160;PRINT, 'Use the mouse to mark the text position:'</p>
+        <p class="Code">&#160;&#160;&#160;; Get the cursor position after pressing any button:</p>
+        <p class="Code">&#160;&#160;&#160;CURSOR, X, Y, /NORMAL, /DOWN</p>
+        <p class="Code">&#160;&#160;&#160;; Write the text at the specified position.</p>
+        <p class="Code">&#160;&#160;&#160;; The NOCLIP keyword is used to ensure that</p>
+        <p class="Code">&#160;&#160;&#160;; the text will appear even if it is outside</p>
+        <p class="Code">&#160;&#160;&#160;; the plotting region.</p>
+        <p class="Code">&#160;&#160;&#160;XYOUTS, X, Y, TEXT, /NORMAL, /NOCLIP</p>
+        <p class="Code">END</p>
+        <p>At the command line, set <code>TEXT</code> equal to the string of text you want to appear in the window. For example, enter, </p>
+        <p class="Code">Text = 'My Sample Text'</p>
+        <p>Compile and run the program by entering the following at the command line, passing your text string to the procedure:</p>
+        <p class="Code">LABEL, TEXT</p>
+        <p>Next, move the pointer device to the desired spot in the window and click the locator button. Consider how you might augment the LABEL procedure to allow you to specify the size and font of the annotation text.</p>
+        <h3><a name="dg_routines_3604229493_880402"></a>Avoid Using CURSOR with Draw Widgets</h3>
+        <p>Note that the CURSOR procedure is only for use with IDL direct graphics windows. It should not be used with draw widgets. To obtain the cursor position and button state information from a draw widget, set the BUTTON_EVENTS and MOTION_EVENTS keywords to WIDGET_DRAW, and examine the X, Y, PRESS, and RELEASE fields in the structures returned by the draw widget in response to cursor events. See <a href="../W/WIDGET_DRAW.htm">WIDGET_DRAW</a> for more information.</p>
+        <h3><a name="dg_routines_3604229493_880407"></a>Using CURSOR with the TEK Device</h3>
+        <p>Note that for the CURSOR procedure to work properly with Tektronix terminals, you may need to execute the command, <code>DEVICE, GIN_CHARS=6</code>.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_880410"></a><a name="dg_routines_3604229493_676448_PageTOC_CURSOR_"></a>Syntax</h2>
+        <p class="Syntax">CURSOR, <i>X</i>, <i>Y</i> [,&#160;<i>Wait | </i>[,&#160;/<a href="#dg_routines_3604229493_880491" class="selected">CHANGE</a> | , /<a href="#dg_routines_3604229493_880497" class="selected">DOWN</a> | ,&#160;/<a href="#dg_routines_3604229493_880506" class="selected">NOWAIT</a> | , /<a href="#dg_routines_3604229493_880509" class="selected">UP</a> | , /<a href="#dg_routines_3604229493_880512" class="selected">WAIT</a>]] [,&#160;/<a href="#dg_routines_3604229493_880494" class="selected">DATA</a> | ,&#160;/<a href="#dg_routines_3604229493_880500" class="selected">DEVICE</a>, | , /<a href="#dg_routines_3604229493_880503" class="selected">NORMAL</a>]</p>
+        <h2 class="API"><a name="dg_routines_3604229493_880437"></a><a name="dg_routines_3604229493_676450_PageTOC_CURSOR_"></a>Arguments</h2>
+        <h3 class="Argument">X</h3>
+        <p>A named variable to receive the cursor’s current column position.</p>
+        <h3 class="Argument">Y</h3>
+        <p>A named variable to receive the cursor’s current row position.</p>
+        <h3 class="Argument">Wait</h3>
+        <p>An integer that specifies the conditions under which CURSOR returns. This parameter can be used interchangeably with the keyword parameters listed below that specify the type of wait. The default value is 1. The table below describes each type of wait.</p>
+        <p>Note that not all modes of waiting work with all display devices.</p>
+        <table style="caption-side: bottom;mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Wait Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Corresponding Keyword</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Action</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>NOWAIT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Return immediately.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>WAIT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Return if a button is down.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>CHANGE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Return if a button is pressed, released, or the pointer is moved.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>DOWN</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Return when a button down transition is detected.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>4</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>UP</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Return when a button up transition is detected.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dg_routines_3604229493_880489"></a><a name="dg_routines_3604229493_1006135_PageTOC_CURSOR_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880491"></a><a name="dg_routines_3604229493_676458_Keywords_CURSOR__"></a>CHANGE</h3>
+        <p>Set this keyword to wait for pointer movement or button transition within the currently selected window.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880494"></a><a name="dg_routines_3604229493_676460_Keywords_CURSOR__"></a>DATA</h3>
+        <p>Set this keyword to return <i>X</i> and <i>Y</i> in data coordinates.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880497"></a><a name="dg_routines_3604229493_676462_Keywords_CURSOR__"></a>DOWN</h3>
+        <p>Set this keyword to wait for a button down transition within the currently selected window.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880500"></a><a name="dg_routines_3604229493_676464_Keywords_CURSOR__"></a>DEVICE</h3>
+        <p>Set this keyword to return <i>X</i> and <i>Y</i> in device coordinates.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880503"></a><a name="dg_routines_3604229493_676466_Keywords_CURSOR__"></a>NORMAL</h3>
+        <p>Set this keyword to return <i>X</i> and <i>Y</i> in normalized coordinates.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880506"></a><a name="dg_routines_3604229493_676468_Keywords_CURSOR__"></a>NOWAIT</h3>
+        <p>Set this keyword to read the pointer position and button status and return immediately. If the pointer is not within the currently selected window, the device coordinates -1, -1 are returned.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880509"></a><a name="dg_routines_3604229493_676470_Keywords_CURSOR__"></a>UP</h3>
+        <p>Set this keyword to wait for a button up transition within the current window.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880512"></a><a name="dg_routines_3604229493_676472_Keywords_CURSOR__"></a>WAIT</h3>
+        <p>Set this keyword to wait for a button to be depressed within the currently selected window. If a button is already pressed, return immediately.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_880558"></a><a name="dg_routines_3604229493_818867_PageTOC_CURSOR_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dg_routines_3604229493_880566"></a><a name="dg_routines_3604229493_1052266_PageTOC_CURSOR_"></a>See Also</h2>
+        <p><a href="../R/RDPIX_Procedure.htm#dg_routines_3604229493_884618">RDPIX Procedure</a>, <a href="../T/TVCRS_Procedure.htm#dg_routines_3604229493_894259">TVCRS Procedure</a>, <a href="../../Direct Graphics/Keywords_Accepted_by_the.htm#devices_517620971_144502">CURSOR_CROSSHAIR</a> (and other CURSOR_ keywords), <a href="../W/WIDGET_DRAW.htm">WIDGET_DRAW</a>, <a href="../../Creating IDL Programs/Appendices/Error_Handling_System_Va.htm#!MOUSE">!MOUSE</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

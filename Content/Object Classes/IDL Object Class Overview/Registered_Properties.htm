@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Objects|Using IDL Objects">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Registered Properties</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ref_part2.htm">Objects</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Using IDL Objects</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Registered Properties</span>
+        </div>
+        <h1><a name="objects_intro_4100679965_1525007"></a><a name="objects_intro_4100679965_80675"></a>Registered Properties</h1>
+        <p>In order for an object property to be displayed in the WIDGET_PROPERTYSHEET interface, which makes it possible for a user to interactively change the value of the property using the mouse and keyboard, the following two conditions must be met:</p>
+        <ul>
+            <li value="1">The property must belong to an object that subclasses from the <a href="../Miscellaneous/IDLitComponent.htm" class="Heading">IDLitComponent</a> class. IDLitComponent provides the infrastructure necessary to display property sheets.</li>
+            <li value="2">The property must be <i>registered</i>. Properties that are not registered will never be displayed in a property sheet. (Note that registered properties can also be <i>hidden</i>, which prevents them from being displayed in a property sheet.)</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This section provides a brief overview of property registration. See Chapter 4, “Property Management” (<i>iTool Developer’s Guide</i>) for a more in-depth discussion.</p>
+        <h2 class="API">Registering a Property</h2>
+        <p>To register a property, use the <a name="kanchor4861"></a>RegisterProperty method of the IDLitComponent class:</p>
+        <p class="Code">Obj-&gt;IDLitComponent::RegisterProperty, <i>PropertyIdentifier, $</i></p>
+        <p class="Code">&#160;&#160;&#160;[,&#160;<i>TypeCode] [,&#160;ATTRIBUTE&#160;=&#160;value]</i></p>
+        <p>where <i>PropertyIdentifier</i> is a string that uniquely identifies the property, <i>TypeCode</i> is an integer between 0 and 9 specifying the property data type, and <i>ATTRIBUTE</i> is a property attribute. </p>
+        <p>Property identifier strings must obey certain rules; see Property Identifiers (Chapter 4, <i>iTool Developer’s Guide</i>) for details. Property type codes are discussed in <a href="#objects_intro_4100679965_1525893" class="selected">Registered Property Data Types</a>. Property attributes are discussed in Property Attributes (Chapter 4, <i>iTool Developer’s Guide</i>).</p>
+        <h2 class="API">Registering All Available Properties</h2>
+        <p>Some of the classes in the IDL object class library include a mechanism to register all available properties in a single operation. If an object class has a REGISTER_PROPERTIES property, then setting that property to 1 when creating the object automatically registers all properties that can be registered. If a property contains a “Yes” in the Registered box of the property description table, it will be registered automatically if the REGISTER_PROPERTIES property is set when the object is created. (See <a href="Object_Properties.htm#objects_intro_4100679965_1538569">About Object Property Descriptions</a> for a description of the property description table.)</p>
+        <h2 class="API"><a name="objects_intro_4100679965_1525893"></a><a name="objects_intro_4100679965_85374"></a>Registered Property Data Types</h2>
+        <p>Registered properties must be of one of the data types listed in the following table.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Properties of objects that are <i>not</i> registered (that is, properties that cannot appear in a property sheet) can be of any IDL data type.</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Type Code</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Type</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><a name="kanchor4862"></a>USERDEF</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p><a name="kanchor4863"></a>User Defined properties can contain values of any IDL type, but must also include a string value that will be displayed in the property sheet. See the following discussion for additional information.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p><a name="kanchor4864"></a>BOOLEAN</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Boolean properties contain either the integer 0 or the integer 1.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><a name="kanchor4865"></a>INTEGER</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Integer properties contain an integer value. If a property of integer data type has a VALID_RANGE attribute that includes an increment value, the property is displayed in a property sheet using a slider. If no increment value is supplied, the property sheet allows the user to edit values manually.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p><a name="kanchor4866"></a>FLOAT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p><a name="kanchor4867"></a>Float properties contain a double-precision floating-point value. If a property of float data type has a VALID_RANGE attribute that includes an increment value, the property is displayed in a property sheet using a slider. If no increment value is supplied, the property sheet allows the user to edit values manually.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>4</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><a name="kanchor4868"></a>STRING</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>String properties contain a scalar string value</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>5</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p><a name="kanchor4869"></a>COLOR</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Color properties contain an RGB color triplet</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>6</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><a name="kanchor4870"></a>LINESTYLE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Linestyle properties contain an integer value between 0 and 6, corresponding to the following IDL line styles:</p>
+                        <p>0&#160;=&#160;Solid</p>
+                        <p>1&#160;=&#160;Dotted</p>
+                        <p>2&#160;=&#160;Dashed</p>
+                        <p>3&#160;=&#160;Dash Dot</p>
+                        <p>4&#160;=&#160;Dash Dot Dot</p>
+                        <p>5&#160;=&#160;Long Dashes</p>
+                        <p>6&#160;=&#160;No Line</p>
+                        <p>See Appendix B, “Property Controls” (<i>iTool User’s Guide</i>) for a visual example of the available line styles.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>7</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p><a name="kanchor4871"></a>SYMBOL</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Symbol properties contain an integer value between 0 and 8, corresponding to the following IDL symbol types:</p>
+                        <p>0&#160;=&#160;No symbol </p>
+                        <p>1&#160;=&#160;Plus sign</p>
+                        <p>2&#160;=&#160;Asterisk </p>
+                        <p>3&#160;=&#160;Period (Dot) </p>
+                        <p>4&#160;=&#160;Diamond </p>
+                        <p>5&#160;=&#160;Triangle </p>
+                        <p>6&#160;=&#160;Square </p>
+                        <p>7&#160;=&#160;X </p>
+                        <p>8&#160;=&#160;“Greater-than” Arrow Head (<code>&gt;</code>)</p>
+                        <p>9&#160;=&#160;“Less-than” Arrow Head (<code>&lt;</code>)</p>
+                        <p>See Appendix B, “Property Controls” (<i>iTool User’s Guide</i>) for a visual example of the available symbols.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>8</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><a name="kanchor4872"></a>THICKNESS</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Thickness properties contain an integer value between 1 and 10, corresponding to the thickness (in points) of the line.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>9</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p><a name="kanchor4873"></a>ENUMLIST</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p><a name="kanchor4874"></a>Enumerated List properties contain an array of string values defined when the property is registered. The GetProperty method returns the zero-based index of the selected item.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">User Defined Property Types</h2>
+        <p>The User Defined property type lets you create a custom interface that allow users of your iTool to select data of types other than the predefined iTool property types. Creating a user defined property type entails the following:</p>
+        <ul>
+            <li value="1">Creating an EditUserDefProperty method for the iTool component (usually a visualization or operation) that uses the user defined property. See <a href="../Miscellaneous/IDLitComponent__EditUser.htm">IDLitComponent::EditUserDefProperty</a> for details.</li>
+            <li value="2">Creating user interface code to allow users to select a value. In the initial release of the iTool system, this means writing an IDL widget interface, but in future releases other users interfaces may be available.</li>
+            <li value="3">Creating a <i>user interface service</i> to display the interface. See Creating a User Interface Service (<i>iTool Developer’s Guide</i>) for details.</li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

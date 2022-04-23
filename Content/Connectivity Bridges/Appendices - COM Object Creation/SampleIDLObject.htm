@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|COM Export Bridge|COM Object Creation">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Sample IDL Object for COM</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">COM Export Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="COMObjectCreation.htm">COM Object Creation</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Sample IDL Object for COM</span>
+        </div>
+        <h1><a name="Sample_IDL_Object"></a><a name="kanchor5131"></a>Sample IDL Object for COM</h1>
+        <p>The <a name="kanchor5132"></a>COM CreateObject method creates an instance of an underlying IDL object and calls its Init method with any specified parameters (see <a href="../ExportFromIDL - COM Objects/StockCOMWrapperMethods.htm#CreateObject">CreateObject</a> for details). Through this object instance, you have access to the properties and methods of the object as well as the underlying IDL process.</p>
+        <p>The following samples rely upon an IDL object named <i>idlexfoo__define.pro</i> containing the following code:</p>
+        <p class="Code">; The Init method expects three parameters:</p>
+        <p class="Code">; a string, a 32-bit long, and an array which has</p>
+        <p class="Code">; 2 rows &amp; 3 columns, containing 32-bit long values.</p>
+        <p class="Code">; The ::Init method can also be called without any parameters.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">FUNCTION idlexfoo::Init, parmStr, parmVal, parmArr, _EXTRA=e</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IF (N_ELEMENTS(parmStr) EQ 1) THEN BEGIN</p>
+        <p class="Code_Indented">IF ( SIZE(parmStr,/type) NE 7 ) THEN BEGIN</p>
+        <p class="Code_Indented">PRINT, 'IDLexFoo::Init, parmStr is not a STRING' HELP, parmStr</p>
+        <p class="Code_Indented">RETURN, 0</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code">ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IF (N_ELEMENTS(parmVal) EQ 1) THEN BEGIN</p>
+        <p class="Code_Indented">IF ( (SIZE(parmVal,/type) NE 3) ) THEN BEGIN PRINT, 'IDLexFoo::Init, parmVal is not a LONG' HELP, parmVal</p>
+        <p class="Code_Indented">RETURN, 0</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code">ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">nElms = N_ELEMENTS(parmArr)</p>
+        <p class="Code">IF (nElms GT 0) THEN BEGIN</p>
+        <p class="Code_Indented">IF ( (nElms NE 6) OR (size(parmArr,/type) NE 3) ) THEN BEGIN PRINT, 'IDLexFoo::Init, parmArr is not a ARR(3,2) of LONG)'</p>
+        <p class="Code_Indented">HELP, parmArr</p>
+        <p class="Code_Indented">RETURN, 0</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code">ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">RETURN, 1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Object definition.</p>
+        <p class="Code">PRO idlexfoo  define</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">; Create [col, row] 32-bit long array.</p>
+        <p class="Code_Indented">initArr = LONARR(3, 2)</p>
+        <p class="Code_Indented">struct = {idlexfoo, $</p>
+        <p class="Code_Indented">parmStr: '', $</p>
+        <p class="Code_Indented">parmVal: 0L, $</p>
+        <p class="Code_Indented">parmArr: initArr}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">END</p>
+        <h2>Export the Sample IDL Object</h2>
+        <p>You will need to create the necessary wrapper object files by using the Export Bridge Assistant to generate them. Once you have created the object definition file, <i>idlexfoo__define.pro</i>, complete the following steps:</p>
+        <ol>
+            <li value="1">  Open the Export Bridge Assistant by entering IDLEXBR_ASSISTANT at the command line.</li>
+            <li value="2">Select to create a COM export object by selecting <b>File &gt; New Project &gt; COM</b> and browse to select the <i>idlexfoo__define.pro</i> file. Click <b>Open</b> to load the file into the Export Assistant.<br /><b>Note</b>: Export Bridge Assistant details are available here, <a href="../ExportFromIDL - Export Bridge Assistant/UsingTheAssistant.htm#Using_The_Export_Bridge_Assistant">Using the Export Bridge Assistant</a>. Refer to that section if you need more information about the following steps.<br /></li>
+            <li value="3">
+                <p>The top-level project entry in the left tree panel is selected by default. There is no need to modify the default properties shown in the right-hand property panel, but you can enter different values if desired. There are no other parameters that need to be defined for this object.</p>
+                <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" class="TableStyle_Description" cellspacing="0">
+                    <col />
+                    <col />
+                    <thead>
+                        <tr>
+                            <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                                <p>Tree View Item</p>
+                            </th>
+                            <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                                <p>Parameter Configuration</p>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                                <p>IDL Export Bridge Project</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                                <p>	Accept the default value or make changes as desired:</p>
+                                <ul>
+                                    <li value="1">Output classname</li>
+                                    <li value="2">Process name</li>
+                                    <li value="3">Output directory</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                                <p>helloworldex</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                                <p>Drawable object equals False</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </li>
+            <li value="4">Save the project by selecting <b>File &gt; Save</b> project. Accept the default name and location or make changes as desired.</li>
+            <li value="5">Build the export object by selecting <b>Build &gt; Build object</b>. The <b>Build log</b> panel shows the results of the build process. For a nondrawable object, <i>.tlb</i> and <i>.dll</i> files (named based on the object name) are created in the <b>Output directory</b>.</li>
+            <li value="6">Register the <i>.dll</i> using <i>regsvr32 idlexfoo.dll</i>. See <a href="../ExportFromIDL - IDL Objects/ConfiguringBuildAndClientMachines.htm#COM_Registration_Requirements">COM Registration Requirements</a> for details if needed.</li>
+        </ol>
+        <p>See the language-specific sections for information on how to create this object in your application:</p>
+        <ul>
+            <li value="1"><a href="VisualBasicdotNETCodeSample.htm#Visual_Basic_.NET_Code_Sample">Visual Basic .NET Code Sample</a>
+            </li>
+            <li value="2"><a href="CplusplusClientCodeSample.htm#C++_Client_Code_Sample">C++ Client Code Sample</a>
+            </li>
+            <li value="3"><a href="CsharpCodeSample.htm#C%23_Code_Sample">C# Code Sample</a>
+            </li>
+            <li value="4"><a href="VisualBasic6CodeSample.htm#Visual_Basic_6_Code_Sample">Visual Basic 6 Code Sample</a>
+            </li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

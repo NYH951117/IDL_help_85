@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: W">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>WV_DWT</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="W_list.htm">Routines: W</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">WV_DWT</span>
+        </div>
+        <h1 class="Routine"><a name="ref_3320460235_1010303"></a><a name="ref_3320460235_63367"></a><a name="ref_3320460235_83545"></a><a name="kanchor2969"></a>WV_DWT</h1>
+        <p><a name="kanchor2970"></a><a name="kanchor2971"></a>The WV_DWT function returns the multi-dimensional discrete wavelet transform of the input <i>Array</i>. The transform is done by <a href="WV_PWT.htm#ref_3320460235_1003503">WV_PWT</a> using a user-inputted wavelet filter.</p>
+        <p>The length of each dimension of <i>Array</i> must be either a power of two (2), or must be less than four (4). The transform is not computed over dimensions of lengths less than four (4), but is computed over all other dimensions (for example, the wavelet transform of an array of size [3,&#160;256] is computed over each [1,&#160;256] column vector).</p>
+        <h2 class="API">Example</h2>
+        <p>The following example shows how to compute the first three levels of the pyramid algorithm using either the N_LEVELS keyword or WV_PWT:</p>
+        <p>&#160;</p>
+        <p class="Code">; Construct a random vector.</p>
+        <p class="Code">n = 1024</p>
+        <p class="Code">x = randomn(s,n)</p>
+        <p class="Code">info = WV_FN_DAUBECHIES(2, wavelet, scaling, ioff, joff)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Take the wavelet transform but stop at level 3.</p>
+        <p class="Code">wv_dwtpartial = WV_DWT(x, wavelet, scaling, ioff, joff, $</p>
+        <p class="Code">&#160;&#160;&#160;N_LEVELS=3)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; First level of the pyramid algorithm.</p>
+        <p class="Code">wv_level1 = WV_PWT(x, wavelet, scaling, ioff, joff)</p>
+        <p class="Code">w_scaling1 = wv_level1[0:n/2-1]  ; Left (scaling) half</p>
+        <p class="Code">w_wavelet1 = wv_level1[n/2:*]    ; Right (wavelet) half</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Second level of the pyramid algorithm.</p>
+        <p class="Code">wv_level2 = WV_PWT(w_scaling1, wavelet, scaling, ioff, joff)</p>
+        <p class="Code">w_scaling2 = wv_level2[0:n/4-1]  ; Left (scaling) half</p>
+        <p class="Code">w_wavelet2 = wv_level2[n/4:*]    ; Right (wavelet) half</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Third level of the pyramid algorithm.</p>
+        <p class="Code">wv_level3 = WV_PWT(w_scaling2, wavelet, scaling, ioff, joff)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Verify that using WV_DWT with N_LEVELS=3</p>
+        <p class="Code">; is the same as calling WV_PWT three times.</p>
+        <p class="Code">wv_partial123 = [wv_level3, w_wavelet2, w_wavelet1]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">print, MAX(ABS(wv_dwtpartial - wv_partial123))</p>
+        <p>IDL prints:</p>
+        <p class="Code">    0.000000</p>
+        <h2 class="API"><a name="ref_3320460235_1040051"></a><a name="ref_3320460235_1003127_PageTOC_WV_DWT_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = WV_DWT(<i>Array</i>, <i>Scaling</i>, <i>Wavelet</i>, <i>Ioff</i>, <i>Joff</i> [,&#160;/<a href="#ref_3320460235_1003349" class="selected">DOUBLE</a>] [,&#160;/<a href="#ref_3320460235_1003353" class="selected">INVERSE</a>] [,&#160;<a href="#ref_3320460235_1043639" class="selected">N_LEVELS</a>=<i>value</i>])</p>
+        <h2 class="API"><a name="ref_3320460235_1006167"></a><a name="ref_3320460235_1006167_PageTOC_WV_DWT_"></a>Return Value</h2>
+        <p>The result is an output array of the same dimensions as <i>Array</i>, containing the discrete wavelet transform over each dimension.</p>
+        <h2 class="API"><a name="ref_3320460235_1013757"></a><a name="ref_3320460235_1013757_PageTOC_WV_DWT_"></a>Arguments</h2>
+        <h3 class="Argument">Array</h3>
+        <p>The input vector or array. The length of each dimension must be either less than four (4) or a power of two (2).</p>
+        <h3 class="Argument">Scaling</h3>
+        <p>A vector of scaling (father) coefficients, of length N.</p>
+        <h3 class="Argument">Wavelet</h3>
+        <p>A vector of wavelet (mother) coefficients, of length N.</p>
+        <h3 class="Argument">Ioff</h3>
+        <p>An integer that specifies the support offset for <i>Scaling</i>. To center the scaling function over each point in <i>Array</i>, set <i>Ioff</i> to –N/2+2.</p>
+        <h3 class="Argument">Joff</h3>
+        <p>An integer that specifies the support offset for <i>Wavelet</i>. To center the wavelet function over each point in <i>Array</i>, set <i>Joff</i> to –N/2+2.</p>
+        <h2 class="API"><a name="ref_3320460235_1003131"></a><a name="ref_3320460235_1003131_PageTOC_WV_DWT_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="ref_3320460235_1003349"></a><a name="ref_3320460235_1003349_Keywords_WV_DWT_"></a>DOUBLE</h3>
+        <p>Set this keyword to force the computation to be done in double-precision arithmetic.</p>
+        <h3 class="Keyword"><a name="ref_3320460235_1003353"></a><a name="ref_3320460235_1003353_Keywords_WV_DWT_"></a>INVERSE</h3>
+        <p>If set, the inverse transform is computed. By default, the forward transform is computed.</p>
+        <h3 class="Keyword"><a name="ref_3320460235_1043639"></a><a name="ref_3320460235_23916"></a>N_LEVELS</h3>
+        <p>Set this keyword to the number of wavelet levels to compute in the pyramid algorithm, starting with the smallest wavelet scale and progressing to larger scales. If this keyword is not set or is set to zero, then all wavelet levels in the pyramid algorithm are computed.</p>
+        <h2 class="API"><a name="ref_3320460235_1011532_PageTOC_WV_DWT_"></a>Method and Result Format</h2>
+        <p><a name="kanchor2972"></a><a name="kanchor2973"></a>The WV_DWT function computes the wavelet coefficients using the pyramidal algorithm (Mallat 1989). </p>
+        <h3><a name="ref_3320460235_1014172_Keywords_WV_DWT_"></a>One-Dimensional Vector</h3>
+        <p>For a one-dimensional vector, the pyramid appears below:</p>
+        <p class="Code">Array elements</p>
+        <p class="Code">[&#160;0,&#160;&#160;1,&#160;&#160;2,&#160;&#160;3,&#160;&#160;4,&#160;&#160;5,&#160;&#160;6,&#160;&#160;7,&#160;&#160;8,&#160;&#160;9,&#160;10,&#160;11,&#160;12,&#160;13,&#160;14,&#160;15]</p>
+        <p class="Code">&#160;&#160;&#160;\&#160;/&#160;&#160;&#160;&#160;&#160;\&#160;/&#160;&#160;&#160;&#160;&#160;\&#160;/&#160;&#160;&#160;&#160;&#160;\&#160;/&#160;&#160;&#160;&#160;&#160;\&#160;/&#160;&#160;&#160;&#160;&#160;\&#160;/&#160;&#160;&#160;&#160;&#160;\&#160;/&#160;&#160;&#160;&#160;&#160;\&#160;/</p>
+        <p class="Code">&#160;&#160;s0,d0&#160;&#160;&#160;s1,d1&#160;&#160;&#160;s2,d2&#160;&#160;&#160;s3,d3&#160;&#160;&#160;s4,d4&#160;&#160;&#160;s5,d5&#160;&#160;&#160;s6,d6&#160;&#160;&#160;s7,d7</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;\&#160;&#160;&#160;&#160;/&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\&#160;&#160;&#160;&#160;/&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\&#160;&#160;&#160;&#160;/&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\&#160;&#160;&#160;&#160;/</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;\&#160;/&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\&#160;/&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\&#160;/&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\&#160;/</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;S0,D0&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;S1,D1&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;S2,D2&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;S3,D3</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;/&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;/</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\&#160;&#160;&#160;&#160;&#160;/&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\&#160;&#160;&#160;&#160;&#160;/</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\&#160;/&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;\&#160;/</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<i>&#160;&#160;</i><b>S</b>0,<b>D</b>0&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<b>S</b>1,<b>D</b>1</p>
+        <p>At each level of the hierarchy, the WV_PWT function is used to compute the scaling coefficient <code>Si</code> and wavelet coefficient <code>Di</code> (where <code>i</code> represents the position). The letters <code>s</code>, <code>S</code>, <b>S</b> and <code>d</code>, <code>D</code>, <b>D</b> represent increasing scale. The wavelet coefficients are stored in <i>Result</i> in order from largest scales to smallest:</p>
+        <p class="Code">Result&#160;=&#160;[&#160;<b>S</b>0,&#160;<b>S</b>1,&#160;&#160;<b>D</b>0,&#160;<b>D</b>1,&#160;&#160;D0,&#160;D1,&#160;D2,&#160;D3,</p>
+        <p class="Code">&#160;&#160;d0,&#160;d1,&#160;d2,&#160;d3,&#160;d4,&#160;d5,&#160;d6,&#160;d7&#160;]</p>
+        <h3><a name="ref_3320460235_1013777_Keywords_WV_DWT_"></a>Two-Dimensional Array</h3>
+        <p>For a two-dimensional Array, the wavelet transform is computed using the pyramidal algorithm along each dimension. The wavelet coefficients are stored in order with the largest scales in the [0, 0] position. As an example, for an 8&#160;x&#160;8 <i>Array</i>, the <i>Result</i> is an 8&#160;x&#160;8 array with the following structure:</p>
+        <p class="Code">[0,0]</p>
+        <p class="Code">&#160;[[&#160;A0B0&#160;&#160;A1B0&#160;&#160;&#160;&#160;C0B0&#160;&#160;C1B0&#160;&#160;&#160;&#160;c0B0&#160;&#160;c1B0&#160;&#160;c2B0&#160;&#160;c3B0&#160;],</p>
+        <p class="Code">&#160;&#160;[&#160;A0B1&#160;&#160;A1B1&#160;&#160;&#160;&#160;C0B1&#160;&#160;C1B1&#160;&#160;&#160;&#160;c0B1&#160;&#160;c1B1&#160;&#160;c2B1&#160;&#160;c3B1&#160;],</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;[&#160;A0D0&#160;&#160;A1D0&#160;&#160;&#160;&#160;C0D0&#160;&#160;C1D0&#160;&#160;&#160;&#160;c0D0&#160;&#160;c1D0&#160;&#160;c2D0&#160;&#160;c3D0&#160;],</p>
+        <p class="Code">&#160;&#160;[&#160;A0D1&#160;&#160;A1D1&#160;&#160;&#160;&#160;C0D1&#160;&#160;C1D1&#160;&#160;&#160;&#160;c0D1&#160;&#160;c1D1&#160;&#160;c2D1&#160;&#160;c3D1&#160;],</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;[&#160;A0d0&#160;&#160;A1d0&#160;&#160;&#160;&#160;C0d0&#160;&#160;C1d0&#160;&#160;&#160;&#160;c0d0&#160;&#160;c1d0&#160;&#160;c2d0&#160;&#160;c3d0&#160;],</p>
+        <p class="Code">&#160;&#160;[&#160;A0d1&#160;&#160;A1d1&#160;&#160;&#160;&#160;C0d1&#160;&#160;C1d1&#160;&#160;&#160;&#160;c0d1&#160;&#160;c1d1&#160;&#160;c2d1&#160;&#160;c3d1&#160;],</p>
+        <p class="Code">&#160;&#160;[&#160;A0d2&#160;&#160;A1d2&#160;&#160;&#160;&#160;C0d2&#160;&#160;C1d2&#160;&#160;&#160;&#160;c0d2&#160;&#160;c1d2&#160;&#160;c2d2&#160;&#160;c3d2&#160;],</p>
+        <p class="Code">&#160;&#160;[&#160;A0d3&#160;&#160;A1d3&#160;&#160;&#160;&#160;C0d3&#160;&#160;C1d3&#160;&#160;&#160;&#160;c0d3&#160;&#160;c1d3&#160;&#160;c2d3&#160;&#160;c3d3&#160;]]</p>
+        <p>Here <code>A</code> and <code>B</code> represent the scale coefficients for the first and second dimensions, respectively, The <code>C</code> and <code>D</code> represent the largest-scale wavelet coefficients for the first and second dimensions, respectively, while <code>c</code> and <code>d</code> represent the small-scale wavelet coefficients. Subscripts <code>0</code>, <code>1</code>, <code>2</code>, <code>3</code> denote the position of the wavelet within the image.</p>
+        <h2 class="API"><a name="ref_3320460235_1023190"></a><a name="ref_3320460235_1023190_PageTOC_WV_DWT_"></a>Version History</h2>
+        <table cellpadding="0" cellspacing="0" class="TableStyle_VersionTable" style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>5.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added N_LEVELS keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">Resources and References</h2>
+        <p>WV_DWT is based on the routine <code>wtn</code> described in section 13.10 of <i>Numerical Recipes in C: The Art of Scientific Computing, 2nd ed.</i> (Cambridge University Press), and is used by permission.</p>
+        <h2 class="API"><a name="ref_3320460235_1011610"></a><a name="ref_3320460235_1011610_PageTOC_WV_DWT_"></a>See Also</h2>
+        <p><a href="WV_CWT.htm#ref_3320460235_1009330">WV_CWT</a>, <a href="WV_PWT.htm#ref_3320460235_1003503">WV_PWT</a>, <a href="WTN.htm">WTN</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

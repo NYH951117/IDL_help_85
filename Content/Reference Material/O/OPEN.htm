@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: O">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>OPENR/OPENU/OPENW </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="O_list.htm">Routines: O</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">OPENR/OPENU/OPENW</span>
+        </div>
+        <h1 class="Routine"><a name="O_828691053_932624"></a><a name="O_828691053_59773"></a>OPENR/OPENU/OPENW </h1>
+        <p><a name="kanchor1984"></a><a name="kanchor1985"></a>The three OPEN procedures open a specified file for input and/or output.</p>
+        <ul>
+            <li value="1">OPENR (OPEN Read) opens an existing file for input only.</li>
+            <li value="2">OPENW (OPEN Write) opens a new file for input and output. If the file exists, it is truncated and its old contents are destroyed. </li>
+            <li value="3">OPENU (OPEN Update) opens an existing file for input and output.</li>
+        </ul>
+        <h3>Logical Unit Numbers and Application Development</h3>
+        <p>Logical Unit Numbers (LUNs) are assigned to individual files when the files are opened by the IDL OPENR/OPENU/OPENW commands, and are used to specify which file IDL should read from or write to. There are a total of 128 LUNs available for assignment to files. While it is possible to assign any of the integers between 1-99 to a given file, when writing applications for others it is good programming practice to let IDL assign and manage the LUNs itself. By using the GET_LUN keyword to the OPEN routines, you can ask IDL to assign a free Logical Unit Number between 100-128 to the specified file. Letting IDL assign the LUN from the list of free unit numbers ensures that your application does not attempt to use a LUN already in use by someone else’s application. See the GET_LUN keyword for details. See <a href="../../Creating IDL Programs/Components of the IDL Language/Understanding__LUNs_.htm#files_2839720996_168544">Understanding (LUNs)</a> for additional information on LUNs.</p>
+        <h2 class="API"><a name="O_828691053_889916"></a><a name="O_828691053_889916_PageTOC_OPEN__"></a>Examples</h2>
+        <p>The following example opens the IDL distribution file <code>people.dat</code> and reads an image from that file:</p>
+        <p class="Code">; Open 'people.dat' on file unit number 1. The FILEPATH <br />; function is used to return the full path name to this<br />; distribution file.<br />OPENR, 1, FILEPATH('people.dat', SUBDIR = ['examples','data'])<br /><br />; Define a variable into which the image will be read:<br />image=BYTARR(192, 192, /NOZERO)<br /><br />; Read the data:<br />READU, 1, image<br /><br />; Display the image:<br />TV, image</p>
+        <h2 class="API"><a name="O_828691053_889688"></a><a name="O_828691053_889688_PageTOC_OPEN__"></a>Syntax</h2>
+        <p>There are three forms of the OPEN procedure:</p>
+        <p class="Syntax">OPENR, <i>Unit</i>, <i>File</i></p>
+        <p class="Syntax">OPENW, <i>Unit</i>, <i>File</i></p>
+        <p class="Syntax">OPENU, <i>Unit</i>, <i>File</i></p>
+        <p class="Syntax"><b>Keywords (all platforms):</b> [,&#160;/<a href="#O_828691053_889709" class="selected">APPEND</a> | ,&#160;/<a href="#O_828691053_928372" class="selected">COMPRESS</a>] [,&#160;<a href="#O_828691053_889712" class="selected">BUFSIZE</a>={0&#160;|&#160;1&#160;|&#160;<i>value&gt;</i>512}] [,&#160;/<a href="#O_828691053_928370" class="selected">DELETE</a>] [,&#160;<a href="#O_828691053_889720" class="selected">ERROR</a>=<i>variable</i>] [,&#160;/<a href="#O_828691053_889729" class="selected">F77_UNFORMATTED</a>] [,&#160;/<a href="#O_828691053_889739" class="selected">GET_LUN</a>] [,&#160;/<a href="#O_828691053_889747" class="selected">MORE</a>] [,&#160;/<a href="#O_828691053_929441" class="selected">NOEXPAND_PATH</a>] [,&#160;/<a href="#O_828691053_930929" class="selected">STDIO</a>] [,&#160;/<a href="#O_828691053_889764" class="selected">SWAP_ENDIAN</a>] [,&#160;/<a href="#O_828691053_889767" class="selected">SWAP_IF_BIG_ENDIAN</a>] [,&#160;/<a href="#O_828691053_889770" class="selected">SWAP_IF_LITTLE_ENDIAN</a>] [,&#160;/<a href="#O_828691053_889773" class="selected">VAX_FLOAT</a>] [,&#160;<a href="#O_828691053_889787" class="selected">WIDTH</a>=<i>value</i>] [,&#160;/<a href="#O_828691053_889796" class="selected">XDR</a>]</p>
+        <p class="Syntax"><b>UNIX-Only Keywords:</b> [,&#160;/<a href="#O_828691053_934244" class="selected">RAWIO</a>]</p>
+        <h2 class="API"><a name="O_828691053_889693"></a><a name="O_828691053_889693_PageTOC_OPEN__"></a>Arguments</h2>
+        <h3 class="Argument">Unit</h3>
+        <p>The unit number to be associated with the opened file.</p>
+        <h3 class="Argument">File</h3>
+        <p>A string containing the name of the file to be opened. Under UNIX, the filename can contain any wildcard characters recognized by the shell specified by the SHELL environment variable. However, it is faster not to use wildcards because IDL doesn’t use the shell to expand file names unless it has to.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The optional <i>Record_Length</i> argument is obsolete, and should not be used in new code.</p>
+        <h2 class="API"><a name="O_828691053_889706"></a><a name="O_828691053_889706_PageTOC_OPEN__"></a>Keywords</h2>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Platform-specific keywords are listed at the end of this section.</p>
+        <h3 class="Keyword"><a name="O_828691053_889709"></a><a name="O_828691053_889709_Keywords_OPEN__"></a>APPEND</h3>
+        <p>Set this keyword to open the file with the file pointer at the end of the file, ready for data to be appended. Normally, the file is opened with the file pointer at the beginning of the file. Under UNIX, use of APPEND prevents OPENW from truncating existing file contents. The APPEND and COMPRESS keywords are mutually exclusive and cannot be specified together.</p>
+        <h3 class="Keyword"><a name="O_828691053_889712"></a><a name="O_828691053_889712_Keywords_OPEN__"></a>BUFSIZE</h3>
+        <p>Set this keyword to a value greater than 512 to specify the size of the I/O buffer (in bytes) used when reading and writing files. Setting BUFSIZE=1 (or any other value less than 512) sets the buffer to the default size, which is platform-specific. Set BUFSIZE=0 to disable I/O buffering.</p>
+        <p>Note that the buffer size is only changeable when reading and writing stream files. Under UNIX, the RAWIO keyword must not be set. Also note that the system stdio may choose to ignore the buffer size setting.</p>
+        <h3 class="Keyword"><a name="O_828691053_928372"></a><a name="O_828691053_928372_Keywords_OPEN__"></a>COMPRESS</h3>
+        <p>If COMPRESS is set, IDL reads and writes all data to the file in the standard GZIP format. IDL's GZIP support is based on the freely available ZLIB library by Mark Adler and Jean-loup Gailly (see www.zlib.org for details). This means that IDL's compressed files are 100% compatible with the widely available gzip and gunzip programs. COMPRESS cannot be used with the APPEND keyword.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>The <a href="../F/FILE_GZIP.htm">FILE_GZIP</a>/<a href="../F/FILE_GUNZIP.htm">FILE_GUNZIP</a> and <a href="../Z/ZLIB_COMPRESS.htm">ZLIB_COMPRESS</a>/<a href="../Z/ZLIB_UNCOMPRESS.htm">ZLIB_UNCOMPRESS</a> routines can also be used to process GZIP files and streams.</p>
+        <h3 class="Keyword"><a name="O_828691053_928370"></a><a name="O_828691053_928370_Keywords_OPEN__"></a>DELETE</h3>
+        <p>Set this keyword to delete the file when it is closed.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Setting the DELETE keyword <i>causes the file to be deleted</i> even if it was opened for read-only access. In addition, once a file is opened with this keyword, there is no way to cancel its operation.</p>
+        <h3 class="Keyword"><a name="O_828691053_889720"></a><a name="O_828691053_889720_Keywords_OPEN__"></a><a name="kanchor1986"></a>ERROR</h3>
+        <p>A named variable to place the error status in. If an error occurs in the attempt to open <i>File</i>, IDL normally takes the error handling action defined by the ON_ERROR and/or ON_IOERROR procedures. OPEN always returns to the caller without generating an error message when ERROR is present. A nonzero error status indicates that an error occurred. The error message can then be found in <a href="../../Creating IDL Programs/Appendices/Error_Handling_System_Va.htm#sysvars_272074529_1003013">!ERROR_STATE</a>.MSG.</p>
+        <p>For example, statements similar to the following can be used to detect errors:</p>
+        <p class="Code">; Try to open the file demo.dat:</p>
+        <p class="Code">OPENR, 1, 'demo.dat', ERROR = err</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; If err is nonzero, something happened. Print the error message to </p>
+        <p class="Code">; the standard error file (logical unit -2):</p>
+        <p class="Code">IF (err NE 0) then PRINTF, -2, !ERROR_STATE.MSG</p>
+        <h3 class="Keyword"><a name="O_828691053_889729"></a><a name="O_828691053_889729_Keywords_OPEN__"></a><a name="kanchor1987"></a>F77_UNFORMATTED</h3>
+        <p>Unformatted variable-length record files produced by FORTRAN programs running on platforms that use stream files (UNIX and Microsoft Windows) contain extra information along with the data in order to allow the data to be properly recovered. This method is necessary because FORTRAN input/output is based on record-oriented files, while files that are simple byte streams do not impose any record structure. Set the F77_UNFORMATTED keyword to read and write this extra information in the same manner as <code>f77(1)</code>, so that data can be processed by both IDL and FORTRAN. See <a href="../../Creating IDL Programs/Components of the IDL Language/Reading_and_Writing_FORT.htm#files_2839720996_2885327">Reading and Writing FORTRAN Data</a> for further details.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>On 64-bit machines, some Fortran compilers will insert record markers that are 64-bit integers instead of the standard 32-bit integers. When reading FORTRAN data, IDL will attempt to recognize the presence of 64-bit record markers and switch to the appropriate format. When writing unformatted Fortran files, IDL will continue to use 32-bit record markers.</p>
+        <h3 class="Keyword"><a name="O_828691053_889739"></a><a name="O_828691053_889739_Keywords_OPEN__"></a><a name="kanchor1988"></a>GET_LUN</h3>
+        <p>Set this keyword to use the GET_LUN procedure to set the value of <i>Unit</i> before the file is opened. Instead of using the two statements:</p>
+        <p class="Code">GET_LUN, Unit</p>
+        <p class="Code">OPENR, Unit, 'data.dat'</p>
+        <p>you can use the single statement:</p>
+        <p class="Code">OPENR, Unit, 'data.dat', /GET_LUN</p>
+        <h3 class="Keyword"><a name="O_828691053_889747"></a><a name="O_828691053_889747_Keywords_OPEN__"></a>MORE</h3>
+        <p>If MORE is set, and the specified <i>File</i> is a terminal, then all output to this unit is formatted in a manner similar to the UNIX <code>more(1)</code> command and sent to the standard output stream. Output pauses at the bottom of each screen, at which point the user can press one of the following keys:</p>
+        <ul>
+            <li value="1">Space: Display the next page of text.</li>
+            <li value="2">Return: Display the next line of text.</li>
+            <li value="3">‘q’ or ‘Q’: Suppress all remaining output.</li>
+            <li value="4">‘h’ or ‘H’: Display this list of options.</li>
+        </ul>
+        <p>For example, the following statements show how to output a file named text.dat to the terminal:</p>
+        <p class="Code">; Open the text file:</p>
+        <p class="Code">OPENR, inunit, 'text.dat', /GET_LUN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Open the terminal as a file:</p>
+        <p class="Code">OPENW, outunit, '/dev/tty', /GET_LUN, /MORE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Read the first line:</p>
+        <p class="Code">line = '' &amp; READF, inunit, line</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; While there is text left, output it:</p>
+        <p class="Code">WHILE ~ EOF(inunit) DO BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;PRINTF, outunit, line</p>
+        <p class="Code">&#160;&#160;&#160;READF, inunit, line</p>
+        <p class="Code">ENDWHILE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Close the files and deallocate the units:</p>
+        <p class="Code">FREE_LUN, inunit &amp; FREE_LUN, outunit</p>
+        <h3 class="Keyword"><a name="O_828691053_929441"></a><a name="O_828691053_929441_Keywords_OPEN__"></a>NOEXPAND_PATH</h3>
+        <p>Set this keyword to specify that the <i>File</i> argument be used exactly as supplied, without applying the usual file path expansion.</p>
+        <h3 class="Keyword"><a name="O_828691053_934244"></a><a name="O_828691053_934244_Keywords_OPEN__"></a>RAWIO</h3>
+        <p><i>This keyword is only available on UNIX platforms.</i>
+        </p>
+        <p>Set this keyword to disable all use of the standard UNIX I/O for the file, in favor of direct calls to the operating system. This allows direct access to devices, such as tape drives, that are difficult or impossible to use effectively through the standard I/O. Using this keyword has the following implications:</p>
+        <ul>
+            <li value="1">No formatted or associated (ASSOC) I/O is allowed on the file. Only READU and WRITEU are allowed.</li>
+            <li value="2">Normally, attempting to read more data than is available from a file causes the unfilled space to be set to zero and an error to be issued. This does not happen with files opened with RAWIO. When using RAWIO, the programmer must check the transfer count, either via the TRANSFER_COUNT keywords to READU and WRITEU, or the FSTAT function.</li>
+            <li value="3">The EOF and POINT_LUN functions cannot be used with a file opened with RAWIO.</li>
+            <li value="4">Each call to READU or WRITEU maps directly to UNIX read(2) and write(2) system calls. The programmer must read the UNIX system documentation for these calls and documentation on the target device to determine if there are any special rules for I/O to that device. For example, the size of data that can be transferred to many cartridge tape drives is often forced to be a multiple of 512 bytes.</li>
+        </ul>
+        <h3 class="Keyword"><a name="O_828691053_930929"></a><a name="O_828691053_930929_Keywords_OPEN__"></a>STDIO</h3>
+        <p>Forces the file to be opened via the standard C I/O library (stdio) rather than any other more native OS API that might usually be used. This is primarily of interest to those who intend to access the file from external code, and is not necessary for most files.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you intend to use the opened file with the READ_JPEG or WRITE_JPEG procedures using their UNIT keyword, you must specify the STDIO keyword to OPEN to ensure that the file is compatible. <br /><br />The only exception to this rule is if the filename ends in <code>.jpg</code> or <code>.jpeg</code> and the STDIO keyword is not present in the call to OPEN. In this case OPEN uses stdio by default, covering most uses of jpeg files without requiring you to take special steps.</p>
+        <h3 class="Keyword"><a name="O_828691053_889764"></a><a name="O_828691053_889764_Keywords_OPEN__"></a>SWAP_ENDIAN</h3>
+        <p>Set this keyword to swap byte ordering for multi-byte data when performing binary I/O on the specified file. This is useful when accessing files also used by another system with byte ordering different than that of the current host.</p>
+        <h3 class="Keyword"><a name="O_828691053_889767"></a><a name="O_828691053_889767_Keywords_OPEN__"></a>SWAP_IF_BIG_ENDIAN</h3>
+        <p>Setting this keyword is equivalent to setting SWAP_ENDIAN; it only takes effect if the current system has big endian byte ordering. This keyword does not refer to the byte ordering of the input data, but to the computer hardware.</p>
+        <h3 class="Keyword"><a name="O_828691053_889770"></a><a name="O_828691053_889770_Keywords_OPEN__"></a>SWAP_IF_LITTLE_ENDIAN</h3>
+        <p>Setting this keyword is equivalent to setting SWAP_ENDIAN; it only takes effect if the current system has little endian byte ordering. This keyword does not refer to the byte ordering of the input data, but to the computer hardware.</p>
+        <h3 class="Keyword"><a name="O_828691053_889773"></a><a name="O_828691053_889773_Keywords_OPEN__"></a>VAX_FLOAT</h3>
+        <p>The opened file contains VAX format floating point values. This keyword implies little endian byte ordering for all data contained in the file, and supersedes any setting of the SWAP_ENDIAN, SWAP_IF_BIG_ENDIAN, or SWAP_IF_LITTLE_ENDIAN keywords.</p>
+        <p>The default setting for this keyword is FALSE.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Please read <a href="#O_828691053_930326" class="selected">Note on Accessing Data in VAX Floating Point Format</a> before using this feature.</p>
+        <h3 class="Keyword"><a name="O_828691053_889787"></a><a name="O_828691053_889787_Keywords_OPEN__"></a>WIDTH</h3>
+        <p>The desired output width. If no output width is specified, IDL uses the following rules to determine where to break lines:</p>
+        <ul>
+            <li value="1">If the output file is a terminal, the terminal width is used.</li>
+            <li value="2">Otherwise, a default of 80 columns is used.</li>
+        </ul>
+        <h3 class="Keyword"><a name="O_828691053_889796"></a><a name="O_828691053_889796_Keywords_OPEN__"></a>XDR</h3>
+        <p>Set this keyword to open the file for unformatted XDR (eXternal Data Representation) I/O via the READU and WRITEU procedures. Use XDR to make binary data portable between different machine architectures by reading and writing all data in a standard format. When a file is open for XDR access, the only I/O data transfer procedures that can be used with it are READU and WRITEU. XDR is described in Portable Unformatted Input/Output.</p>
+        <h2 class="API"><a name="O_828691053_930326"></a><a name="O_828691053_930326_PageTOC_OPEN__"></a><a name="O_828691053_34856"></a>Note on Accessing Data in VAX Floating Point Format</h2>
+        <p>The floating-point number format used by a program such as IDL is determined entirely by the computer hardware upon which it runs. In the early years of computing it was common for different machines to have incompatible floating-point formats. In the 1970s and 1980s, PDP-11 and VAX minicomputers were widely used for scientific computation, and their floating-point format (known as VAX F and D floating) became the <i>de facto</i> standard for science. Early versions of IDL used these formats.</p>
+        <p>In ensuing years, the computing industry has converged upon a floating-point standard known as IEEE 754, commonly referred to as “IEEE floating” or “IEEE arithmetic.” Other formats (including the VAX formats) have diminished in importance. Now, all common computing hardware uses the IEEE format, which has significant advantages over earlier formats:</p>
+        <ul>
+            <li value="1">Binary data is portable to almost all current and foreseeable computing hardware and operating systems, requiring at most simple byte-swapping.</li>
+            <li value="2">Special <i>Infinity</i> and <i>Not A Number (NaN)</i> values for undefined computations allow exceptional computations to be carried out in a well-defined manner (and at full speed) by modern pipelined computer architectures.</li>
+        </ul>
+        <p>This convergence gained momentum in the 1980s as workstations and personal computers came into prominence. As a result, almost all versions of IDL since 1987 have used IEEE floating point arithmetic, and all current versions of IDL use this format. </p>
+        <p>Despite the almost universal current use of the IEEE format, valuable older data stored in the VAX floating-point formats exists at various scientific institutions around the world. In order to allow access to this data, IDL is able to read and write data in these formats. The VAX_FLOAT keyword to the OPEN procedure is used to enable this feature. </p>
+        <p>When converting between VAX and IEEE formats, you should be aware of the following basic numerical issues in order to get the best results. Translation of floating-point values from IDL’s native IEEE format to the VAX format and back (that is, VAX to IEEE to VAX) is not a completely reversible operation, and should be avoided when possible. There are many cases where the recovered values will differ from the original values, including:</p>
+        <ul>
+            <li value="1">The VAX floating-point format lacks support for the IEEE special values (<i>NaN</i> and <i>Infinity</i>). Hence, their special meaning is lost when they are converted to VAX format and cannot be recovered. </li>
+            <li value="2">The IEEE and VAX floating formats have intrinsic differences in precision and range, which can cause information to be lost in both directions. When converting from one format to another, IDL rounds the value to the nearest representable value in the target format. </li>
+        </ul>
+        <p>As a practical matter, an initial conversion of existing VAX format data to IEEE cannot be avoided if the data is to be used on modern machines. However, each format conversion can add a small amount of error to the resulting values, so it is important to minimize the number of such conversions. Use IEEE/VAX conversions only to read existing VAX format data. Create all new files using the native IEEE format. This introduces only a single unavoidable conversion, and minimizes the resulting conversion error. </p>
+        <h2 class="API"><a name="O_828691053_950310"></a><a name="O_828691053_889926_PageTOC_OPEN__"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre-6.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Deprecated BINARY, BLOCK, DEFAULT, EXTENDSIZE, FIXED, FORTRAN, INITIALSIZE, KEYED, LIST, MACCREATOR, MACTYPE, NON, NOAUTOMODE, NOSTDIO, PRINT, SEGMENTED, SHARED, STREAM, SUBMIT, SUPERSEDE, TRUNCATE_ON_CLOSE, UDF_BLOCK, and VARIABLE keywords</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="O_828691053_931681"></a><a name="O_828691053_931681_PageTOC_OPEN__"></a>See Also</h2>
+        <p><a href="../C/CLOSE.htm#C_854643309_676114">CLOSE</a>, <a href="../F/FILE_GZIP.htm">FILE_GZIP</a>, <a href="../F/FILE_GUNZIP.htm">FILE_GUNZIP</a>, <a href="../G/GET_LUN.htm#G_845992557_922610">GET_LUN</a>, <a href="../P/POINT_LUN.htm#P_817877613_678184">POINT_LUN</a>, <a href="../P/PRINT.htm#P_817877613_1152289">PRINT/PRINTF</a>, <a href="../R/READ.htm#R_822202989_863816">READ/READF</a>, <a href="../R/READU.htm#R_822202989_678459">READU</a>, <a href="../W/WRITEU.htm#W_811389549_756607">WRITEU</a>, <a href="../Z/ZLIB_COMPRESS.htm">ZLIB_COMPRESS</a>, <a href="../Z/ZLIB_UNCOMPRESS.htm">ZLIB_UNCOMPRESS</a>, <a href="../Functional List of IDL Routines/Input_Output.htm#funclisting_2438760872_1213961">General File Access</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

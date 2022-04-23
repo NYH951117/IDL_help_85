@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: G">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>GAUSS2DFIT </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="G_list.htm">Routines: G</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">GAUSS2DFIT</span>
+        </div>
+        <h1 class="Routine"><a name="G_845992557_197913"></a><a name="kanchor1014"></a><a name="G_845992557_23241"></a>GAUSS2DFIT </h1>
+        <p><a name="kanchor1015"></a>The GAUSS2DFIT function fits a two-dimensional, elliptical Gaussian equation to rectilinearly gridded data. Given a set of gridded data, <i>Z</i> = <i>F</i>(<i>x, y</i>),</p>
+        <p>where:</p>
+        <p>
+            <img src="../../images/13_14.jpg" />
+        </p>
+        <p>And the elliptical function is:</p>
+        <p>
+            <img src="../../images/13_15.jpg" />
+        </p>
+        <p>The rotated coordinate system is defined as:</p>
+        <p>
+            <img src="../../images/13_16.jpg" style="mc-float: center;" />
+        </p>
+        <p>
+            <img src="../../images/13_17.jpg" />
+        </p>
+        <p>The parameters of the ellipse <i>U</i> are:</p>
+        <ul>
+            <li value="1">Axis lengths are 2<i>a</i> and 2<i>b</i>, in the unrotated X and Y axes, respectively.</li>
+            <li value="2">Center is at (<i>h, k</i>).</li>
+            <li value="3">Rotation of <i>T</i> radians from the X axis, in the <i>clockwise</i> direction.</li>
+        </ul>
+        <p>The rotation is optional, and can be forced to 0, making the major and minor axes of the ellipse parallel to the X and Y axes.</p>
+        <h3><a name="G_845992557_199847_PageTOC_GAUSS2DFIT_"></a>Procedure Used and Other Notes</h3>
+        <p>The peak/valley is found by first smoothing <i>Z</i> and then finding the maximum or minimum, respectively. GAUSSFIT is then applied to the row and column running through the peak/valley to estimate the parameters of the Gaussian in X and Y. Finally, CURVEFIT is used to fit the 2D Gaussian to the data.</p>
+        <p>Be sure that the 2D array to be fit contains the entire peak/valley out to at least 5 to 8 half-widths, or the curve-fitter may not converge.</p>
+        <p>This is a computationally-intensive routine. The time required is roughly proportional to the number of elements in <i>Z</i>.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>gauss2dfit.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="G_845992557_197924"></a><a name="G_845992557_197924_PageTOC_GAUSS2DFIT_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = GAUSS2DFIT( <i>Z</i>, <i>A</i> [,&#160;<i>X</i>, <i>Y</i>]
+			[,&#160;<a href="#FITA" class="selected">FITA</a>=<i>vector</i>]
+			[,&#160;<a href="#MASK" class="selected">MASK</a>=<i>array</i>]
+			[,&#160;/<a href="#G_845992557_199709" class="selected">NEGATIVE</a>]
+			[,&#160;/<a href="#G_845992557_199711" class="selected">TILT</a>]
+			)</p>
+        <h2 class="API">Return Value</h2>
+        <p>The result is a two-dimensional array with the same dimensions as <i>Z</i> that contains the function <i>F(x, y)</i> evaluated at each <i>X</i> and <i>Y</i> value. The coefficients of the fit are returned in the argument <i>A</i>.</p>
+        <h2 class="API"><a name="G_845992557_197925"></a><a name="G_845992557_197925_PageTOC_GAUSS2DFIT_"></a>Arguments</h2>
+        <h3 class="Argument">Z</h3>
+        <p>The dependent variable. <i>Z</i> should be a two-dimensional array with dimensions (<i>N</i><sub class="italic">x</sub><i>, N</i><sub class="italic">y</sub>). Gridding in the array must be rectilinear.</p>
+        <h3 class="Argument">A</h3>
+        <p>A named variable in which the coefficients of the fit are returned. <i>A</i> is returned as a seven element vector the coefficients of the fitted function. The meanings of the seven elements in relation to the discussion above is:</p>
+        <ul>
+            <li value="1"><i>A</i>[0] = <i>A</i><sub>0</sub> = constant term</li>
+            <li value="2"><i>A</i>[1] = <i>A</i><sub>1</sub> = scale factor</li>
+            <li value="3"><i>A</i>[2] = <i>a</i> = width of Gaussian in the X direction</li>
+            <li value="4"><i>A</i>[3] = <i>b</i> = width of Gaussian in the Y direction</li>
+            <li value="5"><i>A</i>[4] = <i>h</i> = center X location</li>
+            <li value="6"><i>A</i>[5] = <i>k</i> = center Y location.</li>
+            <li value="7"><i>A</i>[6] = <i>T</i> = <i>Theta</i>, the rotation of the ellipse from the X axis in radians, <i>counter-clockwise</i>.</li>
+        </ul>
+        <h3 class="Argument">X</h3>
+        <p>An optional vector with <i>N</i><sub class="italic">x</sub> elements that contains the X values of <i>Z </i>(i.e., <i>X</i><sub class="italic">i</sub> is the X value for <i>Z</i><sub class="italic">i,j</sub>. If this argument is omitted, a regular grid in X is assumed, and the X location of <i>Z</i><sub class="italic">i,j </sub>= <i>i</i>.</p>
+        <h3 class="Argument">Y</h3>
+        <p>An optional vector with <i>N</i><sub class="italic">y</sub> elements that contains the Y values of Z (i.e., <i>Y</i><sub class="italic">j </sub>is the Y value for <i>Z</i><sub class="italic">i,j</sub>. If this argument is omitted, a regular grid in Y is assumed, and the Y location of <i>Z</i><sub class="italic">i,j </sub>= <i>j</i>.</p>
+        <h2 class="API"><a name="G_845992557_197926"></a><a name="G_845992557_197926_PageTOC_GAUSS2DFIT_"></a>Keywords</h2>
+        <h3 class="Keyword">FITA<a name="FITA"></a></h3>
+        <p>Set this keyword to a vector with the same number of elements as <i>A</i>. The vector should contain a zero for each fixed parameter and non-zero values for the elements of <i>A</i> to fit. If you do not specify FITA, then all parameters are assumed to be non-fixed.</p>
+        <h3 class="Keyword">MASK<a name="MASK"></a></h3>
+        <p>Set this keyword to a 2D array with <i>N<sub>x</sub></i> x <i>N<sub>y</sub></i> dimensions, containing a 1 for each good data point, and a 0 for each missing data point. By default all data points are included in the fit.</p>
+        <h3 class="Keyword"><a name="G_845992557_199709"></a><a name="G_845992557_199709_Keywords_GAUSS2DFIT__"></a>NEGATIVE</h3>
+        <p>Set this keyword to indicate that the Gaussian to be fitted is a valley (such as an absorption line). By default, a peak is fit.</p>
+        <h3 class="Keyword"><a name="G_845992557_199711"></a><a name="G_845992557_199711_Keywords_GAUSS2DFIT__"></a>TILT</h3>
+        <p>Set this keyword to allow the orientation of the major and minor axes of the ellipse to be unrestricted. The default is that the axes of the ellipse must be parallel to the X and Y axes. Therefore, in the default case, <i>A</i>[6] is always returned as 0.</p>
+        <h2 class="API"><a name="G_845992557_197931"></a><a name="G_845992557_197931_PageTOC_GAUSS2DFIT_"></a>Examples</h2>
+        <p>This example creates a 2D gaussian, adds random noise, adds some bad data points, and then applies GAUSS2DFIT.</p>
+        <p>
+            <img src="../images/ex_gauss2dfit.png" style="float: right;" />
+        </p>
+        <p class="Code">; Create X and Y arrays:</p>
+        <p class="Code">nx = 128L</p>
+        <p class="Code">ny = 100L</p>
+        <p class="Code">X = FINDGEN(nx) # REPLICATE(1.0, ny)</p>
+        <p class="Code">Y = REPLICATE(1.0, nx) # FINDGEN(ny)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Define input function parameters:</p>
+        <p class="Code">aAxis = nx/6.</p>
+        <p class="Code">bAxis = ny/10.</p>
+        <p class="Code">h = 0.5*nx</p>
+        <p class="Code">k = 0.6*ny</p>
+        <p class="Code">tilt = 30*!PI/180</p>
+        <p class="Code">A = [ 5., 10., aAxis, bAxis, h, k, tilt]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create an ellipse:</p>
+        <p class="Code">xprime = (X - h)*cos(tilt) - (Y - k)*sin(tilt)</p>
+        <p class="Code">yprime = (X - h)*sin(tilt) + (Y - k)*cos(tilt)</p>
+        <p class="Code">U = (xprime/aAxis)^2 + (yprime/bAxis)^2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create gaussian Z with random noise:</p>
+        <p class="Code">Zideal = A[0] + A[1] * EXP(-U/2)</p>
+        <p class="Code">Z = Zideal + RANDOMN(seed, nx, ny)</p>
+        <p class="Code">B = []  ; clear out the variable</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Make about 20% of the points be "bad" data.</p>
+        <p class="Code">bad = WHERE(RANDOMU(1, nx, ny) gt 0.8)</p>
+        <p class="Code">Z[bad] = 999</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create the mask of the bad data points.</p>
+        <p class="Code">mask = REPLICATE(1, nx, ny)</p>
+        <p class="Code">mask[bad] = 0</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;***** Fit the function *****</p>
+        <p class="Code">yfit = GAUSS2DFIT(Z, B, /TILT, MASK=mask)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Report results:</p>
+        <p class="Code">PRINT, 'Should be: ', STRING(A, FORMAT='(6f10.4)')</p>
+        <p class="Code">PRINT, 'Is: ', STRING(B, FORMAT='(6f10.4)')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create an array with our fitted results</p>
+        <p class="Code">xprime = (X - B[4])*cos(B[6]) - (Y - B[5])*sin(B[6])</p>
+        <p class="Code">yprime = (X - B[4])*sin(B[6]) + (Y - B[5])*cos(B[6])</p>
+        <p class="Code">Ufit = (xprime/B[2])^2 + (yprime/B[3])^2</p>
+        <p class="Code">Zfit = B[0] + B[1] * EXP(-Ufit/2)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Plot the results. The black dots are missing data.</p>
+        <p class="Code">im = IMAGE(BYTSCL(Z, MAX=20), RGB_TABLE=40, LAYOUT=[1,1,1])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Contour plot of the fit.</p>
+        <p class="Code">c = CONTOUR(Zfit, /OVERPLOT, C_THICK=[4], COLOR='red')</p>
+        <p class="Code">
+            <br />
+        </p>
+        <h2 class="API"><a name="G_845992557_218946"></a><a name="G_845992557_218946_PageTOC_GAUSS2DFIT_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>4.0.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added FITA and MASK keywords</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="G_845992557_881336"></a><a name="G_845992557_881336_PageTOC_GAUSS2DFIT_"></a>See Also</h2>
+        <p><a href="../C/COMFIT.htm#C_854643309_53189">COMFIT</a>, <a href="GAUSSFIT.htm#G_845992557_749954">GAUSSFIT</a>, <a href="../P/POLY_FIT.htm#P_817877613_753815">POLY_FIT</a>, <a href="../R/REGRESS.htm#R_822202989_1102676">REGRESS</a>, <a href="../S/SFIT.htm#S_820040301_36073">SFIT</a>, <a href="../S/SVDFIT.htm#S_820040301_154010">SVDFIT</a>, “Curve and Surface Fitting” (Chapter 7, Using IDL)  in the <code>help/pdf</code> directory of the IDL installation directory.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

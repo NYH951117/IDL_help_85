@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|Medical Imaging in IDL|Using IDL DICOM Network Services">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Defining a Machine to Be Queried</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Expanded DICOM Support in IDL/ExpandedDICOMFunctionality.htm">Medical Imaging in IDL</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Overview.htm">Using IDL DICOM Network Services</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Defining a Machine to Be Queried</span>
+        </div>
+        <h1>Defining a Machine to Be Queried</h1>
+        <p>Query/Retrieve is the process by which DICOM devices request information from a database and retrieve data and images through those requests. To form an association, the local Query Retrieve SCU connects with a remote Query Retrieve SCP. The client at the Query Retrieve SCU machine sends a request to the remote Query Retrieve SCP machine. The Query Retrieve SCP machine responds with a list of patients. From this list the client requests files (identified by patient ID) be sent to a destination (identified by Application Entity title). The remote Query Retrieve SCP machine responds to the request and sends files to the file storage directory that you defined in association with the Storage SCP Application Entity. The Storage SCP service writes the incoming files to disk.</p>
+        <p>
+            <img src="../../Resources/Images/Defining_a_Machine_to_Be_Queried-13.jpg" />
+        </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The default <a name="kanchor5551"></a>Query Retrieve SCU Application Entity is IDL_AE_QUERY_SCU. There is no need to make any changes to this entity definition, but you can define a new Application Entity if desired. You would then select the new entity in the <b>Query Retrieve SCU Application Entity</b> area of the <b>Configuration</b> tab in the <b>DICOM Network Services</b> utility and click <b>Save</b>.</p>
+        <ul>
+            <li value="1">Tell the Query Retrieve SCP device (the <i>file source</i>) where files should be sent (the Storage SCP Application Entity information that indicates the <i>file storage</i> location)</li>
+            <li value="2">Configure a Query SCP Application Entity (for the file source) on your machine (the machine running the query) </li>
+        </ul>
+        <p>Complete the following steps:</p>
+        <ol>
+            <li value="1">On the file source (likely a remote machine or device) that is running the Query Retrieve SCP service, enter the Storage SCP Application Entity information. This Application Entity is the one defined in <a href="ConfiguringSystemToReceiveFiles.htm">Configuring Your System to Receive Files</a>. You can look up the following information in the <b>DICOM Network Services</b> utility by launching it with the SYSTEM keyword. (See <a href="StartingInSystemMode.htm">Starting the DICOM Network Services Utility in System Mode</a> if needed). </li>
+            <ul>
+                <li value="1"><b>Application Entity Title</b> — the default is IDL_STORE_SCP.</li>
+                <li value="2"><b>Host Name</b> — if the current value is <i>localhost</i>, you will instead need to provide the machine host name or IP address. See <a href="DeterminingConfigurationParameters.htm">Determining the IP Address</a>  if you do not know the host name. </li>
+                <li value="3"><b>Port Number</b> — the default value is 2510. </li>
+            </ul>
+            <li value="2">Record the Application Entity title, host name or IP address, and port number of the Query Retrieve SCP service on the file source machine. </li>
+            <li value="3">
+                <p>On your local machine, the machine from which the queries will be made, open the <b>DICOM Network Services</b> utility by entering:</p>
+                <p class="Code">DICOMEX_NET</p>
+            </li>
+            <li value="4">Define an Application Entity that describes the network characteristics of the device from which files are requested, the file source. Use the information collected in step 2 to configure a local Query SCP Application Entity. For instructions on defining a new Application Entity, see <a href="DefiningNewApplicationEntity.htm">Defining a New Application Entity</a>. </li>
+            <p>This entity should be assigned the following:</p>
+            <ul>
+                <li value="1"><b>Service List Name</b> — Query_SCP_Service_List</li>
+                <li value="2"><b>Service Type</b> — Query_SCP</li>
+            </ul>
+            <p>Selecting the Query_SCP service type for this Application Entity indicates the remote device listens for and responds to queries. This service also listens for requests and sends the specified DICOM files. The following figure shows a hypothetical Application Entity configured as a Query SCP service for the file source device. </p>
+            <p>
+                <img src="../../Resources/Images/net_querySCPae.gif" style="margin-left: 5.99976px;margin-top: 1.49976px;margin-right: 16.27201px;margin-bottom: 1.175045px;" />
+            </p>
+            <li value="5">Also on your local machine, make sure the Storage SCP Application Entity referenced in step 1 is listed in the <b>Existing Entities </b>droplist on the <b>Configuration </b>tab. (This is the entity defined in <a href="ConfiguringSystemToReceiveFiles.htm">Configuring Your System to Receive Files</a>.) If you modified the default characteristics of the IDL_AE_STOR_SCP Application Entity or created a new Application Entity that uses the Storage SCP service while in system configuration mode, you must duplicate those settings in the <b>DICOM Network Services</b> utility while in local configuration mode. </li>
+        </ol>
+        <p>See <a href="QueryingRemoteMachine.htm">Querying a Remote Machine</a> for information on how to use the <b>DICOM Network Services</b> utility to query and retrieve files. </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

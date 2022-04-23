@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|COM Import Bridge and ActiveX|COM Import Bridge">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Example RSIDemoComponent</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">COM Import Bridge and ActiveX</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">COM Import Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Example RSIDemoComponent</span>
+        </div>
+        <h1><a name="Example_RSIDemoComponent"></a>Example <a name="kanchor5200"></a>RSIDemoComponent</h1>
+        <p>This <a name="kanchor5201"></a>example uses a COM component included in the IDL distribution. The RSIDemoComponent is included purely for demonstration purposes, and does not perform any useful work beyond illustrating how IDLcomIDispatch objects are created and used.</p>
+        <p>The RSIDemoComponent is contained in a file named <i>RSIDemoComponent.dll</i> located in the <i>examples\doc\bridges\COM</i> subdirectory of the IDL distribution. Before attempting to execute this example, make sure the component is registered on your system as described in <a href="AboutUsingCOMObjects.htm#Registering_COM_Components_on_a_Windows_Machine">Registering COM Components on a Windows Machine</a>.</p>
+        <p>There are three objects defined by the RSIDemoComponent. The example begins by using RSIDemoObj1, which has the program ID:</p>
+        <p class="Code">RSIDemoComponent.RSIDemoObj1</p>
+        <p>and the class ID:</p>
+        <p class="Code">{A77BC2B2-88EC-4D2A-B2B3-F556ACB52E52}</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This complete example, <i>IDispatchDemo.pro</i>, is located in the <i>examples\doc\bridges\COM</i> subdirectory of the IDL distribution. It develops an IDL procedure called IDispatchDemo that illustrates use of the RSIDemoComponent. Run the example procedure by entering <i>IDispatchDemo</i> at the IDL command prompt or view the file in an IDL Editor window by entering <i>.EDIT IDispatchDemo.pro</i>.</p>
+        <ol>
+            <li value="1">Begin by creating an IDLcomIDispatch object from the COM object. You can use either the class ID or the program ID. Remember that if you use the class ID, you must remove the braces ( { } ) and replace the hyphens with underscores.</li>
+            <p class="Code">obj1 = OBJ_NEW( $<br />'IDLCOMIDispatch$PROGID$RSIDemoComponent_RSIDemoObj1')</p>
+            <p>or (with Class ID):</p>
+            <p class="Code">obj1 = OBJ_NEW( $<br />'IDLCOMIDispatch$CLSID$A77BC2B2_88EC_4D2A_B2B3_F556ACB52E52')</p>
+            <li value="2">  The COM object implements the <i>GetCLSID</i> method, which returns the class<br />ID for the component. You can retrieve this value in and IDL variable and print it. The string should be <i>'{A77BC2B2-88EC-4D2A-B2B3- F556ACB52E52}'</i>.</li>
+            <p class="Code">strCLSID = obj1-&gt;GetCLSID()<br />PRINT, strCLSID</p>
+            <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The GetCLSID method returns the class identifier of the object using the standard COM separators ( - ).</p>
+            <li value="3">  The COM object has a property named MessageStr. To retrieve the value of the MessageStr property, enter:</li>
+            <p class="Code">obj1 -&gt; GetProperty, MessageStr = outStr<br />PRINT, outStr</p>
+            <p>IDL should print '<i>RSIDemoObj1</i>'.</p>
+            <li value="4">  You can also set the <i>MessageStr</i> property of the object and display it using the object’s <i>DisplayMessageStr</i> method, which displays the value of the <i>MessageStr</i> property in a Windows dialog:</li>
+            <p class="Code">obj1 -&gt; SetProperty, MessageStr = 'Hello, world'<br />obj1 -&gt; DisplayMessageStr</p>
+            <li value="5">The <i>Msg2InParams</i> method takes two input parameters and concatenates them into a single string. Executing the following commands should cause IDL to print '<i>The value is: 25</i>'.</li>
+            <p class="Code">instr = 'The value is: '<br />val = 25L<br />outStr = obj1-&gt;Msg2InParams(instr, val)<br />PRINT, outStr</p>
+            <li value="6">   To view all known information about the IDLcomIDispatch object, including its dynamic subclass name and the names of its methods, use the IDL HELP command with the OBJECTS keyword:</li>
+            <p class="Code">HELP, obj1, /OBJECTS</p>
+            <li value="7">The <i>GetIndexObject()</i> method returns an object reference to one of the following three possible objects:</li>
+            <ul>
+                <li value="1"><i>RSIDemoObj1</i> (index = 1)</li>
+                <li value="2"><i>RSIDemoObj2</i> (index = 2)</li>
+                <li value="3"><i>RSIDemoObj3</i> (index = 3)</li>
+            </ul>
+            <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the index is not 1, 2, or 3, the <i>GetIndexObject</i> method will return an error.</p>
+            <p>To get a reference to <i>RSIDemoObj3</i>, use the following command:</p>
+            <p class="Code">obj3 = obj1-&gt;GetIndexObject(3)</p>
+            <li value="8">All three objects have the <i>GetCLSID</i> method. You can use this method to verify that the desired object was returned. The output of the following commands should be '<i>{13AB135D-A361-4A14-B165-785B03AB5023}</i>'.</li>
+            <p class="Code">obj3CLSID = obj3-&gt;GetCLSID()<br />PRINT, obj3CLSID</p>
+            <li value="9">Remember to destroy a retrieved object when you are finished with it:</li>
+            <p class="Code">OBJ_DESTROY, obj3</p>
+            <li value="10">Next, use the COM object’s <i>GetArrayOfObjects()</i> method to return a vector of object references to <i>RSIDemoObj1</i>, <i>RSIDemoObj2</i>, and <i>RSIDemoObj3</i>, respectively. The number of elements in the vector is returned in the first parameter; the result should 3.</li>
+            <p class="Code">objs = obj1-&gt;GetArrayOfObjects(cItems)<br />PRINT, cItems</p>
+            <li value="11">Since each object implements the <i>GetCLSID</i> method, you could loop through all the object references and get its class ID:</li>
+            <p class="Code">FOR i = 0, cItems-1 do begin</p>
+            <p class="Code_Indented">objCLSID = objs[i] -&gt; GetCLSID()<br />PRINT, 'Object[',i,'] CLSID: ', objCLSID</p>
+            <p class="Code">ENDFOR</p>
+            <li value="12">Remember to destroy object references when you are finished with them:</li>
+            <p class="Code">OBJ_DESTROY, objs<br />OBJ_DESTROY, obj1</p>
+        </ol>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

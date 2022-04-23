@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: W">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>WRITE_JPEG </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="W_list.htm">Routines: W</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">WRITE_JPEG</span>
+        </div>
+        <h1 class="Routine"><a name="W_811389549_959943"></a><a name="kanchor2922"></a><a name="W_811389549_94631"></a>WRITE_JPEG <a name="kanchor2923"></a></h1>
+        <p>The WRITE_JPEG procedure writes compressed images to files. JPEG (Joint Photographic Experts Group) is a standardized compression method for full-color and gray-scale images. This procedure is based in part on the work of the Independent JPEG Group.</p>
+        <p>As the Independent JPEG Group states, JPEG is intended for real-world scenes (such as digitized photographs). Line art, such as drawings or IDL plots, and other unrealistic images are not its strong suit. Note also that JPEG is a lossy compression scheme. That is, the output image is <i>not</i> identical to the input image. Hence you cannot use JPEG if you must have identical output bits. On typical images of real-world scenes, however, very good compression levels can be obtained with no visible change, and amazingly high compression levels are possible if you can tolerate a low-quality image. You can trade off output image quality against compressed file size by adjusting a compression parameter. Files are encoded in JFIF, the JPEG File Interchange Format; however, such files are usually simply called JPEG files.</p>
+        <p>If you need to store images in a format that uses lossless compression, consider using the WRITE_PNG procedure. This procedure writes a Portable Network Graphics (PNG) file using lossless compression with either 8 or 16 data bits per channel. To store 8-bit or 24-bit images without compression, consider using WRITE_BMP (for Microsoft Bitmap format files) or WRITE_TIFF (to write Tagged Image Format Files).</p>
+        <p>For a short technical introduction to the JPEG compression algorithm, see: Wallace, Gregory K. “The JPEG Still Picture Compression Standard”, <i>Communications of the ACM</i>, April 1991 (vol. 34, no. 4), pp. 30-44.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>All JPEG files consist of byte data. Input data is converted to bytes before being written to a JPEG file.</p>
+        <h2 class="API"><a name="W_811389549_279740"></a><a name="W_811389549_279740_PageTOC_WRITE_JPEG_"></a>Examples</h2>
+        <p>The following command captures the contents of the current IDL graphics window and saves it to a JPEG file named <code>test.jpg</code>, using JPEG compression with a quality index of 25. The image is stored in bottom-to-top order:</p>
+        <p class="Code">WRITE_JPEG, 'test1.jpg', TVRD(), QUALITY=25</p>
+        <p>The following lines create an image in an IDL graphics window, read it from the window and write it as a TrueColor <code>.jpg</code> file in the temporary directory, then read the <code>.jpg</code> file and display it in the same graphics window:</p>
+        <p class="Code">; Save device settings and tell IDL to use a color table<br />DEVICE, GET_DECOMPOSED=old_decomposed<br />DEVICE, DECOMPOSED=0<br />LOADCT, 14<br /><br />; Create an image and display it<br />IMAGE1 = DIST(300)<br />WINDOW, 1, XSIZE=300, YSIZE=300<br />TV, IMAGE1<br /><br />; Write a bitmap file to the temporary directory<br />; Note the use of the TRUE keywords to TVRD and WRITE_JPEG<br />filename = FILEPATH('test.jpg', /TMP)<br />WRITE_JPEG, filename, TVRD(/TRUE), /TRUE<br />PRINT, 'File written to ', filename<br /><br />; Read in the file<br />; Note the use of the TRUE keyword to READ_JPEG<br />READ_JPEG, filename, IMAGE2, /TRUE<br /><br />; Display the IMAGE1 and IMAGE2 side by side<br />; Note the use of the TRUE keyword to TV<br />WINDOW, 1, XSIZE=600, YSIZE=300, $<br />   TITLE='Original (left) and Image read from file (right)'<br />TV, IMAGE1, 0<br />TV, IMAGE2, 1, /TRUE<br /><br />; Restore device settings.<br />DEVICE, DECOMPOSED=old_decomposed</p>
+        <h2 class="API"><a name="W_811389549_279764"></a><a name="W_811389549_279764_PageTOC_WRITE_JPEG_"></a>Syntax</h2>
+        <p class="Syntax">WRITE_JPEG [,&#160;<i>Filename</i>], <i>Image</i> [,&#160;/<a href="#W_811389549_279735" class="selected">ORDER</a>] [,&#160;/<a href="#W_811389549_912025" class="selected">PROGRESSIVE</a>] [,&#160;<a href="#W_811389549_279736" class="selected">QUALITY</a>=<i>value</i>{0 to 100}] [,&#160;<a href="#W_811389549_279737" class="selected">TRUE</a>={1 | 2 | 3}] [,&#160;<a href="#W_811389549_896438" class="selected">UNIT</a>=<i>lun</i>] </p>
+        <h2 class="API"><a name="W_811389549_279783"></a><a name="W_811389549_279783_PageTOC_WRITE_JPEG_"></a>Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>A string containing the name of file to be written in JFIF (JPEG) format. If this parameter is not present, the UNIT keyword must be specified.</p>
+        <h3 class="Argument">Image</h3>
+        <p>A byte array of either two or three dimensions, containing the image to be written. Grayscale images must have two dimensions. TrueColor images must have three dimensions with the index of the dimension that contains the color specified with the TRUE keyword.</p>
+        <h2 class="API"><a name="W_811389549_279794"></a><a name="W_811389549_279794_PageTOC_WRITE_JPEG_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="W_811389549_279735"></a><a name="W_811389549_279735_Keywords_WRITE_JPEG__"></a>ORDER</h3>
+        <p>JPEG/JFIF images are normally written in top-to-bottom order. If the image array is in the standard IDL order (i.e., from bottom-to-top) set ORDER to 0, its default value. If the image array is in top-to-bottom order, ORDER must be set to 1.</p>
+        <h3 class="Keyword"><a name="W_811389549_912025"></a><a name="W_811389549_912025_Keywords_WRITE_JPEG__"></a>PROGRESSIVE</h3>
+        <p>Set this keyword to write the image as a series of scans of increasing quality. When used with a slow communications link, a decoder can generate a low-quality image very quickly, and then improve its quality as more scans are received.</p>
+        <p class="Warning">Not all JPEG applications can handle progressive JPEG files, and it is up the JPEG reader to progressively display the JPEG image. For example, IDL’s READ_JPEG routine ignores the progressive readout request and reads the entire image in at the first reading.</p>
+        <h3 class="Keyword"><a name="W_811389549_279736"></a><a name="W_811389549_279736_Keywords_WRITE_JPEG__"></a>QUALITY</h3>
+        <p>This keyword specifies the quality index, in the range of 0 (terrible) to 100 (excellent) for the JPEG file. The default value is 75, which corresponds to very good quality. Lower values of QUALITY produce higher compression ratios and smaller files.</p>
+        <h3 class="Keyword"><a name="W_811389549_279737"></a><a name="W_811389549_279737_Keywords_WRITE_JPEG__"></a>TRUE</h3>
+        <p>This keyword specifies the index, starting at 1, of the dimension over which the color is interleaved. For example, for an image that is pixel interleaved and has dimensions of (3, <i>m</i>, <i>n</i>), set TRUE to 1. Specify 2 for row-interleaved images (<i>m</i>, 3, <i>n</i>); and 3 for band-interleaved images (<i>m</i>, <i>n</i>, 3). If TRUE is not set, the image is assumed to have no interleaving (it is not a TrueColor image).</p>
+        <h3 class="Keyword"><a name="W_811389549_896438"></a><a name="W_811389549_896438_Keywords_WRITE_JPEG__"></a>UNIT</h3>
+        <p>This keyword designates the logical unit number of an already open file to receive the output, allowing multiple JFIF images per file or the embedding of JFIF images in other data files. If this keyword is used, <i>Filename</i> should not be specified. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When opening a file intended for use with the UNIT keyword, if the filename does not end in <code>.jpg</code>, or <code>.jpeg</code>, you must specify the STDIO keyword to OPEN in order for the file to be compatible with WRITE_JPEG.</p>
+        <h2 class="API"><a name="W_811389549_796053"></a><a name="W_811389549_796053_PageTOC_WRITE_JPEG_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre-4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="W_811389549_983496"></a><a name="W_811389549_983496_PageTOC_WRITE_JPEG_"></a>See Also</h2>
+        <p><a href="../R/READ_JPEG.htm#R_822202989_678446">READ_JPEG</a>, <a href="WRITE_GIF.htm#W_811389549_1068094">WRITE_GIF</a>, <a href="../Q/QUERY___Routines.htm#Q_815714925_982368">QUERY_* Routines</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

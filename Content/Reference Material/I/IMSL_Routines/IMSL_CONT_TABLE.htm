@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_CONT_TABLE</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="IMSL_CONT_TABLE"></a>IMSL_CONT_TABLE</h1>
+        <p>The IMSL_CONT_TABLE procedure sets up table to generate pseudorandom numbers from a general continuous distribution.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>IMSL_CONT_TABLE sets up a table that <a href="IMSL_RAND_GEN_CONT.htm#IMSL_RAND_GEN_CONT">IMSL_RAND_GEN_CONT</a> can use to generate pseudorandom deviates from a continuous distribution. The distribution is specified by its cumulative distribution function, which can be supplied either in tabular form in table or by a function f. See the documentation for the routine RAND_GEN_CONT for a description of the method.</p>
+        <h2 class="API">Examples</h2>
+        <h3>Example 1</h3>
+        <p>In this example, IMSL_RAND_GEN_CONT is used to set up a table for generation of beta pseudorandom deviates. The CDF for this distribution is computed by the routine IMSL_BETACDF. The table contains 100 points at which the CDF is evaluated and that are used for interpolation. Notice that two warnings are issued during the computations for this example.</p>
+        <p class="Code">.RUN</p>
+        <p class="Code">FUNCTION cdf, x</p>
+        <p class="Code">return, IMSL_BETACDF(x, 3., 2.)</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">iopt = 0</p>
+        <p class="Code">ndata = 100;</p>
+        <p class="Code">table = FLTARR(100, 5)</p>
+        <p class="Code">x = 0.0;</p>
+        <p class="Code">table(*,0) = FINDGEN(100)/100.</p>
+        <p class="Code">IMSL_CONT_TABLE, 'cdf', iopt, ndata, table</p>
+        <p class="Code">IMSL_RANDOMOPT, Set = 123457</p>
+        <p class="Code">r = IMSL_RAND_GEN_CONT(5, table)</p>
+        <p class="Code">PM, r</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">0.92079391</p>
+        <p class="Code">0.46412855</p>
+        <p class="Code">0.76678398</p>
+        <p class="Code">0.65357975</p>
+        <p class="Code">0.81706959</p>
+        <h2 class="API">Syntax</h2>
+        <p>IMSL_CONT_TABLE, ( <i>f</i>, <i>iopt</i>, <i>ndata</i>, <i>table</i> [, /DOUBLE] )</p>
+        <h2 class="API">Return Value</h2>
+        <p>None</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">f</h3>
+        <p>A scalar string specifying a user-supplied function to compute the cumulative distribution function. The argument to the function is the point at which the distribution function is to be evaluated.</p>
+        <h3 class="Argument">iopt</h3>
+        <p>Indicator of the extent to which table is initialized prior to calling IMSL_CONT_TABLE.</p>
+        <ul>
+            <li value="1">0—IMSL_CONT_TABLE fills the last four columns of table. Input the points at which the CDF is to be evaluated in the first column of table. These must be in ascending order.</li>
+            <li value="2">1—IMSL_CONT_TABLE fills the last three columns of table. The supplied function f is not used and may be a dummy function; instead, the cumulative distribution function is specified in the first two columns of table. The abscissas (in the first column) must be in ascending order and the function must be strictly monotonically increasing.</li>
+        </ul>
+        <h3 class="Argument">ndata</h3>
+        <p>Number of points at which the CDF is evaluated for interpolation. ndata must be greater than or equal to 4.</p>
+        <h3 class="Argument">table</h3>
+        <p>ndata by 5 table to be used for interpolation of the cumulative distribution function. The first column of table contains abscissas of the cumulative distribution function in ascending order, the second column contains the values of the CDF (which must be strictly increasing), and the remaining columns contain values used in interpolation. The first row of table corresponds to the left limit of the support of the distribution and the last row corresponds to the right limit of the support; that is, table (0, 1) = 0.0 and table(ndata – 1, 1) = 1.0.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">DOUBLE</h3>
+        <p>If present and nonzero, double precision is used.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="IMSL_RAND_GEN_CONT.htm#IMSL_RAND_GEN_CONT">IMSL_RAND_GEN_CONT</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

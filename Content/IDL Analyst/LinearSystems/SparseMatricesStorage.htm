@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Sparse Matrices: Matrix Storage Modes</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1>Sparse Matrices: Matrix Storage Modes</h1>
+        <p>The dense linear algebra functions in IDL Analyst require input consisting of matrix dimensions and all values for the matrix entries. This is not practical for sparse linear algebra. Three different storage formats can be used for the functions in the sparse matrix sections. These methods include:</p>
+        <ul>
+            <li value="1">Sparse Coordinate Storage Format</li>
+            <li value="2">Band Storage Format</li>
+            <li value="3">Compressed Sparse Column (CSC) Format</li>
+        </ul>
+        <h2 class="API">Sparse Coordinate Storage Format</h2>
+        <p>Only the non-zero elements of a sparse matrix need to be communicated to a function. Sparse coordinate storage format stores the value of each matrix entry along with that entry’s row and column index. The following structures are defined by IDL Analyst to make it easy to store sparse matrices:</p>
+        <p class="Code">{imsl_f_sp_elem, row:0L, col:0L, val:float(0.0)}</p>
+        <p class="Code">{imsl_d_sp_elem, row:0L, col:0L, val:double(0.0)}</p>
+        <p class="Code">{imsl_c_sp_elem, row:0L, col:0L, val:complex(0.0)}</p>
+        <p class="Code">{imsl_z_sp_elem, row:0L, col:0L, val:dcomplex(0.0)}</p>
+        <p>As an example consider the 6 x 6 matrix:</p>
+        <p>
+            <img src="../images/MatrixStorage1.png" />
+        </p>
+        <p>The matrix A has 15 non-zero elements, and its sparse coordinate representation would be:</p>
+        <p>
+            <img src="../images/MatrixStorage2.png" />
+        </p>
+        <p>Since this representation does not rely on order, an equivalent form would be:</p>
+        <p>
+            <img src="../images/MatrixStorage3.png" />
+        </p>
+        <p>There are different ways this data could be used to initialize. Consider the following program fragment:</p>
+        <p>
+            <img src="../images/MatrixStorage4a.png" />
+        </p>
+        <p>
+            <img src="../images/MatrixStorage4b.png" />
+        </p>
+        <p>Both a and b represent the sparse matrix <i>A</i>.</p>
+        <p>A sparse symmetric or Hermitian matrix is a special case, since it is only necessary to store the diagonal and either the upper or lower triangle. As an example, consider the 5 x 5 linear system:</p>
+        <p>
+            <img src="../images/MatrixStorage5.png" />
+        </p>
+        <p>The Hermitian and symmetric positive definite system solvers in this module expect the diagonal and lower triangle to be specified. The sparse coordinate form for the lower triangle is given by</p>
+        <p>
+            <img src="../images/MatrixStorage6.png" />
+        </p>
+        <p>&#160;</p>
+        <p>The following program fragment will initialize H:</p>
+        <p class="Code">A = replicate(imsl_c_sp_elem, 7)</p>
+        <p class="Code">a(*).row = [0, 1, 2, 3, 1, 2, 3]</p>
+        <p class="Code">a(*).col = [0, 1, 2, 3, 0, 1, 2]</p>
+        <p class="Code">a(*).val = [COMPLEX(4, 0), COMPLEX(4, 0), $</p>
+        <p class="Code_Indented">COMPLEX(4, 0), COMPLEX(4, 0), $</p>
+        <p class="Code_Indented">COMPLEX(1, 1), COMPLEX(1, 1), $</p>
+        <p class="Code_Indented">COMPLEX(1, 1)]</p>
+        <p>There are some important points to note here. Note that H is not symmetric, but rather Hermitian. The functions that accept Hermitian data understand this and operate assuming that:</p>
+        <p>
+            <img src="../images/MatrixStorage7.png" />
+        </p>
+        <p>The Sparse Matrix Module cannot take advantage of the symmetry in matrices that are not positive definite. A symmetric matrix that happens to be indefinite cannot be stored in this compact symmetric form. Rather, both upper and lower triangles must be specified and the sparse general solver called.</p>
+        <h2 class="API">Band Storage Format</h2>
+        <p>A band matrix is an <i>M</i> × <i>N</i> matrix <i>A</i> with all of its non-zero elements “close” to the main diagonal. Specifically, values <i>A</i><sub style="font-style: italic;">ij</sub><i> = 0</i> if <i>i – j &gt; nlca</i> or <i>j – i &gt; nuca</i>. The integer <i>m = nlca + nuca + 1</i> is the total band width. The diagonals, other than the main diagonal, are called codiagonals. While any <i>M</i> × <i>N</i> matrix is a band matrix, band storage format is only useful when the number of non-zero codiagonals is much less than <i>N</i>.</p>
+        <p>In band storage format, the <i>nlca</i> lower codiagonals and the <i>nuca</i> upper codiagonals are stored in the rows of an array of size <i>m</i> × <i>N</i>. The elements are stored in the same column of the array as they are in the matrix. The values <i>A</i><sub style="font-style: italic;">ij</sub><i> <![CDATA[ ]]></i>inside the band width are stored in the linear array in positions [<i>(i – j + nuca + 1)*i + j</i>]. This results in a row-major, one-dimensional mapping from the two-dimensional notion of the matrix.</p>
+        <p>For example, consider the 5 x 5 matrix A with 1 lower and 2 upper codiagonals:</p>
+        <p>
+            <img src="../images/MatrixStorage8.png" />
+        </p>
+        <p>In band storage format, the data would be arranged as:</p>
+        <p>
+            <img src="../images/MatrixStorage9.png" />
+        </p>
+        <p>This data would be then be stored contiguously, row-major order, in an array of length 20.</p>
+        <p>As an example, consider the following tridiagonal matrix:</p>
+        <p>
+            <img src="../images/MatrixStorage10.png" />
+        </p>
+        <p>The following code segment will store this matrix in band storage format:</p>
+        <p class="Code">a = [0, 1, 2, 3, 4, $</p>
+        <p class="Code_Indented">10, 20, 30, 40, 50, $</p>
+        <p class="Code_Indented">5, 6, 7, 8, 0]</p>
+        <p>As in the sparse coordinate representation, there is a space saving symmetric version of band storage. As an example, we look at the following 5 x 5 symmetric problem:</p>
+        <p>
+            <img src="../images/MatrixStorage11.png" />
+        </p>
+        <p>In band symmetric storage format, the data would be arranged as:</p>
+        <p>
+            <img src="../images/MatrixStorage12.png" />
+        </p>
+        <p>The following Hermitian example illustrates the procedure:</p>
+        <p>
+            <img src="../images/MatrixStorage13.png" />
+        </p>
+        <p>The following program fragments stores H in h, using band symmetric storage format:</p>
+        <p class="Code">h = complexarr(15)</p>
+        <p class="Code">h(0:1) = 0</p>
+        <p class="Code">h(2:4) = complex(1,1)</p>
+        <p class="Code">h(5) = 0</p>
+        <p class="Code">h(6:9) = complex(1,1)</p>
+        <p class="Code">h(10:14) = 8</p>
+        <h2 class="API">Choosing Between Banded and Coordinate Forms</h2>
+        <p>Any matrix can be stored in either sparse coordinate or band format; which format to use depends on the sparsity pattern of the matrix. A matrix with all non-zero data stored in bands close to the main diagonal is probably a good candidate for band format. If non-zero information is scattered more or less uniformly through the matrix, sparse coordinate format is the best choice. The following two cases are extreme examples. First, consider an n x n matrix with all elements on the main diagonal and the (0,<i>n</i>–1) and (<i>n</i>–1,0) entries non-zero. The sparse coordinate vector would be <i>n</i> + 2 units long. An array of length 2<i>n</i><sup>2</sup> – <i>n</i> would be required to store the band representation, nearly twice as much storage as a dense solver might require.</p>
+        <p>Second, consider a tridiagonal matrix with all diagonal, superdiagonal, and subdiagonal entries non-zero. In band format, an array of length 3<i>n</i> is needed. In sparse coordinate format, a vector of length 3<i>n</i> – 2 is required. But the problem is that, for instance with floating-point precision on a 32 bit machine, each of those 3<i>n</i> – 2 units in coordinate format requires three times as much storage as any of the 3<i>n</i> units needed for band representation. This is due to carrying the row and column indices in coordinate form. Band storage evades this requirement by being essentially an ordered list, and defining location in the original matrix by position in the list.</p>
+        <h2 class="API">Compressed Sparse Column (CSC) Format</h2>
+        <p>Functions that accept data in coordinate format can also accept data stored in the format described in the Users’ Guide for the Harwell-Boeing Sparse Matrix Collection. The scheme is column oriented, with each column held as a sparse vector, represented by a list of the row indices of the entries in an integer array and a list of the corresponding values in a separate float (double, complex, dcomplex) array. Data for each column are stored consecutively and in order. A separate integer array holds the location of the first entry of each column and the first free location. Only entries in the lower triangle and diagonal are stored for symmetric and Hermitian matrices. All arrays are based at zero, which is in contrast to the Harwell-Boeing test suite’s one-based arrays.</p>
+        <p>As in the Users’ Guide for the Harwell-Boeing Sparse Matrix Collection, we illustrate the storage scheme with the following example. The 5x5 matrix:</p>
+        <p>
+            <img src="../images/MatrixStorage14.png" />
+        </p>
+        <p>would be stored in the arrays colptr (location of first entry), rowind (row indices), and values (non-zero entries) as follows:</p>
+        <p>
+            <img src="../images/MatrixStorage15.png" />
+        </p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

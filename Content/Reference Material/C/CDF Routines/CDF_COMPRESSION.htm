@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C|CDF Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>CDF_COMPRESSION</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../CDF_Routines.htm">CDF Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">CDF_COMPRESSION</span>
+        </div>
+        <h1 class="Routine"><a name="CDF_1744428779_1006206"></a><a name="CDF_1744428779_96448"></a>CDF_COMPRESSION</h1>
+        <p>The <a name="kanchor184"></a>CDF_COMPRESSION procedure sets or returns the compression mode for a CDF file and/or variables. Compression parameters should be set before values are written to the CDF file.</p>
+        <h3><a name="CDF_1744428779_1021019_PageTOC_CDF_COMPRESSION_"></a>Special Note About Temporary File Location</h3>
+        <p>CDF creates temporary files whenever files/variables are compressed or uncompressed. By default, these files are created in the current directory. UNIX users can set the environment variable CDF_TMP to set the temporary directory explicitly.</p>
+        <h2 class="API"><a name="CDF_1744428779_1019990_PageTOC_CDF_COMPRESSION_"></a>Examples</h2>
+        <p class="Code">; Create a  CDF file and define the compression.</p>
+        <p class="Code">; Compression only works on Single-File CDFs:</p>
+        <p class="Code">id=CDF_CREATE('demo.cdf',[10,20],/CLOBBER,/SINGLE_FILE)</p>
+        <p class="Code">CDF_COMPRESSION,id,SET_COMPRESSION=1 ; (Run-length encoding)</p>
+        <p class="Code">att_id=CDF_ATTCREATE(id, 'Date',/GLOBAL)</p>
+        <p class="Code">CDF_ATTPUT,id,'Date',att_id,systime()</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Change the compression type for the file to GZIP by using</p>
+        <p class="Code">; SET_GZIP_LEVEL:</p>
+        <p class="Code">CDF_COMPRESSION,id,SET_GZIP_LEVEL=7</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Retrieve compression information:</p>
+        <p class="Code">CDF_COMPRESSION,id,GET_GZIP_LEVEL=glevel,GET_COMPRESSION=gcomp</p>
+        <p class="Code">HELP,glevel,gcomp</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create and compress an rVariable:</p>
+        <p class="Code">rid=CDF_VARCREATE(id,'rvar0',[1,1],/CDF_FLOAT)</p>
+        <p class="Code">CDF_COMPRESSION,id,SET_VAR_COMPRESSION=2,VARIABLE='rvar0'</p>
+        <p class="Code">CDF_VARPUT,id,'rvar0',findgen(10,20,5)</p>
+        <p class="Code">CDF_COMPRESSION,id,GET_VAR_COMPRESSION=v_comp,VARIABLE=rid,GET_VAR_GZIP_LEVEL=v_glevel</p>
+        <p class="Code">HELP,v_comp,v_glevel</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create and compress a  zVariable:</p>
+        <p class="Code">zid=CDF_varcreate(id,'zvar0',[1,1,1],DIM=[10,20,30],/ZVARIABLE,$</p>
+        <p class="Code">&#160;&#160;&#160;/CDF_DOUBLE)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; You can set a compression and check it in the same call:</p>
+        <p class="Code">CDF_COMPRESSION,id,SET_VAR_GZIP_LEVEL=9,VARIABLE=zid,/ZVARIABLE,$</p>
+        <p class="Code">&#160;&#160;&#160;GET_VAR_GZIP_LEVEL=v_gzip</p>
+        <p class="Code">HELP,v_gzip</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">CDF_VARPUT,id,zid,dindgen(10,20,30),/ZVARIABLE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; File and variable keywords can be combined in the same call</p>
+        <p class="Code">; (Set calls are processed before Get calls)</p>
+        <p class="Code">CDF_COMPRESSION,id,GET_VAR_COMPRESSION=v_comp,VARIABLE='zvar0',$</p>
+        <p class="Code">&#160;&#160;&#160;/ZVARIABLE, SET_COMPRESSION=2,GET_COMPRESSION=file_comp</p>
+        <p class="Code">HELP,file_comp,v_comp</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">CDF_DELETE,id</p>
+        <h4>IDL Output</h4>
+        <p class="Code">GLEVEL          LONG      =            7</p>
+        <p class="Code">GCOMP           LONG      =            5</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">V_COMP          LONG      =            2</p>
+        <p class="Code">V_GLEVEL        LONG      =            0</p>
+        <p class="Code">&#160;</p>
+        <p>(Note that V_GLEVEL is 0, since the variable compression is not GZIP.)</p>
+        <p class="Code">V_GZIP          LONG      =            9</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">FILE_COMP       LONG      =            2</p>
+        <p class="Code">V_COMP          LONG      =            5</p>
+        <h2 class="API"><a name="CDF_1744428779_1019932_PageTOC_CDF_COMPRESSION_"></a>Syntax</h2>
+        <p class="Syntax">CDF_COMPRESSION, Id [,&#160;<a href="#CDF_1744428779_1006274" class="selected">GET_COMPRESSION</a>=<i>variable</i>] [,&#160;<a href="#CDF_1744428779_1006277" class="selected">GET_GZIP_LEVEL</a>=<i>variable</i>] [,&#160;<a href="#CDF_1744428779_1006280" class="selected">GET_VAR_COMPRESSION</a>=<i>variable</i>] [,&#160;<a href="#CDF_1744428779_1006283" class="selected">GET_VAR_GZIP_LEVEL</a>=<i>variable</i>] [,&#160;<a href="#CDF_1744428779_1006286" class="selected">SET_COMPRESSION</a>={0 | 1 | 2 | 3 | 5}] [,&#160;<a href="#CDF_1744428779_1006294" class="selected">SET_GZIP_LEVEL</a>=<i>integer</i>{1 to 9}] [,&#160;<a href="#CDF_1744428779_1006297" class="selected">SET_VAR_COMPRESSION</a>={0&#160;|&#160;1&#160;|&#160;2&#160;|&#160;3&#160;|&#160;5}] [,&#160;<a href="#CDF_1744428779_1006305" class="selected">SET_VAR_GZIP_LEVEL</a>=<i>integer</i>{1 to 9}] <br />[,&#160;<a href="#CDF_1744428779_1006308" class="selected">VARIABLE</a>=<i>variable name or index</i>] [,&#160;/<a href="#CDF_1744428779_1006311" class="selected">ZVARIABLE</a>]</p>
+        <h2 class="API"><a name="CDF_1744428779_1019936_PageTOC_CDF_COMPRESSION_"></a>Arguments</h2>
+        <h3 class="Argument">Id </h3>
+        <p>The CDF ID of the file being compressed or queried, as returned from a previous call to CDF_OPEN or CDF_CREATE. Note that CDF compression only works for single-file CDF files (see <a href="CDF_CREATE.htm#CDF_1744428779_1006635">CDF_CREATE</a>).</p>
+        <h2 class="API"><a name="CDF_1744428779_1020953_PageTOC_CDF_COMPRESSION_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006274"></a><a name="CDF_1744428779_1019949_Keywords_CDF_COMPRESSION_"></a>GET_COMPRESSION </h3>
+        <p>Set this keyword to a named variable to retrieve the compression type used for the single-file CDF file. Note that individual CDF variables may compression types different that the one for the rest of the CDF file.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006277"></a><a name="CDF_1744428779_1019952_Keywords_CDF_COMPRESSION_"></a>GET_GZIP_LEVEL </h3>
+        <p>Set this keyword to a named variable in which the current GZIP effort level (1-9) for the CDF file is returned. If the compression type for the file is not GZIP (5), then a value of zero is returned.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006280"></a><a name="CDF_1744428779_1019955_Keywords_CDF_COMPRESSION_"></a>GET_VAR_COMPRESSION </h3>
+        <p>Set this keyword to a named variable to retrieve the compression type for the variable identified by the VARIABLE keyword.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006283"></a><a name="CDF_1744428779_1019957_Keywords_CDF_COMPRESSION_"></a>GET_VAR_GZIP_LEVEL </h3>
+        <p>Set this keyword to a named variable in which the GZIP effort level (1-9) for variable specified by the VARIABLE keyword is returned. If the compression type for the variable is not GZIP (5), then a value of zero is returned.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006286"></a><a name="CDF_1744428779_1019965_Keywords_CDF_COMPRESSION_"></a>SET_COMPRESSION </h3>
+        <p>Set this keyword to the compression type to be used for the single-file CDF file. Note that individual CDF variables may use compression types different than the one for the rest of the CDF file. Valid compression types are: </p>
+        <ul>
+            <li value="1">0 = No Compression</li>
+            <li value="2">1 = Run-Length Encoding</li>
+            <li value="3">2 = Huffman</li>
+            <li value="4">3 = Adaptive Huffman</li>
+            <li value="5">5 = GZIP (see the optional GZIP_LEVEL keyword)</li>
+        </ul>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006294"></a><a name="CDF_1744428779_1020981_Keywords_CDF_COMPRESSION_"></a>SET_GZIP_LEVEL </h3>
+        <p>This keyword is used to indicate the desired effort for the GZIP compression. This effort must be expressed as a scalar in the range (1-9). If GZIP_LEVEL is not specified upon entry then the default effort level is taken to be 5. If the SET_GZIP_LEVEL keyword is set to a valid value, and the keyword SET_COMPRESSION is not specified, the SET_COMPRESSION is set to GZIP (5).</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006297"></a><a name="CDF_1744428779_1019968_Keywords_CDF_COMPRESSION_"></a>SET_VAR_COMPRESSION </h3>
+        <p>Set this keyword to the compression type for the variable identified by the VARIABLE keyword. If the variable is a zVariable, and is referred to by index in the VARIABLE keyword, then the keyword ZVARIABLE must be set. The desired variable compression should be set before variable data is added with CDF_VARPUT. Valid compression types are: </p>
+        <ul>
+            <li value="1">0 = No Compression</li>
+            <li value="2">1 = Run-Length Encoding</li>
+            <li value="3">2 = Huffman</li>
+            <li value="4">3 = Adaptive Huffman</li>
+            <li value="5">5 = GZIP (see the optional GZIP_LEVEL keyword)</li>
+        </ul>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006305"></a><a name="CDF_1744428779_1026491_Keywords_CDF_COMPRESSION_"></a>SET_VAR_GZIP_LEVEL </h3>
+        <p>Set this keyword to the GZIP effort level (1-9). If the compression type for the variable is not GZIP (5), no action is performed.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006308"></a><a name="CDF_1744428779_1026493_Keywords_CDF_COMPRESSION_"></a>VARIABLE </h3>
+        <p>Set this keyword to the name of a variable or a variable index to set the current variable. This keyword is mandatory when queering/setting the compression parameters of a rVariable or zVariable. Note that if VARIABLE is set to the index of a zVARIABLE, the ZVARIABLE keyword must also be set. If ZVARIABLE is not set, the variable is assumed to be an rVariable.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006311"></a><a name="CDF_1744428779_1019982_Keywords_CDF_COMPRESSION_"></a>ZVARIABLE </h3>
+        <p>Set this keyword if the current variable is a zVARIABLE and is referred to by index in the VARIABLE keyword. For example:</p>
+        <p class="Code">CDF_COMPRESSION, id, VARIABLE=0, /ZVARIABLE,$ &#160;&#160;&#160;GET_VAR_COMPRESSION=vComp</p>
+        <h2 class="API"><a name="CDF_1744428779_1020062_PageTOC_CDF_COMPRESSION_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="CDF_1744428779_1028607_PageTOC_CDF_COMPRESSION_"></a>See Also</h2>
+        <p><a href="CDF_CONTROL.htm#CDF_1744428779_1006392">CDF_CONTROL</a>, <a href="CDF_CREATE.htm#CDF_1744428779_1006635">CDF_CREATE</a>, <a href="CDF_OPEN.htm#CDF_1744428779_1007948">CDF_OPEN</a>, <a href="CDF_VARNUM.htm#CDF_1744428779_1008959">CDF_VARNUM</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

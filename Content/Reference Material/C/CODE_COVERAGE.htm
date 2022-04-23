@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>CODE_COVERAGE</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">CODE_COVERAGE</span>
+        </div>
+        <h1 class="Routine"><a name="kanchor269"></a>CODE_COVERAGE</h1>
+        <p>The CODE_COVERAGE function returns information on which lines of code within a routine were not executed. You can use the CODE_COVERAGE function to find unneeded code paths within your IDL&#160;code, or to determine if your unit tests are exercising all of your code.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>IDL automatically keeps track of code coverage for all compiled routines. There is no additional overhead to do this. You do not need to "enable" code coverage. You can simply call the CODE_COVERAGE function at any time to get an up-to-date snapshot of the executed and non-executed lines for your routines.</p>
+        <h2 class="API">Example</h2>
+        <p>Save the following code in a file and then compile the code (but do not run it):</p>
+        <p class="Code">function ex_codecover</p>
+        <p class="Code_Indented">PRINT, 2+2</p>
+        <p class="Code_Indented">; not reached</p>
+        <p class="Code_Indented">if (0) then begin</p>
+        <p class="Code_Indented2">PRINT, "never reached"</p>
+        <p class="Code_Indented">endif else begin</p>
+        <p class="Code_Indented2">PRINT, "reached"</p>
+        <p class="Code_Indented">endelse</p>
+        <p class="Code_Indented">return, 1</p>
+        <p class="Code">end</p>
+        <p>Call the CODE_COVERAGE routine and print the results:</p>
+        <p class="Code">r = CODE_COVERAGE('ex_codecover', EXECUTED=e)</p>
+        <p class="Code">PRINT, 'Lines not executed: ', r.ToString()</p>
+        <p class="Code">PRINT, 'Lines executed: ', e.ToString()</p>
+        <p>IDL prints:</p>
+        <p class="Code">Lines not executed:            1           2           4           5           7           9</p>
+        <p class="Code">Lines executed:            0</p>
+        <p>Now call the function and then call CODE_COVERAGE:</p>
+        <p class="Code">void = EX_CODECOVER()</p>
+        <p class="Code">r = CODE_COVERAGE('ex_codecover', EXECUTED=e)</p>
+        <p class="Code">PRINT, 'Lines not executed: ', r.ToString()</p>
+        <p class="Code">PRINT, 'Lines executed: ', e.ToString()</p>
+        <p>IDL prints:</p>
+        <p class="Code">Lines not executed:            5</p>
+        <p class="Code">Lines executed:            1           2           4           7           9</p>
+        <p>See the end of this topic for the rules on what is considered a "line of code."</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = CODE_COVERAGE(&#160;<i>Routine</i>,&#160;/CLEAR, EXECUTED=<i>variable</i>, /FUNCTION, /INCLUDE_END, NLINES=<i>variable</i>, /QUIET )</p>
+        <h2 class="API">Return Value</h2>
+        <p>The <i>Result</i> is an integer array containing the line numbers of <i>Routine</i> which were <i>not</i> executed. If all lines were executed then <i>Result</i> is a scalar 0. The line numbers in <i>Result</i> are relative to the <code>.pro</code> file that contains the routine, with the count starting at line 1.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Routine</h3>
+        <p>A string giving the name of the user-written procedure or function to analyze. To be successful, the routine must have already been compiled. IDL will first look for a procedure with the given name, and if it cannot find one, it will then look for a function. You can use the FUNCTION keyword to force IDL&#160;to look only for a function.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>If you are analyzing a Main program you should use "$MAIN$" as the name.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">CLEAR </h3>
+        <p>Set this keyword to clear the code coverage results for <i>Routine</i>.<br /></p>
+        <h3 class="Keyword">EXECUTED</h3>
+        <p>Set this keyword to a named variable. On return, this variable will be set to an integer array containing the line numbers of <i>Routine</i> which <i>were</i> executed. If none of the lines were executed then this variable will be set to a scalar 0.</p>
+        <h3 class="Keyword">FUNCTION</h3>
+        <p>By default, CODE_COVERAGE first looks for a procedure with the given <i>Routine</i> name. If it cannot find a procedure then it automatically looks for a function. This works fine in all cases except when there is a procedure and a function with the same name. In this case, you can set the FUNCTION keyword to force CODE_COVERAGE to only look for a function.</p>
+        <h3 class="Keyword">INCLUDE_END</h3>
+        <p>By default, CODE_COVERAGE does not include the END statement when computing executed or un-executed lines. This is because for most functions, the RETURN statement will be used to exit from the function and the END statement will never be reached. Even for procedures, you can use RETURN to exit from the procedure and again the END will not be reached. In all of these cases, if the END statements were included, then you would almost always have that line number in your <i>Result</i>, which could be confusing.</p>
+        <p>However, there may be cases where you want to know if a routine reached the end without hitting a RETURN. In these cases you can set INCLUDE_END to include the END statement within the list of executed or un-executed lines.</p>
+        <h3 class="Keyword">NLINES</h3>
+        <p>Set this keyword to a named variable. On return, this variable will contain the total number of lines of code within the routine. This will always be equal to the total number of elements in <i>Result</i> and EXECUTED, and is provided simply as a convenience.</p>
+        <h3 class="Keyword">QUIET</h3>
+        <p>Normally, if IDL&#160;cannot find <i style="text-decoration: none;">Routine</i> in its list of compiled routines, then CODE_COVERAGE will throw an error. If you set the QUIET keyword, then CODE_COVERAGE will quietly return –1 for the result (EXECUTED will also be set to –1, and NLINES will be set to 0).</p>
+        <h2 class="API">Definition of Lines of Code</h2>
+        <p>When computing the "lines of code" that were executed, IDL&#160;only looks at certain lines and ignores others. The following are considered "lines of code":</p>
+        <ul>
+            <li value="1">All expressions and assignments</li>
+            <li value="2">"Begin" statements such as <code>if</code>, <code>case</code>, <code>for</code>, <code>foreach</code>, <code>repeat</code>,  <code>switch</code>, <code>until</code>, and <code>while</code>.</li>
+        </ul>
+        <p>The following are not considered "lines of code" and are ignored:</p>
+        <ul>
+            <li value="1">Comment lines</li>
+            <li value="2">Empty case and switch selectors</li>
+            <li value="3">"End" statements such as <code>endif</code>, <code>endcase</code>, <code>endelse</code>, <code>endfor</code>, <code>endforeach</code>, and <code>endwhile</code></li>
+            <li value="4">The END statement at the end of the routine (unless INCLUDE_END is set)</li>
+        </ul>
+        <p>If you have multiple statements on a line, separated by "&amp;" characters, then each statement will be considered as a separate "line". In this case, the same line number will be returned multiple times in the result (or in EXECUTED). For example, imagine you have the following lines at the end of your function:</p>
+        <p class="Code">18: PRINT,"getting close..."</p>
+        <p class="Code">19: PRINT,"returning..."<br /></p>
+        <p class="Code">20: a=3 &amp; return,a &amp; PRINT,2+2</p>
+        <p class="Code">21: PRINT,"I already returned..."</p>
+        <p class="Code">22: end</p>
+        <p>After this code is executed, calling CODE_COVERAGE will return [20, 21], since the "print,2+2" and the following line were never executed (note that the "end" on line 22 is not included). The EXECUTED variable will contain [18, 19, 20, 20] since both the "a=3" and "return,a" statements were executed.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="../P/PROFILER.htm">PROFILER</a>, <a href="../T/TIC.htm">TIC</a>, <a href="../T/TOC.htm">TOC</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

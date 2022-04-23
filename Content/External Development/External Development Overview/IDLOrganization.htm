@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|External Development Overview">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDL Organization</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="EDGOverview.htm">External Development Overview</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDL Organization</span>
+        </div>
+        <h1><a name="kanchor5421"></a>IDL Organization</h1>
+        <p>In order to properly write code to be linked with IDL, it is necessary to understand a little about its internal operation. This section is intended to give just enough background to understand the material that follows. </p>
+        <p>Traditional interpreted languages work according to the following algorithm:</p>
+        <p class="Code">while (statements remaining) { </p>
+        <p class="Code_Indented">Get next statement.</p>
+        <p class="Code_Indented">Perform lexical analysis and parse statement. </p>
+        <p class="Code_Indented">Execute statement.</p>
+        <p class="Code">}</p>
+        <p>This description is accurate at a conceptual level, and most early interpreters did their work in exactly this way. However, this scheme is inefficient because:</p>
+        <ul>
+            <li value="1">The meaning of each statement is determined by the relatively expensive operations of lexical analysis, parsing, and semantic analysis each and every time the statement is encountered.</li>
+            <li value="2">Since each statement is considered in isolation, any statement that requires jumping to a different location in the program will require an expensive search for the target location. Usually, this search starts at the top of the file and moves forward until the target is found.</li>
+        </ul>
+        <p>To avoid these problems, IDL uses a two-step process in which compilation and interpretation are separate. </p>
+        <p>The core of the system is the interpreter. The interpreter implements a simple, stack-based postfix language in which each instruction corresponds to a primitive of the IDL language. This internal form is a compact binary version of the IDL language routine. Routines written in the IDL language are compiled into this internal form by the IDL compiler when the .RUN executive command is issued, or when any other command requires a new routine to be executed. Once the IDL routine is compiled, the original version is ignored, and all references to the routine are to the compiled version.</p>
+        <p>Some of the advantages of this organization are:</p>
+        <ul>
+            <li value="1">The expensive compilation process is only performed once, no matter how often the resulting code is executed.</li>
+            <li value="2">Statements are not considered in isolation, so the compiler keeps track of the information required to make jumping to a new location in the program fast.</li>
+            <li value="3">The binary internal form is much faster to interpret than the original form.</li>
+            <li value="4">The internal form is compact, leading to better use of main memory, and allowing more code to fit in any memory cache the computer might be using.</li>
+        </ul>
+        <h2>The Interpreter Stack</h2>
+        <p>The primary data structure in the interpreter is the stack. The stack contains pointers to variables, which are implemented by <b>IDL_VARIABLE</b> structures (see <a href="../IDLInternals - Variables/IDLVARIABLEStructure.htm">The IDL_VARIABLE Structure</a>). Pointers to <b>IDL_VARIABLEs</b> are referred to as <b>IDL_VPTRs</b>. Most interpreter instructions work by removing a predefined number of elements from the stack, performing their function, and then pushing the <b>IDL_VPTR</b> to the resulting <b>IDL_VARIABLE</b> back onto the stack. </p>
+        <p>The removed items are the arguments to the instruction, and the new element represents the result. In this sense, the IDL interpreter is no different from any other postfix language interpreter. When an IDL routine is compiled, the compiler checks the number of arguments passed to each system routine against the minimum and maximum number specified in an internal table of routines, and signals an error if an invalid number of arguments is specified.</p>
+        <p>At execution time, the interpreter instructions that execute system procedures and functions operate as follows:</p>
+        <ol>
+            <li value="1">  Look up the requested routine in the internal table of routines.</li>
+            <li value="2">  Execute the routine that implements the desired routine.</li>
+            <li value="3">  Remove the arguments from the stack.</li>
+            <li value="4">  If the routine was a function, push its result onto the stack.</li>
+        </ol>
+        <p>Thus, the compiler checks for the proper number of arguments, and the interpreter does all the work related to pushing and popping elements from the stack. The called function need only worry about executing its operation and providing a result.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Images">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Image with a Map Projection</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/images_gallery.htm">Images</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Image with a Map Projection</span>
+        </div>
+        <h1><a name="kanchor4218"></a>Image with a Map Projection</h1>
+        <p>This example demonstrates how to download a map image from <a href="http://www.openstreetmap.org/" target="_blank" title="Link to Open Street Map website" alt="Link to Open Street Map website">OpenStreetMap</a> and display the image in the correct map projection.</p>
+        <p>
+            <img src="../../IDL Graphics/images/reykjavik.png" />
+        </p>
+        <h2 class="API">Download a Map</h2>
+        <p>Use the <a href="../../Object Classes/Network/IDLnetURL.htm" title="Go to the IDLnetURL object documentation" alt="Go to the IDLnetURL object documentation">IDLnetURL</a> object to create a map using the <a href="http://wiki.openstreetmap.org/wiki/Static_map_images" target="_blank" title="staticMapLite API Wiki" alt="staticMapLite API Wiki">OpenStreetMap staticMapLite</a> API, then save the map image as a PNG:</p>
+        <p class="Code">url = "http://staticmap.openstreetmap.de/staticmap.php?" + $</p>
+        <p class="Code">&#160;&#160;&#160;"center=64.1425,-21.93&amp;zoom=14&amp;size=700x668"</p>
+        <p class="Code">netObject = IDLnetURL()</p>
+        <p class="Code">!null = netObject.Get(URL=url, FILENAME="reykjavik.png")</p>
+        <p class="Code">netObject = 0</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Load the newly-created file</p>
+        <p class="Code">READ_PNG, "reykjavik.png", img</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Or load the file from the IDL distribution if the URL fails</p>
+        <p class="Code">file = FILEPATH('reykjavik.png', SUBDIRECTORY = ['examples', 'data'])</p>
+        <p class="Code">READ_PNG, file, img</p>
+        <h2 class="API">Display the Map Image with the Map Projection</h2>
+        <p>Both the Google Maps API and the OpenStreetMap API provide static map images in the Mercator projection with a spherical ellipsoid of radius 6,378,137 meters. To correctly display these map images in IDL, convert the center longitude/latitude and map zoom factor into the bounding box for the image, in meters.</p>
+        <p class="Code">centerLon = -21.93d</p>
+        <p class="Code">centerLat = 64.1425d</p>
+        <p class="Code">zoom = 14</p>
+        <p class="Code">Re = 6378137  ; Radius of the Earth</p>
+        <p class="Code">resolution = (2*!DPI*Re)/(256*2d^zoom)  ; meters/pixel</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; The image is 700 pixels wide by 668 pixels tall</p>
+        <p class="Code">deltax = 700*resolution  ; meters</p>
+        <p class="Code">deltay = 668*resolution  ; meters</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Convert the map center to spherical Mercator coordinates</p>
+        <p class="Code">; Create a hidden map object to do the conversions.</p>
+        <p class="Code">m = MAP('Mercator', /BUFFER, $</p>
+        <p class="Code">&#160;&#160;&#160;SEMIMAJOR_AXIS=6378137d, SEMIMINOR_AXIS=6378137d)</p>
+        <p class="Code">uv = m.MapForward(centerLon, centerLat)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Compute the image bounding box in spherical Mercator coordinates</p>
+        <p class="Code">x0 = uv[0] - deltax/2  ; meters</p>
+        <p class="Code">x1 = uv[0] + deltax/2  ; meters</p>
+        <p class="Code">y0 = uv[1] - deltay/2  ; meters</p>
+        <p class="Code">y1 = uv[1] + deltay/2  ; meters</p>
+        <p class="Code">m.Close</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRINT, [x0, y0, x1, y1]</p>
+        <p>IDL&#160;prints:</p>
+        <p class="Code">-2444580.6&#160; &#160;     9382851.8 &#160;    -2437892.3       &#160;9389234.3</p>
+        <p>Now that  the bounding box is in meters (image coordinates), you have the information you need to construct the map. Use the image bounding box to specify the image location and dimensions.</p>
+        <p class="Code">; Specify the map projection and the ellipsoid for the image.</p>
+        <p class="Code">; Use this same map projection for the grid,</p>
+        <p class="Code">; and for any other images, contours, or polygons that are</p>
+        <p class="Code">; added to this map.</p>
+        <p class="Code">im = IMAGE(img, GRID_UNITS='meters', $</p>
+        <p class="Code">&#160;&#160;&#160;MAP_PROJECTION='Mercator', $</p>
+        <p class="Code">&#160;&#160;&#160;SEMIMAJOR_AXIS=6378137d, SEMIMINOR_AXIS=6378137d, $</p>
+        <p class="Code">&#160;&#160;&#160;DIMENSIONS=[800, 800], $</p>
+        <p class="Code">&#160;&#160;&#160;IMAGE_LOCATION=[x0, y0], $</p>
+        <p class="Code">&#160;&#160;&#160;IMAGE_DIMENSIONS=[deltax, deltay])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Retrieve the MapGrid object and set some properties.</p>
+        <p class="Code">mg = im.mapgrid</p>
+        <p class="Code">mg.LINESTYLE = 1</p>
+        <p class="Code">mg.LABEL_POSITION = 1 </p>
+        <p class="Code">FOREACH l, mg.longitudes DO l.LABEL_ANGLE = 0</p>
+        <p class="Code">FOREACH l, mg.latitudes DO l.LABEL_ANGLE = 270</p>
+        <p class="Code">mg.BOX_AXES = 1</p>
+        <p class="Code">mg.BOX_THICK = 3</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Overplot symbols or text using longitude/latitude coordinates.</p>
+        <p class="Code">s = SYMBOL(-21.922311d, 64.147597d, 'star', /DATA, $</p>
+        <p class="Code">&#160;&#160;&#160;SYM_SIZE=4, /SYM_FILLED, SYM_FILL_COLOR='yellow')</p>
+        <p class="Code">t = TEXT(-21.9215d, 64.148d, 'Sólfar (Sun Voyager)', /DATA, $</p>
+        <p class="Code">&#160;&#160;&#160;/FILL_BACKGROUND, FILL_COLOR='white') </p>
+        <p>IDL displays the resulting image of Reykjavik:</p>
+        <p>
+            <img src="../../IDL Graphics/images/ImageWithMapProjectionOutput.png" title="Resulting map with correct projection" />
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

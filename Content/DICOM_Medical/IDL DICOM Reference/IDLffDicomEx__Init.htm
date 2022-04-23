@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|Medical Imaging in IDL|IDL DICOM Reference|IDLffDicomEx">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLffDicomEx::Init
+        </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Expanded DICOM Support in IDL/ExpandedDICOMFunctionality.htm">Medical Imaging in IDL</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="DICOMEX_GETCONFIGFILEPAT.htm">IDL DICOM Reference</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLffDicomEx::Init</span>
+        </div>
+        <h1 class="ObjMethod">IDLffDicomEx::Init
+        </h1>
+        <p>The IDLffDicomEx::Init method initializes a IDLffDicomEx object. The IDLffDicomEx object allows you to read and write DICOM files, or create a new DICOM file based on keyword settings. This method can be used to create any type of DICOM file, including files without image data as defined by the SOP Class. See <a href="#dicom_ex_4010397576_1007918" class="selected">Creating a New DICOM File</a> for more information. The original DICOM file is always preserved. To change the attributes of a DICOM file, you must either clone the original file or create a new file. See the following sections for details on using keywords to control how a file can be modified:</p>
+        <ul>
+            <li value="1"><a href="#dicom_ex_4010397576_1007871" class="selected">Accessing a DICOM File in Read-Only Mode</a>
+            </li>
+            <li value="2"><a href="#dicom_ex_4010397576_1007877" class="selected">Cloning a DICOM File</a>
+            </li>
+            <li value="3"><a href="#dicom_ex_4010397576_1007918" class="selected">Creating a New DICOM File</a>
+            </li>
+            <li value="4"><a href="#dicom_ex_4010397576_1007979" class="selected">Accessing an Incomplete DICOM File</a>
+            </li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you don’t need pixel data, you can set the <a href="IDLffDicomEx.htm">NO_PIXEL_DATA</a> property when creating an IDLffDicomEx object. This offers a significant performance improvement and should be used when you only need access to attribute information. To initialize the value of a property, specify the property name as a keyword set equal to the appropriate property value. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Init methods are special lifecycle methods, and as such cannot be called outside the context of object creation. This means that in most cases, you cannot call the Init method directly. There is one exception to this rule: if you write your own subclass of this class, you can call the Init method from within the Init method of the subclass. </p>
+        <h3><a name="dicom_ex_4010397576_1007871"></a><a name="dicom_ex_4010397576_59529"></a>Accessing a DICOM Fi<a name="kanchor5587"></a>le in Read-Only Mode</h3>
+        <p>To open an existing DICOM file in <a name="kanchor5588"></a><a name="kanchor5589"></a>read-only mode, create a new IDLffDicomEx object and specify only a value for the <i>Filename</i> argument, indicating the file to open. You can access all of the DICOM file attributes, but any attempt to write changes to the file using the <a href="IDLffDicomEx__Commit.htm">IDLffDicomEx::Commit</a> method will fail. The following code opens a selected DICOM file in read-only mode:</p>
+        <p class="Code">; Select a DICOM file to examine. </p>
+        <p class="Code">sFile = DIALOG_PICKFILE( $</p>
+        <p class="Code">    PATH=FILEPATH('',SUBDIRECTORY=['examples','data']), $</p>
+        <p class="Code">    TITLE='Select DICOM Patient File', FILTER='*.dcm')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Open the selected file in read-only mode.</p>
+        <p class="Code"> oImg = OBJ_NEW('IDLffDicomEx', sfile)</p>
+        <h3><a name="dicom_ex_4010397576_1007877"></a><a name="dicom_ex_4010397576_59012"></a>Cloning a DICOM File<a name="kanchor5590"></a></h3>
+        <p>To modify an existing <a name="kanchor5591"></a>DICOM file, you must clone the file by setting the following keywords and arguments:</p>
+        <ul>
+            <li value="1">Set the <i>Filename</i> argument to specify the path and name of the new file</li>
+            <li value="2">Set CLONE to the name of the existing DICOM file to be cloned</li>
+        </ul>
+        <p class="NoteIndented">Init will fail if the file defined by <i>Filename</i> already exists. </p>
+        <p>The following clones the selected file:</p>
+        <p class="Code">; Select a DICOM file to clone.</p>
+        <p class="Code">sFile = DIALOG_PICKFILE( $</p>
+        <p class="Code">    PATH=FILEPATH('',SUBDIRECTORY=['examples','data']), $</p>
+        <p class="Code">    TITLE='Select DICOM Patient File', FILTER='*.dcm', $</p>
+        <p class="Code">    GET_PATH=path)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Write the file into the temp directory and then </p>
+        <p class="Code">; create a clone (aImgClone.dcm) of the selected file (sfile).</p>
+        <p class="Code">clonefile = GETENV('IDL_TMPDIR')+PATH_SEP()+'aImgClone.dcm'</p>
+        <p class="Code">   oImg = OBJ_NEW('IDLffDicomEx', clonefile, CLONE=sfile)</p>
+        <p>When you clone a file, attributes shown in the following table are modified. Unless the internally-generated values equal the number of characters in the original tags, the value of the metadata Group Length tag (0002,0000) is also updated. All other DICOM attribute values are identical to the original attributes. </p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>DICOM Tag</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Modification</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>(0002,0003)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Media Storage SOP Instance UID is set to a new <span class="DocumentTitleCompanyName">Exelis VIS</span>-generated value.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>(0002,0012)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Implementation Class UID is set to a new <span class="DocumentTitleCompanyName">Exelis VIS</span>-generated value.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>(0002,0013)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Implementation Version Name is set to the <span class="DocumentTitleCompanyName">Exelis VIS</span> value.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>(0002,0016)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Source Application Entity Title is set to the <span class="DocumentTitleCompanyName">Exelis VIS</span> value. </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>(0008,0018)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>SOP Instance UID is set to a new <span class="DocumentTitleCompanyName">Exelis VIS</span>-generated value.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>These attributes are written to the cloned DICOM file when you call the <a href="IDLffDicomEx__Commit.htm">IDLffDicomEx::Commit</a> method.</p>
+        <p>The resulting cloned file will allow you to modify any attributes that belong to the specified SOP Class for the cloned file. If the NON_CONFORMING keyword is set, then you can set any attribute regardless of the SOP Class of the cloned file.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>It may also be necessary to modify the Series Instance UID (0020,000E) when cloning a file so that when the cloned file is pushed to a PACS workstation it stored in a new series.</p>
+        <h3><a name="dicom_ex_4010397576_1007918"></a><a name="kanchor5592"></a><a name="dicom_ex_4010397576_90330"></a>Creating a New DICOM File</h3>
+        <p>To create a new <a name="kanchor5593"></a>DICOM file, you must set the following:</p>
+        <ul>
+            <li value="1">Set the <i>Filename</i> argument to specify the path and name of the new file</li>
+            <li value="2">Set the SOP_CLASS keyword to an appropriate value to indicate the type of DICOM file to create</li>
+            <li value="3">Set CREATE keyword to indicate this is a new DICOM file </li>
+        </ul>
+        <p>The following code creates a new file with a SOP Class of standard Magnetic Resonance (MR):</p>
+        <p class="Code">; Create a new image named aMRImg.dcm in the current</p>
+        <p class="Code">; working directory. </p>
+        <p class="Code">oImage = OBJ_NEW('IDLffDicomEx', 'aMRImg.dcm', $</p>
+        <p class="Code">&#160;&#160;&#160;SOP_CLASS = 'STANDARD_MR', /CREATE, /NON_CONFORMING )</p>
+        <p>When a new file is created, all defined tags for the chosen SOP Class are present, but do not have a value. You must use <a href="IDLffDicomEx__SetValue.htm">IDLffDicomEx::SetValue</a> or <a href="IDLffDicomEx__SetProperty.htm">IDLffDicomEx::SetProperty</a> to set valid values prior to calling the GetValue or GetProperty methods. These methods will return an error if you attempt to return information for an attribute that does not have a value. Any attribute that you have not set a value for will not be persisted in the file when you call Commit. Use SetValue to configure the attributes required to create a valid DICOM file for the chosen SOP class. (Complete details can be found in <i>Digital Imaging and Communications in Medicine (DICOM) - Part 3: Information Object Definitions</i>.) To set attributes that are not defined for the SOP class, set the NON_CONFORMING keyword. Creating a new file sets values for the following attributes:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>DICOM Tag</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Modification</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>(0002,0002)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Media Storage SOP Class UID is set to the unique identifier associated with the SOP_CLASS keyword.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>(0002,0003)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Media Storage SOP Instance UID is set to a new <span class="DocumentTitleCompanyName">Exelis VIS</span>-generated value.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>(0002,0010)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Transfer Syntax UID is set to Explicit VR Little Endian by default. After pixel data has been set on the new image, you can use the <a href="IDLffDicomEx__ChangeTransferSyntax.htm">IDLffDicomEx::ChangeTransferSyntax</a> method to change the file compression.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>(0002,0012)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Implementation Class UID is set to a new <span class="DocumentTitleCompanyName">Exelis VIS</span>-generated value.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>(0002,0013)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Implementation Version Name is set to the<span class="DocumentTitleCompanyName">Exelis VIS</span> value.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>(0002,0016)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Source Application Entity Title is set to the <span class="DocumentTitleCompanyName">Exelis VIS</span> value. </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>(0008,0016)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>SOP Class UID is set to the unique identifier associated with the SOP_CLASS keyword.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>(0008,0018)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>SOP Instance UID is set to a new<span class="DocumentTitleCompanyName">Exelis VIS</span>-generated value.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>These attributes are written to the new DICOM file when you call the <a href="IDLffDicomEx__Commit.htm">IDLffDicomEx::Commit</a> method.</p>
+        <p>When creating a new DICOM file it is also a good idea to set the following tags. These tags are commonly needed when transmitting a file over a DICOM network. </p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>DICOM Tag</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>(0010,0010)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Patient Name.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>(0010,0020)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Patient ID.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>(0020,000D)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Study Instance UID. When creating a new study the Image Instance UID can be used as a based value to which a unique suffix can be added. When adding an image to an existing study the existing study instance UID can be used.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>(0020,000E)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Series Instance UID. When creating a new series the Image Instance UID can be used as a based value to which a unique suffix can be added. When adding an image to an existing series the existing series instance UID can be used.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>The file is written when the <a href="IDLffDicomEx__Commit.htm">IDLffDicomEx::Commit</a> method is called. Attempting to overwrite a file with an existing file name will fail. </p>
+        <h4>Creating New Files That Use Alternative Character Sets</h4>
+        <p>Several Value Representations accept ESC characters from alternative character sets. In such instances, the text will be interpreted as specified by Specific Character Set attribute (0008,0005). For example, if you are setting Japanese escape characters to an attribute value in a new file, you first need to specify your character sets as in the following code:</p>
+        <p class="Code">; Given a IDLffDicomEx object named oDCM:</p>
+        <p class="Code">val = STRARR(2)</p>
+        <p class="Code">val[0] = 'ISO 2022 IR 87'</p>
+        <p class="Code">val[1] = 'ISO 2022 IR 13' </p>
+        <p class="Code">oDCM-&gt;SetValue, '0008,0005', 'CS', val</p>
+        <p>See Annex H of <i>Digital Imaging and Communications in Medicine (DICOM) - Part&#160;5: Data Structures and Encoding)</i> for more information on Japanese character sets. </p>
+        <h3><a name="dicom_ex_4010397576_1007979"></a><a name="dicom_ex_4010397576_71934"></a>Accessing an <a name="kanchor5594"></a>Incomplete DICOM File</h3>
+        <p>A file that conforms to the <a name="kanchor5595"></a>DICOM Part 10 standard consists of a <a name="kanchor5596"></a>preamble, <a name="kanchor5597"></a>metadata, and a body section. Each section contains an even number of bytes. Not all files have all three sections; some files may be missing the preamble, or the preamble and metadata. Not all files contain an even number of bytes in each section. Files that do not conform to the DICOM Part 10 standard are considered <i>invalid</i>, but it is possible to access the data in these files using the IDLffDicomEx object as described in the following sections. </p>
+        <h4>Files With a Missing Preamble</h4>
+        <p>The IDLffDicomEx object will attempt to read the transfer syntax from the (0002,&#160;0010) tag and open a file with a missing preamble. The following table shows each file type that can be opened when the preamble section is missing. </p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Image Type / Transfer Syntax</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Recoverable</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Implicit VR Little Endian</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Yes</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Explicit VR Little Endian</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Yes</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Explicit VB Big Endian</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Yes</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>JPEG Baseline</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Yes</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>JPEG Extended (Process 2 and 4)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Yes</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>JPEG Lossless, Non-Hierarchical</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Yes</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>JPEG 2000 Lossless</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Yes</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>JPEG 2000</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Yes</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4>Files With Missing Preamble and Metadata Sections</h4>
+        <p>The IDLffDicomEx object will attempt to read a file that is missing the preamble and metadata by determining the transfer syntax from the byte ordering and VR type of the first tag in the file. A file containing JPEG pixel data cannot be opened as it is impossible to determine the compression format of the pixel data when the metadata tags are not in the file. The following table shows each file type that can be opened when missing preamble and metadata sections. </p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Image Type / Transfer Syntax</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Recoverable</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Implicit VR Little Endian</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Yes</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Explicit VR Little Endian</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Yes</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Explicit VB Big Endian</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Yes</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>JPEG Baseline</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>JPEG Extended (Process 2 and 4)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>JPEG Lossless, Non-Hierarchical</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>JPEG 2000 Lossless</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>JPEG 2000</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>The IDLffDicomEx object will add metadata tags to the file so that the file can be successfully saved as a part 10 DICOM file using the <a href="IDLffDicomEx__Commit.htm">IDLffDicomEx::Commit</a> method. The following tags will be written in the metadata section of the recovered file.</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>DICOM Tag</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Modification</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>(0002,0002)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Media Storage SOP Class UID is set to the unique identifier associated with the SOP_CLASS keyword.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>(0002,0003)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Media Storage SOP Instance UID is set to a new <span class="DocumentTitleCompanyName">Exelis VIS</span>-generated value.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>(0002,0010)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Transfer Syntax UID is set to Implicit VR Little Endian, Explicit VR Little Endian, or Explicit VB Big Endian based on byte ordering and VR type of the first tag in the file. </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>(0002,0012)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Implementation Class UID is set to a new <span class="DocumentTitleCompanyName">Exelis VIS</span>-generated value.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>(0002,0013)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Implementation Version Name is set to the <span class="DocumentTitleCompanyName">Exelis VIS</span> value.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>(0002,0016)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Source Application Entity Title is set to the <span class="DocumentTitleCompanyName">Exelis VIS</span> value. </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>A new instance UID (0002,0003) is created for the recovered file since the IDLffDicomEx object never modifies the original input file.</p>
+        <h4>Files With an Odd Number of Bytes</h4>
+        <p>A file that conforms to the DICOM Part 10 standard always includes an even number of bytes in each section. If the IDLffDicomEX object encounters a file with a section that consists of an odd number of bytes, IDL will append a zero at the end of the last block of data read and issue a warning message noting that the section contained an odd number of bytes.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Use files with odd-length sections with extreme caution. Files with an odd number of bytes are not valid DICOM files.</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1125168"></a><a name="dicom_ex_4010397576_1008114_PageTOC_IDLffDicomEx"></a>Syntax</h2>
+        <p class="Syntax"><i>Obj </i>= OBJ_NEW('IDLffDicomEx' (<i>Filename</i>, [,&#160;<a href="#dicom_ex_4010397576_1008138" class="selected">CLONE</a>=<i>string</i>] [,&#160;/<a href="#dicom_ex_4010397576_1031121" class="selected">CREATE</a>] [,&#160;<a href="#dicom_ex_4010397576_1008141" class="selected">SOP_CLASS</a>=<i>string</i>] [,&#160;/<a href="#dicom_ex_4010397576_1008285" class="selected">NON_CONFORMING</a>]&#160;) </p>
+        <p>or</p>
+        <p class="Syntax"><i>Result = Obj</i>-&gt;[IDLffDicomEx::]Init( <i>Filename</i> [,&#160;<a href="#dicom_ex_4010397576_1008138" class="selected">CLONE</a>=<i>string</i>] [,&#160;/<a href="#dicom_ex_4010397576_1031121" class="selected">CREATE</a>] [,&#160;<a href="#dicom_ex_4010397576_1008141" class="selected">SOP_CLASS</a>=<i>string</i>] [,&#160;/<a href="#dicom_ex_4010397576_1008285" class="selected">NON_CONFORMING</a>]&#160;) <i>(In a lifecycle method only.</i>)</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1008118"></a><a name="dicom_ex_4010397576_1008118_PageTOC_IDLffDicomEx"></a>Return Value</h2>
+        <p>When this method is called indirectly, as part of the call to the OBJ_NEW function, the return value is an object reference to the newly-created object. </p>
+        <p>When called directly within a subclass Init method, the return value is 1 if initialization was successful, or 0 otherwise. </p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1008121"></a><a name="dicom_ex_4010397576_1008121_PageTOC_IDLffDicomEx"></a>Arguments</h2>
+        <h3 class="Argument">FileName</h3>
+        <p>Set this keyword to a string indicating the filename of a DICOM file. This can either be an absolute path (‘<code>C:\my_dcm_file.dcm</code>’), or simply a filename (‘<code>my_dcm_file.dcm</code>’). When only a filename is provided, the file is located in the IDL working directory. The exact meaning of the <i>FileName</i> argument depends on what keywords are set as follows:</p>
+        <ul>
+            <li value="1">If no keywords are set, <i>FileName</i> indicates the existing DICOM file to open in read-only mode. Any attempt to commit changes to this file (using the IDLffDicomEx::Commit method) will fail. An error is issued if the specified file does not exist. </li>
+            <li value="2">If the CLONE keyword is set, <i>FileName</i> specifies the name of the new, cloned file. This file will contain a copy of the file specified by the CLONE keyword. An error is issued if the value specified for <i>FileName</i> already exists. </li>
+            <li value="3">If the CREATE keyword is set, <i>FileName</i> specifies the name of the new DICOM file to be created. An error is issued if the value specified for <i>FileName</i> already exists. </li>
+        </ul>
+        <h2 class="API"><a name="dicom_ex_4010397576_1008123"></a><a name="dicom_ex_4010397576_1008123_PageTOC_IDLffDicomEx"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dicom_ex_4010397576_1008138"></a><a name="dicom_ex_4010397576_38429"></a>CLONE</h3>
+        <p>Set this keyword to a string specifying path and name of the existing DICOM file to be cloned. Define the name of the new, cloned file using the <i>FileName</i> argument. See <a href="#dicom_ex_4010397576_1007877" class="selected">Cloning a DICOM File</a> for details. </p>
+        <h3 class="Keyword"><a name="dicom_ex_4010397576_1031121"></a><a name="dicom_ex_4010397576_79786"></a>CREATE</h3>
+        <p>Set this keyword to create a new DICOM image with a name specified by the <i>FileName</i> argument. See <a href="#dicom_ex_4010397576_1007918" class="selected">Creating a New DICOM File</a> for details. You must also set the SOP_CLASS keyword when creating a new image. </p>
+        <h3 class="Keyword"><a name="dicom_ex_4010397576_1008141"></a><a name="dicom_ex_4010397576_73118"></a>SOP_CLASS </h3>
+        <p>This keyword is set when creating a new <a name="kanchor5598"></a>DICOM file using the CREATE keyword. </p>
+        <p>Set this keyword to a string consisting of a value from the SOP Class Name column in the following table to define the type of DICOM file that is created. </p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>SOP Class Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>SOP Class UID</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_CR (Computed Radiography)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_DX_PRESENT (Digital X-ray)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.1.1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_DX_PROCESS (Digital X-ray)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.1.1.1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_MG_PRESENT   (Digital Mammography)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.1.2</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_MG_PROCESS (Digital Mammography)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.1.2.1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_IO_PRESENT (Digital Intra-oral)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.1.3</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_IO_PROCESS (Digital Intra-Oral) </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.1.3.1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_CT </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.2</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_US_MF_RETIRED</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.3</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_US_MF</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.3.1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_MR </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.4</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>ENHANCED_MR_IMAGE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.4.1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>MR_SPECTROSCOPY</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.4.2</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_NM_RETIRED</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.5</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_US_RETIRED</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.6</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_US</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.6.1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_SEC_CAPTURE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.7</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>SC_MULTIFRAME_SINGLE_BIT </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.7.1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>SC_MULTIFRAME_GRAYSCALE_BYTE </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.7.2</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>SC_MULTIFRAME_GRAYSCALE_WORD </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.7.3</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>SC_MULTIFRAME_TRUE_COLOR </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.7.4</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_OVERLAY</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.8</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_CURVE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.9</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_MODALITY_LUT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.10</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_VOI_LUT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.11</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_GRAYSCALE_SOFTCOPY_PS</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.11.1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_XRAY_ANGIO</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.12.1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_XRAY_RF</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.12.2</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_XRAY_ANGIO_BIPLANE (retired)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.12.3</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_NM </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.20</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>RAW_DATA</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.66</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_VL_ENDOSCOPIC</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.77.1.1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_VL_MICROSCOPIC</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.77.1.2</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_VL_SLIDE_MICROSCOPIC</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.77.1.3</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_VL_PHOTOGRAPHIC</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.77.1.4</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_BASIC_TEXT_SR</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.88.11</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_ENHANCED_SR</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.88.22</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_COMPREHENSIVE_SR</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.88.33</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_PET (Positron Emission Tomography)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.128</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_PET_CURVE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.129</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_RT_IMAGE </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.481.1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_RT_DOSE </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.481.2</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_RT_STRUCTURE_SET</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.481.3</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_RT_BEAMS_TREAT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.481.4</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STANDARD_RT_PLAN</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.481.5</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>STANDARD_RT_BRACHY_TREAT </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.481.6</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>STANDARD_RT_TREAT_SUM</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>1.2.840.10008.5.1.4.1.1.481.7</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Keyword"><a name="dicom_ex_4010397576_1008285"></a><a name="dicom_ex_4010397576_31602"></a>NON_CONFORMING </h3>
+        <p>This keyword is set only when the CLONE or CREATE keyword is also set. </p>
+        <p>Set this keyword to be able to add any DICOM attribute to a DICOM file regardless of whether or not the attribute is supported by the SOP Class (as defined in <i>Digital Imaging and Communications in Medicine (DICOM) - Part 3: Information Object Definitions</i>). </p>
+        <p>If this keyword is not set, attempting to use <a href="IDLffDicomEx__SetValue.htm">IDLffDicomEx::SetValue</a> to set non-standard attributes will result in an invalid tag error similar to the following:</p>
+        <p class="Code">IDLFFDICOMEX::SETVALUE:  Error: Failed to set value (tag/err), 0018,603F, Tag parameter invalid</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1125625"></a><a name="dicom_ex_4010397576_1028559_PageTOC_IDLffDicomEx"></a>Examples</h2>
+        <p>The following examples show various ways of initializing an IDLffDicomEx object.</p>
+        <h3>Open a DICOM File in Read-only Mode</h3>
+        <p>The following opens a file in read-only mode:</p>
+        <p class="Code">; Select a DICOM file to examine. </p>
+        <p class="Code">sFile = DIALOG_PICKFILE( $</p>
+        <p class="Code">    PATH=FILEPATH('',SUBDIRECTORY=['examples','data']), $</p>
+        <p class="Code">    TITLE='Select DICOM Patient File', FILTER='*.dcm')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Open the selected file in read-only mode.</p>
+        <p class="Code">oImg = OBJ_NEW('IDLffDicomEx', sfile)</p>
+        <p>See the <a href="IDLffDicomEx__EnumerateTags.htm">IDLffDicomEx::EnumerateTags</a> method Examples section for a complete example. </p>
+        <h3>Open and Clone a DICOM File</h3>
+        <p>The following clones the selected file:</p>
+        <p class="Code">; Select a DICOM file.</p>
+        <p class="Code">sFile = DIALOG_PICKFILE( $</p>
+        <p class="Code">    PATH=FILEPATH('',SUBDIRECTORY=['examples','data']), $</p>
+        <p class="Code">    TITLE='Select DICOM Patient File', FILTER='*.dcm', $</p>
+        <p class="Code">    GET_PATH=path)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a clone (aImgClone.dcm) of the selected file (sfile).</p>
+        <p class="Code">oImg = OBJ_NEW('IDLffDicomEx', path + 'aImgClone.dcm', $</p>
+        <p class="Code">    CLONE=sfile)</p>
+        <p>See <a href="#dicom_ex_4010397576_1007877" class="selected">Cloning a DICOM File</a> for details on what DICOM attributes are modified. See the <a href="IDLffDicomEx__GetPixelData.htm">IDLffDicomEx::GetPixelData</a> method “Examples” section for a complete example.</p>
+        <h3><a name="dicom_ex_4010397576_52136"></a>Create a New DICOM File</h3>
+        <p>The following code creates a new file of modality MR:</p>
+        <p class="Code">; Create a new image named aMRImg.dcm in the current</p>
+        <p class="Code">; working directory. </p>
+        <p class="Code">oImage = OBJ_NEW('IDLffDicomEx', 'aMRImg.dcm', $</p>
+        <p class="Code">&#160;&#160;&#160;SOP_CLASS = 'STANDARD_MR', /CREATE, /NON_CONFORMING )</p>
+        <p>See <a href="#dicom_ex_4010397576_1007918" class="selected">Creating a New DICOM File</a> for details on what DICOM attributes are automatically defined when you create a new file. See the <a href="IDLffDicomEx__SetPixelData.htm">IDLffDicomEx::SetPixelData</a> method Examples section for a complete example that creates new monochrome and RGB images. </p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1037004"></a><a name="dicom_ex_4010397576_1037004_PageTOC_IDLffDicomEx"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

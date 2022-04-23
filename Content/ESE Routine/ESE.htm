@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="ESE Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>ESE</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="ESEAPIOverview.htm">ESE Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">ESE</span>
+        </div>
+        <h1 class="Routine"><a name="kanchor4188"></a>ESE</h1>
+        <p>The ESE class provides a set of static methods that are valuable for introspection, finding tasks, controlling jobs and other functionality.</p>
+        <h2 class="API">Methods</h2>
+        <ul>
+            <li value="1"><a href="#FindTask" class="selected">ESE::FindTask</a>
+            </li>
+            <li value="2"><a href="#GetDeserializer" class="selected">ESE::GetDeserializer</a>
+            </li>
+            <li value="3"><a href="#GetSerializer" class="selected">ESE::GetSerializer</a>
+            </li>
+            <li value="4"><a href="#GetServer" class="selected">ESE::GetServer</a>
+            </li>
+            <li value="5"><a href="#GetTask" class="selected">ESE::GetTask</a>
+            </li>
+            <li value="6"><a href="#Join" class="selected">ESE::Join</a>
+            </li>
+            <li value="7"><a href="#SetDeserializer" class="selected">ESE::SetDeserializer</a>
+            </li>
+            <li value="8"><a href="#SetSerializer" class="selected">ESE::SetSerializer</a>
+            </li>
+        </ul>
+        <h2 class="API">Examples</h2>
+        <h3>Example 1</h3>
+        <p>The ESE class makes it easy to find a task by its full name:</p>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 'ese_addition' )</p>
+        <p>and to match on any task with the string 'ortho' in its name:</p>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 'ortho', /REGEX )</p>
+        <p>This is useful if the URI to a task is not known, or if the task ever moves within the folder and services hierarchy.</p>
+        <h3>Example 2</h3>
+        <p>One of the most important features of the ESE class is to be able to effectively suspend program flow while waiting for asynchronous jobs to finish. In this example, the join method is used to wait for the results from several jobs before their results can be merged and IDL execution can continue.</p>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 8181, 'myFunTask' )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">n = 10</p>
+        <p class="Code">jobs = objarr( n )</p>
+        <p class="Code">FOR i = 0, n - 1 do begin</p>
+        <p class="Code_Indented">jobs[i] = Task.Run( a = 1, b = i, /ASYNCHRONOUS )</p>
+        <p class="Code">ENDFOR</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">status = ESE.Join( jobs )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IF ( min( status ) ) THEN&#160;BEGIN</p>
+        <p class="Code_Indented">PRINT, 'Jobs ran successfully.'</p>
+        <p class="Code">ENDIF ELSE BEGIN</p>
+        <p class="Code_Indented">PRINT, 'Uh oh...'</p>
+        <p class="Code">ENDELSE</p>
+        <h3>Example 3</h3>
+        <p>The ESE API provides is the ability to program with just IDL variables, avoiding JSON strings. For example, you can access input and output parameters as IDL variables:</p>
+        <p class="Code">Server = ESE.GetServer( 'localhost', 8181 )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Task = Server.FindTask( 'myFunTask' )</p>
+        <p class="Code">Task.a = 9</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Job = Task.Run( b = 6 )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRINT, Job.c</p>
+        <p>On lines 4 and 6, the parameters a and b are set to the values 9 and 6. On line 8, the parameter c is retrieved. Behind the scenes, the ESE API is converting between IDL values and JSON, which is needed for transport to and from the ESE server.</p>
+        <p>The default types are handled automatically, but custom types can also be handled. For example, if Task.a was an object of type PlanetClass, custom serialization and deserialization routines could be specified to convert back and forth between IDL variables and JSON strings with the following:</p>
+        <p class="Code">ESE.SetSerializer, 'PlanetClass', 'serializePlanet'</p>
+        <p class="Code">ESE.SetDeserializer, 'PlanetClass', 'deserializePlanet'</p>
+        <p>Now, whenever the ESE API needs to transport a variable to the ESE server, it can convert objects of type PlanetClass to JSON and back again.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The datatype (such as PlanetClass) must be used as the parameter's type in the task's description. See <a href="#SetDeserializer" class="selected">ESE::SetSerializer</a> and <a href="#SetDeserializer" class="selected">ESE::SetDeserializer</a> for details on how to write the conversion functions.</p>
+        <h2 class="API">Properties</h2>
+        <h3 class="Property">ASYNCHRONOUS (Get)</h3>
+        <p>A constant for 'asynchronous'.</p>
+        <h3 class="Property">SYNCHRONOUS (Get)</h3>
+        <p>A constant for 'synchronous'.</p>
+        <h3 class="Property">JOBCANCELLED (Get)</h3>
+        <p>A constant for 'JobCancelled'.</p>
+        <h3 class="Property">JOBCANCELLING (Get)</h3>
+        <p>A constant for 'JobCancelling'.</p>
+        <h3 class="Property">JOBEXECUTING (Get)</h3>
+        <p>A constant for 'JobExecuting'.</p>
+        <h3 class="Property">JOBFAILED (Get)</h3>
+        <p>A constant for 'JobFailed'.</p>
+        <h3 class="Property">JOBQUEUED (Get)</h3>
+        <p>A constant for 'JobQueued'.</p>
+        <h3 class="Property">JOBSUBMITTED (Get)</h3>
+        <p>A constant for 'JobSubmitted'.</p>
+        <h3 class="Property">JOBSUCCEEDED (Get)</h3>
+        <p>A constant for 'JobSucceeded'.</p>
+        <h3 class="Property">JOBTIMEDOUT (Get)</h3>
+        <p>A constant for 'JobStatusTimedOut'.</p>
+        <h1 class="ObjMethod"><a name="FindTask"></a>ESE::FindTask</h1>
+        <p>This static method searches the specified server for the named task and returns an <a href="ESETask.htm">ESETask</a> that represents it. It provides convenience versus <a href="#GetTask" class="selected">ESE::GetTask</a>, where the full URI has to be known, but also protects against the situation where a task has been moved within ESE's task hierarchy.</p>
+        <h2 class="API">Example</h2>
+        <p>Find all tasks on 'localhost' that have the string 'ortho' in them:</p>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 'ortho', /REGEX )</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>A default port of 8181 is used.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Task</i> = ESE.FindTask( <i>Host</i> [, <i>Port</i> ], <i>TaskName</i> [, /REGEX] )</p>
+        <h2 class="API">Return Value</h2>
+        <p>If just one task matches the given name, then a scalar ESETask object is returned. If more than one task is found, then an array of ESETask objects is returned. If no matching tasks exist on the server, then !null is returned. All searches are case insensitive. If the host is invalid or there is a communications error then an error is thrown.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Host</h3>
+        <p>The name or IP address of the server.</p>
+        <h3 class="Argument">Port</h3>
+        <p>The port that ESE is listening on. The default value is 8181.</p>
+        <h3 class="Argument">TaskName</h3>
+        <p>The name of the task. If the REGEX keyword is set then TaskName is the regular expression to match on. Matching is case-insensitive regardless of whether REGEX is set.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">REGEX</h3>
+        <p>Set this keyword to use TaskName as a regular expression.</p>
+        <h1 class="ObjMethod"><a name="GetDeserializer"></a>ESE::GetDeserializer</h1>
+        <p>This static method returns the name of the function that performs the JSON to IDL conversion for a given data type.</p>
+        <h2 class="API">Example</h2>
+        <p>Get the deserializer function for the custom BoundingBox class:</p>
+        <p class="Code">functionName = ESE.GetDeserializer( 'BoundingBox' )</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>FunctionName</i> = ESE.GetDeserializer( <i>Type</i> )</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns the name of the function that does the JSON to IDL conversion. If the data type name or corresponding function do not exist, then !null is returned.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Type</h3>
+        <p>The name of an ESE data type.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="GetSerializer"></a>ESE::GetSerializer</h1>
+        <p>This static method returns the name of the function that does the IDL to JSON conversion for a given data type.</p>
+        <h2 class="API">Example</h2>
+        <p>Get the serializer function for the custom BoundingBox class:</p>
+        <p class="Code">functionName = ESE.GetSerializer( 'BoundingBox' )</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>FunctionName</i> = ESE.GetSerializer( <i>Type</i> )</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns the name of the function that does the IDL to JSON conversion. If the data type name or corresponding function do not exist, then !null is returned.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Type</h3>
+        <p>The name of an ESE data type.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="GetServer"></a>ESE::GetServer</h1>
+        <p>This static method returns an ESEServer object.</p>
+        <h2 class="API">Example</h2>
+        <p>Get the ESE server running on the machine 'localhost' at port 8181:</p>
+        <p class="Code">Server = ESE.GetServer( 'localhost', 8181 )</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = ESE.GetServer( <i>Host</i> [, <i>Port</i> ] )</p>
+        <h2 class="API">Return Value</h2>
+        <p>This method returns an <a href="ESEServer.htm">ESEServer</a> object. If host and port do not map to a valid ESE server, then !null is returned.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Host</h3>
+        <p>The name or IP address of the server.</p>
+        <h3 class="Argument">Port</h3>
+        <p>The port that ESE is listening on. The default value is 8181.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="GetTask"></a>ESE::GetTask</h1>
+        <p>This static method returns an <a href="ESETask.htm">ESETask</a> object.</p>
+        <h2 class="API">Example</h2>
+        <p>Get the task at a given URI:</p>
+        <p class="Code">Task = ESE.GetTask( 'http://localhost:8181/ese/services/AsyncService/smooth_sailing' )</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Task</i> = ESE.GetTask( <i>URI</i> )</p>
+        <h2 class="API">Return Value</h2>
+        <p>This method returns an ESETask object. If the URI does not address a valid task, then !NULL is returned.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">URI</h3>
+        <p>The full URI to an ESE task. It can be discovered through the ESE Admin Console, and through by introspecting via <a href="ESECatalog.htm">ESECatalog</a> and <a href="ESEFolder.htm">ESEFolder</a> objects. It can also be discovered by using <a href="#FindTask" class="selected">ESE::FindTask</a>, to get the URI for future use with GetTask.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="Join"></a>ESE::Join</h1>
+        <p>The static join method synchronizes execution between the current IDL session and ESE jobs. It is used to block further execution until all jobs have completed. It waits and "joins" a set of threads of execution back into the original thread, which can then continue.</p>
+        <h2 class="API">Examples</h2>
+        <p>This example runs myBigTask in parallel, on different segments of the data. The join blocks until all jobs are finished and then returns. The return value from join can be used to see which jobs succeeded and which failed.</p>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 'myBigTask' )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">n = 10</p>
+        <p class="Code">jobs = objarr( n )</p>
+        <p class="Code">FOR i = 0, n - 1 DO&#160;BEGIN</p>
+        <p class="Code_Indented">jobs[ i ] = Task.Run( segment = i, /ASYNCHRONOUS)</p>
+        <p class="Code">ENDFOR</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">status = ESE.Join( jobs )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IF( min( status ) ) THEN&#160;BEGIN</p>
+        <p class="Code_Indented">PRINT, 'Jobs ran successfully.'</p>
+        <p class="Code">ENDIF ELSE BEGIN</p>
+        <p class="Code_Indented">PRINT, 'Uh oh...'</p>
+        <p class="Code">ENDELSE</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Status</i> = ESE.Join( <i>Jobs</i> [, TIMEOUT = <i>value</i>] [, CALLBACK = <i>value</i>] [, /IGNORE_FAILURES] [, USER_DATA = <i>value</i>]] [, REQUESTS_PER_SECOND = <i>value</i>] )</p>
+        <h2 class="API">Return Value</h2>
+        <p>The return value is an array of integers that represents the success or failure of the corresponding job in the Jobs array. A value of 1 indicates that the job succeeded (ESE.jobSucceeded). A value of 0 indicates that the job failed for some reason (ESE.jobFailed, ESE.jobCancelled, etc.). Failed jobs can be examined in detail by looking at <a href="ESEJob.htm">ESEJob</a> properties.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Jobs</h3>
+        <p>A scalar or array of ESEJob objects to join on.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">TIMEOUT</h3>
+        <p>Specifies the number of seconds to wait before ending the join early. The default is "infinity."</p>
+        <h3 class="Keyword">CALLBACK</h3>
+        <p>Specifies the name of an IDL function to be invoked every time a watched job changes status or progress (ESEJob.info() status and progress). The signature of the callback function is:</p>
+        <p>FUNCTION CallbackName, Job [, UserData]</p>
+        <p>The Job argument is the ESEJob object whose status or progress changed. The UserData argument is whatever user data value was passed in by the call to ESE::Join. The return value indicates what value should go into the join's status array (values of [0,1]). Using this technique, the callback can indicate that a successful job actually failed because it recognizes the return value as out-of-range, for example. If the IGNORE_FAILURES keyword is not set, then a return value of 0 will end the join. Be aware that using callback with lengthy operations will slow the join.</p>
+        <h3 class="Keyword">IGNORE_FAILURES</h3>
+        <p>Set this keyword to continue waiting for jobs even if job failures are detected. Failures occur due to job failure, cancellation and time-out. The default is to not continue (a value of 0). Note that the callback can also indicate failure via its return value.</p>
+        <h3 class="Keyword">USER_DATA</h3>
+        <p>Specifies user data to be supplied to the callback. This keyword only makes sense to be used in conjunction with the CALLBACK keyword.</p>
+        <h3 class="Keyword">REQUESTS_PER_SECOND</h3>
+        <p>Specifies how frequently the join should query the server. The goal is to not swamp the server with requests for status. Specify time as an integer or floating-point number. The default is one request per second, which is suitable for most situations. With each request, all jobs have their status queried, so a value of 1 means that the join will not wait more than one second longer than is necessary before noticing job status and progress changes.</p>
+        <h1 class="ObjMethod"><a name="SetDeserializer"></a>ESE::SetDeserializer</h1>
+        <p>This static method pairs a data type with a function that performs "JSON to IDL" conversion. The conversion function is used internally by the ESE API. For example, after a task is run, the value can be retrieved by "myObject = Job.answer". The conversion function translates JSON to an IDL variable. When a data type is already associated with a function, the new function replaces the existing one.</p>
+        <p>The deserializer mapping is stored by the ESE class for use anywhere the API is used; deserializers need only be set just once in a program.</p>
+        <h2 class="API">Examples</h2>
+        <p>Set the deserializer for the custom BoundingBox class:</p>
+        <p class="Code">ESE.SetDeserializer, 'BoundingBox', 'boundingBoxDeserializer'</p>
+        <p>with the deserializer function:</p>
+        <p class="Code">FUNCTION boundingBoxDeserializer, json, value, status_message = message</p>
+        <p class="Code_Indented">COMPILE_OPT idl2</p>
+        <p class="Code_Indented">ON_ERROR, 2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">CATCH, errorStatus</p>
+        <p class="Code_Indented">IF ( errorStatus ne 0 ) THEN&#160;BEGIN</p>
+        <p class="Code_Indented">&#160;&#160;&#160;CATCH, /CANCEL</p>
+        <p class="Code_Indented">&#160;&#160;&#160;MESSAGE, /RESET</p>
+        <p class="Code_Indented">&#160;&#160;&#160;RETURN, !false</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">temp = json_parse( json, /toarray )</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">IF( N_ELEMENTS( temp ) ne 4 ) then return, !false</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">VALUE = temp</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">RETURN, !true</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax">ESE.SetDeserializer, <i>Type</i>, <i>Function</i></p>
+        <h2 class="API">Return Value</h2>
+        <p>None.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Type</h3>
+        <p>The name of an ESE data type. Typically, the type will be custom but built-in types can be specified, causing the corresponding default deserializer to be replaced.</p>
+        <h3 class="Argument">Function</h3>
+        <p>The name of the deserialization function the ESE API will invoke whenever conversion is required. The deserialization function must have the following signature:</p>
+        <p>FUNCTION FunctionName, JSON-String, IDLVariable, STATUS_MESSAGE = value</p>
+        <p>The return value should be !true or !false to indicated the validity of the input variable. The IDLVariable parameter is an optional output parameter to the caller, and is not needed for validation. The optional STATUS_MESSAGE output keyword can provide the caller with a status string.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="SetSerializer"></a>ESE::SetSerializer</h1>
+        <p>This static method pairs a data type with a function that performs "IDL to JSON" conversion. The conversion function is used internally by the ESE API. For example, in "Task.run( a = myObject )" the IDL variable "myObject" will need to be converted to JSON for transport, and the specified function will do the conversion. When a data type is already associated with a function, the new function replaces the existing one.</p>
+        <p>The serializer mapping is stored by the ESE class for use anywhere the API is used; serializers need only be set just once in a program.</p>
+        <h2 class="API">Examples</h2>
+        <p>Set the serializer for the custom BoundingBox class:</p>
+        <p class="Code">ESE.SetSerializer, 'BoundingBox', 'boundingBoxSerializer'</p>
+        <p>with the serializer function:</p>
+        <p class="Code">FUNCTION boundingBoxSerializer, value, json, status_message = message</p>
+        <p class="Code_Indented">COMPILE_OPT idl2</p>
+        <p class="Code_Indented">ON_ERROR, 2</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">CATCH, errorStatus</p>
+        <p class="Code_Indented">IF ( errorStatus ne 0 ) THEN&#160;BEGIN</p>
+        <p class="Code_Indented">&#160;&#160;&#160;CATCH, /CANCEL</p>
+        <p class="Code_Indented">&#160;&#160;&#160;MESSAGE, /RESET</p>
+        <p class="Code_Indented">&#160;&#160;&#160;RETURN, !false</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">IF ( ~ISA( value, /NUMBER ) ) THEN&#160;RETURN, !false</p>
+        <p class="Code_Indented">IF ( N_ELEMENTS( value ) ne 4 ) THEN&#160;RETURN, !false</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">json = json_serialize( value )</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">RETURN, !true</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The serializer can do bounds checking and other validation, if desired.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax">ESE.SetSerializer, <i>Type</i>, <i>Function</i></p>
+        <h2 class="API">Return Value</h2>
+        <p>None.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Type</h3>
+        <p>The name of an ESE data type. Typically the type will be custom but built-in types can be specified, causing the corresponding default serializer to be replaced.</p>
+        <h3 class="Argument">Function</h3>
+        <p>The name of the serialization function the ESE API will invoke whenever conversion is required. The serialization function must have the following signature:</p>
+        <p>FUNCTION FunctionName, IDLVariable, JSON-String, STATUS_MESSAGE = Value</p>
+        <p>The return value should be !true or !false to indicated the validity of the input variable. The JSON-String parameter is an optional output parameter to the caller, and is not needed for validation. The optional STATUS_MESSAGE output keyword can provide the caller with an informative message string.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h2 class="API">Version History</h2>
+        <table class="TableStyle_VersionTable" style="mc-table-style: url('../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;" cellspacing="0">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">IDL 8.4.1</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">Introduced</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="ESEJob.htm">ESEJob</a>, <a href="ESEServer.htm">ESEServer</a>, <a href="ESETask.htm">ESETask</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Callable IDL">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Diverting IDL Output</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="CallableIDL.htm">Callable IDL</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Diverting IDL Output</span>
+        </div>
+        <h1><a name="kanchor5525"></a>Diverting IDL Output</h1>
+        <p>When using a tty-based interface (available only on UNIX platforms), IDL sends its output to the screen for the user to see. When using a GUI-based interface (any platform), the output goes to the IDL log window. The default output function is automatically installed by IDL at startup. To divert IDL output to a function of your own design, use <b>IDL_ToutPush()</b> and <b>IDL_ToutPop()</b> to change the output function called by IDL.</p>
+        <p>Internally, IDL maintains a stack of output functions and provides two functions (<b>IDL_ToutPush()</b> and <b>IDL_ToutPop()</b>) to manage them. The most recently pushed output function is called to output each line of text. Output functions of your own design should have the following type definition:</p>
+        <p class="Code">typedef void (* IDL_TOUT_OUTF)(int flags, char *buf, int n);</p>
+        <p>The arguments to an output function are:</p>
+        <h2 class="API">flags</h2>
+        <p>A bitmask of flag values that specify how the text should be output. The allowed bit values are:</p>
+        <h3>IDL_TOUT_F_STDERR</h3>
+        <p>Send the text to stderr rather than stdout, if that distinction means anything to your output device.</p>
+        <h3>IDL_TOUT_F_NLPOST</h3>
+        <p>After outputting the text, start a new output line. On a tty this is equivalent to sending a newline ('\n') character.</p>
+        <h2 class="API">buf</h2>
+        <p>The text to be output. There may or may not be a NULL termination, so the character count provided by n must be used to move only the specified number of characters.</p>
+        <h2 class="API">n</h2>
+        <p>The number of characters in buf to be output.</p>
+        <h2 class="API">IDL_ToutPush()</h2>
+        <p>Use <b>IDL_ToutPush()</b> to push a new output function onto the stack. The most recently pushed function is the one used by IDL for output.</p>
+        <p class="Code">void IDL_ToutPush(IDL_TOUT_OUTF outf);</p>
+        <h2 class="API">IDL_ToutPop()</h2>
+        <p><b>IDL_ToutPop()</b> removes the most recently pushed output function. The removed function pointer is returned.</p>
+        <p class="Code">IDL_TOUT_OUTF IDL_ToutPop(void);</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Do not pop an output function you did not push. It is an error to attempt to remove the last remaining function.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

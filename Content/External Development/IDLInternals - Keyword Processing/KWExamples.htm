@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Keyword Processing">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Keyword Examples</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDLKeywordProcessing.htm">IDLInternals - Keyword Processing</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Keyword Examples</span>
+        </div>
+        <h1>Keyword Examples</h1>
+        <p>The following C function implements KEYWORD_DEMO, a system procedure intended to demonstrate how to write the keyword processing code for a routine. It prints the values of its keywords, changes the value of READWRITE to 42 if it is present, and returns. Each line is numbered to make discussion easier. These numbers are not part of the actual program.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The following code is designed to demonstrate keyword processing in a simple, uncluttered example. In actual code, you would not use the printf mechanism used on lines 42-53.</p>
+        <p>&#160;</p>
+        <p class="Code">/*1*/ void keyword_demo(int argc, IDL_VPTR *argv, char *argk)</p>
+        <p class="Code">/*2*/ {</p>
+        <p class="Code">/*3*/ typedef struct {</p>
+        <p class="Code">/*4*/ IDL_KW_RESULT_FIRST_FIELD; </p>
+        <p class="Code">/*5*/ /* Must be first entry in structure */ IDL_LONG l;</p>
+        <p class="Code">/*6*/ float f;</p>
+        <p class="Code">/*7*/ double d;</p>
+        <p class="Code">/*8*/ int d_there; </p>
+        <p class="Code">/*9*/ IDL_STRING s; </p>
+        <p class="Code">/*10*/ int s_there;</p>
+        <p class="Code">/*11*/ IDL_LONG arr_data[10];</p>
+        <p class="Code">/*12*/ int arr_there; </p>
+        <p class="Code">/*13*/ IDL_MEMINT arr_n; </p>
+        <p class="Code">/*14*/ IDL_VPTR var;</p>
+        <p class="Code">/*15*/ } KW_RESULT;</p>
+        <p class="Code">/*16*/ static IDL_KW_ARR_DESC_R arr_d = { IDL_KW_OFFSETOF(arr_data), </p>
+        <p class="Code">/*17*/ &#160;&#160;&#160;3, 10,IDL_KW_OFFSETOF(arr_n) };</p>
+        <p class="Code">/*18*/ </p>
+        <p class="Code">/*19*/ static IDL_KW_PAR kw_pars[] = { </p>
+        <p class="Code">/*20*/ IDL_KW_FAST_SCAN,</p>
+        <p class="Code">/*21*/ { "ARRAY", IDL_TYP_LONG, 1, IDL_KW_ARRAY, </p>
+        <p class="Code">/*22*/ IDL_KW_OFFSETOF(arr_there), CHARA(arr_d) },</p>
+        <p class="Code">/*23*/ { "DOUBLE", IDL_TYP_DOUBLE, 1, 0,</p>
+        <p class="Code">/*24*/ IDL_KW_OFFSETOF(d_there), IDL_KW_OFFSETOF(d) },</p>
+        <p class="Code">/*25*/ { "FLOAT", IDL_TYP_FLOAT, 1, IDL_KW_ZERO, 0, </p>
+        <p class="Code">/*26*/ &#160;&#160;&#160;IDL_KW_OFFSETOF(f) },</p>
+        <p class="Code">/*27*/ { "LONG", IDL_TYP_LONG, 1, IDL_KW_ZERO|IDL_KW_VALUE|15, 0, </p>
+        <p class="Code">/*28*/ &#160;&#160;&#160;IDL_KW_OFFSETOF(l) },</p>
+        <p class="Code">/*29*/ { "READWRITE", IDL_TYP_UNDEF, 1, IDL_KW_OUT|IDL_KW_ZERO,</p>
+        <p class="Code">/*30*/ &#160;&#160;&#160;0, IDL_KW_OFFSETOF(var) },</p>
+        <p class="Code">/*31*/ { "STRING", TYP_STRING, 1, 0, </p>
+        <p class="Code">/*32*/ &#160;&#160;&#160;IDL_KW_OFFSETOF(s_there), IDL_KW_OFFSETOF(s) },</p>
+        <p class="Code">/*33*/ { NULL }</p>
+        <p class="Code">/*34*/ };</p>
+        <p class="Code">/*35*/ </p>
+        <p class="Code">/*36*/ KW_RESULT kw;</p>
+        <p class="Code">/*37*/ int i;</p>
+        <p class="Code">/*38*/ IDL_ALLTYPES newval;</p>
+        <p class="Code">/*39*/ </p>
+        <p class="Code">/*40*/ (void) IDL_KWProcessByOffset(argc, argv, argk, kw_pars, </p>
+        <p class="Code">/*41*/ &#160;&#160;&#160;(IDL_VPTR *) 0, 1, &amp;kw);</p>
+        <p class="Code">/*42*/ printf("LONG: &lt;%spresent&gt;\n", kw.l ? "": "not ");</p>
+        <p class="Code">/*43*/ printf("FLOAT: %f\n", kw.f);</p>
+        <p class="Code">/*44*/ printf("DOUBLE: &lt;%spresent&gt;\n", kw.d_there ? "": "not ");</p>
+        <p class="Code">/*45*/ printf("STRING: %s\n",</p>
+        <p class="Code">/*46*/ &#160;&#160;&#160;kw.s_there ? IDL_STRING_STR(&amp;kw.s) : "&lt;not present&gt;");</p>
+        <p class="Code">/*47*/ printf("ARRAY: ");</p>
+        <p class="Code">/*48*/ if (kw.arr_there)</p>
+        <p class="Code">/*49*/ for (i = 0; i &lt; kw.arr_n; i++) </p>
+        <p class="Code">/*50*/ &#160;&#160;&#160;printf(" %d", kw.arr_data[i]); </p>
+        <p class="Code">/*51*/ else</p>
+        <p class="Code">/*52*/ printf("&lt;not present&gt;");</p>
+        <p class="Code">/*53*/ printf("\n");</p>
+        <p class="Code">/*54*/ </p>
+        <p class="Code">/*55*/ printf("READWRITE: ");</p>
+        <p class="Code">/*56*/ if (kw.var) {</p>
+        <p class="Code">/*57*/ IDL_Print(1, &amp;kw.var, (char *) 0);</p>
+        <p class="Code">/*58*/ newval.l = 42;</p>
+        <p class="Code">/*59*/ IDL_StoreScalar(kw.var, TYP_LONG, &amp;newval);</p>
+        <p class="Code">/*60*/ } else {</p>
+        <p class="Code">/*61*/ printf("&lt;not present&gt;");</p>
+        <p class="Code">/*62*/ }</p>
+        <p class="Code">/*63*/ printf("\n");</p>
+        <p class="Code">/*64*/ </p>
+        <p class="Code">/*65*/ IDL_KW_FREE;</p>
+        <p class="Code">/*66*/ }</p>
+        <p class="Code">&#160;</p>
+        <p>Executing this routine from the IDL command line, by entering:</p>
+        <p class="Code">KEYWORD_DEMO</p>
+        <p>gives the output:</p>
+        <p class="Code">LONG: &lt;not present&gt; </p>
+        <p class="Code">FLOAT: 0.000000</p>
+        <p class="Code">DOUBLE: &lt;not present&gt; </p>
+        <p class="Code">STRING: &lt;not present&gt; </p>
+        <p class="Code">ARRAY: &lt;not present&gt; </p>
+        <p class="Code">READWRITE: &lt;not present&gt;</p>
+        <p>&#160;</p>
+        <p>Executing it again from the command line with keywords specified:</p>
+        <p class="Code">A = 56</p>
+        <p class="Code">KEYWORD_DEMO, /LONG, FLOAT=2, DOUBLE=34,$ </p>
+        <p class="Code">&#160;&#160;&#160;STRING="hello", ARRAY=FINDGEN(10), READWRITE=A</p>
+        <p class="Code">PRINT, 'Final Value of A: ', A</p>
+        <p>gives the output:</p>
+        <p class="Code">LONG: &lt;present&gt; </p>
+        <p class="Code">FLOAT: 2.000000</p>
+        <p class="Code">DOUBLE: &lt;present&gt; </p>
+        <p class="Code">STRING: hello</p>
+        <p class="Code">ARRAY: 0 1 2 3 4 5 6 7 8 9</p>
+        <p class="Code">READWRITE:	&#160;&#160;&#160;56</p>
+        <p class="Code">Final Value of A:	&#160;&#160;&#160;42</p>
+        <p>Those features of this procedure that are interesting in terms of keyword processing are, by line number:</p>
+        <p>3-15: Every system routine that processes keywords must define a <b>KW_RESULT</b> structure type. All output from keyword processing is stored in the fields of this structure.The first field in the KW_RESULT structure must always be <b>IDL_KW_RESULT_FIRST_FIELD</b>. The remaining fields are dictated by the keywords defined in kw_pars below, starting on line 19. The fields with named ending in _there are used for the specified field of the <b>IDL_KW_PAR</b> structs, and must be type int. The types of the other fields must match their definitions in the relevant <b>IDL_KW_PAR</b> and <b>IDL_KW_ARR_DESC_R</b> structs.</p>
+        <p>16-17: The ARRAY keyword, defined on line 21, is a read-only array, and requires this array description. Note that the data field specifies the location of the <b>arr_data</b> array within <b>KW_RESULT</b> where the array contents should be copied, and the n_offset field specifies the location of the arr_n field where the number of elements actually seen is to be written. Both of these are specified as offsets into <b>KW_RESULT</b>, using the IDL_<b>KW_OFFSET()</b> macro to compute this. The minimum number of elements allowed is 3, the maximum is 10.</p>
+        <p>19: The start of the keyword definition array. Notice that all of the keywords are ordered lexically (ASCII) and that there is a NULL entry at the end (line 32). Also, all of the mask fields are set to 1, as is the mask argument to <b>IDL_KWProcessByOffset()</b> on line 39. This means that all of the keywords in the list are to be considered valid in this routine.</p>
+        <p>20: This routine is requesting fast keyword processing. You can learn more about this option in <a href="ProcessingKeywords.htm#Speeding">Speeding Keyword Processing</a>.</p>
+        <p>21-22: ARRAY is a read-only array. Its value field is therefore the actual address (and not an offset into <b>KW_RESULT</b>) of the <b>IDL_KW_ARR_DESC_R</b> struct that completes the array definition. This program wants to know explicitly if ARRAY was specified, so the specified field is set to the offset within <b>KW_RESULT</b> of the <b>arr_there</b> field.</p>
+        <p>23-24: DOUBLE is a scalar keyword of <b>IDL_TYP_DOUBLE</b>. It uses the variable <b>kw.d_there</b> to know if the keyword is present. Both the specified and value fields are specified as offsets into <b>KW_RESULT</b>.</p>
+        <p>25: FLOAT is an  scalar k<b>IDL_TYP_FLOAT</b>eyword. It does not use the specified field of the <b>IDL_KW_PAR</b> struct to get notification of whether the keyword is present, so that field is set to 0. Instead, it uses the <b>IDL_KW_ZERO</b> flag to make sure that the variable kw.f is always zeroed. If the keyword is present, the value will be written into kw.f, otherwise it will remain 0. The important point is that the routine can’t tell the difference between the keyword being absent, or being present with a user- supplied value of zero. If this distinction doesn’t matter, such as when the keyword is to serve as an on/off toggle, use this method. If it does matter, use the specified field as demonstrated with the DOUBLE keyword, above.</p>
+        <p>27-28: LONG is a scalar keyword of <b>IDL_TYP_LONG</b>. It sets the <b>IDL_KW_ZERO</b> flag to get the variable kw.l zeroed prior to keyword parsing. The use of the <b>IDL_KW_VALUE</b> flag indicates that if the keyword is present, the value 15 (the lower 12 bits of the flags field) will be ORed into the variable <b>kw.l</b>.</p>
+        <p>29-30: The <b>IDL_KW_OUT</b> flag indicates that the routine wants the <b>IDL_VPTR</b> for READWRITE if it is present. Since <b>IDL_KW_ZERO</b> is also set, the variable kw.var will be zero unless the keyword is present. The specification of <b>IDL_TYP_UNDEF</b> here indicates that there is no type conversion or processing applied to <b>IDL_KW_OUT</b> keywords.</p>
+        <p>31-32: The STRING keyword demonstrates scalar string keywords.</p>
+        <p>33: All <b>IDL_KW_PAR</b> arrays must be terminated with a NULL entry.</p>
+        <p>36: Every system routine that processes keywords must declare a variable named kw, of type <b>KW_RESULT</b>. This variable should be a C stack based local variable (C auto class).</p>
+        <p>38: The <b>IDL_StoreScalar()</b> function used on line 59 requires the scalar value to be provided in an <b>IDL_ALLTYPES</b> struct.</p>
+        <p>40-41: Do the keyword processing. The first three arguments are simply the arguments the interpreter passed to the routine. The plain_args argument is set to NULL because this routine is registered as not accepting any plain arguments. Since no plain arguments will be present, the return value from <b>IDL_KWProcessByOffset()</b> is discarded. The final argument is the address of the <b>KW_RESULT</b> variable (kw) into which the results will be written.</p>
+        <p>42: The <b>kw.l</b> variable will be 0 if LONG is not present, and 1 if it is.</p>
+        <p>43: The <b>kw.f</b> variable will always have some usable value, but if it is zero there is no way to know if the keyword was actually specified or not.</p>
+        <p>45-46: These keywords use the variables from the specified field of their <b>IDL_KW_PAR</b> struct to determine if they were specified or not. Use of the <b>IDL_STRING_STR</b> macro is described in “<a href="../IDLInternals - String Processing/StringProcessing.htm">Accessing IDL_STRING Values</a>".</p>
+        <p>48-54: Accessing the ARRAY keyword is simple. The <b>kw.arr_there</b> variable indicates if the keyword is present, and <b>kw.arr_n</b> gives the number of elements.</p>
+        <p>55-63: Since the READWRITE keyword is accessed via the argument’s <b>IDL_VPTR</b>, we use the <b>IDL_Print()</b> function to print its value. This has the same effect as using the user- level PRINT procedure when running IDL. Then, we change its value to 42 using <b>IDL_StoreScalar()</b>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>We use this mechanism in order to create a simple example. You will probably want to avoid the use of this type of output (printf and IDL_Print()) in your own code.</p>
+        <p>65: Normal exit from any routine that calls <b>IDL_KWProcessByOffset()</b> must be preceded by a call to <b>IDL_KW_FREE</b>. This macro releases any dynamic resources that were allocated by keyword processing.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

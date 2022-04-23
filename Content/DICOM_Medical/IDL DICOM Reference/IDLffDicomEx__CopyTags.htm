@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|Medical Imaging in IDL|IDL DICOM Reference|IDLffDicomEx">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLffDicomEx::CopyTags
+        </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Expanded DICOM Support in IDL/ExpandedDICOMFunctionality.htm">Medical Imaging in IDL</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="DICOMEX_GETCONFIGFILEPAT.htm">IDL DICOM Reference</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLffDicomEx::CopyTags</span>
+        </div>
+        <h1 class="ObjMethod">IDLffDicomEx::CopyTags
+        </h1>
+        <p>The IDLffDicomEx::CopyTags procedure method copies all the tags from the source object to the destination object beginning with the DICOM attribute tag specified by the <i>Start_Tag</i> and copying up to the <i>Stop_Tag</i>. This method does a deep copy of a tag, which means it copies all sub-items, even sequences that contain nested sequences and multiple repeating groups.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This method is intended to copy small blocks of tags from one DICOM file to another DICOM file. This method is <i>not</i> intended to be used to copy entire DICOM files. To clone an existing DICOM file, use the <a href="IDLffDicomEx__Init.htm">IDLffDicomEx::Init</a> method with the CLONE keyword set to copy an entire DICOM file. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you are copying non-standard tags to a destination object (as defined by its SOP Class definition), open the destination object with the <a href="IDLffDicomEx__Init.htm">IDLffDicomEx::Init</a> method NON_CONFORMING keyword to avoid errors. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In rare instances the values of copied tags are changed when they are added to the destination file. If you are copying multiple private block code tags that are not numbered sequentially by 1, they will be numbered in this manner when they are copied into the destination file.</p>
+        <h3><a name="dicom_ex_4010397576_1007119"></a><a name="dicom_ex_4010397576_30638"></a>Specifying Start and Stop Tags</h3>
+        <p>The <i>Start_Tag</i> and <i>Stop_Tag</i> don't have to be precise tags. For example, suppose you provide <code>'0010,0000'</code> as the <i>Start_Tag</i> or <i>Stop_Tag</i> argument. If the specified tag does not exist in the file, copying will start with the next element after that one or stop on the element right before that one. While the <i>Start_Tag</i> and <i>Stop_Tag</i> arguments can be loosely defined, the definitions must adhere to the following guidelines:</p>
+        <ul>
+            <li value="1">The DICOM attributes specified for the start and stop tags must be root level tags. These tags can be sequence tags as long as they exist at the root level, but they cannot be tags contained inside a sequence. </li>
+            <li value="2">When copying private DICOM attributes (those with an odd group number) it is necessary to start at the beginning of a private block. An error will be issued if you attempt to copy tags from the middle of a private sequence or private group. For example 0055,0010 is a tag that starts a new private block of tags. Attempting to copy tags beginning with 0055,1013, which exists inside a private block, would generate an error. </li>
+        </ul>
+        <p class="NoteIndented">If you are copying a block of tags that includes multiple private blocks, each block must be copied independently as shown in the following “Example” section. </p>
+        <ul>
+            <li value="1">The DICOM attributes specified for the start and stop tags cannot be set to ‘0000,0000’.</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Tags 0002,0003 (Media Storage SOP Instance tag) and 0008,0018 (SOP Instance tag) are not copied from one file to another. This avoids overwriting the unique instance identifiers for a file and prevents identical identifiers from existing in two unique files.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Use the <a href="IDLffDicomEx__EnumerateTags.htm">IDLffDicomEx::EnumerateTags</a> method to view all attributes in a DICOM file.</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1007125"></a><a name="dicom_ex_4010397576_1007125_PageTOC_IDLffDicomEx"></a>Syntax</h2>
+        <p class="Syntax"><i>Obj</i>-&gt;[<a href="IDLffDicomEx.htm">IDLffDicomEx</a>::]CopyTags, <i>DestinationObject, Start_Tag, Stop_Tag</i></p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1007129"></a><a name="dicom_ex_4010397576_1007129_PageTOC_IDLffDicomEx"></a>Arguments</h2>
+        <h3 class="Argument">DestinationObject</h3>
+        <p>An IDLffDicomEx object reference to the file to which the specified tags will be copied.</p>
+        <h3 class="Argument">Start_Tag</h3>
+        <p>A string identifying a DICOM attribute in the form <code>'XXXX,XXXX'</code> that specifies the first tag to be copied. A <i>Start_Tag</i> value of '<code>0000,0000'</code> is not valid. See <a href="#dicom_ex_4010397576_1007119" class="selected">Specifying Start and Stop Tags</a> for more information. See <a href="../DICOM Resources/DICOMAttributes.htm">DICOM Attributes</a> for a list of tags. </p>
+        <h3 class="Argument">Stop_Tag</h3>
+        <p>A string identifying a DICOM attribute in the form <code>'XXXX,XXXX'</code> that specifies the last tag to be copied. A <i>Stop_Tag</i> value of '<code>0000,0000'</code> is not valid. See <a href="#dicom_ex_4010397576_1007119" class="selected">Specifying Start and Stop Tags</a> for more information. See <a href="../DICOM Resources/DICOMAttributes.htm">DICOM Attributes</a> for a list of tags.</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1007148"></a><a name="dicom_ex_4010397576_1007148_PageTOC_IDLffDicomEx"></a>Keywords</h2>
+        <p>None</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1034340"></a><a name="dicom_ex_4010397576_1034340_PageTOC_IDLffDicomEx"></a>Example</h2>
+        <p>The following example adds a number of private tags to a clone of the first selected image and then copies these blocks of private tags to a clone of the second selected file using the CopyTags method. The new tags and copied tags are displayed in the Output Log window. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you are copying a block of tags that include multiple private blocks, each block must be copied independently as shown in the following example. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>To avoid errors encountered when attempting to overwrite an existing file, neither cloned image is saved to disk. To do so, call the <a href="IDLffDicomEx__Commit.htm">IDLffDicomEx::Commit</a> method.</p>
+        <p class="Code">PRO print_tags_doc, vTags, vTagCnt</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Format the output.</p>
+        <p class="Code">PRINT, FORMAT= $</p>
+        <p class="Code">   '(%"%3s, %2s, %-12s, %3s, %5s, %12s, %15s")', $</p>
+        <p class="Code">   'IDX', 'LVL', 'TAG',  'VR', 'SEQID', $</p>
+        <p class="Code">   'DESCRIPTION', 'VALUE'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Cycle through the tags.</p>
+        <p class="Code">FOR xx = 0, vTagCnt-1  DO BEGIN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">   ; If the item is nested within another item, indicate the </p>
+        <p class="Code">   ; level using &gt; symbol.</p>
+        <p class="Code">    IF (vTags[xx].Level GT 0) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;vLvl = STRJOIN(REPLICATE('&gt;',vTags[xx].Level))</p>
+        <p class="Code">      vtg =  vLvl + vTags[xx].Tag</p>
+        <p class="Code">    ENDIF ELSE BEGIN</p>
+        <p class="Code">      vtg = vTags[xx].Tag</p>
+        <p class="Code">    ENDELSE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">    ; If the tags are in a group, indicate this.</p>
+        <p class="Code">    IF (vTags[xx].GroupNum GT 0) THEN BEGIN</p>
+        <p class="Code">       PRINT, FORMAT='(%"%15s, %1d")', 'Group', vTags[xx].GroupNum</p>
+        <p class="Code">    ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">   ; Print the fields of the structure. </p>
+        <p class="Code">   PRINT, FORMAT = $</p>
+        <p class="Code">      '(%"%3d, %2d, %-12s, %3s, %5s, %12s, %15s")', $</p>
+        <p class="Code">       xx, vTags[xx].Level, vtg, vTags[xx].VR, $</p>
+        <p class="Code">       vTags[xx].SeqId, vTags[xx].Description, $</p>
+        <p class="Code">       vTags[xx].Value</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ENDFOR</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO dicom_tagcopyexample_doc</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Select a DICOM file.</p>
+        <p class="Code">sFile = DIALOG_PICKFILE( $</p>
+        <p class="Code">    PATH=FILEPATH('',SUBDIRECTORY=['examples','data']), $</p>
+        <p class="Code">    TITLE='Select DICOM Patient File', FILTER='*.dcm', $</p>
+        <p class="Code">    GET_PATH=path)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a clone (aImgClone.dcm) of the selected file (sfile).</p>
+        <p class="Code">; Set the NON_CONFORMING keyword to be able to add a public SQ  </p>
+        <p class="Code">; of radiopharmaceutical items to any file. </p>
+        <p class="Code"> oCloneImg= OBJ_NEW('IDLffDicomEx', path + 'aImgClone.dcm', $</p>
+        <p class="Code">    CLONE=sfile, /NON_CONFORMING)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add private tags. The following are hypothetical.</p>
+        <p class="Code">; Create a multi-valued tag at the root level.</p>
+        <p class="Code">arr = [1, 2, 3, 4]</p>
+        <p class="Code">oCloneImg-&gt;SetPrivateValue, 'Private Test', '0053', '00', 'SS', $</p>
+        <p class="Code">&#160;&#160;&#160;arr</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a sequence at the root level.</p>
+        <p class="Code">vSeqId = oCloneImg-&gt;AddPrivateSequence('VOI Min,Max', '0055', $</p>
+        <p class="Code">&#160;&#160;&#160;'12')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add items to the sequence, specifying SQ identifier returned by </p>
+        <p class="Code">; AddPrivateSequence.</p>
+        <p class="Code">oCloneImg-&gt;SetPrivateValue, 'VOI Min,Max', '0055', '13', 'IS', $</p>
+        <p class="Code">&#160;&#160;&#160;'215', SEQID=vSeqID</p>
+        <p class="Code">oCloneImg-&gt;SetPrivateValue, 'VOI Min,Max', '0055', '14', 'IS', $</p>
+        <p class="Code">&#160;&#160;&#160;'234', SEQID=vSeqID</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Print a range including the new tags to </p>
+        <p class="Code">; the Output Log window.</p>
+        <p class="Code">vTags = oCloneImg-&gt;EnumerateTags(COUNT=vTagCnt, $</p>
+        <p class="Code">   START_TAG='0053,0000', STOP_TAG='0057,0000')</p>
+        <p class="Code">print_tags_doc, vTags, vTagCnt</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Open a second file and copy tags to this file.</p>
+        <p class="Code">; Select a DICOM file.</p>
+        <p class="Code">sFile1 = DIALOG_PICKFILE( $</p>
+        <p class="Code">    PATH=FILEPATH('',SUBDIRECTORY=['examples','data']), $</p>
+        <p class="Code">    TITLE='Select DICOM Patient File', FILTER='*.dcm', $</p>
+        <p class="Code">    GET_PATH=path)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a clone (aImgClone.dcm) of the selected file (sfile).</p>
+        <p class="Code">; Set the NON_CONFORMING keyword to be able to add a public SQ  </p>
+        <p class="Code">; of radiopharmaceutical items to any file. </p>
+        <p class="Code"> oDestImg = OBJ_NEW('IDLffDicomEx', path + 'aDestImg.dcm', $</p>
+        <p class="Code">    CLONE=sfile1, /NON_CONFORMING)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Copy the private tags to the second file. Each block is copied</p>
+        <p class="Code">; independently.</p>
+        <p class="Code">oCloneImg-&gt;CopyTags, oDestImg, '0053,0000', '0055,0000'</p>
+        <p class="Code">oCloneImg-&gt;CopyTags, oDestImg, '0055,0000', '0057,0000'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Print a range including the new tags to </p>
+        <p class="Code">; the Output Log window.</p>
+        <p class="Code">PRINT, 'Tags copied to aDestImg file.'</p>
+        <p class="Code">vTags = oDestImg-&gt;EnumerateTags(COUNT=vTagCnt, $</p>
+        <p class="Code">   START_TAG='0053,0000', STOP_TAG='0057,0000')</p>
+        <p class="Code">print_tags_doc, vTags, vTagCnt</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Clean up references.</p>
+        <p class="Code">OBJ_DESTROY, [oCloneImg, oDestImg]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1036874"></a><a name="dicom_ex_4010397576_1036874_PageTOC_IDLffDicomEx"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

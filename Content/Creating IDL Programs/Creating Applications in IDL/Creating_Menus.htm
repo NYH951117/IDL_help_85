@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|Widget Application Techniques">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Creating Menus</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widget Application Techniques</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Creating Menus</span>
+        </div>
+        <h1><a name="widget_techniques_4218446668_121921"></a>Creating Menus</h1>
+        <p><a name="kanchor5027"></a>Menus allow a user to select one or more options from a list of options. IDL widgets allow you to build a number of different types of menus for your widget application.</p>
+        <p>This section discusses the following different types of menus:</p>
+        <ul>
+            <li value="1"><a href="#widget_techniques_4218446668_95464" class="selected">Button Groups</a>
+            </li>
+            <li value="2"><a href="#widget_techniques_4218446668_95499" class="selected">Lists</a>
+            </li>
+            <li value="3"><a href="#widget_techniques_4218446668_95521" class="selected">Pulldown Menus</a>
+            </li>
+            <li value="4"><a href="#widget_techniques_4218446668_95550" class="selected">Menus on Top-Level Bases</a>
+            </li>
+            <li value="5"><a href="#widget_techniques_4218446668_95574" class="selected">Context-Sensitive Menus</a>
+            </li>
+        </ul>
+        <h2 class="API"><a name="widget_techniques_4218446668_95464"></a><a name="widget_techniques_4218446668_97152"></a>Button Groups</h2>
+        <p>One approach to menu creation is to build an array of buttons. With a button menu, all options are visible to the user all the time. To create a button menu, do the following:</p>
+        <ol>
+            <li value="1">Call the WIDGET_BASE function to create a base to hold the buttons. Use the COLUMN and ROW keywords to determine the layout of the buttons.</li>
+            <li value="2">Call the WIDGET_BUTTON function once for each button to be added to the base created in the previous step.</li>
+        </ol>
+        <p>Because menus of buttons are common, IDL provides a compound widget named CW_BGROUP to create them. Using CW_BGROUP rather than a series of calls to WIDGET_BUTTON simplifies creation of a menu of buttons and also simplifies event handling by providing a single event structure for the group of buttons. For example, the following IDL statements create a button menu with five choices:</p>
+        <p class="Code">values = ['One', 'Two', 'Three', 'Four', 'Five']</p>
+        <p class="Code">base = WIDGET_BASE()</p>
+        <p class="Code">bgroup = CW_BGROUP(base, values, /COLUMN)</p>
+        <p class="Code">WIDGET_CONTROL, base, /REALIZE</p>
+        <p>In this example, one call to CW_BGROUP replaces five calls to WIDGET_BUTTON.</p>
+        <h3><a name="widget_techniques_4218446668_34367"></a>Exclusive or Nonexclusive Buttons</h3>
+        <p>Buttons in button groups normally act as independent entities, returning a selection event (a one in the select field of the event structure) or similar value when pressed. Groups of buttons can also be made to act in concert, as either exclusive or non-exclusive groups. In contrast to normal button groups, both exclusive and non-exclusive groups display which buttons have been selected.</p>
+        <p><i>Exclusive</i> button groups allow only one button to be selected at a given time. Clicking on an unselected button deselects any previously-selected buttons. <i>Non-exclusive</i> button groups allow any number of buttons to be selected at the same time. Clicking on the same button repeatedly selects and deselects that button. The following code creates three button groups. The first group is a “normal” button group as created in the previous example. The next is an exclusive group, and the third is a non-exclusive group.</p>
+        <p class="Code">values = ['One', 'Two', 'Three', 'Four', 'Five']</p>
+        <p class="Code">base = WIDGET_BASE(/ROW)</p>
+        <p class="Code">bgroup1 = CW_BGROUP(base, values, /COLUMN, $</p>
+        <p class="Code"> &#160;LABEL_TOP='Normal', /FRAME)</p>
+        <p class="Code">bgroup2 = CW_BGROUP(base, values, /COLUMN, /EXCLUSIVE, $</p>
+        <p class="Code">&#160;&#160;LABEL_TOP='Exclusive', /FRAME)</p>
+        <p class="Code">bgroup3 = CW_BGROUP(base, values, /COLUMN, /NONEXCLUSIVE, $</p>
+        <p class="Code">&#160;&#160;LABEL_TOP='Nonexclusive', /FRAME)</p>
+        <p class="Code">WIDGET_CONTROL, base, /REALIZE</p>
+        <p>The widget created by this code is shown in the following figure:</p>
+        <p>
+            <img src="../../images/bldwid02.gif" />
+        </p>
+        <h2 class="API"><a name="widget_techniques_4218446668_95499"></a>Lists</h2>
+        <p>A second approach to menu creation is to provide the user with a list of options in the form of a scrolling or drop-down list. A scrolling list is always displayed, although it may not show all items in the list at all times. A drop-down list shows only the selected item until the user clicks on the list, at which time it displays the entire list. Both lists allow only a single selection at a time.</p>
+        <p>The following example code uses the <a href="../../Reference Material/W/WIDGET_LIST.htm#W_811389549_891101">WIDGET_LIST</a> and <a href="../../Reference Material/W/WIDGET_DROPLIST.htm#W_811389549_58310">WIDGET_DROPLIST</a> functions to create two menus of five items each. While both lists contain five items, the scrolling list displays only three at a time, because we specify this with the YSIZE keyword. 
+        </p>
+        <p class="Code">values = ['One', 'Two', 'Three', 'Four', 'Five']</p>
+        <p class="Code">base = WIDGET_BASE(/ROW)</p>
+        <p class="Code">list = WIDGET_LIST(base, VALUE=values, YSIZE=3)</p>
+        <p class="Code">drop = WIDGET_DROPLIST(base, VALUE=values)</p>
+        <p class="Code">WIDGET_CONTROL, base, /REALIZE</p>
+        <p>The widget created by this code is shown in the following figure:</p>
+        <p>
+            <img src="../../images/bldwid03.gif" />
+        </p>
+        <h2 class="API"><a name="widget_techniques_4218446668_95521"></a><a name="kanchor5028"></a>Pulldown Menus</h2>
+        <p>A third approach to menu creation involves menus that appear as a single button until the user selects the menu, at which time the menu pops up to display the list of possible selections. Buttons in such a pulldown menu can activate other pulldown menus to any desired depth. The method for creating a pulldown menu is as follows:</p>
+        <ol>
+            <li value="1">The topmost element of any pulldown menu is a button, created with the MENU keyword to the WIDGET_BUTTON function.</li>
+            <li value="2">The top-level button has one or more child widget buttons attached. (That is, one or more buttons specify the first button’s widget ID as their “parent.”) Each button can either be used as is, in which case pressing it causes an event to be generated, or it can be created with the MENU keyword and have further child widget buttons attached to it. If it has child widgets, pushing it causes a pulldown menu containing the child buttons to pop into view.</li>
+            <li value="3">Menu buttons can be the parent of other buttons to any desired depth.</li>
+        </ol>
+        <p><a name="kanchor5029"></a>Because pulldown menus are common, IDL provides a compound widget named CW_PDMENU to create them. Using CW_PDMENU rather than a series of calls to WIDGET_BUTTON simplifies creation of a pulldown menu in the same way the CW_BGROUP simplifies the creation of button menus.</p>
+        <p>The following example uses CW_PDMENU to create a pulldown menu. First, we create an array of anonymous structures to contain the menu descriptions.</p>
+        <p class="Code">desc = REPLICATE({ flags:0, name:'' }, 6)</p>
+        <p>The desc array contains six copies of the empty structure. Each structure has two fields: flags and name. Next, we populate these fields with values:</p>
+        <p class="Code">desc.flags = [ 1, 0, 1, 0, 2, 2 ]</p>
+        <p class="Code">desc.name = [ 'Operations', 'Predefined', 'Interpolate', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;'Linear', 'Spline', 'Quit' ]</p>
+        <p>The value of the flags field specifies the role of each button. In this example, the first and third buttons start a new sub-menu (values are 1), the second and fourth buttons are plain buttons with no other role (values are 0), and the last two buttons end the current sub-menu and return to the previous level (values are 2). The value of the name field is the value (or label) of the button at each level.</p>
+        <p class="Code">base = WIDGET_BASE()</p>
+        <p class="Code">menu = CW_PDMENU(base, desc)</p>
+        <p class="Code">WIDGET_CONTROL, base, /REALIZE</p>
+        <p>The format of the menu description used by CW_PDMENU in the above example requires some explanation. CW_PDMENU views a menu as consisting of a series of buttons, each of which can optionally lead to a sub-menu. The description of each button consists of a structure supplying its name and a flag field that tells what kind of button it is (starts a new sub-menu, ends the current sub-menu, or a plain button within the current sub-menu). The description of the complete menu consists of an array of such structures corresponding to the flattened menu.</p>
+        <p>Compare the description used in the code above with the result shown in the following figure.</p>
+        <p>
+            <img src="../../images/bldwid04.gif" />
+        </p>
+        <h2 class="API"><a name="widget_techniques_4218446668_95550"></a><a name="widget_techniques_4218446668_83191"></a>Menus on Top-Level Bases</h2>
+        <p>A fourth approach to providing menus in your widget application is to attach the menus directly to the top-level base widget. Menus attached to a top-level base widget are created just like pulldown menus created from button widgets, but they do not appear as buttons. Menus created in this way are children of a special sub-base of the top-level base, created by specifying the MBAR keyword when the top-level base is created.</p>
+        <p>For example, the following code creates a top-level base widget and attaches a menu titled MENU1 to it. MENU1 contains the choices ONE, TWO, and THREE.</p>
+        <p class="Code">base = WIDGET_BASE(MBAR=bar)</p>
+        <p class="Code">menu1 = WIDGET_BUTTON(bar, VALUE='MENU1', /MENU)</p>
+        <p class="Code">button1 = WIDGET_BUTTON(menu1, VALUE='ONE')</p>
+        <p class="Code">button2 = WIDGET_BUTTON(menu1, VALUE='TWO')</p>
+        <p class="Code">button3 = WIDGET_BUTTON(menu1, VALUE='THREE')</p>
+        <p class="Code">draw = WIDGET_DRAW(base, XSIZE=100, YSIZE=100)</p>
+        <p class="Code">WIDGET_CONTROL, base, /REALIZE</p>
+        <p>The resulting widget is shown in the following figure:</p>
+        <p>
+            <img src="../../images/bldwid05.gif" />
+        </p>
+        <h2 class="API"><a name="widget_techniques_4218446668_95574"></a><a name="kanchor5030"></a><a name="kanchor5031"></a>Context-Sensitive Menus</h2>
+        <p>Context-sensitive menus (also referred to as <i>context menus</i> or <i>pop-up menus</i>) are hidden until a user performs an action to display the menu. When summoned, the appearance of a context menu is similar to that of a menu created in a floating, modal base. The behavior of a context menu is the same as that of a menu on a menu bar; when the user clicks one of the menu’s buttons, a button event is generated and the menu is dismissed. If the user clicks outside the context menu, it is dismissed without generating any events.</p>
+        <p>
+            <img src="../../images/contextmenu.gif" />
+        </p>
+        <p>By convention, context-sensitive menus in IDL widget applications are displayed when the user clicks the right mouse button. Several IDL widget primitives — base, draw, list, table, text, and tree widgets — can be configured to generate events when this occurs. The mechanism used to generate right mouse button events is different for draw widgets than for the other types; these differences are discussed below.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>While it is customary to display context-sensitive menus when the user clicks the right mouse button, IDL’s mechanism for displaying the menus is quite general, and can be invoked under many circumstances. Examples in this section will discuss the common usage.</p>
+        <p>To create a context-sensitive menu in a widget application, do the following:</p>
+        <ol>
+            <li value="1">Create a Context Menu</li>
+            <li value="2">Generate and Handle Context Events</li>
+            <li value="3">Display the Context Menu</li>
+            <li value="4">Process Button Events</li>
+        </ol>
+        <h3>Create a Context Menu</h3>
+        <p>Context menus are contained within a special base widget created with the CONTEXT_MENU keyword. A base widget used as the base for a context menu must have as its parent widget one of the following widget types:</p>
+        <ul>
+            <li value="1">Base widget</li>
+            <li value="2">Draw widget</li>
+            <li value="3">List widget</li>
+            <li value="4">Property sheet widget</li>
+            <li value="5">Table widget</li>
+            <li value="6">Text widget</li>
+            <li value="7">Tree widget</li>
+        </ul>
+        <p>The process for creating a context menu is similar to that for creating a menu for a top-level base (a menubar). Create menu entries on the base widget using the WIDGET_BUTTON function. Context menu entries can display sub-menus (using the MENU keyword to WIDGET_BUTTON or the CW_PDMENU compound widget) or appear as separators (using the SEPARATOR keyword to WIDGET_BUTTON).</p>
+        <p>The following code snippet illustrates a very simple context menu attached to a base widget:</p>
+        <p class="Code">topLevelBase = WIDGET_BASE(/CONTEXT_EVENTS)</p>
+        <p class="Code">contextBase = WIDGET_BASE(topLevelBase, /CONTEXT_MENU)</p>
+        <p class="Code">button1 = WIDGET_BUTTON(contextBase, VALUE='First button')</p>
+        <p class="Code">button2 = WIDGET_BUTTON(contextBase, VALUE='Second button')</p>
+        <h3><a name="widget_techniques_4218446668_81581"></a>Generate and Handle Context Events</h3>
+        <h4><a name="widget_techniques_4218446668_75570"></a>Generating Right Mouse Button Events</h4>
+        <p>In order to display the context menu at the appropriate time, the widget that serves as the parent for the context menu base must be configured to generate an event when the user clicks the right mouse button over that widget. For base, list, property sheet, table, text, and tree widgets, this is accomplished by setting the CONTEXT_EVENTS keyword when creating the widget, or by enabling context events by setting the CONTEXT_EVENTS keyword to WIDGET_CONTROL. When a user clicks the right mouse button over an appropriately configured base, list, text, or tree widget, a widget event with the following structure is generated:</p>
+        <p class="Code">{WIDGET_CONTEXT, ID:0L, TOP:0L, HANDLER:0L, X:0L, Y:0L, </p>
+        <p class="Code">   ROW:0L, COL:0L}</p>
+        <p>The first three fields are the standard fields found in every widget event. The X and Y fields give the device coordinates at which the event occurred, measured from the upper left corner of the base widget. The ROW and COL fields return meaningful information for table widgets and values of zero (0) for other widgets. </p>
+        <p>For table widgets, ROW and COL indicate the zero-based index of the cell that was clicked on when the context menu was initiated. The upper-left data cell has a row and column index of 0,0. Row and column headers have indices of -1. If the context menu event takes place outside of all table cells and headers, then both ROW and COL will have values of -1.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When working with context menu events, it is important to notice that the event structure does not have a TYPE field, so special code is needed for the property sheet event handler. Instead of keying off the TYPE field, use the structure’s name. An example is provided in the WIDGET_PROPERTYSHEET “Example” section in the <span class="Reference MaterialbkReference Guide">IDL Reference Guide</span>. </p>
+        <p>For draw widgets, button events are handled differently. Set the BUTTON_EVENTS keyword to WIDGET_DRAW (or the DRAW_BUTTON_EVENTS keyword to WIDGET_CONTROL) to generate widget events with the following structure:</p>
+        <p class="Code">{ WIDGET_DRAW, ID:0L, TOP:0L, HANDLER:0L, TYPE: 0, X:0L, Y:0L, &#160;&#160;&#160;PRESS:0B, RELEASE:0B, CLICKS:0, MODIFIERS:0L, CH:0, KEY:0L }</p>
+        <p>The first three fields are the standard fields found in every widget event. The X and Y fields give the device coordinates at which the event occurred, measured from the lower left corner of the drawing area. PRESS and RELEASE are bitmasks that represent which of the left, center, or right mouse button was pressed: that is, a value of 1 (one) represents the left button, 2 represents the middle button, and 4 represents the right button. (See <a href="../../Reference Material/W/WIDGET_DRAW.htm#W_811389549_680286">Widget Events Returned by Draw Widgets</a> for a complete description of the WIDGET_DRAW event structure.)</p>
+        <h4>Detecting Right Mouse Button Events</h4>
+        <p>Once the parent widget of your context menu is configured to generate events when the user clicks the right mouse button, you must detect the events in your event handler routine. For base, list, text, and tree widgets, your event handler should examine the event structure name to determine the type of event; if the event is of type WIDGET_CONTEXT, you know that the right mouse button was pressed. </p>
+        <p>To detect a right mouse button click in a base, list, text, or tree widget (with context events enabled), use the following test:</p>
+        <p class="Code">IF (TAG_NAMES(event, /STRUCTURE_NAME) EQ 'WIDGET_CONTEXT') THEN BEGIN</p>
+        <p class="Code">&#160;&#160;; process event here</p>
+        <p class="Code">ENDIF</p>
+        <p>For draw widgets, your event handler should examine the WIDGET_DRAW event structure; if the value of the RELEASE field is equal to four, you know that the right mouse button was pressed and released.</p>
+        <p>To detect a right mouse button click in a draw widget (with button events enabled), use the following test:</p>
+        <p class="Code">IF (event.release EQ 4) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;; process event here</p>
+        <p class="Code">ENDIF</p>
+        <p>Note that in a complex widget application, your event handler may first need to determine whether the event came from a draw widget. In this case, you may need a test that looks like this:</p>
+        <p class="Code">IF (TAG_NAMES(event, /STRUCTURE_NAME) EQ 'WIDGET_DRAW') THEN BEGIN</p>
+        <p class="Code">&#160;&#160;IF (event.release EQ 4) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;; process event here</p>
+        <p class="Code">&#160;&#160;ENDIF</p>
+        <p class="Code">ENDIF</p>
+        <h3>Display the Context Menu</h3>
+        <p>When your event handler routine detects a right mouse button click, use the WIDGET_DISPLAYCONTEXTMENU procedure to display the context menu. This routine takes as its parameters the widget ID of the widget for which the context menu is to be displayed, the X and Y coordinates at which the menu should be displayed, and the widget ID of the context menu base widget that holds the context menu. See <a href="../../Reference Material/W/WIDGET_DISPLAYCONTEXTMEN.htm#W_811389549_970597">WIDGET_DISPLAYCONTEXTMENU</a> for additional information.</p>
+        <p>In all cases, the ID field of the event structure generated by the right mouse button click contains the widget ID of the widget whose context menu is to be displayed. Similarly, the event structure contains the location of the mouse click in the X and Y fields; in most cases, this is where you will want to display the context menu.</p>
+        <p>The following code fragment would display a context menu held in a base widget whose widget ID is <code>contextBase</code> at the location of the user’s right mouse click:</p>
+        <p class="Code">WIDGET_DISPLAYCONTEXTMENU, event.ID, event.X, $</p>
+        <p class="Code">&#160;&#160;event.Y, contextBase</p>
+        <p>In a simple application with only one context menu, you know the widget ID of the context menu base widget to be displayed. In a real application, however, it is likely that more than one context menu exists. See <a href="#widget_techniques_4218446668_95654" class="selected">Determining Which Context Menu to Display</a>, below, for tips on dealing with multiple context menus.</p>
+        <h3>Process Button Events</h3>
+        <p>Once the context menu is displayed, processing events that flow from it is the same as processing events from any other menu. The individual buttons that make up the menu can have event handler routines associated with them; these routines are then invoked when the user clicks on one of the menu buttons. See the <a href="#widget_techniques_4218446668_95690" class="selected">Context Menu Example</a> below for a simple illustration of menu button event processing.</p>
+        <h3><a name="widget_techniques_4218446668_95654"></a><a name="widget_techniques_4218446668_95979"></a>Determining Which Context Menu to Display</h3>
+        <p>In a real application, you may have multiple context menus available to display when the user right-clicks on different portions of the user interface. One way to handle this situation is to have your event handler keep track of which context menu should be displayed for each widget. Consider a widget hierarchy that contains a text widget and a list widget, both of which have associated context menus:</p>
+        <p class="Code">topLevelBase = WIDGET_BASE(/COLUMN, XSIZE = 120, YSIZE = 80)</p>
+        <p class="Code">wText = WIDGET_TEXT(topLevelBase, VALUE="Context Menu Test", $</p>
+        <p class="Code">&#160;&#160;/CONTEXT_EVENTS)</p>
+        <p class="Code">wList = WIDGET_LIST(topLevelBase, VALUE=['one','two', 'three'], $</p>
+        <p class="Code">&#160;&#160;/CONTEXT_EVENTS)</p>
+        <p class="Code">contextBase1 = WIDGET_BASE(wText,  /CONTEXT_MENU, $</p>
+        <p class="Code">&#160;&#160;UNAME="tContextMenu")</p>
+        <p class="Code">contextBase2 = WIDGET_BASE(wList,  /CONTEXT_MENU, $</p>
+        <p class="Code">&#160;&#160;UNAME="lContextMenu")</p>
+        <p>Now the application’s event handler, after detecting a right mouse button click with the</p>
+        <p class="Code">IF (TAG_NAMES(event, /STRUCTURE_NAME) EQ 'WIDGET_CONTEXT')</p>
+        <p>test, must somehow determine whether the user had clicked on the text widget or the list widget. To make this determination, you could use the WIDGET_INFO function to search the widget hierarchy starting with the widget at the top of the event structure for a widget with the correct UNAME value:</p>
+        <p class="Code">IF (WIDGET_INFO(event.id, FIND_BY_UNAME = 'tContextMenu') GT 0) $</p>
+        <p class="Code">&#160;&#160;THEN BEGIN</p>
+        <p class="Code">&#160;&#160;WIDGET_DISPLAYCONTEXTMENU, event.id, event.x, event.y, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;WIDGET_INFO(event.id, FIND_BY_UNAME = 'tContextMenu')</p>
+        <p class="Code">ENDIF</p>
+        <p class="Code">IF (WIDGET_INFO(event.id, FIND_BY_UNAME = 'lContextMenu') GT 0) $</p>
+        <p class="Code">&#160;&#160;THEN BEGIN</p>
+        <p class="Code">&#160;&#160;WIDGET_DISPLAYCONTEXTMENU, event.id, event.x, event.y, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;WIDGET_INFO(event.id, FIND_BY_UNAME = 'lContextMenu')</p>
+        <p class="Code">ENDIF</p>
+        <p>While this method will always work, it may involve a substantial amount of code, and must search the widget hierarchy multiple times to find the widget ID of the base for the context menu. If, however, your application has at most one context menu for each base, draw, list, or text widget, you can streamline the code significantly by using a common UNAME value for all of the context menus. For example, if the definitions of the context menu bases change to this:</p>
+        <p class="Code">contextBase1 = WIDGET_BASE(wText,  /CONTEXT_MENU, $</p>
+        <p class="Code">&#160;&#160;UNAME="contextMenu")</p>
+        <p class="Code">contextBase2 = WIDGET_BASE(wList,  /CONTEXT_MENU, $</p>
+        <p class="Code">&#160;&#160;UNAME="contextMenu")</p>
+        <p>then the code detecting and displaying the context menu becomes:</p>
+        <p class="Code">contextBase = WIDGET_INFO(event.ID, FIND_BY_UNAME = 'contextMenu')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">WIDGET_DISPLAYCONTEXTMENU, event.ID, event.X, $</p>
+        <p class="Code">&#160;&#160;event.Y, contextBase</p>
+        <p>Since the context menu base is a child of the text or list widget, the call to WIDGET_INFO finds the appropriate base by searching for the UNAME value “contextMenu”, starting at the widget specified by <code>event.ID</code>.</p>
+        <h3><a name="widget_techniques_4218446668_95690"></a><a name="widget_techniques_4218446668_77298"></a>Context Menu Example</h3>
+        <p>The context menu example defines a simple application with two context menus, one each for a list widget and a text widget. When a menu item on one of the context menus is selected, IDL prints an informational message.</p>
+        <p class="ExampleCode">See the file <code>context_menu_example.<a name="kanchor5032"></a>pro</code> in the <code>examples/doc/widgets</code> subdirectory of the IDL distribution for the example code. Run this example procedure by entering <code>context_menu_example</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT context_menu_example.pro</code>. See <a href="About_Widget_Application.htm#widget_apps_4063420628_1041756">Running the Example Code</a> if IDL does not run the program as expected.</p>
+        <p class="ExampleCode">Additional examples using the context menu in various situations can be found in the <code>examples/doc/widgets</code> subdirectory of the IDL distribution:<br />&#160;&#160;&#160;&#160;&#160;<code>context_tlbase_example.<a name="kanchor5033"></a>pro</code><br />&#160;&#160;&#160;&#160;&#160;<code>context_draw_example.<a name="kanchor5034"></a>pro</code><br />&#160;&#160;&#160;&#160;&#160;<code>context_list_example.<a name="kanchor5035"></a>pro</code><br />&#160;&#160;&#160;&#160;&#160;<code>context_text_example.<a name="kanchor5036"></a>pro</code></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

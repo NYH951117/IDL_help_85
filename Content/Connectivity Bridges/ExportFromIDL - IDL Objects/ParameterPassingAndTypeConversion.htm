@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|Java and COM - IDL Objects">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Parameter Passing And Type Conversion</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Java and COM - IDL Objects</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Parameter Passing And Type Conversion</span>
+        </div>
+        <h1><a name="Parameter_Passing_And_Type_Conversion"></a><a name="kanchor5314"></a>Parameter Passing And <a name="kanchor5315"></a>Type Conversion</h1>
+        <p>The following topics contain important information that must be kept in mind when passing objects, arrays and variables between IDL and an external programming environment:</p>
+        <ul>
+            <li value="1"><a href="#Object_Reference_Use" class="selected">Object Reference Use</a>
+            </li>
+            <li value="2"><a href="#Array_Order_Conversion" class="selected">Array Order Conversion</a>
+            </li>
+            <li value="3"><a href="#Type_Conversion" class="selected">Type Conversion</a>
+            </li>
+        </ul>
+        <h2><a name="Object_Reference_Use"></a>Object Reference Use</h2>
+        <p>It is possible to pass an <a name="kanchor5316"></a>object reference to another wrapper object as a method parameter, with the following restrictions.</p>
+        <ul>
+            <li value="1">The object reference must be a reference to another Export Bridge wrapper object instance of the same wrapper language type (COM or Java) — that is, COM to COM or Java to Java</li>
+            <li value="2">You cannot pass in object references to non-Export Bridge wrapper objects</li>
+            <li value="3">The object reference is “in-only,” meaning that methods and properties cannot return or modify a reference to an object</li>
+            <li value="4">Both objects (the object being referred to and the object using the reference) must have their underlying IDL objects contained within the same IDL process.</li>
+        </ul>
+        <p>For example, using the diagram in <a href="IDLAccess.htm">IDL Access</a>, wrapper object A can have a method that takes an object reference. But the only valid object reference that can be specified is to an instance of wrapper object B, since both have their underlying IDL objects living in the same process, X.</p>
+        <p>If you attempt to pass in an object reference to an IDL object contained in different processes, the method call returns an error. An error is also returned if you attempt to pass in an object reference that does not reference an instance of an Export Bridge wrapper object.</p>
+        <h3>Arrays of Object References</h3>
+        <p>You can also create an array of object references as long as all the objects being referenced are in the same IDL process as the object using the array.</p>
+        <p>When creating an array of object references for COM, it must be defined as a SAFEARRAY of variants, with each variant containing the IUknown or IDispatch pointer to a COM or ActiveX wrapper object instance.</p>
+        <p>When creating an array of object references for Java, it must be defined as a JIDLArray containing an array of JIDLObjectI references.</p>
+        <h2><a name="Array_Order_Conversion"></a><a name="kanchor5317"></a>Array Order Conversion</h2>
+        <p>A method parameter or property value can be an array. When dealing with multidimensional arrays, one must always be aware of the array ordering. See <a href="../Appendices - Multidimensional Array Storage and Access/MASAOverview.htm#Multidimensional_Array_Storage_and_Access_Overview">Multidimensional Array Storage and Access</a> for a complete discussion of the issues.</p>
+        <p>However, you must take into account the array ordering of the client-side array and the array order expected by IDL. The wrapper objects will convert array ordering when designated to do so in the Export Bridge Assistant. During wrapper object construction, the Export Bridge Assistant lets you designate a method parameter as an array and then indicate if the array needs to be converted (see <a href="../ExportFromIDL - Export Bridge Assistant/SpecifyingInformationForExporting.htm#Converting_Array_Majority">Converting Array Majority</a> for details). If the array parameter is marked for conversion, the client array is converted during the method call before being sent to the underlying IDL object. If the parameter is also marked with In/Out mutability (meaning that the parameter is not constant and can be set by the caller and pass the value back to the caller), the array is also converted on the way back to the client. For more information on mutability, see <a href="../ExportFromIDL - Export Bridge Assistant/SpecifyingInformationForExporting.htm#Parameter_Information">Parameter Information</a>.</p>
+        <p>However, there are certain cases where arrays are automatically converted and the user does not have the option to designate conversion. When calling the GetIdlVariable and SetIdlVariable methods on a wrapper object, or when an IDL function returns an array value, the array is always converted into the order expected by COM. (For Java, the user has the option to designate conversion.)</p>
+        <h2><a name="Type_Conversion"></a><a name="kanchor5318"></a>Type Conversion</h2>
+        <p>IDL is a dynamically typed language that lets variables change type after creation. Java and COM are strongly typed languages, which require a variable to be given a fixed type when it is created. This difference can lead to type-conversion errors during method calls because the IDL object can redefine the data type of a parameter. When a method parameter is marked In/Out, the updated parameter value is returned to the client upon return of the method. During the method return, the wrapper compares the data type of the input value against the data type of the output value.</p>
+        <p>The wrapper will perform a loose type conversion in which:</p>
+        <ul>
+            <li value="1">Any scalar type can be converted to any other scalar type (e.g., a short integer to a long integer)</li>
+            <li value="2">A scalar string to a scalar string (e.g., a string of one length to a different length)</li>
+            <li value="3">An array to an array (e.g., any dimensionality and type to any other dimensionality and type)</li>
+        </ul>
+        <p>Loose type conversion attempts to convert the variables returned by the wrapped IDL object to the types expected by the wrapper object.</p>
+        <p>A data conversion error is returned when the above rules are not met. For example:</p>
+        <ul>
+            <li value="1">A scalar changes to a string</li>
+            <li value="2">A scalar changes to an array</li>
+            <li value="3">A string changes to a scalar</li>
+            <li value="4">A string changes to an array</li>
+            <li value="5">An array changes to a scalar</li>
+            <li value="6">An array changes to a string</li>
+        </ul>
+        <p>See <a href="../ExportFromIDL - Export Bridge Assistant/SpecifyingInformationForExporting.htm#Supported_Data_Types">Supported Data Types</a> for data types supported by COM and Java.</p>
+        <h2>IDL Error State and Successful Method Return</h2>
+        <p>If your client creates an instance of a COM/Java Export Bridge wrapper object, and calls an object method whose code throws an error, the wrapped method will return an error unless the referenced code resets the internal IDL error state.</p>
+        <p>In this circumstance, it is best if the wrapped code catches its own error, handles it, and resets the IDL error state. You can reset the IDL error state in the error handling catch block by calling the MESSAGE procedure:</p>
+        <p class="Code">MESSAGE, /RESET</p>
+        <p>This procedure call sets the !ERROR_STATE system variable back to the “success” state.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Environment|Miscellaneous Environment Topics">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Automatic Compilation and Execution</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Concepts.htm">Environment</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../MiscellaneousEnvironmentTopics.htm">Miscellaneous Environment Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Automatic Compilation and Execution</span>
+        </div>
+        <h1><a name="procedures_3673536221_772212"></a><a name="procedures_3673536221_51736"></a>Automatic Compilation and Execution</h1>
+        <p>When used in interactive mode (in the IDL Workbench or in a command shell session — anywhere you see the <code>IDL&gt;</code> prompt) IDL automatically <a name="kanchor4302"></a>compiles and executes a user-written function or procedure when it is first referenced if:</p>
+        <ol>
+            <li value="1">The source code of the function is in the current working directory or in a directory in the IDL search path defined by the system variable <a href="../Appendices/IDL_Environment_System_V.htm#sysvars_272074529_997094">!PATH</a>.</li>
+            <li value="2">The name of the file containing the function is the same as the function name suffixed by <code>.pro</code> or <code>.sav</code>. The suffix should be in lowercase letters.</li>
+        </ol>
+        <p>IDL does <i>not</i> search for files to compile or restore in runtime mode. When using the IDL Virtual Machine or any other runtime mechanism, all routines required by the application must either be restored when the application is initially loaded, or restored explicitly by the application code.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span><a name="kanchor4303"></a>IDL is case-insensitive. However, for some operating systems, IDL only checks for the lowercase filename based on the name of the procedure or function. We recommend that all filenames be lowercase letters.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>User-written functions must be defined before they are referenced, unless they meet the above conditions for automatic compilation, or the function name has been reserved by using the FORWARD_FUNCTION statement described below. This restriction is necessary in order to distinguish between function calls and subscripted variable references.</p>
+        <p>For more information on how to access routines, see Running Named Programs .</p>
+        <h3>A Note on Files with Duplicate Names</h3>
+        <p>If multiple <code>.pro</code> or <code>.sav</code> files with the same base name exist in the directories specified by the <a href="../Appendices/IDL_Environment_System_V.htm#sysvars_272074529_997094">!PATH</a> system variable, IDL will compile or restore the first file it finds, according to the following rules:</p>
+        <ol>
+            <li value="1">IDL begins by searching in the current directory.</li>
+            <li value="2">If a <code>.pro</code> file whose base name matches the routine specified exists in the directory being searched, IDL compiles it, runs the routine, and stops searching.</li>
+            <li value="3">If a <code>.sav</code> file whose base name matches the routine specified exists in the directory being searched, IDL restores it, runs the routine, and stops searching.</li>
+            <li value="4">IDL proceeds to the first directory specified by the <a href="../Appendices/IDL_Environment_System_V.htm#sysvars_272074529_997094">!PATH</a> system variable and begins testing again with step 2. If no match is found, IDL proceeds to check each of the directories specified by the <a href="../Appendices/IDL_Environment_System_V.htm#sysvars_272074529_997094">!PATH</a> system variable in the order they appear in !PATH.</li>
+            <li value="5">If no file whose base name matches the routine specified is found in the directories specified by the <a href="../Appendices/IDL_Environment_System_V.htm#sysvars_272074529_997094">!PATH</a> system variable, IDL issues an <code>Attempt to call undefined procedure/function</code> error, and halts execution.</li>
+        </ol>
+        <h2 class="API"><a name="procedures_3673536221_771841"></a><a name="procedures_3673536221_98076"></a>About Calling and <a name="kanchor4304"></a>Compiling Functions</h2>
+        <p>Versions of IDL prior to version 5.0 used parentheses to indicate array subscripts. Because function calls use parentheses as well, the IDL compiler is not able to distinguish between arrays and functions by examining the statement syntax.</p>
+        <p>User-defined functions, with the exception of those contained in directories specified by the IDL system variable !PATH, must be compiled before the first reference to the function is encountered. This is necessary because the IDL compiler is unable to distinguish between a reference to a variable subscripted with parentheses and a call to a presently undefined user function with the same name. For example, in the statement:</p>
+        <p class="Code">A = XYZ(5)</p>
+        <p>it is impossible to tell by context alone if XYZ is an array or a function.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In versions of IDL prior to version 5.0, parentheses were used to enclose array subscripts. While using parentheses to enclose array subscripts will continue to work as in previous version of IDL, we strongly suggest that you use brackets in all new code. See <a href="../Components of the IDL Language/Understanding_Array_Subs.htm#arrays_3727706888_737171">Array Subscript Syntax: [ ] vs. ( )</a> for additional details.</p>
+        <p>When IDL encounters references that may be either a function call or a subscripted variable, it searches the current directory, then the directories specified by <a href="../Appendices/IDL_Environment_System_V.htm#sysvars_272074529_997094">!PATH</a>, for files with names that match the unknown function or variable name. If one or more files matching the unknown name exist, IDL compiles them before attempting to evaluate the expression. If no function or variable with the given name exists, IDL displays an error message.</p>
+        <p>There are several ways to avoid this problem:</p>
+        <ul>
+            <li value="1">Compile the lowest-level functions (those that call no other functions) first, then higher-level functions, and finally procedures.</li>
+            <li value="2">Place the function in a file with the same name as the function, and place that file in one of the directories specified by !PATH.</li>
+            <li value="3">Use the FORWARD_FUNCTION definition statement to inform IDL that a given name refers to a function rather than a variable. See <a href="../../Reference Material/F/FORWARD_FUNCTION.htm">FORWARD_FUNCTION</a>. </li>
+            <li value="4">Manually compile all functions before any reference, or use <a href="../../Reference Material/R/RESOLVE_ROUTINE.htm">RESOLVE_ROUTINE</a> or <a href="../../Reference Material/R/RESOLVE_ALL.htm">RESOLVE_ALL</a> to compile functions.</li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

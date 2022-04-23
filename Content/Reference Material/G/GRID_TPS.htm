@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: G">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>GRID_TPS </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="G_list.htm">Routines: G</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">GRID_TPS</span>
+        </div>
+        <h1 class="Routine"><a name="G_845992557_870369"></a><a name="G_845992557_48705"></a>GRID_TPS </h1>
+        <p><a name="kanchor1087"></a><a name="kanchor1088"></a>The GRID_TPS function uses thin plate splines to interpolate a set of values over a regular two dimensional grid, from irregularly sampled data values. Thin plate splines are ideal for modeling functions with complex local distortions, such as warping functions, which are too complex to be fit with polynomials.</p>
+        <p>Given <i>n</i> points, (<i>x</i><sub class="italic">i</sub>, <i>y</i><sub class="italic">i</sub>) in the plane, a thin plate spline can be defined as:</p>
+        <p>
+            <img src="../../images/13_24.jpg" />
+        </p>
+        <p>with the constraints:</p>
+        <p>
+            <img src="../../images/13_25.jpg" />
+        </p>
+        <p>where <i>r</i><sub class="italic">i</sub><sup>2 </sup>= (<i>x</i>-<i>x</i><sub class="italic">i</sub>)<sup>2</sup> + (<i>y</i>-<i>y</i><sub class="italic">i</sub>)<sup>2</sup>. A thin plate spline (TPS) is a smooth function, which implies that it has continuous first partial derivatives. It also grows almost linearly when far away from the points (<i>x</i><sub class="italic">i</sub>, <i>y</i><sub class="italic">i</sub>). The TPS surface passes through the original points: <i>f</i>(<i>x</i><sub class="italic">i</sub>, <i>y</i><sub class="italic">i</sub>) = <i>z</i><sub class="italic">i</sub>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>GRID_TPS requires at least 7 noncolinear points.</p>
+        <h2 class="API"><a name="G_845992557_871841"></a><a name="G_845992557_871841_PageTOC_GRID_TPS_"></a>Examples</h2>
+        <p>The following example creates a set of 25 random values defining a surface on a square, 100 units on a side, starting at the origin. Then, we use GRID_TPS to create a regularly gridded surface, with dimensions of 101 by 101 over the square, which is then displayed. The same data set is then interpolated using TRIGRID, and the two results are displayed for comparison.</p>
+        <p class="Code">;X values<br />x = RANDOMU(seed, 25) * 100<br /><br />;Y values<br />y = RANDOMU(seed, 25) * 100<br /><br />;Z values<br />z = RANDOMU(seed, 25) * 10<br /><br />z1 = GRID_TPS(x, y, z, NGRID=[101, 101], START=[0,0], DELTA=[1,1])<br /><br />;Show the result<br />SHADE_SURF, z1, TITLE='TPS'<br /><br />;Grid using TRIGRID<br />TRIANGULATE, x, y, tr, bounds<br /><br />z2 = TRIGRID(x, y, z, tr, [1,1], [0,0,100, 100], $<br />&#160;&#160;&#160;EXTRAPOLATE=bounds)<br /><br />;Show triangulated surface<br />SHADE_SURF, z2, TITLE='TRIGRID - Quintic'</p>
+        <h2 class="API"><a name="G_845992557_871818"></a><a name="G_845992557_871818_PageTOC_GRID_TPS_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = GRID_TPS (<i>Xp</i>, <i>Yp</i>, <i>Values</i> [,&#160;<a href="#G_845992557_871830" class="selected">COEFFICIENTS</a>=<i>variable</i>] [,&#160;<a href="#G_845992557_871834" class="selected">NGRID</a>=<i>[</i><i>nx</i><i>,&#160;</i><i>ny</i><i>]</i>] [,&#160;<a href="#G_845992557_871836" class="selected">START</a>=<i>[</i><i>x0</i><i>,&#160;</i><i>y0</i><i>]</i>] [,&#160;<a href="#G_845992557_871832" class="selected">DELTA</a>=<i>[</i><i>dx</i><i>,&#160;</i><i>dy</i><i>]</i>]&#160;)</p>
+        <h2 class="API"><a name="G_845992557_871820"></a><a name="G_845992557_871820_PageTOC_GRID_TPS_"></a>Return Value</h2>
+        <p>An array of dimension (<i>nx</i>, <i>ny</i>) of interpolated values. If the values argument is a two-dimensional array, the output array has dimensions (<i>nz</i>, <i>nx</i>, <i>ny</i>), where <i>nz</i> is the leading dimension of the values array allowing for the interpolation of arbitrarily sized vectors in a single call. Keywords can be used to specify the grid dimensions, size, and location.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the Cholesky factorization used within GRID_TPS fails, then <i>Result</i> will be a scalar 0.</p>
+        <h2 class="API"><a name="G_845992557_871822"></a><a name="G_845992557_871822_PageTOC_GRID_TPS_"></a>Arguments</h2>
+        <h3 class="Argument">Xp</h3>
+        <p>A vector of <i>x</i> points.</p>
+        <h3 class="Argument">Yp</h3>
+        <p>A vector of <i>y</i> points, with the same number of elements as the <i>Xp</i> argument.</p>
+        <h3 class="Argument">Values</h3>
+        <p>A vector or two-dimensional array of values to interpolate. If values are a two-dimensional array, the leading dimension is the number of values for which interpolation is performed.</p>
+        <h2 class="API"><a name="G_845992557_871829"></a><a name="G_845992557_871829_PageTOC_GRID_TPS_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="G_845992557_871830"></a><a name="G_845992557_871830_Keywords_GRID_TPS__"></a>COEFFICIENTS</h3>
+        <p>A named variable in which to store the resulting coefficients of the thin plate spline function for the last set of Values. The first <i>N</i> elements, where <i>N</i> is the number of input points, contain the coefficients <i>b</i><sub class="italic">i</sub>, in the previous equation. Coefficients with subscripts <i>n</i>, <i>n</i>+1, and <i>n</i>+2, contain the values of <i>a</i><sub>0</sub>, <i>a</i><sub>1</sub>, and <i>a</i><sub>2</sub>, in the above equation.</p>
+        <h3 class="Keyword"><a name="G_845992557_871832"></a><a name="G_845992557_871832_Keywords_GRID_TPS__"></a>DELTA</h3>
+        <p>A two-element array specifying the grid spacing in X and Y. If this keyword is not specified, or if one of the elements is set equal to zero, the grid spacing is determined from the values of the NGRID and START keywords, according to the following rules: </p>
+        <p>DELTA<sub>0</sub> = (MAX(<i>Xp</i>) - START<sub>0</sub>)/(NGRID<sub>0</sub> - 1)</p>
+        <p>DELTA<sub>1</sub> = (MAX(<i>Yp</i>) - START<sub>1</sub>)/(NGRID<sub>1</sub> - 1)</p>
+        <p>DELTA can also be set to a scalar value to be used for the grid size in both X and Y.</p>
+        <h3 class="Keyword"><a name="G_845992557_871834"></a><a name="G_845992557_871834_Keywords_GRID_TPS__"></a>NGRID</h3>
+        <p>A two-element array of the size of the grid to interpolate (<i>n</i><sub class="italic">x</sub>, <i>n</i><sub class="italic">y</sub>). If a scalar is passed, the value is used for both <i>n</i><sub class="italic">x</sub> and <i>n</i><sub class="italic">y</sub>. The default value is [25, 25].</p>
+        <h3 class="Keyword"><a name="G_845992557_871836"></a><a name="G_845992557_871836_Keywords_GRID_TPS__"></a>START</h3>
+        <p>A two-element array of the location of grid point (<i>x</i><sub>0</sub>, <i>y</i><sub>0</sub>). If a scalar is passed, the value is used for both <i>x</i><sub>0</sub> and <i>y</i><sub>0</sub>. The default is the minimum values in the <i>xp</i> and <i>yp</i> arrays.</p>
+        <h2 class="API"><a name="G_845992557_871838_PageTOC_GRID_TPS_"></a>References</h2>
+        <p>I. Barrodale, et al, “Note: Warping digital images using thin plate splines”, Pattern Recognition, Vol 26, No. 2, pp 375-376, 1993.</p>
+        <p>M. J. D. Powell, “Tabulation of thin plate splines on a very fine two-dimensional grid”, Report No. DAMTP 1992/NA2, University of Cambridge, Cambridge, U.K. (1992).</p>
+        <p class="Code">
+            <br />
+        </p>
+        <h2 class="API"><a name="G_845992557_874202"></a><a name="G_845992557_874202_PageTOC_GRID_TPS_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="G_845992557_881396"></a><a name="G_845992557_881396_PageTOC_GRID_TPS_"></a>See Also</h2>
+        <p><a href="../M/MIN_CURVE_SURF.htm#M_824365677_888757">MIN_CURVE_SURF</a>, 
+            “Curve and Surface Fitting” (Chapter 7, <i>Using IDL</i>) in the <code>help/pdf</code> directory of the IDL installation directory.
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

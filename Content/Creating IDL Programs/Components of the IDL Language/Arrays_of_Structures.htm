@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Arrays">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Arrays of Structures</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Arrays.htm">Arrays</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Arrays of Structures</span>
+        </div>
+        <h1><a name="structures_2305844932_127926"></a><a name="structures_2305844932_23456"></a>Arrays of <a name="kanchor4466"></a>Structures</h1>
+        <p>An array of structures is simply an array in which each element is a structure of the same type. The referencing and subscripting of these arrays (also called structure arrays) follow the same rules as simple arrays.</p>
+        <h2 class="API"><a name="structures_2305844932_31732"></a>Creating an Arr<a name="kanchor4467"></a>ay of Structures</h2>
+        <p>The easiest way to create an array of structures is to use the REPLICATE function. The first parameter to REPLICATE is a reference to the structure of each element. Using the example in <a href="Structure_References.htm#structures_2305844932_127896">Examples of Structure References</a> and assuming the STAR structure has been defined, an array containing 100 elements of the structure is created with the following statement:</p>
+        <p class="Code">cat = REPLICATE({star}, 100)</p>
+        <p>Alternatively, since the variable A contains an instance of the structure STAR, then</p>
+        <p class="Code">cat = REPLICATE(A, 100)</p>
+        <p>Or, to define the structure and an array of the structure in one step, use the following statement:</p>
+        <p class="Code">cat = REPLICATE({star, name:'', ra:0.0, dec:0.0, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;inten:FLTARR(12)}, 100)</p>
+        <p>The concepts and combinations of subscripts, subscript arrays, subscript ranges, fields, nested structures, etc., are quite general and lead to many possibilities, only a small number of which can be explained here. In general, any structures that are similar to the examples above are allowed.</p>
+        <h2 class="API"><a name="structures_2305844932_69712"></a>Examples of Arrays of Structures</h2>
+        <p>This example uses the above definition in which the variable CAT contains a star catalog of STAR structures.</p>
+        <p class="Code">;Set the name field of all 100 elements to "EMPTY."</p>
+        <p class="Code">cat.name = 'EMPTY'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Set the i-th element of cat to the contents of the star structure.</p>
+        <p class="Code">cat[I] = {star, 'BETELGEUSE', 12.4, 54.2, FLTARR(12)}</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Store 0.0 into cat[0].ra, 1.0 into cat[1].ra, ..., 99.0 into </p>
+        <p class="Code">;cat[99].ra</p>
+        <p class="Code">cat.ra = INDGEN(100)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Prints name field of all 100 elements of cat, separated by commas </p>
+        <p class="Code">;(the last field has a trailing comma).</p>
+        <p class="Code">PRINT, cat.name + ','</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Find index of star with name of SIRIUS.</p>
+        <p class="Code">I = WHERE(cat.name EQ 'SIRIUS')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Extract intensity field from each entry. Q will be a 12 by 100 </p>
+        <p class="Code">;floating-point array.</p>
+        <p class="Code">Q = cat.inten</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Plot intensity of sixth star in array cat.</p>
+        <p class="Code">PLOT, cat[5].inten</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Make a contour plot of the (7,46) floating-point array ;taken from </p>
+        <p class="Code">;months (2:8) and stars (5:50).</p>
+        <p class="Code">CONTOUR, cat[5:50].inten[2:8]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Sort the array into ascending order by names. Store the result </p>
+        <p class="Code">;back into cat.</p>
+        <p class="Code">cat = cat(SORT(cat.name))</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Determine the monthly total intensity of all stars in array. </p>
+        <p class="Code">;monthly is now a 12-element array.</p>
+        <p class="Code">monthly = cat.inten # REPLICATE(1,100)</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

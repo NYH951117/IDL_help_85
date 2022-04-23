@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_RAND_GEN_CONT</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="IMSL_RAND_GEN_CONT"></a>IMSL_RAND_GEN_CONT</h1>
+        <p>The IMSL_RAND_GEN_CONT function generates pseudorandom numbers from a general continuous distribution.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>Routine IMSL_RAND_GEN_CONT generates pseudorandom numbers from a continuous distribution using the inverse CDF technique, by interpolation of points of the distribution function given in table, which is set up by <a href="IMSL_CONT_TABLE.htm#IMSL_CONT_TABLE">IMSL_CONT_TABLE</a>. A strictly monotone increasing distribution function is assumed. The interpolation is by an algorithm attributable to Akima (1970), using piecewise cubics. The use of this technique for generation of random numbers is due to Guerra, Tapia, and Thompson (1976), who give a description of the algorithm and accuracy comparisons between this method and linear interpolation. The relative errors using the Akima interpolation are generally considered very good.</p>
+        <h2 class="API">Examples</h2>
+        <h3>Example 1</h3>
+        <p>In this example, IMSL_RAND_GEN_CONT is used to set up a table for generation of beta pseudorandom deviates. The CDF for this distribution is computed by the routine IMSL_BETACDF. The table contains 100 points at which the CDF is evaluated and that are used for interpolation. Notice that two warnings are issued during the computations for this example.</p>
+        <p class="Code">.RUN</p>
+        <p class="Code">FUNCTION cdf, x</p>
+        <p class="Code">return, IMSL_BETACDF(x, 3., 2.)</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">iopt = 0</p>
+        <p class="Code">ndata = 100;</p>
+        <p class="Code">table = FLTARR(100, 5)</p>
+        <p class="Code">x = 0.0;</p>
+        <p class="Code">table(*,0) = FINDGEN(100)/100.</p>
+        <p class="Code">IMSL_CONT_TABLE, 'cdf', iopt, ndata, table</p>
+        <p class="Code">IMSL_RANDOMOPT, Set = 123457</p>
+        <p class="Code">r = IMSL_RAND_GEN_CONT(5, table)</p>
+        <p class="Code">PM, r</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">0.92079391</p>
+        <p class="Code">0.46412855</p>
+        <p class="Code">0.76678398</p>
+        <p class="Code">0.65357975</p>
+        <p class="Code">0.81706959</p>
+        <h2 class="API">Syntax</h2>
+        <p><i>Result</i> = IMSL_RAND_GEN_CONT(<i>n</i>, <i>table</i> [, /DOUBLE])</p>
+        <h2 class="API">Return Value</h2>
+        <p>An array of length n containing the random deviates.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">n</h3>
+        <p>Number of random numbers to generate.</p>
+        <h3 class="Argument">table</h3>
+        <p>A two-dimensional array setup using IMSL_CONT_TABLE to be used for interpolation of the cumulative distribution function. The first column of table contains abscissas of the cumulative distribution function in ascending order, the second column contains the values of the CDF (which must be strictly increasing beginning with 0.0 and ending at 1.0) and the remaining columns contain values used in interpolation.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">DOUBLE</h3>
+        <p>If present and nonzero, double precision is used.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="IMSL_CONT_TABLE.htm#IMSL_CONT_TABLE">IMSL_CONT_TABLE</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_SP_LUFAC</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1>IMSL_SP_LUFAC</h1>
+        <p>The IMSL_SP_LUFAC function computes an LU factorization of a sparse matrix stored in either coordinate format or CSC format. Using keywords, any of several related computations can be performed.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>The IMSL_SP_LUFAC function computes an <i>LU</i> factorization of <i>A</i> using the improved generalized symmetric Markowitz pivoting scheme.</p>
+        <p>If a sequence of systems <i>Ax = b</i> are to be solved where <i>A</i> is unchanged, it is usually more efficient to compute the factorization once and perform multiple forward and back solves with the various right-hand sides. In this case, the factor <i>L</i> is explicitly stored and a record of all rows as well as column interchanges is made. The solve step then solves the two triangular systems <i>Ly = b</i> and <i>Ux = y</i>. In this case, first call IMSL_SP_LUFAC to compute the factorization, then use the keyword FACTOR_COORD with the IMSL_SP_LUSOL function.</p>
+        <p>If the solution to <i>A</i><sup style="font-style: italic;">T</sup><i>x = b</i> is required, specify the keyword TRANSPOSE. This keyword only alters the forward elimination and back substitution so that the operations <i>U</i><sup style="font-style: italic;">T</sup><i>y = b</i> and <i>L</i><sup style="font-style: italic;">T</sup><i>x = y</i> are performed to obtain the solution. So, with one call to IMSL_SP_LUFAC to produce the factorization, solutions to both <i>Ax = b</i> and <i>A</i><sup style="font-style: italic;">T</sup><i>x = b</i> can be obtained.</p>
+        <p>The keyword CONDITION is used to calculate and return an estimation of the<i> L</i><sub style="font-style: italic;">1</sub> condition number of <i>A</i>. The algorithm used is due to Higham. Specifying CONDITION causes a complete L to be computed and stored, even if a one-off problem is being solved. This is due to the fact that Higham’s method requires solution to problems of the form <i>Az = r</i> and <i>A</i><sup style="font-style: italic;">T</sup><i>z = r</i>.</p>
+        <p>The default pivoting strategy is symmetric Markowitz (PIVOTING = 3). If a row or column oriented problem is encountered, there may be some reduction in fill-in by selecting either PIVOTING = 1 for row Markowitz, or PIVOTING = 2 for column Markowitz. The Markowitz strategy will search a pre-elected number of rows or columns for pivot candidates. The default number is three, but this can be changed by using the keyword N_SEARCH_ROWS.</p>
+        <p>The keyword TOL_DROP can be used to set a tolerance which can reduce fill-in. This works by preventing any new fill element which has magnitude less than the specified drop tolerance from being added to the factorization. Since this can introduce substantial error into the factorization, it is recommended that the keyword ITER_REFINE be used to recover more accuracy in the final solution. The trade-off is between space savings from the drop tolerance and the extra time needed in repeated solve steps needed for refinement.</p>
+        <p>The IMSL_SP_LUFAC function provides the option of switching to a dense factorization method at some point during the decomposition. This option is enabled by specifying the keywords HYBRID_DENSITY and HYBRID_ORDER. HYBRID_DENSITY specifies a minimum density for the active submatrix before a format switch will occur. A density of 1.0 indicates complete fill-in. HYBRID_ORDER places an upper bound of the order of the active submatrix which will be converted to dense format. This is used to prevent a switch from occurring too early, possibly when the <i>O</i>(<i>n</i><sup>3</sup>) nature of the dense factorization will cause performance degradation. Note that this option can significantly increase heap storage requirements.</p>
+        <h2 class="API">Example</h2>
+        <p>Consider the following matrix:</p>
+        <p>
+            <img src="images/IMSL_SP_LUSOL_Example.png" />
+        </p>
+        <p>This example factors <i>A</i> using IMSL_SP_LUFAC, and computes solutions to the systems <i>Ax</i><sub style="font-style: italic;">1</sub><i> = b</i><sub style="font-style: italic;">1</sub> and <i>Ax</i><sub style="font-style: italic;">2</sub><i> = b</i><sub style="font-style: italic;">2</sub> using the computed factor as input to IMSL_SP_LUSOL.</p>
+        <p>&#160;</p>
+        <p class="Code">A = replicate(imsl_f_sp_elem, 15)</p>
+        <p class="Code">; Define the sparse matrix A using coordinate storage format.</p>
+        <p class="Code">a(*).row = [0, 1, 1, 1, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5]</p>
+        <p class="Code">a(*).col = [0, 1, 2, 3, 2, 0, 3, 4, 0, 3, 4, 5, 0, 1, 5]</p>
+        <p class="Code">a(*).val = [10, 10, -3, -1, 15, -2, 10, -1, -1, -5, $</p>
+        <p class="Code">1, -3, -1, -2, 6]</p>
+        <p class="Code">b1 = [10, 7, 45, 33, -34, 31]</p>
+        <p class="Code">b2 = [50, 40, 225, 130, -85, 5]</p>
+        <p class="Code">; Define the right-hand sides.</p>
+        <p class="Code">factor = IMSL_SP_LUFAC(a, 6)</p>
+        <p class="Code">; Compute the LU factorization.</p>
+        <p class="Code">x1 = IMSL_SP_LUSOL(b1, factor_coord = factor)</p>
+        <p class="Code">; Call IMSL_SP_LUSOL with factor and b1, then print result</p>
+        <p class="Code">; and the sum of the residuals.</p>
+        <p class="Code">PM, x1</p>
+        <p class="Code_Indented">1.0000000</p>
+        <p class="Code_Indented">2.0000000</p>
+        <p class="Code_Indented">3.0000000</p>
+        <p class="Code_Indented">4.0000000</p>
+        <p class="Code_Indented">5.0000000</p>
+        <p class="Code_Indented">6.0000000</p>
+        <p class="Code">PM, TOTAL(ABS(IMSL_SP_MVMUL(6, 6, a, x1) - b1))</p>
+        <p class="Code">8.8817842e-16</p>
+        <p class="Code">x2 = IMSL_SP_LUSOL(b2, factor_coord = factor)</p>
+        <p class="Code">; Call IMSL_SP_LUSOL with factor and b2, then print out</p>
+        <p class="Code">; result and the sum of the residuals.</p>
+        <p class="Code">PM, x2</p>
+        <p class="Code_Indented">5.0000000</p>
+        <p class="Code_Indented">10.000000</p>
+        <p class="Code_Indented">15.000000</p>
+        <p class="Code_Indented">15.000000</p>
+        <p class="Code_Indented">10.000000</p>
+        <p class="Code_Indented">5.0000000</p>
+        <p class="Code">PM, TOTAL(ABS(IMSL_SP_MVMUL(6, 6, a, x2) - b2))</p>
+        <p class="Code_Indented">1.4210855e-14</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> =IMSL_SP_LUFAC(<i>a</i>, <i>n_rows</i> [, <a href="#CONDITIO" class="selected">CONDITION</a>=<i>variable</i>] [, /<a href="#CSC_COL" class="selected">CSC_COL</a>] [, /<a href="#CSC_ROW" class="selected">CSC_ROW</a>] [, /<a href="#CSC_VAL" class="selected">CSC_VAL</a>] [, <a href="#GWTH_FAC" class="selected">GWTH_FACTOR</a>=<i>variable</i>] [, <a href="#GWTH_LIM" class="selected">GWTH_LIM</a>=<i>value</i>] [, /<a href="#HYBRID_D" class="selected">HYBRID_DENSITY</a>] [, /<a href="#HYBRID_O" class="selected">HYBRID_ORDER</a>] [,<a href="#ITER_REF" class="selected">ITER_REFINE</a>=<i>value</i>] [, <a href="#MEMORY_B" class="selected">MEMORY_BLOCK</a>=<i>value</i>] [, <a href="#N_NONZER" class="selected">N_NONZEROS</a>=<i>variable</i>] [, <a href="#N_SEARCH" class="selected">N_SEARCH_ROWS</a>=<i>value</i>] [, <a href="#PIVOTING" class="selected">PIVOTING</a>=<i>value</i>] [, <a href="#SMALLEST" class="selected">SMALLEST_PVT</a>=<i>variable</i>] [, <a href="#STABILIT" class="selected">STABILITY</a>=<i>value</i>] [, <a href="#TOL_DROP" class="selected">TOL_DROP</a>=<i>value</i>] [, <a href="#TRANSPOS" class="selected">TRANSPOSE</a>=<i>value</i>])</p>
+        <h2 class="API">Return Value</h2>
+        <p>Structure containing the <i>LU</i> factorization of <i>A</i>.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">a</h3>
+        <p>Sparse matrix stored as an array of structures containing the coefficient matrix <i>A(i,j)</i>. See “Sparse Matrices: Direct Methods”  and its related sections for a description of structures used for sparse matrices.</p>
+        <h3 class="Argument">n_rows</h3>
+        <p>The number of rows in <i>a</i>.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="CONDITIO"></a>CONDITION</h3>
+        <p>Named variable into which an estimate of the <i>L</i><sub style="font-style: italic;">1</sub> condition number is stored.</p>
+        <h3 class="Keyword"><a name="CSC_COL"></a>CSC_COL</h3>
+        <p>Accept the coefficient matrix in compressed sparse column (CSC) format. See “Sparse Coordinate Storage Format”  for a discussion of this storage scheme. The keywords CSC_COL, CSC_ROW, and CSC_VAL must be used together.</p>
+        <h3 class="Keyword"><a name="CSC_ROW"></a>CSC_ROW</h3>
+        <p>Accept the coefficient matrix in compressed sparse column (CSC) format. See “Sparse Coordinate Storage Format”  for a discussion of this storage scheme. The keywords CSC_COL, CSC_ROW, and CSC_VAL must be used together.</p>
+        <h3 class="Keyword"><a name="CSC_VAL"></a>CSC_VAL</h3>
+        <p>Accept the coefficient matrix in compressed sparse column (CSC) format. See “Sparse Coordinate Storage Format”  for a discussion of this storage scheme. The keywords CSC_COL, CSC_ROW, and CSC_VAL must be used together.</p>
+        <h3 class="Keyword"><a name="GWTH_FAC"></a>GWTH_FACTOR</h3>
+        <p>Named variable into which the largest element in absolute value at any stage of the Gaussian elimination divided by the largest element in absolute value in <i>A</i> is stored.</p>
+        <h3 class="Keyword"><a name="GWTH_LIM"></a>GWTH_LIM</h3>
+        <p>The computation stops if the growth factor exceeds GWTH_LIMIT. Default is 1.0e16.</p>
+        <h3 class="Keyword"><a name="HYBRID_D"></a>HYBRID_DENSITY</h3>
+        <p>Enable the function to switch to a dense factorization method when the density of the active submatrix reaches 0.0 ≤ HYBRID_DENSITY ≤ 1.0 and the order of the active submatrix is less than or equal to HYBRID_ORDER. The keywords HYBRID_DENSITY and HYBRID_ORDER must be used together.</p>
+        <h3 class="Keyword"><a name="HYBRID_O"></a>HYBRID_ORDER</h3>
+        <p>Enable the function to switch to a dense factorization method when the density of the active submatrix reaches 0.0 ≤ HYBRID_DENSITY ≤ 1.0 and the order of the active submatrix is less than or equal to HYBRID_ORDER. The keywords HYBRID_DENSITY and HYBRID_ORDER must be used together.</p>
+        <h3 class="Keyword"><a name="ITER_REF"></a>ITER_REFINE</h3>
+        <p>If present and nonzero, iterative refinement will be applied.</p>
+        <h3 class="Keyword"><a name="MEMORY_B"></a>MEMORY_BLOCK</h3>
+        <p>Supply the number of non-zeros which will be added to the factor if current allocations are inadequate. Default: MEMORY_BLOCK = N_ELEMENTS(a)</p>
+        <h3 class="Keyword"><a name="N_NONZER"></a>N_NONZEROES</h3>
+        <p>Named variable into which the total number of non-zeros in the factor is stored.</p>
+        <h3 class="Keyword"><a name="N_SEARCH"></a>N_SEARCH_ROWS</h3>
+        <p>The number of rows which have the least number of non-zero elements that will be searched for a pivot element. Default: N_SEARCH_ROWS = 3.</p>
+        <h3 class="Keyword"><a name="PIVOTING"></a>PIVOTING</h3>
+        <p>Scalar value specifying the pivoting method to use. For Row Markowitz, set PIVOTING to 1; for Column Markowitz, set PIVOTING to 2; and for Symmetric Markowitz, set PIVOTING to 3. Default: PIVOTING = 3.</p>
+        <h3 class="Keyword"><a name="SMALLEST"></a>SMALLEST_PVT</h3>
+        <p>Named variable into which the value of the pivot element of smallest magnitude that occurred during the factorization is stored.</p>
+        <h3 class="Keyword"><a name="STABILIT"></a>STABILITY</h3>
+        <p>The absolute value of the pivot element must be bigger than the largest element in absolute value in its row divided by STABILITY. Default: STABILITY = 10.0.</p>
+        <h3 class="Keyword"><a name="TOL_DROP"></a>TOL_DROP</h3>
+        <p>Possible fill-in is checked against this tolerance. If the absolute value of the new element is less than TOL_DROP, it will be discarded. Default: TOL_DROP = 0.0.</p>
+        <h3 class="Keyword"><a name="TRANSPOS"></a>TRANSPOSE</h3>
+        <p>If present and nonzero, <i>A</i><sup style="font-style: italic;">T</sup><i>x = b</i> is solved.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="IMSL_LUSOL.htm">IMSL_SP_LUSOL</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

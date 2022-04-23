@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: R">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>RADON </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="R_list.htm">Routines: R</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">RADON</span>
+        </div>
+        <h1 class="Routine"><a name="R_822202989_1081840"></a><a name="kanchor2170"></a><a name="R_822202989_76614"></a><a name="kanchor2171"></a>RADON </h1>
+        <p><a name="kanchor2172"></a><a name="kanchor2173"></a><a name="kanchor2174"></a>The RADON function implements the Radon transform, used to detect features within a two-dimensional image. This function can be used to return either the Radon transform, which transforms lines through an image to points in the Radon domain, or the Radon backprojection, where each point in the Radon domain is transformed to a straight line in the image.</p>
+        <h3><a name="R_822202989_1081855_PageTOC_RADON_"></a>Radon Transform Theory</h3>
+        <p>The Radon transform is used to detect features within an image. Given a function <i>A</i>(<i>x</i>,&#160;<i>y</i>), the Radon transform is defined as: </p>
+        <p>
+            <img src="../../images/24_2.jpg" />
+        </p>
+        <p>This equation describes the integral along a line <i>s</i> through the image, where ρ is the distance of the line from the origin and θ is the angle from the horizontal. </p>
+        <p>
+            <img src="../../images/radon02.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 6.000515px;margin-bottom: 5.999752px;" />
+        </p>
+        <p>In medical imaging, each point <i>R</i>(θ,&#160;ρ) is called a ray-sum, while the resulting image is called a shadowgram. An image can be reconstructed from its ray-sums using the backprojection operator:  </p>
+        <p>
+            <img src="../../images/24_4.jpg" />
+        </p>
+        <p>where the output, <i>B</i>(<i>x</i>,&#160;<i>y</i>), is an image of <i>A</i>(<i>x</i>,&#160;<i>y</i>) blurred by the Radon transform.</p>
+        <h3>How IDL Implements the Radon Transform</h3>
+        <p>To avoid the use of a two-dimensional interpolation and decrease the interpolation errors, the Radon transform equation is rotated by θ, and the interpolation is then done along the line <i>s</i>. 
+			The transform is divided into two regions, one for nearly-horizontal lines 
+			(θ ≤ 45°; 135° ≤ θ ≤ 180°), and the other for steeper lines (45° &lt; θ &lt; 135°), where θ is assumed to lie on the interval [0°, 180°].</p>
+        <p>For nearest-neighbor interpolation (the default), the discrete transform formula for an image <i>A</i>(<i>m</i>,&#160;<i>n</i>) [<i>m</i> = 0, ...,<i> M</i>–1, <i>n</i> = 0, ..., <i>N</i>–1] is:  </p>
+        <p>
+            <img src="../../images/24_5.jpg" />
+        </p>
+        <p>where brackets [ ] indicate rounding to the nearest integer, and the slope and offsets are given by:  </p>
+        <p>
+            <img src="../../images/24_6.jpg" />
+        </p>
+        <p>
+            <img src="../../images/24_7.jpg" />
+        </p>
+        <p>For linear interpolation, the transform is:  </p>
+        <p>
+            <img src="../../images/24_11.jpg" />
+        </p>
+        <p>where the slope and offsets are the same as above, and &#160;the lower-half brackets indicate flooring to the nearest lower integer. The weighting <i>w</i> is given by the difference between <i>a'n + b'</i> and its floored value, or between <i>a’n + b’</i> and its floored value.</p>
+        <h3>How IDL Implements the Radon Backprojection</h3>
+        <p>For the backprojection transform, the discrete formula for nearest-neighbor interpolation is:  </p>
+        <p>
+            <img src="../../images/24_8.jpg" />
+        </p>
+        <p>with the nearest-neighbor for ρ given by:  </p>
+        <p>
+            <img src="../../images/24_9.jpg" />
+        </p>
+        <p>For backprojection with linear interpolation:  </p>
+        <p>
+            <img src="../../images/24_10.jpg" />
+        </p>
+        <p>and ρ is the same as in the nearest-neighbor.</p>
+        <h2 class="API"><a name="R_822202989_1081848"></a><a name="R_822202989_1081848_PageTOC_RADON_"></a>Syntax</h2>
+        <p><b>Radon Transform:</b>
+        </p>
+        <p class="Syntax"><i>Result</i> = RADON( <i>Array </i>[,&#160;/<a href="#R_822202989_1081932" class="selected">DOUBLE</a>] [,&#160;<a href="#R_822202989_1081934" class="selected">DRHO</a>=<i>scalar</i>] [,&#160;<a href="#R_822202989_1081936" class="selected">DX</a>=<i>scalar</i>] [,&#160;<a href="#R_822202989_1081938" class="selected">DY</a>=<i>scalar</i>] [, /<a href="#R_822202989_1081940" class="selected">GRAY</a>] [, /<a href="#R_822202989_1081942" class="selected">LINEAR</a>] [,&#160; <a href="#R_822202989_1081944" class="selected">NRHO</a>=<i>scalar</i>] [,&#160;<a href="#R_822202989_1081946" class="selected">NTHETA</a>=<i>scalar</i>]    [,&#160;<a href="#R_822202989_1081952" class="selected">RHO</a>=<i>variable</i>] [,&#160;<a href="#R_822202989_1081954" class="selected">RMIN</a>=<i>scalar</i>] [,&#160;<a href="#R_822202989_1081956" class="selected">THETA</a>=<i>variable</i>] [,&#160;<a href="#R_822202989_1081958" class="selected">XMIN</a>=<i>scalar</i>] [,&#160;<a href="#R_822202989_1081960" class="selected">YMIN</a>=<i>scalar</i>] )</p>
+        <p><b>Radon Backprojection:</b>
+        </p>
+        <p class="Syntax"><i>Result</i> = RADON( <i>Array,</i> /<a href="#R_822202989_1081929" class="selected">BACKPROJECT</a>, <a href="#R_822202989_1081952" class="selected">RHO</a>=<i>variable</i>, <a href="#R_822202989_1081956" class="selected">THETA</a>=<i>variable</i>   [,&#160;/<a href="#R_822202989_1081932" class="selected">DOUBLE</a>] [,&#160;<a href="#R_822202989_1081936" class="selected">DX</a>=<i>scalar</i>] [,&#160;<a href="#R_822202989_1081938" class="selected">DY</a>=<i>scalar</i>] [,&#160;/<a href="#R_822202989_1081942" class="selected">LINEAR</a>] [,&#160;<a href="#R_822202989_1081948" class="selected">NX</a>=<i>scalar</i>] [,&#160;<a href="#R_822202989_1081950" class="selected">NY</a>=<i>scalar</i>] [,&#160;<a href="#R_822202989_1081958" class="selected">XMIN</a>=<i>scalar</i>] [,&#160;<a href="#R_822202989_1081960" class="selected">YMIN</a>=<i>scalar</i>] )</p>
+        <h2 class="API"><a name="R_822202989_1081853"></a><a name="R_822202989_1081853_PageTOC_RADON_"></a>Return Value</h2>
+        <p>The result of this function is a two-dimensional floating-point array, or a complex array if the input image is complex. If <i>Array</i> is double-precision, or if the DOUBLE keyword is set, the result is double-precision, otherwise, the result is single-precision.</p>
+        <h2 class="API"><a name="R_822202989_1081925"></a><a name="R_822202989_1081925_PageTOC_RADON_"></a>Arguments</h2>
+        <h3 class="Argument">Array</h3>
+        <p>The two-dimensional array of size <i>M</i> by <i>N</i> to be transformed.</p>
+        <h2 class="API"><a name="R_822202989_1081928"></a><a name="R_822202989_1081928_PageTOC_RADON_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="R_822202989_1081929"></a><a name="R_822202989_1081929_Keywords_RADON__"></a>BACKPROJECT</h3>
+        <p>If set, the backprojection is computed, otherwise, the forward transform is computed.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The Radon backprojection does not return the original image. Instead, it returns an image blurred by the Radon transform. Because the Radon transform is not one-to-one, multiple (<i>x</i>,&#160;<i>y</i>) points are mapped to a single (θ,&#160;ρ).</p>
+        <h3 class="Keyword"><a name="R_822202989_1081932"></a><a name="R_822202989_1081932_Keywords_RADON__"></a>DOUBLE</h3>
+        <p>Set this keyword to force the computation to be done using double-precision arithmetic.</p>
+        <h3 class="Keyword"><a name="R_822202989_1081934"></a><a name="R_822202989_1081934_Keywords_RADON__"></a>DRHO</h3>
+        <p>Set this keyword equal to a scalar specifying the spacing between ρ coordinates, expressed in the same units as <i>Array</i>. The default is one-half of the diagonal distance between pixels, 0.5[(DX<sup>2</sup>&#160;+&#160;DY<sup>2</sup>)]<sup>1/2</sup>. Smaller values produce finer resolution, and are useful for zooming in on interesting features. Larger values may result in undersampling, and are not recommended. If BACKPROJECT is specified, this keyword is ignored.</p>
+        <h3 class="Keyword"><a name="R_822202989_1081936"></a><a name="R_822202989_1081936_Keywords_RADON__"></a>DX</h3>
+        <p>Set this keyword equal to a scalar specifying the spacing between the horizontal (<i>x</i>) coordinates. The default is 1.0.</p>
+        <h3 class="Keyword"><a name="R_822202989_1081938"></a><a name="R_822202989_1081938_Keywords_RADON__"></a>DY</h3>
+        <p>Set this keyword equal to a scalar specifying the spacing between the vertical (<i>y</i>) coordinates. The default is 1.0.</p>
+        <h3 class="Keyword"><a name="R_822202989_1081940"></a><a name="R_822202989_1081940_Keywords_RADON__"></a>GRAY</h3>
+        <p>Set or omit this keyword to perform a weighted Radon transform, with the weighting given by the pixel values. If GRAY is explicitly set to zero, the image is treated as a binary image with all nonzero pixels considered as 1.</p>
+        <h3 class="Keyword"><a name="R_822202989_1081942"></a><a name="R_822202989_1081942_Keywords_RADON__"></a>LINEAR</h3>
+        <p>Set this keyword to use linear interpolation rather than the default nearest-neighbor sampling. Results are more accurate but slower when linear interpolation is used.</p>
+        <h3 class="Keyword"><a name="R_822202989_1081944"></a><a name="R_822202989_1081944_Keywords_RADON__"></a>NRHO</h3>
+        <p>Set this keyword equal to a scalar specifying the number of ρ coordinates to use. The default is 2&#160;CEIL([MAX(x<sup>2</sup>&#160;+&#160;y<sup>2</sup>)]<sup>1/2</sup>/&#160;DRHO)&#160;+&#160;1. If BACKPROJECT is specified, this keyword is ignored.</p>
+        <h3 class="Keyword"><a name="R_822202989_1081946"></a><a name="R_822202989_1081946_Keywords_RADON__"></a>NTHETA</h3>
+        <p>Set this keyword equal to a scalar specifying the number of θ coordinates to use over the interval [0,&#160;π]. The default is CEIL(π[(M<sup>2</sup>+&#160;N<sup>2</sup>)/2]<sup>1/2</sup>). Larger values produce smoother results, and are useful for filtering before backprojection. Smaller values result in broken lines in the transform, and are not recommended. If BACKPROJECT is specified, this keyword is ignored.</p>
+        <h3 class="Keyword"><a name="R_822202989_1081948"></a><a name="R_822202989_1081948_Keywords_RADON__"></a>NX</h3>
+        <p>If BACKPROJECT is specified, set this keyword equal to a scalar specifying the number of horizontal coordinates in the output <i>Result</i>. The default is FLOOR(2&#160;MAX(|RHO|)(DX<sup>2</sup>&#160;+&#160;DY<sup>2</sup>)<sup>-1/2</sup>&#160;+&#160;1). For the forward transform this keyword is ignored.</p>
+        <h3 class="Keyword"><a name="R_822202989_1081950"></a><a name="R_822202989_1081950_Keywords_RADON__"></a>NY</h3>
+        <p>If BACKPROJECT is specified, set this keyword equal to a scalar specifying the number of vertical coordinates in the output <i>Result</i>. The default is FLOOR(2&#160;MAX(|RHO|)(DX<sup>2</sup> +&#160;DY<sup>2</sup>)<sup>-1/2</sup> + 1). For the forward transform, this keyword is ignored.</p>
+        <h3 class="Keyword"><a name="R_822202989_1081952"></a><a name="R_822202989_1081952_Keywords_RADON__"></a>RHO</h3>
+        <p>For the forward transform, set this keyword to a named variable that will contain the radial (ρ) coordinates, in units defined by the DX and DY keywords (pixels by default). If BACKPROJECT is specified, this keyword must contain the ρ coordinates of the input <i>Array</i>. The ρ coordinates should be evenly spaced and in increasing order.</p>
+        <h3 class="Keyword"><a name="R_822202989_1081954"></a><a name="R_822202989_1081954_Keywords_RADON__"></a>RMIN</h3>
+        <p>Set this keyword equal to a scalar specifying the minimum ρ coordinate to use for the forward transform. The default is –0.5(NRHO&#160;–&#160;1)&#160;DRHO. If BACKPROJECT is specified, this keyword is ignored.</p>
+        <h3 class="Keyword"><a name="R_822202989_1081956"></a><a name="R_822202989_1081956_Keywords_RADON__"></a>THETA</h3>
+        <p>For the forward transform, set this keyword to a named variable containing a vector of angular (θ) coordinates (in radians) to use for the transform. If NTHETA is specified instead, and THETA is set to a named variable, on exit THETA will contain the θ coordinates. If BACKPROJECT is specified, this keyword must contain the θ coordinates of the input <i>Array</i>.</p>
+        <h3 class="Keyword"><a name="R_822202989_1081958"></a><a name="R_822202989_1081958_Keywords_RADON__"></a>XMIN</h3>
+        <p>Set this keyword equal to a scalar specifying the <i>x</i>-coordinate of the lower-left corner of the input <i>Array</i>. The default is –&#160;(<i>M–</i>1)/2, where <i>Array</i> is an <i>M</i> by <i>N</i> array. If BACKPROJECT is specified, set this keyword equal to a scalar specifying the <i>x</i>&#8209;coordinate of the lower-left corner of the <i>Result</i>. In this case the default is -DX&#160;(NX-1)/2.</p>
+        <h3 class="Keyword"><a name="R_822202989_1081960"></a><a name="R_822202989_1081960_Keywords_RADON__"></a>YMIN</h3>
+        <p>Set this keyword equal to a scalar specifying the <i>y</i>-coordinate of the lower-left corner of the input <i>Array</i>. The default is –&#160;(<i>N–</i>1)/2, where <i>Array</i> is an <i>M</i> by <i>N</i> array. If BACKPROJECT is specified, set this keyword equal to a scalar specifying the <i>y</i>-coordinate of the lower-left corner of the <i>Result</i>. In this case, the default is -DY&#160;(NY-1)/2.</p>
+        <h2 class="API"><a name="R_822202989_1081962"></a><a name="R_822202989_1081962_PageTOC_RADON_"></a>Examples</h2>
+        <p class="ExampleCode">The code for this example is included in the file <code>radon_doc.pro</code> in the <code>examples/doc/language</code> subdirectory of the IDL distribution. Run this example procedure by entering <code>radon_doc</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT radon_doc.pro</code>.</p>
+        <p>This example displays the Radon transform and the Radon backprojection:</p>
+        <p class="Code">PRO radon_doc</p>
+        <p class="Code"> </p>
+        <p class="Code">&#160;&#160;&#160;DEVICE, DECOMPOSED=0</p>
+        <p class="Code">&#160;&#160;&#160;;Create an image with a ring plus random noise:</p>
+        <p class="Code">&#160;&#160;&#160;x = (LINDGEN(128,128) MOD 128) - 63.5</p>
+        <p class="Code">&#160;&#160;&#160;y = (LINDGEN(128,128)/128) - 63.5</p>
+        <p class="Code">&#160;&#160;&#160;radius = SQRT(x^2 + y^2)</p>
+        <p class="Code">&#160;&#160;&#160;array = (radius GT 40) AND (radius LT 50)</p>
+        <p class="Code">&#160;&#160;&#160;array = array + RANDOMU(seed,128,128)</p>
+        <p class="Code"> </p>
+        <p class="Code">&#160;&#160;&#160;;Create display window, set graphics properties:</p>
+        <p class="Code">&#160;&#160;&#160;WINDOW, XSIZE=440,YSIZE=700, TITLE='Radon Example'</p>
+        <p class="Code">&#160;&#160;&#160;!P.BACKGROUND = 255  ; white</p>
+        <p class="Code">&#160;&#160;&#160;!P.COLOR = 0 ; black</p>
+        <p class="Code">&#160;&#160;&#160;!P.FONT=2</p>
+        <p class="Code">&#160;&#160;&#160;ERASE</p>
+        <p class="Code"> </p>
+        <p class="Code">&#160;&#160;&#160;XYOUTS, .05, .94, 'Ring and Random Pixels', /NORMAL   </p>
+        <p class="Code">&#160;&#160;&#160;;Display the image. 255b changes black values to white:</p>
+        <p class="Code">&#160;&#160;&#160;TVSCL, 255b - array, .05, .75, /NORMAL</p>
+        <p class="Code">&#160;&#160;&#160;;Calculate and display the Radon transform:</p>
+        <p class="Code">&#160;&#160;&#160;XYOUTS, .05, .70, 'Radon Transform', /NORMAL</p>
+        <p class="Code">&#160;&#160;&#160;result = RADON(array, RHO=rho, THETA=theta)</p>
+        <p class="Code">&#160;&#160;&#160;TVSCL, 255b - result, .08, .32, /NORMAL</p>
+        <p class="Code">&#160;&#160;&#160;PLOT, theta, rho, /NODATA, /NOERASE, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;POSITION=[0.08,0.32, 1, 0.68], $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;XSTYLE=9,YSTYLE=9,XTITLE='Theta', YTITLE='R'</p>
+        <p class="Code"> </p>
+        <p class="Code">&#160;&#160;&#160;;For simplicity in this example, remove everything but</p>
+        <p class="Code">&#160;&#160;&#160;;the two stripes. </p>
+        <p class="Code">&#160;&#160;&#160;result[*,0:55] = 0</p>
+        <p class="Code">&#160;&#160;&#160;result[*,73:181] = 0</p>
+        <p class="Code">&#160;&#160;&#160;result[*,199:*] = 0</p>
+        <p class="Code"> </p>
+        <p class="Code">&#160;&#160;&#160;;Find the Radon backprojection and display the output:</p>
+        <p class="Code">&#160;&#160;&#160;XYOUTS, .05, .26, 'Radon Backprojection', /NORMAL</p>
+        <p class="Code">&#160;&#160;&#160;backproject = RADON(result, /BACKPROJECT, RHO=rho, THETA=theta)</p>
+        <p class="Code">&#160;&#160;&#160;TVSCL, 255b - backproject, .05, .07, /NORMAL</p>
+        <p class="Code">END</p>
+        <p>The following figure displays the program output. The top image is an image of a ring and random pixels, or noise. The center image is the Radon transform, and displays the line integrals through the image. The bottom image is the Radon backprojection, after filtering all noise except for the two strong horizontal stripes in the middle image.</p>
+        <p>
+            <img src="../../images/radon09.gif" style="margin-left: 4.5px;margin-top: 2.25px;margin-right: 3.450974px;" />
+        </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>A better (and more complicated) method than removing everything but the two stripes is to choose a threshold for the result at each value of theta, perhaps based on the average of the result over the theta dimension.</p>
+        <h2 class="API"><a name="R_822202989_1082029_PageTOC_RADON_"></a>References</h2>
+        <ol>
+            <li value="1">Herman, Gabor T. <i>Image Reconstruction from Projections</i>. New York: Academic Press, 1980.</li>
+            <li value="2">Hiriyannaiah, H. P. X-ray computed tomography for medical imaging. IEEE Signal Processing Magazine, March 1997: 42-58.</li>
+            <li value="3">Jain, Anil K. <i>Fundamentals of Digital Image Processing</i>. Englewood Cliffs, NJ: Prentice-Hall, 1989.</li>
+            <li value="4">Toft, Peter. <i>The Radon Transform: Theory and Implementation</i>. Denmark: Technical University; 1996. Ph.D. Thesis.</li>
+        </ol>
+        <h2 class="API"><a name="R_822202989_1103583"></a><a name="R_822202989_1092886_PageTOC_RADON_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="R_822202989_1103572"></a><a name="R_822202989_1082021_PageTOC_RADON_"></a>See Also</h2>
+        <p><a href="../H/HOUGH.htm#H_835179117_875881">HOUGH</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

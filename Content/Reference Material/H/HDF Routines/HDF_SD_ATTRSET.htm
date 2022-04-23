@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: H|HDF Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>HDF_SD_ATTRSET</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../H_list.htm">Routines: H</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../HDF_Routines.htm">HDF Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">HDF_SD_ATTRSET</span>
+        </div>
+        <h1 class="Routine"><a name="HDF_1733484267_1010744"></a><a name="HDF_1733484267_60488"></a>HDF_SD_ATTRSET</h1>
+        <p>The <a name="kanchor1249"></a>HDF_SD_ATTRSET procedure writes attributes to an open HDF SD dataset. If no data type is specified, the data type is taken from the <i>Values</i> argument.</p>
+        <h2 class="API"><a name="HDF_1733484267_1053817_PageTOC_HDF_SD_ATTRSET_"></a>Examples</h2>
+        <p class="Code">fid = HDF_OPEN('demo.hdf', /ALL) ; Create a new HDF file.</p>
+        <p class="Code">SDinterface_id = HDF_SD_START('demo.hdf', /RDWR) ; Start the SD interface.</p>
+        <p class="Code">; Create a global attribute:</p>
+        <p class="Code">HDF_SD_ATTRSET, SDinterface_id, 'TITLE', 'MY TITLE GLOBAL', 16</p>
+        <p class="Code">; Create another global attribute:</p>
+        <p class="Code">HDF_SD_ATTRSET, SDinterface_id, 'RANGE', [-99.88,55544.2], /DOUBLE</p>
+        <p class="Code">; Create a dataset:</p>
+        <p class="Code">SDdataset_id = HDF_SD_CREATE(SDinterface_id, 'var1', [10,20], /FLOAT)</p>
+        <p class="Code">; Add a dataset attribute:</p>
+        <p class="Code">HDF_SD_ATTRSET, SDdataset_id, 'TITLE', 'MY TITLE SDinterface_id', 15</p>
+        <p class="Code">; Find the recently-created RANGE attribute:</p>
+        <p class="Code">index=HDF_SD_ATTRFIND(SDinterface_id, 'RANGE')</p>
+        <p class="Code">; Retrieve data from RANGE:</p>
+        <p class="Code">HDF_SD_ATTRINFO,SDinterface_id,index,NAME=atn,COUNT=atc,TYPE=att,DATA=d</p>
+        <p class="Code">; Print information about the returned variables:</p>
+        <p class="Code">HELP, atn, atc, att </p>
+        <p class="Code">; Print the data returned in variable d with the given format:</p>
+        <p class="Code">PRINT, d, FORMAT='(F8.2,x,F8.2)'</p>
+        <p class="Code">HDF_SD_ENDACCESS, SDdataset_id ; End access to the HDF file.</p>
+        <p class="Code">HDF_SD_END, SDinterface_id </p>
+        <p class="Code">HDF_CLOSE, fid</p>
+        <h4>IDL Output</h4>
+        <p class="Code">ATN STRING = 'RANGE'</p>
+        <p class="Code">ATC LONG = 2</p>
+        <p class="Code">ATT STRING = 'DOUBLE'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">-99.88 55544.20</p>
+        <h2 class="API"><a name="HDF_1733484267_1053757_PageTOC_HDF_SD_ATTRSET_"></a>Syntax</h2>
+        <p class="Syntax">HDF_SD_ATTRSET, <i>SD_id</i>, <i>Attr_Name</i>, <i>Values</i> [,&#160;<i>Count</i>] [,&#160;/<a href="#HDF_1733484267_1010830" class="selected">BYTE</a>] [,&#160;/<a href="#HDF_1733484267_1010833" class="selected">DFNT_CHAR</a>] [,&#160;/<a href="#HDF_1733484267_1010836" class="selected">DFNT_FLOAT32</a>] [,&#160;/<a href="#HDF_1733484267_1010839" class="selected">DFNT_FLOAT64</a>] [,&#160;/<a href="#HDF_1733484267_1010842" class="selected">DFNT_INT8</a>] [,&#160;/<a href="#HDF_1733484267_1010845" class="selected">DFNT_INT16</a>] [,&#160;/<a href="#HDF_1733484267_1010848" class="selected">DFNT_INT32</a>] [,&#160;/<a href="#HDF_1733484267_1010851" class="selected">DFNT_UINT8</a>] [,&#160;/<a href="#HDF_1733484267_1010854" class="selected">DFNT_UINT16</a>] [,&#160;/<a href="#HDF_1733484267_1010857" class="selected">DFNT_UINT32</a>] [,&#160;/<a href="#HDF_1733484267_1010860" class="selected">DOUBLE</a>] [,&#160;/<a href="#HDF_1733484267_1010863" class="selected">FLOAT</a>] [,&#160;/<a href="#HDF_1733484267_1010866" class="selected">INT</a>] [,&#160;/<a href="#HDF_1733484267_1010869" class="selected">LONG</a>] [,&#160;/<a href="#HDF_1733484267_1010872" class="selected">SHORT</a>] [,&#160;/<a href="#HDF_1733484267_1010875" class="selected">STRING</a>]</p>
+        <h2 class="API"><a name="HDF_1733484267_1053759_PageTOC_HDF_SD_ATTRSET_"></a>Arguments</h2>
+        <h3 class="Argument">SD_id</h3>
+        <p>An SD interface ID as returned by HDF_SD_START (i.e., a global attribute’s “SDinterface_id”), or HDF_SD_SELECT/HDF_SD_CREATE (i.e., a dataset’s “SDdataset_id”).</p>
+        <h3 class="Argument">Attr_Name</h3>
+        <p>A string containing the name of the attribute to be written.</p>
+        <h3 class="Argument">Values</h3>
+        <p>The attribute values to be written.</p>
+        <h3 class="Argument">Count</h3>
+        <p>An optional integer argument specifying how many items are to be written. Count must be less than or equal to the number of elements in the Values argument.</p>
+        <h2 class="API"><a name="HDF_1733484267_1053768_PageTOC_HDF_SD_ATTRSET_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010830"></a><a name="HDF_1733484267_1053770_Keywords_HDF_SD_ATTRSET_"></a>BYTE</h3>
+        <p>Set this keyword to indicate that the attribute is composed of bytes. Data will be stored with the HDF DFNT_UINT8 data type. Setting this keyword is the same as setting the DFNT_UINT8 keyword.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010833"></a><a name="HDF_1733484267_1053773_Keywords_HDF_SD_ATTRSET_"></a>DFNT_CHAR</h3>
+        <p>Set this keyword to create an attribute of HDF type DFNT_CHAR8. Setting this keyword is the same as setting the STRING keyword.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010836"></a><a name="HDF_1733484267_1053776_Keywords_HDF_SD_ATTRSET_"></a>DFNT_FLOAT32</h3>
+        <p>Set this keyword to create an attribute of HDF type DFNT_FLOAT32. Setting this keyword is the same as setting the FLOAT keyword.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010839"></a><a name="HDF_1733484267_1053779_Keywords_HDF_SD_ATTRSET_"></a>DFNT_FLOAT64</h3>
+        <p>Set this keyword to create an attribute of HDF type DFNT_FLOAT64. Setting this keyword is the same as setting the DOUBLE keyword.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010842"></a><a name="HDF_1733484267_1053782_Keywords_HDF_SD_ATTRSET_"></a>DFNT_INT8</h3>
+        <p>Set this keyword to create an attribute of HDF type DFNT_INT8.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDL does not have a signed 8-bit integer type. When writing the data to the file using DFNT_INT8, byte values from 0-127 will be written unchaged, while byte values from 128-255 will be wrapped into the range -127 to -1. When reading data of type DFNT_INT8 from the file into IDL, values from 0-127 will be read in unchanged, while values from -127 to -1 will be wrapped into the byte range 128 to 255.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010845"></a><a name="HDF_1733484267_1053785_Keywords_HDF_SD_ATTRSET_"></a>DFNT_INT16</h3>
+        <p>Set this keyword to create an attribute of HDF type DFNT_INT16. Setting this keyword is the same as setting either the INT keyword or the SHORT keyword.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010848"></a><a name="HDF_1733484267_1053788_Keywords_HDF_SD_ATTRSET_"></a>DFNT_INT32</h3>
+        <p>Set this keyword to create an attribute of HDF type DFNT_INT32. Setting this keyword is the same as setting the LONG keyword.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010851"></a><a name="HDF_1733484267_1053791_Keywords_HDF_SD_ATTRSET_"></a>DFNT_UINT8</h3>
+        <p>Set this keyword to create an attribute of HDF type DFNT_UINT8. Setting this keyword is the same as setting the BYTE keyword.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010854"></a><a name="HDF_1733484267_1053794_Keywords_HDF_SD_ATTRSET_"></a>DFNT_UINT16</h3>
+        <p>Set this keyword to create an attribute of HDF type DFNT_UINT16.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010857"></a><a name="HDF_1733484267_1053797_Keywords_HDF_SD_ATTRSET_"></a>DFNT_UINT32</h3>
+        <p>Set this keyword to create an attribute of HDF type DFNT_UINT32.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010860"></a><a name="HDF_1733484267_1053800_Keywords_HDF_SD_ATTRSET_"></a>DOUBLE</h3>
+        <p>Set this keyword to indicate that the attribute is composed of double-precision floating-point values. Data will be stored with the HDF DFNT_FLOAT64 data type. Setting this keyword is the same as setting the DFNT_FLOAT64 keyword.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010863"></a><a name="HDF_1733484267_1053803_Keywords_HDF_SD_ATTRSET_"></a>FLOAT</h3>
+        <p>Set this keyword to indicate that the attribute is composed of single-precision floating-point values. Data will be stored with the HDF DFNT_FLOAT32 data type. Setting this keyword is the same as setting the DFNT_FLOAT32 keyword.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010866"></a><a name="HDF_1733484267_1053806_Keywords_HDF_SD_ATTRSET_"></a>INT</h3>
+        <p>Set this keyword to indicate that the attribute is composed of 2-byte integers. Data will be stored with the HDF DFNT_INT16 data type. Setting this keyword is the same as setting either the SHORT keyword or the DFNT_INT16 keyword.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010869"></a><a name="HDF_1733484267_1053809_Keywords_HDF_SD_ATTRSET_"></a>LONG</h3>
+        <p>Set this keyword to indicate that the attribute is composed of longword integers. Data will be stored with the HDF DFNT_INT32 data type. Setting this keyword is the same as setting the DFNT_INT32 keyword.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010872"></a><a name="HDF_1733484267_1053812_Keywords_HDF_SD_ATTRSET_"></a>SHORT</h3>
+        <p>Set this keyword to indicate that the attribute is composed of 2-byte integers. Data will be stored with the HDF DFNT_INT16 data type. Setting this keyword is the same as setting either the INT keyword or the DFNT_INT16 keyword.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010875"></a><a name="HDF_1733484267_1053815_Keywords_HDF_SD_ATTRSET_"></a>STRING</h3>
+        <p>Set this keyword to indicate that the attribute is composed of strings. Data will be stored with the HDF DFNT_CHAR8 data type. Setting this keyword is the same as setting the DFNT_CHAR8 keyword.</p>
+        <h2 class="API"><a name="HDF_1733484267_1053837_PageTOC_HDF_SD_ATTRSET_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="HDF_1733484267_1117769_PageTOC_HDF_SD_ATTRSET_"></a>See Also</h2>
+        <p><a href="HDF_SD_ATTRFIND.htm#HDF_1733484267_1010545">HDF_SD_ATTRFIND</a>, <a href="HDF_SD_ATTRINFO.htm#HDF_1733484267_1010620">HDF_SD_ATTRINFO</a>, <a href="HDF_SD_CREATE.htm#HDF_1733484267_1010930">HDF_SD_CREATE</a>, <a href="HDF_SD_SELECT.htm#HDF_1733484267_1012166">HDF_SD_SELECT</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

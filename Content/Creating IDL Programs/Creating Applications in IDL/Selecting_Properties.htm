@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|About Property Sheet Widgets">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Selecting Properties</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="About_Property_Sheet_Wid.htm">About Property Sheet Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Selecting Properties</span>
+        </div>
+        <h1><a name="widget_propertysheet_3756481120_127532"></a>Selecting Properties<a name="kanchor5079"></a></h1>
+        <p>A property sheet consists of rows and columns. The left-most column identifies the properties, and the other column or columns identify the property values of one or more objects (also known as components). A select event is generated whenever a cell containing a property name or a property value is selected by left-clicking on it using the mouse. When a single property value is clicked on, the associated property name appears indented. Only a single property value can be selected at one time. However, when the MULTIPLE_PROPERTIES keyword is set, multiple properties can be selected in a property sheet using the <b>Ctrl</b> key to make nonadjacent selections --or using the <b>Shift</b> key to make adjacent selections. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Setting the EDITABLE keyword to 0 (zero) allows the user to select, but not modify properties. See <a href="../../Reference Material/W/WIDGET_PROPERTYSHEET.htm#W_811389549_1020327">WIDGET_PROPERTYSHEET</a> for details.</p>
+        <p>
+            <img src="../../images/widget_propsheet1.gif" />
+        </p>
+        <p>When the property sheet is initially realized, no properties are selected by default. However a single property or multiple properties can be selected programmatically using the PROPERTYSHEET_SETSELECTED keyword to the WIDGET_CONTROL procedure. </p>
+        <p>Set the PROPERTYSHEET_SETSELECTED keyword to a string or an array of strings identifying the properties to appear selected. The strings should match valid property identifiers. When this keyword is set to an empty string or an array that contains only an empty sting, it clears all property selections. For example, the following code pre-selects two properties in a property sheet:</p>
+        <p class="Code">; Create the property sheet.</p>
+        <p class="Code">oComp = OBJ_NEW('IDLitVisAxis')</p>
+        <p class="Code">wPropAxis = WIDGET_PROPERTYSHEET(base, VALUE = oComp, $</p>
+        <p class="Code">   EVENT_PRO = 'PropertyEvent', UNAME = 'PropSheet', $</p>
+        <p class="Code">&#160;&#160;&#160;/MULTIPLE_PROPERTIES)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Pre-select the color and transparency properties of </p>
+        <p class="Code">; axis component.</p>
+        <p class="Code">WIDGET_CONTROL, wPropAxis, </p>
+        <p class="Code">   PROPERTYSHEET_SETSELECTED=['Color', 'Transparency']</p>
+        <h2 class="API"><a name="widget_propertysheet_3756481120_151083"></a><a name="widget_propertysheet_3756481120_94637"></a>Accessing Property Sheet Selection Events</h2>
+        <p>The event structure (WIDGET_PROPSHEET_SELECT) provided when selection occurs contains a COMPONENT tag, an IDENTIFIER tag, and a NSELECTED tag.</p>
+        <p class="Code">{WIDGET_PROPSHEET_SELECT, ID:0L, TOP:0L, HANDLER:0L, TYPE:0L, </p>
+        <p class="Code">   COMPONENT:OBJREF, IDENTIFIER:"", NSELECTED:0L } </p>
+        <p>The COMPONENT tag is a reference to the object associated with the selected property value. When multiple objects (also known as components) are associated with the property sheet, this member indicates which one object had one of its property values selected. If a property (instead of a property value) is selected, the COMPONENT tag always contains an object reference to the first object, even if there are multiple objects in the property sheet. The IDENTIFIER tag uniquely identifies the property. This identifier is unique among all of the component’s properties. The component and identifier can be used to obtain the value of the selected property:</p>
+        <p class="Code">isDefined = event.component-&gt; $</p>
+        <p class="Code">&#160;&#160;&#160;GetPropertyByIdentifier(event.identifier, value)</p>
+        <p>where <code>event</code> is the event structure, <code>isDefined</code> is a 1 if the value is defined (0, otherwise), and <code>value</code> receives the property’s value. </p>
+        <p>The NSELECTED tag returns the number of currently selected properties. When more than a single property is selected, the IDENTIFIER field holds the identifier of the first item selected. This is not the first item selected with the mouse, but the first item encountered in the property sheet definition among those which are selected. The NSELECTED tag is equivalent to calling WIDGET_INFO with the /PROPERTYSHEET_NSELECTED keyword. </p>
+        <p>Using WIDGET_INFO, it is also possible to return the identifiers of all selected properties using the /PROPERTYSHEET_SELECTED keyword. This returns a string or string array containing the identifiers of the selected properties. </p>
+        <p class="Code">; Return information about single or multiple property</p>
+        <p class="Code">; selections. </p>
+        <p class="Code">vNumSelected = WIDGET_INFO(event.ID, /PROPERTYSHEET_NSELECTED)      </p>
+        <p class="Code">vSelected = WIDGET_INFO(event.ID, /PROPERTYSHEET_SELECTED)</p>
+        <p class="Code">PRINT, 'Number properties selected: ' + STRING(vNumSelected)</p>
+        <p class="Code">PRINT, 'Selected properties: ' </p>
+        <p class="Code">PRINT, vSelected </p>
+        <h2 class="API">Controlling When Properties are Selectable</h2>
+        <p>Three things that determine the appearance of a property sheet data cells. They are, in order of greatest to least precedence:</p>
+        <ol>
+            <li value="1">Sensitivity of the entire widget — If SENSITIVE=0 for WIDGET_PROPERTYSHEET then no selection or scrolling is possible.</li>
+            <li value="2">Editability of the entire widget — If EDITABLE=0 for the property sheet (meaning it is marked as read-only), cells can be selected but cannot be changed. If EDITABLE=1 (the default value meaning properties can be selected and modified), then the editability of individual properties is controlled by their individual sensitivity values.</li>
+            <li value="3">Sensitivity of an individual property — If SENSITIVE=0 for an individual property (set using the RegisterProperty or SetPropertyAttribute methods of IDLitComponent), then the individual property cannot be selected or changed. </li>
+        </ol>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

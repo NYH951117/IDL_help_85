@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: P">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>PARTICLE_TRACE</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="P_list.htm">Routines: P</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">PARTICLE_TRACE</span>
+        </div>
+        <h1 class="Routine"><a name="P_817877613_844757"></a><a name="kanchor1999"></a><a name="P_817877613_29726"></a>PARTICLE_TRACE</h1>
+        <p>The PARTICLE_TRACE procedure traces the path of a massless particle through a vector field, given a set of starting points (or <i>seed</i> points). </p>
+        <p>Particles are tracked by treating the vector field as a velocity field and integrating. Each particle is tracked from the seed point until the path leaves the input volume or a maximum number of iterations is reached. The vertices generated along the paths are returned packed into a single array along with a polyline connectivity array. The polyline connectivity array organizes the vertices into separate paths (one per seed). Each path has an orientation. The initial orientation may be set using the SEED_NORMAL keyword. As a path is tracked, the change in the normal is also computed and may be returned to the user as the optional <i>Normals</i> argument.</p>
+        <p>Path output can be passed directly to an IDLgrPolyline object or passed to the STREAMLINE procedure for generation of ribbons. Control over aspects of the integration (e.g. method or stepsize) is also provided.</p>
+        <h2 class="API"><a name="P_817877613_1192768"></a><a name="P_817877613_1192768_PageTOC_PARTICLE_TRACE__"></a>Example</h2>
+        <p>The following procedure calculates the path of three particles through a vector field representing wind and plots it against a background displaying the vector field itself.</p>
+        <p class="Code">PRO ex_particle_trace2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">; Restore u, v, x, and y variables containing wind data</p>
+        <p class="Code_Indented">RESTORE, FILEPATH('globalwinds.dat', $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;SUBDIR=['examples','data'])</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Build a data array from the wind data.</p>
+        <p class="Code_Indented">data = FLTARR(2, 128, 64)</p>
+        <p class="Code_Indented">data[0, *, *] = u</p>
+        <p class="Code_Indented">data[1, *, *] = v</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Define starting points for the streamlines</p>
+        <p class="Code_Indented">seeds = [[32, 32], [64, 32], [96, 32]]</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Calculate the vertext and connectivity data for the</p>
+        <p class="Code_Indented">; streamline paths</p>
+        <p class="Code_Indented">PARTICLE_TRACE, data, seeds, verts, conn, MAX_ITERATIONS=30</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Plot the underlying vector field</p>
+        <p class="Code_Indented">VELOVECT, u, v, x, y, COLOR='AAAAAA'x</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Overplot the streamlines</p>
+        <p class="Code_Indented">i = 0</p>
+        <p class="Code_Indented">sz = SIZE(verts, /STRUCTURE)</p>
+        <p class="Code_Indented">WHILE (i LT sz.dimensions[1]) DO BEGIN</p>
+        <p class="Code_Indented">&#160;&#160;&#160;nverts = conn[i]</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; OLD METHOD: Uses 'x' and 'y' as lookup tables, losing the fractional</p>
+        <p class="Code_Indented">;                part of the result, ending up only using data grid points.</p>
+        <p class="Code_Indented">PLOTS, x[verts[0, conn[i+1:i+nverts]]], $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;y[verts[1, conn[i+1:i+nverts]]], $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;COLOR='0000FF'x, THICK=2</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; NEW METHOD: Find 'index' locations of desired points, then scale them</p>
+        <p class="Code_Indented">;                correctly to exact degrees. Plotting both to show improvement.</p>
+        <p class="Code_Indented">xIndices = verts[0, conn[i+1:i+nverts]]</p>
+        <p class="Code_Indented">yIndices = verts[1, conn[i+1:i+nverts]]</p>
+        <p class="Code_Indented">xDeg = (xIndices / 128) * 360 - 180</p>
+        <p class="Code_Indented">yDeg = (yIndices /  64) * 180 -  90</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">PLOTS, xDeg, yDeg, COLOR='0000FF'x, THICK=2</p>
+        <p class="Code_Indented">i += nverts + 1</p>
+        <p class="Code_Indented">ENDWHILE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="P_817877613_1071133"></a><a name="P_817877613_1071133_PageTOC_PARTICLE_TRACE__"></a>Syntax</h2>
+        <p class="Syntax">PARTICLE_TRACE, <i>Data</i>, <i>Seeds</i>, <i>Verts</i>, <i>Conn</i> [,&#160;<i>Normals</i>] [,&#160;<a href="#P_817877613_1071158" class="selected">MAX_ITERATIONS</a>=<i>value</i>] [,&#160;<a href="#P_817877613_1071147" class="selected">ANISOTROPY</a>=<i>array</i>] [,&#160;<a href="#P_817877613_1071149" class="selected">INTEGRATION</a>={0&#160;|&#160;1}] [,&#160;<a href="#P_817877613_1071154" class="selected">SEED_NORMAL</a>=<i>vector</i>] [,&#160;<a href="#P_817877613_1071156" class="selected">TOLERANCE</a>=<i>value</i>] [,&#160;<a href="#P_817877613_1071160" class="selected">MAX_STEPSIZE</a>=<i>value</i>] [,&#160;/<a href="#P_817877613_1071162" class="selected">UNIFORM</a>]</p>
+        <h2 class="API"><a name="P_817877613_1071135"></a><a name="P_817877613_1071135_PageTOC_PARTICLE_TRACE__"></a>Arguments</h2>
+        <h3 class="Argument">Data</h3>
+        <p>A three- or four-dimensional array that defines the vector field. <i>Data</i> can be of dimensions [2, <i>dx</i>, <i>dy</i>] for a two-dimensional vector field or [3, <i>dx</i>, <i>dy</i>, <i>dz</i>] for a three-dimensional vector field, where:</p>
+        <ul>
+            <li value="1"><i>Data</i>[0,*,*] or <i>Data</i>[0,*,*,*] contains the X components of the two- or three-dimensional vector field (commonly referred to as <i>U</i>).</li>
+            <li value="2"><i>Data</i>[1,*,*] or <i>Data</i>[1,*,*,*] contains the Y components of the two- or three-dimensional vector field (commonly referred to as <i>V</i>).</li>
+            <li value="3"><i>Data</i>[2,*,*,*] contains the Z components of the three-dimensional vector field (commonly referred to as <i>W</i>).</li>
+        </ul>
+        <h3 class="Argument">Seeds</h3>
+        <p>An array of two- or three-element vectors ([2, <i>n</i>] or [3, <i>n</i>]) specifying the indices of the <i>n</i> points in the <i>Data</i> array at which the tracing operation is to begin. The result will be <i>n</i> output paths.</p>
+        <h3 class="Argument">Verts</h3>
+        <p>A named variable that will contain the output path vertices as a [2, <i>n</i>] or [3, <i>n</i>] array of floating-point values.</p>
+        <h3 class="Argument">Conn</h3>
+        <p>A named variable that will contain the output path connectivity array in IDLgrPolyline POLYLINES keyword format. There is one set of line segments in this array for each input seed point.</p>
+        <h3 class="Argument">Normals</h3>
+        <p>A named variable that will contain the output normal estimate at each output vertex ([3, <i>n</i>] array of floats).</p>
+        <h2 class="API"><a name="P_817877613_1071146"></a><a name="P_817877613_1071146_PageTOC_PARTICLE_TRACE__"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="P_817877613_1071147"></a><a name="P_817877613_1071147_Keywords_PARTICLE_TRACE__"></a>ANISOTROPY</h3>
+        <p>Set this input keyword to a two- or three- element array describing the distance between grid points in each dimension. The default value is [1.0, 1.0, 1.0] for three-dimensional data and [1.0, 1.0] for two-dimensional data.</p>
+        <h3 class="Keyword"><a name="P_817877613_1071149"></a><a name="P_817877613_1071149_Keywords_PARTICLE_TRACE__"></a>INTEGRATION</h3>
+        <p>Set this keyword to one of the following values to select the integration method:</p>
+        <ul>
+            <li value="1">0 = 2nd order Runge-Kutta (the default)</li>
+            <li value="2">1 = 4th order Runge-Kutta</li>
+        </ul>
+        <h3 class="Keyword"><a name="P_817877613_1071154"></a><a name="P_817877613_1071154_Keywords_PARTICLE_TRACE__"></a>SEED_NORMAL</h3>
+        <p>Set this keyword to a three-element vector which selects the initial normal for the paths. The default value is [0.0, 0.0, 1.0]. This keyword is ignored for 2-D data.</p>
+        <h3 class="Keyword"><a name="P_817877613_1071156"></a><a name="P_817877613_1071156_Keywords_PARTICLE_TRACE__"></a>TOLERANCE</h3>
+        <p>This keyword is used with adaptive step-size control in the 4th order Runge-Kutta integration scheme. It is ignored if the UNIFORM keyword is set or the 2nd order Runge-Kutta scheme is selected.</p>
+        <h3 class="Keyword"><a name="P_817877613_1071158"></a><a name="P_817877613_1071158_Keywords_PARTICLE_TRACE__"></a>MAX_ITERATIONS</h3>
+        <p>This keyword specifies the maximum number of line segments to return for each path. The default value is 200.</p>
+        <h3 class="Keyword"><a name="P_817877613_1071160"></a><a name="P_817877613_1071160_Keywords_PARTICLE_TRACE__"></a>MAX_STEPSIZE</h3>
+        <p>This keyword specifies the maximum path step size. The default value is 1.0.</p>
+        <h3 class="Keyword"><a name="P_817877613_1071162"></a><a name="P_817877613_1071162_Keywords_PARTICLE_TRACE__"></a>UNIFORM</h3>
+        <p>If this keyword is set, the step size will be set to a fixed value, set via the MAX_STEPSIZE keyword. If this keyword is not specified, and TOLERANCE is either unspecified or inapplicable, then the step size is computed based on the velocity at the current point on the path according to the formula:</p>
+        <p>&#160;&#160;&#160;&#160;&#160;&#160;stepsize = MIN(MaxStepSize, MaxStepSize/MAX(ABS(U), ABS(V), ABS(W)))</p>
+        <p>where (U,V,W) is the local velocity vector.</p>
+        <h2 class="API"><a name="P_817877613_1079052"></a><a name="P_817877613_1079052_PageTOC_PARTICLE_TRACE__"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.5</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

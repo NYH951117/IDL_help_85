@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|About Button Widgets">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Bitmap Button Labels</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="About_Button_Widgets.htm">About Button Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Bitmap Button Labels</span>
+        </div>
+        <h1><a name="widget_button_2309937164_96712"></a><a name="widget_button_2309937164_23876"></a>Bitmap Button <a name="kanchor5051"></a>Labels</h1>
+        <p>In addition to setting the VALUE of a button widget to a text string, you can use a bitmap image as the label for the button. To us a bitmap image, set VALUE to one of the following:</p>
+        <ul>
+            <li value="1">The path to a bitmap image file, if the BITMAP keyword is also specified.</li>
+            <li value="2">An <i>n</i> x <i>m</i> byte array converted to a bitmap byte array using the <a href="../../Reference Material/C/CVTTOBM.htm#C_854643309_871497">CVTTOBM</a> function, which displays as a black-and-white bitmap image.</li>
+            <li value="3">An <i>n</i> x <i>m</i> x 3 byte array, which displays as a 24-bit color bitmap image.</li>
+        </ul>
+        <p>The following sections describe the process of creating bitmap files, black-and-white arrays, and color arrays for use as bitmap button labels.</p>
+        <h2 class="API">Creating Bitmap Files for Buttons</h2>
+        <p>You can produce appropriate bitmap files (for use with the BITMAP keyword to WIDGET_BUTTON) using any bitmap editor available on your operating system. Be sure to save the file as a <code>.bmp</code> file.</p>
+        <h3><a name="kanchor5052"></a>Transparent Bitmaps</h3>
+        <p>For 16- and 256-color bitmaps included using the BITMAP keyword, IDL uses the color of the pixel in the lower left corner as the transparent color. All pixels of this color become transparent, allowing the button color to show through. This allows you to use bitmaps that do not appear to be rectangular. For 24-bit bitmaps, there is no transparent pixel. Note that this functionality is currently only available on Windows platforms.</p>
+        <p>If you have a 16- or 256-color rectangular bitmap and you want to maintain the rectangular shape of a bitmap, you can either draw a border of a different color around the bitmap (making sure that the lower left pixel is a different color from the background you want to maintain) or save the bitmap as a 24-bit (TrueColor) image. If your bitmap also contains text, make sure the border you draw is a different color than the text, otherwise the text color will become transparent.</p>
+        <h3>Note on 8-bit X Windows Displays</h3>
+        <p>Displaying bitmap buttons on 8-bit color X Windows displays may require using additional X colormap colors to allocate colors used by the bitmaps. If the required colormap colors are not available, the button bitmap may not display properly.</p>
+        <h2 class="API">Creating Black-and-White Bitmap Arrays for Buttons</h2>
+        <p>You can produce appropriate black-and-white bitmap arrays in IDL in the following ways:</p>
+        <ul>
+            <li value="1">Create a black and white bitmap using an external bitmap editor, and read it into an IDL byte array using the appropriate procedure (READ_BMP, READ_JPEG, etc.) and convert the byte array to a bitmap byte array using the CVTTOBM function.</li>
+            <li value="2">On an X-Window system, use the X11 bitmap utility to create a black and white bitmap byte array and read it in to IDL using the <a href="../../Reference Material/R/READ_X11_BITMAP.htm#R_822202989_756244">READ_X11_BITMAP </a>routine.</li>
+            <li value="3">Create a black and white bitmap using the <a name="kanchor5053"></a><a href="../../Reference Material/X/XBM_EDIT.htm#X_800576109_1046006">XBM_EDIT</a> procedure. This procedure offers several alternatives for the form of the final bitmap.</li>
+            <li value="4">Create an <i>n</i> x <i>m</i> byte array using the <a href="../../Reference Material/B/BYTARR.htm#B_856805997_675870">BYTARR</a> function and modify array elements using array operations. Use <a href="../../Reference Material/C/CVTTOBM.htm#C_854643309_871497">CVTTOBM </a>to convert the array to a bitmap byte array.</li>
+        </ul>
+        <h2 class="API">Creating Color Bitmap Arrays for Buttons</h2>
+        <p>You can produce appropriate color bitmap arrays in IDL in the following ways:</p>
+        <ul>
+            <li value="1">Create a 24-bit color image using an external bitmap editor, and read it into an IDL byte array using the appropriate procedure (READ_BMP, READ_JPEG, etc.). Remember that the image array must be interleaved by plane (<i>n</i>&#160;x&#160;<i>m</i>&#160;3), with the planes in the order red, green, blue. Note that image files created by image editors are often interleaved by pixel rather than by plane; use the TRANSPOSE function to reformat the array.</li>
+        </ul>
+        <p class="indent">For example, if you read a 24-bit color image into an array using the <a href="../../Reference Material/R/READ_BMP.htm#R_822202989_1071023">READ_BMP </a>function, the resulting array will be interleaved by pixel (with dimensions 3&#160;x&#160;<i>n</i>&#160;x&#160;<i>m</i>), with planes in the order blue, green, red. To create an array in the proper format for use as a button bitmap, use the following IDL commands:</p>
+        <p class="Code_Indented">button_image = READ_BMP('bitmap_file.bmp', /RGB)</p>
+        <p class="Code_Indented">button_image = TRANSPOSE(button_image, [1,2,0])</p>
+        <p class="Code_Indented">...</p>
+        <p class="Code_Indented">button = WIDGET_BUTTON(base, VALUE=button_image)</p>
+        <p class="indent">Here, the RGB keyword to READ_BMP reorders the color planes to be in the order red, green, blue; the call to TRANSPOSE puts the array in the proper format for use in a bitmap button.</p>
+        <ul>
+            <li value="1">Create an <i>n</i> x <i>m</i> x 3 byte array using the <a href="../../Reference Material/B/BYTARR.htm#B_856805997_675870">BYTARR</a> function and modify the array elements using array operations.</li>
+        </ul>
+        <p>Although IDL places no restriction on the size of bitmap allowed, the various toolkits may prefer certain sizes.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

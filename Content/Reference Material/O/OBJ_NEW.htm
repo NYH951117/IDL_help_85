@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: O">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>OBJ_NEW</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="O_list.htm">Routines: O</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">OBJ_NEW</span>
+        </div>
+        <h1 class="Routine"><a name="O_828691053_889454"></a><a name="O_828691053_40428"></a><a name="kanchor1971"></a>OBJ_NEW</h1>
+        <p><a name="kanchor1972"></a>Given the name of a structure that defines an object class, the OBJ_NEW function returns an object reference to a new instance of the specified object type by carrying out the following operations in order:</p>
+        <ol>
+            <li value="1">If the class structure has not been defined, IDL will attempt to find and call a procedure to define it automatically. If the structure is still not defined, OBJ_NEW fails and issues an error.</li>
+            <li value="2">If the class structure has been defined, OBJ_NEW creates an object heap variable containing a zeroed instance of the class structure.</li>
+            <li value="3">
+                <p>Once the new object heap variable has been created, OBJ_NEW looks for a <i>method</i> function named <i>Class</i>::INIT (where <i>Class</i> is the actual name of the class). If an INIT method exists, it is called with the new object as its implicit SELF argument, as well as any arguments and keywords specified in the call to OBJ_NEW. If the class has no INIT method, the usual method-searching rules are applied to find one from a superclass. For more information on methods and method-searching rules.</p>
+                <p>The INIT method is expected to initialize the object instance data as necessary to meet the needs of the class implementation. INIT should return a scalar TRUE value (such as 1) if the initialization is successful, and FALSE (such as 0) if the initialization fails.</p>
+                <p class="NoteIndented">OBJ_NEW does not call all the INIT methods in an object’s class hierarchy. Instead, it simply calls the first one it finds. Therefore, the INIT method for a class should call the INIT methods of its direct superclasses as necessary. </p>
+            </li>
+            <li value="4">If the INIT method returns true, or if no INIT method exists, OBJ_NEW returns an object reference to the heap variable. If INIT returns false, OBJ_NEW destroys the new object and returns the NULL object reference, indicating that the operation failed. Note that in this case the CLEANUP method is not called.</li>
+        </ol>
+        <p>If called without arguments, OBJ_NEW returns a NULL object reference. The NULL object reference is a special value that never refers to a value object. It is primarily used as a placeholder in structure definitions, and as the initial value for elements of object arrays created via OBJARR. The null object reference is useful as an indicator that an object reference is currently not usable.</p>
+        <h2 class="API"><a name="O_828691053_889477"></a><a name="O_828691053_889477_PageTOC_OBJ_NEW_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = OBJ_NEW( [<i>ObjectClassName </i>[,&#160;<i>Arg</i><sub class="italic">1</sub><i>...Arg</i><sub class="italic">n</sub>]] )</p>
+        <h2 class="API"><a name="O_828691053_934038"></a><a name="O_828691053_934038_PageTOC_OBJ_NEW_"></a><a name="O_828691053_61584"></a>Return Value </h2>
+        <p>Returns a reference to a new instance of the specified object type. If called without arguments, OBJ_NEW returns a NULL object reference. The NULL object reference is a special value that never refers to a value object. It is primarily used as a placeholder in structure definitions, and as the initial value for elements of object arrays created via OBJARR. The null object reference is useful as an indicator that an object reference is currently not usable.</p>
+        <h2 class="API"><a name="O_828691053_889479"></a><a name="O_828691053_889479_PageTOC_OBJ_NEW_"></a>Arguments</h2>
+        <h3 class="Argument">ObjectClassName</h3>
+        <p>String giving the name of the structure type that defines the object class for which a new object should be created.</p>
+        <p>If <i>ObjectClassName</i> is not provided, OBJ_NEW does not create a new heap variable, and returns the <i>Null Object</i>, which is a special object reference that is guaranteed to never point at a valid object heap variable. The null object is a convenient value to use when defining structure definitions for fields that are object references, since it avoids the need to have a pre-existing valid object reference.</p>
+        <h3 class="Argument">Arg<sub class="italic">1</sub>…Arg<sub class="italic">n</sub></h3>
+        <p>Any arguments accepted by the INIT method for the class of object being created can be specified when the object is created.</p>
+        <h2 class="API"><a name="O_828691053_889485"></a><a name="O_828691053_889485_PageTOC_OBJ_NEW_"></a>Keywords</h2>
+        <p>Any keywords accepted by the INIT method for the class of object being created can be specified when the object is created.</p>
+        <h2 class="API"><a name="O_828691053_931654"></a><a name="O_828691053_931654_PageTOC_OBJ_NEW_"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="O_828691053_957782"></a><a name="O_828691053_957782_PageTOC_OBJ_NEW_"></a>See Also</h2>
+        <p><a href="OBJ_CLASS.htm#O_828691053_955134">OBJ_CLASS</a>, <a href="OBJ_DESTROY.htm#O_828691053_889421">OBJ_DESTROY</a>, <a href="OBJ_HASMETHOD.htm#O_828691053_954486">OBJ_HASMETHOD</a>, <a href="OBJ_ISA.htm#O_828691053_889439">OBJ_ISA</a>, <a href="OBJ_VALID.htm#O_828691053_889488">OBJ_VALID</a>, <a>Overview of Object Graphic Destinations</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

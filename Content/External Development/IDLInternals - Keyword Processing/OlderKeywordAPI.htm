@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Keyword Processing">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Older Keyword API</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDLKeywordProcessing.htm">IDLInternals - Keyword Processing</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Older Keyword API</span>
+        </div>
+        <h1>Older Keyword API</h1>
+        <h2 class="API">The Pre-IDL 5.5 Keyword API</h2>
+        <p>Versions of IDL prior to IDL 5.5 used a different, but similar, keyword processing API to that found in the current versions. The remainder of this chapter provides information of interest to programmers maintaining older system routines that were written to that API.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span><span class="DocumentTitleCompanyName">Exelis VIS</span> recommends that all new code be written using the new keyword processing API. The older API continues to be supported for backwards compatibility, and there is no urgent reason to convert code that uses it. However, the effort of converting old code to the new API is minimal, and can be beneficial.</p>
+        <h2 class="API">Background</h2>
+        <p>If you have system routines that were written for use with versions of IDL older than IDL 5.5, your code uses an older keyword processing API, described in “Processing Keywords With IDL_KWGetParams()”, that including the following obsolete elements:</p>
+        <ul>
+            <li value="1"><b>IDL_KWGetParams()</b>
+            </li>
+            <li value="2"><b>IDL_KW_ARR_DESC</b>
+            </li>
+            <li value="3"><b>IDL_KWCleanup()</b>, <b>IDL_KW_MARK</b>, <b>IDL_KW_CLEAN</b></li>
+        </ul>
+        <p>This old API served for many years, but it had some unfortunate features that made it hard to use correctly:</p>
+        <ul>
+            <li value="1">The rules for when and how to use <b>IDL_KWCleanup()</b> were difficult to remember. The programmer had to decide whether or not to call it based on the types of the keywords being processed. If you didn’t call it when you should, memory would be leaked.</li>
+            <li value="2">In order to ensure correctness, many programmers would resort to always calling <b>IDL_KWCleanup()</b> whether it was is needed or not. This is inefficient, but otherwise fine.</li>
+            <li value="3">The use of <b>IDL_KWCleanup()</b> is based on a worst case assumption that the keywords that require cleaning will actually be invoked by the IDL user. This is often not the case, and is therefore inefficient.</li>
+            <li value="4">Imagine an existing system routine that does not need to use <b>IDL_KWCleanup()</b>, and therefore is coded not to use it. If a new keyword should later be added to that routine, and that new keyword should require the use of <b>IDL_KWCleanup()</b>, it is very likely that the programmer adding this new keyword will fail to recognize that issue. This leads to memory leaking from a formerly correct routine.</li>
+            <li value="5">If a future version of IDL should get a new data type that requires cleaning, that will change the rules for when <b>IDL_KWCleanup()</b> needs to be called. Existing code may need to be examined to fix this situation.</li>
+            <li value="6">The old keyword API is not reentrant, because it requires static variable addresses to be embedded in the keyword list. This has always been a problem for recursively callable routines (e.g. <b>WIDGET_CONTROL</b>, which can cause an IDL procedure callback to execute, which can in turn call <b>WIDGET_CONTROL</b> again). In the past, we have carefully coded these complex routines to avoid problems, but the large amount of code required is difficult to write and verify. The proper solution is a reentrant keyword API that uses offsets to variables within a structure, instead of actual statically scoped variable addresses. This is what the current API provides.</li>
+        </ul>
+        <h2 class="API">Advantages of the IDL 5.5 API</h2>
+        <p>In contrast, keyword processing, in IDL 5.5 and later is built around the <b>IDL_KWProcessByOffset()</b> function, has the following advantages:</p>
+        <ul>
+            <li value="1">The old API remains in place with full functionality. Hence, you are not required to update your old code (There are benefits to such updating, however).</li>
+            <li value="2">A transitional API, build around the <b>IDL_KWProcessByAddr()</b> function, exists to help ease updating your code. See <a href="#The" class="selected">The Transitional API</a> for details. The transitional API is a halfway measure designed to solve the worst problems of the old API while requiring the minimum amount of change.</li>
+            <li value="3">The new API, and the transitional API both eliminate the confusing <b>IDL_KWCleanup()</b> routine and its requirement to <b>KW_MARK</b> before, and <b>KW_CLEAN</b> after keyword processing based on the types of the keywords. Instead, the keyword processing API keeps track of the need to cleanup itself, and handles this efficiently. The user is freed from guesswork about how and when to do the required cleanup.</li>
+            <li value="4">Keyword cleanup will only happen if the keyword module determines that it is necessary as it processes the actual keywords used. This is more efficient, and it can be easily extended within IDL if a new data type is added to the IDL system, without requiring any change to your code.</li>
+            <li value="5">The internal data structures used to maintaining keyword state are now dynamically allocated, and do not have the static limits that the old implementation did.</li>
+            <li value="6">The new API is able to process keywords using a re-entrant keyword description. Results are written to stack based (C auto) variables rather than statically defined variables. This can be used to greatly simplify the implementation of recursive system routines, and has been used extensively for that purpose within IDL.</li>
+        </ul>
+        <h2 class="API">Differences And Similarities Between APIs</h2>
+        <p>The current IDL keyword processing API was designed to minimize the changes necessary to convert existing older code. The differences and similarities between these APIs are summarized below:</p>
+        <ul>
+            <li value="1">The basic <b>IDL_KW_PAR</b> data structure is unchanged between the two. However, in the old API, the specified, and value fields are addresses to statically allocated C variables or <b>IDL_KW_ARR_DESC</b> structures. In the new API, specified is always an offset into a user defined <b>KW_RESULT</b> structure. The value field is an offset into <b>KW_RESULT</b> when it is used to refer to data. It is an address when used to refer to an <b>IDL_KW_ARR_DESC_R</b> structure.</li>
+            <li value="2">The old API uses the <b>IDL_KW_ARR_DESC</b> structure to define <b>IDL_KW_ARRAY</b> read-only arrays. The new API uses the very similar IDL_KW_ARR_DESC_R structure. This is necessary because <b>IDL_KW_ARR_DESC</b> is not reentrant (the number of array elements used is written into the struct), while <b>IDL_KW_ARR_DESC_R</b> causes them to be written into a field in the <b>KW_RESULT</b> variable instead.</li>
+            <li value="3">The new API requires all keyword variables to be contained in a single <b>KW_RESULT</b> structure, while the old API allowed them to be independent variables. This is important to the offset-based scheme used in the new API, as well as having the nice side effect of improving the organization and readability of most code.</li>
+            <li value="4">The old API uses <b>IDL_KWGetParams()</b> to process keywords. The new API uses <b>IDL_KWProcessByOffset()</b>.</li>
+            <li value="5">The old API uses IDL_KWCleanup() to free resources. The rules for using it are complicated and lead to latent coding errors. The new API uses the <b>IDL_KW_FREE</b> macro, and has a simple consistent rule for use.</li>
+        </ul>
+        <h2 class="API">Converting Existing Code To The New API</h2>
+        <p>To convert code that uses the old API to the new version:</p>
+        <ul>
+            <li value="1">Define a typedef for a struct named <b>KW_RESULT</b>, containing the keyword variables. Make the first field be the predefined <b>IDL_KW_RESULT_FIRST_FIELD</b>.</li>
+            <li value="2">Modify your keyword definition list so that the specified and value fields of each <b>IDL_KW_PAR</b> struct contain offsets instead of addresses in all cases except when the value field references an <b>IDL_KW_ARR_DESC</b> struct. To do this, use the <b>IDL_KW_OFFSETOF()</b> macro.</li>
+            <li value="3">Any reference to an <b>IDL_KW_ARR_DESC</b> structure for an <b>IDL_KW_ARRAY</b> keyword must be converted to an <b>IDL_KW_ARR_DESC_R</b> struct.</li>
+            <li value="4">Replace the call to <b>IDL_KWGetParams()</b> with a call to <b>IDL_KWProcessByOffset()</b>.</li>
+            <li value="5">Remove any <b>IDL_KWCleanup(IDL_KW_MARK)</b> calls.</li>
+            <li value="6">Replace any <b>IDL_KWCleanup(IDL_KW_CLEAN)</b> calls with the <b>IDL_KW_FREE</b> macro. Check to ensure that all exit paths from your function other than via <b>IDL_Message()</b> include a call to this macro.</li>
+        </ul>
+        <h2 class="API"><a name="The"></a>The Transitional API</h2>
+        <p>We recommend that you convert your code to the reentrant keyword API based around the <b>IDL_KWProcessByOffset()</b> and <b>IDL_KWFree()</b> functions. This is almost always a straightforward operation, and the resulting code has all of the advantages discussed in “Advantages Of The IDL 5.5 API”. However, there is another alternative that may be useful is some situations. A third keyword API, built around the <b>IDL_KWProcessByAddr()</b> function exists that provides the benefits of eliminating the confusing <b>IDL_KWCleanup()</b> function, while not requiring the use of static non-reentrant separate variables to change.</p>
+        <p>The transitional API is a halfway measure designed to solve the worst problems of the old API while requiring the minimum amount of change to your code:</p>
+        <p class="Code">int IDL_KWProcessByAddr(int argc, IDL_VPTR *argv, char *argk, &#160;&#160;&#160;&#160;&#160;&#160;</p>
+        <p class="Code">&#160;&#160;&#160;IDL_KW_PAR *kw_list, IDL_VPTR *plain_args, </p>
+        <p class="Code">&#160;&#160;&#160;int mask, int *free_required)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">void IDL_KWFree(void)</p>
+        <p>where:</p>
+        <h3>argc, argv, argk, plain_args, mask</h3>
+        <p>These arguments are the same as those required by <b>IDL_KWProcessByOffset()</b>.</p>
+        <h3>kw_list</h3>
+        <p>An array of <b>IDL_KW_PAR</b> structures, in the absolute address form required by the old IDL_<b>KWGetParams()</b> keyword API (the specified and value fields use address to static C variables).</p>
+        <h3>free_required</h3>
+        <p>The address of an integer to be filled in by <b>IDL_KWProcessByAddr()</b>. If set to TRUE, the caller must call <b>IDL_KWFree()</b> prior to exit from the routine.</p>
+        <h2 class="API">Example: Converting From The Old Keyword API</h2>
+        <p>To illustrate the use of the old keyword API, the transitional API, and the new reentrant API, this section provides an extremely simple example, written three times, once with each API.</p>
+        <p>Another useful comparison is to compare the example <a href="KWExamples.htm">Keyword Examples</a> on with its original version written with the old API which can be found in “Keyword Examples”.</p>
+        <h3>Old API</h3>
+        <p class="Code">IDL_VPTR IDL_someroutine(int argc, IDL_VPTR *argv, char *argk)</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">static IDL_VPTR count_var; </p>
+        <p class="Code_Indented">static IDL_LONG debug; </p>
+        <p class="Code_Indented">static IDL_STRING name;</p>
+        <p class="Code_Indented">static IDL_KW_PAR kw_pars[] = {</p>
+        <p class="Code_Indented">{ "COUNT", 0,1,IDL_KW_OUT|IDL_KW_ZERO,0,IDL_CHARA(count_var)},</p>
+        <p class="Code_Indented">{ "DEBUG", IDL_TYP_LONG, 1, IDL_KW_ZERO, 0,IDL_CHARA(debug) },</p>
+        <p class="Code_Indented">{ "NAME", IDL_TYP_STRING, 1, IDL_KW_ZERO, 0,IDL_CHARA(name) },</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">{ NULL }</p>
+        <p class="Code_Indented">};</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">IDL_VPTR result;</p>
+        <p class="Code_Indented">IDL_KWCleanup(IDL_KW_MARK);</p>
+        <p class="Code_Indented">argc = IDL_KWGetParams(argc,argv,argk,kw_pars,(IDL_VPTR *)0,1);</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">/* Your code goes here. Keyword values are available in the</p>
+        <p class="Code_Indented">* static variables.*/</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">/* Cleanup keywords before leaving */ </p>
+        <p class="Code_Indented">IDL_KWCleanup(IDL_KW_CLEAN); </p>
+        <p class="Code_Indented">return(result);</p>
+        <p class="Code">}</p>
+        <h3>Transitional API</h3>
+        <p>The transitional API provides the benefits of simplified and straightforward cleanup, but does not require you to alter your IDL_KW_PAR array or gather the keyword variables into a common structure. The resulting code is very similar to the old API.</p>
+        <p class="Code">IDL_VPTR IDL_someroutine(int argc, IDL_VPTR *argv, char *argk)</p>
+        <p class="Code">{</p>
+        <p class="Code">static IDL_VPTR count_var; </p>
+        <p class="Code">static IDL_LONG debug; </p>
+        <p class="Code">static IDL_STRING name;</p>
+        <p class="Code">static IDL_KW_PAR kw_pars[] = {</p>
+        <p class="Code">{"COUNT", 0, 1, IDL_KW_OUT|IDL_KW_ZERO,</p>
+        <p class="Code">0,IDL_KW_ADDROF(count_var) },</p>
+        <p class="Code">{ "DEBUG", IDL_TYP_LONG,1,IDL_KW_ZERO,0,IDL_KW_ADDROF(debug)},</p>
+        <p class="Code">{ "NAME", IDL_TYP_STRING,1,IDL_KW_ZERO,0,IDL_KW_ADDROF(name)},</p>
+        <p class="Code">{ NULL }</p>
+        <p class="Code">};</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">int kw_free; </p>
+        <p class="Code">IDL_VPTR result;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">argc = IDL_KWProcessByAddr(argc, argv, argk, kw_pars, </p>
+        <p class="Code">&#160;&#160;&#160;(IDL_VPTR *) 0, 1, &amp;kw_free);</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">/* Your code goes here. Keyword values are available in the</p>
+        <p class="Code">* static variables.*/</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">/* Cleanup keywords before leaving */</p>
+        <p class="Code">if (kw_free) IDL_KWFree();</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">return(result);</p>
+        <p class="Code">}</p>
+        <p>&#160;</p>
+        <h3>New Reentrant API</h3>
+        <p class="Code">IDL_VPTR IDL_someroutine(int argc, IDL_VPTR *argv, char *argk)</p>
+        <p class="Code">{</p>
+        <p class="Code">typedef struct {</p>
+        <p class="Code">IDL_KW_RESULT_FIRST_FIELD; /* Must be first entry in struct */ IDL_VPTR count_var;</p>
+        <p class="Code">IDL_LONG debug;</p>
+        <p class="Code">IDL_STRING name;</p>
+        <p class="Code">} KW_RESULT;</p>
+        <p class="Code">static IDL_KW_PAR kw_pars[] = {</p>
+        <p class="Code">{ "COUNT", 0, 1, IDL_KW_OUT | IDL_KW_ZERO,</p>
+        <p class="Code">0, IDL_KW_OFFSETOF(count_var) },</p>
+        <p class="Code">{ "DEBUG", IDL_TYP_LONG, 1, IDL_KW_ZERO,</p>
+        <p class="Code">0, IDL_KW_OFFSETOF(debug) },</p>
+        <p class="Code">{ "NAME", IDL_TYP_STRING, 1, IDL_KW_ZERO,</p>
+        <p class="Code">0, IDL_KW_OFFSETOF(name) },</p>
+        <p class="Code">{ NULL }</p>
+        <p class="Code">};</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">KW_RESULT kw; </p>
+        <p class="Code">IDL_VPTR result;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">argc = IDL_KWProcessByOffset(argc, argv, argk, kw_pars, (IDL_VPTR *) 0, 1, &amp;kw);</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">/* Your code goes here. Keyword values are available in the</p>
+        <p class="Code">* kw struct.*/</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">/* Cleanup keywords before leaving if necessary */ </p>
+        <p class="Code">IDL_KW_FREE;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">return(result);</p>
+        <p class="Code">}</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

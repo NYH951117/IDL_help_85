@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>HDF5 Overview</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="kanchor5903"></a>HDF5 Overview</h1>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>For information on the current HDF5 version, enter the following at the IDL prompt:</p>
+        <p class="Code">HELP, 'hdf5', /DLM</p>
+        <p>The Hierarchical Data Format (HDF) version 5 file format was designed for scientific data consisting of a hierarchy of datasets and attributes (or metadata). HDF is a product of the National Center for Supercomputing Applications (NCSA), which supplies the underlying C-language library; IDL provides access to this library via a set of procedures and functions contained in a dynamically loadable module (DLM).</p>
+        <p>IDL’s HDF5 routines all begin with the prefix "H5_" or "H5*_".</p>
+        <h2 class="API"><a name="kanchor5904"></a>Programming Model</h2>
+        <p>Hierarchical Data Format files are organized in a hierarchical structure. The two primary structures are:</p>
+        <p>The HDF5 group — a grouping structure containing instances of zero or more groups or datasets, together with supporting metadata.</p>
+        <p>The HDF5 dataset — a multidimensional array of data elements, together with supporting metadata.</p>
+        <p>HDF attributes are small named datasets that are attached to primary datasets, groups, or named datatypes.</p>
+        <h2 class="API"><a name="kanchor5905"></a>Code Examples</h2>
+        <h3>Reading an Image</h3>
+        <p>The following example opens up the <code>hdf5_test.h5</code> file and reads in a sample image. It is assumed that the user already knows the dataset name, either from using <code>h5dump</code>, or the H5G_GET_MEMBER_NAME function.</p>
+        <p class="Code">PRO ex_read_hdf5</p>
+        <p class="Code">; Open the HDF5 file.</p>
+        <p class="Code">file = FILEPATH('hdf5_test.h5', $</p>
+        <p class="Code">SUBDIRECTORY=['examples', 'data'])</p>
+        <p class="Code">file_id = H5F_OPEN(file)</p>
+        <p class="Code">; Open the image dataset within the file.</p>
+        <p class="Code">; This is located within the /images group.</p>
+        <p class="Code">; We could also have used H5G_OPEN to open up the group first.</p>
+        <p class="Code">dataset_id1 = H5D_OPEN(file_id, '/images/Eskimo')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Read in the actual image data.</p>
+        <p class="Code">image = H5D_READ(dataset_id1)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Open up the dataspace associated with the Eskimo image.</p>
+        <p class="Code">dataspace_id = H5D_GET_SPACE(dataset_id1)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Retrieve the dimensions so we can set the window size.</p>
+        <p class="Code">dimensions = H5S_GET_SIMPLE_EXTENT_DIMS(dataspace_id)</p>
+        <p class="Code">; Now open and read the color palette associated with</p>
+        <p class="Code">; this image.</p>
+        <p class="Code">dataset_id2 = H5D_OPEN(file_id, '/images/Eskimo_palette')</p>
+        <p class="Code">palette = H5D_READ(dataset_id2)</p>
+        <p class="Code">; Close all our identifiers so we don't leak resources.</p>
+        <p class="Code">H5S_CLOSE, dataspace_id</p>
+        <p class="Code">H5D_CLOSE, dataset_id1</p>
+        <p class="Code">H5D_CLOSE, dataset_id2</p>
+        <p class="Code">H5F_CLOSE, file_id</p>
+        <p class="Code">; Display the data.</p>
+        <p class="Code">DEVICE, DECOMPOSED=0</p>
+        <p class="Code">WINDOW, XSIZE=dimensions[0], YSIZE=dimensions[1]</p>
+        <p class="Code">TVLCT, palette[0,*], palette[1,*], palette[2,*]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use /ORDER since the image is stored top-to-bottom.</p>
+        <p class="Code">TV, image, /ORDER</p>
+        <p class="Code">END</p>
+        <h3>Reading a Subselection</h3>
+        <p>The following example reads only a portion of the previous image, using the dataspace keywords to H5D_READ.</p>
+        <p class="Code">PRO ex_read_hdf5_select</p>
+        <p class="Code">; Open the HDF5 file.</p>
+        <p class="Code">file = FILEPATH('hdf5_test.h5', $</p>
+        <p class="Code">SUBDIRECTORY=['examples', 'data'])</p>
+        <p class="Code">file_id = H5F_OPEN(file)</p>
+        <p class="Code">; Open the image dataset within the file.</p>
+        <p class="Code">dataset_id1 = H5D_OPEN(file_id, '/images/Eskimo')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Open up the dataspace associated with the Eskimo image.</p>
+        <p class="Code">dataspace_id = H5D_GET_SPACE(dataset_id1)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Now choose our hyperslab. We will pick out only the central</p>
+        <p class="Code">; portion of the image.</p>
+        <p class="Code">start = [100, 100]</p>
+        <p class="Code">count = [200, 200]</p>
+        <p class="Code">; Be sure to use /RESET to turn off all other</p>
+        <p class="Code">; selected elements.</p>
+        <p class="Code">H5S_SELECT_HYPERSLAB, dataspace_id, start, count, $</p>
+        <p class="Code">STRIDE=[2, 2], /RESET</p>
+        <p class="Code">; Create a simple dataspace to hold the result. If we</p>
+        <p class="Code">; didn't supply</p>
+        <p class="Code">; the memory dataspace, then the result would be the same size</p>
+        <p class="Code">; as the image dataspace, with zeroes everywhere except our</p>
+        <p class="Code">; hyperslab selection.</p>
+        <p class="Code">memory_space_id = H5S_CREATE_SIMPLE(count)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Read in the actual image data.</p>
+        <p class="Code">image = H5D_READ(dataset_id1, FILE_SPACE=dataspace_id, $</p>
+        <p class="Code">MEMORY_SPACE=memory_space_id)</p>
+        <p class="Code">; Now open and read the color palette associated with</p>
+        <p class="Code">; this image.</p>
+        <p class="Code">dataset_id2 = H5D_OPEN(file_id, '/images/Eskimo_palette')</p>
+        <p class="Code">palette = H5D_READ(dataset_id2)</p>
+        <p class="Code">; Close all our identifiers so we don't leak resources.</p>
+        <p class="Code">H5S_CLOSE, memory_space_id</p>
+        <p class="Code">H5S_CLOSE, dataspace_id</p>
+        <p class="Code">H5D_CLOSE, dataset_id1</p>
+        <p class="Code">H5D_CLOSE, dataset_id2</p>
+        <p class="Code">H5F_CLOSE, file_id</p>
+        <p class="Code">; Display the data.</p>
+        <p class="Code">DEVICE, DECOMPOSED=0</p>
+        <p class="Code">WINDOW, XSIZE=count[0], YSIZE=count[1]</p>
+        <p class="Code">TVLCT, palette[0,*], palette[1,*], palette[2,*]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; We need to use /ORDER since the image is stored</p>
+        <p class="Code">; top-to-bottom.</p>
+        <p class="Code">TV, image, /ORDER</p>
+        <p class="Code">END</p>
+        <h3>Creating a Data File</h3>
+        <p>The following example creates a simple HDF5 data file with a single sample data set. The file is created in the current working directory.</p>
+        <p class="Code">PRO ex_create_hdf5</p>
+        <p class="Code">file = filepath('hdf5_out.h5')</p>
+        <p class="Code">fid = H5F_CREATE(file)</p>
+        <p class="Code">;; create data</p>
+        <p class="Code">data = hanning(100,150)</p>
+        <p class="Code">;; get data type and space, needed to create the dataset</p>
+        <p class="Code">datatype_id = H5T_IDL_CREATE(data)</p>
+        <p class="Code">dataspace_id = H5S_CREATE_SIMPLE(size(data,/DIMENSIONS))</p>
+        <p class="Code">;; create dataset in the output file</p>
+        <p class="Code">dataset_id = H5D_CREATE(fid,$</p>
+        <p class="Code">'Sample data',datatype_id,dataspace_id)</p>
+        <p class="Code">;; write data to dataset</p>
+        <p class="Code">H5D_WRITE,dataset_id,data</p>
+        <p class="Code">;; close all open identifiers</p>
+        <p class="Code">H5D_CLOSE,dataset_id</p>
+        <p class="Code">H5S_CLOSE,dataspace_id</p>
+        <p class="Code">H5T_CLOSE,datatype_id</p>
+        <p class="Code">H5F_CLOSE,fid</p>
+        <p class="Code">END</p>
+        <h3>Reading Partial Datasets</h3>
+        <p>To read a portion of a compound dataset or attribute, create a datatype that matches only the elements you wish to retrieve, and specify that datatype as the second argument to the <a href="H5D_READ.htm">H5D_READ </a>function. The following example creates a simple HDF5 data file in the current directory, then opens the file and reads a portion of the data.</p>
+        <p class="Code">; Create sample data in an array of structures with two fields</p>
+        <p class="Code">struct = {time:0.0, data:intarr(40)}</p>
+        <p class="Code">r = REPLICATE(struct,20)</p>
+        <p class="Code">r.time = RANDOMU(seed,20)*1000</p>
+        <p class="Code">r.data = INDGEN(40,20)</p>
+        <p class="Code">; Create a file</p>
+        <p class="Code">file = 'h5_test.h5'</p>
+        <p class="Code">fid = H5F_CREATE(file)</p>
+        <p class="Code">; Create a datatype based on a single element of the arrary</p>
+        <p class="Code">dt = H5T_IDL_CREATE(struct)</p>
+        <p class="Code">; Create a 20 element dataspace</p>
+        <p class="Code">ds = H5S_CREATE_SIMPLE(N_ELEMENTS(r))</p>
+        <p class="Code">; Create and write the dataset</p>
+        <p class="Code">d = H5D_CREATE(fid, 'dataset', dt, ds)</p>
+        <p class="Code">H5D_WRITE, d, r</p>
+        <p class="Code">; Close the file</p>
+        <p class="Code">H5F_CLOSE, fid</p>
+        <p class="Code">; Open the file for reading</p>
+        <p class="Code">fid = H5F_OPEN(file)</p>
+        <p class="Code">; Open the dataset</p>
+        <p class="Code">d = H5D_OPEN(fid, 'dataset')</p>
+        <p class="Code">; Define the data we want to read from the dataset</p>
+        <p class="Code">struct = {data:intarr(40)}</p>
+        <p class="Code">; Create datatype denoting the portion to be read</p>
+        <p class="Code">dt = H5T_IDL_CREATE(struct)</p>
+        <p class="Code">; Read only the data that matches our datatype. The</p>
+        <p class="Code">; returned value will be a 20 element structure with only</p>
+        <p class="Code">; one tag, 'DATA'. Each element of which will be a [40]</p>
+        <p class="Code">; element integer array</p>
+        <p class="Code">result = H5D_READ(d, dt)</p>
+        <p class="Code">H5F_CLOSE, fid</p>
+        <h2 class="API"><a name="kanchor5906"></a>The IDL HDF5 Library</h2>
+        <p>The IDL HDF5 library consists of an almost direct mapping between the HDF5 library functions and the IDL functions and procedures. The relationship between the IDL routines and the HDF5 library is described in the following subsections.</p>
+        <h3>Routine Names</h3>
+        <p>The IDL routine names are typically identical to the HDF5 function names, with the exception that an underscore is added between the prefix and the actual function. For example, the C function H5get_libversion() is implemented by the IDL function H5_GET_LIBVERSION.</p>
+        <p>The IDL HDF5 library contains the following function categories:</p>
+        <table class="TableStyle_Description" style="margin-left: 0;margin-right: auto;mc-table-style: url('../../../Resources/TableStyles/Description.css');" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <thead>
+                <tr class="Head-Header1">
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Prefix</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Category</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Purpose</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>H5</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Library</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>General library tasks</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>H5A</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Attribute</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Manipulate attribute datasets</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>H5D</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Dataset</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Manipulate general datasets</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>H5F</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>File</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Create, open, and close files</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>H5G</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Group</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Handle groups of other groups or datasets</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>H5I</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Identifier</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Query object identifiers</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>H5R</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Reference</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Reference identifiers</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>H5S</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Dataspace</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Handle dataspace dimensions and selection</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>H5T</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>Datatype</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Handle dataset element information</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Functions Versus Procedures</h3>
+        <p>HDF5 functions that only return an error code are typically implemented as IDL procedures. An example is H5F_CLOSE, which takes a single file identifier number as the argument and closes the file. HDF5 functions that return values are implemented as IDL functions. An example is H5F_OPEN, which takes a filename as the argument and returns a file identifier number.</p>
+        <h3>Error Handling</h3>
+        <p>All HDF5 functions that return an error or status code are checked for failure. If an error occurs, the HDF5 error handling code is called to retrieve the internal HDF5 error message. This error message is printed to the output window, and program execution stops.</p>
+        <h3>Dimension Order</h3>
+        <p>HDF5 uses C row-major ordering instead of IDL column-major ordering. For row major, the first listed dimension varies slowest, while for column major the first listed dimension varies fastest. The IDL HDF5 library handles this difference by automatically reversing the dimensions for all functions that accept lists of dimensions.</p>
+        <p>For example, an HDF5 file may be known to contain a dataset with dimensions [5][10][50], either as declared in the C code, or from the output from the <code>h5dump</code> utility. When this dataset is read into IDL, the array will have the dimensions listed as [50, 10, 5], using the output from the IDL help function.</p>
+        <h2 class="API"><a name="kanchor5907"></a>HDF5 Datatypes</h2>
+        <p>In HDF5, a <i>datatype </i>is an object that describes the storage format of the individual data points of a data set. There are two categories of datatypes; <i>atomic</i> and <i>compound</i> datatypes:</p>
+        <ul>
+            <li value="1"><i>Atomic datatypes</i> cannot be decomposed into smaller units at the API level.</li>
+            <li value="2"><i>Compound datatypes</i> are a collection of one or more atomic types or small arrays of such types. Compound datatypes are similar to a struct in C or a common block in Fortran. See <a href="#Compound" class="selected">Compound Datatypes</a> for additional details.</li>
+            <li value="3">In addition, HDF5 uses the following terms for different datatype concepts:</li>
+            <li value="4">A <i>named datatype</i> is a datatype that is named and stored in a file. Naming is permanent; a datatype cannot be changed after being named. Named datatypes are created from in-memory datatypes using the <a href="H5T_COMMIT.htm">H5T_COMMIT</a> routine.</li>
+            <li value="5">An <i>opaque datatype</i> is a mechanism for describing data which cannot be otherwise described by HDF5. The only properties associated with opaque types are the size in bytes and an ASCII tag string. See <a href="#Opaque" class="selected">Opaque Datatypes</a> for additional details.</li>
+            <li value="6">An<i> enumeration datatype</i> is a one-to-one mapping between a set of symbols and an ordered set of integer values. The symbols are passed between IDL and the underlying HDF5 library as character strings. All the values for a particular enumeration datatype are of the same integer type. See <a href="#Enumerat" class="selected">Enumeration Datatypes</a> for additional details.</li>
+            <li value="7">A <i>variable length array</i> datatype is a sequence of existing datatypes (atomic, variable length, or compound) which are not fixed in length from one dataset location to another. See <a href="#Variable" class="selected">Variable Length Array Datatypes</a> for additional details.</li>
+        </ul>
+        <h3><a name="Compound"></a>Compound Datatypes</h3>
+        <p>HDF5 compound datatypes can be compared to C structures, Fortran structures, or SQL records. Compound datatypes can be nested; there is no limitation to the complexity of a compound datatype. Each member of a compound datatype must have a descriptive name, which is the key used to uniquely identify the member within the compound datatype.</p>
+        <p>Use one of the <a href="H5T_COMPOUND_CREATE.htm">H5T_COMPOUND_CREATE</a> or <a href="H5T_IDL_CREATE.htm">H5T_IDL_CREATE</a> routines to create compound datatypes. Use the following routines to work with compound datatypes:</p>
+        <ul>
+            <li value="1"><a href="H5T_GET_MEMBER_CLASS.htm">H5T_GET_MEMBER_CLASS </a>
+            </li>
+            <li value="2"><a href="H5T_GET_MEMBER_INDEX.htm">H5T_GET_MEMBER_INDEX</a>
+            </li>
+            <li value="3"><a href="H5T_GET_MEMBER_NAME.htm">H5T_GET_MEMBER_NAME </a>
+            </li>
+            <li value="4"><a href="H5T_GET_MEMBER_OFFSET.htm">H5T_GET_MEMBER_OFFSET </a>
+            </li>
+            <li value="5"><a href="H5T_GET_MEMBER_TYPE.htm">H5T_GET_MEMBER_TYPE </a>
+            </li>
+            <li value="6"><a href="H5T_GET_MEMBER_VALUE.htm">H5T_GET_MEMBER_VALUE</a>
+            </li>
+            <li value="7"><a href="H5T_GET_NMEMBERS.htm">H5T_GET_NMEMBERS </a>
+            </li>
+        </ul>
+        <h4>Example</h4>
+        <p>See <a href="H5F_CREATE.htm">H5F_CREATE</a> for an extensive example using compound datatypes.</p>
+        <h3><a name="Opaque"></a>Opaque Datatypes</h3>
+        <p>An opaque datatype contains a series of bytes. It always contains a single element, regardless of the length of the series of bytes it contains.</p>
+        <p>When an IDL variable is written to a dataset or attribute defined as an opaque datatype, it is written as a string of bytes with no demarcation. When data in a opaque datatype is read into an IDL variable, it is returned as byte array. Use the FIX routine to convert the returned byte array to the appropriate IDL data type.</p>
+        <p>Use the <a href="H5T_IDL_CREATE.htm">H5T_IDL_CREATE</a> routine with the OPAQUE keyword to create opaque datatypes. To create an opaque array, use an opaque datatype with the <a href="H5T_ARRAY_CREATE.htm">H5T_ARRAY_CREATE</a> routine. A single string tag can be assigned to an opaque datatype to provide auxiliary information about what is contained therein. Create tags using the <a href="H5T_SET_TAG.htm">H5T_SET_TAG</a> routine; retrieve tags using the <a href="H5T_GET_TAG.htm">H5T_GET_TAG</a> routine. HDF5 limits the length of the tag to 255 characters.</p>
+        <h4>Example</h4>
+        <p>The following example creates an opaque datatype and stores within it a 20-element integer array.</p>
+        <p class="Code">; Create a file to hold the data</p>
+        <p class="Code">file = 'h5_test.h5'</p>
+        <p class="Code">fid = H5F_CREATE(file)</p>
+        <p class="Code">; Create some data</p>
+        <p class="Code">data = INDGEN(20)</p>
+        <p class="Code">; Create an opaque datatype</p>
+        <p class="Code">dt = H5T_IDL_CREATE(data, /OPAQUE)</p>
+        <p class="Code">; Create a single element dataspace</p>
+        <p class="Code">ds = H5S_CREATE_SIMPLE(1)</p>
+        <p class="Code">; Create and write the dataset</p>
+        <p class="Code">d = H5D_CREATE(fid, 'dataset', dt, ds)</p>
+        <p class="Code">H5D_WRITE, d, data</p>
+        <p class="Code">; Close the file</p>
+        <p class="Code">H5F_CLOSE, fid</p>
+        <p class="Code">; Reopen file for reading</p>
+        <p class="Code">fid = H5F_OPEN(file)</p>
+        <p class="Code">; Read in the data</p>
+        <p class="Code">d = H5D_OPEN(fid, 'dataset')</p>
+        <p class="Code">result = H5D_READ(d)</p>
+        <p class="Code">; Close the file</p>
+        <p class="Code">H5F_CLOSE, fid</p>
+        <p class="Code">HELP, result</p>
+        <p>IDL prints:</p>
+        <p class="Code">RESULT          BYTE      = Array[40]</p>
+        <p>Note that the result is a 40-element byte array, since each integer requires two bytes.</p>
+        <h3><a name="Enumerat"></a>Enumeration Datatypes</h3>
+        <p>An enumeration datatype consists of a set of (<i>Name</i>, <i>Value</i>) pairs, where:</p>
+        <ul>
+            <li value="1"><i>Name</i> is a scalar string that is unique within the datatype (a given name string can only be associated with a single value)</li>
+            <li value="2"><i>Value</i> is a scalar integer that is unique within the datatype</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Name/value pairs must be assigned to the datatype <i>before</i> it is used to create a dataset. The dataset stores the state of the datatype at the time the dataset is created; additional changes to the datatype will not be reflected in the dataset.</p>
+        <p>Create the enumeration datatype using the <a href="H5T_ENUM_CREATE.htm">H5T_ENUM_CREATE</a> function. Once you have created an enumeration datatype:</p>
+        <ul>
+            <li value="1">use the <a href="H5T_ENUM_INSERT.htm">H5T_ENUM_INSERT</a> procedure to associate a single name/value pair with the datatype</li>
+            <li value="2">use the <a href="H5T_ENUM_VALUEOF.htm">H5T_ENUM_VALUEOF</a> function to retrieve the value associated with a single name</li>
+            <li value="3">use the <a href="H5T_ENUM_NAMEOF.htm">H5T_ENUM_NAMEOF</a> function to retrieve the name associated with a single value</li>
+        </ul>
+        <p>These routines replicate the facilities provided by the underlying HDF5 library, which deals only with single name/value pairs. To make it easier to read and write entire enumerated lists, IDL provides two helper routines at package the name/value pairs in arrays of IDL IDL_H5_ENUM structures, which have the following definition:</p>
+        <p class="Code">{IDL_H5_ENUM, NAME:'', VALUE:0}</p>
+        <p>The routines are:</p>
+        <ul>
+            <li value="1"><a href="H5T_ENUM_SET_DATA.htm">H5T_ENUM_SET_DATA</a> associates multiple name/value pairs with an enumeration datatype in a single operation. Data can be provided either as a string array of names and an integer array of values or as a single array of IDL_H5_ENUM structures.</li>
+            <li value="2"><a href="H5T_ENUM_GET_DATA.htm">H5T_ENUM_GET_DATA</a> retrieves multiple name/value pairs from an enumeration datatype in a single operation. Data are returned in an array of IDL_H5_ENUM structures.</li>
+        </ul>
+        <p>The <a href="H5T_ENUM_VALUES_TO_NAMES.htm">H5T_ENUM_VALUES_TO_NAMES</a> function is a helper routine that lets you retrieve the names associated with an array of values in a single operation.</p>
+        <p>The following routines may also be useful when working with enumeration datatypes:</p>
+        <p><a href="H5T_GET_MEMBER_INDEX.htm">H5T_GET_MEMBER_INDEX</a>, <a href="H5T_GET_MEMBER_NAME.htm">H5T_GET_MEMBER_NAME</a>, <a href="H5T_GET_MEMBER_VALUE.htm">H5T_GET_MEMBER_VALUE</a></p>
+        <h4>Example</h4>
+        <p>The following example creates an enumeration datatype and saves it to a file. The example then reopens the file and reads the data, printing the names.</p>
+        <p class="Code">; Create a file to hold the data</p>
+        <p class="Code">file = 'h5_test.h5'</p>
+        <p class="Code">fid = H5F_CREATE(file)</p>
+        <p class="Code">; Create arrays to serve as name/value pairs</p>
+        <p class="Code">names = ['dog', 'pony', 'turtle', 'emu', 'wildebeest']</p>
+        <p class="Code">values = INDGEN(5)+1</p>
+        <p class="Code">; Create the enumeration datatype</p>
+        <p class="Code">dt = H5T_ENUM_CREATE()</p>
+        <p class="Code">; Associate the name/value pairs with the datatype</p>
+        <p class="Code">H5T_ENUM_SET_DATA, dt, names, values</p>
+        <p class="Code">; Create a dataspace, then create and write the dataset</p>
+        <p class="Code">ds = H5S_CREATE_SIMPLE(N_ELEMENTS(values))</p>
+        <p class="Code">d = H5D_CREATE(fid, 'dataset', dt, ds)</p>
+        <p class="Code">H5D_WRITE, d, values</p>
+        <p class="Code">; Close the file</p>
+        <p class="Code">H5F_CLOSE, fid</p>
+        <p class="Code">; Reopen file for reading</p>
+        <p class="Code">fid = H5F_OPEN(file)</p>
+        <p class="Code">; Read in the data</p>
+        <p class="Code">d = H5D_OPEN(fid, 'dataset')</p>
+        <p class="Code">dt = H5D_GET_TYPE(d)</p>
+        <p class="Code">result = H5D_READ(d)</p>
+        <p class="Code">; Close the file</p>
+        <p class="Code">H5F_CLOSE, fid</p>
+        <p class="Code">; Print the value associated with the name "pony"</p>
+        <p class="Code">PRINT, H5T_ENUM_VALUEOF(dt, 'pony')</p>
+        <p class="Code">; Print all the name strings</p>
+        <p class="Code">PRINT, H5T_ENUM_VALUES_TO_NAMES(dt, result)</p>
+        <h3><a name="Variable"></a>Variable Length Array Datatypes</h3>
+        <p>HDF5 provides support for variable length arrays, but IDL itself does not. As a result, in order to store data in an HDF5 variable length array you must:</p>
+        <ol>
+            <li value="1">Create a series of vectors of data in IDL, each with a potentially different length. All vectors must be of the same data type.</li>
+            <li value="2">
+                <p>Store a pointer to each data vector in the PDATA field of an IDL_H5_VLEN structure. The IDL_H5_VLEN structure is defined as follows:</p>
+                <p class="Code">{ IDL_H5_VLEN, pdata:PTR_NEW() }</p>
+            </li>
+            <li value="3">Create an array of IDL_H5_VLEN structures that will be stored as an HDF5 variable length array.</li>
+            <li value="4">
+                <p>The IDL_H5_VLEN structure is defined as follows:</p>
+                <p class="Code">{ IDL_H5_VLEN, pdata:PTR_NEW() }</p>
+            </li>
+            <li value="5">Create a base HDF5 datatype from one of the data vectors.</li>
+            <li value="6">Create an HDF5 variable length datatype from the base datatype.</li>
+            <li value="7">Create an HDF5 dataspace of the appropriate size.</li>
+            <li value="8">Create an HDF5 dataset.</li>
+            <li value="9">Write the array of IDL_H5_VLEN structures to the HDF5 dataset.</li>
+        </ol>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDL string arrays are a special case: see <a href="#variable_length_string_arrays" class="selected">Variable Length String Arrays</a> for details.</p>
+        <p>Creating a variable length array datatype is a two-step process. First, you must create a base datatype using the H5T_IDL_CREATE function; all data in the variable length array must be of this datatype. Second, you create a variable length array datatype using the base datatype as an input to the <a href="H5T_VLEN_CREATE.htm">H5T_VLEN_CREATE</a> function.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>No explicit size is provided to the H5T_VLEN_CREATE function; sizes are determined as needed by the data being written.</p>
+        <h4>Example: Writing a Variable Length Array</h4>
+        <p class="Code">; Create a file to hold the data</p>
+        <p class="Code">file = 'h5_test.h5'</p>
+        <p class="Code">fid = H5F_CREATE(file)</p>
+        <p class="Code">; Create three vectors containing integer data</p>
+        <p class="Code">a = INDGEN(2)</p>
+        <p class="Code">b = INDGEN(3)</p>
+        <p class="Code">c = 3</p>
+        <p class="Code">; Create an array of three IDL_H5_VLEN structures</p>
+        <p class="Code">sArray = REPLICATE({IDL_H5_VLEN},3)</p>
+        <p class="Code">; Populate the IDL_H5_VLEN structures with pointers to</p>
+        <p class="Code">; the three data vectors</p>
+        <p class="Code">sArray[0].pdata = PTR_NEW(a)</p>
+        <p class="Code">sArray[1].pdata = PTR_NEW(b)</p>
+        <p class="Code">sArray[2].pdata = PTR_NEW(c)</p>
+        <p class="Code">; Create a dataype based on one of the data vectors</p>
+        <p class="Code">dt1 = H5T_IDL_CREATE(a)</p>
+        <p class="Code">; Create a variable length datatype based on the previously-</p>
+        <p class="Code">; created datatype</p>
+        <p class="Code">dt = H5T_VLEN_CREATE(dt1)</p>
+        <p class="Code">; Create a dataspace</p>
+        <p class="Code">ds = H5S_CREATE_SIMPLE(N_ELEMENTS(sArray))</p>
+        <p class="Code">; Create the dataset</p>
+        <p class="Code">d = H5D_CREATE(fid,'dataset', dt, ds)</p>
+        <p class="Code">; Write the array of structures to the dataset</p>
+        <p class="Code">H5D_WRITE, d, sArray</p>
+        <h4>Examples: Reading a Variable Length Array</h4>
+        <p>Using the H5D_READ function to read data written as a variable length array creates an array of IDL_H5_VLEN structures. The following examples show how to refer to individual data elements of various HDF5 datatypes</p>
+        <h5>Atomic HDF5 Datatypes</h5>
+        <p>To read and access data stored in variable length arrays of atomic HDF5 datatypes, simply dereference the pointer stored in the PDATA field of the appropriate IDL_H5_VLEN structure. For example, to retrieve the variable <code>b</code> from the data written in the above example:</p>
+        <p class="Code">data = H5D_READ(d)</p>
+        <p class="Code">b = *data[1].pdata</p>
+        <h5>Compound HDF5 Datatypes</h5>
+        <p>If you have a variable length array of compound datatypes, the tag <code>tag</code> of the <i>j</i><sup class="italic">th</sup> structure of the <i>i</i><sup class="italic">th</sup> element of the variable length array would be accessed as follows:</p>
+        <p class="Code">data = H5D_READ(d)</p>
+        <p class="Code">a = (*data[i].pdata)[j].tag</p>
+        <h5>Variable Length Arrays of Variable Length Arrays</h5>
+        <p>If you have a variable length array of variable length arrays of integers, the <i>k</i><sup class="italic">th</sup> integer of the <i>j</i><sup class="italic">th</sup> element of a variable length array stored in the ith element of a variable length array would be accessed as follows:</p>
+        <p class="Code">data = H5D_READ(d)</p>
+        <p class="Code">a = (*(*data[i].pdata)[j].pdata)[k]</p>
+        <h5>Compound Datatypes Containing Variable Length Arrays</h5>
+        <p>If you have a compound datatype containing a variable length array, the <i>k</i><sup class="italic">th</sup> data element of the <i>j</i><sup class="italic">th</sup> variable length array in the <i>i</i><sup class="italic">th </sup>compound datatype would be accessed as follows:</p>
+        <p class="Code">data = H5D_READ(d)</p>
+        <p class="Code">a = (*data[i].vl_array[j].pdata)[k]</p>
+        <h4><a name="variable_length_string_arrays"></a>Variable Length String Arrays</h4>
+        <p>Because the data vectors referenced by the pointers stored in the PDATA field of the IDL_H5_VLEN structure must all have the same type and dimension, strings are handled as vectors of individual characters rather than as atomic units. This means that each element in a string array must be assigned to an individual IDL_H5_VLEN structure:</p>
+        <p class="Code">str = ['dog', 'dragon', 'duck']</p>
+        <p class="Code">sArray = REPLICATE({IDL_H5_VLEN},3)</p>
+        <p class="Code">sArray[0].pdata = ptr_new(str[0])</p>
+        <p class="Code">sArray[1].pdata = ptr_new(str[1])</p>
+        <p class="Code">sArray[2].pdata = ptr_new(str[2])</p>
+        <p>Use the <a href="H5T_STR_TO_VLEN.htm">H5T_STR_TO_VLEN</a> function to assist in converting between an IDL string array and an HDF5 variable length string array. The following achieves the same result as the above five lines:</p>
+        <p class="Code">str = ['dog', 'dragon', 'duck']</p>
+        <p class="Code">sArray = H5T_STR_TO_VLEN(str)</p>
+        <p>Similarly, if you have an HDF5 variable length array containing string data, use the <a href="H5T_VLEN_TO_STR.htm">H5T_VLEN_TO_STR</a> function to access the string data:</p>
+        <p class="Code">data = H5D_READ(d)</p>
+        <p class="Code">str = H5T_VLEN_TO_STR(data)</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

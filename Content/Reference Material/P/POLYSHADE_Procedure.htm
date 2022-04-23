@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: P">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>POLYSHADE</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="P_list.htm">Routines: P</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">POLYSHADE Procedure</span>
+        </div>
+        <h1 class="Routine"><a name="dg_routines_3604229493_892899"></a><a name="dg_routines_3604229493_45438"></a>POLYSHADE</h1>
+        <p><a name="kanchor2047"></a><a name="kanchor2048"></a>The POLYSHADE function creates a shaded-surface representation of one or more solids described by a set of polygons. This function accepts, as arguments, an array of three-dimensional vertices and a list of the indices of the vertices that describe each polygon. </p>
+        <p>Shading values are determined from one of three sources: a light source model, a user-specified array containing vertex shade values, or a user-specified array containing polygon shade values.</p>
+        <p>The shaded surface is constructed using the scan line algorithm. The default shading model is a combination of diffuse reflection and depth cueing. With this shading model, polygons are shaded using either constant shading, in which each polygon is given a constant intensity, or with Gouraud shading where the intensity is computed at each vertex and then interpolated over the polygon. Use the SET_SHADING procedure to control the direction of the light source and other shading parameters.</p>
+        <p><a name="kanchor2049"></a>User-specified shading arrays allow “4-dimensional” displays that consist of a surface defined by a set of polygons, shaded with values from another variable.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_893003"></a><a name="dg_routines_3604229493_678340_PageTOC_POLYSHADE_"></a>Examples</h2>
+        <p>POLYSHADE is often used in conjunction with SHADE_VOLUME for volume visualization. The following example creates a spherical volume dataset and renders an isosurface from that dataset:</p>
+        <p class="Code">; Create an empty, 3-D array:<br />SPHERE = FLTARR(20, 20, 20)<br /><br />; Create the spherical dataset:<br />FOR X=0,19 DO FOR Y=0,19 DO FOR Z=0,19 DO $<br />&#160;&#160;&#160;SPHERE(X, Y, Z) = SQRT((X-10)^2 + (Y-10)^2 + (Z-10)^2)<br /><br />; Find the vertices and polygons for a density level of 8:<br />SHADE_VOLUME, SPHERE, 8, V, P<br /><br />; Set up an appropriate 3-D transformation so we can see the<br />; sphere. This step is very important:<br />SCALE3, XRANGE=[0,20], YRANGE=[0,20], ZRANGE=[0,20]<br /><br />; Render the image. Note that the T3D keyword has been set so that <br />; the previously-established 3-D transformation is used:<br />image = POLYSHADE(V, P, /T3D)<br /><br />; Display the image:<br />TV, image</p>
+        <h2 class="API"><a name="dg_routines_3604229493_892930"></a><a name="dg_routines_3604229493_678311_PageTOC_POLYSHADE_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = POLYSHADE( <i>Vertices</i>, <i>Polygons</i>)</p>
+        <p>or</p>
+        <p class="Syntax"><i>Result</i> = POLYSHADE(<i>X</i>, <i>Y</i>, <i>Z</i>, <i>Polygons</i>)</p>
+        <p><b>Keywords:</b> [,&#160;/<a href="#dg_routines_3604229493_892974" class="selected">DATA</a> | ,&#160;/<a href="#dg_routines_3604229493_892977" class="selected">NORMAL</a>] [,&#160;<a href="#dg_routines_3604229493_892980" class="selected">POLY_SHADES</a>=<i>array</i>] [,&#160;<a href="#dg_routines_3604229493_892983" class="selected">SHADES</a>=<i>array</i>] [,&#160;/<a href="#dg_routines_3604229493_892990" class="selected">T3D</a>] [,&#160;<a href="#dg_routines_3604229493_892993" class="selected">TOP</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_892996" class="selected">XSIZE</a>=<i>columns</i>] [,&#160;<a href="#dg_routines_3604229493_893000" class="selected">YSIZE</a>=<i>rows</i>]</p>
+        <h2 class="API"><a name="dg_routines_3604229493_892960"></a><a name="dg_routines_3604229493_25250"></a><a name="kanchor2050"></a>Return Value</h2>
+        <p>Returns a shaded-surface representation. Output is a two-dimensional byte array containing the shaded image unless the current graphics output device is the Z-buffer. If the current output device is the Z-buffer, the results are merged with the Z-buffer’s contents and the function result contains a dummy value. See <a href="../../Direct Graphics/Supported_Devices.htm#Z-Buffer">Z-Buffer</a> for information and examples.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_892964"></a><a name="dg_routines_3604229493_678315_PageTOC_POLYSHADE_"></a>Arguments</h2>
+        <h3 class="Argument">Vertices</h3>
+        <p>A (3, <i>n</i>) array containing the X, Y, and Z coordinates of each vertex. Coordinates can be in either data or normalized coordinates, depending on which keywords are present.</p>
+        <h3 class="Argument">X, Y, Z</h3>
+        <p>The X, Y, and Z coordinates of each vertex can, alternatively, be specified as three array expressions of the same dimensions.</p>
+        <h3 class="Argument">Polygons</h3>
+        <p>An integer or longword array containing the indices of the vertices for each polygon. The vertices of each polygon should be listed in counterclockwise order when observed from outside the surface. The vertex description of each polygon is a vector of the form: [<i>n</i>, <i>i</i><sub>0</sub>, <i>i</i><sub>1</sub>, ..., <i>i</i><sub class="italic">n</sub><sub>-1</sub>] and the array <i>Polygons</i> is the concatenation of the lists of each polygon. For example, to render a pyramid consisting of four triangles, <i>Polygons</i> would contain 16 elements, made by concatenating four, four-element vectors of the form [3, <i>V</i><sub>0</sub>, <i>V</i><sub>1</sub>, <i>V</i><sub>2</sub>]. <i>V</i><sub>0</sub>, <i>V</i><sub>1</sub>, and <i>V</i><sub>2</sub> are the indices of the vertices describing each triangle.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_892972"></a><a name="dg_routines_3604229493_678322_PageTOC_POLYSHADE_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_892974"></a><a name="dg_routines_3604229493_678323_Keywords_POLYSHADE__"></a>DATA</h3>
+        <p>Set this keyword to indicate that the vertex coordinates are in data units, the default coordinate system.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_892977"></a><a name="dg_routines_3604229493_678325_Keywords_POLYSHADE__"></a>NORMAL</h3>
+        <p>Set this keyword to indicate that coordinates are in normalized units, within the three dimensional (0,1) cube.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_892980"></a><a name="dg_routines_3604229493_678327_Keywords_POLYSHADE__"></a>POLY_SHADES</h3>
+        <p>An array expression, with the same number of elements as there are polygons defined in the <i>Polygons</i> array, containing the color index used to render each polygon. No interpolation is performed if all pixels within a given polygon have the same shade value. For most displays, this parameter should be scaled into the range of bytes.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_892983"></a><a name="dg_routines_3604229493_678329_Keywords_POLYSHADE__"></a>SHADES</h3>
+        <p>An array expression, with the same number of elements as <i>Vertices</i>, containing the color index at each vertex. The shading of each pixel is interpolated from the surrounding SHADE values. For most displays, this parameter should be scaled into the range of bytes.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When using the SHADES keyword on TrueColor devices, we recommend that decomposed color support be turned off by setting DECOMPOSED=0 for <a href="../D/DEVICE_Procedure.htm#dg_routines_3604229493_882302">DEVICE Procedure</a>.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_892990"></a><a name="dg_routines_3604229493_678331_Keywords_POLYSHADE__"></a>T3D</h3>
+        <p>Set this keyword to use the three-dimensional to two-dimensional transformation contained in the homogeneous 4 by 4 matrix !P.T. Note that if T3D is set, !P.T must contain a valid transformation matrix. The SURFACE, SCALE3, and T3D procedures (and others) can all be used to set up transformations.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_892993"></a><a name="dg_routines_3604229493_678333_Keywords_POLYSHADE__"></a>TOP</h3>
+        <p>The maximum shading value when light source shading is in effect. The default value is one less than the number of colors available in the currently selected graphics device.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_892996"></a><a name="dg_routines_3604229493_678335_Keywords_POLYSHADE__"></a>XSIZE</h3>
+        <p>The number of columns in the output image array. If this parameter is omitted, the number of columns is equal to the X size of the currently selected display device.</p>
+        <p>Warning: The size parameters should be explicitly specified when the current graphics device is PostScript or any other high-resolution device. Making the output image the default full device size is likely to cause an insufficient memory error.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_893000"></a><a name="dg_routines_3604229493_678338_Keywords_POLYSHADE__"></a>YSIZE</h3>
+        <p>The number of rows in the output image array. If this parameter is omitted, the number of rows is equal to the Y resolution of the currently selected display device.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_893012"></a><a name="dg_routines_3604229493_1079133_PageTOC_POLYSHADE_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dg_routines_3604229493_893020"></a><a name="dg_routines_3604229493_1079158_PageTOC_POLYSHADE_"></a>See Also</h2>
+        <p><a href="PROJECT_VOL_Procedure.htm#dg_routines_3604229493_878002">PROJECT_VOL Procedure</a>, <a href="../R/RECON3.htm">RECON3</a>, <a href="../S/SET_SHADING_Procedure.htm#dg_routines_3604229493_884993">SET_SHADING Procedure</a>, <a href="../S/SHADE_SURF_Procedure.htm#dg_routines_3604229493_885128">SHADE_SURF Procedure</a>, <a href="../S/SHADE_VOLUME_Procedure.htm#dg_routines_3604229493_885531">SHADE_VOLUME Procedure</a>, <a href="../V/VOXEL_PROJ.htm#dg_routines_3604229493_889793">VOXEL_PROJ</a></p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

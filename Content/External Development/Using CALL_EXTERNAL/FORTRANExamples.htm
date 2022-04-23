@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Using CALL_EXTERNAL">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Fortran Examples</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="CALL_EXTERNAL.htm">Using CALL_EXTERNAL</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Fortran Examples</span>
+        </div>
+        <h1>Fortran Examples</h1>
+        <h2 class="API">Example: Calling a Fortran Routine Using a C Interface Routine</h2>
+        <p>Calling Fortran is similar to calling C, with the significant difference that Fortran code expects all arguments to be passed by reference and not by value (the C default). This means that the address of the argument is passed rather than the argument itself. This issue is discussed in <a href="PassingParameters.htm">By-Value and By-Reference Arguments</a>.</p>
+        <p>A C interface routine can easily extract the addresses of the arguments from the argv array and pass them to the actual routine which will compute the sum. The arguments f, n, and s are pointers that are being passed by value. Fortran expects all arguments to be passed by reference — that is, it expects all arguments to be addresses. If C passes a pointer (an address) by value, Fortran will interpret it correctly as the address of an argument. The following code segments illustrate this. The <code>example_c2f.c </code>file contains the C interface routine, which would be compiled as illustrated above. The example.f file contains the Fortran routine that actually sums the array.</p>
+        <p>In these examples, we assume that the routines are being compiled under Sun Solaris. The object name of the Fortran subroutine will be sum_array1_ to match the output of the Solaris Fortran compiler. The following are the contents of <code>example_c2f.c</code> and example.f:</p>
+        <p class="Code">#include &lt;stdio.h&gt;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">void sum_array(int argc, void *argv[])</p>
+        <p class="Code">{</p>
+        <p class="Code"> extern void sum_array1_();/* Fortran routine */</p>
+        <p class="Code"> int *n;</p>
+        <p class="Code">	float *s, *f;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">	f = (float *) argv[0];	/* Array pntr */</p>
+        <p class="Code">	n = (int *) argv[1];	/* Get # of elements */</p>
+        <p class="Code">	s = (float *) argv[2];	/* Pass back result a parameter */</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">	sum_array1_(f, n, s);	/* Compute sum */</p>
+        <p class="Code">}</p>
+        <p>&#160;</p>
+        <p>f77</p>
+        <p>&#160;</p>
+        <p class="Code">c This subroutine is called by SUM_ARRAY and has no IDL-specific code.</p>
+        <p class="Code">c</p>
+        <p class="Code">SUBROUTINE sumarray1(array, n, sum)</p>
+        <p class="Code">INTEGER*4 n</p>
+        <p class="Code">REAL*4 array(n), sum</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"> sum=0.0</p>
+        <p class="Code"> DO i=1,n</p>
+        <p class="Code"> sum = sum + array(i)</p>
+        <p class="Code"> PRINT *, sum, array(i)</p>
+        <p class="Code"> ENDDO</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"> RETURN</p>
+        <p class="Code"> END</p>
+        <p>&#160;</p>
+        <p>This example is compiled and linked in a manner similar to that used in the C example above. For more information on compiling and linking on your platform, see the README file contained in the <code>external/call_external/Fortran</code> subdirectory of the IDL distribution. This directory also contains a makefile, which builds this example on UNIX platforms. To call the example program from within IDL:</p>
+        <p class="Code">;Make an array. X = FINDGEN(10)</p>
+        <p class="Code">;A floating result</p>
+        <p class="Code">SUM = 0.0</p>
+        <p class="Code">S = CALL_EXTERNAL('example.so', $</p>
+        <p class="Code">&#160;&#160;&#160;'sum_array', X, N_ELEMENTS(X), sum)</p>
+        <p>In this example, example.so is the name of the sharable image file, sum_array is the name of the entry point, and <b>X</b> and <b>N_ELEMENTS(X)</b> are passed to the called routine as parameters. The returned value is contained in the variable sum.</p>
+        <h2 class="API">Hidden Arguments</h2>
+        <p>When passing C null-terminated character strings into a Fortran routine, the C function should also pass in the string length. This extra parameter is added to the end of the Fortran routine call in the C function, but does not explicitly appear in the Fortran routine.</p>
+        <p>For example, in C:</p>
+        <p class="Code">char * str1= 'IDL';</p>
+        <p class="Code">char * str2= 'ITT';</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">int len1=3;</p>
+        <p class="Code">int len2=3;</p>
+        <p class="Code">double data, info;</p>
+        <p class="Code">/* Call a Fortran sub-routine named example1 */</p>
+        <p class="Code">example1_(str1, data, str2, info, len1, len2)</p>
+        <p>In Fortran:</p>
+        <p class="Code">SUBROUTINE EXAMPLE1(STR1, DATA, STR2, INFO) CHARACTER*(*)STR1, STR2</p>
+        <p class="Code">DOUBLE PRECISIONDATA, INFO</p>
+        <h2 class="API">Example: Calling a Fortran Routine Using a Fortran Interface Routine</h2>
+        <p>Calling Fortran is similar to calling C, with the significant difference that Fortran expects all arguments to be passed by reference. This means that the address of the argument is passed rather than the argument itself. </p>
+        <p>A Fortran interface routine can be written to extract the addresses of the arguments from the argv array and pass them to the actual routine which will compute the sum. Passing the contents of each argv element by value has the same effect as converting the parameter to a normal Fortran parameter.</p>
+        <p>This method uses the OpenVMS Extensions to Fortran, %LOC and %VAL.</p>
+        <p>Some Fortran compilers may not support these extensions. If your compiler does not, use the method discussed in the previous section for calling Fortran with a C interface routine.</p>
+        <p>The contents of the file example1.f are shown in the following figure. This example is compiled, linked, and called in a manner similar to that used in the C example above. For more information on compiling and linking on your platform, see the README file contained in the external/fortran subdirectory of the IDL distribution. This directory also contains a makefile, which builds this example on UNIX platforms.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This example is written to run under a 32-bit operating system. To run the example under a 64-bit operating system would require modifications; most notably, to declare argv as INTEGER*8 rather than INTEGER*4.</p>
+        <p>&#160;</p>
+        <p class="Code">f77</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"> SUBROUTINE SUM_ARRAY(argc, argv)	!Called by IDL</p>
+        <p class="Code"> INTEGER*4 argc, argv(*)	!Argc and Argv are integers</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"> j = LOC(argc)	!Obtains the number of arguments (argc)</p>
+        <p class="Code">	!Because argc is passed by VALUE.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"> c Call subroutine SUM_ARRAY1, converting the IDL parameters</p>
+        <p class="Code"> c to standard Fortran, passed by reference arguments:</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"> CALL SUM_ARRAY1(%VAL(argv(1)), %VAL(argv(2)), %VAL(argv(3)))</p>
+        <p class="Code"> RETURN</p>
+        <p class="Code"> END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"> c This subroutine is called by SUM_ARRAY and has no</p>
+        <p class="Code"> c IDL specific code.</p>
+        <p class="Code"> c</p>
+        <p class="Code"> SUBROUTINE SUM_ARRAY1(array, n, sum)</p>
+        <p class="Code"> INTEGER*4 n</p>
+        <p class="Code"> REAL*4 array(n), sum</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"> sum=0.0</p>
+        <p class="Code"> DO i=1,n</p>
+        <p class="Code"> sum = sum + array(i)</p>
+        <p class="Code"> ENDDO</p>
+        <p class="Code"> RETURN</p>
+        <p class="Code"> END</p>
+        <p>&#160;</p>
+        <p>To call the example program from within IDL:</p>
+        <p class="Code">X = FINDGEN(10) ; Make an array. sum = 0.0</p>
+        <p class="Code">S = CALL_EXTERNAL('example1.so', $</p>
+        <p class="Code">&#160;&#160;&#160;'sum_array_', X, N_ELEMENTS(X), sum)</p>
+        <p>In this example, example1.so is the name of the sharable image file, sum_array_ is the name of the entry point, and <b>X</b> and <b>N_ELEMENTS(X)</b> are passed to the called routine as parameters. The returned value is contained in the variable sum.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The entry point name generated by the Fortran compiler may be different than that produced by the C compiler. One of the best ways to find out what name was generated is to use the UNIX nm utility on the object file. See your system’s man page for nm for details.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

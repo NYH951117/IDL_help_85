@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: S">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>≥SEARCH2D </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="S_list.htm">Routines: S</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">SEARCH2D</span>
+        </div>
+        <h1 class="Routine"><a name="S_820040301_758939"></a><a name="S_820040301_26448"></a>≥SEARCH2D </h1>
+        <p><a name="kanchor2337"></a><a name="kanchor2338"></a>The SEARCH2D function finds “objects” or regions of similar data values within a two-dimensional array. Given a starting location and a range of values to search for, SEARCH2D finds all the cells within the array that are within the specified range and have some path of connectivity through these cells to the starting location. In addition to searching for cells within a global range of data values, SEARCH2D can also search for adjacent cells whose values deviate from their neighbors within specified tolerances.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>search2d.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="S_820040301_758974"></a><a name="S_820040301_758974_PageTOC_SEARCH2D_"></a>Examples</h2>
+        <p>Find all the indices corresponding to an object in an image:</p>
+        <p class="Code">; Create an image with different valued regions:<br />img = FLTARR(512, 512) <br />img[3:503, 9:488] = 0.7<br />img[37:455, 18:438] = 0.5<br />img[144:388, 90:400] = 0.7<br />img[200:301, 1:255] = 1.0<br />img[155:193, 333:387] = 0.3<br />TVSCL, img&#160;&#160;&#160;;Display the image.<br /><br />; Search for an object starting at (175, 300) whose data values are <br />; between (0.6) and (0.8):<br />region = SEARCH2D(img, 175, 300, 0.6, 0.8, /DIAGONAL)<br /><br />; Scale the background cells into the range 0 to 127:<br />img = BYTSCL(img, TOP=127B)<br /><br />; Highlight the object region by setting it to 255:<br />img[region] = 255B<br /><br />; Display the array with the highlighted object in it:<br />TVSCL, img</p>
+        <h2 class="API"><a name="S_820040301_758948"></a><a name="S_820040301_758948_PageTOC_SEARCH2D_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = SEARCH2D( <i>Array</i>, <i>Xpos</i>, <i>Ypos</i>, <i>Min_Val</i>, <i>Max_Val</i> [,&#160;<a href="#S_820040301_758963" class="selected">DECREASE</a>=<i>value</i>, <a href="#S_820040301_758966" class="selected">INCREASE</a>=<i>value</i>[,&#160;<a href="#S_820040301_758969" class="selected">LPF_BAND</a>=<i>integer</i>{3}]] [,&#160;/<a href="#S_820040301_758972" class="selected">DIAGONAL</a>] )</p>
+        <h2 class="API"><a name="S_820040301_1133119"></a><a name="S_820040301_48745"></a>Return Value</h2>
+        <p>SEARCH2D returns a longword array that contains a list of the array subscripts that define the located object or region. The original X and Y indices of the array subscripts returned by SEARCH2D can be found with the following IDL code:</p>
+        <p class="Code">index_y = <i>Result</i> / (SIZE(<i>Array</i>))[1]</p>
+        <p class="Code">index_x = <i>Result</i> - (index_y * (SIZE(<i>Array</i>))[1])</p>
+        <p>where <i>Result</i> is the array returned by SEARCH2D and <i>Array</i> is the original input array. The object within <i>Array</i> can be subscripted as <i>Array</i>(<i>Region</i>) or <i>Array</i>(index_x, index_y).</p>
+        <h2 class="API"><a name="S_820040301_758950"></a><a name="S_820040301_758950_PageTOC_SEARCH2D_"></a>Arguments</h2>
+        <h3 class="Argument">Array</h3>
+        <p>A two-dimensional array, of any data type, to be searched.</p>
+        <h3 class="Argument">Xpos</h3>
+        <p>The X coordinate (dimension 0 of <i>Array</i>) of the starting location.</p>
+        <h3 class="Argument">Ypos</h3>
+        <p>The Y coordinate (dimension 1 of <i>Array</i>) of the starting location.</p>
+        <h3 class="Argument">Min_Val</h3>
+        <p>The minimum data value for which to search. All array subscripts of all cells that are connected to the starting cell, and have a value between <i>Min_Val</i> and <i>Max_Val</i> (inclusive) are returned. </p>
+        <h3 class="Argument">Max_Val</h3>
+        <p>The maximum data value for which to search.</p>
+        <h2 class="API"><a name="S_820040301_758961"></a><a name="S_820040301_758961_PageTOC_SEARCH2D_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="S_820040301_758963"></a><a name="S_820040301_758963_Keywords_SEARCH2D__"></a>DECREASE</h3>
+        <p>This keyword and the INCREASE keyword allow you to compensate for changing intensities of data values within an object. An edge-enhanced copy of <i>Array</i> is made and compared to the orginal array if this keyword is set. The search is limited to pixels for which the edge-enhanced gradient value lies between the DECREASE and INCREASE values. When DECREASE or INCREASE is set, any adjacent cells are found if their corresponding data values in the edge enhanced array are greater than DECREASE and less than INCREASE. In any case, the adjacent cells will never be selected if their data values are not between <i>Min_Val</i> and <i>Max_Val</i>. The default for this keyword is 0.0 if INCREASE is specified.</p>
+        <h3 class="Keyword"><a name="S_820040301_758966"></a><a name="S_820040301_758966_Keywords_SEARCH2D__"></a>INCREASE</h3>
+        <p>This keyword and the DECREASE keyword allow you to compensate for changing intensities of data values within an object. An edge-enhanced copy of <i>Array</i> is made and compared to the orginal array if this keyword is set. The search is limited to pixels for which the edge-enhanced gradient value lies between the DECREASE and INCREASE values. When DECREASE or INCREASE is set, any adjacent cells are found if their corresponding data values in the edge enhanced array are greater than DECREASE and less than INCREASE. In any case, the adjacent cells will never be selected if their data values are not between <i>Min_Val</i> and <i>Max_Val</i>. The default for this keyword is 0.0 if DECREASE is specified.</p>
+        <h3 class="Keyword"><a name="S_820040301_758969"></a><a name="S_820040301_758969_Keywords_SEARCH2D__"></a>LPF_BAND</h3>
+        <p>Set this keyword to an integer value of 3 or greater to perform low-pass filtering on the edge-enhanced array. The value of LPF_BAND is used as the width of the smoothing window. This keyword is only effective when the DECREASE or INCREASE keywords are also specified. The default is no smoothing.</p>
+        <h3 class="Keyword"><a name="S_820040301_758972"></a><a name="S_820040301_758972_Keywords_SEARCH2D__"></a>DIAGONAL</h3>
+        <p>Set this keyword to cause SEARCH2D to find cells meeting the search criteria whose surrounding squares share a common corner. Normally, cells are considered adjacent only when squares surrounding the cells share a common edge. Setting this option requires more memory and execution time.</p>
+        <h2 class="API"><a name="S_820040301_758987"></a><a name="S_820040301_758987_PageTOC_SEARCH2D_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre-4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2><a name="S_820040301_1110254"></a><a name="S_820040301_1110254_PageTOC_SEARCH2D_"></a>See Also</h2>
+        <p><a href="SEARCH3D.htm#S_820040301_758989">SEARCH3D</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

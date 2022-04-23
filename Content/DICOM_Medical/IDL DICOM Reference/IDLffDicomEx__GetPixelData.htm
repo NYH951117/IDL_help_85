@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|Medical Imaging in IDL|IDL DICOM Reference|IDLffDicomEx">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLffDicomEx::GetPixelData
+</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Expanded DICOM Support in IDL/ExpandedDICOMFunctionality.htm">Medical Imaging in IDL</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="DICOMEX_GETCONFIGFILEPAT.htm">IDL DICOM Reference</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLffDicomEx::GetPixelData</span>
+        </div>
+        <h1 class="ObjMethod">IDLffDicomEx::GetPixelData
+</h1>
+        <p>The IDLffDicomEx::GetPixelData function method returns the uncompressed pixel data from the DICOM image file. (If pixel data is stored in a compressed format, it is uncompressed before it is returned.) A DICOM file may store a single-frame image or a multiple-frame image. In the case of a multi-frame image, this method allows you to return the pixel data of all of the frames, or of a specified frame when you set the FRAME keyword. The NUMBER_OF_FRAMES property can be used to determine whether the image contains single or multiple frames. If the Number of Frames attribute does not exist in the DICOM image file, then it contains a single-frame image.        </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>By default, GetPixelData returns the pixel data array in standard IDL format where the first pixel in the returned array is the bottom left-hand pixel in the frame. You must set the ORDER keyword to return the array DICOM format where the first pixel in the returned array is the top left-hand pixel in the frame. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you are not sure that the image contains multiple frames, use <a href="IDLffDicomEx__QueryValue.htm#dicom_ex_4010397576_1008324">IDLffDicomEx::QueryValue</a> to check for Number of Frames attribute before attempting to access the value. Not all DICOM SOP classes support multi-frame pixel data. Attempting to return a property value associated with a nonexistent attribute or an attribute that does not have a value will result in an error. </p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>Use the following settings when displaying planar pixel data (where the PLANAR_CONFIGURATION property value equals 1): set the TVSCL method TRUE keyword to 3, or set the IDLgrImage object INTERLEAVE property to 2. </p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1007465"></a><a name="dicom_ex_4010397576_1007465_PageTOC_IDLffDicomEx"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>-&gt;[<a href="IDLffDicomEx.htm">IDLffDicomEx</a>::]GetPixelData ( [,&#160;<a href="#dicom_ex_4010397576_1007552" class="selected">FRAME</a>=<i>integer</i>] [,&#160;/<a href="#dicom_ex_4010397576_1007557" class="selected">ORDER</a>] [,&#160;<a href="#dicom_ex_4010397576_1007561" class="selected">COUNT</a>=<i>variable</i>])</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1007467"></a><a name="dicom_ex_4010397576_1007467_PageTOC_IDLffDicomEx"></a>Return Value</h2>
+        <p>Returns a multi-dimensional array. The data type of the array is based upon the <a href="IDLffDicomEx.htm#dicom_ex_4010397576_1076526">BITS_ALLOCATED</a> property of the DICOM file as follows:</p>
+        <ul>
+            <li value="1">Byte — the image data is 8 bits and signed or unsigned</li>
+            <li value="2">Unsigned integer — the image data is greater than 8 bits and unsigned</li>
+            <li value="3">Integer — the image data is greater than 8 bits and signed</li>
+        </ul>
+        <p>The following table describes the possible arrangements of the multi-dimensional array. </p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Dimensions</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Arrangement</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Two-dimensional</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[columns, rows]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>A single monochrome frame.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td rowspan="5" class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Three-dimensional</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>[columns, rows, frames]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Two or more monochrome frames.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[3, columns, rows]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>A single RGB or HSV pixel interleaved frame.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>[columns, rows, 3]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>A single RGB or HSV planar interleaved frame.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[4, columns, rows]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>A single CMYK pixel interleaved frame.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>[columns, rows, 4]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>A single CMYK planar interleaved frame. </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td rowspan="4" class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Four-dimensional</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[3, columns, rows, frames]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Two or more RGB or HSV pixel interleaved frames.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>[columns, rows, 3, frames]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Two or more RGB or HSV planar interleaved frames. </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>[4, columns, rows, frames]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Two or more CMYK pixel interleaved frames.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>[columns, rows, 4, frames]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Two or more CMYK planar interleaved frame. </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dicom_ex_4010397576_1007549"></a><a name="dicom_ex_4010397576_1007549_PageTOC_IDLffDicomEx"></a>Arguments</h2>
+        <p>None</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1007551"></a><a name="dicom_ex_4010397576_1007551_PageTOC_IDLffDicomEx"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dicom_ex_4010397576_1007552"></a><a name="dicom_ex_4010397576_51167"></a>FRAME</h3>
+        <p>Set this keyword to a long integer to specify which frame or pixel data within a multi-frame image is to be returned. Allowable values denoted the zero-based index value of the frame, from 0 to <a href="IDLffDicomEx.htm#dicom_ex_4010397576_1025697">NUMBER_OF_FRAMES</a> -1. If not specified, the pixel data of all frames is returned.</p>
+        <h3 class="Keyword"><a name="dicom_ex_4010397576_1007557"></a><a name="dicom_ex_4010397576_16184"></a>ORDER</h3>
+        <p>Set the keyword to return the pixel data in DICOM format where the first pixel in the returned array is the top left-hand pixel in the frame. If this keyword is not set, the pixel data array is returned in standard IDL format where the first pixel in the returned array is the bottom left-hand pixel in the frame. </p>
+        <h3 class="Keyword"><a name="dicom_ex_4010397576_1007561"></a><a name="dicom_ex_4010397576_51064"></a>COUNT</h3>
+        <p>Set this keyword to a named variable that will contain a long integer indicating the number frames returned in the pixel data array. </p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1027963"></a><a name="dicom_ex_4010397576_1027963_PageTOC_IDLffDicomEx"></a>Examples</h2>
+        <h4>Filtering Monochrome DICOM Data</h4>
+        <p>The following example applies the ROBERTS edge-detection filter to every frame within a single- or multiple-frame monochrome DICOM file. Each frame is then sequentially displayed in a Direct Graphics widow.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For an example that writes RGB pixel data to an IDLffDicomEx object, see the Example section of <a href="IDLffDicomEx__SetPixelData.htm">IDLffDicomEx::SetPixelData</a>. </p>
+        <p class="Code">The code for <code>filter_clonedicom_doc.<a name="kanchor5584"></a>pro </code>is provided in the IDL distribution, in the <code>examples/doc/dicom</code> subdirectory of the main IDL directory. Run the example procedure by entering filter_clonedicom at the IDL command prompt or view the file in an IDL Editor window by entering .EDIT filter_clonedicom.pro.</p>
+        <p class="Code">PRO filter_clonedicom_doc</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Select a DICOM file. </p>
+        <p class="Code">sFile = DIALOG_PICKFILE( $</p>
+        <p class="Code">    PATH=FILEPATH('',SUBDIRECTORY=['examples','data']), $</p>
+        <p class="Code">    TITLE='Select DICOM Patient File', FILTER='*.dcm', $</p>
+        <p class="Code">    GET_PATH=path)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a clone (aImgClone.dcm) of the selected file (sfile).</p>
+        <p class="Code"> oImg = OBJ_NEW('IDLffDicomEx', path + 'aImgClone.dcm', $</p>
+        <p class="Code">    CLONE=sfile)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Get image attributes.</p>
+        <p class="Code">oImg-&gt;GetProperty, BITS_ALLOCATED = vBA, ROWS=rows, $</p>
+        <p class="Code">   COLUMNS=cols, SAMPLES_PER_PIXEL=samples</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Allow user to select monochrome image.</p>
+        <p class="Code">IF samples gt 1 THEN BEGIN </p>
+        <p class="Code">&#160;&#160;&#160;v= DIALOG_MESSAGE('This application requires ' + $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;'a monochrome image.', /ERROR)</p>
+        <p class="Code">sFile = DIALOG_PICKFILE( $</p>
+        <p class="Code">    PATH=FILEPATH('',SUBDIRECTORY=['examples','data']), $</p>
+        <p class="Code">    TITLE='Select DICOM Patient File', FILTER='*.dcm', $</p>
+        <p class="Code">    GET_PATH=path)</p>
+        <p class="Code">&#160;&#160;&#160;; Create a clone (aImgClone.dcm) of the selected file (sfile).</p>
+        <p class="Code">&#160;&#160;&#160;oImg = OBJ_NEW('IDLffDicomEx', path + 'aImgClone.dcm', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;CLONE=sfile)</p>
+        <p class="Code">ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Check to see if the image has multiple frames.</p>
+        <p class="Code">; First check for the presence of the Number of Frames tag.</p>
+        <p class="Code">FrameTest = oImg-&gt;QueryValue('NUMBER_OF_FRAMES')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; If the tag exists and has a value, retrieve it. Pixel data </p>
+        <p class="Code">; FRAME index is zero-based so subtract 1 from the value. </p>
+        <p class="Code">; ORDER is set for IDL consistency.</p>
+        <p class="Code">IF FrameTest EQ 2 THEN BEGIN</p>
+        <p class="Code">   oImg-&gt;GetProperty, NUMBER_OF_FRAMES=frame</p>
+        <p class="Code">   FRAME = frame - 1</p>
+        <p class="Code">; Otherwise, set FRAME to 0 indicating is is a single frame</p>
+        <p class="Code">; image. ORDER is set for IDL consistency. </p>
+        <p class="Code">ENDIF ELSE BEGIN</p>
+        <p class="Code">   FRAME = 0</p>
+        <p class="Code">ENDELSE</p>
+        <p class="Code">ORDER = 0</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Return all of the frames of pixel data by </p>
+        <p class="Code">; not specifying a value for FRAME.</p>
+        <p class="Code">vPixels = oImg-&gt;GetPixelData(ORDER=order, COUNT=cnt)</p>
+        <p class="Code">PRINT, 'Returned pixel data for number of frames = ', cnt</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Initialize and array of the proper type for the </p>
+        <p class="Code">; filtered pixel data. </p>
+        <p class="Code">IF vBA GT 8 THEN BEGIN</p>
+        <p class="Code">    vFilterArr = INTARR([rows,cols,frame+1])</p>
+        <p class="Code">ENDIF ELSE BEGIN</p>
+        <p class="Code">    vFilterArr = BYTARR([rows,cols,frame+1])</p>
+        <p class="Code">ENDELSE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Filter each frame of data or the single frame.</p>
+        <p class="Code">IF frame GT 0 THEN BEGIN </p>
+        <p class="Code">   FOR n = 1, frame+1 DO BEGIN</p>
+        <p class="Code">      vFilterPixels = ROBERTS(vPixels[*,*,n-1])</p>
+        <p class="Code">      vFilterArr[*,*,n-1] = vFilterPixels</p>
+        <p class="Code">   ENDFOR</p>
+        <p class="Code">ENDIF ELSE BEGIN</p>
+        <p class="Code">   vFilterArr = ROBERTS(vPixels)</p>
+        <p class="Code">ENDELSE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Roberts function changes byte data to integer. </p>
+        <p class="Code">; SetPixelData requires array of original type. </p>
+        <p class="Code">; If original array was byte (as indicated by </p>
+        <p class="Code">; BITS_ALLOCATED = 8), change the array back to byte.</p>
+        <p class="Code">IF vBA EQ 8 THEN BEGIN</p>
+        <p class="Code">   vFilterArr = BYTE(vFilterArr)</p>
+        <p class="Code">ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Set the pixel data of the frame(s) back to the image. </p>
+        <p class="Code">oImg-&gt;SetPixelData, vFilterarr, ORDER=order</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Write the pixel data changes to the file.</p>
+        <p class="Code">oImg-&gt;Commit</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Sequentially display each frame of the original</p>
+        <p class="Code">; and filtered data. </p>
+        <p class="Code">WINDOW, XSIZE=cols*2, YSIZE=rows, $</p>
+        <p class="Code">   TITLE = 'Original and Filtered Frames'</p>
+        <p class="Code">FOR i = 1, frame+1 DO BEGIN</p>
+        <p class="Code">   TVSCL, vPixels[*,*,i-1], 0, ORDER = order</p>
+        <p class="Code">   TVSCL, vfilterarr[*,*,i-1], 1, ORDER = order</p>
+        <p class="Code">   WAIT, 1</p>
+        <p class="Code">ENDFOR</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Clean up references.</p>
+        <p class="Code">OBJ_DESTROY, oImg</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Note: the following line allows you to run the program</p>
+        <p class="Code">; multiple times without having to manually delete the file. </p>
+        <p class="Code">; You cannot duplicate an existing file when creating or cloning</p>
+        <p class="Code">; a DICOM file. </p>
+        <p class="Code">FILE_DELETE, path + 'aImgClone.dcm', /ALLOW_NONEXISTENT</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1036894"></a><a name="dicom_ex_4010397576_1036894_PageTOC_IDLffDicomEx"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

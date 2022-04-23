@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>COMMON </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">COMMON</span>
+        </div>
+        <h1 class="Routine"><a name="C_854643309_65788"></a><a name="kanchor298"></a><a name="C_854643309_40065"></a>COMMON </h1>
+        <p>The COMMON statement creates or references a common block. Common blocks are useful when there are variables that need to be accessed by several IDL procedures or when the value of a variable within a procedure must be preserved across calls. Once a common block has been defined, any program unit referencing that common block can access variables in the block as though they were local variables. Variables in a common statement have a global scope within procedures defining the same common block. Unlike local variables, variables in common blocks are not destroyed when a procedure is exited.</p>
+        <p>There are two types of common block statements: definition statements and reference statements. See the Examples section for details.</p>
+        <h3>Note on Common Block Variable Names</h3>
+        <p>Variables in IDL COMMON blocks do not actually have names. Rather, IDL represents COMMON blocks internally as an array of variables, and these variables are referenced by their positional index. Hence, the first variable is at position 0, the second at position 1, and so forth. When you specify a COMMON block declaration in an IDL routine, you specify names to be used for these variables <i>within the scope of that routine</i>. </p>
+        <p>The first routine in which a COMMON block is defined is remembered by IDL as part of the state of that block. When another routine defines the same COMMON block, it is allowed to omit the variable names. In this case, IDL uses the same names used in the original defining routine. Since good programming practice dictates that the same names be used everywhere, this result usually causes no confusion. However, different routines are <i>allowed</i> to use entirely different names to refer to a given variable. For example, the DIV routine above could have been written like this:</p>
+        <p class="Code">PRO DIV2, D</p>
+        <p class="Code">&#160;&#160;&#160;COMMON SHARE2, X, Y, Z</p>
+        <p class="Code">&#160;&#160;&#160;D = X / Y</p>
+        <p class="Code">&#160;&#160;&#160;PRINT, D, X, Y, Z</p>
+        <p class="Code">&#160;&#160;&#160;RETURN</p>
+        <p class="Code">END</p>
+        <p>In this scenario, the variable referred to by the name E in the MULT routine is referred to by the name X in the DIV2 routine. Similarly, the variable name F is replaced by Y, and the name G is replaced by Z. Note that only the names by which the variables are called has changed — the underlying variables are the same. While this type of COMMON block reference is legal, it can quickly become confusing, and most programmers use the same names in every case. </p>
+        <h2 class="API"><a name="C_854643309_1281946"></a><a name="C_854643309_11042"></a>Examples</h2>
+        <h3><a name="C_854643309_23158"></a>Common Block Definition Statements</h3>
+        <p>The common block definition statement creates a common block with the designated name and places the variables whose names follow into that block. Variables defined in a common block can be referenced by any program unit that declares that common block. The general form of the COMMON block definition statement is as follows:</p>
+        <p class="Code">COMMON <i>Block_Name</i>, <i>Variable</i><sub class="italic">1</sub>, <i>Variable</i><sub class="italic">2</sub>, ..., <i>Variable</i><sub class="italic">n</sub></p>
+        <p>The number of variables appearing in the common block cannot change after the common block has been defined. The first program unit (main program, function, or procedure) to define the common block sets the number of included variables; other program units can <i>reference</i> the common block with any number of variables up to the number originally specified. Different program units can give the variables different names, as shown in the example below.</p>
+        <p>Common blocks share the same space for all procedures. In IDL, common block variables are matched variable to variable, unlike FORTRAN, where storage locations are matched. The third variable in a given IDL common block will always be the same as the third variable in all declarations of the common block regardless of the size, type, or structure of the preceding variables.</p>
+        <p>Note that common blocks must appear before any of the variables they define are referenced in the procedure.</p>
+        <p>Variables in common blocks can be of any type and can be used in the same manner as normal variables. Variables appearing as parameters cannot be used in common blocks. There are no restrictions on the number of common blocks used, although each common block uses dynamic memory.</p>
+        <h4>Example</h4>
+        <p>The two procedures in the following example show how variables defined in common blocks are shared.</p>
+        <p class="Code">PRO ADD, A</p>
+        <p class="Code">&#160;&#160;&#160;COMMON SHARE1, X, Y, Z, Q, R</p>
+        <p class="Code">&#160;&#160;&#160;A = X + Y + Z + Q + R</p>
+        <p class="Code">&#160;&#160;&#160;PRINT, X, Y, Z, Q, R, A </p>
+        <p class="Code">&#160;&#160;&#160;RETURN </p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO SUB, T</p>
+        <p class="Code">&#160;&#160;&#160;COMMON SHARE1, A, B, C, D</p>
+        <p class="Code">&#160;&#160;&#160;T = A - B - C - D</p>
+        <p class="Code">&#160;&#160;&#160;PRINT, A, B, C, D, T</p>
+        <p class="Code">&#160;&#160;&#160;RETURN</p>
+        <p class="Code">END </p>
+        <p>The variables X, Y, Z, and Q in the procedure ADD are the same as the variables A, B, C, and D, respectively, in procedure SUB. The variable R in ADD is not used in SUB. If the procedure SUB were to be compiled before the procedure ADD, an error would occur when the COMMON definition in ADD was compiled. This is because SUB has already declared the size of the COMMON block, SHARE1, which cannot be extended.</p>
+        <h3><a name="C_854643309_92526"></a>Common Block Reference Statements</h3>
+        <p>The common block reference statement duplicates the COMMON block and variable names from a previous definition. The COMMON block need only be defined in the first routine to be compiled that references the block.</p>
+        <h4>Example</h4>
+        <p>The two procedures in the following example share the COMMON block SHARE2 and all its variables.</p>
+        <p class="Code">PRO MULT, M</p>
+        <p class="Code">&#160;&#160;&#160;COMMON SHARE2, E, F, G</p>
+        <p class="Code">&#160;&#160;&#160;M = E * F * G</p>
+        <p class="Code">&#160;&#160;&#160;PRINT, M, E, F, G</p>
+        <p class="Code">&#160;&#160;&#160;RETURN</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO DIV, D</p>
+        <p class="Code">&#160;&#160;&#160;COMMON SHARE2</p>
+        <p class="Code">&#160;&#160;&#160;D = E / F</p>
+        <p class="Code">&#160;&#160;&#160;PRINT, D, E, F, G</p>
+        <p class="Code">&#160;&#160;&#160;RETURN</p>
+        <p class="Code">END</p>
+        <p>The MULT procedure uses a common block <i>definition</i> statement to define the block SHARE2. The DIV procedure then uses a COMMON block <i>reference</i> statement to gain access to all the variables defined in SHARE2. (Note that MULT must be defined before DIV in order for the COMMON block <i>reference</i> to succeed.)</p>
+        <h2 class="API"><a name="C_854643309_1281876"></a><a name="C_854643309_1019124_PageTOC_COMMON_"></a>Syntax</h2>
+        <p class="Syntax">COMMON <i>Block_Name</i>,<i> Variable<sub>1</sub></i>,<i> ...</i>,<i> Variable<sub>n</sub></i></p>
+        <h2 class="API"><a name="C_854643309_1052145"></a><a name="C_854643309_1052145_PageTOC_COMMON_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

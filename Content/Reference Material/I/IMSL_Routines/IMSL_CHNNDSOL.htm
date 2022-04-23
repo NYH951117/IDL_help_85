@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_CHNNDSOL</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="IMSL_CHNNDSOL"></a>IMSL_CHNNDSOL</h1>
+        <p>The IMSL_CHNNDSOL function solves a real symmetric nonnegative definite system of linear equations <i>Ax = b</i>. Computes the solution to <i>Ax = b</i> given the Cholesky factor.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>The IMSL_CHNNDSOL function solves a system of linear algebraic equations having a symmetric nonnegative definite (positive semidefinite) coefficient matrix. It first computes a Cholesky <i>(LL</i><sup style="font-style: italic;">H</sup> or <i>R</i><sup style="font-style: italic;">H</sup><i>R</i>) factorization of the coefficient matrix <i>A</i>. The factorization algorithm is based on the work of Healy (1968) and proceeds sequentially by columns. The <i>i</i>-th column is declared to be linearly dependent on the first <i>i</i> – 1 columns if:</p>
+        <p>
+            <img src="images/IMSL_CHNNDSOL_eq1.png" />
+        </p>
+        <p>where ε (specified by TOLERANCE) may be set. When a linear dependence is declared, all elements in the <i>i</i>-th row of <i>R</i> (column of <i>L</i>) are set to zero. Modifications due to Farebrother and Berry (1974) and Barrett and Healy (1978) for checking for matrices that are not nonnegative definite also are incorporated. The IMSL_CHNNDSOL function declares <i>A</i> to be not nonnegative definite and issues an error message if either of the following conditions is satisfied:</p>
+        <p>
+            <img src="images/IMSL_CHNNDSOL_eq2.png" />
+        </p>
+        <p>&#160;</p>
+        <p>Healy’s (1968) algorithm and the IMSL_CHNNDSOL function permit the matrices <i>A</i> and <i>R</i> to occupy the same storage. Barrett and Healy (1978), in their remark, neglect this fact. The IMSL_CHNNDSOL function uses:</p>
+        <p>
+            <img src="images/IMSL_CHNNDSOL_eq3.png" />
+        </p>
+        <p>in condition 2 above to remedy this problem. </p>
+        <p>If an inverse of the matrix <i>A</i> is required and the matrix is not (numerically) positive definite, then the resulting inverse is a symmetric <i>g<sub>2</sub></i> inverse of <i>A</i>. For a matrix <i>G</i> to be a <i>g<sub>2</sub></i> inverse of a matrix <i>A</i>, <i>G</i> must satisfy conditions 1 and 2 for the Moore- Penrose inverse but generally fail conditions 3 and 4. The four conditions for <i>G</i> to be a Moore-Penrose inverse of <i>A</i> are as follows:</p>
+        <ol>
+            <li value="1">AGA = A</li>
+            <li value="2">GAG = G</li>
+            <li value="3">AG is symmetric</li>
+            <li value="4">GA is symmetric</li>
+        </ol>
+        <p>The solution of the linear system <i>Ax = b</i> is computed by solving the factored version of the linear system <i>R</i><sup style="font-style: italic;">T</sup><i>Rx = b</i> as two successive triangular linear systems. In solving the triangular linear systems, if the elements of a row of <i>R</i> are all zero, the corresponding element of the solution vector is set to zero. For a detailed description of the algorithm, see Section 2 in Sallas and Lionti (1988). This routine is useful to solve normal equations in a linear least-squares problem.</p>
+        <h2 class="API">Example</h2>
+        <p>A solution to a system of four linear equations is obtained. Maindonald (1984, pp. 83–86, 104–105) discusses the computations for the factorization and solution to this problem.</p>
+        <p class="Code">RM, a, 4, 4</p>
+        <p class="Code">; Define the coefficient matrix.</p>
+        <p class="Code">row 0: 36 12 30 6</p>
+        <p class="Code">row 1: 12 20 2 10</p>
+        <p class="Code">row 2: 30 2 29 1</p>
+        <p class="Code">row 3: 6 10 1 14</p>
+        <p class="Code">RM, b, 4, 1</p>
+        <p class="Code">; Define the right-hand side.</p>
+        <p class="Code">row 0: 18</p>
+        <p class="Code">row 1: 22</p>
+        <p class="Code">row 2: 7</p>
+        <p class="Code">row 3: 20</p>
+        <p class="Code">x = IMSL_CHNNDSOL(b, a)</p>
+        <p class="Code">; Define the right-hand side.</p>
+        <p class="Code">PM, x</p>
+        <p class="Code">; Output the results.</p>
+        <p class="Code_Indented">0.166667</p>
+        <p class="Code_Indented">0.500000</p>
+        <p class="Code_Indented">0.00000</p>
+        <p class="Code_Indented">1.00000</p>
+        <h2 class="API">Syntax</h2>
+        <p><i>Result</i> = IMSL_CHNNDSOL(<i>b</i>[, <i>a</i>] [, /<a href="#DOUBLE" class="selected">DOUBLE</a>] [, <a href="#FACTOR" class="selected">FACTOR</a>=<i>value</i>] [, <a href="#INVERSE" class="selected">INVERSE</a>=<i>variable</i>] [, <a href="#TOLERANC" class="selected">TOLERANCE</a>=<i>value</i>])</p>
+        <h2 class="API">Return Value</h2>
+        <p>A solution x of the linear system <i>Ax = b</i>.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">b</h3>
+        <p>Matrix containing the right-hand side.</p>
+        <h3 class="Argument">a</h3>
+        <p>(Optional) Two-dimensional matrix containing the coefficient matrix. Element <i>A(i, j)</i> contains the <i>j</i>-th coefficient of the <i>i</i>-th equation.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="DOUBLE"></a>DOUBLE</h3>
+        <p>If present and nonzero, double precision is used.</p>
+        <h3 class="Keyword"><a name="FACTOR"></a>FACTOR</h3>
+        <p>The<i> LL</i><sup style="font-style: italic;">T</sup> factorization of <i>A</i>. The lower-triangular part of this matrix contains <i>L</i>, and the upper-triangular part contains <i>L<sup>T</sup></i>.</p>
+        <h3 class="Keyword"><a name="INVERSE"></a>INVERSE</h3>
+        <p>Named variable into which the inverse of the matrix <i>A</i> is stored.</p>
+        <h3 class="Keyword"><a name="TOLERANC"></a>TOLERANCE</h3>
+        <p>Tolerance used in determining linear dependence. Default: TOLERANCE = 100ε, where ε is machine precision.</p>
+        <h2 class="API">Errors</h2>
+        <h3 class="Keyword">Warning Errors</h3>
+        <p><code>MATH_INCONSISTENT_EQUATIONS_2</code> — Linear system of equations is inconsistent.</p>
+        <p><code>MATH_NOT_NONNEG_DEFINITE</code> — Matrix <i>A</i> is not non-negative definite.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

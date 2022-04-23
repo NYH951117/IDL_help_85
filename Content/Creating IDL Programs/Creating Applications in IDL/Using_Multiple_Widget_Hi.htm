@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|Widget Application Techniques">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Using Multiple Widget Hierarchies</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widget Application Techniques</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Using Multiple Widget Hierarchies</span>
+        </div>
+        <h1><a name="widget_techniques_4218446668_109965"></a><a name="widget_techniques_4218446668_35785"></a>Using Multiple Widget Hierarchies</h1>
+        <p>Using <a name="kanchor5026"></a>widgets, you can create IDL applications with graphical user interfaces. Although widget applications are running “inside” IDL, a well-designed program can behave and appear just like a stand-alone application.</p>
+        <p>While a simple application may consist of a single widget hierarchy headed by a single top-level base widget, more complex applications can include multiple widget hierarchies, each with their own top-level base. Widget applications that include multiple widget hierarchies consist of a <i>group</i> of top-level base widgets organized hierarchically. The individual widgets that make up the widget application’s interface have as their parent widget either one of the top-level bases or a base that is a child of one of the top-level bases.</p>
+        <p>Groups of widgets are defined by setting the GROUP_LEADER keyword when creating the widget. Group membership controls how and when widgets are iconized, which layer they appear in, and when they are destroyed. </p>
+        <p>The figure below depicts a widget application group hierarchy consisting of six top-level bases in three groups: base 1 leads all six bases, base 2 leads bases 4 and 5, and base 3 leads base 6. What does this mean? Operations like inconization or destruction that affect base 2 also affect bases 4 and 5. Operations that affect base 3 also affect base 6. Operations that affect base 1 affect all six bases—that is, a group includes not only those bases that explicitly claim one base as their leader, but also all bases <i>led by</i> those member bases.</p>
+        <p>
+            <img src="../../images/bldwid01.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 6.000484px;margin-bottom: 6.000469px;" />
+        </p>
+        <p>The following IDL commands would create this hierarchy:</p>
+        <p class="Code">base1 = WIDGET_BASE()</p>
+        <p class="Code">base2 = WIDGET_BASE(GROUP_LEADER=base1)</p>
+        <p class="Code">base3 = WIDGET_BASE(GROUP_LEADER=base1)</p>
+        <p class="Code">base4 = WIDGET_BASE(GROUP_LEADER=base2)</p>
+        <p class="Code">base5 = WIDGET_BASE(GROUP_LEADER=base2)</p>
+        <p class="Code">base6 = WIDGET_BASE(GROUP_LEADER=base3)</p>
+        <h2 class="API"><a name="widget_techniques_4218446668_26387"></a>Widget Group Behaviors</h2>
+        <p>Groups of widgets are displayed and destroyed according to the following principles:</p>
+        <h3>Iconization</h3>
+        <p>Bases and groups of bases can be <i>iconized</i> (or <i>minimized</i>) by clicking the system minimize control. When a group leader is iconized, all members of the group are minimized as well.</p>
+        <h3>Layering</h3>
+        <p><i>Layering</i> is the process by which groups of widgets seem to share the same plane on the display screen. Within a layer on the screen, widgets have a <i>Z-order</i>, or front-to-back order, that defines which widgets appear to be on top of other widgets.</p>
+        <p>All widgets within a group hierarchy share the same layer—that is, when one group member has the input focus, all members of the group hierarchy are displayed in a layer that appears in front of all other groups or applications. Within the layer, the widgets can have an arbitrary Z-order, determined by the programmer.</p>
+        <h3>Destruction</h3>
+        <p>When a group leader widget is destroyed, either programmatically or by clicking on the system “close” button, all members of the group are destroyed as well.</p>
+        <p>See <a href="../../Reference Material/W/WIDGET_BASE.htm#W_811389549_1221767">Iconizing, Layering, and Destroying Groups of Top-Level Bases</a> under WIDGET_BASE  for detailed information on how group membership defines widget behavior on different platforms.</p>
+        <h3>Titlebar Icon Inheritance</h3>
+        <p>On Microsoft Windows platforms, if the group leader has the <a href="../../Reference Material/W/WIDGET_BASE.htm#W_811389549_1231048">BITMAP</a> keyword set, the same titlebar icon is used for all group members. (Titlebar icons are not supported on Motif platforms.)</p>
+        <h2 class="API"><a name="widget_techniques_4218446668_46453"></a>Floating bases</h2>
+        <p>Top-level base widgets created with the FLOATING keyword set will <i>float</i> above their group leaders, even though they share the same layer. Floating bases and their group leaders are iconized in a single icon (on platforms where iconization is possible). Floating bases are destroyed when their group leaders are destroyed.</p>
+        <h2 class="API"><a name="widget_techniques_4218446668_34723"></a>Modal bases</h2>
+        <p>Top-level base widgets created with the MODAL keyword will float above their group leaders, and will suspend processing in the widget application until they are dismissed. (<i>Dialogs</i> are generally modal.) Modal bases cannot be iconized, and on some platforms other bases cannot be moved or iconized while the modal dialog is present. Modal bases cannot have scroll bars or menubars. </p>
+        <h2 class="API"><a name="widget_techniques_4218446668_13666"></a>Menubars</h2>
+        <p>Widget applications can have an application-specific menubar, created by the MBAR keyword to WIDGET_BASE. Menus and menubars are discussed in detail in <a href="Creating_Menus.htm#widget_techniques_4218446668_121921">Creating Menus</a>.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

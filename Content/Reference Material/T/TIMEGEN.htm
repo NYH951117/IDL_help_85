@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: T">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>TIMEGEN </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="T_list.htm">Routines: T</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">TIMEGEN</span>
+        </div>
+        <h1 class="Routine"><a name="T_809226861_1077128"></a><a name="kanchor2545"></a><a name="T_809226861_20189"></a>TIMEGEN </h1>
+        <p>The TIMEGEN function returns an array, with specified dimensions, of double-precision floating-point values that represent times in terms of Julian dates.<a name="kanchor2546"></a></p>
+        <p>The Julian date is the number of days elapsed since Jan. 1, 4713 B.C.E., plus the time expressed as a day fraction. Following the astronomical convention, the day is defined to start at 12 PM (noon). Julian date 0.0d is therefore Jan. 1, 4713 B.C.E. at 12:00:00.<a name="kanchor2547"></a></p>
+        <p>The first value of the returned array corresponds to a Julian date start time, and each subsequent value corresponds to the next Julian date in the sequence. The sequence is determined by specifying the time unit (such as months or seconds) and the step size, or spacing, between the units. You can also construct more complicated arrays by including smaller time units within each major time interval.</p>
+        <p>A small offset is added to each Julian date to eliminate roundoff errors when calculating the day fraction from the hour, minute, second. This offset is given by the larger of EPS and EPS*Julian, where Julian is the integer portion of the Julian date and EPS is the double-precision floating-point precision parameter from <a href="../M/MACHAR.htm#M_824365677_887317">MACHAR</a>. For typical Julian dates the offset is approximately 6x10<sup>-10</sup> (which corresponds to 5x10<sup>-5</sup> seconds). This offset ensures that when the Julian date is converted back to the hour, minute, and second, the hour, minute, and second will have the same integer values.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>Because of the large magnitude of the Julian date (1 Jan 2000 is Julian day 2451545), the precision of most Julian dates is limited to 1 millisecond (0.001 seconds). If you are not interested in the date itself, you can improve the precision by subtracting a large offset or setting the START keyword to zero.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Julian values must be in the range -1095 to 1827933925, which corresponds to calendar dates 1 Jan 4716 B.C.E. and 31 Dec 5000000, respectively.</p>
+        <h2 class="API"><a name="T_809226861_1077213"></a><a name="T_809226861_1077213_PageTOC_TIMEGEN_"></a>Examples</h2>
+        <p>Generate an array of 366 time values that are one day apart starting with January 1, 2000:</p>
+        <p class="Code">MyDates = TIMEGEN(366, START=JULDAY(1,1,2000))</p>
+        <p>Generate an array of 20 time values that are 12 hours apart starting with the current time:</p>
+        <p class="Code">MyTimes = TIMEGEN(20, UNITS='Hours', STEP_SIZE=12, $</p>
+        <p class="Code">&#160;&#160;&#160;START=SYSTIME(/JULIAN))</p>
+        <p>Generate an array of time values that are 1 hour apart from 1 January 2000 until the current time:</p>
+        <p class="Code">MyTimes = TIMEGEN(START=JULDAY(1,1,2000), $</p>
+        <p class="Code">&#160;&#160;&#160;FINAL=SYSTIME(/JULIAN), UNITS='Hours')</p>
+        <p>Generate an array of time values composed of seconds, minutes, and hours that start from the current hour:</p>
+        <p class="Code">MyTimes = TIMEGEN(60, 60, 24, $</p>
+        <p class="Code">&#160;&#160;&#160;START=FLOOR(SYSTIME(/JULIAN)*24)/24d, UNITS='S')</p>
+        <p>Generate an array of 24 time values with monthly intervals, but with subintervals at 5 PM on the first and fifteenth of each month:</p>
+        <p class="Code">MyTimes = TIMEGEN(24, START=FLOOR(SYSTIME(/JULIAN)), $</p>
+        <p class="Code">&#160;&#160;&#160;DAYS=[1,15], HOURS=17)</p>
+        <h2 class="API"><a name="T_809226861_1077142"></a><a name="T_809226861_1077142_PageTOC_TIMEGEN_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = TIMEGEN( [<i>D</i><sub class="italic">1</sub><i>,...,D</i><sub class="italic">8</sub>] [,&#160;<a href="#T_809226861_1077151" class="selected">FINAL</a>=<i>value</i>] [,&#160;<a href="#T_809226861_1077148" class="selected">DAYS</a>=<i>vector</i>] [,&#160;<a href="#T_809226861_1077154" class="selected">HOURS</a>=<i>vector</i>] [,&#160;<a href="#T_809226861_1077156" class="selected">MINUTES</a>=<i>vector</i>] [,&#160;<a href="#T_809226861_1077158" class="selected">MONTHS</a>=<i>vector</i>] [,&#160;<a href="#T_809226861_1077160" class="selected">SECONDS</a>=<i>vector</i>] [,&#160;<a href="#T_809226861_1077162" class="selected">START</a>=<i>value</i>] [,&#160;<a href="#T_809226861_1077166" class="selected">STEP_SIZE</a>=<i>value</i>] [,&#160;<a href="#T_809226861_1077168" class="selected">UNITS</a>=<i>string</i>] [,&#160;<a href="#T_809226861_1077211" class="selected">YEAR</a>=<i>value</i>] )</p>
+        <h2 class="API"><a name="T_809226861_1094720"></a><a name="T_809226861_15537"></a>Return Value</h2>
+        <p>Returns the specified time values.</p>
+        <h2 class="API"><a name="T_809226861_1077144"></a><a name="T_809226861_1077144_PageTOC_TIMEGEN_"></a>Arguments</h2>
+        <h3 class="Argument">D<sub class="italic">i</sub></h3>
+        <p>The dimensions of the result. The dimension parameters may be any scalar expression. Up to eight dimensions may be specified. If the dimension arguments are not integer values, IDL will truncate them to integer values before creating the new array. The dimension arguments are required unless keyword FINAL is set, in which case they are ignored.</p>
+        <h2 class="API"><a name="T_809226861_1077147"></a><a name="T_809226861_1077147_PageTOC_TIMEGEN_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="T_809226861_1077148"></a><a name="T_809226861_1077148_Keywords_TIMEGEN__"></a>DAYS</h3>
+        <p>Set this keyword to a scalar or a vector giving the day values that should be included within each month. This keyword is ignored if the UNITS keyword is set to “Days”, “Hours”, “Minutes”, or “Seconds”. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Day values that are beyond the end of the month will be set equal to the last day for that month. For example, setting <code>DAY=[31]</code> will automatically return the last day in each month.</p>
+        <h3 class="Keyword"><a name="T_809226861_1077151"></a><a name="T_809226861_1077151_Keywords_TIMEGEN__"></a>FINAL</h3>
+        <p>Set this keyword to a double-precision value representing the Julian date/time to use as the last value in the returned array. In this case, the dimension arguments are ignored and <i>Result</i> is a one-dimensional array, with the number of elements depending upon the step size. The FINAL time may be less than the START time, in which case STEP_SIZE should be negative.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the step size is not an integer then the last element may not be equal to the FINAL time. In this case, TIMEGEN will return enough elements such that the last element is less than or equal to FINAL.</p>
+        <h3 class="Keyword"><a name="T_809226861_1077154"></a><a name="T_809226861_1077154_Keywords_TIMEGEN__"></a>HOURS</h3>
+        <p>Set this keyword to a scalar or a vector giving the hour values that should be included within each day. This keyword is ignored if UNITS is set to “Hours”, “Minutes”, or “Seconds”.</p>
+        <h3 class="Keyword"><a name="T_809226861_1077156"></a><a name="T_809226861_1077156_Keywords_TIMEGEN__"></a>MINUTES</h3>
+        <p>Set this keyword to a scalar or a vector giving the minute values that should be included within each hour. This keyword is ignored if UNITS is set to “Minutes” or “Seconds”.</p>
+        <h3 class="Keyword"><a name="T_809226861_1077158"></a><a name="T_809226861_1077158_Keywords_TIMEGEN__"></a>MONTHS</h3>
+        <p>Set this keyword to a scalar or a vector giving the month values that should be included within each year. This keyword is ignored if UNITS is set to “Months”, “Days”, “Hours”, “Minutes”, or “Seconds”.</p>
+        <h3 class="Keyword"><a name="T_809226861_1077160"></a><a name="T_809226861_1077160_Keywords_TIMEGEN__"></a>SECONDS</h3>
+        <p>Set this keyword to a scalar or a vector giving the second values that should be included within each minute. This keyword is ignored if UNITS is set to “Seconds”.</p>
+        <h3 class="Keyword"><a name="T_809226861_1077162"></a><a name="T_809226861_1077162_Keywords_TIMEGEN__"></a>START</h3>
+        <p>Set this keyword to a double-precision value representing the Julian date/time to use as the first value in the returned array. The default is 0.0d [corresponding to January 1, 4713 B.C.E. at 12 pm (noon)].</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If subintervals are provided by MONTHS, DAYS, HOURS, MINUTES, or SECONDS, then the first element may not be equal to the START time. In this case the first element in the returned array will be greater than or equal to START.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>Other array generation routines in IDL (such as FINDGEN) do not allow you to specify a starting value because the resulting array can be added to a scalar representing the start value. For TIMEGEN it is correct to add a scalar to the array if the units are days, hours, minutes, seconds, or sub-seconds. For example:<br /><code>MyTimes = TIMEGEN(365, UNITS="Days") + SYSTIME(/JULIAN)</code><br /><br /><br />However, if the units are months or years, the start value is necessary because the number of days in a month or year can vary depending upon the year in which they fall (for instance, consider leap years). For example:<br /><code>MyTimes = TIMEGEN(12, UNITS="Months", START=JULDAY(1,1,2000))</code><br /></p>
+        <h3 class="Keyword"><a name="T_809226861_1077166"></a><a name="T_809226861_1077166_Keywords_TIMEGEN__"></a>STEP_SIZE</h3>
+        <p>Set this keyword to a scalar value representing the step size between the major intervals of the returned array. The step size may be negative. The default step size is 1. When the UNITS keyword is set to “Years” or “Months”, the STEP_SIZE value is rounded to the nearest integer. </p>
+        <h3 class="Keyword"><a name="T_809226861_1077168"></a><a name="T_809226861_1077168_Keywords_TIMEGEN__"></a>UNITS</h3>
+        <p>Set this keyword to a scalar string indicating the time units to be used for the major intervals for the generated array. Valid values include:</p>
+        <ul>
+            <li value="1">“Years” or “Y”</li>
+            <li value="2">“Months” or “M”</li>
+            <li value="3">“Days” or “D”</li>
+            <li value="4">“Hours” or “H”</li>
+            <li value="5">“Minutes” or “I”</li>
+            <li value="6">“Seconds” or “S”</li>
+        </ul>
+        <p>The case (upper or lower) is ignored. If this keyword is not specified, then the default for UNITS is the time unit that is larger than the largest keyword present:</p>
+        <table style="caption-side: bottom;mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Largest Keyword Present</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Default UNITS</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>SECONDS=<i>vector</i></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>“Minutes”</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>MINUTES=<i>vector</i></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>“Hours”</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>HOURS=<i>vector</i></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>“Days”</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>DAYS=<i>vector</i></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>“Months”</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>MONTHS=<i>vector</i></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>“Years”</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>YEAR=<i>value</i></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>“Years”</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>If none of the above keywords are present, the default is UNITS=“Days”.</p>
+        <h3 class="Keyword"><a name="T_809226861_1077211"></a><a name="T_809226861_1077211_Keywords_TIMEGEN__"></a>YEAR</h3>
+        <p>Set this keyword to a scalar giving the starting year. If YEAR is specified then the starting year from START is ignored.</p>
+        <h2 class="API"><a name="T_809226861_1077228"></a><a name="T_809226861_1077228_PageTOC_TIMEGEN_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="T_809226861_1086485"></a><a name="T_809226861_87834"></a>See Also</h2>
+        <p><a href="../../Creating IDL Programs/Components of the IDL Language/Format_Codes.htm#files_2839720996_168633">Format Codes</a>, <a href="../C/CALDAT.htm#C_854643309_1083750">CALDAT</a>, <a href="../J/JULDAY.htm#J_839504493_762378">JULDAY</a>, <a href="../S/SYSTIME.htm#S_820040301_762665">SYSTIME</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

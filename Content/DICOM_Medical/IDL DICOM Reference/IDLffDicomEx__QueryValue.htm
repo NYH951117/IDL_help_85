@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|Medical Imaging in IDL|IDL DICOM Reference|IDLffDicomEx">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLffDicomEx::QueryValue
+        </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Expanded DICOM Support in IDL/ExpandedDICOMFunctionality.htm">Medical Imaging in IDL</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="DICOMEX_GETCONFIGFILEPAT.htm">IDL DICOM Reference</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLffDicomEx::QueryValue</span>
+        </div>
+        <h1 class="ObjMethod">IDLffDicomEx::QueryValue
+        </h1>
+        <p>The IDLffDicomEx::QueryValue function method checks a DICOM file for the presence of a specified attribute. This method allows you to verify the presence of a tag prior to calling a method that requires a DICOM attribute to be present and have a value in order to succeed. Attempting to call GetValue, GetValueCount, GetValueLength, GetVR, and GetProperty methods all return an error when you attempt to access an attribute that does not exist in a DICOM file. GetValue and GetProperty also fail when attempting to access an attribute that does not have a value.</p>
+        <p>This method is especially useful for determining the number of frames in an image prior to attempting to use this value when accessing pixel data. The Number of Frames tag is typically only present in multi-frame image files so when writing code that handles both single frame and multi-frame images, QueryValue can be used to determine if the Number of Frames DICOM attribute is present in the file.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>For IDLffDicomEx properties, you can query using a property name (e.g., <a href="IDLffDicomEx.htm#dicom_ex_4010397576_1025697">NUMBER_OF_FRAMES</a>) instead of having to specify the DICOM attribute (e.g., 0028,0008). </p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1008328"></a><a name="dicom_ex_4010397576_1008328_PageTOC_IDLffDicomEx"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>-&gt;[<a href="IDLffDicomEx.htm">IDLffDicomEx</a>::]QueryValue(<i>DicomTag </i>[,&#160;<a href="#dicom_ex_4010397576_1008348" class="selected">SEQID</a>=<i>integer</i>]&#160;) </p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1008330"></a><a name="dicom_ex_4010397576_1008330_PageTOC_IDLffDicomEx"></a>Return Value</h2>
+        <p>This method returns one of the following:</p>
+        <ul>
+            <li value="1">0 = tag not found</li>
+            <li value="2">1 = tag found but does not have a value</li>
+            <li value="3">2 = tag found and has a value</li>
+        </ul>
+        <p>A return value of 0 or 1 indicates attempting to call GetValue would cause an error. A return value of 2 means GetValue would succeed for the specified attribute.</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1008336"></a><a name="dicom_ex_4010397576_1008336_PageTOC_IDLffDicomEx"></a>Arguments</h2>
+        <h3 class="Argument">DicomTag</h3>
+        <p>A string that identifies either of the following:</p>
+        <ul>
+            <li value="1">A group and element of a DICOM attribute in the form <code>'XXXX,XXXX'</code>. The <i>DicomTag</i> argument must reference a public tag. See <a href="../DICOM Resources/DICOMAttributes.htm">DICOM Attributes</a> for a list of tags.</li>
+            <li value="2">An IDLffDicomEx property name, such as BITS_ALLOCATED. Allowable property names are any of those listed in <a href="IDLffDicomEx.htm#dicom_ex_4010397576_1025181">IDLffDicomEx Properties</a>.</li>
+        </ul>
+        <p class="NoteIndented">When querying an IDLffDicomEx property name, the SEQID keyword is ignored. All named properties exist at the root level of the DICOM file, not within sequences.</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1008347"></a><a name="dicom_ex_4010397576_1008347_PageTOC_IDLffDicomEx"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dicom_ex_4010397576_1008348"></a><a name="dicom_ex_4010397576_64656"></a>SEQID</h3>
+        <p>Set this keyword only if retrieving the value of an attribute that exists within a sequence. Use this keyword to specify a sequence identifier as follows:</p>
+        <ul>
+            <li value="1">Set to a non-zero value (a sequence identifier) indicating the sequence in which the value is contained. This sequence identifier may have been returned via a previous call to the GetValue method. </li>
+            <li value="2">Set to 0 or do not specify this keyword to indicate the attribute exists at the root level of the DICOM file. This is the default. </li>
+        </ul>
+        <h2 class="API"><a name="dicom_ex_4010397576_1037580"></a><a name="dicom_ex_4010397576_1037580_PageTOC_IDLffDicomEx"></a>Example</h2>
+        <p>The following code checks for the Number of Frames attribute (0028,0008) indicating the image contains multiple frames. Attempting to just return a value for this attribute may fail as not all image SOP Classes require this tag to be present for single-frame images. For a complete example, see the “Example” section of <a href="IDLffDicomEx__ChangeTransferSyntax.htm#dicom_ex_4010397576_1123452">IDLffDicomEx::ChangeTransferSyntax</a>. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In an image containing multiple frames, the returned frames are indexed in a zero-based array; hence the Number of Frames (attribute or property) value minus one will return the desired frame when accessing pixel data.</p>
+        <p class="Code">; Check to see if the image has multiple frames.</p>
+        <p class="Code">frameTest = oImg-&gt;QueryValue('0028,0008')</p>
+        <p class="Code">IF FrameTest EQ 2 THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;oImg-&gt;GetProperty, NUMBER_OF_FRAMES=frames</p>
+        <p class="Code">&#160;&#160;&#160;frames = frames - 1</p>
+        <p class="Code">ENDIF ELSE BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;frames = 0</p>
+        <p class="Code">ENDELSE</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1008352"></a><a name="dicom_ex_4010397576_1008352_PageTOC_IDLffDicomEx"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

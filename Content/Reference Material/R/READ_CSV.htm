@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: R">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>READ_CSV</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="R_list.htm">Routines: R</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">READ_CSV</span>
+        </div>
+        <h1 class="Routine"><a name="R_822202989_1233548"></a><a name="kanchor2207"></a><a name="R_822202989_15357"></a>READ_CSV</h1>
+        <p><a name="kanchor2208"></a>The READ_CSV function reads data from a “comma-separated value” (comma-delimited) text file or URL into an IDL structure variable.</p>
+        <p>This routine handles CSV files consisting of one or more optional table header lines, followed by one optional column header line, followed by columnar data, with commas separating each field. Each row is assumed to be a new record. Blank lines at the beginning of the file are automatically ignored.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>read_csv.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API">Example</h2>
+        <p>Using <a href="../D/DIALOG_PICKFILE.htm">DIALOG_PICKFILE</a>, we'll locate a specific file on your computer, read it in, and display some information about it.</p>
+        <p class="Code">; Use DIALOG_PICKFILE to locate 'ScatterplotData.csv.' </p>
+        <p class="Code">; and assign it a name ('testfile')</p>
+        <p class="Code">testfile = DIALOG_PICKFILE(FILTER='*.csv')</p>
+        <p>Navigate to C:\Program Files\Exelis\IDL82\examples\data and open the file called 'ScatterplotData.csv'.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Read the file in and assign it to the sed_data variable;</p>
+        <p class="Code">; assign the header information to variables for use later.</p>
+        <p class="Code">sed_data = READ_CSV(testfile, HEADER=SedHeader, $</p>
+        <p class="Code">&#160;&#160;&#160;N_TABLE_HEADER=1, TABLE_HEADER=SedTableHeader)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the field names found in the header.</p>
+        <p class="Code">PRINT, SedHeader</p>
+        <p class="Code">PRINT, SedTableHeader</p>
+        <p>IDL&#160;displays the field names and the table heading separately:</p>
+        <p class="Code">Distance from Terminus (meters) Mean Particle size (mm) Sedimentation Rate (g/cm2yr)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">2012 Simulated Sediment Distribution at the terminus of SE Alaskan Tidewater Glaciers</p>
+        <p>Display additional information about the file:</p>
+        <p class="Code">; Show information on the file structure</p>
+        <p class="Code">HELP, sed_data, /STRUCTURES</p>
+        <p>IDL displays:</p>
+        <p class="Code">** Structure &lt;12801420&gt;, 3 tags, length=880, data length=880, refs=1:</p>
+        <p class="Code">FIELD1 &#160;&#160;         LONG &#160;&#160; &#160;   Array[44]</p>
+        <p class="Code">FIELD2 &#160;&#160;         DOUBLE &#160;   Array[44]</p>
+        <p class="Code">FIELD3 &#160;&#160;         DOUBLE &#160;   Array[44]</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = READ_CSV( <i>Filename</i> [,&#160;<a href="#COUNT" class="selected">COUNT</a>=<i>variable</i>] [,&#160;<a href="#HEADER" class="selected">HEADER</a>=<i>variable</i>] [,&#160;<a href="#MISSING" class="selected">MISSING_VALUE</a>=<i>value</i>] [,&#160;<a href="#NHEADER" class="selected">N_TABLE_HEADER</a>=<i>value</i>] [,&#160;<a href="#NRECORDS" class="selected">NUM_RECORDS</a>=<i>value</i>] [,&#160;<a href="#RSTART" class="selected">RECORD_START</a>=<i>value</i>] [,&#160;<a href="#THEADER" class="selected">TABLE_HEADER</a>=<i>variable</i>] [, <a href="#TYPES" class="MCXref xref selected">TYPES</a>=value] )</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns a structure variable that contains one structure field for each column of data in the CSV file. The data type of the individual structure fields is determined using the following rules:</p>
+        <table style="margin-left: 0;margin-right: auto;caption-side: top;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <thead>
+                <tr class="Head-Header1">
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Resulting Data Type</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>If this condition is met</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Long integer</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>All data within the column consists of integers, all of which are smaller than the largest 32-bit signed integer.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>64-bit Long integer</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>All data within the column consists of integers, at least one of which is greater than the largest 32-bit signed integer.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Double-precision floating point</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>All data within the column consists of numbers, at least one of which has a decimal point or exponent.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>String</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Any column that does not meet one of the above conditions.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When determining the data type the first 100 and last 100 elements in each column are examined. You can use the TYPES keyword to override the automatic type checking.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>A string containing the name of a CSV file to be read. <i>Filename</i> may be a local file or a URL. If a URL is specified, it must contain the scheme, host, and full path to the CSV file on that server.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="COUNT"></a>COUNT</h3>
+        <p>Set this keyword equal to a named variable that will contain the number of records read.</p>
+        <h3 class="Keyword"><a name="HEADER"></a>HEADER</h3>
+        <p>Set this keyword equal to a named variable that will contain the column headers as a vector of strings. If no header exists, an empty scalar string is returned.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The headers will only be returned for CSV files that contain numeric data. If the CSV file contains only string data, the header (if it exists) will be contained in the first data record.</p>
+        <h3 class="Keyword"><a name="MISSING"></a>MISSING_VALUE</h3>
+        <p>Set this keyword equal to a value used to replace any missing floating-point or integer data. The default value is 0.</p>
+        <h3 class="Keyword"><a name="NHEADER"></a>N_TABLE_HEADER</h3>
+        <p>Set this keyword equal to the number of lines of the CSV file to skip before beginning to read records from the file. (If a column header line is present, it will not be skipped.) If the TABLE_HEADER keyword specifies a variable to hold table header information, each skipped line will be stored as a single string in that variable.</p>
+        <p>If the HEADER keyword is also present, the column headers will be taken from the line following the line specified by N_TABLE_HEADER.</p>
+        <h3 class="Keyword"><a name="NRECORDS"></a>NUM_RECORDS</h3>
+        <p>Set this keyword equal to an integer specifying the number of records to read. By default all records are read.</p>
+        <h3 class="Keyword"><a name="RSTART"></a>RECORD_START</h3>
+        <p>Set this keyword equal an integer specifying the index of the first record to read. The default is the first record of the file (record 0).</p>
+        <h3 class="Keyword"><a name="THEADER"></a>TABLE_HEADER</h3>
+        <p>Set this keyword equal to a named variable that will contain the file's table header information as a vector of strings. The number of lines specified by the N_TABLE_HEADER keyword will be interpreted as the table header. Table header information appears in the CSV file above the column headers specified by the HEADER keyword (if present).</p>
+        <h3 class="Keyword"><a name="TYPES"></a>TYPES</h3>
+        <p>Set this keyword to a string array containing the IDL data types   for each column of data. If TYPES is missing or there are more columns than elements in TYPES then IDL automatically determines the data type for the extra columns using the rules given under Return Value above. Possible values for data types are:</p>
+        <ul>
+            <li value="1">"" - An empty string indicates that IDL&#160;should automatically determine the data type for that column</li>
+            <li value="2">"Byte" - Byte data</li>
+            <li value="3">"Int" - 16-bit signed integer data</li>
+            <li value="4">"Long" - 32-bit signed integer data</li>
+            <li value="5">"Float" - 32-bit floating-point data</li>
+            <li value="6">"Double" - 64-bit floating-point data</li>
+            <li value="7">"Uint" - 16-bit unsigned integer data</li>
+            <li value="8">"Ulong"- 32-bit unsigned integer data</li>
+            <li value="9">"Long64"- 64-bit signed integer data</li>
+            <li value="10">"Ulong64"- 64-bit unsigned integer data</li>
+        </ul>
+        <h2 class="API">Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>7.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">
+                        <p>8.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">
+                        <p>N_TABLE_HEADER and TABLE_HEADER keywords added</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">8.5</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">Added TYPES keyword. Added support for URL files.</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="../I/IOPEN.htm">IOPEN</a>, <a href="../Q/QUERY_ASCII.htm#Q_815714925_1045490">QUERY_ASCII</a>, <a href="../Q/QUERY_CSV.htm#Q_815714925_1125522">QUERY_CSV</a>, <a href="READ_ASCII.htm#R_822202989_956701">READ_ASCII</a>, <a href="../W/WRITE_CSV.htm#W_811389549_1249436">WRITE_CSV</a>, <a href="../W/WGET.htm">WGET</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: S">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>SEM_LOCK</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="S_list.htm">Routines: S</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">SEM_LOCK</span>
+        </div>
+        <h1 class="Routine"><a name="S_820040301_1318522"></a><a name="S_820040301_80311"></a>SEM_LOCK</h1>
+        <p><a name="kanchor2344"></a>The SEM_LOCK function attempts to gain the lock on an existing semaphore for the current IDL process. (Note that the semaphore could have been created by <i>any</i> process; IDL can lock semaphores created by other applications.) Once the lock has been obtained by an IDL process, other processes (including other IDL processes) will not be able to gain the lock until the SEM_RELEASE process is called within the IDL process that owns the lock. Similarly, an IDL process will not be able to obtain a lock on an existing semaphore if that semaphore is already locked by another process.</p>
+        <p><a name="S_820040301_1318533"></a><a name="S_820040301_1318533_PageTOC_SEM_LOCK_"></a>Example</p>
+        <p>This example illustrates the way semaphores operate using two independent IDL sessions on the same machine.</p>
+        <ol>
+            <li value="1">The user starts IDL session 1.</li>
+            <li value="2">
+                <p>The user creates a semaphore using the following command:</p>
+                <p class="Code">status = SEM_CREATE('semaphore1')</p>
+                <p class="indent">This creates a semaphore called “<code>semaphore1</code>”. </p>
+            </li>
+            <li value="3">
+                <p>The user sets a lock on the semaphore using the following command:</p>
+                <p class="Code">status = SEM_LOCK('semaphore1')</p>
+                <p class="indent">If the lock is obtained, <code>status</code> is set equal to 1.</p>
+            </li>
+            <li value="4">The user starts IDL session 2.</li>
+            <li value="5">
+                <p>In session 2, the user creates a reference to the same semaphore created in session 1:</p>
+                <p class="Code">status = SEM_CREATE('semaphore1')</p>
+            </li>
+            <li value="6">
+                <p>In session 2, the user attempts to gain the lock on the semaphore with the following command:</p>
+                <p class="Code">status = SEM_LOCK('semaphore1')</p>
+                <p class="indent">Since the lock is owned by session 1, <code>status</code> is set equal to 0 (the lock was not obtained).</p>
+            </li>
+            <li value="7">
+                <p>In session 1, the lock on the semaphore is released using the following command:</p>
+                <p class="Code">SEM_RELEASE, 'semaphore1'</p>
+            </li>
+            <li value="8">
+                <p>Once the lock has been released in session 1, the user once again attempts to gain the lock on the semaphore in session 2:</p>
+                <p class="Code">status = SEM_LOCK('semaphore1')</p>
+                <p>In this case, <code>status</code> is set equal to 1, indicating session 2 now has the lock</p>
+            </li>
+            <li value="9">In session 1, attempting to retrieve the lock will result in failure, since session 2 has the lock on the semaphore.</li>
+            <li value="10">
+                <p>In session 2, the user executes the following command:</p>
+                <p class="Code">SEM_DELETE, 'semaphore1'</p>
+                <p>This removes the reference to the semaphore in session 2, but does not destroy the actual semaphore in the operating system.</p>
+            </li>
+            <li value="11">
+                <p>In session 1, the user executes the following command:</p>
+                <p class="Code">SEM_DELETE, 'semaphore1'</p>
+                <p>This removes both the reference to the semaphore in session 1 and the actual semaphore in the operating system, because:</p>
+            </li>
+            <ul>
+                <li value="1">If the user is on a UNIX system, the semaphore itself is destroyed because it was created in session 1 and there are no other references it.</li>
+                <li value="2">If the user is on a Windows system, the semaphore itself is destroyed because session 1 has the last reference to it.</li>
+            </ul>
+        </ol>
+        <h2 class="API"><a name="S_820040301_1318524"></a><a name="S_820040301_1318524_PageTOC_SEM_LOCK_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = SEM_LOCK(<i>strName</i>)</p>
+        <h2 class="API"><a name="S_820040301_1318526"></a><a name="S_820040301_1318526_PageTOC_SEM_LOCK_"></a>Return Value</h2>
+        <p>The result is 1 (one) if the lock on the specified semaphore was successfully obtained, or 0 (zero) if the lock could not be obtained.</p>
+        <h2 class="API"><a name="S_820040301_1318528"></a><a name="S_820040301_1318528_PageTOC_SEM_LOCK_"></a>Arguments</h2>
+        <h3 class="Argument">strName</h3>
+        <p>A scalar string containing the name associated with the semaphore. This is the name used when creating the semaphore with SEM_CREATE. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Semaphore names must be 24 characters or less on Macintosh platforms.</p>
+        <h2 class="API"><a name="S_820040301_1318531"></a><a name="S_820040301_1318531_PageTOC_SEM_LOCK_"></a>Keywords</h2>
+        <p>None</p>
+        <h2 class="API"><a name="S_820040301_1318562"></a><a name="S_820040301_1318562_PageTOC_SEM_LOCK_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2><a name="S_820040301_1318569"></a><a name="S_820040301_1318569_PageTOC_SEM_LOCK_"></a>See Also</h2>
+        <p><a href="SEM_CREATE.htm#S_820040301_1318441">SEM_CREATE</a>, <a href="SEM_DELETE.htm#S_820040301_1318499">SEM_DELETE</a>, <a href="SEM_RELEASE.htm#S_820040301_1318571">SEM_RELEASE</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

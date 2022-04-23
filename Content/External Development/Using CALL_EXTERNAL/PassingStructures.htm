@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Using CALL_EXTERNAL">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Passing Structures</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="CALL_EXTERNAL.htm">Using CALL_EXTERNAL</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Passing Structures</span>
+        </div>
+        <h1><a name="kanchor5434"></a>Passing Structures</h1>
+        <p>IDL structure variables are stored in memory in the same layout that C uses. This makes it possible to pass IDL structure variables into <b>CALL_EXTERNAL</b> routines, as long as the layout of the IDL structure is known. To access an IDL structure from an external routine, you must create a C structure definition that has the exact same layout as the IDL structure you want to process.</p>
+        <p>For example, for an IDL structure defined as follows:</p>
+        <p class="Code">s = {ASTRUCTURE,zero:0B,one:0L,two:0.0,three:0D,four: intarr(2)}</p>
+        <p>the corresponding C structure would look like the following:</p>
+        <p class="Code">typedef struct { unsigned char zero; IDL_LONG one;</p>
+        <p class="Code">&#160;&#160;&#160;float two; double three; short four[2];</p>
+        <p class="Code">} ASTRUCTURE;</p>
+        <p>Then, cast the pointer from argv to the structure type, as follows:</p>
+        <p class="Code">ASTRUCTURE* mystructure;</p>
+        <p class="Code">mystructure = (ASTRUCTURE*) argv[0];</p>
+        <p>The following routine, found in <code>incr_struct.c</code>, increments each field of an IDL structure of type <b>ASTRUCTURE</b>. This is implemented as a function with a natural C interface, and a second glue routine that implements the IDL portable convention, using the one with the natural interface to do the actual work:</p>
+        <p>&#160;</p>
+        <p class="Code">#include &lt;stdio.h&gt;</p>
+        <p class="Code">#include "idl_export.h"</p>
+        <p class="Code_Indented">/*</p>
+        <p class="Code_Indented">* C definition for the structure that this routine accepts.The</p>
+        <p class="Code_Indented">* corresponding IDL structure definition would look like this:</p>
+        <p class="Code_Indented">*	s = {zero:0B,one:0L,two:0.,three:0D,four: intarr(2)}</p>
+        <p class="Code_Indented">*/</p>
+        <p class="Code_Indented">typedef struct { unsigned char zero; IDL_LONG one;</p>
+        <p class="Code_Indented">float two; double three; short four[2];</p>
+        <p class="Code_Indented">} ASTRUCTURE;</p>
+        <p class="Code_Indented">int incr_struct_natural(ASTRUCTURE *mystructure, IDL_LONG n)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented">/* for each structure in the array, increment every field */</p>
+        <p class="Code_Indented">for (; n--; mystructure++) { mystructure-&gt;zero++; mystructure-&gt;one++; mystructure-&gt;two++; mystructure-&gt;three++; mystructure-&gt;four[0]++; mystructure-&gt;four[1]++;</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">return 1;</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">int incr_struct(int argc, void *argv[])</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented">if (argc != 2) return 0;</p>
+        <p class="Code_Indented">return incr_struct_natural((ASTRUCTURE*) argv[0], (IDL_LONG)</p>
+        <p class="Code_Indented">argv[1]);</p>
+        <p class="Code">}</p>
+        <p>It is not possible to access structures with arbitrary definitions using the <b>CALL_EXTERNAL</b> interface. The system routine interface, discussed in  <a href="../Adding System Routines/AddingSystRoutines.htm">Adding System Routines</a>, does provide support for determining the layout of a structure at runtime.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

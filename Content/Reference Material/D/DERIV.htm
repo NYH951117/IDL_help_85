@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: D">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>DERIV </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="D_list.htm">Routines: D</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">DERIV</span>
+        </div>
+        <h1 class="Routine"><a name="D_843829869_1032874"></a><a name="kanchor490"></a><a name="D_843829869_75359"></a><a name="kanchor491"></a>DERIV </h1>
+        <p>The DERIV function uses three-point (quadratic) Lagrangian interpolation to compute the derivative of an evenly-spaced or unevenly-spaced array of data.</p>
+        <p>Given three neighboring points in your data with X coordinates [x<sub>0</sub>, x<sub>1</sub>, x<sub>2</sub>] and Y coordinates [y<sub>0</sub>, y<sub>1</sub>, y<sub>2</sub>], the three-point Lagrangian interpolation polynomial is defined as:</p>
+        <p>y = y<sub>0</sub>(x – x<sub>1</sub>)(x – x<sub>2</sub>)/[(x<sub>0</sub> – x<sub>1</sub>)(x<sub>0</sub> – x<sub>2</sub>)] +</p>
+        <p>&#160;&#160;&#160;y<sub>1</sub>(x – x<sub>0</sub>)(x – x<sub>2</sub>)/[(x<sub>1</sub> – x<sub>0</sub>)(x<sub>1</sub> – x<sub>2</sub>)] +</p>
+        <p>&#160;&#160;y<sub>2</sub>(x – x<sub>0</sub>)(x – x<sub>1</sub>)/[(x<sub>2</sub> – x<sub>0</sub>)(x<sub>2</sub> – x<sub>1</sub>)]</p>
+        <p>This can be rewritten as:</p>
+        <p>y = y<sub>0</sub>(x – x<sub>1</sub>)(x – x<sub>2</sub>)/(x<sub>01</sub>x<sub>02</sub>) – y<sub>1</sub>(x – x<sub>0</sub>)(x – x<sub>2</sub>)/(x<sub>01</sub>x<sub>12</sub>) + y<sub>2</sub>(x – x<sub>0</sub>)(x – x<sub>1</sub>)/(x<sub>02</sub>x<sub>12</sub>)</p>
+        <p>where x<sub>01</sub> = x<sub>0</sub> – x<sub>1</sub>, x<sub>02</sub> = x<sub>0</sub> – x<sub>2</sub>, and x<sub>12</sub> = x<sub>1</sub> – x<sub>2</sub>.</p>
+        <p>Taking the derivative with respect to x:</p>
+        <p>y' = y<sub>0</sub>(2x – x<sub>1</sub> – x<sub>2</sub>)/(x<sub>01</sub>x<sub>02</sub>) – y<sub>1</sub>(2x – x<sub>0</sub> – x<sub>2</sub>)/(x<sub>01</sub>x<sub>12</sub>) + y<sub>2</sub>(2x – x<sub>0</sub> – x<sub>1</sub>)/(x<sub>02</sub>x<sub>12</sub>)</p>
+        <p>&#160;</p>
+        <p>Given a discrete set of <i>X</i> locations and <i>Y</i> values, the DERIV function then computes the derivative at all of the <i>X</i> locations. For example, for all of the <i>X</i> locations (except the first and last points), the derivative y' is computed by substituting in x = x<sub>1</sub>:</p>
+        <p>y' = y<sub>0</sub>x<sub>12</sub>/(x<sub>01</sub>x<sub>02</sub>) + y<sub>1</sub>(1/x<sub>12</sub> – 1/x<sub>01</sub>) – y<sub>2</sub>x<sub>01</sub>/(x<sub>02</sub>x<sub>12</sub>)</p>
+        <p>The first point is computed at x = x<sub>0</sub>:</p>
+        <p>y' = y<sub>0</sub>(x<sub>01</sub> + x<sub>02</sub>)/(x<sub>01</sub>x<sub>02</sub>) – y<sub>1</sub>x<sub>02</sub>/(x<sub>01</sub>x<sub>12</sub>) + y<sub>2</sub>x<sub>01</sub>/(x<sub>02</sub>x<sub>12</sub>)</p>
+        <p>The last point is computed at x = x<sub>2</sub>:</p>
+        <p>y' = –y<sub>0</sub>x<sub>12</sub>/(x<sub>01</sub>x<sub>02</sub>) + y<sub>1</sub>x<sub>02</sub>/(x<sub>01</sub>x<sub>12</sub>) – y<sub>2</sub>(x<sub>02</sub> + x<sub>12</sub>)/(x<sub>02</sub>x<sub>12</sub>)</p>
+        <p>&#160;</p>
+        <p>For an evenly-spaced array of values Y[0...N–1], the three-point Lagrangian interpolation reduces to:</p>
+        <p>Y'[0] = (–3*Y[0] + 4*Y[1] – Y[2]) / 2</p>
+        <p>Y'[i] = (Y[i+1] – Y[i–1]) / 2    <i> ; i = 1...N–2</i></p>
+        <p>Y'[N–1] = (3*Y[N–1] – 4*Y[N–2] + Y[N–3]) / 2</p>
+        <p>This routine is written in the IDL language. You can find more details for all of the above equations in the source code in the file <code>deriv.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="D_843829869_1077982"></a><a name="D_843829869_757896_PageTOC_DERIV_"></a>Example</h2>
+        <p>Compute the derivative of the <code>sin</code> function:</p>
+        <p class="Code">x = [0:10:0.01]</p>
+        <p class="Code">y = sin(x)</p>
+        <p class="Code">dy = DERIV(x, y)</p>
+        <p class="Code">help, dy</p>
+        <p class="Code">print, max(abs(dy - cos(x)))</p>
+        <p>IDL&#160;prints:</p>
+        <p class="Code">DY              FLOAT     = Array[1001]</p>
+        <p class="Code">3.33786e-005</p>
+        <h2 class="API"><a name="D_843829869_757889"></a><a name="D_843829869_757889_PageTOC_DERIV_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = DERIV([<i>X</i>,]<i> Y</i>)</p>
+        <h2 class="API"><a name="D_843829869_1002683"></a><a name="D_843829869_45436"></a>Return Value</h2>
+        <p>Returns a one-dimensional array of values containing the derivative of <i>Y</i>. If either <i>X</i> or <i>Y</i> is double precision then the result will be double precision, otherwise the result will be single precision.</p>
+        <h2 class="API"><a name="D_843829869_757891"></a><a name="D_843829869_757891_PageTOC_DERIV_"></a>Arguments</h2>
+        <h3 class="Argument">X</h3>
+        <p>A one-dimensional array of data containing the X locations. If <i>X</i> is omitted then the <i>Y</i> points are assumed to be evenly spaced.</p>
+        <h3 class="Argument">Y</h3>
+        <p>A one-dimensional array of data containing the Y values.</p>
+        <h2 class="API"><a name="D_843829869_757905"></a><a name="D_843829869_757905_PageTOC_DERIV_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">8.3</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">Add theory and examples</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">Another Example</h2>
+        <p>
+            <img src="../images/ex_deriv.png" style="float: right;" />Here, we compute the derivative of the function x<sup>3</sup> – x<sup>2</sup> + 1 with some added Gaussian random noise. We then use <a href="DERIVSIG.htm">DERIVSIG</a> to compute the error estimates. Finally, we make an errorbar plot of the derivative and overplot the theoretical derivative 3x<sup>2</sup> – 2x.</p>
+        <p class="Code">x = [-1:2:0.1]</p>
+        <p class="Code">y = x^3 - x^2 + 1 + 0.1*randomn(2,n_elements(x))</p>
+        <p class="Code">dy = DERIV(x, y)</p>
+        <p class="Code">sigd = DERIVSIG(x, y, 0, 0.1)</p>
+        <p class="Code">p = ERRORPLOT(x, dy, sigd, 'o', /SYM_FILLED, $</p>
+        <p class="Code_Indented">AXIS_STYLE=1, DIM=[300,300], $</p>
+        <p class="Code_Indented">XRANGE=[-1.1,2.1], $</p>
+        <p class="Code_Indented">XTITLE='x', YTITLE='dy/dx', $</p>
+        <p class="Code_Indented">TITLE='Error bars are 1$\sigma$ uncertainty')</p>
+        <p class="Code">p = PLOT('3*x^2 - 2*x', /OVERPLOT)</p>
+        <p class="Code">print, CORRELATE(dy, 3*x^2 - 2*x)</p>
+        <p>IDL prints:</p>
+        <p class="Code">0.940621</p>
+        <h2 class="API">Resources and References</h2>
+        <p>F. B. Hildebrand, <i>Introduction to Numerical Analysis</i>, <i>2nd ed.</i>, Dover Books, 1987, p. 85.</p>
+        <p>P.R. Bevington and D. K. Robinson, <i>Data Analysis and Reduction for the Physical           Sciences, 3rd ed.</i>, McGraw-Hill, 2002, p. 39.</p>
+        <h2 class="API"><a name="D_843829869_997308"></a><a name="D_843829869_997308_PageTOC_DERIV_"></a>See Also</h2>
+        <p><a href="DERIVSIG.htm#D_843829869_757924">DERIVSIG</a>, <a href="../I/INT_TABULATED.htm">INT_TABULATED</a>, <a href="../Q/QROMB.htm">QROMB</a>, <a href="../Q/QROMO.htm">QROMO</a>, <a href="../Q/QSIMP.htm">QSIMP</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: G">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>GAUSSFIT </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="G_list.htm">Routines: G</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">GAUSSFIT</span>
+        </div>
+        <h1 class="Routine"><a name="G_845992557_749954"></a><a name="G_845992557_49956"></a>GAUSSFIT </h1>
+        <p><a name="kanchor1016"></a><a name="kanchor1017"></a>The GAUSSFIT function computes a non-linear least-squares fit to a function <i>f</i>&#160;(<i>x</i>) with from three to six unknown parameters. <i>f</i>&#160;(<i>x</i>) is a linear combination of a Gaussian and a quadratic; the number of terms is controlled by the keyword parameter NTERMS.</p>
+        <p>
+            <img src="../images/ex_gaussfit.png" />
+        </p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>gaussfit.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="G_845992557_871297"></a><a name="G_845992557_871297_PageTOC_GAUSSFIT_"></a>Example</h2>
+        <p>The following example shows how to use GAUSSFIT to fit to four different functions, with NTERMS=3,4,5,6. To simulate actual data, random noise has been added to each function. Save the code in a file named "ex_gaussfit.pro".</p>
+        <p class="Code">; Define the independent variable.</p>
+        <p class="Code">n = 101</p>
+        <p class="Code">x = (FINDGEN(n)-(n/2))/4</p>
+        <p class="Code">; Define the coefficients.</p>
+        <p class="Code">a = [4.0, 1.0, 2.0, 1.0, 0.25, 0.01]</p>
+        <p class="Code">print, 'Expect: ', a</p>
+        <p class="Code">z = (x - a[1])/a[2] ; Gaussian variable</p>
+        <p class="Code">seed = 123321 ; Pick a starting seed value</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">for nterms=3,6 do begin</p>
+        <p class="Code_Indented">; Define the dependent variables. Start with random noise.</p>
+        <p class="Code_Indented">y = 0.4*RANDOMN(seed, n)</p>
+        <p class="Code_Indented">; Use a switch statement so we fall through to each term.</p>
+        <p class="Code_Indented">switch nterms of</p>
+        <p class="Code_Indented">6: y = y + a[5]*x^2</p>
+        <p class="Code_Indented">5: y = y + a[4]*x</p>
+        <p class="Code_Indented">4: y = y + a[3]</p>
+        <p class="Code_Indented">3: y = y + a[0]*exp(-z^2/2)</p>
+        <p class="Code_Indented">endswitch</p>
+        <p class="Code_Indented">; Fit the data to the function, storing coefficients in</p>
+        <p class="Code_Indented">; coeff:</p>
+        <p class="Code_Indented">yfit = GAUSSFIT(x, y, coeff, NTERMS=nterms)</p>
+        <p class="Code_Indented">print, 'Result: ', coeff[0:nterms-1]</p>
+        <p class="Code_Indented">; Plot the original data and the fitted curve:</p>
+        <p class="Code_Indented">p1 = PLOT(x, y, TITLE='nterms='+STRTRIM(nterms,2), $</p>
+        <p class="Code_Indented2">LAYOUT=[4,1,nterms-2], CURRENT=(nterms gt 3), $</p>
+        <p class="Code_Indented2">DIMENSIONS=[800,200], MARGIN=[0.1,0.2,0.1,0.2])</p>
+        <p class="Code_Indented">p2 = PLOT(x, yfit, THICK=2, /OVERPLOT)</p>
+        <p class="Code">endfor</p>
+        <p class="Code">end</p>
+        <p>When this program is compiled and executed, IDL generates the plots at the top of this topic, and then prints the following results:</p>
+        <p class="Code">IDL&gt; .run ex_gaussfit</p>
+        <p class="Code">Expect: 4.00000 1.00000 2.00000 1.00000 0.250000 0.0100000</p>
+        <p class="Code">Result:       3.91262      1.05290      1.99806</p>
+        <p class="Code">Result:       4.04331      1.03996      2.06383     0.983630</p>
+        <p class="Code">Result:       4.24642      1.04692      1.95604     0.959738     0.242130</p>
+        <p class="Code">Result:       3.74969     0.934981      2.02861      1.10497     0.251669   0.00969010</p>
+        <h2 class="API"><a name="G_845992557_749966"></a><a name="G_845992557_749966_PageTOC_GAUSSFIT_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = GAUSSFIT( <i>X</i>, <i>Y</i> [,&#160;<i>A</i>] [,&#160;<a href="#G_845992557_881490" class="selected">CHISQ</a>=<i>variable</i>] [,&#160;<a href="#G_845992557_841704" class="selected">ESTIMATES</a>=<i>array</i>] [,&#160;<a href="#G_845992557_841712" class="selected">MEASURE_ERRORS</a>=<i>vector</i>] [,&#160;<a href="#G_845992557_889863" class="selected">NTERMS</a>=<i>integer</i>{3 to 6}] [,&#160;<a href="#G_845992557_881498" class="selected">SIGMA</a>=<i>variable</i>] [,&#160;<a href="#G_845992557_881500" class="selected">YERROR</a>=<i>variable</i>])</p>
+        <h2 class="API"><a name="G_845992557_884390"></a><a name="G_845992557_58522"></a>Return Value</h2>
+        <p>The result is a vector with the same length as <i>X</i> that contains the function <i>f(x)</i> evaluated at each <i>X</i> value. The coefficients of the fit are returned in the argument <i>A</i>.</p>
+        <h2 class="API"><a name="G_845992557_925882"></a><a name="G_845992557_749968_PageTOC_GAUSSFIT_"></a>Arguments</h2>
+        <h3 class="Argument">X</h3>
+        <p>An <i>n</i>-element vector containing the independent variable values. <i>X</i> may be of type integer, floating point, or double-precision floating-point.</p>
+        <h3 class="Argument">Y</h3>
+        <p>A vector of dependent variables, the same length as <i>X</i>.</p>
+        <h3 class="Argument">A</h3>
+        <p>A named variable that will contain the coefficients <i>A</i> of the fit.</p>
+        <h2 class="API"><a name="G_845992557_841703"></a><a name="G_845992557_841703_PageTOC_GAUSSFIT_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="G_845992557_881490"></a><a name="G_845992557_881490_Keywords_GAUSSFIT__"></a>CHISQ</h3>
+        <p>Set this keyword to a named variable that will contain the value of the reduced chi-square goodness-of-fit statistic.</p>
+        <h3 class="Keyword"><a name="G_845992557_841704"></a><a name="G_845992557_841704_Keywords_GAUSSFIT__"></a>ESTIMATES</h3>
+        <p>Set this keyword equal to an array of starting estimates for the parameters of the equation. If the NTERMS keyword is specified, the ESTIMATES array should have NTERMS elements. If NTERMS is not specified, the ESTIMATES array should have six elements. If the ESTIMATES array is not specified, estimates are calculated by first subtracting a constant (if NTERMS &gt;= 4) or a linear term (if NTERMS &gt;= 5), and then forming a simple estimate of the Gaussian coefficients.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If ESTIMATES[2] (the Gaussian width) is zero, then GAUSSFIT will automatically compute a best guess for the starting value for this term.</p>
+        <h3 class="Keyword"><a name="G_845992557_841712"></a><a name="G_845992557_841712_Keywords_GAUSSFIT__"></a>MEASURE_ERRORS</h3>
+        <p>Set this keyword to a vector containing standard measurement errors for each point <i>Y</i>[<i>i</i>]. This vector must be the same length as <i>X</i> and <i>Y</i>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For Gaussian errors (e.g., instrumental uncertainties), MEASURE_ERRORS should be set to the standard deviations of each point in <i>Y</i>. For Poisson or statistical weighting, MEASURE_ERRORS should be set to SQRT(<i>Y</i>).</p>
+        <h3 class="Keyword"><a name="G_845992557_889863"></a><a name="G_845992557_889863_Keywords_GAUSSFIT__"></a>NTERMS</h3>
+        <p>Set this keyword to an integer value between three and six to specify the function to be used for the fit. The values correspond to the functions shown below. In all cases: </p>
+        <h4>NTERMS=6 </h4>
+        <p>
+            <img src="../../images/13_19.jpg" />
+        </p>
+        <h4>NTERMS=5</h4>
+        <p>
+            <img src="../../images/13_20.jpg" />
+        </p>
+        <h4>NTERMS=4</h4>
+        <p>
+            <img src="../../images/13_21.jpg" />
+        </p>
+        <h4>NTERMS=3</h4>
+        <p>
+            <img src="../../images/13_22.jpg" />
+        </p>
+        <p>For all of these cases, <b>z</b> is defined as,</p>
+        <p>
+            <img src="../../images/13_18.jpg" />
+        </p>
+        <p>NTERMS=6 is the default setting. Here, A<sub>0</sub> is the height of the Gaussian, A<sub>1</sub> is the center of the Gaussian, A<sub>2</sub> is the width (the standard deviation) of the Gaussian, A<sub>3</sub> is the constant term, A<sub>4</sub> is the linear term, and A<sub>5</sub> is the quadratic term.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>The full width at half maximum (FWHM) of the Gaussian may be computed as 2*SQRT(2*ALOG(2))*A2.</p>
+        <h3 class="Keyword"><a name="G_845992557_881498"></a><a name="G_845992557_881498_Keywords_GAUSSFIT__"></a>SIGMA</h3>
+        <p>Set this keyword to a named variable that will contain the 1-sigma error estimates of the returned parameters.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If MEASURE_ERRORS is omitted, then you are assuming that a polynomial is the correct model for your data, and therefore, no independent goodness-of-fit test is possible. In this case, the values returned in SIGMA are multiplied by SQRT(CHISQ/(<i>N</i>*<i>M</i>)), where <i>N</i> is the number of points in <i>X</i>, and <i>M</i> is the number of coefficients. See Section 15.2 of <i>Numerical Recipes in C (Second Edition)</i> for details.</p>
+        <h3 class="Keyword"><a name="G_845992557_881500"></a><a name="G_845992557_881500_Keywords_GAUSSFIT__"></a>YERROR</h3>
+        <p>Set this keyword to a named variable that will contain the standard error between YFIT and Y.</p>
+        <h2 class="API"><a name="G_845992557_34757"></a><a name="G_845992557_34757_PageTOC_GAUSSFIT_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">
+                        <p>5.6</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">
+                        <p>Added CHISQ, SIGMA, and YERROR keywords</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added MEASURE_ERRORS keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="G_845992557_881340"></a><a name="G_845992557_881340_PageTOC_GAUSSFIT_"></a>See Also</h2>
+        <p><a href="../C/COMFIT.htm#C_854643309_53189">COMFIT</a>, <a href="../C/CURVEFIT.htm#C_854643309_749660">CURVEFIT</a>, <a href="GAUSS2DFIT.htm#G_845992557_197913">GAUSS2DFIT</a>, <a href="../P/POLY_FIT.htm#P_817877613_753815">POLY_FIT</a>, <a href="../R/REGRESS.htm#R_822202989_1102676">REGRESS</a>, <a href="../S/SFIT.htm#S_820040301_36073">SFIT</a>, <a href="../S/SVDFIT.htm#S_820040301_154010">SVDFIT</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

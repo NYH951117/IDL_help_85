@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: L">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>LABEL_REGION </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="L_list.htm">Routines: L</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">LABEL_REGION</span>
+        </div>
+        <h1 class="Routine"><a name="L_826528365_918813"></a><a name="kanchor1644"></a><a name="L_826528365_67218"></a>LABEL_REGION </h1>
+        <p>The LABEL_REGION function consecutively labels all of the regions, or blobs, of a bi-level image with a unique region index. This process is sometimes called “blob coloring”. A region is a set of non-zero pixels within a neighborhood around the pixel under examination.</p>
+        <p>The argument for LABEL_REGION is an <i>n</i>-dimensional bi-level integer type array—only zero and non-zero values are considered. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Due to the 3x3 kernel used to identify regions, pixels located along the edge of an image (for example, a pixel that is within 1 pixel of the edge), may not be identified as a region.</p>
+        <p>Statistics on each of the regions may be easily calculated using the HISTOGRAM function as shown in the examples below.</p>
+        <h2 class="API"><a name="L_826528365_930490"></a><a name="L_826528365_930490_PageTOC_LABEL_REGION_"></a>Examples</h2>
+        <p><a name="L_826528365_677396_Keywords_LABEL_REGION__"></a>
+            <img src="../images/ex_labelregion.png" />
+        </p>
+        <p>This example counts the number of distinct regions within an image, and their population. Note that region 0 will contain the edges of the shapes, while region 1 contains the background pixels of the image.</p>
+        <p class="Code">file = FILEPATH('rbcells.jpg', $</p>
+        <p class="Code_Indented">SUBDIR=['examples', 'data'])</p>
+        <p class="Code">READ_JPEG, file, img</p>
+        <p class="Code">; Use Sobel for edge detection,</p>
+        <p class="Code">; pick a nice threshold and convert to a 0/1 mask.</p>
+        <p class="Code">sbl = SOBEL(img) lt 200</p>
+        <p class="Code">; Surround the mask with a two-pixel border, so that</p>
+        <p class="Code">; all of the outside regions are marked as background.</p>
+        <p class="Code">sbl[*,0:1] = 1</p>
+        <p class="Code">sbl[*,-2:-1] = 1</p>
+        <p class="Code">sbl[0:1,*] = 1</p>
+        <p class="Code">sbl[-2:-1,*] = 1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Label all of the individual regions.</p>
+        <p class="Code">; label[0] will be the edges,</p>
+        <p class="Code">; label[1] will be the background, etc.</p>
+        <p class="Code">label = LABEL_REGION(sbl)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Count number of pixels in each region,</p>
+        <p class="Code">; ignore background and edges</p>
+        <p class="Code">h = HISTOGRAM(label, MIN=2, REVERSE_INDICES=r)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Turn the edges into the highest value, so we can see them.</p>
+        <p class="Code">label[WHERE(label eq 0)] = MAX(label) + 1</p>
+        <p class="Code">i1 = IMAGE(img, LAYOUT=[4,1,1], DIM=[900,300], RGB_TABLE=56)</p>
+        <p class="Code">i2 = IMAGE(255b*(~sbl), LAYOUT=[4,1,2], /CURRENT, RGB_TABLE=56)</p>
+        <p class="Code">i3 = IMAGE(label, LAYOUT=[4,1,3], /CURRENT, $</p>
+        <p class="Code_Indented">RGB_TABLE=COLORTABLE(39,/REVERSE))</p>
+        <p class="Code">p = PLOT(REVERSE(h[SORT(h)]), XRANGE=[0,100], $</p>
+        <p class="Code_Indented">LAYOUT=[4,1,4], /CURRENT, MARGIN=[0.15,0.25,0.05,0.25], $</p>
+        <p class="Code_Indented">/HISTOGRAM, /FILL_BACKGROUND, $</p>
+        <p class="Code_Indented">XTITLE='Region', TITLE='# of pixels in each region')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Print the mean and standard deviation of each region</p>
+        <p class="Code">FOR i=0, N_ELEMENTS(h)-1 DO if h[i] gt 200 then $</p>
+        <p class="Code_Indented">PRINT, 'Region ', i, ', Population = ', h[i], $</p>
+        <p class="Code_Indented">', Standard Deviation = ', STDEV(img[r[r[i]:r[i+1]-1]], mean), $</p>
+        <p class="Code_Indented">', Mean = ', mean</p>
+        <p>IDL prints:</p>
+        <p class="Code">Region        6, Population =          563, Standard Deviation =       48.3602, Mean =       141.748</p>
+        <p class="Code">Region       41, Population =          665, Standard Deviation =       46.2527, Mean =       137.786</p>
+        <p class="Code">Region       85, Population =          678, Standard Deviation =       43.7675, Mean =       142.531</p>
+        <p class="Code">...</p>
+        <h2 class="API"><a name="L_826528365_677390"></a><a name="L_826528365_677390_PageTOC_LABEL_REGION_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = LABEL_REGION( <i>Data</i> [,&#160;/<a href="#L_826528365_930484" class="selected">ALL_NEIGHBORS</a>] [,&#160;/<a href="#L_826528365_677395" class="selected">ULONG</a>] )</p>
+        <h2 class="API"><a name="L_826528365_962209"></a><a name="L_826528365_99223"></a>Return Value</h2>
+        <p>The result of the function is an unsigned integer array of the same dimensions with each pixel containing its region index. A region index of zero indicates that the original pixel was zero and belongs to no region. Output values range from 0 to the number of regions.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the number of regions exceeds the maximum unsigned integer (65535) then IDL will throw an error. In this case you should call LABEL_REGION again with the ULONG keyword.</p>
+        <h2 class="API"><a name="L_826528365_677392"></a><a name="L_826528365_677392_PageTOC_LABEL_REGION_"></a>Arguments</h2>
+        <h3 class="Argument">Data</h3>
+        <p>A <i>n</i>-dimensional image to be labeled. <i>Data</i> is converted to integer type if necessary. Pixels at the edges of <i>Data</i> are considered to be zero.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>If <i>Data</i> is a temporary array (an expression) of type integer (or type long if ULONG is set) then LABEL_REGION will be able to re-use the array for the result and avoid using extra memory. See <a href="../T/TEMPORARY.htm">TEMPORARY</a> for details on converting an array to a temporary variable.</p>
+        <h2 class="API"><a name="L_826528365_828026"></a><a name="L_826528365_828026_PageTOC_LABEL_REGION_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="L_826528365_930484"></a><a name="L_826528365_930484_Keywords_LABEL_REGION__"></a>ALL_NEIGHBORS</h3>
+        <p>Set this keyword to indicate that all adjacent neighbors to a given pixel should be searched. (This is sometimes called 8-neighbor searching when the image is 2-dimensional). The default is to search only the neighbors that are exactly one unit in distance from the current pixel (sometimes called 4-neighbor searching when the image is 2-dimensional).</p>
+        <h3 class="Keyword"><a name="L_826528365_677395"></a><a name="L_826528365_677395_Keywords_LABEL_REGION__"></a>ULONG</h3>
+        <p>Set this keyword to specify that the output array should be an unsigned long integer. You should use this keyword if you suspect that the number of regions will be greater than 65535. Note however that setting this keyword will produce an output array that uses twice as much memory.</p>
+        <h2 class="API"><a name="L_826528365_825365"></a><a name="L_826528365_825365_PageTOC_LABEL_REGION_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre 6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Deprecated the EIGHT keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="L_826528365_952473"></a><a name="L_826528365_952473_PageTOC_LABEL_REGION_"></a>See Also</h2>
+        <p><a href="../H/HISTOGRAM.htm#H_835179117_677165">HISTOGRAM</a>, <a href="../S/SEARCH2D.htm#S_820040301_758939">SEARCH2D</a>, <a href="../S/SOBEL.htm">SOBEL</a>, <a href="../T/TEMPORARY.htm">TEMPORARY</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

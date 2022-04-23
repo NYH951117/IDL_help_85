@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: R">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>REGION_GROW </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="R_list.htm">Routines: R</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">REGION_GROW</span>
+        </div>
+        <h1 class="Routine"><a name="R_822202989_1086451"></a><a name="kanchor2266"></a><a name="R_822202989_18676"></a>REGION_GROW </h1>
+        <p>The REGION_GROW function performs region growing for a given region within an N-dimensional array by finding all pixels within the array that are connected neighbors to the region pixels and that fall within provided constraints. The constraints are specified either as a threshold range (a minimum and maximum pixel value) or as a multiple of the standard deviation of the region pixel values. If the threshold is used (this is the default), the region is grown to include all connected neighboring pixels that fall within the given threshold range. If the standard deviation multiplier is used, the region is grown to include all connected neighboring pixels that fall within the range of the mean (of the region's pixel values) plus or minus the given multiplier times the sample standard deviation. </p>
+        <h2 class="API">Example</h2>
+        <p>
+            <img src="../images/region_grow_ex1.gif" />
+        </p>
+        <p>The following lines create the map shown at the top of this topic.</p>
+        <p class="Code">; Load an image.</p>
+        <p class="Code">fname = FILEPATH('muscle.jpg', SUBDIR=['examples','data'])</p>
+        <p class="Code">READ_JPEG, fname, img</p>
+        <p class="Code">imgDims = SIZE(img, /DIMENSIONS)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Define original region pixels.</p>
+        <p class="Code">x0 = 550</p>
+        <p class="Code">y0 = 300</p>
+        <p class="Code">x = INDGEN(16*16) MOD 16 + x0</p>
+        <p class="Code">y = INDGEN(16*16) / 16 + y0</p>
+        <p class="Code">roiPixels = x + y * imgDims[0]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Grow the region.</p>
+        <p class="Code">newROIPixels = REGION_GROW(img, roiPixels, $</p>
+        <p class="Code">&#160;&#160;STDDEV_MULTIPLIER=4)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Draw the original image</p>
+        <p class="Code">im1 = IMAGE(img, LAYOUT=[1,2,1], DIM=[700, 900])</p>
+        <p class="Code">p = POLYGON(x0+[0,15,15,0], y0+[0,0,15,15], $</p>
+        <p class="Code">&#160;&#160;COLOR='Lime', FILL_COLOR='Lime', /DATA)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Color the grown region, and draw the new image.</p>
+        <p class="Code">img1 = img</p>
+        <p class="Code">img1[newROIPixels] = 255b</p>
+        <p class="Code">imgTrue = REBIN(img, imgDims[0], imgDims[1], 3)</p>
+        <p class="Code">imgTrue[*,*,1] = img1</p>
+        <p class="Code">im2 = IMAGE(imgTrue, LAYOUT=[1,2,2], /CURRENT)</p>
+        <h2 class="API"><a name="R_822202989_1086455"></a><a name="R_822202989_1086455_PageTOC_REGION_GROW_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result </i>= REGION_GROW(<i>Array</i>, <i>ROIPixels</i> [,&#160;/<a href="#R_822202989_1086463" class="selected">ALL_NEIGHBORS</a>] [,&#160;/<a href="#R_822202989_1168470" class="selected">NAN</a>] [,&#160;<a href="#R_822202989_1086465" class="selected">STDDEV_MULTIPLIER</a>=<i>value</i> | <a href="#R_822202989_1086469" class="selected">THRESHOLD</a>=[<i>min</i>,<i>max</i>]] )</p>
+        <h2 class="API"><a name="R_822202989_1135180"></a><a name="R_822202989_15472"></a>Return Value</h2>
+        <p>REGION_GROW returns the vector of array indices that represent pixels within the grown region. The grown region will not include pixels at the edges of the input array. If no pixels fall within the grown region, this function will return the value -1.</p>
+        <h2 class="API"><a name="R_822202989_1086457"></a><a name="R_822202989_1086457_PageTOC_REGION_GROW_"></a>Arguments</h2>
+        <h3 class="Argument">Array</h3>
+        <p>An N-dimensional array of data values. The region will be grown according to the data values within this array.</p>
+        <h3 class="Argument">ROIPixels</h3>
+        <p>A vector of indices into <i>Array</i> that represent the initial region that is to be grown.</p>
+        <h2 class="API"><a name="R_822202989_1086462"></a><a name="R_822202989_1086462_PageTOC_REGION_GROW_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="R_822202989_1086463"></a><a name="R_822202989_1086463_Keywords_REGION_GROW__"></a>ALL_NEIGHBORS</h3>
+        <p>Set this keyword to indicate that all adjacent neighbors to a given pixel should be considered during region growing (sometimes known as 8-neighbor searching when the array is two-dimensional). The default is to search only the neighbors that are exactly one unit in distance from the current pixel (sometimes known as 4-neighbor searching when the array is two-dimensional).</p>
+        <h3 class="Keyword"><a name="R_822202989_1168470"></a><a name="R_822202989_1168470_Keywords_REGION_GROW__"></a>NAN</h3>
+        <p>Set this keyword to cause the routine to check for occurrences of the IEEE floating-point values <i>NaN</i> or <i>Infinity</i> in the input data. Elements with the value <i>NaN</i> or <i>Infinity</i> are treated as missing data.</p>
+        <h3 class="Keyword"><a name="R_822202989_1086465"></a><a name="R_822202989_1086465_Keywords_REGION_GROW__"></a>STDDEV_MULTIPLIER</h3>
+        <p>Set this keyword to a scalar value that serves as the multiplier of the sample standard deviation of the original region pixel values. The expanded region includes neighboring pixels that fall within the range of the mean of the region’s pixel values plus or minus the given multiplier times the sample standard deviation as follows:</p>
+        <p>Mean +/- StdDevMultiplier * StdDev</p>
+        <p>This keyword is mutually exclusive of THRESHOLD. If both keywords are specified, a warning message will be issued and the THRESHOLD value will be used.</p>
+        <h3 class="Keyword"><a name="R_822202989_1086469"></a><a name="R_822202989_1086469_Keywords_REGION_GROW__"></a>THRESHOLD</h3>
+        <p>Set this keyword to a two-element vector, [<i>min</i>,<i>max</i>], of the inclusive range within which the pixel values of the grown region must fall. The default is the range of pixel values within the initial region. This keyword is mutually exclusive of STDDEV_MULTIPLIER. If both keywords are specified, a warning message will be issued and the THRESHOLD value will be used.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If neither keyword is specified, THRESHOLD is used by default. The range of threshold values is based upon the pixel values within the original region and therefore does not have to be provided.</p>
+        <h2 class="API"><a name="R_822202989_1093059"></a><a name="R_822202989_1093059_PageTOC_REGION_GROW_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>5.5</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added NAN keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

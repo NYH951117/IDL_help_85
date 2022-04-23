@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Files and Input Output">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDL and Input/Output</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="FilesIO.htm">IDLInternals - Files and Input Output</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDL and Input/Output</span>
+        </div>
+        <h1><a name="kanchor5487"></a>IDL and Input/Output</h1>
+        <p>IDL provides extensive Input/Output facilities at the user level. Internally, it uses native Input/Output facilities (UNIX system calls or Windows system API) in addition to the standard C library stream package (stdio). The choice of which facilities to use are made based on the target platform and the requested features for the file.</p>
+        <p>Most external code linked with IDL (<a href="../Using CALL_EXTERNAL/CALL_EXTERNAL.htm">CALL_EXTERNAL</a>, system routines, etc.) should not do Input/Output directly for the following reasons:</p>
+        <ul>
+            <li value="1">Part of the IDL philosophy is that Input/Output is handled by dedicated I/O facilities provided by IDL, and that computational code should accept data from IDL variables and return results in the same way. This gives the user of your code the freedom and flexibility to save their data in any of the many forms supported by IDL’s core I/O facilities, and frees you from writing complex and error prone input/output code.</li>
+            <li value="2">Using IDL’s Input/Output facilities frees you from having to code around platform specific differences in I/O behavior.</li>
+            <li value="3">Input/Output from languages other than C often require runtime library support code to run at program startup before your code and successfully perform I/O. For example, Fortran Input/Output may depend on a Fortran runtime subsystem having been initialized. IDL, as a C program, does not perform initialization of such libraries for other languages. If you know enough about your Fortran system, you can often supply the missing initialization call, but such workarounds are usually not well documented, and are inherently platform specific.</li>
+        </ul>
+        <p>For the reasons above, only minimal I/O abilities are available from IDL's internals, and only for files that explicitly use the standard C stdio library. Therefore, if your application must directly perform I/O to a file managed by IDL, it is necessary to use the standard C library streampackage (stdio) by specifying the <b>IDL_F_STDIO</b> flag to <b>IDL_FileOpen()</b>. Most of the routines associated with the standard C library I/O package can be used in the normal manner.</p>
+        <h2 class="API">Disallowed C Library Routines and Their IDL Counterparts</h2>
+        <p>The C library routines listed in the following table should not be used; use the IDL-specific functions instead:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>C-Library Function</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>IDL&#160;Function</p>
+                    </th>
+                </tr>
+            </thead>
+            <tr>
+                <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                    <p>fclose()</p>
+                </td>
+                <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                    <p><a href="CloseFiles.htm">IDL_FileClose()</a>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                    <p>fdopen()</p>
+                </td>
+                <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                    <p><a href="OpenFiles.htm">IDL_FileOpen()</a>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                    <p>feof()</p>
+                </td>
+                <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                    <p><a href="DetectEOF.htm">IDL_FileEOF()</a>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                    <p>fflush()</p>
+                </td>
+                <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                    <p><a href="FlushBuffData.htm">IDL_FileFlushUnit()</a>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                    <p>fopen()</p>
+                </td>
+                <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                    <p><a href="OpenFiles.htm">IDL_FileOpen()</a>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                    <p>freopen()</p>
+                </td>
+                <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                    <p><a href="OpenFiles.htm">IDL_FileOpen()</a>
+                    </p>
+                </td>
+            </tr>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In order to access a file opened using <b>IDL_FileOpen()</b> in this manner, you must ensure that it is stdio compatible by specifying <b>IDL_F_STDIO</b> as part of the extra_flags argument to <b>IDL_FileOpen()</b>. Failure to do this will cause your code to fail to execute as expected.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: H">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>HEAP_FREE </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="H_list.htm">Routines: H</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">HEAP_FREE</span>
+        </div>
+        <h1 class="Routine"><a name="H_835179117_877451"></a><a name="H_835179117_40782"></a><a name="H_835179117_79017"></a>HEAP_FREE </h1>
+        <p><a name="kanchor1461"></a><a name="kanchor1462"></a><a name="kanchor1463"></a><a name="kanchor1464"></a>The HEAP_FREE procedure recursively frees all heap variables (pointers or objects) referenced by its input argument. This routine examines the input variable, including all array elements and structure fields. When a valid pointer or object reference is encountered, that heap variable is marked for removal. Pointer references are then recursively examined for additional heap variables to be freed. (HEAP_FREE does not descend into object references; freeing resources contained by an object should be handled by the object's Cleanup method.) Finally, all heap variables identified by HEAP_FREE are released; pointer heap variables as if the PTR_FREE procedure was called, and object heap variables as if the OBJ_DESTROY procedure was called.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If automatic garbage collection is enabled, heap variables are freed automatically when their reference counts reach zero. Automatic garbage collection is a more robust mechanism for finding and freeing orphaned heap variables than the older HEAP_FREE procedure, since automatic garbage collection will only free heap variables that have no remaining references. </p>
+        <p>See <a href="../../Creating IDL Programs/Components of the IDL Language/Automatic_Garbage_Collec.htm#pointers_3224653378_1018570">Automatic Garbage Collection</a>for details.)</p>
+        <p>As with the related HEAP_GC procedure, there are some disadvantages to using HEAP_FREE:</p>
+        <ul>
+            <li value="1">When freeing object heap variables, HEAP_FREE calls OBJ_DESTROY without supplying any plain arguments or keywords. It is the responsibility of the object’s Cleanup method to release any heap variables encapsulated in the object itself; HEAP_FREE will not “descend” into an object to free heap variables.</li>
+        </ul>
+        <p class="indent">Depending on the objects being released, calling OBJ_DESTROY (and thus the object’s Cleanup method) without parameters may not be sufficient. In such cases, call OBJ_DESTROY explicitly with the proper arguments rather than using HEAP_FREE.</p>
+        <ul>
+            <li value="1">HEAP_FREE releases the referenced heap variables in an unspecified order which depends on the current state of the internal data structure used by IDL to hold them. This can be confusing for object destructor methods that expect all of their contained data to be present. If your application requires a specific order for the release of its heap variables, you must explicitly free them in the correct order. HEAP_FREE cannot be used in such cases.</li>
+            <li value="2">The algorithm used by HEAP_FREE to release variables requires examination of every existing heap variable (that is, it is an O(n) algorithm). This may be slow if an IDL session has thousands of current heap variables.</li>
+        </ul>
+        <p>For these reasons, applications should keep careful track of their heap variable usage, and explicitly free them at the proper time (for example, using the object destructor method) rather than resorting to simple-looking but potentially expensive expedients such as HEAP_FREE or HEAP_GC. </p>
+        <p>HEAP_FREE is recommended when:</p>
+        <ul>
+            <li value="1">The data structures involved are highly complex, nested, or variable, and writing cleanup code is difficult and error prone.</li>
+            <li value="2">The data structures are opaque, and the code cleaning up does not have knowledge of the structure.</li>
+        </ul>
+        <h2 class="API"><a name="H_835179117_877479"></a><a name="H_835179117_877479_PageTOC_HEAP_FREE_"></a>Examples</h2>
+        <p class="Code">; Create a structure variable.<br />mySubStructure = {pointer:PTR_NEW(INDGEN(100)), $<br />&#160;&#160;&#160;obj:OBJ_NEW('Idl_Container')}<br />myStructure ={substruct:mySubStructure, $<br />&#160;&#160;&#160;ptrs:[PTR_NEW(INDGEN(10)), PTR_NEW(INDGEN(11))]}<br /><br />;Look at the heap.<br />HELP, /HEAP_VARIABLES<br /><br />; Now free the heap variables contained in myStructure.<br />HEAP_FREE, myStructure, /VERBOSE<br />HELP, /HEAP_VARIABLES</p>
+        <h2 class="API"><a name="H_835179117_877466"></a><a name="H_835179117_877466_PageTOC_HEAP_FREE_"></a>Syntax</h2>
+        <p class="Syntax">HEAP_FREE, <i>Var </i>[, /<a href="#H_835179117_877472" class="selected">OBJ</a>] [, /<a href="#H_835179117_877474" class="selected">PTR</a>] [, /<a href="#H_835179117_877477" class="selected">VERBOSE</a>]</p>
+        <h2 class="API"><a name="H_835179117_877468"></a><a name="H_835179117_877468_PageTOC_HEAP_FREE_"></a>Arguments</h2>
+        <h3 class="Argument">Var</h3>
+        <p>The variable whose data is used as the starting point for heap variables to be freed.</p>
+        <h2 class="API"><a name="H_835179117_877471"></a><a name="H_835179117_877471_PageTOC_HEAP_FREE_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="H_835179117_877472"></a><a name="H_835179117_877472_Keywords_HEAP_FREE__"></a>OBJ</h3>
+        <p>Set this keyword to free object heap variables only.</p>
+        <h3 class="Keyword"><a name="H_835179117_877474"></a><a name="H_835179117_877474_Keywords_HEAP_FREE__"></a>PTR</h3>
+        <p>Set this keyword to free pointer heap variables only.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Setting both the PTR and OBJ keywords is the same as setting neither.</p>
+        <h3 class="Keyword"><a name="H_835179117_877477"></a><a name="H_835179117_877477_Keywords_HEAP_FREE__"></a>VERBOSE</h3>
+        <p>If this keyword is set, HEAP_FREE writes a one line description of each heap variable, in the format used by the HELP procedure, as the variable is released. This is a debugging aid that can be used by program developers to check for heap variable leaks that need to be located and eliminated.</p>
+        <h2 class="API"><a name="H_835179117_877493"></a><a name="H_835179117_877493_PageTOC_HEAP_FREE_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="H_835179117_880150"></a><a name="H_835179117_880150_PageTOC_HEAP_FREE_"></a>See Also</h2>
+        <p><a href="HEAP_GC.htm#H_835179117_852187">HEAP_GC</a>, <a href="HEAP_REFCOUNT.htm#H_835179117_925652">HEAP_REFCOUNT</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

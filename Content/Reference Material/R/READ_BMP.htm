@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: R">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>READ_BMP </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="R_list.htm">Routines: R</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">READ_BMP</span>
+        </div>
+        <h1 class="Routine"><a name="R_822202989_1071023"></a><a name="kanchor2205"></a><a name="kanchor2206"></a><a name="R_822202989_75148"></a>READ_BMP </h1>
+        <p>The READ_BMP function reads a Microsoft Windows Version 3 device independent bitmap file (.BMP) and returns the image. </p>
+        <p>READ_BMP does not handle 1-bit-images or compressed images.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>read_bmp.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>To find information about a potential BMP file before trying to read its data, use the <a href="../Q/QUERY_BMP.htm#Q_815714925_1112741">QUERY_BMP </a>function.</p>
+        <h2 class="API"><a name="R_822202989_843691"></a><a name="R_822202989_843691_PageTOC_READ_BMP_"></a>Examples</h2>
+        <p>To open, read, and display a BMP file named <code>foo.bmp</code> in the current directory and store the color vectors in the variables R, G, and B, enter:</p>
+        <p class="Code">; Read and display an image:</p>
+        <p class="Code">TV, READ_BMP('foo.bmp', R, G, B)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Load its colors:</p>
+        <p class="Code">TVLCT, R, G, B</p>
+        <p>Many applications that use 24-bit BMP files outside IDL expect BMP files to be stored as BGR. For example, enter the following commands.</p>
+        <p class="Code">; Make a red square image:<br />a = BYTARR(3, 200, 200, /NOZERO)<br />a[0, *, *] = 255<br /><br />;View the image:<br />TV, a, /TRUE<br />WRITE_BMP, 'foo.bmp', a</p>
+        <p>If you open the <code>.bmp</code> file in certain bitmap editors, you may find that the square is blue. </p>
+        <p class="Code">image = READ_BMP('foo.bmp')<br /><br />; IDL reads the image back in and interprets it as red:<br />TV, image, /TRUE<br /><br />; Reverse the order of the indices by adding the RGB keyword:<br />image = READ_BMP('foo.bmp', /RGB)<br /><br />; Displays the image in blue:<br />TV, image, /TRUE</p>
+        <h2 class="API"><a name="R_822202989_756097"></a><a name="R_822202989_756097_PageTOC_READ_BMP_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = READ_BMP( <i>Filename</i>, [,&#160;<i>R</i>, <i>G</i>, <i>B</i>] [,&#160;<i>Ihdr</i>] [,&#160;/<a href="#R_822202989_867600" class="selected">RGB</a>] )</p>
+        <h2 class="API"><a name="R_822202989_1103771"></a><a name="R_822202989_95098"></a>Return Value</h2>
+        <p>Returns a byte array containing the image. Dimensions are taken from the BITMAPINFOHEADER of the file. In the case of 4-bit or 8-bit images, the dimensions of the resulting array are (<code>biWidth</code>, <code>biHeight</code>). </p>
+        <p>For 24-bit images, the dimensions are (<code>3</code>, <code>biWidth</code>, <code>biHeight</code>). Color interleaving is blue, green, red; i.e., Result[<i>0,i,j</i>] = blue, Result[<i>1,i,j</i>] = green, etc. The RGB keyword can be used to change the interleaving.</p>
+        <p>For 32-bit images, the dimensions are (<code>4</code>, <code>biWidth</code>, <code>biHeight</code>). Color interleaving is blue, green, red, alpha; i.e., Result[<i>0,i,j</i>] = blue, Result[<i>1,i,j</i>] = green, Result[<i>2,i,j</i>] = red, Result[<i>3,i,j</i>] = alpha. The RGB keyword can be used to change the interleaving.</p>
+        <h2 class="API"><a name="R_822202989_756099"></a><a name="R_822202989_756099_PageTOC_READ_BMP_"></a>Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>A scalar string specifying the full path name of the bitmap file to read.</p>
+        <h3 class="Argument">R, G, B</h3>
+        <p>Named variables that will contain the color tables from the file. There 16 elements each for 4 bit images, 256 elements each for 8 bit images. Color tables are not defined or used for 24-bit or 32-bit images.</p>
+        <h3 class="Argument">Ihdr</h3>
+        <p>A named variable that will contain a structure holding the BITMAPINFOHEADER from the file. Tag names are as defined in the Microsoft Developer Network Library; see <a href="http://msdn.microsoft.com/en-us/library/ms532290.aspx">http://msdn.microsoft.com/en-us/library/ms532290.aspx</a> for details.</p>
+        <h2 class="API"><a name="R_822202989_867599"></a><a name="R_822202989_867599_PageTOC_READ_BMP_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="R_822202989_867600"></a><a name="R_822202989_867600_Keywords_READ_BMP__"></a>RGB</h3>
+        <p>If this keyword is set, color interleaving of 16-, 24-, and 32-bit images will be R, G, B [, A] i.e., Result[<i>0,i,j</i>] = red, Result[<i>1,i,j</i>] = green, Result[2,<i>i</i>,<i>j</i>] = blue, and if there is an alpha channel, Result[3,<i>i</i>,<i>j</i>] = alpha.</p>
+        <h2 class="API"><a name="R_822202989_756110"></a><a name="R_822202989_756110_PageTOC_READ_BMP_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre-4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Add support for 32-bit (RGBA) bitmaps files</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="R_822202989_1092924"></a><a name="R_822202989_1092924_PageTOC_READ_BMP_"></a>See Also</h2>
+        <p><a href="../I/IOPEN.htm">IOPEN</a>, <a href="../W/WRITE_BMP.htm#W_811389549_756424">WRITE_BMP</a>, <a href="../Q/QUERY_BMP.htm#Q_815714925_1112741">QUERY_BMP </a></p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

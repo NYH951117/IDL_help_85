@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Error Handling">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Issuing Error Messages</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="ErrorHandling.htm">IDLInternals - Error Handling</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Issuing Error Messages</span>
+        </div>
+        <h1><a name="kanchor5472"></a>Issuing Error Messages</h1>
+        <p>Errors are reported using one of the following functions:</p>
+        <p>•	<b>IDL_Message()</b></p>
+        <p>•	<b>IDL_MessageFromBlock()</b></p>
+        <p>•	<b>IDL_MessageSyscode()</b></p>
+        <p>•	<b>IDL_MessageSyscodeFromBlock()</b></p>
+        <p>These functions are patterned after the standard C library <b>printf()</b> function. They are really the same function, differing in which message block the error is issued from (the <b>FromBlock</b> versions allow you to specify the block) and their reporting of system errors that might accompany IDL errors (the Syscode versions allow you to specify a system error). IDL documentation often refers to <b>IDL_Message()</b>. This should be understood to be a generic reference to any of these four functions.</p>
+        <p class="Code">void IDL_Message(int code, int action, ...)</p>
+        <p class="Code">void IDL_MessageFromBlock(IDL_MSG_BLOCK block,int code, int action, ...)</p>
+        <p class="Code">void IDL_MessageSyscode(int code, IDL_MSG_SYSCODE_T syscode_type, int syscode, int action, ...)</p>
+        <p class="Code">void IDL_MessageSyscodeFromBlock(IDL_MSG_BLOCK block, int code, IDL_MSG_SYSCODE_T syscode_type, int syscode, int action, ...)</p>
+        <h2 class="API">Arguments</h2>
+        <h3>block</h3>
+        <p>Pointer to the IDL message block from which the error should be issued. If block is a NULL pointer, the default IDL core block (<b>IDL_MBLK_CORE</b>) is used.</p>
+        <h3>code</h3>
+        <p>This is the error code associated with the error message to be issued. There are two error codes in the default IDL core block (<b>IDL_MBLK_CORE</b>) that are available to programmers adding system routines to IDL. The use of these codes is described below. See <a href="#Error" class="selected">“Error Codes,”</a> below.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For any significant development involving an IDL system routine, we recommend your code be packaged as a Dynamically Loadable Module (DLM), and that your DLM define a message block to contain its errors instead of using the GENERIC core block messages.</p>
+        <h3>syscode_type</h3>
+        <p><b>IDL_Message()</b> always issues a single-line error message that describes the problem from IDL’s point of view. Often, however, there is an underlying system reason for the error that should also be displayed to give the user a complete picture of what went wrong. For example, the IDL view of the problem might be “Unable to open file,” while the underlying system reason for the error is “no such directory.” The <b>IDL_MessageSyscode()</b> functions allow you to include the relevant system error code, and have it incorporated into the IDL message on a second line of output. There are several different types of system error code that can be specified. The <b>syscode_type</b> argument is used to tell <b>IDL_MessageSyscode()</b> which type of system error is present:</p>
+        <h4>IDL_MSG_SYSCODE_NONE</h4>
+        <p>Indicates that there is no system error. In this case, the <b>syscode</b> argument is ignored, and <b>IDL_MessageSyscode()</b> is functionally equivalent to <b>IDL_Message()</b>.</p>
+        <h4>IDL_MSG_SYSCODE_ERRNO </h4>
+        <p>The UNIX operating system uses a system provided global variable named <b>errno</b> for communicating system level errors. Whenever a call to a system function fails, it returns a value of -1 and puts an error code into <b>errno</b> that specifies the reason for the failure. Other functions, such as those provided by the standard C library, do not set <b>errno</b>. The system documentation (man pages) describes which functions do and do not set <b>errno</b>, and the rules for interpreting its value.</p>
+        <p>You should specify <b>IDL_MSG_SYSCODE_ERRNO</b> only if you are calling <b>IDL_MessageSyscode()</b> as the result of a failed function that is documented to set errno on your target platform. Otherwise, <b>errno</b> might contain an unrelated garbage value resulting in an incorrect error message. When specifying <b>IDL_MSG_SYSCODE_ERRNO</b>, you should supply the current value of errno as the syscode argument to <b>IDL_MessageSyscode()</b>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The Microsoft Windows operating system has <b>errno</b> for compatibility with the expectations of C programmers, but typically does not set it. On this operating system, specifying <b>IDL_MSG_SYSCODE_ERRNO</b> may have no effect.</p>
+        <h4>IDL_MSG_SYSCODE_WIN (Microsoft Windows Only) </h4>
+        <p>Microsoft Windows system error codes. The value supplied to the <b>syscode</b> argument to <b>IDL_MessageSyscode()</b> should be a system error code, as returned by the Windows <b>GetLastError()</b> system function.</p>
+        <h4>IDL_MSG_SYSCODE_WINSOCK (Microsoft Windows Only) </h4>
+        <p>Microsoft Windows winsock error codes. The value supplied to the <b>syscode</b> argument to <b>IDL_MessageSyscode()</b> should be a system error code, as returned by the Windows <b>WSAGetLastError()</b> system function</p>
+        <h3>syscode</h3>
+        <p>Value of the system error code that should be reported. This argument is ignored if its value is zero (0), or if <b>syscode_type</b> is <b>IDL_MSG_SYSCODE_NONE</b>. Otherwise, it is interpreted as an error code of the type given by <b>syscode_type</b>, and the text of the specified system error will be output along with the IDL message on a separate second line.</p>
+        <h3>action</h3>
+        <p><b>IDL_Message()</b> can take a number of different actions after issuing the error message. The action to take is specified by the action argument:</p>
+        <h4>IDL_MSG_RET</h4>
+        <p>Use this argument to make <b>IDL_Message()</b> return to the caller after issuing the error message. In this case, the calling routine can either continue or return to the interpreter as it sees fit.</p>
+        <h4>IDL_MSG_INFO</h4>
+        <p>Use this argument to issue a message that is not an error, but is simply informational in nature. The message is output and <b>IDL_Message()</b> returns to the caller. Normally, <b>IDL_Message()</b> sets the values of IDL’s <a href="../../Creating IDL Programs/Appendices/Error_Handling_System_Va.htm#sysvars_272074529_1003013">!ERROR_STATE</a> system variables, but not in this case.</p>
+        <h4>IDL_MSG_EXIT</h4>
+        <p>Use this argument to cause the IDL process to exit after the message is issued. This code should never be used in a system function or procedure—it is intended for use in other sections of the system.</p>
+        <h4>IDL_MSG_LONGJMP</h4>
+        <p>Use this argument to cause <b>IDL_Message()</b> to exit directly back to the interpreter after issuing the message. In this case, <b>IDL_Message()</b> does not return to its caller. It is an error to use this action code in code not called by the IDL interpreter since the resulting call to <b>longjmp()</b> will be invalid.</p>
+        <h4>IDL_MSG_IO_LONGJMP</h4>
+        <p>This action code is exactly like <b>IDL_MSG_LONGJMP</b> except that it is issued in response to an input/output error. This code is only used by the I/O module. User written system routines should use the existing I/O routines, so they do not need to use this action.</p>
+        <h3>Modifier Codes</h3>
+        <p>In addition, the following modifier codes can be ORed into the action code. They modify the normal behavior of <b>IDL_Message()</b>:</p>
+        <h4>IDL_MSG_ATTR_NOPRINT</h4>
+        <p>Suppress the printing of the error message, but do everything else in the normal way.</p>
+        <h4>IDL_MSG_ATTR_MORE</h4>
+        <p>Use paging in the style of the UNIX more command to display the output. This option exists primarily for use by the IDL compiler, and is unlikely to be of interest to authors of system routines.</p>
+        <h4>IDL_MSG_ATTR_NOPREFIX</h4>
+        <p>Normally, <b>IDL_Message()</b> prefixes the output message with the string contained in IDL’s <a href="../../Creating IDL Programs/Appendices/Error_Handling_System_Va.htm#!MSG_PREFIX">!MSG_PREFIX</a> system variable. <b>IDL_MSG_ATTR_NOPREFIX</b> suppresses this prefix string.</p>
+        <h4>IDL_MSG_ATTR_QUIET</h4>
+        <p>If the <b>IDL_MSG_INFO</b> action has been specified and this bit mask has been included, and the IDL user has IDL’s <a href="../../Creating IDL Programs/Appendices/IDL_Environment_System_V.htm#sysvars_272074529_997106">!QUIET</a> system variable, <b>IDL_Message()</b> returns without issuing a message.</p>
+        <h4>IDL_MSG_ATTR_NOTRACE</h4>
+        <p>Set this code to inhibit the traceback portion of the error message.</p>
+        <h4>IDL_MSG_ATTR_BELL</h4>
+        <p>Set this code to ring the bell when the message is output.</p>
+        <p>&#160;</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The message format string specifies a format string to be used for the error message. This format string is exactly like those used by the standard C library <b>printf()</b> function. Any arguments following <b>action</b> are taken to be arguments for this format string.</p>
+        <h2><a name="Error"></a>Error Codes</h2>
+        <p>As mentioned above, two error codes are reserved for use by writers of system routines. They are:</p>
+        <h4>IDL_M_GENERIC</h4>
+        <p>This message code specifies a format string of “%s”. The first argument after <b>action</b> is taken to be a null-terminated string that is substituted into the format string. For example, the C statement:</p>
+        <p class="Code">IDL_Message(IDL_M_GENERIC, IDL_MSG_LONGJMP, "Error! Help!")</p>
+        <p>causes IDL to abort the current routine and issue the message:</p>
+        <p class="Code">% Error! Help!</p>
+        <h4>IDL_M_NAMED_GENERIC</h4>
+        <p>This message code is exactly like the one above except that it prints the name of the system routine in front of the error string. For example, assuming that the name of the routine is MY_PROC, the C statement:</p>
+        <p class="Code">IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP, "Error! Help!")</p>
+        <p>causes IDL to interrupt the current routine and issue the message:</p>
+        <p class="Code">% MY PROC: Error! Help!</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

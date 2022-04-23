@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Modifying Visualizations">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Colorbars</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../GUInavigation/modifying_vis_gallery.htm">Modifying Visualizations</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Colorbars</span>
+        </div>
+        <h1>Colorbars</h1>
+        <p>You can add a colorbar to a graphic. Colorbars show  the minimum to maximum pixel values on a color scale. </p>
+        <p>See the following sections:</p>
+        <ul>
+            <li value="1"><a href="#Example:" class="selected">Example: DEM</a>
+            </li>
+            <li value="2"><a href="#Discrete" class="selected">Example: Discrete Contour Levels with Colorbar</a>
+            </li>
+            <li value="3"><a href="#Example:2" class="selected">Example: Two Contour Plots with One Colorbar</a>
+            </li>
+            <li value="4"><a href="#Properti" class="selected">Properties Used in the Examples</a>
+            </li>
+            <li value="5"><a href="#Resource" class="selected">Resources</a>
+            </li>
+        </ul>
+        <h2 class="API"><a name="Example:"></a>Example: DEM</h2>
+        <p>The following example shows  a digital elevation model (DEM) taken from the Santa Monica mountains in California. The colors in the graphic are determined by the RGB_TABLE, which the COLORBAR function uses to create the color scale.</p>
+        <p>
+            <img src="../Resources/Images/colorbar.png" alt="DEM graphic with colorbar" />
+        </p>
+        <p>The code shown below creates the graphic shown above. You can copy the entire block and paste it into the IDL&#160;command line to run it. </p>
+        <p class="Code">; Define the data</p>
+        <p class="Code_Indented">file = FILE_WHICH('elevbin.dat')</p>
+        <p class="Code_Indented">dem = READ_BINARY(file, data_dims=[64,64])</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Display the data.</p>
+        <p class="Code_Indented">c1 = CONTOUR(dem, $</p>
+        <p class="Code_Indented">&#160;&#160;RGB_TABLE=30, $</p>
+        <p class="Code_Indented">&#160;&#160;/FILL, $</p>
+        <p class="Code_Indented">&#160;&#160;PLANAR=0, $</p>
+        <p class="Code_Indented">&#160;&#160;TITLE='Santa Monica Mountains')</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Add the colorbar.</p>
+        <p class="Code_Indented">cbar = COLORBAR(TARGET = c1, ORIENTATION=1, $</p>
+        <p class="Code_Indented">&#160;&#160;POSITION=[0.90, 0.2, 0.95, 0.75])</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Move the Z Axis to the back.</p>
+        <p class="Code_Indented">(c1['zaxis']).location = [0, (c1.yrange)[1], 0]</p>
+        <h2 class="API"><a name="Discrete"></a>Example: Discrete Contour Levels with Colorbar</h2>
+        <p>You can display a colorbar that matches discrete contour levels.</p>
+        <p>The following example shows a simple contour image generated from the DIST function. The colors in the graphic are determined by the RGB_TABLE, which the COLORBAR function uses to create the color scale.</p>
+        <p>
+            <img src="../Resources/Images/colorbar_discrete_contours.png" alt="Contour image with colorbar" />
+        </p>
+        <p>The code shown below creates the graphic shown above. You can copy the entire block and paste it into the IDL&#160;command line to run it. </p>
+        <p class="Code">; Example function to plot with </p>
+        <p class="Code">; a range of [0,100].</p>
+        <p xml:space="preserve" class="Code">d = DIST(41)</p>
+        <p xml:space="preserve" class="Code">fmax = 100.0</p>
+        <p xml:space="preserve" class="Code">f = d / max(d) * fmax</p>
+        <p xml:space="preserve" class="Code">&#160;</p>
+        <p class="Code">; Set 11 contour levels: </p>
+        <p class="Code">; [0, 10, 20, ... 100].</p>
+        <p xml:space="preserve" class="Code">n_levels = 11</p>
+        <p xml:space="preserve" class="Code">levels = FINDGEN(n_levels)/(n_levels-1)*fmax</p>
+        <p xml:space="preserve" class="Code">&#160;</p>
+        <p class="Code">; Make a step color table for the </p>
+        <p class="Code">; contour plot. The color table </p>
+        <p class="Code">; 'step_ct' is a [256,3] array, but </p>
+        <p class="Code">; there are only 11 distinct colors. </p>
+        <p class="Code">; The indices into the color tables </p>
+        <p class="Code">; (both original and step) are contour </p>
+        <p class="Code">; levels interpolated to the range </p>
+        <p class="Code">; of color table indices (the byte</p>
+        <p class="Code">; range).</p>
+        <p xml:space="preserve" class="Code">ct_number = 4</p>
+        <p xml:space="preserve" class="Code">ct_indices = BYTSCL(levels)</p>
+        <p xml:space="preserve" class="Code">LOADCT, ct_number, RGB_TABLE=ct, /SILENT</p>
+        <p xml:space="preserve" class="Code">step_ct = CONGRID(ct[ct_indices, *], 256, 3)</p>
+        <p xml:space="preserve" class="Code">&#160;</p>
+        <p class="Code">; Display the example function using </p>
+        <p class="Code">; the step color table and the</p>
+        <p xml:space="preserve" class="Code">; interpolated indices.</p>
+        <p xml:space="preserve" class="Code">c1 = CONTOUR(f, $</p>
+        <p xml:space="preserve" class="Code"> &#160;c_value = levels, $</p>
+        <p xml:space="preserve" class="Code">&#160;&#160;RGB_TABLE = step_ct, $</p>
+        <p xml:space="preserve" class="Code">&#160;&#160;RGB_INDICES = ct_indices, $</p>
+        <p xml:space="preserve" class="Code">&#160;&#160;/FILL, $</p>
+        <p class="Code">&#160;&#160;MARGIN = [0.15, 0.20, 0.15, 0.15], $</p>
+        <p xml:space="preserve" class="Code">&#160;&#160;TITLE = 'Max = ' + strtrim(fmax,2), $</p>
+        <p xml:space="preserve" class="Code">&#160;&#160;WINDOW_TITLE = 'Discrete Colorbar Example')</p>
+        <p xml:space="preserve" class="Code">&#160;</p>
+        <p class="Code">; The colorbar needs n_levels+1 ticks to make </p>
+        <p class="Code">; labels line up correctly.</p>
+        <p class="Code">; Append empty string.</p>
+        <p xml:space="preserve" class="Code">tick_labels = [STRTRIM(FIX(levels), 2), '']</p>
+        <p xml:space="preserve" class="Code">cb = COLORBAR( $</p>
+        <p xml:space="preserve" class="Code">&#160;&#160;TARGET = c1, $</p>
+        <p xml:space="preserve" class="Code">&#160;&#160;TICKLEN = 0, $</p>
+        <p xml:space="preserve" class="Code">&#160;&#160;MAJOR = n_levels+1, $</p>
+        <p xml:space="preserve" class="Code">&#160;&#160;TICKNAME = tick_labels, $</p>
+        <p xml:space="preserve" class="Code">&#160;&#160;FONT_SIZE = 10, $</p>
+        <p xml:space="preserve" class="Code">&#160;&#160;POSITION = [0.2, 0.07, 0.8, 0.1])</p>
+        <h2 class="API"><a name="Example:2"></a>Example: Two Contour Plots with One Colorbar</h2>
+        <p>The following example shows two simple contour images generated from the DIST function, annotated with one colorbar.</p>
+        <p>
+            <img src="../Resources/Images/colorbar_twoplots.png" />
+        </p>
+        <p>The code shown below creates the graphic shown above. You can copy the entire block and paste it into the IDL&#160;command line to run it. </p>
+        <p class="Code">; Example functions to plot. The first (f1) has a </p>
+        <p class="Code">; range of [0,100], the second (f2) a range of [0,70].</p>
+        <p class="Code">d = DIST(41)</p>
+        <p class="Code">max1 = 100.0</p>
+        <p class="Code">max2 = 70.0</p>
+        <p class="Code">f1 = d / max(d) * max1</p>
+        <p class="Code">f2 = d / max(d) * max2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Explicitly set 11 contour levels: [0, 10, 20, ... 100].</p>
+        <p class="Code">n_levels = 11</p>
+        <p class="Code">levels = FINDGEN(n_levels)/(n_levels-1)*max1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Make a step color table for the first contour plot. </p>
+        <p class="Code">; The color table STEP_CT is a [256,3] array, but there </p>
+        <p class="Code">; are only n_levels=11 distinct colors (to check, load </p>
+        <p class="Code">; and view the color table in XPALETTE). The indices into </p>
+        <p class="Code">; the color tables (both original and step) are contour </p>
+        <p class="Code">; levels interpolated to the range of color table indices </p>
+        <p class="Code">; (i.e., the byte range).</p>
+        <p class="Code">ct_number = 4</p>
+        <p class="Code">ct_indices = BYTSCL(levels)</p>
+        <p class="Code">LOADCT, ct_number, RGB_TABLE = ct, /SILENT</p>
+        <p class="Code">step_ct = CONGRID(ct[ct_indices, *], 256, 3)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the first function using the step color </p>
+        <p class="Code">; table and the interpolated indices.</p>
+        <p class="Code">c1 = CONTOUR(f1, $</p>
+        <p class="Code">&#160;&#160;LAYOUT = [2,1,1], $</p>
+        <p class="Code">&#160;&#160;C_VALUE = levels, $</p>
+        <p class="Code">&#160;&#160;RGB_TABLE = step_ct, $</p>
+        <p class="Code">&#160;&#160;RGB_INDICES = ct_indices, $</p>
+        <p class="Code">&#160;&#160;/FILL, $</p>
+        <p class="Code">&#160;&#160;TITLE = 'Max = ' + strtrim(max1,2), $</p>
+        <p class="Code">&#160;&#160;WINDOW_TITLE = 'Discrete Colorbar Example')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the second function using the original color </p>
+        <p class="Code">; table and the interpolated indices.</p>
+        <p class="Code">c2 = CONTOUR(f2, $</p>
+        <p class="Code">&#160;&#160;LAYOUT = [2,1,2], $</p>
+        <p class="Code"> &#160;/CURRENT, $</p>
+        <p class="Code">&#160;&#160;C_VALUE = levels, $</p>
+        <p class="Code">&#160;&#160;RGB_TABLE = ct_number, $ ; compare with c1</p>
+        <p class="Code">&#160;&#160;RGB_INDICES = ct_indices, $</p>
+        <p class="Code"> &#160;/FILL, $</p>
+        <p class="Code">&#160;&#160;TITLE = 'Max = ' + strtrim(max2,2))</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display colorbar with first contour plot as a </p>
+        <p class="Code">; target. It needs n_levels + 1 ticks to make labels </p>
+        <p class="Code">; line up correctly.</p>
+        <p class="Code">tick_labels = [STRTRIM(FIX(levels), 2), '']</p>
+        <p class="Code">cb = COLORBAR( $</p>
+        <p class="Code">&#160;&#160;TARGET = c1, $</p>
+        <p class="Code">&#160;&#160;TICKLEN = 0, $</p>
+        <p class="Code">&#160;&#160;MAJOR = n_levels+1, $</p>
+        <p class="Code">&#160;&#160;TICKNAME = tick_labels, $</p>
+        <p class="Code">&#160;&#160;FONT_SIZE = 8, $</p>
+        <p class="Code">&#160;&#160;POSITION = [0.2, 0.06, 0.8, 0.09])</p>
+        <h2 class="API"><a name="Properti"></a>Properties used in the examples</h2>
+        <h3>CONTOUR</h3>
+        <ul>
+            <li value="1"><code>RGB_TABLE </code>- defines the color table used to display the image.&#160;COLORBAR uses the colors defined in this property.</li>
+            <li value="2"><code>FILL</code> - specifies that the contour is filled. This keyword uses the colors defined in <code>RGB_TABLE.</code></li>
+            <li value="3"><code>PLANAR          </code>- PLANAR = 0 displays the graphic in three-dimensional space rather than on a plane. The default is PLANAR=1, which displays a graphic on a plane.</li>
+            <li value="4"><code>TITLE</code> - defines the title of the view rather than the graphic.</li>
+        </ul>
+        <h3>COLORBAR</h3>
+        <ul>
+            <li value="1"><code>ORIENTATION</code> - ORIENTATION&#160;=1 defines a vertical colorbar direction. The default orientation is 0, which is horizontal.</li>
+            <li value="2"><code>POSITION</code> - defines the location of the colorbar in a four-element vector: [X1, Y1, X2, Y2], defining the lower left and upper right corners of the image portion of the colorbar.</li>
+        </ul>
+        <h2 class="API"><a name="Resource"></a>Resources</h2>
+        <ul>
+            <li value="1"><a href="../Reference Material/B/BYTSCL.htm">BYTSCL</a>
+            </li>
+            <li value="2"><a href="../Reference Material/C/COLORBAR.htm">COLORBAR</a>
+            </li>
+            <li value="3"><a href="../Reference Material/D/DIST.htm">DIST</a>
+            </li>
+            <li value="4"><a href="../Reference Material/F/FINDGEN.htm">FINDGEN</a>
+            </li>
+            <li value="5"><a href="../Reference Material/L/LOADCT_Procedure.htm">LOADCT</a>
+            </li>
+            <li value="6"><a href="../Reference Material/R/READ_BINARY.htm">READ_BINARY</a>
+            </li>
+            <li value="7"><a href="../GUInavigation/visualize.htm">Graphics examples</a>
+            </li>
+            <li value="8"><a href="../GUInavigation/visualize.htm#Annotati">Graphics annotations</a>
+            </li>
+            <li value="9"><a href="../Reference Material/Functional List of IDL Routines/Graphics.htm">IDL Graphics Functions</a>
+            </li>
+            <li value="10"><a href="propChanges.htm">Changing graphics properties
+            </a>
+            </li>
+            <li value="11"><a href="MultiViz.htm">Multiple graphics in one window
+            </a>
+            </li>
+            <li value="12"><a href="ImageGuideMe/SaveImage.htm">Save a graphic
+            </a>
+            </li>
+            <li value="13"><a href="../IDL Graphics/FormattingSymsAndLines.htm">Formatting IDL&#160;Graphics Symbols and Lines
+</a>
+            </li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

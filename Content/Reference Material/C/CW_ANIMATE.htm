@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>CW_ANIMATE </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">CW_ANIMATE</span>
+        </div>
+        <h1 class="Routine"><a name="dg_routines_3604229493_880622"></a>CW_ANIMATE<a name="kanchor404"></a> <![CDATA[ ]]></h1>
+        <p><a name="kanchor405"></a><a name="kanchor406"></a>The CW_ANIMATE function creates a compound widget that— along with its associated routines — displays an animated sequence of images using off-screen windows knows as <i>pixmaps</i>. The speed and direction of the display can be adjusted using the widget interface. </p>
+        <p>CW_ANIMATE provides the graphical interface used by the XINTERANIMATE procedure, which is the preferred routine for displaying animation sequences in most situations. Use this widget instead of XINTERANIMATE when you need to run multiple instances of the animation widget simultaneously. Note that if more than one animation widget is running, they will have to share resources and will display images more slowly than a single instance of the widget.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>cw_animate.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h3><a name="dg_routines_3604229493_880654"></a>Using CW_ANIMATE</h3>
+        <p>Unlike XINTERANIMATE, using the CW_ANIMATE widget requires calls to two separate procedures, CW_ANIMATE_LOAD and CW_ANIMATE_RUN, to load the images to be animated and to run the animation. Alternatively, you can supply a vector of pre-existing pixmap window IDs, eliminating the need to use CW_ANIMATE_LOAD. The vector of pixmaps is commonly obtained from a call to CW_ANIMATE_GETP applied to a previous animation widget. Once the images are loaded, they are displayed by copying the images from the pixmap or buffer to the visible draw widget.</p>
+        <p>See the documentation for <a href="CW_ANIMATE_LOAD.htm">CW_ANIMATE_LOAD</a>, <a href="CW_ANIMATE_RUN.htm">CW_ANIMATE_RUN</a>, and <a href="CW_ANIMATE_GETP.htm">CW_ANIMATE_GETP</a> for more information.</p>
+        <p>The only event returned by CW_ANIMATE indicates that the user has clicked on the “End Animation” button. The parent application should use this as a signal to kill the animation widget via WIDGET_CONTROL. When the widget is destroyed, the pixmaps used in the animation are destroyed as well, unless they were saved by a call to CW_ANIMATE_GETP.</p>
+        <p>See the animation widget’s help file (available by clicking the “Help” button on the widget) for more information about the widget’s controls.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Three routines associated with the CW_ANIMATE compound widget — CW_ANIMATE_GETP, CW_ANIMATE_LOAD, and CW_ANIMATE_RUN — do not create compound widgets themselves, but act on an existing CW_ANIMATE widget.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_880813"></a>Examples</h2>
+        <p>Assume the following event handler procedure exists:</p>
+        <p class="Code">PRO EHANDLER, EV</p>
+        <p class="Code">WIDGET_CONTROL, /DESTROY, EV.TOP</p>
+        <p class="Code">END</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>If you wish to create this event handler starting from the IDL command prompt, remember to begin with the <code>.RUN</code> command.</p>
+        <p>Enter the following commands to open the file <code>ABNORM.DAT</code> (a series of images of a human heart) and load the images it contains into an array H.</p>
+        <p class="Code">OPENR, 1, FILEPATH('abnorm.dat', SUBDIR = ['examples','data'])</p>
+        <p class="Code">H = BYTARR(64, 64, 16, /NOZERO)</p>
+        <p class="Code">READU, 1, H</p>
+        <p class="Code">CLOSE, 1</p>
+        <p class="Code">H = REBIN(H, 128, 128, 16)</p>
+        <p>Create an instance of the animation widget and load the frames. Note that because the animation widget is realized before the call to CW_ANIMATE_LOAD, the frames are displayed as they are loaded. This provides the user with an indication of how things are progressing.</p>
+        <p class="Code">base = WIDGET_BASE(TITLE = 'Animation Widget')</p>
+        <p class="Code">animate = CW_ANIMATE(base, 128, 128, 16)</p>
+        <p class="Code">WIDGET_CONTROL, /REALIZE, base</p>
+        <p class="Code">FOR I=0,15 DO CW_ANIMATE_LOAD, animate, FRAME=I, IMAGE=H[*,*,I]</p>
+        <p>Save the pixmap window IDs for future use:</p>
+        <p class="Code">CW_ANIMATE_GETP, animate, pixmap_vect</p>
+        <p>Start the animation:</p>
+        <p class="Code">CW_ANIMATE_RUN, animate</p>
+        <p class="Code">XMANAGER, 'CW_ANIMATE Demo', base, EVENT_HANDLER = 'EHANDLER'</p>
+        <p>Pressing the “End Animation” button kills the application.</p>
+        <p>
+            <img src="../../Resources/Images/cwanim1.gif" style="margin-left: 5.99976px;margin-top: 1.12464px;margin-right: 6.000469px;margin-bottom: 1.12536px;" />
+        </p>
+        <h2 class="API"><a name="dg_routines_3604229493_880661"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = CW_ANIMATE( <i>Parent</i>, <i>Sizex</i>, <i>Sizey</i>,<i> Nframes</i> [,&#160;<a href="#dg_routines_3604229493_880709" class="selected">MPEG_BITRATE</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_880731" class="selected">MPEG_FORMAT</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_880736" class="selected">MPEG_QUALITY</a>=<i>value</i>] [,&#160;/<a href="#dg_routines_3604229493_880740" class="selected">NO_KILL</a>] [,&#160;<a href="#dg_routines_3604229493_880743" class="selected">OPEN_FUNC</a>=<i>string</i>] [,&#160;<a href="#dg_routines_3604229493_880746" class="selected">PIXMAPS</a>=<i>vector</i>] [,&#160;<a href="#dg_routines_3604229493_880749" class="selected">TAB_MODE</a>=value] [,&#160;/<a href="#dg_routines_3604229493_880783" class="selected">TRACK</a>] [,&#160;<a href="#dg_routines_3604229493_880786" class="selected">UNAME</a>=<i>string</i>] [,&#160;<a href="#dg_routines_3604229493_880793" class="selected">UVALUE</a>=<i>value</i>] )</p>
+        <h2 class="API"><a name="dg_routines_3604229493_880694"></a>Return Value</h2>
+        <p>This function returns the widget ID of the newly-created animation widget.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_880697"></a>Arguments</h2>
+        <h3 class="Argument">Parent</h3>
+        <p>The widget ID of the parent widget.</p>
+        <h3 class="Argument">Sizex</h3>
+        <p>The width of the displayed image, in pixels.</p>
+        <h3 class="Argument">Sizey</h3>
+        <p>The height of the displayed image, in pixels</p>
+        <h3 class="Argument">Nframes</h3>
+        <p>The number of frames in the animation sequence.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_880707"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880709"></a>MPEG_BITRATE</h3>
+        <p>Set this keyword to a double-precision floating-point value to specify the MPEG movie bit rate. Higher bit rates will create higher quality MPEGs but will increase file size. The following table describes the valid values:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>MPEG Version</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Range</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>MPEG 1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>0.1 to 104857200.0</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>MPEG 2 </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>0.1 to 429496729200.0</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Set this keyword to 0.0 (the default setting) to indicate that IDL should compute the BITRATE value based upon the value you have specified for the MPEG_QUALITY keyword. The value of MPEG_BITRATE returned is either the value computed by IDL from the MPEG_QUALITY value or the last non-zero valid value stored in this property.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Only use MPEG_BITRATE if changing the value of MPEG_QUALITY does not produce the desired results. It is highly recommended to set the value of MPEG_BITRATE to at least several times the frame rate to avoid unusable MPEG files or file generation errors.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880731"></a>MPEG_FORMAT</h3>
+        <p>Set this keyword to a Boolean value that specifies the type of MPEG encoding to use: </p>
+        <ul>
+            <li value="1">0 = MPEG1 (the default)</li>
+            <li value="2">1 = MPEG2</li>
+        </ul>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880736"></a>MPEG_QUALITY</h3>
+        <p>Set this keyword to an integer value between 0 (low quality) and 100 (high quality), inclusive, that specifies the quality at which the MPEG stream is to be stored. Higher quality values result in lower rates of time compression and less motion prediction which provide higher quality MPEGs but with substantially larger file size. Lower quality factors may result in longer MPEG generation times. The default is 50.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Since MPEG uses JPEG (lossy) compression, the original picture quality cannot be reproduced even when setting MPEG_QUALITY to its highest setting.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880740"></a>NO_KILL</h3>
+        <p>Set this keyword to omit the “End Animation” button from the animation widget.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880743"></a>OPEN_FUNC</h3>
+        <p>Set this keyword equal to a scalar string specifying the name of a user-written function that loads animation data. If a function is specified, an “Open ...” button is added to the animation widget.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880746"></a>PIXMAPS</h3>
+        <p>Use this keyword to provide the animation widget with a vector of pre-existing pixmap (off screen window) IDs. This vector is usually obtained from a call to CW_ANIMATE_GETP applied to a previous animation widget.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880749"></a>TAB_MODE</h3>
+        <p>Set this keyword to one of the values shown in the table below to determine how the widget hierarchy can be navigated using the <b>Tab</b> key. The TAB_MODE setting is inherited by lower-level bases and child widgets unless it is explicitly set on an individual widget.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>It is not possible to tab to disabled (SENSITIVE=0) or hidden (MAP=0) widgets.</p>
+        <p>Valid settings are:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Disable navigation onto or off of the widget. This is the default. Child widgets automatically inherit the tab mode of the parent base as described in <a href="../../Creating IDL Programs/Creating Applications in IDL/Enhancing_Widget_Applica.htm#Specifyi">Inheriting the TAB_MODE Value</a>.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Enable navigation onto and off of the widget.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Navigate only onto the widget.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Navigate only off of the widget.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In widget applications on the UNIX platform, the Motif library controls what widgets are brought into and released from focus using tabbing. The TAB_MODE keyword value is always zero, and any attempt to change it is ignored when running a widget application on the UNIX platform. Tabbing behavior may vary significantly between UNIX platforms; do not rely on a particular behavior being duplicated on all UNIX systems.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880783"></a>TRACK</h3>
+        <p>Set this keyword to cause the frame slider to track the frame number of the currently-displayed frame.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880786"></a>UNAME </h3>
+        <p>Set this keyword to a string that can be used to identify the widget in your code. You can associate a name with each widget in a specific hierarchy, and then use that name to query the widget hierarchy and get the correct widget ID.</p>
+        <p>To query the widget hierarchy, use the WIDGET_INFO function with the FIND_BY_UNAME keyword. The UNAME should be unique to the widget hierarchy because the FIND_BY_UNAME keyword returns the ID of the first widget with the specified name.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_880793"></a>UVALUE</h3>
+        <p>The “user value” to be assigned to the widget.</p>
+        <h3><a name="dg_routines_3604229493_880797"></a>Keywords to WIDGET_CONTROL and WIDGET_INFO</h3>
+        <p>The widget ID returned by most compound widgets is actually the ID of the compound widget’s base widget. This means that many keywords to the WIDGET_CONTROL and WIDGET_INFO routines that affect or return information on base widgets can be used with compound widgets.</p>
+        <p>See <a href="../../Creating IDL Programs/Creating Applications in IDL/Creating_a_Compound_Widg.htm">Creating a Compound Widget</a> for a more complete discussion of controlling compound widgets using <a href="../W/WIDGET_CONTROL.htm">WIDGET_CONTROL</a> and <a href="../W/WIDGET_INFO.htm">WIDGET_INFO</a>.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_880810"></a>Widget Events Returned by the CW_ANIMATE Widget</h2>
+        <p>The only event returned by this widget indicates that the user has pressed the DONE button. The parent application should use this as a signal to kill the animation widget via <a href="../W/WIDGET_CONTROL.htm">WIDGET_CONTROL</a>.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_880846"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">
+                        <p>Added TAB_MODE keyword</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added MPEG_BITRATE, MPEG_FORMAT, and MPEG_QUALITY keywords</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dg_routines_3604229493_880862"></a>See Also</h2>
+        <p><a href="CW_ANIMATE_LOAD.htm#dg_routines_3604229493_880948">CW_ANIMATE_LOAD</a>, <a href="CW_ANIMATE_RUN.htm#dg_routines_3604229493_881055">CW_ANIMATE_RUN</a>, <a href="CW_ANIMATE_GETP.htm#dg_routines_3604229493_880877">CW_ANIMATE_GETP</a>, <a href="../X/XINTERANIMATE.htm">XINTERANIMATE</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: J">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>JUL2GREG</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="J_list.htm">Routines: J</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">JUL2GREG</span>
+        </div>
+        <h1 class="Routine">JUL2GREG<a name="kanchor1569"></a><a name="kanchor1570"></a></h1>
+        <p>The JUL2GREG procedure calculates the Gregorian month, day, year (and optional hour, minute, second) from a Julian Date. This is the inverse of the <a href="../G/GREG2JUL.htm">GREG2JUL</a> function.</p>
+        <p><b>Notes</b>
+        </p>
+        <ul>
+            <li value="1">The JUL2GREG procedure uses the proleptic Gregorian date, which is produced by extending the Gregorian calendar backwards to dates preceeding its introduction in 1582. In the proleptic Gregorian calendar, there are no missing days in October 1582, every 4 years is a leap year, except if the year ends in a "00" then it is not a leap year, unless it is also divisible by 400 (in which case it is a leap year).</li>
+            <li value="2">There is no year 0 in the calendar as defined by IDL. Instead,year 1 CE is immediately preceeded by year 1 BCE. This means that leap years are offset by 1. For example, -5, -9, -13, etc. are all leap years, -101 is not a leap year (following the rule for "00" years), but -401 is a leap year.</li>
+            <li value="3">The proleptic Gregorian calendar is usually required for information exchange between international partners, as defined by ISO 8601:2004 (clause 3.2.1). The proleptic Gregorian calendar is not used by astronomers, who instead use the Julian Day Number, as given by the <a href="JULDAY.htm">JULDAY</a> function.</li>
+            <li value="4">The JUL2GREG procedure should only be used with the <a href="../G/GREG2JUL.htm">GREG2JUL</a> function. Similarly, the <a href="JULDAY.htm">JULDAY</a> function should only be used with <a href="../C/CALDAT.htm">CALDAT</a>. For dates between 1 Jan CE and 15 Oct 1582 the two calendar systems differ by up to 10 days. For dates on or after 15 Oct 1582 the two calendar systems are identical.</li>
+            <li value="5">Julian values must be between -31776 and 1827933925, which correspond to calendar dates of 24 Oct 4801 BCE and 31 Dec 5000000, respectively.</li>
+            <li value="6">This routine is written in the IDL language. Its source code can be found in the file <code>jul2greg.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</li>
+        </ul>
+        <h2 class="API">&#160;</h2>
+        <h2 class="API">Examples</h2>
+        <p>Unlike the Julian calendar, in the proleptic Gregorian calendar the year 1500 is not a leap year:</p>
+        <p class="Code">JUL2GREG, 2268982, Month1, Day1, Year1</p>
+        <p class="Code">JUL2GREG, 2268983, Month2, Day2, Year2</p>
+        <p class="Code">PRINT, Month1, Day1, Year1</p>
+        <p class="Code">PRINT, Month2, Day2, Year2</p>
+        <p>IDL prints:</p>
+        <p class="Code">2&#160;&#160;&#160;&#160;28&#160;&#160;&#160;&#160;1500</p>
+        <p class="Code">3&#160;&#160;&#160;&#160;&#160;1&#160;&#160;&#160;&#160;1500</p>
+        <p>Be sure to distinguish between <i>Month</i> and <i>Minute</i> when assigning variable names. For example, the following code would cause the Month value to be the same as the Minute value:</p>
+        <p class="Code">;Find date corresponding to Julian day 2529161.36:</p>
+        <p class="Code">JUL2GREG, 2492637.36, M, D, Y, H, M, S</p>
+        <p class="Code">PRINT, M, D, Y, H, M, S</p>
+        <p>IDL prints:</p>
+        <p class="Code">0&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;4&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;2112&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;18&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;0&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;0.00000000</p>
+        <p>Moreover, Julian Day Numbers should be maintained as double-precision floating-point data when the numbers are used to determine hours, minutes, and seconds.</p>
+        <p>So, instead of the previous call, use a "D" following the number to ensure that it is double precision:</p>
+        <p class="Code">JUL2GREG, 2492637.36D, Month, Day, Year, Hour, Minute, Second</p>
+        <p class="Code">PRINT, Month, Day, Year, Hour, Minute, Second</p>
+        <p>IDL prints:</p>
+        <p class="Code">7&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;4&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;2112&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;20&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;38&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;23.999989</p>
+        <p>You can also use arrays for the <i>Julian</i> argument:</p>
+        <p class="Code">JUL2GREG, DINDGEN(4) + 2449587.0D, m, d, y</p>
+        <p class="Code">PRINT, m, d, y</p>
+        <p>IDL prints:</p>
+        <p class="Code">           8           8           8           8</p>
+        <p class="Code">          22          23          24          25</p>
+        <p class="Code">        1994        1994        1994        1994</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax">JUL2GREG, <i>Julian</i>,<i> Month </i>[,&#160;<i>Day</i> [,&#160;<i>Year</i> [,&#160;<i>Hour</i> [,&#160;<i>Minute</i> [,&#160;<i>Second</i>]]]]]</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Julian</h3>
+        <p>A numeric value or array that specifies the Julian Date (which begins at noon) to be converted to a calendar date.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Julian Dates should be maintained as double-precision floating-point data when the numbers are used to determine hours, minutes, and seconds.</p>
+        <h3 class="Argument">Month</h3>
+        <p>A named variable that, on output, contains a longword integer or longword integer array representing the number of the month (1 = January, ..., 12 = December).</p>
+        <h3 class="Argument">Day</h3>
+        <p>A named variable that, on output, contains a longword integer or longword integer array representing the number of the day of the month (1-31).</p>
+        <h3 class="Argument">Year</h3>
+        <p>A named variable that, on output, contains a longword integer or longword integer array representing the number of the year (e.g., 1994).</p>
+        <h3 class="Argument">Hour</h3>
+        <p>A named variable that, on output, contains a longword integer or longword integer array representing the number of the hour of the day (0-23).</p>
+        <h3 class="Argument">Minute</h3>
+        <p>A named variable that, on output, contains a longword integer or longword integer array representing the number of the minute of the hour (0-59).</p>
+        <h3 class="Argument">Second</h3>
+        <p>A named variable that, on output, contains a double-precision floating-point value or a double-precision floating-point array representing the number of the second of the minute (0-59).</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.2.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="../C/CALDAT.htm">CALDAT</a>, <a href="../G/GREG2JUL.htm">GREG2JUL</a>, <a href="JULDAY.htm#J_839504493_762378">JULDAY</a>, <a href="../S/SYSTIME.htm#S_820040301_762665">SYSTIME</a>, <a href="../../Creating IDL Programs/Components of the IDL Language/Date_Time_Data.htm">Date/Time Data</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

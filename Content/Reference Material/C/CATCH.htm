@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>CATCH </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">CATCH</span>
+        </div>
+        <h1 class="Routine"><a name="C_854643309_985147"></a><a name="C_854643309_70268"></a><a name="kanchor163"></a><a name="kanchor164"></a>CATCH </h1>
+        <p>The CATCH procedure provides a generalized mechanism for the handling of exceptions and errors within IDL. Calling CATCH establishes an error handler for the current procedure that intercepts all errors that can be handled by IDL, excluding non-fatal warnings such as math errors (e.g., floating-point underflow).</p>
+        <p>When an error occurs, each active procedure, beginning with the offending procedure and proceeding up the call stack to the main program level, is examined for an error handler (established by a call to CATCH). If an error handler is found, control resumes at the statement after the call to CATCH. The index of the error is returned in the argument to CATCH. The <a href="../../Creating IDL Programs/Appendices/Error_Handling_System_Va.htm#sysvars_272074529_1003013">!ERROR_STATE</a> system variable is also set. The associated error message is stored in <a name="kanchor165"></a>!ERROR_STATE.MSG. If no error handlers are found, program execution stops, an error message is issued, and control reverts to the interactive mode. A call to ON_IOERROR in the procedure that causes an I/O error supersedes CATCH, and takes the branch to the label defined by ON_IOERROR. </p>
+        <p>This mechanism is similar, but not identical to, the <code><a name="kanchor166"></a>setjmp/<a name="kanchor167"></a>longjmp</code> facilities in C and the <a name="kanchor168"></a><code>catch/throw</code> facilities in C++.</p>
+        <p>Error handling is discussed in more detail in <a href="../../Creating IDL Programs/Application Programming/Controlling_and_Recoveri.htm">Controlling and Recovering from Errors</a>.</p>
+        <h2 class="API"><a name="C_854643309_716997"></a><a name="C_854643309_716997_PageTOC_CATCH_"></a>Examples</h2>
+        <p>The following procedure illustrates the use of CATCH:</p>
+        <p class="Code">PRO CATCH_EXAMPLE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Define variable A:</p>
+        <p class="Code">&#160;&#160;&#160;A = FLTARR(10)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Establish error handler. When errors occur, the index of the</p>
+        <p class="Code">&#160;&#160;&#160;; error is returned in the variable Error_status:</p>
+        <p class="Code">&#160;&#160;&#160;CATCH, Error_status</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;;This statement begins the error handler:</p>
+        <p class="Code">&#160;&#160;&#160;IF Error_status NE 0 THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;PRINT, 'Error index: ', Error_status</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;PRINT, 'Error message: ', !ERROR_STATE.MSG</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; Handle the error by extending A:</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;A=FLTARR(12)</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;CATCH, /CANCEL</p>
+        <p class="Code">&#160;&#160;&#160;ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Cause an error:</p>
+        <p class="Code">&#160;&#160;&#160;A[11]=12</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Even though an error occurs in the line above, program</p>
+        <p class="Code">&#160;&#160;&#160;; execution continues to this point because the event handler</p>
+        <p class="Code">&#160;&#160;&#160;; extended the definition of A so that the statement can be </p>
+        <p class="Code">&#160;&#160;&#160;; re-executed.</p>
+        <p class="Code">&#160;&#160;&#160;HELP, A</p>
+        <p class="Code">END</p>
+        <p>Running the CATCH_EXAMPLE procedure causes IDL to produce the following output and control returns to the interactive prompt:</p>
+        <p class="Code">Error index:         -144</p>
+        <p class="Code">Error message:</p>
+        <p class="Code">Attempt to subscript A with &lt;INT (      11)&gt; is out of range.</p>
+        <p class="Code">A               FLOAT     = Array[12]</p>
+        <h2 class="API"><a name="C_854643309_884074"></a><a name="C_854643309_884074_PageTOC_CATCH_"></a>Syntax</h2>
+        <p class="Syntax">CATCH, [<i>Variable</i>] [,&#160;/<a href="#C_854643309_716974" class="selected">CANCEL</a>]</p>
+        <h2 class="API"><a name="C_854643309_716953"></a><a name="C_854643309_716953_PageTOC_CATCH_"></a>Arguments</h2>
+        <h3 class="Argument">Variable</h3>
+        <p>A named variable in which the error index is returned. When an error handler is established by a call to CATCH, <i>Variable</i> is set to zero. If an error occurs, <i>Variable</i> is set to the error index, and control is transferred to the statement after the call to CATCH. The error index is also returned in the CODE field of the !ERROR_STATE system variable, i.e., !ERROR_STATE.CODE.</p>
+        <h2 class="API"><a name="C_854643309_716963"></a><a name="C_854643309_716963_PageTOC_CATCH_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="C_854643309_716974"></a><a name="C_854643309_716974_Keywords_CATCH__"></a>CANCEL<a name="kanchor169"></a></h3>
+        <p>Set this keyword to cancel the error handler for the current procedure. This cancellation does not affect other error handlers that may be established in other active procedures.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the CANCEL keyword is set, the <i>Variable</i> argument must not be present.</p>
+        <h2 class="API"><a name="C_854643309_796024"></a><a name="C_854643309_796024_PageTOC_CATCH_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="C_854643309_1052061"></a><a name="C_854643309_1052061_PageTOC_CATCH_"></a>See Also</h2>
+        <p><a href="../../Creating IDL Programs/Appendices/Error_Handling_System_Va.htm#sysvars_272074529_1003013">!ERROR_STATE</a>, <a href="../O/ON_ERROR.htm#O_828691053_889555">ON_ERROR</a>, <a href="../O/ON_IOERROR.htm#O_828691053_889589">ON_IOERROR</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

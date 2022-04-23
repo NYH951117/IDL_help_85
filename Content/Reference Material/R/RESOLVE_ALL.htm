@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: R">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>RESOLVE_ALL </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="R_list.htm">Routines: R</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">RESOLVE_ALL</span>
+        </div>
+        <h1 class="Routine"><a name="R_822202989_678560"></a><a name="kanchor2277"></a><a name="R_822202989_64718"></a>RESOLVE_ALL </h1>
+        <p><a name="kanchor2278"></a>The RESOLVE_ALL procedure iteratively resolves (by compiling) any uncompiled procedures or functions that are called in any already-compiled procedure or function. The process ends when there are no unresolved routines left to compile. If an unresolved procedure or function is not in the IDL search path, RESOLVE_ALL exits with an error, and no additional routines are compiled. </p>
+        <p>RESOLVE_ALL is primarily used to construct an IDL <a href="../S/SAVE.htm">SAVE</a> file containing the compiled code for a package of routines.</p>
+        <ul>
+            <li value="1">If you are constructing such a SAVE file and it contains calls to built-in IDL system functions that are not present under all operating systems (e.g., IOCTL), you must make sure to use FORWARD_FUNCTION to tell IDL that these names are functions. Otherwise, IDL may interpret them as arrays and generate unintended results.</li>
+            <li value="2">If you are creating a SAVE file that relies on graphics or iTools components, RESOLVE_ALL automatically calls IRESOLVE if it finds any routines from IDL&#160;graphics or iTools. </li>
+            <li value="3">RESOLVE_ALL does not resolve procedures or functions that are called via quoted strings such as CALL_PROCEDURE, CALL_FUNCTION, or EXECUTE, or in keywords that can contain procedure names such as TICKFORMAT or EVENT_PRO. To include these routines in your SAVE file you should either use <a href="RESOLVE_ROUTINE.htm">RESOLVE_ROUTINE</a> or compile them manually.</li>
+            <li value="4">RESOLVE_ALL does not resolve widget event handler routines that are specified with any of the event handler keywords. In general, it is best to include the event handling routine in the same program file as the widget creation routine, so that all of the event handlers are compiled along with the creation routine.</li>
+            <li value="5">RESOLVE_ALL cannot resolve calls to <a href="../L/LAMBDA.htm">LAMBDA</a> functions or <a href="../L/LAMBDAP.htm">LAMBDAP</a> procedures, and will throw an error with the name of the "unresolved" variable. If you have only a few Lambda variables, you can use the SKIP_ROUTINES keyword to ignore these variable names. Otherwise, you could use the CONTINUE_ON_ERROR and UNRESOLVED keywords to make sure that the list of unresolved routines matches your list of Lambda variable names.</li>
+        </ul>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>resolve_all.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="R_822202989_135752"></a><a name="R_822202989_135752_PageTOC_RESOLVE_ALL_"></a>Syntax</h2>
+        <p class="Syntax">RESOLVE_ALL [,&#160;<a href="#R_822202989_1114080" class="selected">CLASS</a>=<i>string</i>] [,&#160;/<a href="#R_822202989_1114078" class="selected">CONTINUE_ON_ERROR</a>] [,&#160;/<a href="#R_822202989_1014991" class="selected">QUIET</a>] [,&#160;<a href="#R_822202989_1166218" class="selected">RESOLVE_EITHER</a>=<i>string</i>] [,&#160;<a href="#R_822202989_1166223" class="selected">RESOLVE_FUNCTION</a>=<i>string</i>] [,&#160;<a href="#R_822202989_1166248" class="selected">RESOLVE_PROCEDURE</a>=<i>string</i>] [,&#160;<a href="#R_822202989_1166262" class="selected">SKIP_ROUTINES</a>=<i>string</i>] [,&#160;<a href="#R_822202989_1166255" class="selected">UNRESOLVED</a>=<i>variable</i>] </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>To properly resolve routines, make sure you run RESOLVE_ALL in an IDL session in which no compilation errors have occurred. This is important because if IDL has previously attempted (and failed) to compile a routine, that routine will be added to IDL’s list of user-defined routines as an uncompiled routine. A subsequent call to RESOLVE_ALL will attempt to compile the uncompiled routine, potentially causing another error.<br /><br />You can ensure that an IDL session is “clean” either by exiting and restarting IDL or by issuing the <a href="../Dot Commands/_RESET_SESSION.htm#symbols_612366544_983175">.RESET_SESSION</a> executive command.</p>
+        <h2 class="API"><a name="R_822202989_1167968"></a><a name="R_822202989_38142"></a>Arguments</h2>
+        <p>None</p>
+        <h2 class="API"><a name="R_822202989_135758"></a><a name="R_822202989_135758_PageTOC_RESOLVE_ALL_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="R_822202989_1114080"></a><a name="R_822202989_1114080_Keywords_RESOLVE_ALL__"></a>CLASS</h3>
+        <p>Set this keyword to a string or string array containing object class names. </p>
+        <p>RESOLVE_ALL’s rules for finding uncompiled functions and procedures are not able to find object definitions or methods, because those things are not known to IDL until the object classes are actually instantiated and the methods called. However, if the CLASS keyword is set, RESOLVE_ALL will ensure that the <code>*__define.pro</code> files for the specified classes and their superclasses are compiled and executed. RESOLVE_ALL then locates all methods for the specified classes and their superclasses, and makes sure they are also compiled. </p>
+        <h3 class="Keyword"><a name="R_822202989_1114078"></a><a name="R_822202989_1114078_Keywords_RESOLVE_ALL__"></a>CONTINUE_ON_ERROR</h3>
+        <p>Set this keyword to allow continuation upon error.</p>
+        <h3 class="Keyword"><a name="R_822202989_1014991"></a><a name="R_822202989_1014991_Keywords_RESOLVE_ALL__"></a>QUIET</h3>
+        <p>Set this keyword to suppress informational messages.</p>
+        <h3 class="Keyword"><a name="R_822202989_1166218"></a><a name="R_822202989_18418"></a>RESOLVE_EITHER</h3>
+        <p>Set this keyword to a string or string array of routine names to resolve. Use this keyword instead of RESOLVE_FUNCTION or RESOLVE_PROCEDURE if you do not know the type of the routine being resolved. If the routines are already compiled, they are not recompiled.</p>
+        <h3 class="Keyword"><a name="R_822202989_1166223"></a><a name="R_822202989_72780"></a>RESOLVE_FUNCTION</h3>
+        <p>Set this keyword to a string or string array of function names to resolve. If the functions are already compiled, they are not recompiled.</p>
+        <h3 class="Keyword"><a name="R_822202989_1166248"></a><a name="R_822202989_71130"></a>RESOLVE_PROCEDURE</h3>
+        <p>Set this keyword to a string or string array of procedure names to resolve. If the procedures are already compiled, they are not recompiled.</p>
+        <h3 class="Keyword"><a name="R_822202989_1166262"></a><a name="R_822202989_33048"></a>SKIP_ROUTINES</h3>
+        <p>Set this keyword to a string array containing the names of routines <i>not</i> to resolve. Using this keyword is useful when a library file containing the designated routines will be later included.</p>
+        <h3 class="Keyword"><a name="R_822202989_1166255"></a><a name="R_822202989_48406"></a>UNRESOLVED</h3>
+        <p>Set this keyword to a variable that will contain the names of the unresolved procedures and functions if CONTINUE_ON_ERROR is set. Routines in the SKIP_ROUTINES list are also included in the result.</p>
+        <h2 class="API"><a name="R_822202989_1166251"></a><a name="R_822202989_135766_PageTOC_RESOLVE_ALL_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added CLASS keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="R_822202989_1093085"></a><a name="R_822202989_1093085_PageTOC_RESOLVE_ALL_"></a>See Also</h2>
+        <p><a href="../Dot Commands/_COMPILE.htm#symbols_612366544_992450">.COMPILE</a>, <a href="RESOLVE_ROUTINE.htm#R_822202989_1073539">RESOLVE_ROUTINE</a>, <a href="ROUTINE_INFO.htm#R_822202989_845681">ROUTINE_INFO</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

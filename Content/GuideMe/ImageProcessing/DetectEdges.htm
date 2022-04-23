@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Image Analysis">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Detect Edges</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/image_analysis_gallery1.htm">Image Analysis</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Detect Edges</span>
+        </div>
+        <h1>Detect Edges<a name="kanchor4224"></a></h1>
+        <p>Detecting edges is another way to extract features. Many edge detection methods use <a href="DirectionalFilters.htm">directional</a> or <a href="LaplacianFilters.htm">Laplacian</a> filters. IDL provides the following edge detection routines:</p>
+        <ul>
+            <li value="1"><a href="../../Reference Material/E/EDGE_DOG.htm">EDGE_DOG</a>
+            </li>
+            <li value="2"><a href="../../Reference Material/E/EMBOSS.htm">EMBOSS</a>
+            </li>
+            <li value="3"><a href="../../Reference Material/L/LAPLACIAN.htm">LAPLACIAN</a>
+            </li>
+            <li value="4"><a href="../../Reference Material/P/PREWITT.htm">PREWITT</a>
+            </li>
+            <li value="5"><a href="../../Reference Material/R/ROBERTS.htm">ROBERTS</a>
+            </li>
+            <li value="6"><a href="../../Reference Material/S/SHIFT_DIFF.htm">SHIFT_DIFF</a>
+            </li>
+            <li value="7"><a href="../../Reference Material/S/SOBEL.htm">SOBEL</a>
+            </li>
+        </ul>
+        <p>The results of these routines can be added or subtracted from the original image to enhance the contrast of its edges. Morphological operators are used for more complex edge detection.</p>
+        <p>The following example uses each of the above functions to detect edges in an aerial image of New York City. This example data is available in the <code>examples/data</code> directory of your IDL installation. The code shown below creates the following layout in one image window:</p>
+        <p>
+            <img src="../images/edge_detection_images.gif" />
+        </p>
+        <p class="Code">; Import the image from the file.</p>
+        <p class="Code">file = FILEPATH('nyny.dat', $</p>
+        <p class="Code">&#160;&#160;&#160;SUBDIRECTORY = ['examples', 'data'])</p>
+        <p class="Code">orig_imageSize = [768, 512]</p>
+        <p class="Code">orig_image = READ_BINARY(file, DATA_DIMS = orig_imageSize)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Crop the image to focus in on the bridges:</p>
+        <p class="Code">croppedSize = [96, 96]</p>
+        <p class="Code">croppedImage = orig_image[200:(croppedSize[0] - 1) + 200, $</p>
+        <p class="Code">&#160;&#160;&#160;180:(croppedSize[1] - 1) + 180]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display original image.</p>
+        <p class="Code">img01 = IMAGE(croppedImage, $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE = "Original", $</p>
+        <p class="Code">&#160;&#160;&#160;LAYOUT = [4, 2, 1], DIMENSIONS = [640, 400])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Apply Roberts filter.</p>
+        <p class="Code">robimage = ROBERTS(croppedImage)</p>
+        <p class="Code">img02 = IMAGE(robimage, $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE = "Roberts Filter", /CURRENT, $</p>
+        <p class="Code">&#160;&#160;&#160;LAYOUT = [4, 2, 2])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Apply Sobel filter.</p>
+        <p class="Code">sobimage = SOBEL(croppedImage)</p>
+        <p class="Code">img03 = IMAGE(sobimage, $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE = "Sobel Filter", /CURRENT, $</p>
+        <p class="Code">&#160;&#160;&#160;LAYOUT = [4, 2, 3])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Apply Prewitt filter.</p>
+        <p class="Code">prewimage = PREWITT(croppedImage)</p>
+        <p class="Code">img04 = IMAGE(prewimage, $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE = "Prewitt Filter", /CURRENT, $</p>
+        <p class="Code">&#160;&#160;&#160;LAYOUT = [4, 2, 4])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Apply SHIFT_DIFF filter.</p>
+        <p class="Code">shiftimage = SHIFT_DIFF(croppedImage)</p>
+        <p class="Code">img05 = IMAGE(shiftimage, $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE = "SHIFT_DIFF Filter", /CURRENT, $</p>
+        <p class="Code">&#160;&#160;&#160;LAYOUT = [4, 2, 5])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Apply EDGE_DOG filter.</p>
+        <p class="Code">edgedogimage = EDGE_DOG(croppedImage)</p>
+        <p class="Code">img06 = image(edgedogimage, $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE = "EDGE_DOG Filter", /CURRENT, $</p>
+        <p class="Code">&#160;&#160;&#160;LAYOUT = [4,2,6])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Apply Laplacian filter.</p>
+        <p class="Code">lapimage = LAPLACIAN(croppedImage)</p>
+        <p class="Code">img07 = IMAGE(lapimage, $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE = "Laplacian Filter", /CURRENT, $</p>
+        <p class="Code">&#160;&#160;&#160;LAYOUT = [4, 2, 7])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Apply EMBOSS filter.</p>
+        <p class="Code">embossimage = EMBOSS(croppedImage)</p>
+        <p class="Code">img08 = IMAGE(embossimage, $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE = "EMBOSS Filter", /CURRENT, $</p>
+        <p class="Code">&#160;&#160;&#160;LAYOUT = [4, 2, 8])</p>
+        <h2 class="API">Resources</h2>
+        <ul>
+            <li value="1"><a href="../MultiViz.htm">Multiple Graphics in One Window</a>
+            </li>
+            <li value="2"><a href="../../LoadingDefaultColorTables.htm">Loading Default Color Tables</a>
+            </li>
+            <li value="3"><a href="DirectionalFilters.htm">Apply Directional Filters</a>
+            </li>
+            <li value="4"><a href="LaplacianFilters.htm">Apply Laplacian Filters</a>
+            </li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

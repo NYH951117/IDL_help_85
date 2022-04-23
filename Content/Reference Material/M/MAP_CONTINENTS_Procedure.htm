@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: M">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>MAP_CONTINENTS Procedure</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="M_list.htm">Routines: M</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">MAP_CONTINENTS Procedure</span>
+        </div>
+        <h1 class="Routine"><a name="dg_routines_3604229493_883696"></a><a name="kanchor1770"></a><a name="dg_routines_3604229493_95626"></a><a name="kanchor1771"></a><a name="kanchor1772"></a>MAP_CONTINENTS Procedure</h1>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Please see the <a href="MAPCONTINENTS.htm" class="Heading">MAPCONTINENTS</a> function, which replicates the functionality of this routine and offers an interactive interface.</p>
+        <p>The MAP_CONTINENTS procedure draws continental boundaries, filled continents, political boundaries, coastlines, and/or rivers, over a map projection. Outlines can be drawn in low or high-resolution (if the optional high-resolution CIA World Map database is installed). If MAP_CONTINENTS is called without any keywords, it draws low-resolution, unfilled continent outlines.</p>
+        <p>The MAP_STRUCTURE keyword can be used to draw directly to UV (Cartesian) coordinates. Otherwise, MAP_SET must be called before MAP_CONTINENTS to establish the projection type, the center of the projection, polar rotation and geographic limits.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_883872"></a><a name="dg_routines_3604229493_887599_PageTOC_MAP_CONTINENTS_"></a>Examples</h2>
+        <p>The following example demonstrates the use of map outlines to embellish a map projection:</p>
+        <p class="Code">; Handle TrueColor displays:<br />DEVICE, DECOMPOSED=0<br /><br />; Load discrete color table:<br />tek_color<br /><br />; Match color indices to colors we want to use:<br />black=0 &amp; white=1 &amp; red=2<br />green=3 &amp; dk_blue=4 &amp; lt_blue=5<br /><br />; Set up an orthographic projection centered over the north <br />; Atlantic.Fill the hemisphere with dark blue. Specify black<br />; gridlines:<br />MAP_SET,  /ORTHO, 40, -30, 23, /ISOTROPIC, $<br />&#160;&#160;&#160;/HORIZON, E_HORIZON={FILL:1, COLOR:dk_blue}, $<br />&#160;&#160;&#160;/GRID, COLOR=black<br /><br />; Fill the continent boundaries with solid white:<br />MAP_CONTINENTS, /FILL_CONTINENTS, COLOR=white<br /><br />; Overplot coastline data:<br />MAP_CONTINENTS, /COASTS, COLOR=black<br /><br />; Add rivers, in light blue:<br />MAP_CONTINENTS, /RIVERS, COLOR=lt_blue<br /><br />; Show national borders:<br />MAP_CONTINENTS, /COUNTRIES, COLOR=red, MLINETHICK=2</p>
+        <p>The following example uses the MAP_STRUCTURE keyword to map the continents in UV (Cartesian) coordinates, without having to set up a !MAP transform using MAP_SET.</p>
+        <p class="Code">; GCTP Polar stereographic projection<br />mapStruct = MAP_PROJ_INIT(106, LIMIT=[0,-180,90,180], $<br />&#160;&#160;&#160;CENTER_LATITUDE=90)<br /><br />; Create a plot window using the UV Cartesian range.<br />PLOT, mapStruct.uv_box[[0,2]],mapStruct.uv_box[[1,3]], $<br />&#160;&#160;&#160;/NODATA, /ISOTROPIC, XSTYLE=1, YSTYLE=1<br /><br />MAP_CONTINENTS, MAP_STRUCTURE=mapStruct<br />MAP_GRID, MAP_STRUCTURE=mapStruct</p>
+        <h2 class="API"><a name="dg_routines_3604229493_883719"></a><a name="dg_routines_3604229493_887524_PageTOC_MAP_CONTINENTS_"></a>Syntax</h2>
+        <p class="Syntax">MAP_CONTINENTS [,&#160;/<a href="#dg_routines_3604229493_883767" class="selected">COASTS</a>] [,&#160;<a href="#dg_routines_3604229493_883770" class="selected">COLOR</a>=<i>index</i>] [,&#160;/<a href="#dg_routines_3604229493_883773" class="selected">CONTINENTS</a>] [,&#160;/<a href="#dg_routines_3604229493_883778" class="selected">COUNTRIES</a>] [&#160;,<a href="#dg_routines_3604229493_883781" class="selected">FILL_CONTINENTS</a>={1 | 2}[,&#160;<a href="#dg_routines_3604229493_883845" class="selected">ORIENTATION</a>=<i>value</i>]] [,&#160;/<a href="#dg_routines_3604229493_883785" class="selected">HIRES</a>] [,&#160;<a href="#dg_routines_3604229493_883789" class="selected">LIMIT</a>=<i>vector</i>] [,&#160;<a href="#dg_routines_3604229493_883794" class="selected">MAP_STRUCTURE</a>=<i>structure</i>] [,&#160;<a href="#dg_routines_3604229493_883801" class="selected">MLINESTYLE</a>={0 | 1 | 2 | 3 | 4 | 5}] [,&#160;<a href="#dg_routines_3604229493_883841" class="selected">MLINETHICK</a>=<i>value</i>] [,&#160;/<a href="#dg_routines_3604229493_883848" class="selected">RIVERS</a>] [,&#160;<a href="#dg_routines_3604229493_883851" class="selected">SPACING</a>=<i>centimeters</i>] [,&#160;/<a href="#dg_routines_3604229493_883854" class="selected">USA</a>]</p>
+        <p class="Syntax"><b>Graphics Keywords:</b> [,&#160;/T3D] [,&#160;ZVALUE=<i>value</i>{0 to 1}]</p>
+        <h2 class="API"><a name="dg_routines_3604229493_883765"></a><a name="dg_routines_3604229493_887526_PageTOC_MAP_CONTINENTS_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_883767"></a><a name="dg_routines_3604229493_887528_Keywords_MAP_CONTINENTS__"></a>COASTS</h3>
+        <p>Set this keyword to draw coastlines, islands, and lakes instead of the default continent outlines. Note that if you are using the low-resolution map database (if the HIRES keyword is <i>not</i> set), many islands are drawn even when COASTS is not set. If you are using the high-resolution map database (if the HIRES keyword <i>is</i> set), no islands are drawn unless COASTS is set.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_883770"></a><a name="dg_routines_3604229493_887531_Keywords_MAP_CONTINENTS__"></a>COLOR</h3>
+        <p>Set this keyword to the color index of the lines being drawn.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_883773"></a><a name="dg_routines_3604229493_957787_Keywords_MAP_CONTINENTS__"></a>CONTINENTS</h3>
+        <p>Set this keyword to plot the continental boundaries. This is the default, unless COASTS, COUNTRIES, RIVERS and/or USA is set.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you are using the low-resolution map database (if the HIRES keyword is <i>not</i> set), outlines for continents, islands, and lakes are drawn when the CONTINENTS keyword is set. If you are using the high-resolution map database (if the HIRES keyword <i>is</i> set), only continental outlines are drawn when the CONTINENTS keyword is set. To draw islands and lakes when using the high-resolution map database, use the COASTS keyword.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you are using the USA and CONTINENTS keywords in conjunction to map the outline of each state in the United States onto an existing outline of the continent, you may see discrepancies in the coastline. This is due to the fact that the two outlines are derived from different databases (the USA keyword uses a geographical database, and the CONTINENTS keyword uses a geological database).</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_883778"></a><a name="dg_routines_3604229493_887534_Keywords_MAP_CONTINENTS__"></a>COUNTRIES</h3>
+        <p>Set this keyword to draw political boundaries as of 1993.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_883781"></a><a name="dg_routines_3604229493_887537_Keywords_MAP_CONTINENTS__"></a>FILL_CONTINENTS</h3>
+        <p>Set this keyword to 1 to fill continent boundaries with a solid color. The color is set by the COLOR keyword. Set this keyword to 2 to fill continent boundaries with a line fill. For line filling, the COLOR, MLINESTYLE, MLINETHICK, ORIENTATION, and SPACING keywords can be used to control the type of line fill.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When using this keyword in conjunction with the HIRES keyword, lakes on continents will be filled and islands will not be filled.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_883785"></a><a name="dg_routines_3604229493_887540_Keywords_MAP_CONTINENTS__"></a>HIRES</h3>
+        <p>Set this keyword to use high-resolution map data instead of the default low-resolution data. This option is only available if you have installed the optional high-resolution map datasets. If the high-resolution data is not available, a warning is printed and the low-resolution data is used instead.</p>
+        <p>This keyword can be used in conjunction with the COASTS, COUNTRIES, FILL_CONTINENTS, and RIVERS keywords.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_883789"></a><a name="dg_routines_3604229493_957885_Keywords_MAP_CONTINENTS__"></a>LIMIT</h3>
+        <p>Set this keyword to a four-element vector [<i>Lat</i><sub>min</sub>, <i>Lon</i><sub>min</sub>, <i>Lat</i><sub>max</sub>, <i>Lon</i><sub>max</sub>] to only plot continents that pass through the LIMIT rectangle. The points (<i>Lat</i><sub>min</sub>, <i>Lon</i><sub>min</sub>) and (<i>Lat</i><sub>max</sub>, <i>Lon</i><sub>max</sub>) are the latitudes and longitudes of two points diagonal from each other on the region’s boundary. The default is to use the limits from the current map projection.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Line segments for continents which extend outside of the LIMIT rectangle will still be plotted.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_883794"></a><a name="dg_routines_3604229493_1059750_Keywords_MAP_CONTINENTS__"></a>MAP_STRUCTURE</h3>
+        <p>Set this keyword to a !MAP structure, as returned from <a href="MAP_PROJ_INIT.htm">MAP_PROJ_INIT</a>. If this keyword is set, the !MAP system variable is ignored, and the polygons and polylines are drawn using UV (Cartesian) coordinates.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_883801"></a><a name="dg_routines_3604229493_887544_Keywords_MAP_CONTINENTS__"></a><a name="dg_routines_3604229493_90715"></a>MLINESTYLE</h3>
+        <p>The line style of the boundaries being drawn. Linestyles are described in the table below. The default is 0 for solid.</p>
+        <p>&#160;</p>
+        <table style="caption-side: bottom;mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <caption valign="bottom" style="padding-bottom: 12pt;">
+                <p>&#160;</p>
+            </caption>
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Index</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Linestyle</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Solid</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Dotted</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Dashed</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Dash Dot</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>4</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Dash Dot</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>5</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Long Dashes</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_883841"></a><a name="dg_routines_3604229493_887584_Keywords_MAP_CONTINENTS__"></a>MLINETHICK</h3>
+        <p>The thickness of the boundary or fill lines. The default thickness is 1.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_883845"></a><a name="dg_routines_3604229493_887588_Keywords_MAP_CONTINENTS__"></a><a name="dg_routines_3604229493_77075"></a>ORIENTATION</h3>
+        <p>Set this keyword to the counterclockwise angle in degrees from horizontal that the line fill should be drawn. The default is 0. This keyword only has effect if the FILL_CONTINENTS keyword is set to 2.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_883848"></a><a name="dg_routines_3604229493_887591_Keywords_MAP_CONTINENTS__"></a>RIVERS</h3>
+        <p>Set this keyword to draw rivers.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_883851"></a><a name="dg_routines_3604229493_887594_Keywords_MAP_CONTINENTS__"></a>SPACING</h3>
+        <p>Set this keyword to the spacing, in centimeters, for a line fill. This keyword only has effect if the FILL_CONTINENTS keyword is set to 2. The default is 0.5 centimeters.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_883854"></a><a name="dg_routines_3604229493_887597_Keywords_MAP_CONTINENTS__"></a>USA</h3>
+        <p>Set this keyword to draw borders for each state in the United States in addition to continental boundaries.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you are using the USA and CONTINENTS keywords in conjunction to map the outline of each state in the United States onto an existing outline of the continent, you may see discrepancies in the coastline. This is due to the fact that the two outlines are derived from different databases (the USA keyword uses a geographical database, and the CONTINENTS keyword uses a geological database).</p>
+        <h3><a name="dg_routines_3604229493_883859"></a><a name="dg_routines_3604229493_958024_Keywords_MAP_CONTINENTS__"></a><a name="dg_routines_3604229493_958024_PageTOC_MAP_CONTINENTS_"></a>Graphics Keywords Accepted</h3>
+        <p>See <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_317209">Graphics Keywords</a> for the description of the following graphics and plotting keywords:</p>
+        <p><a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_315956">T3D</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316102">ZVALUE</a></p>
+        <h2 class="API"><a name="dg_routines_3604229493_883878"></a><a name="dg_routines_3604229493_887611_PageTOC_MAP_CONTINENTS_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added MAP_STRUCTURE keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dg_routines_3604229493_883890"></a><a name="dg_routines_3604229493_972896_PageTOC_MAP_CONTINENTS_"></a>See Also</h2>
+        <p><a href="MAP_GRID_Procedure.htm#dg_routines_3604229493_883952">MAP_GRID Procedure</a>, <a href="MAP_IMAGE.htm#dg_routines_3604229493_891676">MAP_IMAGE</a>, <a href="MAP_PATCH.htm#dg_routines_3604229493_891842">MAP_PATCH</a>, <a href="MAP_PROJ_INIT.htm">MAP_PROJ_INIT</a>, <a href="MAP_SET_Procedure.htm#dg_routines_3604229493_892044">MAP_SET Procedure</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

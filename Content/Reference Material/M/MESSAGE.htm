@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: M">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>MESSAGE </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="M_list.htm">Routines: M</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">MESSAGE</span>
+        </div>
+        <h1 class="Routine"><a name="M_824365677_988498"></a><a name="kanchor1859"></a><a name="M_824365677_14106"></a>MESSAGE </h1>
+        <p><a name="kanchor1860"></a><a name="kanchor1861"></a><a name="kanchor1862"></a><a name="kanchor1863"></a><a name="kanchor1864"></a><a name="kanchor1865"></a>The MESSAGE procedure issues error and informational messages using the same mechanism employed by built-in IDL routines. By default, the message is issued as an error, the message is output, and IDL performs the required error-handling actions (which can be controlled via the CATCH, ON_ERROR, and ON_IOERROR procedures). As a side-effect of issuing the error, the system variable !ERROR_STATE is set and the text of the error message is placed in !ERROR_STATE.MSG. (If there is an operating system component to the error message, !ERROR_STATE.SYS_MSG is updated as well).</p>
+        <p>The MESSAGE procedure supports the following uses:</p>
+        <ol>
+            <li value="1">To issue a simple error message containing user-specified text.</li>
+            <li value="2">To issue a specific error from a <i>message block</i> by name, with optional arguments. The NAME keyword is required in this case; if the error is not defined in the default IDL message block, the BLOCK keyword is also required. See <a href="../D/DEFINE_MSGBLK.htm#D_843829869_991824">DEFINE_MSGBLK</a> and <a href="../D/DEFINE_MSGBLK_FROM_FILE.htm#D_843829869_991870">DEFINE_MSGBLK_FROM_FILE</a> for examples of this usage.</li>
+            <li value="3">To reissue the most recent error encountered by IDL. If the CATCH procedure is used to trap errors, the REISSUE_LAST keyword to MESSAGE can be used within the CATCH block to pass the error up to its caller. See <a href="#M_824365677_1016614" class="selected">Example 2</a> below for an example.</li>
+        </ol>
+        <p class="NoteIndented">The first thing MESSAGE does is issue an error. If the procedure that calls MESSAGE also defines a CATCH block, execution transfers to the CATCH block as soon as the error is issued, and <i>before</i> any text defined to be output by MESSAGE is printed unless one of the CONTINUE or INFORMATIONAL keywords is set.</p>
+        <p>If the call to the MESSAGE procedure causes execution to halt, traceback information is displayed automatically.</p>
+        <h2 class="API"><a name="M_824365677_888700"></a><a name="M_824365677_888700_PageTOC_MESSAGE_"></a>Examples</h2>
+        <p>For more information on MESSAGE, see Additional Examples.</p>
+        <h3><a name="M_824365677_888701_Keywords_MESSAGE__"></a>Example 1</h3>
+        <p>As an example, assume the statement:</p>
+        <p class="Code">message, 'Unexpected value encountered.'</p>
+        <p>is executed in a procedure named CALC. If an error occurs, the following message would be printed:</p>
+        <p class="Code">% CALC: Unexpected value encountered.</p>
+        <p>and execution would halt.</p>
+        <h2 class="API"><a name="M_824365677_888662"></a><a name="M_824365677_888662_PageTOC_MESSAGE_"></a>Syntax</h2>
+        <p><i>To issue a simple error message:</i>
+        </p>
+        <p class="Syntax">MESSAGE, [<i>Text</i>] [,&#160;/<a href="#M_824365677_965245" class="selected">CONTINUE</a>] [,&#160;<a href="#M_824365677_965401" class="selected">LEVEL</a>=<i>CallLevel</i>] [,&#160;/<a href="#M_824365677_888672" class="selected">INFORMATIONAL</a>] [,&#160;/<a href="#M_824365677_888676" class="selected">IOERROR</a>] [,&#160;/<a href="#M_824365677_965554" class="selected">NONAME</a>] [,&#160;/<a href="#M_824365677_888682" class="selected">NOPREFIX</a>] [,&#160;/<a href="#M_824365677_888686" class="selected">NOPRINT</a>] [,&#160;/<a href="#M_824365677_1016373" class="selected">RESET</a>]</p>
+        <p><i>To issue a named message from a message block:</i>
+        </p>
+        <p class="Syntax">MESSAGE, [<i>Arg</i><sub class="italic">1</sub>, ... <i>Arg</i><sub class="italic">N</sub><i>,</i>]&#160;<a href="#M_824365677_965353" class="selected">NAME</a>=<i>ErrorName</i> [,&#160;<a href="#M_824365677_888669" class="selected">BLOCK</a>=<i>BlockName</i>] [,&#160;/<a href="#M_824365677_965245" class="selected">CONTINUE</a>] [,&#160;<a href="#M_824365677_965401" class="selected">LEVEL</a>=<i>CallLevel</i>] [,&#160;/<a href="#M_824365677_888672" class="selected">INFORMATIONAL</a>] [,&#160;/<a href="#M_824365677_888676" class="selected">IOERROR</a>] [,&#160;/<a href="#M_824365677_965554" class="selected">NONAME</a>] [,&#160;/<a href="#M_824365677_888682" class="selected">NOPREFIX</a>] [,&#160;/<a href="#M_824365677_888686" class="selected">NOPRINT</a>] [,&#160;/<a href="#M_824365677_1016373" class="selected">RESET</a>]</p>
+        <p><i>To reissue the most recent error:</i>
+        </p>
+        <p class="Syntax">MESSAGE, /<a href="#M_824365677_1016375" class="selected">REISSUE_LAST</a></p>
+        <h2 class="API"><a name="M_824365677_888664"></a><a name="M_824365677_888664_PageTOC_MESSAGE_"></a>Arguments</h2>
+        <h3 class="Argument">Text</h3>
+        <p>A string value specifying the text to be displayed in a simple error message.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The <i>Text</i> argument is only used when MESSAGE is issuing a simple error message; that is, if neither the NAME keyword nor the REISSUE_LAST keyword is present. If <i>none</i> of the <i>Text</i> argument, the NAME keyword, or the REISSUE_LAST keyword are present, MESSAGE returns quietly.</p>
+        <h3 class="Argument">Arg<sub class="italic">i</sub></h3>
+        <p>When issuing a named error using the NAME (and possibly BLOCK) keyword, the <i>Arg</i><sub class="italic">i</sub> arguments are substituted into the error format string, as described in the documentation for <a href="../D/DEFINE_MSGBLK.htm#D_843829869_991824">DEFINE_MSGBLK</a> and <a href="../D/DEFINE_MSGBLK_FROM_FILE.htm#D_843829869_991870">DEFINE_MSGBLK_FROM_FILE</a>.</p>
+        <h2 class="API"><a name="M_824365677_1016330"></a><a name="M_824365677_888667_PageTOC_MESSAGE_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="M_824365677_888669"></a><a name="M_824365677_888669_Keywords_MESSAGE__"></a>BLOCK</h3>
+        <p>Set this keyword to a string containing the name of the IDL message block to use. This keyword is ignored unless the NAME keyword is also present to specify a message name.</p>
+        <p>By default, MESSAGE throws the IDL_M_USER_ERR message from the IDL_MBLK_CORE message block. If you wish to provide something other than the default error message, you can define your own message blocks and error messages. See the <a href="../D/DEFINE_MSGBLK.htm#D_843829869_991824">DEFINE_MSGBLK</a> and <a href="../D/DEFINE_MSGBLK_FROM_FILE.htm#D_843829869_991870">DEFINE_MSGBLK_FROM_FILE</a> procedures for details. You can use the HELP, /MESSAGES command to see the currently defined message blocks.</p>
+        <h3 class="Keyword"><a name="M_824365677_965245"></a><a name="M_824365677_965245_Keywords_MESSAGE__"></a>CONTINUE</h3>
+        <p>Set this keyword to return after issuing the error instead of taking the action specified by ON_ERROR. Use this option when it is desirable to report an error and then continue processing.</p>
+        <h3 class="Keyword"><a name="M_824365677_888672"></a><a name="M_824365677_888672_Keywords_MESSAGE__"></a>INFORMATIONAL</h3>
+        <p><a name="kanchor1866"></a>Set this keyword to issue informational text instead of an error. In this case, !ERROR_STATE is not set. The !QUIET system variable controls the printing of informational messages.</p>
+        <h3 class="Keyword"><a name="M_824365677_888676"></a><a name="M_824365677_888676_Keywords_MESSAGE__"></a>IOERROR</h3>
+        <p>Set this keyword to indicate that the error occurred while performing I/O. The action specified by the ON_IOERROR procedure is executed instead of ON_ERROR.</p>
+        <h3 class="Keyword"><a name="M_824365677_965401"></a><a name="M_824365677_965401_Keywords_MESSAGE__"></a>LEVEL</h3>
+        <p>Many messages include the name of the routine that called MESSAGE at the beginning of the message text. Use the LEVEL keyword to an integer value to specify that the name of a routine further up in the current call chain should be used instead. Specify the value of LEVEL as described in the following table:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>LEVEL value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Meaning</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The currently active routine.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&gt; 0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>The absolute index of the routine to indicate. A value of 1 specifies the main level ($MAIN$), 2 indicates the routine called by $MAIN$, and so forth.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>&lt; 0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Negative values indicate the relative index of the desired routine moving backwards from the current one. Hence, -1 indicates the caller of the current routine.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>The LEVEL keyword can be used to hide error handling helper routines from user view. The following procedure will issue an error on behalf of its caller. The calling routine’s name will appear in the resulting message, and not that of the error routine:</p>
+        <p class="Code">pro THROW_ERROR, text</p>
+        <p class="Code">&#160;&#160;&#160;on_error, 2&#160;&#160;&#160;; Stop in caller</p>
+        <p class="Code">&#160;&#160;&#160;MESSAGE, LEVEL=-1, text</p>
+        <p class="Code">end</p>
+        <h3 class="Keyword"><a name="M_824365677_965353"></a><a name="M_824365677_965353_Keywords_MESSAGE__"></a>NAME</h3>
+        <p>Set this keyword to a string containing the name of the message to throw. By default, MESSAGE throws the IDL_M_USER_ERR message from the IDL_MBLK_CORE message block. NAME is often used in conjunction with the BLOCK keyword to throw a non-default message from a non-default message block.</p>
+        <h3 class="Keyword"><a name="M_824365677_965554"></a><a name="M_824365677_965554_Keywords_MESSAGE__"></a>NONAME</h3>
+        <p>Set this keyword to suppress printing of the issuing routine’s name at the beginning of the error message.</p>
+        <h3 class="Keyword"><a name="M_824365677_888682"></a><a name="M_824365677_888682_Keywords_MESSAGE__"></a>NOPREFIX</h3>
+        <p>Usually, the message includes the message prefix string (as specified by the MSG_PREFIX field of the !ERROR_STATE system variable) at the beginning. Set this keyword to omit the prefix.</p>
+        <h3 class="Keyword"><a name="M_824365677_888686"></a><a name="M_824365677_888686_Keywords_MESSAGE__"></a>NOPRINT</h3>
+        <p>Set this keyword to prevent the message from printing to the screen and cause the other actions to proceed quietly. The error system variables are updated as usual.</p>
+        <h3 class="Keyword"><a name="M_824365677_1016375"></a><a name="M_824365677_1016375_Keywords_MESSAGE__"></a>REISSUE_LAST</h3>
+        <p>Set this keyword to reissue the last error issued by IDL. By using this keyword in conjunction with the CATCH procedure, your code can catch an error caused by called code, perform recovery actions, and issue the error normally. See the <a href="#M_824365677_888700" class="selected">Examples</a> below for a demonstration of this approach.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If this keyword is specified, no plain arguments or other keywords may be specified.</p>
+        <h3 class="Keyword"><a name="M_824365677_1016373"></a><a name="M_824365677_1016373_Keywords_MESSAGE__"></a>RESET</h3>
+        <p>Set this keyword to set the <a href="../../Creating IDL Programs/Appendices/Error_Handling_System_Va.htm#sysvars_272074529_1003013">!ERROR_STATE</a> system variable back to the “success” state and clear any internal traceback information being saved for use by the LAST_ERROR keyword to the <a href="../H/HELP.htm#H_835179117_748700">HELP</a> procedure.</p>
+        <h2 class="API">Additional Examples</h2>
+        <h3><a name="M_824365677_1016614"></a><a name="M_824365677_1016614_Keywords_MESSAGE__"></a>Example 2</h3>
+        <p>This example demonstrates the use of the CATCH procedure and the REISSUE_LAST keyword to the MESSAGE procedure to control errors. In this example, we write a procedure named GET_TWO_POINTERS, which creates and returns two image variables of identical size via pointer heap variables. One possible problem with such an operation is that the system may not have enough memory to allocate both images. We want this operation to be all or nothing, so if we fail to get both variables we need to free the variable we did get before allowing our caller to see the error:</p>
+        <p class="Code">PRO GET_TWO_POINTERS, D1, D2, P1, P2</p>
+        <p class="Code">&#160;&#160;; [D1, D2] - Input dimensions</p>
+        <p class="Code">&#160;&#160;; P1, P2 - Variables to receive pointers to images</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;ON_ERROR, 2&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;; When we reissue error, have</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;; control returned to caller.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;nullPtr = PTR_NEW()&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;; Create a NULL pointer.</p>
+        <p class="Code">&#160;&#160;P1 = (P2 = nullPtr)&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;; Set both pointers to NULL.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;CATCH, error&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;; Establish catch block.</p>
+        <p class="Code">&#160;&#160;IF (error NE 0) THEN BEGIN&#160;&#160;&#160;; An error occurs.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;CATCH, /CANCEL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;; Cancel catch block so an error</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;; here will not cause looping.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;PTR_FREE, P1, P2&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;; If P1 or P2 are non-NULL, free</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;P1 = (P2 = nullPtr)&#160;&#160;&#160;&#160;&#160;&#160;&#160;; them so caller sees NULL pointers.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;MESSAGE, /REISSUE_LAST&#160;&#160;&#160;&#160;; Reissue the error. The caller</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;; will get control.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;; This line is never reached, because MESSAGE causes an</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;; implicit return to the calling routine.</p>
+        <p class="Code">&#160;&#160;&#160;ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;P1 = PTR_NEW(BYTARR(D1, D2))&#160;&#160;; Get first image.</p>
+        <p class="Code">&#160;&#160;&#160;P2 = PTR_NEW(BYTARR(D1, D2))&#160;&#160;; Get second image.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; We now have both images and can safely return.</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="M_824365677_888706"></a><a name="M_824365677_888706_PageTOC_MESSAGE_"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre 4.0 </p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">
+                        <p>5.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">
+                        <p>Deprecated the TRACEBACK keyword</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added REISSUE_LAST keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="M_824365677_972997"></a><a name="M_824365677_972997_PageTOC_MESSAGE_"></a>See Also</h2>
+        <p><a href="../C/CATCH.htm#C_854643309_985147">CATCH</a>, <a href="../D/DEFINE_MSGBLK.htm#D_843829869_991824">DEFINE_MSGBLK</a>, <a href="../D/DEFINE_MSGBLK_FROM_FILE.htm#D_843829869_991870">DEFINE_MSGBLK_FROM_FILE</a>, <a href="../O/ON_ERROR.htm#O_828691053_889555">ON_ERROR</a>, <a href="../O/ON_IOERROR.htm#O_828691053_889589">ON_IOERROR</a>, <a href="../S/STRMESSAGE.htm#S_820040301_1069479">STRMESSAGE</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

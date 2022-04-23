@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Creating Mouse Event Functions</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1>Creating Mouse Event Functions</h1>
+        <p>You can create custom functions to handle mouse events in a graphics               <a href="../Reference Material/W/WINDOW.htm">WINDOW</a> or a <a href="../Reference Material/W/WIDGET_WINDOW.htm">WIDGET_WINDOW</a>. These functions must use the syntax described below. </p>
+        <p>Each function must return a value of 0 to turn off default event handling or 1 to perform default event handling.</p>
+        <p>See the <a href="#WINDOWE" class="selected">WINDOW&#160;example</a> and <a href="#WIDGET_W" class="selected">WIDGET_WINDOW example</a>, below.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>Instead of creating a separate function for each event handler, you may find it convenient to use a custom event handling class along with the EVENT_HANDLER property. See&#160;<a href="GraphicsEventHandler.htm">Creating an Event Handler Class to Control Events</a> for details on how to write this object class.</p>
+        <h2 class="API">Syntax</h2>
+        <p>The syntax of the various event handler functions are similar, as the following list shows. </p>
+        <table class="TableStyle_Description" style="margin-left: 0;margin-right: auto;caption-side: top;mc-table-style: url('../Resources/TableStyles/Description.css');" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <thead>
+                <tr class="Head-Header1">
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Handler Type</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Syntax</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Mouse_Down</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p><i>Result</i> = FUNCTION_NAME(<em>Window</em>,  <em>X</em>, <em>Y</em>, <em>Button</em>, <em>KeyMods</em>,<em> Clicks)</em></p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Mouse_Motion</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p><i>Result</i> = FUNCTION_NAME(<em>Window</em>,  <em>X</em>, <em>Y</em>, <em>KeyMods)</em></p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Mouse_Up</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p><i>Result</i> = FUNCTION_NAME(<em>Window</em>, <em>X</em>, <em>Y</em>, <em>Button)</em></p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>Mouse_Wheel</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p><i>Result</i> = FUNCTION_NAME(<em>Window</em>,             <em>X</em>, <em>Y</em>, <em>Delta</em>, <em>KeyMods)</em></p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Where FUNCTION_NAME&#160;is a unique name for the function, which will be called from one of the mouse event handling keywords of              <a href="../Reference Material/W/WINDOW.htm">WINDOW</a> or <a href="../Reference Material/W/WIDGET_WINDOW.htm">WIDGET_WINDOW</a>. Avoid using generic names such as "MouseDownHandler" or "MouseUpHandler" to prevent name collisions with other applications using event handlers.</p>
+        <h2 class="API">Arguments</h2>
+        <h3>Window</h3>
+        <p>The object reference of the window in which the mouse event occurred.</p>
+        <h3>X</h3>
+        <p>The x-coordinate location of the mouse cursor (in device coordinates) at the time of the event.</p>
+        <h3>Y</h3>
+        <p>The y-coordinate of the mouse cursor (in device coordinates) at the time of the event.</p>
+        <h3>Button</h3>
+        <p>The value of the clicked button. Possible values are:</p>
+        <table class="TableStyle_Description" style="margin-left: 0;margin-right: auto;caption-side: top;mc-table-style: url('../Resources/TableStyles/Description.css');" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <thead>
+                <tr class="Head-Header1">
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Mouse Button</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Left </p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Middle</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>4</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Right </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Clicks</h3>
+        <p>The value indicating how many button clicks occurred. The value is 1 for a single click and 2 for a double click.</p>
+        <h3>Delta</h3>
+        <p>The value indicating the direction and number of movements of the mouse wheel. </p>
+        <p>Pushing the wheel generates positive values, pulling the wheel generates negative values. The magnitude of the value depends on the device setting for the individual mouse, but is usually limited to small integer values such as +1, -1, +2, -2, etc.</p>
+        <h3>KeyMods</h3>
+        <p>The value containing a bitwise mask indicating which modifier keys are active at the time the mouse event happens. Possible values are: </p>
+        <table style="caption-side: bottom;mc-table-style: url('../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Modifier Key</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Shift</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Control</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>4</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Caps lock</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>8</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Alt</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="WINDOWE"></a>Example Using WINDOW</h2>
+        <p>In the following example code, the <code>RBBoxMouseDown</code> function creates a polygon and caches the start point of a drag operation. In the <code>RBBoxMouseMotion</code> function the polygon is updated with the current location of the cursor. In the <code>RBBoxMouseUp</code> function, the polygon is again updated and the color of the polygon is modified. Copy this code into a new IDL file and run it. To test the code, drag and drop the mouse to draw a box in the graphic window.</p>
+        <p class="Code">FUNCTION RBBoxMouseDown, oWin, $</p>
+        <p class="Code_Indented">x, y, iButton, KeyMods, nClicks</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">state = oWin.UVALUE</p>
+        <p class="Code_Indented">state.x0 = x</p>
+        <p class="Code_Indented">state.y0 = y</p>
+        <p class="Code_Indented">state.buttonDown = 1</p>
+        <p class="Code_Indented">state.poly.HIDE = 0</p>
+        <p class="Code_Indented">state.poly.SetData, [0,0,0], [0,0,0]</p>
+        <p class="Code_Indented">state.poly.LINESTYLE='--'</p>
+        <p class="Code_Indented">oWin.UVALUE=state</p>
+        <p class="Code_Indented">RETURN, 0 ; Skip default event handling</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">FUNCTION RBBoxMouseMotion, oWin, x, y, KeyMods</p>
+        <p class="Code_Indented">state = oWin.uvalue</p>
+        <p class="Code_Indented">IF state.buttonDown then begin</p>
+        <p class="Code_Indented">&#160;&#160;&#160;x0 = state.x0</p>
+        <p class="Code_Indented">&#160;&#160;&#160;y0 = state.y0</p>
+        <p class="Code_Indented">&#160;&#160;&#160;xVector=[x0,x0,x,x,x0]</p>
+        <p class="Code_Indented">&#160;&#160;&#160;yVector=[y0,y,y,y0,y0]</p>
+        <p class="Code_Indented">&#160;&#160;&#160;xy = state.poly.ConvertCoord(xVector, yVector, /DEVICE, /TO_NORMAL)</p>
+        <p class="Code_Indented">&#160;&#160;&#160;state.poly.SetData, REFORM(xy[0,*]), REFORM(xy[1,*])</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">RETURN, 0 ; Skip default event handling</p>
+        <p class="Code">END</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">FUNCTION RBBoxMouseUp, oWin, x, y, iButton</p>
+        <p class="Code_Indented">state = oWin.uvalue</p>
+        <p class="Code_Indented">IF (~state.buttonDown) THEN RETURN, 0</p>
+        <p class="Code_Indented">x0 = state.x0</p>
+        <p class="Code_Indented">y0 = state.y0</p>
+        <p class="Code_Indented">xVector=[x0,x0,x,x,x0]</p>
+        <p class="Code_Indented">yVector=[y0,y,y,y0,y0]</p>
+        <p class="Code_Indented">xy = state.poly.ConvertCoord(xVector, yVector, /DEVICE, /TO_NORMAL)</p>
+        <p class="Code_Indented">state.poly.SetData, REFORM(xy[0,*]), REFORM(xy[1,*])</p>
+        <p class="Code_Indented">state.poly.LINESTYLE='-'</p>
+        <p class="Code_Indented">state.buttonDown=0</p>
+        <p class="Code_Indented">oWin.uvalue=state</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Clear the current selections</p>
+        <p class="Code_Indented">oSelect = oWin.GetSelect()</p>
+        <p class="Code_Indented">FOREACH oVis, oSelect do oVis.Select, /UNSELECT</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Do a hit test and select new items.</p>
+        <p class="Code_Indented">oVisList = oWin.HitTest(x0+(x-x0)/2, y0+(y-y0)/2, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;DIMENSIONS=ABS([x-x0, y-y0]) &gt; 10)</p>
+        <p class="Code_Indented">FOREACH vis, oVisList do begin</p>
+        <p class="Code_Indented">&#160;&#160;&#160;if vis ne state.poly then vis.Select, /ADD</p>
+        <p class="Code_Indented">ENDFOREACH</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">RETURN, 0 ; Skip default event handling</p>
+        <p class="Code">END</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">PRO RBBoxEventsTest</p>
+        <p class="Code_Indented">x = Findgen(200)</p>
+        <p class="Code_Indented">y = Sin(x*2*!PI/25.0)*Exp(-0.01*x)</p>
+        <p class="Code_Indented">p = PLOT(x, y, TITLE='Click, hold mouse down and drag, release to draw box')</p>
+        <p class="Code_Indented">; Add a hidden polygon for the rubber-band box.</p>
+        <p class="Code_Indented">poly = POLYGON([0,0,0],[0,0,0], /DEVICE, $</p>
+        <p class="Code_Indented">LINESTYLE='--', /HIDE, $</p>
+        <p class="Code_Indented">FILL_TRANSPARENCY=90, FILL_BACKGROUND = 1, FILL_COLOR='red')</p>
+        <p class="Code_Indented">p.window.UVALUE={x0:0, y0:0, buttonDown:0L, $</p>
+        <p class="Code_Indented">poly: poly}</p>
+        <p class="Code_Indented">p.window.MOUSE_DOWN_HANDLER='RBBoxMouseDown'</p>
+        <p class="Code_Indented">p.window.MOUSE_UP_HANDLER='RBBoxMouseUp'</p>
+        <p class="Code_Indented">p.window.MOUSE_MOTION_HANDLER='RBBoxMouseMotion'</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="WIDGET_W"></a>Example Using WIDGET_WINDOW</h2>
+        <p>In this example, only the MOUSE_MOTION_HANDLER event handler is used. The event coordinates (in device coordinates) are converted to data coordinates and displayed in a label widget below the draw widget. A crosshair is also drawn at the nearest plot data point.</p>
+        <h3>Mouse Event Handler Function</h3>
+        <p class="Code">&#160;</p>
+        <p class="Code">FUNCTION ExWidWinMouseMotionHandler, oWin, x, y, KeyMods</p>
+        <p class="Code_Indented">state = oWin.uValue</p>
+        <p class="Code_Indented">IF (~ISA(state.plot)) then return, 1</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Convert from screen coordinates to data coordinates.</p>
+        <p class="Code_Indented">xy = state.plot.ConvertCoord(x, y, /DEVICE, /TO_DATA)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; "Snap" the location to the nearest plot point.</p>
+        <p class="Code_Indented">xy = state.plot.GetValueAtLocation(xy[0])</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Update the crosshair location and the label</p>
+        <p class="Code_Indented">state.crosshair.LOCATION = xy</p>
+        <p class="Code_Indented">probe = STRING(xy[0:1], FORMAT='(2F9.2)')</p>
+        <p class="Code_Indented">WIDGET_CONTROL, state.label, SET_VALUE=probe</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">return, 1 ; Perform default event handling</p>
+        <p class="Code">END</p>
+        <h3>Mouse Motion Procedure</h3>
+        <p>Run the following code example to test the event handling functions defined in the previous code example.</p>
+        <p class="Code">PRO ExWidgetWindowEvents_event, event</p>
+        <p class="Code_Indented">; Be sure to process the internal window event first.</p>
+        <p class="Code_Indented">; This handles selection, translation, rotation, etc.</p>
+        <p class="Code_Indented">w = WIDGET_EVENT(/NOWAIT)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">CASE TAG_NAMES(event, /STRUCTURE_NAME) of</p>
+        <p class="Code_Indented">&#160;&#160;&#160;'WIDGET_BASE': BEGIN</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">&#160;&#160;&#160;; Handle base resize events. Retrieve our cached padding,</p>
+        <p class="Code_Indented">&#160;&#160;&#160;; and our new size.</p>
+        <p class="Code_Indented">&#160;&#160;&#160;WIDGET_CONTROL, event.id, GET_UVALUE=pad, TLB_GET_SIZE=newSize</p>
+        <p class="Code_Indented">&#160;&#160;&#160;wDraw = WIDGET_INFO(event.top, FIND_BY_UNAME='ex_widwin_window')</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">&#160;&#160;&#160;; Change the draw widget to match the new size, minus padding.</p>
+        <p class="Code_Indented">&#160;&#160;&#160;xy = newSize - pad</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">&#160;&#160;&#160;WIDGET_CONTROL, wDraw, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;&#160;&#160;&#160;DRAW_XSIZE=xy[0], DRAW_YSIZE=xy[1], $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;&#160;&#160;&#160;SCR_XSIZE=xy[0], SCR_YSIZE=xy[1]</p>
+        <p class="Code_Indented">&#160;&#160;&#160;END</p>
+        <p class="Code_Indented">&#160;&#160;&#160;ELSE: ; do nothing</p>
+        <p class="Code_Indented">ENDCASE</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">PRO ExWidgetWindowEvents</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Create the widgets (start unmapped)</p>
+        <p class="Code_Indented">wBase = WIDGET_BASE(/COLUMN, /TLB_SIZE_EVENTS, MAP=0)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">wDraw = WIDGET_WINDOW(wBase, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;UNAME='ex_widwin_window', $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;MOUSE_MOTION_HANDLER='ExWidWinMouseMotionHandler', $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;X_SCROLL_SIZE=640, Y_SCROLL_SIZE=512)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">w1 = WIDGET_LABEL(wBase, /ALIGN_LEFT, /DYNAMIC)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">WIDGET_CONTROL, wBase, /REALIZE</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Cache the padding between the base and the draw</p>
+        <p class="Code_Indented">WIDGET_CONTROL, wBase, TLB_GET_SIZE=basesize</p>
+        <p class="Code_Indented">padding = basesize - [640, 512]</p>
+        <p class="Code_Indented">WIDGET_CONTROL, wBase, SET_UVALUE=padding</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Retrieve the newly-created Window object.</p>
+        <p class="Code_Indented">WIDGET_CONTROL, wDraw, GET_VALUE=win</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Make sure this is the current window</p>
+        <p class="Code_Indented">win.Select</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">p = PLOT(/TEST, /CURRENT)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Change crosshair to "manual" mode and set some properties.</p>
+        <p class="Code_Indented">c = p.CROSSHAIR</p>
+        <p class="Code_Indented">c.STYLE = 'Manual'</p>
+        <p class="Code_Indented">c.COLOR = 'Red'</p>
+        <p class="Code_Indented">c.LINESTYLE = '-'</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Cache the graphics references for the event handlers</p>
+        <p class="Code_Indented">win.uValue = {plot:p, label:w1, crosshair: c}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Draw the widgets and start the event processing</p>
+        <p class="Code_Indented">WIDGET_CONTROL, wBase, /MAP</p>
+        <p class="Code_Indented">XMANAGER, 'ExWidgetWindowEvents', wBase, /NO_BLOCK</p>
+        <p class="Code">END</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

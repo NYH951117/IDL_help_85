@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: H|HDF Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>HDF_VD_WRITE</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../H_list.htm">Routines: H</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../HDF_Routines.htm">HDF Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">HDF_VD_WRITE</span>
+        </div>
+        <h1 class="Routine"><a name="HDF_1733484267_1014305"></a><a name="HDF_1733484267_87489"></a>HDF_VD_WRITE</h1>
+        <p>The <a name="kanchor1304"></a>HDF_VD_WRITE procedure stores data in a <a name="kanchor1305"></a>VData in an HDF file.</p>
+        <p>There are many restrictions on writing data to a VData. When writing multiple fields of varying types, only limited error checking is possible. When writing a series of fields all with the same type, data is converted to that type before writing. For example:</p>
+        <p class="Code">Vdat = HDF_VD_ATTACH(Fid, -1, /WRITE)</p>
+        <p class="Code">; Create a 10 integer vector:</p>
+        <p class="Code">Data = INDGEN(10)</p>
+        <p class="Code">; Data converted to FLOAT before write:</p>
+        <p class="Code">HDF_VD_WRITE, Vdat, 'PX', Data</p>
+        <p>It is possible to write less data than exists in the Data argument by using the NRECORDS keyword. For example, the following command writes 5 records, instead of the 10 implied by the size of the data (VEL is assumed to be of type FLOAT, order=3):</p>
+        <p class="Code">HDF_VD_WRITE, Vdat, 'VEL', FINDGEN(3,10),NREC=5</p>
+        <p>VEL now contains [ [ 0.0, 1.0, 2.0 ], ..., [ 12.0, 13.0, 14.0] ]</p>
+        <p>HDF_VD_WRITE will not allow a user to specify more records than exist. For example, the following command fails:</p>
+        <p class="Code">HDF_VD_WRITE, Vdat, 'VEL', [1,2,3], NREC=1000</p>
+        <h3><a name="HDF_1733484267_999863_PageTOC_HDF_VD_WRITE_"></a>Known Issues</h3>
+        <p>HDF vdatas can only be appended or overwritten if they are defined at creation with a file interlacing mode of FULL_INTERLACE. Records in a fully interlaced vdata are written record-by-record which allows them to be appended or overwritten. For further information, consult the “Writing to Multi-Field Vdatas” section in the <i>HDF User's Guide</i> published by the National Center for Supercomputing (available at <p><a href="http://www.hdfgroup.org/training/HDFtraining/UsersGuide/Vdatas.fm4.html">http://www.hdfgroup.org/training/HDFtraining/UsersGuide/Vdatas.fm4.html</a>).</p></p>
+        <h3><a name="HDF_1733484267_999884_PageTOC_HDF_VD_WRITE_"></a>Restrictions</h3>
+        <p>It is not possible to write IDL structures directly to a VData (because of possible internal padding depending upon fields/machine architecture, etc.). The user must put the data into a byte array before using HDF_VD_WRITE.</p>
+        <p>When writing a series of fields all with the same type, the low order dimension of <i>Data</i> must match the sum of the orders of the fields. For example:</p>
+        <p class="Code">HDF_VD_WRITE, Vdat, 'PX,PY', FLTARR(3,10)</p>
+        <p>fails. PX and PY are both order 1 (total 2) and the array’s low order dimension is 3.</p>
+        <h2 class="API"><a name="HDF_1733484267_999865_PageTOC_HDF_VD_WRITE_"></a>Syntax</h2>
+        <p class="Syntax">HDF_VD_WRITE, <i>VData</i>, <i>Fields</i>, <i>Data</i> [,&#160;/<a href="#HDF_1733484267_1014369" class="selected">FULL_INTERLACE</a>&#160;|&#160;,&#160;/<a href="#HDF_1733484267_1014372" class="selected">NO_INTERLACE</a>] [,&#160;<a href="#HDF_1733484267_1014375" class="selected">NRECORDS</a>=<i>records</i>]</p>
+        <h2 class="API"><a name="HDF_1733484267_999867_PageTOC_HDF_VD_WRITE_"></a>Arguments</h2>
+        <h3 class="Argument">VData</h3>
+        <p>The VData handle returned by a previous call to <a href="HDF_VD_ATTACH.htm#HDF_1733484267_1012798">HDF_VD_ATTACH</a>.</p>
+        <h3 class="Argument">Fields</h3>
+        <p>A string containing a comma-separated list of the fields to be written.</p>
+        <h3 class="Argument">Data</h3>
+        <p>The data to be written to the specified VData.</p>
+        <h2 class="API"><a name="HDF_1733484267_999874_PageTOC_HDF_VD_WRITE_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="HDF_1733484267_1014369"></a><a name="HDF_1733484267_999876_Keywords_HDF_VD_WRITE_"></a>FULL_INTERLACE</h3>
+        <p>Set this keyword to use full interlace when writing (the default).</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1014372"></a><a name="HDF_1733484267_999879_Keywords_HDF_VD_WRITE_"></a>NO_INTERLACE</h3>
+        <p>Set this keyword to use no interlace when writing.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1014375"></a><a name="HDF_1733484267_999882_Keywords_HDF_VD_WRITE_"></a>NRECORDS</h3>
+        <p>The number of records to written. By default, HDF_VD_WRITE writes all records from a VData.</p>
+        <h2 class="API"><a name="HDF_1733484267_1117911_PageTOC_HDF_VD_WRITE_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

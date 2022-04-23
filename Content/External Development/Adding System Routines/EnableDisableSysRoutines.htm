@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Adding System Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Enabling and Disabling System Routines</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="AddingSystRoutines.htm">Adding System Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Enabling and Disabling System Routines</span>
+        </div>
+        <h1><a name="kanchor5518"></a>Enabling and Disabling System Routines</h1>
+        <p>The following IDL internal functions allow the enabling and/or disabling of  system routines. Disabled routines will throw an error when called from IDL code.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>These routines are primarily meant for authors of Runtime or Callable IDL applications.</p>
+        <h2 class="API">IDL_SysRtnEnable()</h2>
+        <p>The <b>IDL_SysRtnEnable()</b> function is used to enable and/or disable system routines.</p>
+        <h3>Syntax</h3>
+        <p class="Code">void IDL_SysRtnEnable(int is_function, IDL_STRING *names, </p>
+        <p class="Code">&#160;&#160;&#160;IDL_MEMINT n, int option, IDL_SYSRTN_GENERIC disfcn)</p>
+        <h3>Arguments</h3>
+        <h4>is_function</h4>
+        <p>Set to TRUE if functions are being manipulated, FALSE for procedures.</p>
+        <h4>names</h4>
+        <p>NULL, or an array of names of routines.</p>
+        <h4>n</h4>
+        <p>The number of names in names.</p>
+        <h4>option</h4>
+        <p>One of the values from the following specify what this routine should do:</p>
+        <ul>
+            <li value="1"><code>IDL_SRE_ENABLE</code>	(Enable specified routines)</li>
+            <li value="2"><code>IDL_SRE_ENABLE_EXCLUSIVE</code>	(Enable specified routines and disable all others)</li>
+            <li value="3"><code>IDL_SRE_DISABLE</code>	(Disable specified routines)</li>
+            <li value="4"><code>IDL_SRE_DISABLE_EXCLUSIVE</code>	(Disable specified routines and enable all others)</li>
+        </ul>
+        <h4>disfcn</h4>
+        <p>NULL, or address of an IDL system routine to be called by the IDL interpreter for these disabled routines. If this argument is not provided, a default routine is used.</p>
+        <h3>Result</h3>
+        <p>All routines are enabled/disabled as specified. If a non-existent routine is specified, it is quietly ignored. Attempts to enable routines disabled for licensing reasons are also quietly ignored.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The routines <b>CALL_FUNCTION</b>, <b>CALL_METHOD</b> (function and procedure), <b>CALL_PROCEDURE</b>, and <b>EXECUTE</b> are not real system routines, but are actually special cases that result in different IDL pcode. For this reason, they cannot be disabled. However, anything they can call can be disabled.</p>
+        <h2>IDL_SysRtnGetEnabledNames() </h2>
+        <p>The <b>IDL_SysRtnGetEnabledNames()</b> function can be used to obtain the names of all system routines which are currently enabled or disabled, either due to licensing reasons (i.e., some routines are disabled in IDL demo mode) or due to a call to <b>IDL_SysRtnEnable()</b>.</p>
+        <h3>Syntax</h3>
+        <p class="Code">void IDL_SysRtnGetEnabledNames(int is_function, IDL_STRING *str, int enabled)</p>
+        <h3>Arguments</h3>
+        <h4>is_function</h4>
+        <p>Set to TRUE if a list of functions is desired, FALSE for a list of procedures.</p>
+        <h4>str</h4>
+        <p>Points to a buffer of IDL_STRING descriptors to fill in. The caller must call <b>IDL_SysRtnNumEnabled()</b> to determine how many such routines exist, and this buffer must be large enough to hold that number.</p>
+        <h4>enabled</h4>
+        <p>Set to TRUE to receive names of enabled routines, FALSE to receive names of disabled ones.</p>
+        <h3>Result</h3>
+        <p>The memory supplied via str is filled in with the desired names.</p>
+        <h2>IDL_SysRtnGetEnabledNames() </h2>
+        <p>The <b>IDL_SysRtnGetEnabledNames()</b> function requires you to supply a buffer large enough to hold all of the names to be returned. <b>IDL_SysRtnNumEnabled()</b> can be called to obtain the number of such routines, allowing you to properly size the buffer.</p>
+        <h3>Syntax</h3>
+        <p class="Code">IDL_MEMINT IDL_SysRtnNumEnabled(int is_function, int enabled)</p>
+        <h3>Arguments</h3>
+        <h4>is_function</h4>
+        <p>Set to TRUE if the number of functions is desired, FALSE for procedures.</p>
+        <h4>enabled</h4>
+        <p>Set to TRUE to receive number of enabled routines, FALSE to receive number of disabled ones.</p>
+        <h3>Result</h3>
+        <p>Returns the requested count.</p>
+        <h2>IDL_SysRtnGetRealPtr() </h2>
+        <p>The <b>IDL_SysRtnGetRealPtr()</b> routine returns the pointer to the actual internal IDL function that implements the system function or procedure of the specified name.</p>
+        <p>You can use this routine to interpose your own code between IDL and the actual routine. This process is sometimes called "hooking." To implement such a hook function, you must use the IDL_SysRtnEnable() function to register the interposed routine, which in turn uses <b>IDL_SysRtnGetRealPtr()</b> to obtain the actual IDLfunction pointer for the routine.</p>
+        <h3>Syntax</h3>
+        <p class="Code">IDL_SYSRTN_GENERIC IDL_SysRtnGetRealPtr(int is_function, char *name)</p>
+        <h3>Arguments</h3>
+        <h4>is_function</h4>
+        <p>Set to TRUE if functions are being manipulated, FALSE for procedures.</p>
+        <h4>name</h4>
+        <p>The name of function or procedure for which the real function pointer is required.</p>
+        <h3>Result</h3>
+        <p>If the specified routine...</p>
+        <ul>
+            <li value="1">exists and is not disabled, its function pointer is returned.</li>
+            <li value="2">does not exist, a NULL pointer is returned.</li>
+            <li value="3">has been disabled by the user, its actual function pointer is returned.</li>
+            <li value="4">has been disabled for licensing reasons, the real function pointer does not exist, and the pointer to its stub is returned.</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine can cause an <b>IDL_MSG_LONGJMP</b> message to be issued if the function comes from a DLM and the DLM load fails due to memory allocation errors. Therefore, it must not be called unless the IDL interpreter is active. The prime intent for this routine is to call it from the stub routine of a disabled function when the interpreter invokes the associated system routine.</p>
+        <h2>IDL_SysRtnGetCurrentName() </h2>
+        <p>To get the IDL name for the currently executing system routine, use  <b>IDL_SysRtnGetCurrentName()</b>.</p>
+        <h3>Syntax</h3>
+        <p class="Code">char *IDL_SysRtnGetCurrentName(void)</p>
+        <p>This function returns a pointer to the name of the currently executing system routine. If there is no currently executing system routine, a NULL (0) pointer is returned.</p>
+        <p>This routine will never return NULL if called from within a system routine.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|Java Import Bridge">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Managing IDL-Java Object Properties</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Java Import Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Managing IDL-Java Object Properties</span>
+        </div>
+        <h1><a name="Managing_IDL-Java_Object_Properties"></a><a name="kanchor5393"></a>Managing <a name="kanchor5394"></a>IDL-Java Object Properties</h1>
+        <p>Property names and arguments are also passed to the IDL Java subsystem and are used in conjunction with the Java Reflection API to construct and access public data members on the underlying object. These public data members (known as properties in IDL) are identified through arguments to the GetProperty and SetProperty methods. See <a href="#Getting_and_Setting_Properties" class="selected">Getting and Setting Properties</a> for more information.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Only public data members may be accessed.</p>
+        <p>Due to case-sensitivity incompatibilities between IDL and Java and the fact that Java might promote certain data types, the Java bridge uses an algorithm to match the IDL properties name to the corresponding Java object data members.</p>
+        <p>Before the algorithm starts, IDL provides a case-insensitive &lt;PROPERTYNAME&gt; and a reference to the Java object. For the given object and its parent classes, the Java bridge obtains a list of all the public data members including static members. This algorithm performs the following steps:</p>
+        <ol>
+            <li value="1">If the Java class has one data member name matching the IDL &lt;PROPERTYNAME&gt; (except for case insensitivity), this Java data member is used. At this point, data types are not yet taken into account; this algorithm only matches the data member names.</li>
+            <li value="2">If the Java class has several member names that differ only in case, the data member name that exactly matches the IDL &lt;PROPERTYNAME&gt; (i.e. the one that is all caps) is called. Otherwise, the IDL-Java bridge issues an error that the class has no data members named &lt;PROPERTYNAME&gt;.</li>
+            <li value="3">When setting a property with the SetProperty method, a promotion algorithm matches the provided IDL parameter with the Java data parameter as closely as possible. If the IDL value can be promoted to the same type as the data member, this data member is used. Otherwise, an error is issued.</li>
+            <p>When retrieving a property with the GetProperty method, this step is skipped and the value is returned to IDL.</p>
+        </ol>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The <i>allprops.pro</i> and <i>publicmembers.pro</i> files in the <i>resource/bridges/import/java/examples</i> directory of the IDL distribution provide information about data members associated with given Java classes. Run the example procedures by entering <i>allprops</i> and <i>publicmembers</i> at the IDL command prompt or view the files in an IDL Editor window by entering <i>.EDIT allprops.pro</i> or <i>.EDIT publicmembers.pro</i>.</p>
+        <h2><a name="Getting_and_Setting_Properties"></a>Getting and Setting Properties</h2>
+        <p>The IDL-Java bridge follows the standard IDL property interface to support data member access on Java objects and classes.</p>
+        <p>To retrieve a property value from a Java object, use the following syntax:</p>
+        <p class="Code">ObjRef-&gt;GetProperty, PROPERTY=variable</p>
+        <p>where <i>ObjRef</i> is an instance of IDLjavaObject that encapsulates the Java object, PROPERTY is the name of the Java object’s data member (property), and variable is the name of an IDL variable that will contain the retrieved property value.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Use the function syntax if there is a return value (i.e. "result = ObjRef-&gt;GetProperty([PROPERTY])").</p>
+        <p>To retrieve multiple property values in a single statement supply multiple PROPERTY=<i>variable</i> pairs separated by commas.</p>
+        <p>To set a property value on a Java object, use the following syntax:</p>
+        <p class="Code">ObjRef-&gt;SetProperty, Property=value</p>
+        <p>where <i>ObjRef</i> is an instance of IDLjavaObject that encapsulates the Java object, PROPERTY is the name of the Java object’s data member, and value is value of the property to be set.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Use the function syntax if there is a return value (i.e. "result = ObjRef-&gt;SetProperty([Property, value])").</p>
+        <p>To set multiple property values in a single statement supply multiple PROPERTY=<i>value</i> pairs separated by commas.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The provided PROPERTY must map directly to a data member name. Any name passed into either of the property routines is assumed to be a fully qualified Java property name. As such, the partial property name functionality provided by IDL is not valid with IDL Java based objects.</p>
+        <p>The <i>variable</i> or <i>value</i> part may be an IDL primitive type, an instance of IDLJavaObject, or an array of an IDL primitive type. See <a href="IDL-JavaBridgeDataTypeMapping.htm#IDL-Java_Bridge_Data_Type_Mapping">IDL-Java Bridge Data Type Mapping</a> for more information.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Besides other Java-based objects, no complex types (structures, pointers, etc.) are supported as parameters to property calls.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

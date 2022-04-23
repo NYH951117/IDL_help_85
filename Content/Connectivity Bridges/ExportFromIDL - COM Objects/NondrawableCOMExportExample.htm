@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|COM Export Bridge|Examples">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Nondrawable COM Export Example</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">COM Export Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Examples</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Nondrawable COM Export Example</span>
+        </div>
+        <h1><a name="Nondrawable_COM_Export_Example"></a><a name="kanchor5186"></a>Nondrawable <a name="kanchor5187"></a>COM Export Example</h1>
+        <p><a name="kanchor5188"></a>Nondrawable objects provide access to the enormous processing power of IDL, but do not provide IDL drawing capabilities. This is useful for applications that need the data manipulation capabilities of IDL, but have no need for, or have independent drawing capabilities.</p>
+        <h2><a name="Hello_World_COM_Example_with_Custom_Method"></a>Hello World COM Example with Custom Method</h2>
+        <p>The following simple example creates an IDL object with a single function method that accepts one argument, and walks through the process of exporting the object using the Export Bridge Assistant. Once the export files are created, a simple Visual Basic .NET console application shows how to access the object method and capture its output.</p>
+        <p>Complete the following steps to duplicate this example.</p>
+        <ol>
+            <li value="1">  In an IDL Editor window, copy in the following code and save the file as <i>helloworldex__define.pro</i> in a directory in your IDL path:</li>
+        </ol>
+        <p class="Code">; Method returns message based on presence or</p>
+        <p class="Code">; absence of argument.</p>
+        <p class="Code">FUNCTION helloworldex::HelloFrom, who</p>
+        <p class="Code_Indented">IF (N_ELEMENTS(who) NE 0) THEN BEGIN</p>
+        <p class="Code_Indented" style="text-indent: 20px;">message = "Hello World from " + who</p>
+        <p class="Code_Indented" style="text-indent: 20px;">RETURN, message</p>
+        <p class="Code_Indented">ENDIF ELSE BEGIN</p>
+        <p class="Code_Indented" style="text-indent: 20px;">message = 'Hello World'</p>
+        <p class="Code_Indented" style="text-indent: 20px;">RETURN, message</p>
+        <p class="Code_Indented">ENDELSE</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Init returns object reference on successful</p>
+        <p class="Code">; initialization.</p>
+        <p class="Code">FUNCTION helloworldex::INIT</p>
+        <p class="Code_Indented">RETURN, 1</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Object definition.</p>
+        <p class="Code">PRO helloworldex__define</p>
+        <p class="Code_Indented">struct = { $</p>
+        <p class="Code_Indented" style="text-indent: 20px;">helloworldex, $</p>
+        <p class="Code_Indented" style="text-indent: 20px;">who: '' , $</p>
+        <p class="Code_Indented" style="text-indent: 20px;">message: ' ' $</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code">END</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>It is a good idea to test the functionality of an object before exporting it. After compiling the file, enter the following lines at the command line and make sure the output is what is expected for this object.</p>
+        <p class="Code">ohello = OBJ_NEW("HELLOWORLDEX") PRINT, ohello-&gt;HelloFrom()</p>
+        <p class="Code">PRINT, ohello-&gt;HelloFrom('Mr. Bill')</p>
+        <ol data-mc-continue="true">
+            <li value="2">Open the Export Bridge Assistant by entering IDLEXBR_ASSISTANT at the command line.</li>
+            <li value="3">Select to create a COM export object by selecting <b>File &gt; New Project &gt; COM</b> and browse to select the <i>helloworldex__define.pro</i> file. Click Open to load the file into the Export Assistant.</li>
+        </ol>
+        <p class="NoteIndent" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Export Bridge Assistant details are available in <a href="../ExportFromIDL - Export Bridge Assistant/SpecifyingInformationForExporting.htm#Specifying_Information_For_Exporting">Specifying Information for Exporting</a>. Refer to that section if you need more information about the following steps.</p>
+        <ol data-mc-continue="true">
+            <li value="4">The top-level project entry in the left-hand tree panel is selected by default.</li>
+        </ol>
+        <p class="indent">There is no need to modify the default properties shown in the right-hand property panel, but you can enter different values if desired. Set other export object characteristics as described in the following table. Select the tree view item listed in the left column to configure the related properties in the right column.</p>
+        <table style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Tree View Item</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Parameter Configuration</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>IDL Export Bridge Project</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>	Accept the default value or make changes as desired:</p>
+                        <ul>
+                            <li value="1"> Output classname</li>
+                            <li value="2"> Process name</li>
+                            <li value="3"> Output directory</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>helloworldex	</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Drawable object equals False</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>HELLOFROM method</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p><b>Output method name</b> — accept the default value, HELLOFROM</p>
+                        <p><b>Return Type</b> — BSTR since this function method returns a string message (as defined in the IDL object definition structure)</p>
+                        <p><b>Array</b> — False since this method returns a single string, not an array</p>
+                        <p><b>Export</b> — True</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>WHO argument</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p><b>Mutability</b> — In since the argument is not passed back to the caller</p>
+                        <p><b>Type</b> — BSTR since this argument is defined as a string in the IDL object definition</p>
+                        <p><b>Array</b> — False</p>
+                        <p><b>Export</b> — True</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <ol data-mc-continue="true">
+            <li value="5">Save the project by selecting <b>File &gt; Save project</b>. Accept the default name and location or make changes as desired.</li>
+            <li value="6">Verify that the object elements you want to export are listed in the Export log panel. If the expected items are not present, one or more items may still have an UNSPECIFIED field value that must be changed.</li>
+            <li value="7">Build the export object by selecting <b>Build &gt; Build object</b>. The <b>Build log</b> panel shows the results of the build process. For a nondrawable object, .tlb and .dll files (named based on the object name) are created in the <b>Output directory</b>.</li>
+            <li value="8">Register the <i>.dll</i> using <i>regsvr32 helloworldex.dll</i>. See <a href="../ExportFromIDL - IDL Objects/ConfiguringBuildAndClientMachines.htm#COM_Registration_Requirements">COM Registration Requirements</a> for details if needed.</li>
+            <li value="9">Create a new Visual Basic .NET console application and import a reference to the COM library named <i>helloworldexLib 1.0 Type Library</i>.</li>
+            <li value="10">Replace the default module code with the text in the file referenced below. See code comments for details.</li>
+        </ol>
+        <h3>Example Code</h3>
+        <p>The text file for this example, <i>com_export_helloex_doc.txt</i>, is located in the <i>examples/doc/bridges/COM</i> subdirectory of the IDL distribution. This Visual Basic .NET code can be copied from the text file and adopted for use in your COM environment.</p>
+        <p>After building the solution and starting without debugging, the console window appears with the output messages.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

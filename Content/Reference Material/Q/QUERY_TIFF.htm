@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: Q">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>QUERY_TIFF </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Q_list.htm">Routines: Q</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">QUERY_TIFF</span>
+        </div>
+        <h1 class="Routine"><a name="Q_815714925_1045766"></a><a name="kanchor2155"></a><a name="Q_815714925_10988"></a>QUERY_TIFF </h1>
+        <p>QUERY_TIFF is a method of obtaining information about a TIFF image file without having to read the file. See <a href="QUERY___Routines.htm#Q_815714925_982368">QUERY_* Routines</a> for more information.</p>
+        <h2 class="API"><a name="Q_815714925_1045790"></a><a name="Q_815714925_1045790_PageTOC_QUERY_TIFF_"></a>Examples</h2>
+        <p>This is an example of using QUERY_TIFF to write and read a multi-image TIFF file. The first image is a 16-bit, single channel image stored using compression. The second image is an RGB image stored using 32-bits/channel uncompressed.</p>
+        <p class="Code">PRO ex_query_tiff</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Write the image data:</p>
+        <p class="Code">data = FIX(DIST(256))</p>
+        <p class="Code">rgbdata = LONARR(3,320,240)</p>
+        <p class="Code">tif_file = FILEPATH('multi.tif', /TMP)</p>
+        <p class="Code">WRITE_TIFF,tif_file,data,COMPRESSION=1,/SHORT</p>
+        <p class="Code">WRITE_TIFF,tif_file,rgbdata,/LONG,/APPEND</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Read the image data back:</p>
+        <p class="Code">ok = QUERY_TIFF(tif_file,s)</p>
+        <p class="Code">IF (ok) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;FOR i=0,s.NUM_IMAGES-1 DO BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;imp = QUERY_TIFF(tif_file,t,IMAGE_INDEX=i)</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;img = READ_TIFF(tif_file,IMAGE_INDEX=i)</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;HELP,t,/STRUCTURE</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;HELP,img</p>
+        <p class="Code">&#160;&#160;&#160;ENDFOR</p>
+        <p class="Code">ENDIF</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="Q_815714925_1045774"></a><a name="Q_815714925_1045774_PageTOC_QUERY_TIFF_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = QUERY_TIFF ( <i>Filename </i>[,&#160;<i>Info</i>] [,&#160;<a href="#Q_815714925_1091493" class="selected">GEOTIFF</a>=<i>variable</i>] [,&#160;<a href="#Q_815714925_1045788" class="selected">IMAGE_INDEX</a>=<i>index</i>] )</p>
+        <h2 class="API"><a name="Q_815714925_1073793"></a><a name="Q_815714925_1073793_PageTOC_QUERY_TIFF_"></a>Return Value</h2>
+        <p>This routine returns a long with the value of 1 (one) if the query was successful (and the file type was correct) or 0 (zero) on failure.</p>
+        <h2 class="API"><a name="Q_815714925_1045776"></a><a name="Q_815714925_1045776_PageTOC_QUERY_TIFF_"></a>Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>A scalar string containing the pathname of the TIFF file to query.</p>
+        <h3 class="Argument">Info</h3>
+        <p>Returns an anonymous structure containing information about the image in the file. The Info.TYPE field will return the value ‘TIFF’.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>See <a href="QUERY___Routines.htm#Q_815714925_1072337">General Query * Routine Info Structures</a> for detailed structure information.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In addition to the fields returned in the Info structure for all image types, there are a number of extra fields in the Info structure for TIFF images. See <a href="QUERY___Routines.htm#Q_815714925_1072333">QUERY_TIFF-Specific Routine Info Structures</a> for detailed structure info.</p>
+        <h2 class="API"><a name="Q_815714925_1045786"></a><a name="Q_815714925_1045786_PageTOC_QUERY_TIFF_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="Q_815714925_1091493"></a><a name="Q_815714925_75013"></a>GEOTIFF</h3>
+        <p>Set this keyword to a named variable in which to return an anonymous structure containing the GeoTIFF tags and keys found in the file. If no GeoTIFF information is present in the file, the returned variable is set to a scalar zero. For a description of the possible GeoTIFF tags see the GEOTIFF keyword in READ_TIFF.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>This keyword returns the same information as the GEOTIFF keyword to READ_TIFF, but avoids the overhead of reading in the entire image.</p>
+        <h3 class="Keyword"><a name="Q_815714925_1045788"></a><a name="Q_815714925_1045788_Keywords_QUERY_TIFF__"></a>IMAGE_INDEX</h3>
+        <p>Image number index. If this value is larger than the number of images in the file, the function returns 0 (failure).</p>
+        <h2 class="API"><a name="Q_815714925_1045807"></a><a name="Q_815714925_1045807_PageTOC_QUERY_TIFF_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>5.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">
+                        <p>Added DESCRIPTION, DOCUMENT_NAME, DATE_TIME, and POSITION <i>Info</i> structures</p>
+                        <p>Added GEOTIFF keyword</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">8.2</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">Added support for BigTIFF files.</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="Q_815714925_1076524"></a><a name="Q_815714925_1076524_PageTOC_QUERY_TIFF_"></a>See Also</h2>
+        <p><a href="QUERY___Routines.htm#Q_815714925_982368">QUERY_* Routines</a>, <a href="../R/READ_TIFF.htm#R_822202989_843871">READ_TIFF</a>, <a href="../W/WRITE_TIFF.htm#W_811389549_943138">WRITE_TIFF</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

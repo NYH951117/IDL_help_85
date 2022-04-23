@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_SP_BDFAC</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1>IMSL_SP_BDFAC</h1>
+        <p>The IMSL_SP_BDSOL procedure computes the LU factorization of a matrix stored in band storage mode.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>The IMSL_SP_BDFAC function computes the <i>LU</i> factorization of <i>A</i> with based on the blocked <i>LU</i> factorization algorithm given in Du Croz, et al, (1990). Level-3 BLAS invocations were replaced by in-line loops. The blocking factor BLK_FACTOR has the default value of 1, but can be reset to any positive value not exceeding 32.</p>
+        <p>An estimate of the <i>L<sub>1</sub></i> condition number of <i>A</i> is computed using Higham’s modifications to Hager’s method, as given in Higham (1988). If the estimated condition number is greater than 1/ε (where ε is the machine precision), a warning message is issued. This indicates that very small changes in <i>A</i> may produce large changes in the solution <i>x</i>.</p>
+        <h2 class="API">Example</h2>
+        <p>Consider the 1000 x 1000 banded matrix below:</p>
+        <p>
+            <img src="images/IMSL_SP_BDSOL_Example.png" />
+        </p>
+        <p>This example computes the solution to <i>Ax<sub>1</sub> = b<sub>1</sub></i> and <i>Ax<sub>2</sub> = b<sub>2</sub></i>, where <i>b<sub>1</sub></i> and <i>b<sub>2</sub></i> are random vectors. The factorization is computed just once, using IMSL_SP_BDFAC, and the solutions are computed using IMSL_SP_BDSOL.</p>
+        <p>&#160;</p>
+        <p class="Code">n_rows = 1000L</p>
+        <p class="Code">nlca = 1L</p>
+        <p class="Code">nuca = 1L</p>
+        <p class="Code">a = DBLARR(n_rows*(nlca+nuca+1))</p>
+        <p class="Code">a(1:n_rows-1) = 4</p>
+        <p class="Code">a(n_rows:2*n_rows-1) = -1</p>
+        <p class="Code">a(2*n_rows:*) = 4</p>
+        <p class="Code">; Fill A with the values of the bands.</p>
+        <p class="Code">seed = 123L</p>
+        <p class="Code">b1 = RANDOMU(seed, n_rows)</p>
+        <p class="Code">b2 = RANDOMU(seed, n_rows)</p>
+        <p class="Code">; Fill random vectors</p>
+        <p class="Code">IMSL_SP_BDFAC, nlca, nuca, n_rows, a, pivot, factor</p>
+        <p class="Code">; Compute the factorization using IMSL_SP_BDFAC.</p>
+        <p class="Code">x1 = IMSL_SP_BDSOL(b1, nlca, nuca, Factor = factor, Pivot = pivot)</p>
+        <p class="Code">; Compute solution of Ax1 = b1 above, and output residual below.</p>
+        <p class="Code">PM, TOTAL(ABS(IMSL_SP_MVMUL(n_rows, n_rows, nlca, nuca, $</p>
+        <p class="Code_Indented">a, x1)-b1))</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">1.2367884e-13</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">x2 = IMSL_SP_BDSOL(b2, nlca, nuca, Factor = factor, Pivot = pivot)</p>
+        <p class="Code">; Compute the solution of Ax2 = b2 above, and output residual.</p>
+        <p class="Code">PM, TOTAL(ABS(IMSL_SP_MVMUL(n_rows, n_rows, nlca, nuca, $</p>
+        <p class="Code_Indented">a, x2)-b2))</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">9.1537888e-14</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax">IMSL_SP_BDFAC, <i>nlca</i>, <i>nuca</i>, <i>n_rows</i>, <i>a</i>, <i>pivot</i>, <i>factor</i> [, <a href="#BLK_FACT" class="selected"><a href="#BLK_FACT" class="selected">BLK_FACTOR</a></a>=<i>value</i>] [, <a href="#CONDITIO" class="selected">CONDITION</a>=<i>variable</i>] [, /<a href="#DOUBLE" class="selected">DOUBLE</a>] </p>
+        <h2 class="API">Return Value</h2>
+        <p>None.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">a</h3>
+        <p>Array of size (<i>nlca</i> + <i>nuca</i> + 1) x <i>n</i> containing the <i>n x n</i> banded coefficient matrix in band storage mode <i>A(i, j)</i>. See “Band Storage Format” for a description of band storage mode.</p>
+        <h3 class="Argument">factor</h3>
+        <p>A named variable that will contain an array of size (<i>2*nlca + nuca + 1</i>) x <i>n_rows</i> containing the <i>LU</i> factorization of <i>A</i> with column pivoting. The keywords FACTOR and CONDITION cannot be used together.</p>
+        <h3 class="Argument">nlca</h3>
+        <p>Number of lower codiagonals in <i>a</i>.</p>
+        <h3 class="Argument">nuca</h3>
+        <p>Number of upper codiagonals in <i>a</i>.</p>
+        <h3 class="Argument">n_rows</h3>
+        <p>Number of rows in <i>a</i>.</p>
+        <h3 class="Argument">pivot</h3>
+        <p>A named variable that will contain a one-dimensional array containing the pivot sequence. The keywords PIVOT and CONDITION cannot be used together.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="BLK_FACT"></a>BLK_FACTOR</h3>
+        <p>The blocking factor. This keyword must be set no larger than 32. Default: BLK_FACTOR = 1.</p>
+        <h3 class="Keyword"><a name="CONDITIO"></a>CONDITION</h3>
+        <p>Named variable into which an estimate of the <i>L<sub>1</sub></i> condition number is stored. This keyword cannot be used with PIVOT and FACTOR.</p>
+        <h3 class="Keyword"><a name="DOUBLE"></a>DOUBLE</h3>
+        <p>If present and nonzero, double precision is used.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="IMSL_SP_BDSOL.htm">IMSL_SP_BDSOL</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

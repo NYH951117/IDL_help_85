@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: S">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>SEM_DELETE</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="S_list.htm">Routines: S</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">SEM_DELETE</span>
+        </div>
+        <h1 class="Routine"><a name="S_820040301_1318499"></a><a name="S_820040301_53464"></a><a name="kanchor2343"></a>SEM_DELETE</h1>
+        <p>The SEM_DELETE procedure destroys the reference to the specified semaphore within the current IDL process. (Semaphores themselves are independent of any IDL process.)</p>
+        <p>SEM_DELETE behaves differently on UNIX and Windows systems:</p>
+        <h4>UNIX Systems</h4>
+        <p>On UNIX systems, a semaphore can exist even if no process has a reference to it. In addition to destroying the reference to the specified semaphore within the current IDL process, SEM_DELETE will schedule the semaphore itself for destruction in the following situations:</p>
+        <ul>
+            <li value="1">If the semaphore itself was created by the current IDL process, and the DESTROY_SEMAPHORE keyword was <i>not</i> explicitly set equal to zero.</li>
+            <li value="2">If the reference to the semaphore was created in the current IDL process with the DESTROY_SEMAPHORE keyword set equal to one. </li>
+        </ul>
+        <p class="indent">See <a href="SEM_CREATE.htm#S_820040301_1318458">DESTROY_SEMAPHORE</a> for additional information.</p>
+        <p>A semaphore that has been scheduled for destruction will be destroyed when the last process that has a reference to it destroys its reference.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>On UNIX systems, a semaphore is marked for deletion when the process that <i>created</i> the semaphore exits. While this does not immediately delete the semaphore itself, it does free up the semaphore’s <i>name</i>. This means that after the process that created a semaphore exits — even if other processes have references to that semaphore — SEM_CREATE will create a new and distinct semaphore with the same name. Any subsequent processes that call SEM_CREATE with that name will receive a reference to the new semaphore.<br /><br />If this behavior causes problems for your application, ensure that the process that creates a semaphore does not exit until all processes that use the semaphore have either exited or deleted their references to the semaphore.</p>
+        <h4>Windows Systems</h4>
+        <p>On Windows systems, a semaphore only exists as long as some process has a reference to it. SEM_DELETE simply destroys the reference to the specified semaphore.</p>
+        <h2 class="API"><a name="S_820040301_1318511"></a><a name="S_820040301_1318511_PageTOC_SEM_DELETE_"></a>Example</h2>
+        <p>See <a href="SEM_LOCK.htm">SEM_LOCK</a> for an example using this function.</p>
+        <h2 class="API"><a name="S_820040301_1318504"></a><a name="S_820040301_1318504_PageTOC_SEM_DELETE_"></a>Syntax</h2>
+        <p class="Syntax">SEM_DELETE, <i>strName</i></p>
+        <h2 class="API"><a name="S_820040301_1318506"></a><a name="S_820040301_1318506_PageTOC_SEM_DELETE_"></a>Arguments</h2>
+        <h3 class="Argument">strName</h3>
+        <p>A scalar string containing the name associated with the semaphore. This is the name used when creating the semaphore with SEM_CREATE. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Semaphore names must be 24 characters or less on Macintosh platforms.</p>
+        <h2 class="API"><a name="S_820040301_1318509"></a><a name="S_820040301_1318509_PageTOC_SEM_DELETE_"></a>Keywords</h2>
+        <p>None</p>
+        <h2 class="API"><a name="S_820040301_1318513"></a><a name="S_820040301_1318513_PageTOC_SEM_DELETE_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2><a name="S_820040301_1318520"></a><a name="S_820040301_1318520_PageTOC_SEM_DELETE_"></a>See Also</h2>
+        <p><a href="SEM_CREATE.htm#S_820040301_1318441">SEM_CREATE</a>, <a href="SEM_LOCK.htm#S_820040301_1318522">SEM_LOCK</a>, <a href="SEM_RELEASE.htm#S_820040301_1318571">SEM_RELEASE</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Program Control">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Jump Statements</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Program Control.htm">Program Control</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Jump Statements</span>
+        </div>
+        <h1><a name="prog_control_2688138422_711018"></a><a name="prog_control_2688138422_32658"></a>Jump Statements</h1>
+        <p>Jump statements can be used to modify the behavior of conditional and iterative statements. Jump statements allow you to exit a loop, start the next iteration of a loop, or explicitly transfer program control to a specified location in your program.</p>
+        <h2 class="API"><a name="kanchor4946"></a><a name="prog_control_2688138422_34379"></a>Statement Labels</h2>
+        <p>Labels are the destinations of GOTO statements as well as the ON_ERROR and ON_IOERROR procedures. The label field is simply an identifier followed by a colon. Label identifiers, as with variable names, consist of 1 to 15 alphanumeric characters, and are case insensitive. The dollar sign ($) and underscore (_) characters can appear after the first character. Some examples of labels are as follows:</p>
+        <p class="Code">LABEL1:</p>
+        <p class="Code">LOOP_BACK: A = 12</p>
+        <p class="Code">I$QUIT: RETURN &#160;&#160;;Comments are allowed.</p>
+        <h2 class="API"><a name="prog_control_2688138422_711053"></a><a name="prog_control_2688138422_68075"></a>BREAK</h2>
+        <p><a name="kanchor4947"></a>The BREAK statement provides a convenient way to immediately exit from a loop (FOR, FOREACH, WHILE, REPEAT), CASE, or SWITCH statement without resorting to the GOTO statement. </p>
+        <h3>Example</h3>
+        <p>This example illustrates a situation in which using the BREAK statement makes a loop more efficient. In this example, we create a 10,000-element array of integers from 0 to 9999, ordered randomly. Then we use a loop to find where in the array the value 5 is located. If the value is found, we BREAK out of the loop because there is no need to check the rest of the array:</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This example could be written more efficiently using the <a href="../../Reference Material/W/WHERE.htm#W_811389549_679886">WHERE</a> function. This example is intended only to illustrate how BREAK might be used.</p>
+        <p class="Code">; Create a randomly-ordered array of integers</p>
+        <p class="Code">; from 0 to 9999:</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">array = SORT(RANDOMU(seed,10000))</p>
+        <p class="Code">n = N_ELEMENTS(array)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Find where in array the value 5 in located:</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">FOR i = 0,n-1 DO BEGIN</p>
+        <p class="Code">   IF (array[i] EQ 5) THEN BREAK</p>
+        <p class="Code">ENDFOR</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRINT, i</p>
+        <p>We could write this loop without using the BREAK statement, but this would require us to continue the loop even after we find the value we’re looking for (or resort to using a GOTO statement):</p>
+        <p class="Code">FOR i = 0, n-1 DO BEGIN</p>
+        <p class="Code">   IF (array[i] EQ 5) THEN found=i</p>
+        <p class="Code">ENDFOR</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRINT, found</p>
+        <h2 class="API"><a name="prog_control_2688138422_711063"></a><a name="prog_control_2688138422_71672"></a>CONTINUE</h2>
+        <p><a name="kanchor4948"></a>The CONTINUE statement provides a convenient way to immediately start the next iteration of the enclosing FOR, FOREACH, WHILE, or REPEAT loop. Whereas the BREAK statement exits from a loop, the CONTINUE statement exits only from the current loop iteration, proceeding immediately to the next iteration.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Do not confuse the CONTINUE statement described here with the <a href="../../Reference Material/Dot Commands/_CONTINUE.htm#symbols_612366544_983151">.CONTINUE</a> executive command The two constructs are not related, and serve completely different purposes.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>CONTINUE is not allowed within CASE or SWITCH statements. This is in contrast with the C language, which does allow this.</p>
+        <h3>Example</h3>
+        <p>This example presents one way (not necessarily the best) to print the even numbers between 1 and 10:</p>
+        <p class="Code">FOR I=1,10 DO BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;IF (I AND 1) THEN CONTINUE&#160;&#160;; If odd, start next iteration</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;PRINT, I</p>
+        <p class="Code">ENDFOR</p>
+        <h2 class="API"><a name="prog_control_2688138422_711027"></a><a name="prog_control_2688138422_42899"></a>GOTO</h2>
+        <p><a name="kanchor4949"></a>The GOTO statement is used to transfer program control to a point in the program specified by the label. The GOTO statement is generally considered to be a poor programming practice that leads to unwieldy programs. Its use should be avoided. However, for those cases in which the use of a GOTO is appropriate, IDL does provide the GOTO statement.</p>
+        <p>Note that using a GOTO to jump into the middle of a loop results in an error.</p>
+        <p>The syntax of the GOTO statement is as follows:</p>
+        <p class="Code">GOTO, <i>Label</i></p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You must be careful in programming with GOTO statements. It is not difficult to get into a loop that will never terminate, especially if there is not an escape (or test) within the statements spanned by the GOTO.</p>
+        <h3>Example</h3>
+        <p>In the following example, the statement at label JUMP1 is executed after the GOTO statement, skipping any intermediate statements:</p>
+        <p class="Code">GOTO, JUMP1</p>
+        <p class="Code">PRINT, 'Skip this' ; This statement is skipped</p>
+        <p class="Code">PRINT, 'Skip this' ; This statement is also skipped</p>
+        <p class="Code">JUMP1: PRINT, 'Do this'</p>
+        <p>The label can also occur before the GOTO statement that refers to the label, but you must be careful to avoid an endless loop. GOTO statements are frequently the subjects of IF statements, as in the following statement:</p>
+        <p class="Code">IF A NE G THEN GOTO, MISTAKE</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

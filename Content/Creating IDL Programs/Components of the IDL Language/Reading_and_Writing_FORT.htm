@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Reading and Writing FORTRAN Data</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="files_2839720996_2885327"></a><a name="files_2839720996_26511"></a>Reading and Writing FORTRAN Data</h1>
+        <p>The standard FORTRAN <i>unformatted sequential</i> file input/output mechanism performs file input and output by reading and writing blocks of data from (or to) a file as <i>logical records</i>. To read data, the FORTRAN program asks for the next logical record from an open file; the operating system is then responsible for determining how much data should be retrieved from the file. This system works well for operating systems like VMS, which organize files into records and can thus keep track of where logical blocks of data begin and end.</p>
+        <p>In contrast, the UNIX and Microsoft Windows operating systems supported by IDL treat files as an uninterrupted stream of bytes. In order to reconcile the FORTRAN need for logical records with these <i>stream files</i>, FORTRAN compilers for UNIX and Microsoft Windows provide a mechanism to add a longword integer count of the number of bytes in each logical record. This mechanism allows FORTRAN-generated data files that treat data as a series of logical records to be read on platforms that use stream files.</p>
+        <p>The F77_UNFORMATTED keyword to the OPEN procedures informs IDL that the file contains unformatted data demarcated by logical record identifiers. When a file is opened with this keyword, IDL interprets the longword counts properly and is able to read the logical records. Similarly, IDL can write data using the logical record format using the F77_UNFORMATTED keyword.</p>
+        <p>Use the F77_UNFORMATTED keyword if your IDL program is reading data that contain embedded longword logical record separators, or if your program is writing data that will be read by a FORTRAN program that reads unformatted sequential files.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>On 64-bit machines, some Fortran compilers will insert record markers that are 64-bit integers instead of the standard 32-bit integers. When reading FORTRAN data, IDL will attempt to recognize the presence of 64-bit record markers and switch to the appropriate format. When writing unformatted Fortran files, IDL will continue to use 32-bit record markers.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Direct-access FORTRAN I/O does not write data using logical records, but simply transfers binary data to or from the file.</p>
+        <h2 class="API">Reading Data from a FORTRAN File</h2>
+        <p>The following FORTRAN program, when run on a UNIX or Microsoft Windows system (that is, an operating system that uses stream files), produces a file containing a five-column by three-row array of floating-point values with each element set to its one-dimensional subscript:</p>
+        <p class="Code">&#160;&#160;&#160;&#160;PROGRAM ftn2idl</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;INTEGER i, j</p>
+        <p class="Code">&#160;&#160;&#160;&#160;REAL data(5, 3)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;OPEN(1, FILE="ftn2idl.dat", FORM="unformatted")</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;DO 100 j = 1, 3</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DO 100 i = 1, 5</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;data(i,j) = ((j - 1) * 5) + (i - 1)</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;print *, data(i,j)</p>
+        <p class="Code">100&#160;CONTINUE</p>
+        <p class="Code">&#160;&#160;&#160;&#160;WRITE(1) data</p>
+        <p class="Code">&#160;&#160;&#160;&#160;END</p>
+        <p>Running this program creates the file <i>ftn2idl.dat</i> containing the unformatted array. The following IDL statements can be used to read this file and print out its contents:</p>
+        <p class="Code">;Create an array to contain the fortran array.</p>
+        <p class="Code">data = FLTARR(5,3)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Open the fortran-generated file. The F77_UNFORMATTED keyword is </p>
+        <p class="Code">;necessary so that IDL will know that the file contains unformatted </p>
+        <p class="Code">;data produced by a UNIX FORTRAN program.</p>
+        <p class="Code">OPENR, lun, 'ftn2idl.dat', /GET_LUN, /F77_UNFORMATTED</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Read the data in a single input operation.</p>
+        <p class="Code">READU, lun, data</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Release the logical unit number and close the fortran file.</p>
+        <p class="Code">FREE_LUN, lun</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Print the result.</p>
+        <p class="Code">PRINT, data</p>
+        <p>Executing these IDL statements produces the following output:</p>
+        <p class="Code">0.00000      1.00000      2.00000      3.00000      4.00000</p>
+        <p class="Code">5.00000      6.00000      7.00000      8.00000      9.00000</p>
+        <p class="Code">10.0000      11.0000      12.0000      13.0000      14.0000</p>
+        <p>Because unformatted data produced by FORTRAN unformatted WRITE statements on an operating system that uses stream files are interspersed with extra information before and after each logical record, it is important that the IDL program read the data in the same way that the FORTRAN program wrote it. For example, consider the following attempt to read the above data file one row at a time:</p>
+        <p class="Code">;Create an array to contain one row of the FORTRAN array.</p>
+        <p class="Code">data = FLTARR(5, /NOZERO)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">OPENR, lun, 'ftn2idl.dat', /GET_LUN, /F77_UNFORMATTED</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;One row at a time.</p>
+        <p class="Code">FOR I = 0, 4 DO BEGIN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;;Read a row of data.</p>
+        <p class="Code">&#160;&#160;&#160;READU, lun, data</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;;Print the row.</p>
+        <p class="Code">&#160;&#160;&#160;PRINT, data</p>
+        <p class="Code">ENDFOR</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Close the file.</p>
+        <p class="Code">FREE_LUN, lun</p>
+        <p>Executing these IDL statements produces the output:</p>
+        <p class="Code">0.00000      1.00000      2.00000      3.00000      4.00000</p>
+        <p class="Code">% READU:&#160;End of file encountered. Unit: 100</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;File: ftn2idl.dat6</p>
+        <p class="Code">% Execution halted at $MAIN$(0).</p>
+        <p>Here, IDL attempted to read the single logical record written by the FORTRAN program as if it were written in five separate records. IDL hit the end of the file after reading the first five values of the first record.</p>
+        <h2 class="API">Writing Data to a FORTRAN File</h2>
+        <p>The following IDL statements create a five-column by three-row array of floating-point values with each element set to its one-dimensional subscript, and writes the array to a data file suitable for reading by a FORTRAN program:</p>
+        <p class="Code">;Create the array.</p>
+        <p class="Code">data = FINDGEN(5,3)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Open a file for writing. Note that the F77_UNFORMATTED keyword is </p>
+        <p class="Code">;necessary to tell IDL to write the data in a format readable by a </p>
+        <p class="Code">;FORTRAN program.</p>
+        <p class="Code">OPENW, lun, 'idl2ftn.dat', /GET_LUN, /F77_UNFORMATTED</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Write the data.</p>
+        <p class="Code">WRITEU, lun, data</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Close the file.</p>
+        <p class="Code">FREE_LUN, lun</p>
+        <p>The following FORTRAN program reads the data file created by IDL:</p>
+        <p class="Code">&#160;&#160;&#160;&#160;PROGRAM idl2ftn</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;INTEGER i, j</p>
+        <p class="Code">&#160;&#160;&#160;&#160;REAL data(5, 3)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;OPEN(1, FILE="idl2ftn.dat", FORM="unformatted")</p>
+        <p class="Code">&#160;&#160;&#160;&#160;READ(1) data</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;DO 100 j = 1, 3</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DO 100 i = 1, 5</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;PRINT *, data(i,j)</p>
+        <p class="Code">100&#160;CONTINUE</p>
+        <p class="Code">&#160;&#160;&#160;&#160;END</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

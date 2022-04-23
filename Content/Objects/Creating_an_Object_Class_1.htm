@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Objects|Creating Object Classes">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Creating an Object Class Structure </title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Object Classes/ref_part2.htm">Objects</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Creating Custom Objects.htm">Creating Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Creating an Object Class Structure</span>
+        </div>
+        <h1>Creating an Object Class Structure </h1>
+        <p>Object instance data is contained in named IDL structures. We will use the term <i><a name="kanchor4876"></a>class</i><i>structure</i> to refer to IDL structures containing object instance data.</p>
+        <p>Beyond the restriction that class structures must be named structures, there are no limits on what a class structure contains. Class structures can include data of any type or organization, including pointers and object references. When an object is created, the name of the class structure becomes the name of the class itself, and thus serves to define the names of all methods associated with the class. For example, if we create the following class structure:</p>
+        <p class="Code">struct = { Class1, data1:0L, data2:FLTARR(10) }</p>
+        <p>any objects created from the class structure Class1 would have the same two fields (<code>data1</code>, a long integer, and <code>data2</code>, a ten-element floating-point array) and any methods associated with the class would have the name Class1::<i>method</i>, where <i>method</i> is the actual name of the method routine. Methods are discussed in detail in <a href="Creating_Custom_Object_M_1.htm">Creating Custom Object Method Routines</a>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When a new instance of a <a name="kanchor4877"></a>structure is created from an existing named structure, all of the fields in the newly-created structure are <i>zeroed</i>. This means that fields containing numeric values will contain zeros, fields containing string values will contain empty strings, and fields containing pointers or objects will contain null pointers or null objects. In other words, no matter what data the original structure contained, the new structure will contain only a template for that type of data. This is true of objects as well; a newly created object will contain a zeroed copy of the class structure as its instance data.</p>
+        <p>It is important to realize that creating a class structure does not create an object. Objects can only be created by calling the class name as a function or using the OBJ_NEW function, and can only be accessed via the returned object reference.  In addition, object methods can only be called on objects, and not on class structures themselves.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Because you can use a class name as a function, do not create a function with the same name as an existing object class. </p>
+        <p><i>Once defined, a given class structure type cannot be changed. </i>If a structure definition is executed and the structure already exists, each tag name and the structure of each tag field must agree with the original definition. To redefine a structure, you must either reset or exit the current IDL session.</p>
+        <h2 class="API"><a name="objects_custom_2374809850_1030303"></a><a name="objects_custom_2374809850_34899"></a>Automatic Class Structure Definition</h2>
+        <p>If IDL finds a reference to a structure that has not been defined, it will search for a structure definition procedure to define it. (This is true of all structure references, not just class structures.) <a name="kanchor4878"></a> Briefly, if IDL encounters a structure reference for a structure type that has not been defined, it searches for a routine with a name of the form</p>
+        <p class="Code">STRUCT__DEFINE</p>
+        <p>where STRUCT is the name of the structure type. Note that there are <i>two</i> underscores in the name of the structure definition routine.</p>
+        <p>The following is an example of a structure definition procedure that defines a structure that will be used for the class CNAME.</p>
+        <p class="Code">PRO CNAME__DEFINE</p>
+        <p class="Code">&#160;&#160;&#160;&#160;struct = { CNAME, data1:0L, data2:FLTARR(10) }</p>
+        <p class="Code">END</p>
+        <p>This defines a structure named CNAME with 2 data fields (<code>data1</code>, a long integer, and <code>data2</code>, a ten-element floating-point array). If you tell IDL to create an object of type CNAME before this structure has been defined, IDL will search for the procedure CNAME__DEFINE to define the class structure before attempting to create the object. If the CNAME__DEFINE procedure has not yet been compiled, IDL will use its normal routine searching algorithm to attempt to find a file named CNAME__DEFINE.PRO. If IDL cannot find a defined structure or structure definition routine, the object-creation operation will fail.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you are creating structure definitions on the fly, the possibility exists that you will run into namespace conflicts — that is, a structure with the same name as the structure you are attempting to create may already exist. This can be a problem if you are developing object-oriented applications for others, since you probably do not have much control over the IDL environment on your clients’ systems. You can avoid most problems by creating a unique namespace for your routines; <span class="DocumentTitleCompanyName">Exelis VIS</span> does this by prefixing the names of objects with the letters “IDL”. To help avoid namespace conflict, consider using a custom prefix (not “IDL”). To be completely sure that the objects created by your programs are what you expect, however, you should have the program inspect the created structures and handle errors appropriately.</p>
+        <h2 class="API"><a name="objects_custom_2374809850_1030318"></a><a name="objects_custom_2374809850_30182"></a>Inheritance</h2>
+        <p>When <a name="kanchor4879"></a>defining a class structure, use the INHERITS specifier to indicate that this structure inherits instance data and methods from another class structure. For example, if we defined a class structure called “circle,” as follows:</p>
+        <p class="Code">struct = { circle, x:0, y:0, radius:0 }</p>
+        <p>we can define a subclass of the “circle” class like this:</p>
+        <p class="Code">struct = { filled_circle, color:0, INHERITS circle }</p>
+        <p>You can use the INHERITS specifier in any structure definition. However, when the structure being defined is a <i>class structure</i> (that is, an object will be created from the structure), inheritance affects both the structure definition and the object methods available to the object that inherits. The INHERITS specifier is discussed in <a href="../Creating IDL Programs/Components of the IDL Language/Creating_and_Defining_St.htm#structures_2305844932_127876">Structure Inheritance</a>.</p>
+        <p>When a class structure inherits from another class structure, it is said to be a <i>subclass</i> of the class it inherits from. Similarly, the class that is inherited from is called a <i>superclass</i> of the new class. Defining a subclass of an existing class in this manner has two consequences. First, the class structure for the subclass is constructed as if the elements of the inherited class structure were included in-line in the structure definition. In our example, the command defining the “filled_circle” class above would create the following structure definition:</p>
+        <p class="Code">{ filled_circle, color:0, x:0, y:0, radius:0 }</p>
+        <p>Note that the data fields from the inherited structure definition appear in-line at the point where the INHERITS specifier appears.</p>
+        <p>The second consequence of defining a subclass structure that inherits from another class structure is that when an object is created from the subclass structure, that object inherits the <i>methods</i> of the superclass as well as its data fields. That is, if an object of the superclass type has a method, that method is available to objects created from the subclass as well. In our example above, say we create an object of type circle and define a Print method for it. Any objects of type filled_circle will also have access to the Print method defined for circle. </p>
+        <p>IDL allows multiple inheritance. This means that you can include the INHERITS specifier as many times as you desire in a structure definition, <i>as long as all of the resulting data fields have unique names</i>. Data fields must have unique names because when the class structure definition is built, the tag names are included in-line at the point where the INHERITS specifier appears. Duplicate tag names will cause the structure definition to fail; it is your responsibility as a programmer to ensure that tag names are not used more than once in a structure definition.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The requirement that names be unique applies only to <i>data</i> fields. It is perfectly legitimate (and often necessary) for subclasses to have methods with the same names as methods belonging to the superclass.</p>
+        <h2 class="API"><a name="objects_custom_2374809850_20334"></a>Null <a name="kanchor4880"></a>Objects</h2>
+        <p>The <i>Null Object</i> is a special object reference that is guaranteed to never point at a valid object heap variable. It is used by IDL to initialize object reference variables when no other initializing value is present. It is also a convenient value to use when defining structure definitions for fields that are object references, since it avoids the need to have a pre-existing valid object reference.</p>
+        <p>Null objects are created when you call an object-creation routine but do not specify a class structure to be used as the new object’s template. The following statement creates a null object:</p>
+        <p class="Code">nullobj = OBJ_NEW()</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

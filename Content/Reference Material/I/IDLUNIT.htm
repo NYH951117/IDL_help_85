@@ -1,0 +1,2705 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: I">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLUNIT</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="I_list.htm">Routines: I</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLUNIT</span>
+        </div>
+        <h1 class="Routine"><a name="kanchor1524"></a>IDLUNIT</h1>
+        <p>The IDLUNIT function allows you to perform basic dimensional analysis, conversions, and mathematical operations, all while factoring units. IDLUNIT is designed to be flexible, allowing you to evaluate simple mathematical expressions, or convert units. Results can be used in other IDL functions and programs.</p>
+        <h2 class="API">Examples</h2>
+        <h3>Example 1</h3>
+        <p>Approximately how many miles across is our galaxy, assuming its diameter is roughly 100,000 lightyears?</p>
+        <p class="Code">milkyway = IDLUNIT('100000 ly -&gt; miles')</p>
+        <p class="Code">PRINT, milkyway</p>
+        <p>IDL prints:</p>
+        <p class="Code">5.87861E+017 miles</p>
+        <h3>Example 2</h3>
+        <p>How far does a spaceship travel in 10 hours at warp 3 whilst trying to outrun an enemy fighter? Assume our Chief Engineer can keep the engines in one piece for that long, and warp for our spaceship is defined as:</p>
+        <p><i>v = w</i><sup>3</sup><i>c</i>
+        </p>
+        <p>where <i>v</i> is velocity in m/s, <i>w</i> is the warp factor, and <i>c</i> is the speed of light in m/s.</p>
+        <p class="Code">velocity = IDLUNIT('3^3 * c')</p>
+        <p class="Code">time = IDLUNIT('10 hours')</p>
+        <p class="Code">distance = time * velocity</p>
+        <p class="Code">PRINT, distance</p>
+        <p>IDL prints:</p>
+        <p class="Code">291.398 terameter</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;How far is that in kilometers?</p>
+        <p class="Code">PRINT, distance.to('kilometers')</p>
+        <p>IDL prints:</p>
+        <p class="Code">2.91398E+011 kilometers</p>
+        <p>So, our spaceship travels 2.91x10<sup>11</sup> kilometers in 10 hours at warp 3.</p>
+        <p>For more examples using IDLUNIT, see <a href="#Addition" class="selected">Additional Examples</a> near the end of this topic.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = IDLUNIT(<i>Expression</i> [, <a href="#SIMPLIFY" class="selected">SIMPLIFY</a>=<i>value</i>] [, /<a href="#DECOMPOS" class="selected">DECOMPOSE</a>])</p>
+        <h3>Properties</h3>
+        <p>&lt;<i><a href="#AnyUnit" class="selected">ANY UNIT</a></i>&gt;, <a href="#QUANTITY" class="selected">QUANTITY</a>, <a href="#UNIT" class="selected">UNIT</a>, <a href="#TERMS" class="selected">TERMS</a></p>
+        <h3>Methods</h3>
+        <p><a href="#ADDUNIT" class="selected">AddUnit</a>
+        </p>
+        <p><a href="#LISTUNIT" class="selected">ListUnits</a>
+        </p>
+        <p><a href="#RemoveUnit" class="selected">RemoveUnit</a>
+        </p>
+        <p><a href="#TO" class="selected">To</a>
+        </p>
+        <h2 class="API">Return Value</h2>
+        <p>IDLUNIT returns  an object that can be used as-is or assigned to a variable and used in further operations.</p>
+        <p>IDLUNIT determines the units of the <i>Return Value</i> based on:</p>
+        <ul>
+            <li value="1">Explicit Conversion: if the input expression includes the conversion operators ' -&gt; ' or ' to ', IDLUNIT will automatically convert the <i>Result</i> to the target unit that you specify. </li>
+            <li value="2">Order of Units: The units that come first in the input string, <i><a href="#Argument" class="selected">Unit Expression</a></i>, are retained as the default base output unit. In other words, if you ask IDLUNIT to evaluate '3 feet + 7 meters' the <i>Result</i> will be in feet <a href="#UNIT" class="selected">unless you indicate otherwise</a>.</li>
+            <li value="3">IDLUNIT objects are immutable - once created they can never be modified, only replaced with new values.</li>
+        </ul>
+        <h2 class="API"><a name="Argument"></a>Arguments</h2>
+        <h3 class="Argument">Expression</h3>
+        <p>A string containing an expression that you want IDLUNIT to evaluate. The expression can consist of any combination of numbers, units, and mathematical operators. Numbers may be entered in scientific notation using 'e' to denote the exponent. The input expression may also include an optional conversion operator followed by a unitless expression. The input expression is parsed, evaluated to a single quantity and a set of units, and then optionally converted or simplified. </p>
+        <p>IDLUNIT recognizes the following operators:</p>
+        <ul>
+            <li value="1">addition: '+' </li>
+            <li value="2">subtraction, negation: '-' </li>
+            <li value="3">division: '/' </li>
+            <li value="4">multiplication: '*'</li>
+            <li value="5">grouping: '(' <i>and</i> ')' </li>
+            <li value="6">conversion: '-&gt;' or 'to' </li>
+        </ul>
+        <p>Additionally, white space between numbers and units implies multiplication.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You can also use the TO method to convert an IDLUNIT object into different units.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="SIMPLIFY"></a>SIMPLIFY</h3>
+        <p>Set this keyword to specify the method IDL should use to simplify the input expression:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Description</p>
+                    </td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Example</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Do not simplify units</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1 ft s / s -&gt; 1 ft s / s
+</p>
+                        <p>1 m ft -&gt; 1 m ft
+</p>
+                        <p>1 volt / amp -&gt; 1 volt / amp
+</p>
+                        <p>1 furlong -&gt; 1 furlong</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Cancel out dimensionally equivalent units only</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1 ft s / s -&gt; 1 ft</p>
+                        <p>1 m ft -&gt; 0.3048 m^2</p>
+                        <p>1 volt / amp -&gt; 1 volt / amp</p>
+                        <p>1 furlong -&gt; 1 furlong</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2 (default)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Cancel terms then choose new unit, if shorter</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1 ft s / s -&gt; 1 ft
+</p>
+                        <p>1 m ft -&gt; 0.3048 m^2
+</p>
+                        <p>1 volt / amp -&gt; 1 ohm
+</p>
+                        <p>1 furlong -&gt; 1 furlong</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>Always choose new unit</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>1 ft s / s -&gt; 304.8 millimeter</p>
+                        <p>
+1 m ft -&gt; 304800 millimeter^2
+</p>
+                        <p>1 volt / amp -&gt; 1 ohm
+</p>
+                        <p>1 furlong -&gt; 201.168 meter</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Keyword"><a name="DECOMPOS"></a>DECOMPOSE</h3>
+        <p>Setting this keyword prompts IDL to break down the result into one of the eight base SI units: meters, grams, seconds, amperes, Kelvins, moles, candela, and bits.</p>
+        <p>For example, 1 joule = 1000 meter^2 gram / second^2</p>
+        <h2 class="API">Properties</h2>
+        <h3 class="Property"><a name="AnyUnit"></a><i>&lt;Any Unit&gt;</i> (static)</h3>
+        <p>When called statically, you can use the property syntax to access any unit, as in the following examples:</p>
+        <p class="Code">four_weeks = 2 * IDLUNIT.fortnight</p>
+        <p class="Code">PRINT, four_weeks.TO('weeks')  ; IDL displays 4 weeks</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRINT, IDLUNIT('1 gram') * IDLUNIT.c^2  </p>
+        <p class="Code">&#160;</p>
+        <p>IDL displays:</p>
+        <p class="Code"> 8.98755E+013 joule</p>
+        <h3 class="Property"><a name="QUANTITY"></a>QUANTITY (Get Only)</h3>
+        <p>Returns the numeric quantity of the resultant value from IDLUNIT,  e.g., 3 for '3 gallons / min'</p>
+        <h3 class="Property"><a name="UNIT"></a>UNIT (Get Only)</h3>
+        <p>Returns a string representing the units of the resulting value from IDLUNIT,  e.g., 'gallons / min'</p>
+        <h3 class="Property"><a name="TERMS"></a>TERMS</h3>
+        <p>A list of IDLUNITTERM structures that fully describe each of the unit terms.</p>
+        <h2 class="API">Methods</h2>
+        <h1 class="ObjMethod"><a name="ADDUNIT"></a>AddUnit</h1>
+        <p>The AddUnit static method adds a new unit to the list that IDLUNIT can recognize.</p>
+        <h4>Syntax</h4>
+        <p>IDLUNIT.AddUnit, <i>name</i>, <i>value</i> [, /<a href="#BINARY" class="selected">BINARY</a>] [, <a href="#OFFSET" class="selected">OFFSET</a>=<i>value</i>] </p>
+        <p>&#160;&#160;&#160;[, <a href="#PLURAL" class="selected">PLURAL</a>=<i>string</i>] [, /<a href="#PREFER" class="selected">PREFER</a>]  [, /<a href="#PREFIXABLE" class="selected">PREFIXABLE</a>] [, <a href="#SYMBOL" class="selected">SYMBOL</a>=<i>string</i>]</p>
+        <h4>Arguments</h4>
+        <h5>name</h5>
+        <p>The full singular name of the new unit.</p>
+        <h5>value</h5>
+        <p>The value of the new unit. This can be any valid IDLUNIT expression string.</p>
+        <h4>Keywords</h4>
+        <h5><a name="BINARY"></a>BINARY</h5>
+        <p>This keyword flags IDL that this unit uses kilo- orders of magnitude of 1024 rather than 1000.</p>
+        <h5><a name="OFFSET"></a>OFFSET</h5>
+        <p>The new unit's offset from 'absolute zero'. For example, the offset for Degrees Celsius is 273.15.</p>
+        <h5><a name="PLURAL"></a>PLURAL</h5>
+        <p>The plural name for the unit, if any, so IDL can recognize it in expressions.</p>
+        <h5><a name="PREFER"></a>PREFER</h5>
+        <p>Adds this unit to the 'preferred' unit list, from which IDL may select units  to simplify expressions.</p>
+        <h5><a name="PREFIXABLE"></a>PREFIXABLE</h5>
+        <p>This keyword flags IDL that it is appropriate to prepend this unit with SI prefixes ('milli', 'kilo', etc.) when necessary.</p>
+        <h5><a name="SYMBOL"></a>SYMBOL</h5>
+        <p>The symbol or abbreviated name, if any, so IDL can recognize it in expressions.</p>
+        <h4>Examples</h4>
+        <p class="Code">PRINT, IDLUNIT('1 shake -&gt; nanoseconds')</p>
+        <p>Since "shake" is not a recognized unit, IDL returns: </p>
+        <p class="Code">% IDLUnit error: Unit "shake" not recognized.</p>
+        <p class="Code">% Execution halted at: $MAIN$</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add "shake" to the list of units.</p>
+        <p class="Code">IDLUNIT.AddUnit, 'shake', '10 nanoseconds', PLURAL='shakes', SYMBOL='sh'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Now that we have added the unit, we can use it in IDLUNIT:</p>
+        <p class="Code">PRINT, IDLUNIT('2 shake -&gt; picoseconds')</p>
+        <p>IDL displays:</p>
+        <p class="Code">20000 picoseconds</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Check to make sure the plural works:</p>
+        <p class="Code">PRINT, IDLUNIT('2 shakes -&gt; picoseconds')</p>
+        <p>IDL displays:</p>
+        <p class="Code">20000 picoseconds</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Try it by using the symbol:</p>
+        <p class="Code">PRINT, IDLUNIT('2 sh -&gt; picoseconds')</p>
+        <p>We can see that it works:</p>
+        <p class="Code">20000 picoseconds</p>
+        <p>&#160;</p>
+        <p class="Code">; Use the TO method to convert:</p>
+        <p class="Code">PRINT, (2 * IDLUNIT.shake).TO('picoseconds')</p>
+        <p>IDL displays:</p>
+        <p class="Code">20000 picoseconds</p>
+        <h1 class="ObjMethod"><a name="LISTUNIT"></a>ListUnits</h1>
+        <p>The ListUnits static method returns a listing of the names of all units presently "known" by IDL.</p>
+        <h4>Syntax</h4>
+        <p><i>Result</i> = IDLUnit.ListUnits()</p>
+        <h1 class="ObjMethod"><a name="RemoveUnit"></a>RemoveUnit</h1>
+        <p>This method removes a unit from the list that IDLUNIT can recognize. </p>
+        <h4>Syntax</h4>
+        <p>IDLUNIT.RemoveUnit, <i>name</i></p>
+        <h4>Arguments</h4>
+        <h5>name</h5>
+        <p>The name of the unit you want to remove.</p>
+        <h3><a name="TO"></a>To</h3>
+        <p>The To method converts an IDLUNIT value to new units as specified. This is functionally equivalent to using the conversion operator ('-&gt;') inside an IDLUNIT expression.</p>
+        <p>For example, these two commands:</p>
+        <p class="Code">speed = IDLUNIT('100 feet / second')</p>
+        <p class="Code">PRINT, speed.To('miles / hour')</p>
+        <p>Are equivalent to the following:</p>
+        <p class="Code">PRINT, IDLUNIT('100 feet / second -&gt; miles / hour')</p>
+        <h1>Additional Information on IDLUNIT</h1>
+        <h3><a name="Fundamen"></a>Fundamental Units</h3>
+        <p>The fundamental units that form the basis of processing within IDLUNIT are:</p>
+        <ul>
+            <li value="1">meter (m)</li>
+            <li value="2">gram (g)</li>
+            <li value="3">second (s)</li>
+            <li value="4">ampere (A)</li>
+            <li value="5">Kelvin (K)</li>
+            <li value="6">mole (mol)</li>
+            <li value="7">candela (cd)</li>
+            <li value="8">bit (b)</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Processing within IDLUNIT requires that units be broken down into their most basic form. While kilogram is the SI standard unit for mass, it is a <a href="#Availabl" class="selected">prefixed unit</a>, therefore IDLUNIT uses the gram instead. </p>
+        <h3><a name="Availabl"></a>Available Unit Prefixes</h3>
+        <p>IDLUNIT recognizes the following unit prefixes and prefix symbols:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Prefix</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Order of Magnitude (kilo-)</p>
+                    </td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Base-10</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Symbol</p>
+                        <p>(case sensitive)</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>yotta</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>8</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>10<sup>24</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Y</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>zetta</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>7</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>10<sup>21</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Z</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>exa</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>6</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>10<sup>18</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>E</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>peta</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>5</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>10<sup>15</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>P</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>tera</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>4</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>10<sup>12</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>T</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>giga</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>10<sup>9</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>G</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>mega</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>10<sup>6</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>M</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>kilo</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>10<sup>3</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>k</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>hecto</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2/3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>10<sup>2</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>h</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>deca</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1/3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>10<sup>1</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>da</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>deci</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>-1/3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>10<sup>-1</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>d</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>centi</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>-2/3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>10<sup>-2</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>c</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>milli</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>-1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>10<sup>-3</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>m</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>micro</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>-2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>10<sup>-6</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>u</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>nano</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>-3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>10<sup>-9</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>n</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>pico</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>-4</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>10<sup>-12</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>p</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>femto</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>-5</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>10<sup>-15</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>f</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>atto</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>-6</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>10<sup>-18</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>a</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>zepto</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>-7</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>10<sup>-21</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>z</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>yocto</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>-8</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>10<sup>-24</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>y</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Symbols are case sensitive; prefixes are case insensitive.</p>
+        <p>Almost all units use 1000 as their kilo- orders of magnitude.  Some units, however, can be flagged as 'binary' and use 1024 instead.  For example:</p>
+        <ul>
+            <li value="1">1 kilogram = 1000 grams</li>
+            <li value="2">1 megagram = 1000<sup>2</sup> grams = 1,000,000 grams</li>
+            <li value="3">1 gigagram = 1000<sup>3</sup> grams = 1,000,000,000 grams</li>
+            <li value="4">1 kilobyte = 1024 bytes</li>
+            <li value="5">1 megabyte = 1024<sup>2</sup> bytes = 1,048,576 bytes</li>
+            <li value="6">1 gigabyte = 1024<sup>3</sup> bytes = 1,073,741,824 bytes</li>
+        </ul>
+        <h3><a name="Pre-Defi"></a>Pre-Defined Units</h3>
+        <p>IDL contains the following pre-defined units. Use the name, the plural, or the symbol to reference the unit in your call to IDLUNIT. A dot in the Prefixes column indicates that you can prepend this unit with SI prefixes ('milli', 'kilo', etc.).</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Symbols for the units are case sensitive; names and plurals are case insensitive. Underscores are required in the names and plurals as indicated.</p>
+        <h4>Length</h4>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Plural </p>
+                    </td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Symbol</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Prefixes</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>meter</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>meters</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>m</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>micron</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>microns</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>inch</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>inches</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>in</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>point</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>points</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>pt</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>pica</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>picas</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>foot</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>feet</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>ft</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>yard</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>yards</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>yd</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>mile</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>miles</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>mi</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>link</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>links</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>rod</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>rods</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>chain</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>chains</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>furlong</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>furlongs</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>league</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>leagues</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>fathom</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>fathoms</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>cable</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>cables</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>nautical_mile</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>nautical_miles</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">nmi</td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h4>Area</h4>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Plural </p>
+                    </td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Symbol</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Prefixes</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>acre</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>acres</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>ac</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>hectare</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>hectares</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>ha</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4>Volume</h4>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Plural </p>
+                    </td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Symbol</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Prefixes</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>liter</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>liters</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>l</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>fluid_ounce</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>fluid_ounces</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>floz</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>minim</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>minims</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>fluid_dram</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>fluid_drams</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>teaspoon</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>teaspoons</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>tsp</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>tablespoon</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>tablespoons</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>tbsp</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>jigger</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>jiggers</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>gill</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>gills</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>cup</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>cups</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>pint</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>pints</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>quart</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>quarts</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>gallon</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>gallons</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>gal</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>barrel</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>barrels</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>oil_barrel</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>oil_barrels</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>hogshead</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>hogsheads</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>dash</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>dashes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>pinch</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>pinches</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>smidgen</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>smidgens</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4>Mass</h4>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Plural </p>
+                    </td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Symbol</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Prefixes</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>gram</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>grams</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>g</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>pound</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>pounds</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>lbs</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>grain</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>grains</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>dram</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>drams</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>ounce</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>ounces</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>oz</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>hundredweight</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>hundredweights</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>ton</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>tons</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4>Time</h4>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Plural </p>
+                    </td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Symbol</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Prefixes</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>hertz</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Hz</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>second</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>seconds</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>s</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>minute</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>minutes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>min</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>hour</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>hours</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>day</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>days</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>week</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>weeks</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>fortnight</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>fortnights</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>year</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>years</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4>Velocity</h4>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Plural </p>
+                    </td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Symbol</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Prefixes</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>mph</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>kph</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>fps</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4>Acceleration</h4>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Plural </p>
+                    </td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Symbol</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Prefixes</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>gravity</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>gravities</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>galileo</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>galileos</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>Gal</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4>Force</h4>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Plural </p>
+                    </td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Symbol</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Prefixes</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>newton</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>newtons</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>N</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>pound_force</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>pounds_force</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>lbf</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>dyne</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>dyn</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4>Pressure</h4>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Plural </p>
+                    </td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Symbol</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Prefixes</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>pascal</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>pascals</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Pa</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>psi</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>psi</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>bar</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>atmosphere</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>atmospheres</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>atm</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>torr</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4>Data </h4>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Plural </p>
+                    </td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Symbol</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Prefixes</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>bit</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>bits</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>b</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>byte</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>bytes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>B</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>•</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4>Electrical</h4>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Plural </p>
+                    </td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Symbol</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Prefixes</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>ampere (aka amp)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>amperes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>A</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>amp (aka ampere)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>amps</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>volt</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>volts</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>V</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>ohm</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>ohms</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>coulomb</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>coulombs</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>C</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>farad</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>farads</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>F</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>watt</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>watts</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>W</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>•</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4>Energy</h4>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Plural </p>
+                    </td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Symbol</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Prefixes</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>joule</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>joules</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>J</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>erg</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>ergs</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>calorie</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>calories</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>cal</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>british_thermal_unit</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>BTU</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4>Temperature</h4>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Plural </p>
+                    </td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Symbol</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Prefixes</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>kelvin</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>K</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>celsius</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>deg_C</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>fahrenheit</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>deg_F</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4>Misc</h4>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Plural </p>
+                    </td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Symbol</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Prefixes</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>candela</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>candelas</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>cd</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>mole</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>moles</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>mol</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>•</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>jansky</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>janskies</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>Jy</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h4>Constants</h4>
+        <p>For additional information on these constants, please see <a href="../../Creating IDL Programs/Appendices/Constant_System_Variable.htm#CONST">!CONST in the Constant System Variables</a> help topic.</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');border-left-style: solid;border-left-width: 0px;border-right-style: solid;border-right-width: 0px;border-top-style: solid;border-top-width: 0px;border-bottom-style: solid;border-bottom-width: 2px;border-bottom-color: #d8dadb;margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Plural </p>
+                    </td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Symbol</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Prefixes</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>astronomical_unit</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>astronomical_units</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>au</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>speed_of_light</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>c</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>elementary_charge</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>e</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>electric_permittivity</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>eps0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>faraday</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>faradays</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>gravitation_constant</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>G</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>planck_constant</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>h</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>lightyear</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>lightyears</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>ly</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>earth_mass</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>M_earth</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>sun_mass</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>M_sun</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>electron_mass</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>me</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>neutron_mass</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>mn</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>proton_mass</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>mp</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>magnetic_permeability</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>mu0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Loschmidt_number</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>n0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>avogadro</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Na</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>parsec</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>parsecs</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>pc</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>gas_constant</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>earth_radius</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>R_earth</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>electron_radius</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>re</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>rydberg</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>standard_temperature</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>T0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>atomic_mass</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>molar_volume</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>sigma</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Operators</h3>
+        <p>Calls to IDLUNIT allow the use of a subset of IDL's mathematical operators: addition, subtraction, multiplication, division, exponents, unit conversion, parentheses, and negation. However, the following functionality is not  available <i>inside</i> a call to IDLUNIT:</p>
+        <ul>
+            <li value="1">more complex mathematical operations (increment, decrement, MOD, etc.)</li>
+            <li value="2">relational and logical operators</li>
+            <li value="3">variables</li>
+            <li value="4">matrices</li>
+            <li value="5">flow control</li>
+        </ul>
+        <p>Even though the IDLUNIT functionality is limited, its result  is an object that you can use within IDL just as you would any other data. You can store the result of an IDLUNIT call in a variable, print it, or use it in math operations. See the Examples for more ways to use the results of IDLUNIT.</p>
+        <h3>Order of Operations</h3>
+        <p>The order of operations within an&#160;IDLUNIT call is slightly different from IDL's standard order of operations due to the introduction of implied multiplication and unit conversion. IDLUNIT's order of operations is:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">Order</td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">Operator</td>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">Symbol</th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">1</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">Parenthesis</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">()</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">  (2 m + 3 m) * 4 m </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">2</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">Exponent</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">^</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">2 m ^ 3</td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">3</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">Implied Multiplication</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">space between numbers and units</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">7 meters</td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">4</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">Negation</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">-</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">-7</td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">5</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">Multiplication and Division</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">*, /</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">2 m * 3 or 3 m / 3</td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">6</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">Addition and Subtraction</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">+, -</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">4 m + 5 m or 5 m - 4 m</td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">7</td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">Unit Conversion</td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>' -&gt; ',</p>
+                        <p> ' to '</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd"> '7 meters to inches' or '7 meters -&gt; inches'</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3><a name="Unit"></a>Unit Conversion</h3>
+        <p>IDLUNIT allows you to explicitly convert a result into a specified "target" unit, thus overriding the default presentation of units in the <i>Result</i>. You can explicitly convert units in one of two ways, either inside a call to IDLUNIT using conversion operators, or by using the IDLUNIT::To method:</p>
+        <p><b style="font-style: italic; font-weight: normal;">Conversion Operators:</b> " -&gt; " or " to " within an IDLUNIT call. As an example, </p>
+        <p class="Code">'4 feet * 3 meters -&gt; inches^2' </p>
+        <p>and</p>
+        <p class="Code">  '4 feet * 3 meters to inches^2'</p>
+        <p>both tell IDLUNIT to multiply 4 feet by 3 meters and display the result in terms of square inches rather than feet (the default in this case because "feet" is the first unit in the expression). </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You can specify the exponent on the target unit (e.g., 'meters^3' for cubic meters) or explicitly state more complex units such as 'meters/second' or 'kg/m^3'. If you do not explicitly state these more complex target units, IDLUNIT will attempt to present the "best" output units based on a combination of the input string and unit factoring.</p>
+        <p>See also: <b style="font-style: italic; font-weight: normal;">IDLUNIT::<a href="#TO" class="selected">To</a></b></p>
+        <h2 class="API"><a name="Addition"></a>Additional Examples</h2>
+        <h3>General Examples</h3>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Convert one mile to feet</p>
+        <p class="Code">PRINT, IDLUNIT('1 mile') ;1 mile</p>
+        <p class="Code">PRINT, IDLUNIT('1 mile -&gt; feet') ;5280 feet</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Convert 2 square miles to acres</p>
+        <p class="Code">PRINT, IDLUNIT('2 miles^2 -&gt; acres') ;1280 acres</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Convert 2 miles, squared, to acres. Note the difference</p>
+        <p class="Code">; between this and the previous example.</p>
+        <p class="Code">PRINT, IDLUNIT('(2 miles)^2 -&gt; acres') ;2560 acres</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Perform basic arithmetic in the input expression</p>
+        <p class="Code">PRINT, IDLUNIT('(2 miles)^2 * 12 cm + 1000 gallons') ;1.2432 gigaliter</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRINT, IDLUNIT('3^2 amp seconds') ;9 coulomb</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Convert bits to gigabytes</p>
+        <p class="Code">PRINT, IDLUNIT('1.234e12 b to GB') ;143.657 GB</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Convert grams to nanograms</p>
+        <p class="Code">PRINT, IDLUNIT('3.14e-7 g to nanograms') ;314 nanograms</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; How fast did the men's 100 m gold medalist run?</p>
+        <p class="Code">PRINT, IDLUNIT('100 m / 9.63s -&gt; mph') ;23.2288 mph</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; General example showing order of operations</p>
+        <p class="Code">PRINT, IDLUNIT('(2 m + 3 m) * 5 m') ;25 m^2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; About how many times does my heart beat in a year?</p>
+        <p class="Code">PRINT, IDLUNIT('(53 / 1 minute) * 1 year') ;2.78759E+007</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; How many cubic feet of air are in the 3 km of space </p>
+        <p class="Code">; above a 4 acre plot of land? Try it a couple of ways</p>
+        <p class="Code">; first without specifying the exponent on feet</p>
+        <p class="Code">PRINT, IDLUNIT('4 acres * 3 kilometers -&gt; feet')</p>
+        <p class="Code">PRINT, IDLUNIT('4 acres * 3 kilometers -&gt; feet^3')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Demonstrate the QUANTITY&#160;and UNIT properties</p>
+        <p class="Code">testVal = IDLUNIT('3 gallons')</p>
+        <p class="Code">PRINT, testVal.UNIT ;gallons</p>
+        <p class="Code">PRINT, testVal.quantity ;3.0000000</p>
+        <p class="Code">&#160;</p>
+        <h3>Example 3</h3>
+        <p>                How fast did the Curiosity rover approach Mars?</p>
+        <p class="Code">init_speed = IDLUNIT('13000mph')</p>
+        <p class="Code">final_speed = IDLUNIT('0 mph')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">                ; How long it took to come to a stop (the "Seven Minutes of Terror")</p>
+        <p class="Code">time  = IDLUNIT('7 minutes')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">                   ; Arithmetic on IDLUNIT objects works, too</p>
+        <p class="Code">accel = (init_speed - final_speed) / time</p>
+        <p class="Code">&#160;</p>
+        <p class="Code"> ; How fast was the Curiosity rover's descent?</p>
+        <p class="Code">PRINT, accel </p>
+        <p class="Code">&#160;</p>
+        <p class="Code">           ; How does that compare to standing on Earth?</p>
+        <p class="Code">PRINT, accel.TO('gravities')</p>
+        <h3>Example 4</h3>
+        <p>A land baroness owns 10 square miles of Montana rangeland and purchases an additional 15. How many square miles does she have?</p>
+        <p class="Code">; Try 2 different ways to demonstrate order of operations</p>
+        <p class="Code">PRINT, IDLUNIT('10 miles^2 + 15 miles^2') ;25 miles^2</p>
+        <p class="Code">PRINT, IDLUNIT('(10 miles ^ 2) + (15 miles ^ 2)') ;25 miles^2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; How many acres is that?</p>
+        <p class="Code">acres = IDLUNIT('(10 miles ^ 2) + (15 miles ^ 2) to acres')</p>
+        <p class="Code">PRINT, acres </p>
+        <p class="Code">&#160;</p>
+        <p>Our land baroness buys more parcels, how many acres does she own now?</p>
+        <p class="Code">acres2 = IDLUNIT('(20 miles ^ 2) + (25 miles ^ 2) to acres')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; How many acres does she now have? Do some math on these</p>
+        <p class="Code">; IDLUNIT objects</p>
+        <p class="Code">total = acres + acres2</p>
+        <p class="Code">PRINT, total</p>
+        <h2 class="API">Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>8.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.4.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added nautical_mile</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="../../Creating IDL Programs/Appendices/Constant_System_Variable.htm#CONST">Constant System Variables: !CONST</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

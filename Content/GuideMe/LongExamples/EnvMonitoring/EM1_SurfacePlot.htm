@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Long Examples|Environmental Monitoring">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Plot 3D Terrain and Water Table</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Long Examples</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Plot 3D Terrain and Water Table</span>
+        </div>
+        <h1>Plot 3D Terrain and Water Table</h1>
+        <p>In this topic we explore how to combine two different <a href="../../../Reference Material/S/SURFACE.htm">SURFACE</a> plots with <a href="../../../Reference Material/P/POLYLINE.htm">POLYLINE</a> and <a href="../../../Reference Material/S/SCATTERPLOT3D.htm">SCATTERPLOT3D</a> to further characterize the study area. We use the same data as in the topic "<a href="EM1_Gridding.htm">Model the Study Area and Setting</a>," but view the data as three-dimensional surfaces rather than a two-dimensional contour plot.</p>
+        <p>Your resulting graphic should look similar to these depending on how you rotate and resize the plot and window (these plots were stretched in the X dimension):</p>
+        <p>
+            <img src="../../images/EM_Surface_Plot3.png" />
+        </p>
+        <p>
+            <img src="../../images/EM_Surface_Plot2.png" />
+        </p>
+        <h2>Read In and Grid the Terrain Data</h2>
+        <p>Start by reading in the base data to use throughout the rest of the examples. The data resides in the file <code>TankDataTerrain.csv</code> in the <code>\examples\data</code> directory of your IDL installation. This file contains the surface terrain data of our site, in X, Y, Z coordinates (all in meters). The fourth column of data in this file contains the elevation of the surface of the underlying aquifer.</p>
+        <p>In this example, we create a template with <a href="../../../Reference Material/A/ASCII_TEMPLATE.htm">ASCII_TEMPLATE</a>, then read in the data using <a href="../../../Reference Material/R/READ_ASCII.htm">READ_ASCII</a>.</p>
+        <p class="Code">; Create the base template and assign X, Y, Z, </p>
+        <p class="Code">; and AQ as the variable names.</p>
+        <p class="Code">; Make sure to start the data at row 2 </p>
+        <p class="Code">; (row 1 contains column headers).</p>
+        <p class="Code">myTemplate = ASCII_TEMPLATE()</p>
+        <p class="Code">site = READ_ASCII('TankDataTerrain.csv', $</p>
+        <p class="Code">&#160;&#160;&#160;TEMPLATE=myTemplate)</p>
+        <p>&#160;</p>
+        <p class="Code">; Grid the data using the Kriging method </p>
+        <p class="Code">; (set DIMENSION to 1000 </p>
+        <p class="Code">; to align with the size of the study area). </p>
+        <p class="Code">;  Choose another gridding method if you wish.</p>
+        <p class="Code">grid = GRIDDATA(site.X, site.Y, site.Z, $</p>
+        <p class="Code">&#160;&#160;&#160;DIMENSION=1000, METHOD="Kriging")</p>
+        <p class="Code">&#160;</p>
+        <h2>Create the Surface Plot</h2>
+        <p>Next, begin creating the surface plot from the gridded terrain data.</p>
+        <p>The DEPTH_CUE property creates the haze effect in the graphic, above. We use Gouraud shading in this example, and set ASPECT_Z to 2.5 in order to exaggerate the Z-dimension and make the plot easier to view.</p>
+        <p class="Code">mySurf = SURFACE(grid, RGB_TABLE=16, TRANSPARENCY=40, $</p>
+        <p class="Code">&#160;&#160;&#160;COLOR='sienna', DEPTH_CUE=[0,1], SHADING=1, $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE="Study Area 3D Terrain with Water Table", $</p>
+        <p class="Code">&#160;&#160;&#160;ASPECT_RATIO=.75, ASPECT_Z=2.5)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Change the direction of the title to be parallel</p>
+        <p class="Code">; to the z-azis.</p>
+        <p class="Code">mySurf.TITLE.UPDIR = [0,0,1]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Hide the original axes to make viewing the plot easier.</p>
+        <p class="Code">mySurf['axis0'].TRANSPARENCY = 100</p>
+        <p class="Code">mySurf['axis1'].TRANSPARENCY = 100</p>
+        <p class="Code">mySurf['axis2'].TRANSPARENCY = 100</p>
+        <p>&#160;</p>
+        <p class="Code">; Create alternate axes for easier reading and more accurate </p>
+        <p class="Code">; data representation.</p>
+        <p class="Code">surfXAxis = AXIS('X', LOCATION=-15, TITLE='km', TICKINTERVAL=2, $</p>
+        <p class="Code">&#160;&#160;&#160;COORD_TRANSFORM=[0,0.01])</p>
+        <p class="Code">surfYAxis = AXIS('Y', LOCATION=-15, TITLE='km', TICKINTERVAL=2, $</p>
+        <p class="Code">&#160;&#160;&#160;COORD_TRANSFORM=[0,0.01])</p>
+        <p class="Code">zAxis = AXIS('Z', LOCATION=[0, 1010], TICKINTERVAL=50, $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE='Terrain with Water Table (m)', AXIS_RANGE=[0.0,600])</p>
+        <p>&#160;</p>
+        <p class="Code">; Finally, add the gridded contours leaving off the labels.</p>
+        <p class="Code">contours = CONTOUR(grid, C_VALUE=site.Z, PLANAR=0, FONT_SIZE=12, $</p>
+        <p class="Code">&#160;&#160;&#160;C_LABEL_SHOW=0, /OVERPLOT)</p>
+        <p>&#160;</p>
+        <p class="Code">; Add the water table: grid the data then plot it with SURFACE.</p>
+        <p class="Code">gridH2O = GRIDDATA(site.X, site.Y, site.AQ, DIMENSION=1000, $</p>
+        <p class="Code">&#160;&#160;&#160;METHOD="Kriging")</p>
+        <p class="Code">myWaterTable = SURFACE(gridH2O, TRANSPARENCY=25, $</p>
+        <p class="Code">&#160;&#160;&#160;COLOR='cornflower', /OVERPLOT)</p>
+        <h2>Add the Tank and Well Locations to the Plot</h2>
+        <p>Waste was pumped into both wells and storage tanks, so plot these in 3D space in relation to the surface of the water table. We will also plot the locations of the tanks and wells on the actual SURFACE plot.</p>
+        <p class="Code">; Plot the tank and well locations in space using POLYLINE.</p>
+        <p class="Code">tank1 = POLYLINE([66,66], [210,210], [475,473], /DATA, $</p>
+        <p class="Code">&#160;&#160;&#160;TARGET=mySurf, COLOR='red', THICK=10)</p>
+        <p class="Code">well2 = POLYLINE([276,276], [221,221], [479,450], /DATA, $</p>
+        <p class="Code">&#160;&#160;&#160;TARGET=mySurf, COLOR='hot pink', THICK=3)</p>
+        <p class="Code">well3 = POLYLINE([566,566], [146,146], [463,450], /DATA, $</p>
+        <p class="Code">&#160;&#160;&#160;TARGET=mySurf, COLOR='dark red', THICK=3)</p>
+        <p class="Code">tank4 = POLYLINE([471,471], [483,483], [465,462], /DATA, $</p>
+        <p class="Code">&#160;&#160;&#160;TARGET=mySurf, COLOR='orange red', THICK=10)</p>
+        <p class="Code">well5 = POLYLINE([484,484], [313,313], [470,460], /DATA, $</p>
+        <p class="Code">&#160;&#160;&#160;TARGET=mySurf, COLOR='medium violet red', THICK=3)</p>
+        <p>&#160;</p>
+        <p class="Code">; Plot the gridded locations of the wells/tanks, </p>
+        <p class="Code">; and labels their location on the SURFACE.</p>
+        <p class="Code">xLoc = [66,276,566,471,484]</p>
+        <p class="Code">yLoc = [210,221,146,483,313]</p>
+        <p class="Code">zLoc = [491,480,463,473,470]</p>
+        <p class="Code">zLocLabels = [495,484,467,477,474]</p>
+        <p class="Code">labels = ['A-401','A-402','A-403','A-404','A-405']</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use SCATTERPLOT3D to put the locations on the SURFACE</p>
+        <p class="Code">; and use TEXT to place the labels.</p>
+        <p class="Code">myPlot2 = SCATTERPLOT3D(xLoc, yLoc, zLoc, /OVERPLOT, SYMBOL='*', $</p>
+        <p class="Code">&#160;&#160;&#160;SYM_SIZE=1, SYM_FILLED=1, SYM_THICK=2, SYM_FILL_COLOR='black')</p>
+        <p class="Code">myLabels = TEXT(xLoc, yLoc, zLocLabels, labels, /DATA, /OVERPLOT)</p>
+        <h2>Other Topics in this Series</h2>
+        <ul>
+            <li value="1"><a href="EM1_Gridding.htm">Model the Study Area and Setting</a>
+            </li>
+            <li value="2"><a href="EM1_PlotSupportingInformation.htm">Plot Supporting Information</a>
+            </li>
+            <li value="3"><a href="EM1_PlumeContours.htm">Create Contours of Pollutant Plume</a>
+            </li>
+            <li value="4"><a href="EM1_FlowVectors.htm">Plot Relative Aquifer Flow Vectors</a>
+            </li>
+        </ul>
+        <h2>See Also</h2>
+        <p><a href="../../../Reference Material/A/ASCII_TEMPLATE.htm">ASCII_TEMPLATE</a>, <a href="../../../Reference Material/A/AXIS.htm">AXIS</a>, <a href="../../../Reference Material/C/CONTOUR.htm">CONTOUR</a>, <a href="../../../Reference Material/G/GRIDDATA.htm">GRIDDATA</a>, <a href="../../../Reference Material/P/POLYLINE.htm">POLYLINE</a>, <a href="../../../Reference Material/R/READ_ASCII.htm">READ_ASCII</a>, <a href="../../../Reference Material/R/READ_CSV.htm">READ_CSV</a>, <a href="../../../Reference Material/S/SCATTERPLOT.htm">SCATTERPLOT</a>, <a href="../../../Reference Material/S/SCATTERPLOT3D.htm">SCATTERPLOT3D</a>, <a href="../../../Reference Material/S/SURFACE.htm">SURFACE</a>, <a href="../../../Reference Material/T/TEXT.htm">TEXT</a> <![CDATA[ ]]></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

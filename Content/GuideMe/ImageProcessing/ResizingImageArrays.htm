@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Image Analysis">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Resize Image Arrays</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/image_analysis_gallery1.htm">Image Analysis</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Resize Image Arrays</span>
+        </div>
+        <h1>Resize Image Arrays</h1>
+        <p>You can shrink or expand one-, two-, or three-dimensional image arrays using the <a href="../../Reference Material/C/CONGRID.htm">CONGRID</a>&#160;and <a href="../../Reference Material/R/REBIN.htm">REBIN</a> functions. CONGRID resizes an array by any arbitrary amount, and REBIN resizes by an integer multiple of the original dimensions.</p>
+        <p>For more information on how these functions work, see <a href="#How" class="selected">How Image Arrays are Resized.</a></p>
+        <h2 class="API">Resizing to a Specific Size</h2>
+        <p>The following example  uses the <a href="../../Reference Material/C/CONGRID.htm">CONGRID</a> function. This example data is available in the <code>examples/data</code> directory of your IDL installation. The code shown below creates the graphics shown here. </p>
+        <p>
+            <img src="../images/congrid_orig.gif" alt="Original image array" /> <img src="../images/congrid_large.gif" alt="image array after congrid resize" /></p>
+        <p>Copy the entire code block and paste it into the IDL command line to run it.</p>
+        <p class="Code">; Select the file.</p>
+        <p class="Code">file = FILEPATH('convec.dat', SUBDIRECTORY=['examples', 'data'])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use READ_BINARY  to read in the data, </p>
+        <p class="Code">; specifying known data dimensions.</p>
+        <p class="Code">data = READ_BINARY(file, DATA_DIMS=[248, 248])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use the IMAGE function to display the original image with a color table.</p>
+        <p class="Code">im = IMAGE(data, RGB_TABLE=28)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use the CONGRID function to increase the image array </p>
+        <p class="Code">; size to 600 by 600 pixels and force bilinear interpolation.</p>
+        <p class="Code">magnifiedIm = CONGRID(data, 600, 600, /INTERP)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the magnified image in a new window</p>
+        <p class="Code">; with a color table.</p>
+        <p class="Code">im2 = IMAGE(magnifiedIm, RGB_TABLE=28)</p>
+        <h2 class="API">Resizing to a Multiple of the Image Array Size</h2>
+        <p>You can achieve similar results using REBIN, but you need to specify a multiple of the original array size.</p>
+        <p>The following example uses the same data as the previous example, using REBIN&#160;to resize the image display:</p>
+        <p class="Code">; Select the file. </p>
+        <p class="Code">file = FILEPATH('convec.dat', SUBDIRECTORY=['examples', 'data'])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use READ_BINARY  to read in the data, </p>
+        <p class="Code">; specifying known data dimensions.</p>
+        <p class="Code">convec_image = READ_BINARY(file, DATA_DIMS=[248, 248])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use the IMAGE function to display</p>
+        <p class="Code">; the original image with a color table.</p>
+        <p class="Code">im = IMAGE(convec_image, RGB_TABLE=28)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use the REBIN function to increase the</p>
+        <p class="Code">; image array size to three times the original size</p>
+        <p class="Code">rebinIm = REBIN(convec_image, 744, 744)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the resized image in a new window with a color table.</p>
+        <p class="Code">im2 = IMAGE(rebinIm, RGB_TABLE=28)</p>
+        <h2 class="API"><a name="How"></a>How Image Arrays are Resized</h2>
+        <p>When expanding an image array, new values are interpolated from the source image to produce additional pixels in the output image array:</p>
+        <ul>
+            <li value="1">CONGRID defaults to nearest-neighbor sampling with one- or two-dimensional arrays and automatically uses bilinear interpolation with three-dimensional arrays.</li>
+            <li value="2">REBIN defaults to bilinear interpolation.</li>
+        </ul>
+        <p>When shrinking an image array, IDL resamples pixels to produce a lower number of pixels in the output image array:</p>
+        <ul>
+            <li value="1">CONGRID uses nearest-neighbor interpolation to resample the array.</li>
+            <li value="2">REBIN averages neighboring pixel values in the source image that contribute to a single pixel value in the output image.</li>
+        </ul>
+        <h2 class="API">Resources</h2>
+        <ul>
+            <li value="1"><a href="../../Reference Material/I/IMAGE.htm" class="Heading">IMAGE</a>
+            </li>
+            <li value="2"><a href="../../Reference Material/C/CONGRID.htm">CONGRID</a>
+            </li>
+            <li value="3"><a href="../../Reference Material/R/REBIN.htm">REBIN</a>
+            </li>
+            <li value="4"><a href="../../Reference Material/Functional List of IDL Routines/Graphics.htm" class="Heading">IDL Graphics Functions</a>
+            </li>
+            <li value="5"><a href="../propChanges.htm" class="Heading">Change graphics properties</a>
+            </li>
+            <li value="6"><a href="../MultiViz.htm" class="Heading">Multiple graphics in one window</a>
+            </li>
+            <li value="7"><a href="../ImageGuideMe/SaveImage.htm" class="Heading">Save a graphic</a>
+            </li>
+            <li value="8"><a href="../../IDL Graphics/FormattingSymsAndLines.htm" class="Heading">Formatting IDL&#160;Graphics Symbols and Lines</a>
+            </li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

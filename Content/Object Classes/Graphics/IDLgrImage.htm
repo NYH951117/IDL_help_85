@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|Graphics Object Classes">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLgrImage</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/NoLines.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_gr.htm">Graphics Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLgrImage</span>
+        </div>
+        <h1 class="ObjClass"><a name="objects_gr_2157407275_1010038"></a><a name="objects_gr_2157407275_13854"></a>IDLgrImage</h1>
+        <p data-mc-conditions="Reference Material.Online_Help_Only">
+            <MadCap:conditionalText data-mc-conditions="Reference Material.Online_Help_Only"><a href="#Supercla" class="selected">Superclasses</a> | <a href="#objects_gr_2157407275_1010069" class="selected">Creation</a> | <a href="#objects_gr_2157407275_1043925" class="selected">Properties</a> | <a href="#objects_gr_2157407275_1010075" class="selected">Methods</a> | <a href="#objects_gr_2157407275_1666287" class="selected">Examples</a> | <a href="#objects_gr_2157407275_1010099" class="selected">Version History</a></MadCap:conditionalText>
+        </p>
+        <p>An <a name="kanchor3591"></a>image object represents a mapping from a two-dimensional array of data values to a two dimensional array of pixel colors, resulting in a flat 2-D-scaled version of the image, drawn at Z = 0.</p>
+        <p>An IDLgrImage object is an<i> atomic graphic object</i>; it is one of the basic drawable elements of the IDL Object Graphics system, and it is not a container for other objects.</p>
+        <p>Beginning with IDL 6.2, IDLgrImage renders an image by default using a texture-mapped polygon on graphics devices using the RGB color model, for a significant increase in functionality and performance. IDL continues to use a 2D bitmap primitive to draw an image on devices using the indexed color model, since texture mapping is not available on such devices. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>With the texture-mapping performance improvements of 6.2, interpolation results may differ slightly across graphics devices and from pre-6.2 results. See <a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052150">INTERPOLATE</a> for details.</p>
+        <h3><a name="objects_gr_2157407275_1010056"></a><a name="objects_gr_2157407275_73284"></a>Transformations of IDLgrImage Objects</h3>
+        <p>By default, IDLgrImage objects are drawn at Z=0 and are positioned and sized with respect to two points: </p>
+        <p class="Code">p1 = [LOCATION(0), LOCATION(1), 0] </p>
+        <p class="Code">p2 = [LOCATION(0) + DIMENSION(0), LOCATION(1) + DIMENSION(1), 0].  </p>
+        <p>where LOCATION and DIMENSION are properties of the image object. These two points are transformed in three dimensions, and then projected onto the screen to form the opposite corners of a 2-D rectangle using screen space points designated as <code>p1'</code> and <code>p2'</code>: </p>
+        <p class="Code">[ [p1'[0], p1'[1]], [[p2'[0], p1'[1]], </p>
+        <p class="Code">&#160;&#160;&#160;[[p2'[0], p2'[1]], [[p1'[0], p2'[1]] ] </p>
+        <p>The image data is drawn on the display as a 2-D image within this 2-D rectangle whose sides are parallel to the screen sides. The image data is <i>scaled</i> in two dimensions (not rotated) to fit into this projected rectangle and then drawn with Z buffering disabled. </p>
+        <p>To draw an image with the current full 3D transformation (the same way other objects such as polygons are transformed), set the IDLgrImage TRANSFORM_MODE property to 1. See the IDLgrImage <a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1665873">TRANSFORM_MODE</a> property for details.</p>
+        <p>Objects are drawn to a destination device in the order that they are added (via the Add method) to the model, view, or scene that contains them. By default, image objects do not take into account the depth locations of other objects that may be included in the view object unless you enable depth testing (see <a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1095165">DEPTH_TEST_DISABLE</a> for details). </p>
+        <p>This means that objects that are drawn to the destination object (window or printer) after the image is drawn will appear to be in front of the image, even if they are located behind the image object. Since the image is drawn by default with depth testing disabled, you can think of the image primitive as ‘painting’ the image onto the screen without regard for other objects that might already have been drawn there.</p>
+        <p>This behavior can be changed by enabling depth testing to make the image primitive behave like other primitives such as polygons when they are drawn with depth testing enabled.</p>
+        <h2 class="API">Image Ti<a name="kanchor3592"></a>li<a name="kanchor3593"></a>ng</h2>
+        <p>The IDLgrImage object supports tiling, which lets you display images that are too large to be read entirely into memory. For example, some satellite images can be over a gigabyte in size, which is impossible to fit into memory and display as a single unit on a typical computer. However, it can be displayed by segmenting it into smaller, more manageable image tiles. </p>
+        <p>When tiling is enabled for an IDLgrImage object, the image is initially created without any data. The image pixels are only loaded when a tile section comes into view through panning. Also, you can create an image pyramid to support level-of-detail (LOD) rendering for large images. This changes the resolution of an image when you zoom in or out within an image display. As you zoom out, successively smaller, less-detailed images can be displayed. This quickly provides a full view of the larger image, lets you choose an area of interest, and zoom in on that area. As you zoom in, progressively detailed image layers can be loaded. The IDLgrImage object is aware of the LOD required and will communicate that to the application when the application requests the tile visibility information.</p>
+        <h2 class="API">Annotating <a name="kanchor3594"></a>Indexed Image Objects</h2>
+        <p>When using Object Graphics, the original color table does not need to be modified. The color table (palette) pertains only to the image object, not the window, view, model, polygon, or text objects. Color annotations are usually applied to label each color level within the image or to allow color comparisons. This section shows how to label each color level on an indexed image in Object Graphics. As an example, an image of average world temperature is imported from the <code>worldtmp.png</code> file. This file does not contain a color table associated with this image, so a pre-defined color table will be applied. This table provides the colors for the polygons and text used to make a colorbar for this image. Each polygon uses the color of each level in the table. The text represents the average temperature (in Celsius) of each level.</p>
+        <p class="ExampleCode">See <code>applycolorbar_indexed_object.<a name="kanchor3595"></a>pro</code> in the <code>examples/doc/objects</code> subdirectory of the IDL installation directory for code that duplicates this example. Run the example procedure by entering <code>applycolorbar_indexed_object</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT applycolorbar_indexed_object.pro</code>. </p>
+        <ol>
+            <li value="1">
+                <p>Determine the path to the <code>worldtmp.png </code>file:</p>
+                <p class="Code">worldtmpFile = FILEPATH('worldtmp.png', $</p>
+                <p class="Code">&#160;&#160;&#160;SUBDIRECTORY = ['examples', 'demo', 'demodata'])</p>
+            </li>
+            <li value="2">
+                <p>Import the image from the <code>worldtmp.png </code>file into IDL:</p>
+                <p class="Code">worldtmpImage = READ_PNG(worldtmpFile)</p>
+            </li>
+            <li value="3">
+                <p>Determine the size of the imported image:</p>
+                <p class="Code">worldtmpSize = SIZE(worldtmpImage, /DIMENSIONS)</p>
+            </li>
+            <li value="4">
+                <p>Initialize the display objects necessary for an Object Graphics display:</p>
+                <p class="Code">oWindow = OBJ_NEW('IDLgrWindow', RETAIN = 2, $</p>
+                <p class="Code">&#160;&#160;&#160;DIMENSIONS = [worldtmpSize[0], worldtmpSize[1]], $</p>
+                <p class="Code">&#160;&#160;&#160;TITLE = 'Average World Temperature (in Celsius)')</p>
+                <p class="Code">oView = OBJ_NEW('IDLgrView', $</p>
+                <p class="Code">&#160;&#160;&#160;VIEWPLANE_RECT = [0, 0, worldtmpSize[0], $</p>
+                <p class="Code">&#160;&#160;&#160;worldtmpSize[1]])</p>
+                <p class="Code">oModel = OBJ_NEW('IDLgrModel')</p>
+            </li>
+            <li value="5">
+                <p>Initialize the palette object, load the Rainbow18 color table into the palette, and then apply the palette to an image object:</p>
+                <p class="Code">oPalette = OBJ_NEW('IDLgrPalette')</p>
+                <p class="Code">oPalette -&gt; LoadCT, 38</p>
+                <p class="Code">oImage = OBJ_NEW('IDLgrImage', worldtmpImage, $</p>
+                <p class="Code">&#160;&#160;&#160;PALETTE = oPalette)</p>
+            </li>
+            <li value="6">
+                <p>Add the image to the model, then add the model to the view, and finally draw the view in the window:</p>
+                <p class="Code">oModel -&gt; Add, oImage</p>
+                <p class="Code">oView -&gt; Add, oModel</p>
+                <p class="Code">oWindow -&gt; Draw, oView</p>
+                <p>The following figure is displayed. It shows a temperature image and Rainbow18 color table (Object Graphics).</p>
+                <p>
+                    <img src="../../images/imgcolor35.gif" />
+                </p>
+                <p>Before applying the color polygons and text of each level, you must first initialize their color values and their locations. The Rainbow18 color table has only 18 different color levels, but still has 256 elements. You can use the INDGEN routine to make an array of 18 elements ranging from 0 to 17 in value, where each element contains the index of that element. Then you can use the BYTSCL routine to scale these values to range from 0 to 255. The resulting array contains the initial color value (from 0 to 255) of the associated range (from 0 to 17, equalling 18 elements).</p>
+            </li>
+            <li value="7">
+                <p>Initialize the color level parameter:</p>
+                <p class="Code">fillColor = BYTSCL(INDGEN(18))</p>
+            </li>
+            <li value="8">
+                <p>Initialize the average temperature of each level, which directly depends on the initial color value of each range. Temperature is linearly scaled to range from -60 to 40 Celsius. You can convert the resulting temperature value to a string variable to be used as text:</p>
+                <p class="Code">temperature = STRTRIM(FIX(((20.*fillColor)/51.) - 60), 2)</p>
+                <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When the <i>fillColor</i> variable in the previous statement is multiplied by the floating-point value of 20 (denoted by the decimal after the number), the elements of the array are converted from byte values to floating-point values. These elements are then converted to integer values with the FIX routine so the decimal part will not be displayed. The STRTRIM routine converts the integer values to string values to be displayed as text. The second argument to STRTRIM is set to 2 to note the leading and trailing black values should be trimmed away when the integer values are converted to string values.</p>
+                <p>With the polygon color and text now defined, you can determine their locations. You can use a polygon object to draw each polygon and text objects to display each element of text. The process is repetitive from level to level, so a FOR/DO loop is used to display the entire colorbar. Since each polygon and text is drawn individually within the loop, you only need to determine the location of a single polygon and an array of offsets for each step in the loop. The following two steps describe this process.</p>
+            </li>
+            <li value="9">
+                <p>Initialize the polygon and the text location parameters. Each polygon is 35 pixels in width and 18 pixels in height. The offset will move the y-location 18 pixels every time a new polygon is displayed:</p>
+                <p class="Code">x = [5., 40., 40., 5., 5.]</p>
+                <p class="Code">y = [5., 5., 23., 23., 5.] + 5.</p>
+                <p class="Code">offset = 18.*FINDGEN(19) + 5.</p>
+            </li>
+            <li value="10">
+                <p>Initialize the polygon and text objects:</p>
+                <p class="Code">oPolygon = OBJARR(18)</p>
+                <p class="Code">oText = OBJARR(18)</p>
+                <p class="Code">FOR i = 0, (N_ELEMENTS(oPolygon) - 1) DO BEGIN &amp; $</p>
+                <p class="Code">&#160;&#160;&#160;oPolygon[i] = OBJ_NEW('IDLgrPolygon', x, $</p>
+                <p class="Code">&#160;&#160;&#160;y + offset[i], COLOR = fillColor[i], $</p>
+                <p class="Code">&#160;&#160;&#160;PALETTE = oPalette) &amp; $</p>
+                <p class="Code">&#160;&#160;&#160;oText[i] = OBJ_NEW('IDLgrText', temperature[i], $</p>
+                <p class="Code">&#160;&#160;&#160;LOCATIONS = [x[0] + 3., y[0] + offset[i] + 3.], $</p>
+                <p class="Code">&#160;&#160;&#160;COLOR = 255*(fillColor[i] LT 255), $</p>
+                <p class="Code">&#160;&#160;&#160;PALETTE = oPalette) &amp; $</p>
+                <p class="Code">ENDFOR</p>
+                <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The &amp; after BEGIN and the $ allow you to use the FOR/DO loop at the IDL command line. These &amp; and $ symbols are not required when the FOR/DO loop in placed in an IDL program as shown in <code>ApplyColorbar_Indexed_Object.pro</code> in the <code>examples/doc/objects </code>subdirectory of the IDL installation.</p>
+            </li>
+            <li value="11">
+                <p>Add the polygons and text to the model, then add the model to the view, and finally redraw the view in the window:</p>
+                <p class="Code">oModel -&gt; Add, oPolygon</p>
+                <p class="Code">oModel -&gt; Add, oText</p>
+                <p class="Code">oWindow -&gt; Draw, oView</p>
+                <p>The following figure displays a temperate image with the colorbar annotation applied to the image. (Object Graphics)</p>
+                <p>
+                    <img src="../../images/imgcolor36.gif" />
+                </p>
+            </li>
+            <li value="12">
+                <p>Clean up object references. When working with objects always remember to clean up any object references with the OBJ_DESTROY routine. Since the view contains all the other objects, except for the window (which is destroyed by the user), you only need to use OBJ_DESTROY on the view and the palette objects:</p>
+                <p class="Code">OBJ_DESTROY, [oView, oPalette]</p>
+            </li>
+        </ol>
+        <h2 class="API"><a name="obj_annotate_40295092_1008947"></a><a name="obj_annotate_40295092_84650"></a>Annotating <a name="kanchor3596"></a>RGB Image Objects</h2>
+        <p>When using Object Graphics, colors can be defined just by the values of their red, green, and blue components. In this example, a color spectrum of additive and subtractive primary colors will be drawn on an RGB image for comparison with the colors in that image. The <code>glowing_gas.jpg</code> file (which is provided by the Hubble Heritage Team, made up of AURA, STScI, and NASA) contains an RGB image of an expanding shell of glowing gas surrounding a hot, massive star in our Milky Way Galaxy. This image contains all the colors of this spectrum. Complete the following steps for a detailed description of the process.</p>
+        <p class="ExampleCode">See <code>applycolorbar_rgb_object.<a name="kanchor3597"></a>pro </code>in the <code>examples/doc/objects</code> subdirectory of the IDL installation directory for code that duplicates this example. Run the example procedure by entering <code>applycolorbar_rgb_object</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT applycolorbar_rgb_object.pro</code>. </p>
+        <ol>
+            <li value="1">
+                <p>Determine the path to the <code>glowing_gas.jpg </code>file:</p>
+                <p class="Code">cosmicFile = FILEPATH('glowing_gas.jpg', $</p>
+                <p class="Code">&#160;&#160;&#160;SUBDIRECTORY = ['examples', 'data'])</p>
+            </li>
+            <li value="2">
+                <p>Import the image from the <code>glowing_gas.jpg </code>file into IDL:</p>
+                <p class="Code">READ_JPEG, cosmicFile, cosmicImage</p>
+            </li>
+            <li value="3">
+                <p>Determine the size of the imported image. The image contained within this file is pixel-interleaved (the color information is contained within the first dimension). You can use the SIZE routine to determine the other dimensions of this image:</p>
+                <p class="Code">cosmicSize = SIZE(cosmicImage, /DIMENSIONS)</p>
+            </li>
+            <li value="4">
+                <p>Initialize the display objects required for an Object Graphics display:</p>
+                <p class="Code">oWindow = OBJ_NEW('IDLgrWindow', RETAIN = 2, $</p>
+                <p class="Code">&#160;&#160;&#160;DIMENSIONS = [cosmicSize[1], cosmicSize[2]], $</p>
+                <p class="Code">&#160;&#160;&#160;TITLE = 'glowing_gas.jpeg')</p>
+                <p class="Code">oView = OBJ_NEW('IDLgrView', $</p>
+                <p class="Code">&#160;&#160;&#160;VIEWPLANE_RECT = [0., 0., cosmicSize[1], $</p>
+                <p class="Code">&#160;&#160;&#160;cosmicSize[2]])</p>
+                <p class="Code">oModel = OBJ_NEW('IDLgrModel')</p>
+            </li>
+            <li value="5">
+                <p>Initialize the image object. The INTERLEAVE keyword is set to 0 because the RGB image is pixel-interleaved:</p>
+                <p class="Code">oImage = OBJ_NEW('IDLgrImage', cosmicImage, $</p>
+                <p class="Code">&#160;&#160;&#160;INTERLEAVE = 0, DIMENSIONS = [cosmicSize[1], $</p>
+                <p class="Code">&#160;&#160;&#160;cosmicSize[2]])</p>
+            </li>
+            <li value="6">
+                <p>Add the image to the model, then add the model to the view, and finally draw the view in the window:</p>
+                <p class="Code">oModel -&gt; Add, oImage</p>
+                <p class="Code">oView -&gt; Add, oModel</p>
+                <p class="Code">oWindow -&gt; Draw, oView</p>
+                <p>The following image contains all of the colors of the additive and subtractive primary spectrum (Object Graphics). A colorbar annotation can be added to compare the colors of that spectrum and the colors within the image. The color of each box is defined in the following array.</p>
+                <p>
+                    <img src="../../images/imgcolor39.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 5.999767px;margin-bottom: 5.999767px;" />
+                </p>
+                <p>You can use the following to determine the color and location parameters for each polygon.</p>
+            </li>
+            <li value="7">
+                <p>Initialize the color parameters:</p>
+                <p class="Code">fillColor = [[0, 0, 0], $ ; black</p>
+                <p class="Code">&#160;&#160;&#160;[255, 0, 0], $ ; red</p>
+                <p class="Code">&#160;&#160;&#160;[255, 255, 0], $ ; yellow</p>
+                <p class="Code">&#160;&#160;&#160;[0, 255, 0], $ ; green</p>
+                <p class="Code">&#160;&#160;&#160;[0, 255, 255], $ ; cyan</p>
+                <p class="Code">&#160;&#160;&#160;[0, 0, 255], $ ; blue</p>
+                <p class="Code">&#160;&#160;&#160;[255, 0, 255], $ ; magenta</p>
+                <p class="Code">&#160;&#160;&#160;[255, 255, 255]] ; white</p>
+            </li>
+            <li value="8">
+                <p>After defining the polygon colors, you can determine their locations. Initialize polygon location parameters:</p>
+                <p class="Code">x = [5., 25., 25., 5., 5.]</p>
+                <p class="Code">y = [5., 5., 25., 25., 5.] + 5.</p>
+                <p class="Code">offset = 20.*FINDGEN(9) + 5.</p>
+                <p>The <i>x</i> and <i>y</i> variables pertain to the x and y locations (in pixel units) of each box of color. The <i>offset</i> maintains the spacing (in pixel units) of each box. Since the image is made up of mostly a black background, the x border of the colorbar is also determined to draw a white border around the polygons.</p>
+            </li>
+            <li value="9">
+                <p>Initialize location of colorbar border:</p>
+                <p class="Code">x_border = [x[0] + offset[0], x[1] + offset[7], $</p>
+                <p class="Code">&#160;&#160;&#160;x[2] + offset[7], x[3] + offset[0], x[4] + offset[0]]</p>
+                <p>The y border is already defined by the y variable.</p>
+                <p>These parameters are used when initializing the polygon and polyline objects These objects will be used to draw the boxes of the color spectrum and the colorbar border. Each polygon is 20 pixels wide and 20 pixels high. The offset will move the y-location 20 pixels every time a new polygon is displayed.</p>
+            </li>
+            <li value="10">
+                <p>Initialize the polygon objects. The process is repetitive from level to level, so a FOR/DO loop will be used to display the entire colorbar. Since each polygon is drawn individually within the loop, you only need to determine the location of a single polygon and an array of offsets for each step in the loop:</p>
+                <p class="Code">oPolygon = OBJARR(8)</p>
+                <p class="Code">FOR i = 0, (N_ELEMENTS(oPolygon) - 1) DO oPolygon[i] = $</p>
+                <p class="Code">&#160;&#160;&#160;OBJ_NEW('IDLgrPolygon', x + offset[i], y, $</p>
+                <p class="Code">&#160;&#160;&#160;COLOR = fillColor[*, i])</p>
+            </li>
+            <li value="11">
+                <p>The colorbar border is produced with a polyline object. This polyline object requires a <i>z</i> variable to define it slightly above the polygons and image. The z variable is required to place the polyline in front of the polygons. Initialize the polyline (border) object:</p>
+                <p class="Code">z = [0.001, 0.001, 0.001, 0.001, 0.001]</p>
+                <p class="Code">oPolyline = OBJ_NEW('IDLgrPolyline', x_border, y, z, $</p>
+                <p class="Code">&#160;&#160;&#160;COLOR = [255, 255, 255])</p>
+            </li>
+            <li value="12">
+                <p>The polygon and polyline objects can now be added to the model and then displayed (re-drawn) in the window. Add the polygons and polyline to the model, then add the model to the view, and finally redraw the view in the window:</p>
+                <p class="Code">oModel -&gt; Add, oPolygon</p>
+                <p class="Code">oModel -&gt; Add, oPolyline</p>
+                <p class="Code">oWindow -&gt; Draw, oView</p>
+                <p>The following figure shows the colorbar annotation applied to the image (Object Graphics).</p>
+                <p class="TableAnchor_Indented">
+                    <img src="../../images/imgcolor40.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 5.999767px;margin-bottom: 5.999767px;" />
+                </p>
+            </li>
+            <li value="13">Clean up object references. When working with objects always remember to clean up any object references with the OBJ_DESTROY routine. Since the view contains all the other objects, except for the window (which is destroyed by the user), you only need to use OBJ_DESTROY on the view object:</li>
+        </ol>
+        <p class="Code_Indented">OBJ_DESTROY, oView</p>
+        <h2 class="API"><a name="Supercla"></a>Superclasses</h2>
+        <p><a href="../Miscellaneous/IDLitComponent.htm">IDLitComponent</a>
+        </p>
+        <h2 class="API"><a name="objects_gr_2157407275_1010069"></a><a name="objects_gr_2157407275_1003478_PageTOC_IDLgrImage__"></a>Creation</h2>
+        <p>See <a href="IDLgrImage__Init.htm#objects_gr_2157407275_1809847">IDLgrImage::Init</a>.</p>
+        <h2 class="API"><a name="objects_gr_2157407275_1043925"></a><a name="objects_gr_2157407275_76045"></a>Properties</h2>
+        <p>Objects of this class have the following properties. See <a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1044500">IDLgrImage Properties</a> for details on individual properties.</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/NoLines.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_NoLines">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052050">ALL</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1665614">ALPHA_CHANNEL</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052068">BLEND_FUNCTION</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052124">CHANNEL</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1287882">CLIP_PLANES</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052132">DATA</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1665691">DEPTH_OFFSET</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1095165">DEPTH_TEST_DISABLE</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1095212">DEPTH_TEST_FUNCTION</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1095251">DEPTH_WRITE_DISABLE</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1095169">DIMENSIONS</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052136">GREYSCALE</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052140">HIDE</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1801050">IMAGE_1D</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052144">INTERLEAVE</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1801217">INTERNAL_DATA_TYPE</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052150">INTERPOLATE</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052152">LOCATION</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052158">ORDER</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052160">PALETTE</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052253">PARENT</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052251">REGISTER_PROPERTIES</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1665804">RENDER_METHOD</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1093772">RESET_DATA</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1799401">SHADER</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1813892">SHARE_DATA</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052171">SUB_RECT</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1808281">TILE_BORDER_SIZE</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1810029">TILE_COLOR</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1667130">TILE_CURRENT_LEVEL</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1667167">TILE_DIMENSIONS</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1667197">TILE_LEVEL_MODE</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1667227">TILE_NUM_LEVELS</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1709469">TILE_SHOW_BOUNDARIES</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1667264">TILED_IMAGE_DIMENSIONS</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1667509">TILING</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1665873">TRANSFORM_MODE</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052175">XCOORD_CONV</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052243">XRANGE</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052181">YCOORD_CONV</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052233">YRANGE</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052187">ZCOORD_CONV</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">
+                        <p><a href="IDLgrImage_Properties.htm#objects_gr_2157407275_1052223">ZRANGE</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>In addition, objects of this class inherit the properties of all superclasses of this class.</p>
+        <h2 class="API"><a name="objects_gr_2157407275_1010075"></a><a name="objects_gr_2157407275_1003491_PageTOC_IDLgrImage__"></a>Methods<a name="kanchor3598"></a></h2>
+        <p>This class has the following methods:</p>
+        <ul>
+            <li value="1"><a href="IDLgrImage__Cleanup.htm#objects_gr_2157407275_1010104">IDLgrImage::Cleanup</a>
+            </li>
+            <li value="2"><a href="IDLgrImage__DeleteTileDa.htm#objects_gr_2157407275_1667810">IDLgrImage::DeleteTileData</a>
+            </li>
+            <li value="3"><a href="IDLgrImage__GetCTM.htm#objects_gr_2157407275_1010139">IDLgrImage::GetCTM</a>
+            </li>
+            <li value="4"><a href="IDLgrImage__GetProperty.htm#objects_gr_2157407275_1010183">IDLgrImage::GetProperty</a>
+            </li>
+            <li value="5"><a href="IDLgrImage__Init.htm#objects_gr_2157407275_1809847">IDLgrImage::Init</a>
+            </li>
+            <li value="6"><a href="IDLgrImage__ReadFiltered.htm#objects_gr_2157407275_1812558">IDLgrImage::ReadFilteredData</a>
+            </li>
+            <li value="7"><a href="IDLgrImage__SetProperty.htm#objects_gr_2157407275_1809748">IDLgrImage::SetProperty</a>
+            </li>
+            <li value="8"><a href="IDLgrImage__SetTileData.htm#objects_gr_2157407275_1667909">IDLgrImage::SetTileData</a>
+            </li>
+            <li value="9"><a href="IDLgrImage__TileDataLoad.htm#objects_gr_2157407275_1843416">IDLgrImage::TileDataLoaded</a>
+            </li>
+        </ul>
+        <p>In addition, this class inherits the methods of its superclasses (if any).</p>
+        <h2 class="API"><a name="objects_gr_2157407275_1666287"></a><a name="objects_gr_2157407275_27732"></a>Examples</h2>
+        <p>See "Working with Image Objects" and  "Mapping an Image onto Elevation Data" (Chapter 3, <i>Image Processing in IDL</i>  in the <code>help/pdf</code> directory of your IDL installation) for a texture mapping example. <a name="objects_gr_2157407275_1010099"></a><a name="objects_gr_2157407275_1394979_PageTOC_IDLgrImage__"></a></p>
+        <h3>Displaying<a name="kanchor3599"></a> Binary <a name="kanchor3600"></a>Images with <a name="kanchor3601"></a>Object Graphics</h3>
+        <p><a name="kanchor3602"></a>Binary<a name="kanchor3603"></a> images are composed of pixels having one of two values, usually zero or one. With most color tables, pixels having values of zero and one are displayed with almost the same color, such as with the default greyscale color table. Thus, a binary image is usually scaled to display the zeros as black and the ones as white.</p>
+        <p>The following example imports a binary image of the world from the <code>continent_mask.dat</code> binary file. In this image, the oceans are zeros (black) and the continents are ones (white). This type of image can be used to mask out (omit) data over the oceans. The image contains byte data values and is 360 pixels by 360 pixels.</p>
+        <p class="ExampleCode">See <code>displaybinaryimage_object.<a name="kanchor3604"></a>pro</code> in the <code>examples/doc/objects</code> subdirectory of the IDL installation directory for code that duplicates this example. Run the example procedure by entering <code>displaybinaryimage </code>at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT displaybinaryimage.pro</code>. </p>
+        <ol>
+            <li value="1">
+                <p>Determine the path to the <code>continent_mask.dat</code> file:</p>
+                <p class="Code">file = FILEPATH('continent_mask.dat', $</p>
+                <p class="Code">&#160;&#160;&#160;SUBDIRECTORY = ['examples', 'data'])</p>
+            </li>
+            <li value="2">
+                <p>Initialize the image size parameter:</p>
+                <p class="Code">imageSize = [360, 360]</p>
+            </li>
+            <li value="3">
+                <p>Use <a href="../../Reference Material/R/READ_BINARY.htm#R_822202989_756090">READ_BINARY</a> to import the image from the file:</p>
+                <p class="Code">image = READ_BINARY(file, DATA_DIMS = imageSize)</p>
+            </li>
+            <li value="4">
+                <p>Initialize the display objects:</p>
+                <p class="Code">oWindow = OBJ_NEW('IDLgrWindow', RETAIN = 2, $</p>
+                <p class="Code">&#160;&#160;&#160;DIMENSIONS = imageSize, $</p>
+                <p class="Code">&#160;&#160;&#160;TITLE = 'A Binary Image, Not Scaled')</p>
+                <p class="Code">oView = OBJ_NEW('IDLgrView', $</p>
+                <p class="Code">&#160;&#160;&#160;VIEWPLANE_RECT = [0., 0., imageSize])</p>
+                <p class="Code">oModel = OBJ_NEW('IDLgrModel')</p>
+            </li>
+            <li value="5">
+                <p>Initialize the image object:</p>
+                <p class="Code">oImage = OBJ_NEW('IDLgrImage', image)</p>
+            </li>
+            <li value="6">
+                <p>Add the image object to the model, which is added to the view, then display the view in the window:</p>
+                <p class="Code">oModel -&gt; Add, oImage</p>
+                <p class="Code">oView -&gt; Add, oModel</p>
+                <p class="Code">oWindow -&gt; Draw, oView</p>
+                <p>The resulting window should be all black (blank). The binary image contains zeros and ones, which are almost the same color (black). A binary image should be scaled prior to displaying in order to show the ones as white.</p>
+            </li>
+            <li value="7">
+                <p>Initialize another window:</p>
+                <p class="Code">oWindow = OBJ_NEW('IDLgrWindow', RETAIN = 2, $</p>
+                <p class="Code">&#160;&#160;&#160;DIMENSIONS = imageSize, $</p>
+                <p class="Code">&#160;&#160;&#160;TITLE = 'A Binary Image, Scaled')</p>
+            </li>
+            <li value="8">
+                <p>Update the image object with a scaled version of the image:</p>
+                <p class="Code">oImage -&gt; SetProperty, DATA = BYTSCL(image)</p>
+            </li>
+            <li value="9">
+                <p>Display the view in the window:</p>
+                <p class="Code">oWindow -&gt; Draw, oView</p>
+                <p>The following figure shows the results of scaling this display.</p>
+                <p>
+                    <img src="../../images/imgdisp06.gif" />
+                </p>
+            </li>
+            <li value="10">Clean up the object references. When working with objects always remember to clean up any object references with the OBJ_DESTROY routine. Since the view contains all the other objects, except for the window (which is destroyed by the user), you only need to use OBJ_DESTROY on the view object.</li>
+        </ol>
+        <p class="Code_Indented">OBJ_DESTROY, oView</p>
+        <h3>Displaying <a name="kanchor3605"></a><a name="kanchor3606"></a>Greyscale <a name="kanchor3607"></a>Images with <a name="kanchor3608"></a>Object Graphics</h3>
+        <p><a name="kanchor3609"></a>Since greyscale images are composed of pixels of varying intensities, they are best displayed with color tables that progress linearly from black to white. IDL provides several such pre-defined color tables, but the default greyscale color table is generally suitable.</p>
+        <p>The following example imports a greyscale image from the <code>convec.dat</code> binary file. This greyscale image shows the convection of the Earth’s mantle. The image contains byte data values and is 248 pixels by 248 pixels. Since the data type is byte, this image does not need to be scaled before display. If the data was of any type other than byte and the data values were not within the range of 0 up to 255, the display would need to scale the image in order to show its intensities. Complete the following steps for a detailed description of the process.</p>
+        <p class="ExampleCode">See <code>displaygrayscaleimage_object.<a name="kanchor3610"></a>pro</code> in the e<code>xamples/doc/objects </code>subdirectory of the IDL installation directory for code that duplicates this example. Run the example procedure by entering <code>displaygrayscaleimage </code>at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT displaygrayscaleimage.pro</code>. </p>
+        <ol>
+            <li value="1">
+                <p>Determine the path to the <code>convec.dat</code> file:</p>
+                <p class="Code">file = FILEPATH('convec.dat', $</p>
+                <p class="Code">   SUBDIRECTORY = ['examples', 'data'])</p>
+            </li>
+            <li value="2">
+                <p>Initialize the image size parameter:</p>
+                <p class="Code">imageSize = [248, 248]</p>
+            </li>
+            <li value="3">
+                <p>Using <a href="../../Reference Material/R/READ_BINARY.htm#R_822202989_756090">READ_BINARY</a>, import the image from the file:</p>
+                <p class="Code">image = READ_BINARY(file, DATA_DIMS = imageSize)</p>
+            </li>
+            <li value="4">
+                <p>Initialize the display objects:</p>
+                <p class="Code">oWindow = OBJ_NEW('IDLgrWindow', RETAIN = 2, $</p>
+                <p class="Code">&#160;&#160;&#160;DIMENSIONS = imageSize, $</p>
+                <p class="Code">&#160;&#160;&#160;TITLE = 'A Greyscale Image')</p>
+                <p class="Code">oView = OBJ_NEW('IDLgrView', $</p>
+                <p class="Code">&#160;&#160;&#160;VIEWPLANE_RECT = [0., 0., imageSize])</p>
+                <p class="Code">oModel = OBJ_NEW('IDLgrModel')</p>
+            </li>
+            <li value="5">
+                <p>Initialize the image object:</p>
+                <p class="Code">oImage = OBJ_NEW('IDLgrImage', image, /GREYSCALE)</p>
+            </li>
+            <li value="6">
+                <p>Add the image object to the model, which is added to the view, then display the view in the window:</p>
+                <p class="Code">oModel -&gt; Add, oImage</p>
+                <p class="Code">oView -&gt; Add, oModel</p>
+                <p class="Code">oWindow -&gt; Draw, oView</p>
+                <p>The following figure shows the resulting greyscale image display.</p>
+                <p>
+                    <img src="../../images/imgdisp07.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 6.000469px;margin-bottom: 6.000469px;" />
+                </p>
+            </li>
+            <li value="7">Clean up the object references. When working with objects always remember to clean up any object references with the OBJ_DESTROY routine. Since the view contains all the other objects, except for the window (which is destroyed by the user), you only need to use OBJ_DESTROY on the view object.</li>
+        </ol>
+        <p class="Code_Indented">OBJ_DESTROY, oView</p>
+        <h3>Displaying <a name="kanchor3611"></a><a name="kanchor3612"></a>Multiple <a name="kanchor3613"></a>Ima<a name="kanchor3614"></a>ges in <a name="kanchor3615"></a>Object Graphics</h3>
+        <p>The following example imports an RGB image from the <code>rose.jpg</code> image file. This RGB image is a close-up photograph of a red rose and is pixel interleaved. This example extracts the three color channels of this image, and displays them as greyscale images in various locations within the same window. Complete the following steps for a detailed description of the process.</p>
+        <p class="ExampleCode">See <code>displaymultiples_object.<a name="kanchor3616"></a>pro </code>in the <code>examples/doc/objects</code> subdirectory of the IDL installation directory for code that duplicates this example. Run the example procedure by entering <code>displaymultiples_object</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT displaymultiples_object.pro</code>. </p>
+        <ol>
+            <li value="1">
+                <p>Determine the path to the <code>rose.jpg</code> file:</p>
+                <p class="Code">file = FILEPATH('rose.jpg', $</p>
+                <p class="Code">&#160;&#160;&#160;SUBDIRECTORY = ['examples', 'data'])</p>
+            </li>
+            <li value="2">
+                <p>Use <a href="../../Reference Material/Q/QUERY_IMAGE.htm#Q_815714925_1095965">QUERY_IMAGE</a>to query the file to determine image parameters:</p>
+                <p class="Code">queryStatus = QUERY_IMAGE(file, imageInfo)</p>
+            </li>
+            <li value="3">
+                <p>Set the image size parameter from the query information:</p>
+                <p class="Code">imageSize = imageInfo.dimensions</p>
+            </li>
+            <li value="4">
+                <p>Use <a href="../../Reference Material/R/READ_IMAGE.htm#R_822202989_1071039">READ_IMAGE </a>to import the image from the file:</p>
+                <p class="Code">image = READ_IMAGE(file)</p>
+            </li>
+            <li value="5">
+                <p>Extract the channels (as images) from the pixel interleaved RGB image:</p>
+                <p class="Code">redChannel = REFORM(image[0, *, *])</p>
+                <p class="Code">greenChannel = REFORM(image[1, *, *])</p>
+                <p class="Code">blueChannel = REFORM(image[2, *, *])</p>
+                <p>The LOCATION keyword to the Init method of the image object can be used to position an image within a window. The LOCATION keyword uses data coordinates, which are the same as device coordinates for images. Before initializing the image objects, you should initialize the display objects. The following steps display multiple images horizontally, vertically, and diagonally.</p>
+            </li>
+            <li value="6">
+                <p>Initialize the display objects:</p>
+                <p class="Code">oWindow = OBJ_NEW('IDLgrWindow', RETAIN = 2, $</p>
+                <p class="Code">&#160;&#160;&#160;DIMENSIONS = imageSize*[3, 1], $</p>
+                <p class="Code">&#160;&#160;&#160;TITLE = 'The Channels of an RGB Image')</p>
+                <p class="Code">oView = OBJ_NEW('IDLgrView', $</p>
+                <p class="Code">&#160;&#160;&#160;VIEWPLANE_RECT = [0., 0., imageSize]*[0, 0, 3, 1])</p>
+                <p class="Code">oModel = OBJ_NEW('IDLgrModel')</p>
+            </li>
+            <li value="7">
+                <p>Now initialize the image objects and arrange them with the LOCATION keyword:</p>
+                <p class="Code">oRedChannel = OBJ_NEW('IDLgrImage', redChannel)</p>
+                <p class="Code">oGreenChannel = OBJ_NEW('IDLgrImage', greenChannel, $</p>
+                <p class="Code">&#160;&#160;&#160;LOCATION = [imageSize[0], 0])</p>
+                <p class="Code">oBlueChannel = OBJ_NEW('IDLgrImage', blueChannel, $</p>
+                <p class="Code">&#160;&#160;&#160;LOCATION = [2*imageSize[0], 0])</p>
+            </li>
+            <li value="8">
+                <p>Add the image objects to the model, which is added to the view, then display the view in the window:</p>
+                <p class="Code">oModel -&gt; Add, oRedChannel</p>
+                <p class="Code">oModel -&gt; Add, oGreenChannel</p>
+                <p class="Code">oModel -&gt; Add, oBlueChannel</p>
+                <p class="Code">oView -&gt; Add, oModel</p>
+                <p class="Code">oWindow -&gt; Draw, oView</p>
+                <p>The following figure shows the resulting greyscale images, a horizontal display of RGB channels in Object Graphics.</p>
+                <p class="TableAnchor_Indented">
+                    <img src="../../images/imgdisp14.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 6.000484px;margin-bottom: 6.000477px;" />
+                </p>
+                <p>These images can be displayed vertically in another window by first initializing another window and then updating the view and images with different location information.</p>
+            </li>
+            <li value="9">
+                <p>Initialize another window object:</p>
+                <p class="Code">oWindow = OBJ_NEW('IDLgrWindow', RETAIN = 2, $</p>
+                <p class="Code">&#160;&#160;&#160;DIMENSIONS = imageSize*[1, 3], $</p>
+                <p class="Code">&#160;&#160;&#160;TITLE = 'The Channels of an RGB Image')</p>
+            </li>
+            <li value="10">
+                <p>Change the view from horizontal to vertical:</p>
+                <p class="Code">oView -&gt; SetProperty, $</p>
+                <p class="Code">&#160;&#160;&#160;VIEWPLANE_RECT = [0., 0., imageSize]*[0, 0, 1, 3]</p>
+            </li>
+            <li value="11">
+                <p>Change the locations of the channels:</p>
+                <p class="Code">oGreenChannel -&gt; SetProperty, LOCATION = [0, imageSize[1]]</p>
+                <p class="Code">oBlueChannel -&gt; SetProperty, LOCATION = [0, 2*imageSize[1]]</p>
+            </li>
+            <li value="12">
+                <p>Display the updated view within the new window:</p>
+                <p class="Code">oWindow -&gt; Draw, oView</p>
+                <p>The following figure shows the resulting greyscale images, a vertical display of RGB channels in Object Graphics.</p>
+                <p class="TableAnchor_Indented">
+                    <img src="../../images/imgdisp15.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 6.000477px;margin-bottom: 5.999767px;" />
+                </p>
+                <p>These images can also be displayed diagonally in another window by first initializing the other window and then updating the view and images with different location information.The LOCATION can also be used to create a display overlapping images. When overlapping images in Object Graphics, you must remember the last image added to the model will be in front of the previous images.</p>
+            </li>
+            <li value="13">
+                <p>Initialize another window object:</p>
+                <p class="Code">oWindow = OBJ_NEW('IDLgrWindow', RETAIN = 2, $</p>
+                <p class="Code">&#160;&#160;&#160;DIMENSIONS = imageSize*[2, 2], $</p>
+                <p class="Code">&#160;&#160;&#160;TITLE = 'The Channels of an RGB Image')</p>
+            </li>
+            <li value="14">
+                <p>Change the view to prepare for a diagonal display:</p>
+                <p class="Code">oView -&gt; SetProperty, $</p>
+                <p class="Code">&#160;&#160;&#160;VIEWPLANE_RECT = [0., 0., imageSize]*[0, 0, 2, 2]</p>
+            </li>
+            <li value="15">
+                <p>Change the locations of the channels:</p>
+                <p class="Code">oGreenChannel -&gt; SetProperty, $</p>
+                <p class="Code">&#160;&#160;&#160;LOCATION = [imageSize[0]/2, imageSize[1]/2]</p>
+                <p class="Code">oBlueChannel -&gt; SetProperty, $</p>
+                <p class="Code">&#160;&#160;&#160;LOCATION = [imageSize[0], imageSize[1]]</p>
+            </li>
+            <li value="16">
+                <p>Display the updated view within the new window:</p>
+                <p class="Code">oWindow -&gt; Draw, oView</p>
+                <p>The following figure shows the resulting greyscale images, a diagonal display of RGB channels in Object Graphics.</p>
+                <p class="TableAnchor_Indented">
+                    <img src="../../images/imgdisp16.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 5.999752px;margin-bottom: 6.000484px;" />
+                </p>
+            </li>
+            <li value="17">
+                <p>Clean up the object references. When working with objects always remember to clean up any object references with the OBJ_DESTROY routine. Since the view contains all the other objects, except for the window (which is destroyed by the user), you only need to use OBJ_DESTROY on the view object.</p>
+                <p class="Code">OBJ_DESTROY, oView</p>
+            </li>
+        </ol>
+        <h3>Applying a Transparent Image Overlay</h3>
+        <p>The following example reads in two medical images, a computed tomography (CT) file that contains structural information, and a PET (positron emission tomography) file that contains metabolic data. A color table is applied to the PET file, and the transparency is set using the ALPHA_CHANNEL property. The PET image object is then overlaid on top of the base CT image. This is done by adding the transparent PET image to the model after (and therefore displayed in front of) the base CT image. </p>
+        <p class="ExampleCode">See <code>alphaimage_obj_doc.pro<a name="kanchor3617"></a></code> in the <code>examples/doc/objects</code> subdirectory of the IDL installation directory for code that duplicates this example. Run the example procedure by entering <code>alphaimage_obj_doc</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT alphaimage_obj_doc.pro</code>. </p>
+        <p>To replicate this example, create a new <code>.pro</code> file and complete the following steps:</p>
+        <ol>
+            <li value="1">
+                <p>Load CT and PET images and get the image dimensions.</p>
+                <p class="Code">file_pt = FILEPATH('head_pt.dcm', $</p>
+                <p class="Code">   SUBDIRECTORY=['examples', 'data'])</p>
+                <p class="Code">file_ct = FILEPATH('head_ct.dcm', $</p>
+                <p class="Code">   SUBDIRECTORY=['examples', 'data'])</p>
+                <p class="Code">img_pt = READ_DICOM(file_pt)</p>
+                <p class="Code">img_ct = READ_DICOM(file_ct)</p>
+                <p class="Code">dims_ct = SIZE(img_ct, /DIMENSIONS)</p>
+                <p class="Code">dims_pt = SIZE(img_pt, /DIMENSIONS)</p>
+            </li>
+            <li value="2">
+                <p>Check for dimension equality and resize if different.</p>
+                <p class="Code">IF dims_pt[0] NE dims_ct[0] THEN BEGIN</p>
+                <p class="Code">   x = dims_ct[0]/dims_pt[0]</p>
+                <p class="Code">   img_pt = REBIN(img_pt, dims_pt[0]*x, dims_pt[1]*x)</p>
+                <p class="Code">   dims_pt = x*dims_pt</p>
+                <p class="Code">   If dims_pt[0] NE dims_ct[0] THEN BEGIN</p>
+                <p class="Code">      status = DIALOG_MESSAGE ('Incompatible images', /ERROR)</p>
+                <p class="Code">   ENDIF</p>
+                <p class="Code">ENDIF</p>
+            </li>
+            <li value="3">
+                <p>Change the data to byte type before creating the base CT image.</p>
+                <p class="Code">img_ct = BYTSCL(img_ct)</p>
+                <p class="Code">oImageCT = OBJ_NEW('IDLgrImage', img_ct)</p>
+            </li>
+            <li value="4">
+                <p>Create display objects and display the CT image.</p>
+                <p class="Code">oWindow = OBJ_NEW('IDLgrWindow', RETAIN=2, $</p>
+                <p class="Code">   DIMENSIONS=[dims_ct[0], dims_ct[1]], TITLE='CT Image')</p>
+                <p class="Code">oView = OBJ_NEW('IDLgrView', VIEWPLANE_RECT=[0., 0., $</p>
+                <p class="Code">   dims_ct[0], dims_ct[1]])</p>
+                <p class="Code">oModel = OBJ_NEW('IDLgrModel')</p>
+                <p class="Code">oModel-&gt;Add, oImageCT</p>
+                <p class="Code">oView-&gt;Add, oModel</p>
+                <p class="Code">oWindow-&gt;Draw, oView</p>
+            </li>
+            <li value="5">
+                <p>Create a palette object and load the red-temperature table.</p>
+                <p class="Code">oPalette = OBJ_NEW('IDLgrPalette')</p>
+                <p class="Code">oPalette-&gt;Loadct, 3</p>
+            </li>
+            <li value="6">
+                <p>Change the data type to byte and create the PET image object. Set the BLEND_FUNCTION and ALPHA_CHANNEL properties to support image transparency.</p>
+                <p class="Code">img_pt = BYTSCL(img_pt)</p>
+                <p class="Code">oImagePT = OBJ_NEW('IDLgrImage', img_pt, $</p>
+                <p class="Code">   PALETTE=oPalette, BLEND_FUNCTION=[3,4], $</p>
+                <p class="Code">&#160;&#160;&#160;ALPHA_CHANNEL=0.50)</p>
+            </li>
+            <li value="7">
+                <p>Create a second window, add the semi-transparent image to the model containing the original image and display the overlay.</p>
+                <p class="Code">oWindow2 = OBJ_NEW('IDLgrWindow', RETAIN=2, $</p>
+                <p class="Code">   DIMENSIONS=[dims_pt[0], dims_pt[1]],  $</p>
+                <p class="Code">   LOCATION=[dims_ct[0]+10, 0], TITLE='CT/PET Transparency')</p>
+                <p class="Code">oModel -&gt; Add, oImagePT</p>
+                <p class="Code">oWindow2 -&gt; Draw, oView</p>
+            </li>
+            <li value="8">
+                <p>Clean-up object references.</p>
+                <p class="Code">OBJ_DESTROY, [oView, oImageCT, oImagePT]</p>
+                <p>The results of this example are shown in the following figure of a CT image (left) and CT with a semi-transparent PET overlay (right).</p>
+                <p>
+                    <img src="../../images/ct_alpha_pet.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 6.000484px;margin-bottom: 5.999752px;" />
+                </p>
+            </li>
+        </ol>
+        <h3>Cumulative Alpha Blending </h3>
+        <p>The following example shows the additive effects of displaying an image object with alpha channel data and an image with an ALPHA_CHANNEL property setting. In this example, the alpha channel is used to mask out values, and the ALPHA_CHANNEL property is used to control the object transparency. However, it is easy to modify the code and investigate the relationship between setting image transparency using the alpha channel data and ALPHA_CHANNEL property. For example, defining 50% transparency for each results in 25% opacity overall. </p>
+        <p>The two initial images are displayed in the following figure. The black portion of the land classification image (left) will be removed and this image will then be overlaid on top of the map image. </p>
+        <p>
+            <img src="../../images/alpha_org_map.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 6.000515px;margin-bottom: 5.999767px;" />
+        </p>
+        <p class="ExampleCode">See <code>alphacomposite_image_doc.pro<a name="kanchor3618"></a></code> in the <code>examples/doc/objects</code> subdirectory of the IDL installation directory for code that duplicates this example. Run the example procedure by entering <code>alphacomposite_image</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT alphacomposite_image.pro</code>. </p>
+        <p>To replicate this example, create a new <code>.pro</code> file complete the following steps:</p>
+        <ol>
+            <li value="1">
+                <p>Open the political map, the base image.</p>
+                <p class="Code">mapFile = FILEPATH('afrpolitsm.png', $</p>
+                <p class="Code">   SUBDIRECTORY = ['examples', 'data'])</p>
+                <p class="Code">mapImg = READ_PNG(mapFile, mapR, mapG, mapB)</p>
+            </li>
+            <li value="2">
+                <p>Assign the color table of the map image to a palette object.</p>
+                <p class="Code">mapPalette = OBJ_NEW('IDLgrPalette', mapR, mapG, mapB)</p>
+            </li>
+            <li value="3">
+                <p>Create an image object containing the map data.</p>
+                <p class="Code">oMapImg = OBJ_NEW('IDLgrImage', mapImg, $</p>
+                <p class="Code">   DIMENSIONS=[600, 600], PALETTE=mapPalette)</p>
+            </li>
+            <li value="4">
+                <p>Open the land cover characteristics image.</p>
+                <p class="Code">landFile = FILEPATH('africavlc.png', $</p>
+                <p class="Code">   SUBDIRECTORY = ['examples', 'data'])</p>
+                <p class="Code">landImg = READ_PNG(landFile, landR, landG, landB)</p>
+                <p class="Code">landImgDims = SIZE(landImg, /DIMENSIONS)</p>
+            </li>
+            <li value="5">
+                <p>To mask out the black values of the land classification image, create a 4 channel array for the red, green, blue, and alpha data.</p>
+                <p class="Code">alphaLand = BYTARR(4, landImgDims[0], landImgDims[1],$ &#160;&#160;&#160;/NOZERO)</p>
+            </li>
+            <li value="6">
+                <p>Get the red, green and blue values used by the image and assign them to the first three channels of the alpha image array.</p>
+                <p class="Code">alphaLand[0, *, *] = landR[landImg]</p>
+                <p class="Code">alphaLand[1, *, *] = landG[landImg]</p>
+                <p class="Code">alphaLand[2, *, *] = landB[landImg]</p>
+            </li>
+            <li value="7">
+                <p>Mask out the black pixels with a value of 0. Multiply the mask value by 255 for complete opacity. You could set this to a value between 0 (completely transparent) and 255 (opaque) to control the transparency. Any value set here will be combined with any value set for the ALPHA_CHANNEL property on the image object. </p>
+                <p class="Code">mask = (landImg GT 0)</p>
+                <p class="Code">alphaLand [3, *, *] = mask*255B</p>
+            </li>
+            <li value="8">
+                <p>Create the semi-transparent image object. ALPHA_CHANNEL values can range from 0.0 (transparent) to 1.0 (opaque). The image will appear semi-transparent when the BLEND_FUNCTION property is set to [3,4]. </p>
+                <p class="Code">oAlphaLand = OBJ_NEW('IDLgrImage', alphaLand, $</p>
+                <p class="Code">   DIMENSIONS=[600, 600], BLEND_FUNCTION=[3,4], $</p>
+                <p class="Code">   ALPHA_CHANNEL=0.35)</p>
+            </li>
+            <li value="9">
+                <p>Create the display objects.</p>
+                <p class="Code">oWindow = OBJ_NEW('IDLgrWindow', $</p>
+                <p class="Code">   DIMENSIONS=[600, 600], RETAIN=2, $</p>
+                <p class="Code">   TITLE='Overlay of Land Cover Transparency')</p>
+                <p class="Code">viewRect = [0, 0, 600, 600]</p>
+                <p class="Code">oView = OBJ_NEW('IDLgrView', VIEWPLANE_RECT=viewRect)</p>
+                <p class="Code">oModel = OBJ_NEW('IDLgrModel')</p>
+            </li>
+            <li value="10">
+                <p>Add the semi-transparent image to the model after the base image. </p>
+                <p class="Code">oModel-&gt;Add, oMapImg</p>
+                <p class="Code">oModel-&gt;Add, oAlphaLand</p>
+                <p class="Code">oView-&gt;Add, oModel</p>
+                <p class="Code">oWindow-&gt;Draw, oView</p>
+            </li>
+            <li value="11">
+                <p>Clean up objects.</p>
+                <p class="Code">OBJ_DESTROY, [oView, oMapImg, oAlphaLand, mapPalette]</p>
+                <p>The results appear in the following figure of a land image (35% opaque) overlaid the map image. </p>
+                <p>
+                    <img src="../../images/alphaImg35.gif" style="margin-left: 0.75024px;margin-top: 1.49976px;margin-right: 3.000248px;margin-bottom: 0.75024px;" />
+                </p>
+            </li>
+        </ol>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You can use control points to warp the images and properly align the transparent image over the map image. See <a href="#Warping" class="selected">Warping Image Objects</a> for details. </p>
+        <h3><a name="Warping"></a>Warping Image <a name="kanchor3619"></a>Objects</h3>
+        <p>Object Graphics allows precise control over the color palettes used to display image objects. By initializing a palette object, both the reference image object and the transparent, warped image object can be displayed using individual color palettes. </p>
+        <p>The following example warps an African land-cover characteristics image to a political <a name="kanchor3620"></a>map of the <a name="kanchor3621"></a>continent. After displaying the images and selecting control points in each image using the XROI utility, the resulting warped image is altered to include an alpha channel, enabling transparency. Image objects are then created and displayed in an IDL Obj<a name="kanchor3622"></a>ect Graphics display. Complete the following steps for a detailed description of the process.</p>
+        <p class="ExampleCode">See <code>transparentwarping_object.<a name="kanchor3623"></a>pro </code>in the <code>examples/doc/objects </code>subdirectory of the IDL installation directory for code that duplicates this example. Run the example procedure by entering <code>transparentwarping_object</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT transparentwarping_object.pro</code>.</p>
+        <ol>
+            <li value="1">
+                <p>Select the political map image. This is the reference image to which the land cover image will be warped:</p>
+                <p class="Code">mapFile= FILEPATH('afrpolitsm.png', $</p>
+                <p class="Code_Indented">&#160;&#160;&#160;Subdirectory = ['examples', 'data'])</p>
+            </li>
+            <li value="2">
+                <p>Use <a href="../../Reference Material/R/READ_PNG.htm#R_822202989_1045821">READ_PNG</a> routine to read in the file. Specify <i>mapR, mapG, mapB</i> to read in the image’s associated color table:</p>
+                <p class="Code">mapImg = READ_PNG(mapFile, mapR, mapG, mapB)</p>
+            </li>
+            <li value="3">
+                <p>Using <a href="IDLgrPalette__Init.htm#objects_gr_2157407275_1012290">IDLgrPalette::Init</a>, assign the image’s color table to a palette object, which will be applied to an image object in a later step:</p>
+                <p class="Code">mapPalette = OBJ_NEW('IDLgrPalette', mapR, mapG, mapB)</p>
+            </li>
+            <li value="4">
+                <p>Select and open the land cover input image, which will be warped to the map:</p>
+                <p class="Code">landFile = FILEPATH('africavlc.png', $</p>
+                <p class="Code">&#160;&#160;&#160;Subdirectory = ['examples', 'data'])</p>
+                <p class="Code">landImg = READ_PNG (landFile, landR, landG, landB)</p>
+            </li>
+        </ol>
+        <h3>Selecting Control Points for Image Object Warping</h3>
+        <p>This section desc<a name="kanchor3624"></a>ribes using the XROI utility to select corresponding control points in the two images. The arrays of control points in the input image, (<i>X<sub class="italic">i</sub>, Y<sub class="italic">i</sub></i>), will be mapped to the array of points selected in the reference image, (<i>X<sub class="italic">o</sub>, Y<sub class="italic">o</sub>)</i>. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The <i>X<sub class="italic">i</sub></i> and <i>Y<sub class="italic">i</sub></i> vectors and the <i>X<sub class="italic">o</sub></i> and <i>Y<sub class="italic">o</sub></i> vectors must be the same length, meaning that you must select the same number of control points in the reference image as you select in the input image. The control points must also be selected in the same order since the point <i>X<sub class="italic">i1</sub></i>, <i>Y<sub class="italic">i1</sub></i> will be warped to <i>X<sub class="italic">o1</sub>, Y<sub class="italic">o1</sub></i>.</p>
+        <p>The following figure shows the points to be selected in the input image.</p>
+        <p>
+            <img src="../../images/imgwarp07.gif" />
+        </p>
+        <p>Reasonably precise warping of the land classification image to the political map requires selecting numerous control points because of the irregularity of the continent’s border. Select the control points in the land classification image as described in the following steps. </p>
+        <ol>
+            <li value="1">
+                <p>Load the image and its associated color table into the <a href="../../Reference Material/X/XROI.htm#X_800576109_976751">XROI</a> utility, specifying the REGIONS_OUT keyword to save the region defined by the control points in the<i> landROIout </i>object:</p>
+                <p class="Code">XROI, landImg, landR, landG, landB, $</p>
+                <p class="Code">&#160;&#160;&#160;REGIONS_OUT = landROIout, /BLOCK</p>
+                <p>Select the <b>Draw Polygon</b> button from the XROI utility toolbar shown in the following figure. Position the crosshairs symbol over CP1, shown in the previous figure, and click the left mouse button. Repeat this action for each successive control point. After selecting the sixteenth control point, position the crosshairs over the first point selected and click the right mouse button to close the region. Your display should appear similar to the following figure.&#160;</p>
+                <p>
+                    <img src="../../images/draw_polygon.gif" />
+                </p>
+                <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>It is of no concern that portions of the continent lie outside the polygonal boundary. The EXTRAPOLATE keyword to WARP_TRI enables warping of the image areas lying outside of the boundary of control points. However, images requiring more aggressive warp models may not have good results outside of the extent of the control points when WARP_TRI is used with the /EXTRAPOLATE keyword.</p>
+            </li>
+            <li value="2">
+                <p>Close the XROI window and assign the <i>landROIout</i> object data to the <i>X<sub class="italic">i</sub></i><sub class="italic"> </sub>and <i>Y<sub class="italic">i</sub></i> control point vectors: </p>
+                <p class="Code">landROIout -&gt; GetProperty, DATA = landROIdata</p>
+                <p class="Code">Xi = landROIdata[0,*]</p>
+                <p class="Code">Yi = landROIdata[1,*]</p>
+                <p>The following figure displays the corresponding control points to be selected in the reference image of the political map. These control points will make up the <i>X</i><sub class="italic">o</sub> and <i>Y</i><sub class="italic">o</sub> arrays required by the IDL warping routines.</p>
+                <p>
+                    <img src="../../images/imgwarp09.gif" style="margin-left: 7.5744px;margin-top: 2.0268px;margin-right: 5.966646px;margin-bottom: 2.562495px;" />
+                </p>
+            </li>
+            <li value="3">
+                <p>Load the image of the political map and its associated color table into the XROI utility, specifying the REGIONS_OUT keyword to save the selected region in the<i> mapROIout </i>object:</p>
+                <p class="Code">XROI, mapImg, mapR, mapG, mapB, $</p>
+                <p class="Code">&#160;&#160;&#160;REGIONS_OUT=mapROIout,/BLOCK</p>
+                <p>Select the <b>Draw Polygon</b> button from the XROI utility toolbar. Position the crosshairs symbol over CP1, shown in the previous figure, and click the left mouse button. Repeat this action for each successive control point. After selecting the sixteenth control point, position the crosshairs over the first point selected and click the right mouse button to close the region. Your display should appear similar to the following figure.</p>
+                <p>
+                    <img src="../../images/imgwarp10.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 9.292324px;margin-bottom: 4.06509px;" />
+                </p>
+            </li>
+            <li value="4">
+                <p>Close the XROI window and assign the <i>mapROIout</i> object data to the <i>X<sub class="italic">o</sub></i> and <i>Y<sub class="italic">o</sub></i> control point vectors: </p>
+                <p class="Code">mapROIout -&gt; GetProperty, DATA=mapROIdata</p>
+                <p class="Code">Xo = mapROIdata[0,*]</p>
+                <p class="Code">Yo = mapROIdata[1,*]</p>
+            </li>
+        </ol>
+        <h3><a name="obj_image_3577551095_38426"></a>Warping and Displaying a Transparent Image Object</h3>
+        <p>The following section describes warping the land cover image to the political map and creating image objects. The resulting warped image will then be made into a transparency by creating an alpha channel for the image. Finally, the transparent object will be displayed as an overlay to the original political map.</p>
+        <ol>
+            <li value="1">
+                <p>Warp the input image, <code>landImg</code>, onto the reference image using <a href="../../Reference Material/W/WARP_TRI.htm#W_811389549_758712">WARP_TRI</a>. This function uses the irregular grid of the reference image, defined by<i> X<sub>o</sub>, Y<sub>o</sub>,</i> as a basis for triangulation, defining the surfaces associated with (<i>X<sub>o</sub>, Y<sub>o</sub>, X<sub>i</sub></i>) and (<i>X<sub>o</sub>, Y<sub>o</sub>, Y<sub>i</sub></i>). Each pixel in the input image is then transferred to the appropriate position in the resulting output image as designated by interpolation. Using the WARP_TRI syntax,</p>
+                <p class="Code"><i>Result</i> = WARP_TRI( Xo, Yo, Xi, Yi, <i>Image</i><br />&#160;&#160;[, OUTPUT_SIZE=vector][, /QUINTIC] [, /EXTRAPOLATE] )</p>
+                <p>set the OUTPUT_SIZE equal to the reference image dimensions since this image forms the basis of the warped, output image. Use the EXTRAPOLATE keyword to display the portions of the image which fall outside of the boundary of selected control points: </p>
+                <p class="Code">warpImg = WARP_TRI(Xo, Yo, Xi, Yi, landImg, $</p>
+                <p class="Code_Indented">&#160;&#160;&#160;OUTPUT_SIZE=[600, 600], /EXTRAPOLATE)</p>
+            </li>
+            <li value="2">
+                <p>While not required, you can quickly check the precision of the warp in a Direct Graphics display before proceeding with creating a transparency by entering the following lines:</p>
+                <p class="Code">DEVICE, DECOMPOSED = 0</p>
+                <p class="Code">TVLCT, landR, landG, landB</p>
+                <p class="Code">WINDOW, 3, XSIZE = 600, YSIZE = 600, $</p>
+                <p class="Code">&#160;&#160;&#160;TITLE = 'Image Warped with WARP_TRI'</p>
+                <p class="Code">TV, warpImg</p>
+                <p>Precise control point selection results in accurate warping. If there is little distortion, as in the following figure, control points were successfully selected in nearly corresponding positions in both images.</p>
+                <p class="Code">
+                    <img src="../../images/imgwarp11.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 3.520092px;margin-bottom: 4.520168px;" />
+                </p>
+            </li>
+            <li value="3">
+                <p>A transparent image object must be a greyscale or an RGB (24-bit) image containing an alpha channel. The alpha channel controls the transparency of the pixels. See <a href="IDLgrImage__Init.htm#objects_gr_2157407275_1809847">IDLgrImage::Init</a> for more information. </p>
+                <p>The following lines convert the warped image and its associated color table into a RGB image containing four channels (red, green, blue, and alpha). First, get the dimensions of the warped image and then use BYTARR to create <i>alphaWarp, </i>a 4-channel by <i>xdim </i>by <i>ydim</i> array, where (<i>xdim, ydim</i>) are the dimensions of the warped image:</p>
+                <p class="Code">warpImgDims = SIZE(warpImg, /Dimensions)</p>
+                <p class="Code">alphaWarp = BYTARR(4, warpImgDims[0], warpImgDims[1], /NOZERO)</p>
+            </li>
+            <li value="4">
+                <p>Load the red, green and blue channels of the warped land characteristics image into the first three channels of the <i>alphaWarp</i> array:</p>
+                <p class="Code">alphaWarp[0, *, *] = landR[warpImg]</p>
+                <p class="Code">alphaWarp[1, *, *] = landG[warpImg]</p>
+                <p class="Code">alphaWarp[2, *, *] = landB[warpImg]</p>
+            </li>
+            <li value="5">
+                <p>Define the transparency of the alpha channel. First, create an array, masking out the black background of the warped image (where pixel values equal 0) by retaining only pixels with values greater than 0: </p>
+                <p class="Code">mask = (warpImg GT 0)</p>
+                <p>Apply the resulting mask to the alpha channel, the fourth channel of the array. This channel creates a 50% transparency of the pixels of the first three channels (red, green, blue) of the <i>alphaWarp</i> by multiplying the <i>mask</i> by 128B (byte). Alpha channel values range from 0 (completely transparent) to 255 (completely opaque):</p>
+                <p class="Code">alphaWarp [3, *, *] = mask*128B</p>
+                <p>You can set the transparency of an entire image. To set the transparency of <i>all </i>pixels at 50% in this example, your could replace the two previous steps with the following two lines:</p>
+                <p class="Code">mask = BYTARR(s[0], s[1]) + 128<br />&#160;&#160;&#160;&#160;alphaWarp [3, *, *] = mask</p>
+            </li>
+            <li value="6">
+                <p>Initialize the transparent image object using <a href="IDLgrImage__Init.htm#objects_gr_2157407275_1809847">IDLgrImage::Init</a>. Specify the BLEND_FUNCTION property of the image object to control how the alpha channel is interpreted. Setting the BLEND_FUNCTION to [3, 4] allows you to see through the foreground image to the background. The foreground opacity is defined by the alpha channel value, specified in the previous step:</p>
+                <p class="Code">oAlphaWarp = OBJ_NEW('IDLgrImage', alphaWarp, $</p>
+                <p class="Code">&#160;&#160;&#160;DIMENSIONS = [600, 600], BLEND_FUNCTION = [3, 4])</p>
+            </li>
+            <li value="7">
+                <p>Initialize the reference image object, applying the palette created earlier:</p>
+                <p class="Code">oMapImg = OBJ_NEW('IDLgrImage', mapImg, $</p>
+                <p class="Code">&#160;&#160;&#160;DIMENSIONS = [600,600], PALETTE = mapPalette)</p>
+            </li>
+            <li value="8">
+                <p>Using <a href="IDLgrWindow__Init.htm#objects_gr_2157407275_1018813">IDLgrWindow::Init</a>, initialize a window object in which to display the images:</p>
+                <p class="Code">oWindow = OBJ_NEW('IDLgrWindow', DIMENSIONS = [600, 600], $</p>
+                <p class="Code">&#160;&#160;&#160;RETAIN = 2, TITLE = 'Overlay of Land Cover Transparency')</p>
+            </li>
+            <li value="9">
+                <p>Create a view object using <a href="IDLgrView__Init.htm#objects_gr_2157407275_1016943">IDLgrView::Init</a>. The VIEWPLANE_RECT keyword controls the image display in the Object Graphics window. First create an array, <i>viewRect</i>, which specifies the <i>x-placement</i>, <i>y&#8209;placement</i>, <i>width, </i>and <i>height</i> of the view surface. The values <code>0,</code><code>0</code> place the (0, 0) coordinate of viewing surface in the lower-left corner of the Object Graphics window:</p>
+                <p class="Code">viewRect = [0, 0, 600, 600]</p>
+                <p class="Code">oView = OBJ_NEW('IDLgrView', VIEWPLANE_RECT = viewRect)</p>
+            </li>
+            <li value="10">
+                <p>Using <a href="IDLgrModel__Init.htm#objects_gr_2157407275_1011430">IDLgrModel::Init</a>, initialize a model object to which the images will be applied. Add the base image and the transparent alpha image to the model:</p>
+                <p class="Code">oModel = OBJ_NEW('IDLgrModel')</p>
+                <p class="Code">oModel -&gt; Add, oMapImg</p>
+                <p class="Code">oModel -&gt; Add, oAlphaWarp</p>
+                <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Image objects appear in the Object Graphics window in the order in which they are added to the model. If a transparent object is added to the model before an opaque object, it will not be visible.</p>
+            </li>
+            <li value="11">
+                <p>Add the model, containing the images, to the view and draw the view in the window:</p>
+                <p class="Code">oView -&gt; Add, oModel</p>
+                <p class="Code">oWindow -&gt; Draw, oView</p>
+                <p>The following figure shows the warped image transparency overlaid onto the original reference image, the political map.</p>
+                <p>
+                    <img src="../../images/93_12.jpg" />
+                </p>
+            </li>
+            <li value="12">
+                <p>Use OBJ_DESTROY to clean up unneeded object references including the region objects:</p>
+                <p class="Code">OBJ_DESTROY, [oView, oMapImg, oAlphaWarp, $</p>
+                <p class="Code">&#160;&#160;&#160;mapPalette, landROIout, mapROIout]</p>
+            </li>
+        </ol>
+        <h3><a name="kanchor3625"></a>Mapping an Image Object onto a Sphere</h3>
+        <p>This example maps an image containing world elevation data onto the surface of a sphere and displays the result using the XOBJVIEW utility. This utility automatically creates the window object and the view object. Therefore, this<a name="kanchor3626"></a> example creates an object based on IDLgrModel that contains the sphere, the image and the image palette, as shown in the conceptual representation in the following figure.&#160;</p>
+        <p>
+            <img src="../../images/xobjview_example.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 3.770657px;margin-bottom: 9.840969px;" />
+        </p>
+        <p>Complete the following steps for a detailed description of the process.</p>
+        <p class="ExampleCode">See <code>maponsphere_object.<a name="kanchor3627"></a>pro </code>in the <code>examples/doc/objects</code> subdirectory of the IDL installation directory for code that duplicates this example. Run the example procedure by entering <code>maponsphere_object</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT maponsphere_object.pro</code>.</p>
+        <ol>
+            <li value="1">
+                <p>Select the world elevation image. Define the array, read in the data and close the file. </p>
+                <p class="Code">file = FILEPATH('worldelv.dat', $</p>
+                <p class="Code">&#160;&#160;&#160;SUBDIRECTORY = ['examples', 'data'])</p>
+                <p class="Code">image = READ_BINARY(file, DATA_DIMS = [360, 360])<br /></p>
+            </li>
+            <li value="2">
+                <p>Use the <a href="../../Reference Material/M/MESH_OBJ.htm#M_824365677_929903">MESH_OBJ</a> procedure to create a sphere onto which the image will be mapped. The following invocation of MESH_OBJ uses a value of 4, which represents a spherical mesh: </p>
+                <p class="Code">MESH_OBJ, 4, vertices, polygons, REPLICATE(0.25, 101, 101)</p>
+                <p>When the MESH_OBJ procedure completes, the <i>vertices</i> and <i>polygons</i> variables contain the mesh vertices and polygonal mesh connectivity information, respectively. Although our image is 360 by 360, we can texture map the image to a mesh that has fewer vertices. IDL interpolates the image data across the mesh, retaining all the image detail between polygon vertices. The number of mesh vertices determines how close to perfectly round the sphere will be. Fewer vertices produce a sphere with larger facets, while more vertices make a sphere with smaller facets and more closely approximates a perfect sphere. A large number of mesh vertices will increase the time required to draw the sphere. In this example, MESH_OBJ produces a 101 by 101 array of vertices that are located in a sphere shape with a radius of 0.25.</p>
+            </li>
+            <li value="3">
+                <p>Initialize the display objects. In this example, it is necessary to define a model object that will contain the sphere, the image and the color table palette. Using the syntax, <code><i>oNewObject</i></code><code>&#160;=&#160;OBJ_NEW('</code><i>Class_Name</i><code>')</code>, create the model, palette and image objects: </p>
+                <p class="Code">oModel = OBJ_NEW('IDLgrModel')</p>
+                <p class="Code">oPalette = OBJ_NEW('IDLgrPalette')</p>
+                <p class="Code">oPalette -&gt; LOADCT, 33</p>
+                <p class="Code">oPalette -&gt; SetRGB, 255, 255, 255, 255</p>
+                <p class="Code">oImage = OBJ_NEW('IDLgrImage', image, PALETTE = oPalette)</p>
+                <p>The previous lines initialize the <i>oPalette</i> object with the color table and then set the final index value of the red, green and blue bands to 255 (white) in order to use white (instead of black) to designate the highest areas of elevation. The palette object is created before the image object so that the palette can be applied when initializing the image object. For more information, see <a href="IDLgrModel__Init.htm#objects_gr_2157407275_1011430">IDLgrModel::Init</a>, <a href="IDLgrPalette__Init.htm#objects_gr_2157407275_1012290">IDLgrPalette::Init</a> and <a href="IDLgrImage__Init.htm#objects_gr_2157407275_1809847">IDLgrImage::Init</a>.</p>
+            </li>
+            <li value="4">
+                <p>Create texture coordinates that define how the texture map is applied to the mesh. A texture coordinate is associated with each vertex in the mesh. The value of the texture coordinate at a vertex determines what part of the texture will be mapped to the mesh at that vertex. Texture coordinates run from 0.0 to 1.0 across a texture, so a texture coordinate of [0.5, 0.5] at a vertex specifies that the image pixel at the exact center of the image is mapped to the mesh at that vertex.</p>
+                <p>In this example, we want to do a simple linear mapping of the texture around the sphere, so we create a convenience vector that describes the mapping in each of the texture’s <i>x-</i> and <i>y-</i>directions, and then create these texture coordinates:</p>
+                <p class="Code">vector = FINDGEN(101)/100.</p>
+                <p class="Code">texure_coordinates = FLTARR(2, 101, 101)</p>
+                <p class="Code">texure_coordinates[0, *, *] = vector # REPLICATE(1., 101)</p>
+                <p class="Code">texure_coordinates[1, *, *] = REPLICATE(1., 101) # vector</p>
+                <p>The code above copies the convenience vector through the array in each direction.</p>
+            </li>
+            <li value="5">
+                <p>Enter the following line to initialize a polygon object with the image and geometry data using the <a href="IDLgrPolygon__Init.htm#objects_gr_2157407275_1013254">IDLgrPolygon::Init</a> function. Set <code>SHADING&#160;=&#160;1</code> for gouraud (smoother) shading. Set the <code>DATA</code> keyword equal to the sphere defined with the MESH_OBJ function. Set <code>COLOR</code> to draw a white sphere onto which the image will be mapped. Set <code>TEXTURE_COORD</code> equal to the texture coordinates created in the previous steps. Assign the image object to the polygon object using the <code>TEXTURE_MAP</code> keyword and force bilinear interpolation:</p>
+                <p class="Code">oPolygons = OBJ_NEW('IDLgrPolygon', SHADING = 1, $</p>
+                <p class="Code">&#160;&#160;&#160;DATA = vertices, POLYGONS = polygons, $</p>
+                <p class="Code">&#160;&#160;&#160;COLOR = [255, 255, 255], $</p>
+                <p class="Code">&#160;&#160;&#160;TEXTURE_COORD = texure_coordinates, $</p>
+                <p class="Code">&#160;&#160;&#160;TEXTURE_MAP = oImage, /TEXTURE_INTERP)</p>
+                <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When mapping an image onto an IDLgrPolygon object, you must specify both TEXTURE_MAP and TEXTURE_COORD keywords.</p>
+            </li>
+            <li value="6">
+                <p>Add the polygon containing the image and the palette to the model object: </p>
+                <p class="Code">oModel -&gt; ADD, oPolygons</p>
+            </li>
+            <li value="7">
+                <p>Rotate the model -90° along the <i>x</i>-axis and <i>y</i>-axis: </p>
+                <p class="Code">oModel -&gt; ROTATE, [1, 0, 0], -90</p>
+                <p class="Code">oModel -&gt; ROTATE, [0, 1, 0], -90</p>
+            </li>
+            <li value="8">
+                <p>Display the results using <a href="../../Reference Material/X/XOBJVIEW.htm#X_800576109_956910">XOBJVIEW</a>, an interactive utility allowing you to rotate and resize objects:</p>
+                <p class="Code">XOBJVIEW, oModel, /BLOCK</p>
+                <p>
+                    <img src="../../images/imgtex08.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 4.499996px;margin-bottom: 4.500713px;" />
+                </p>
+                <p>After displaying the object, you can rotate the sphere by clicking in the display window and dragging your mouse. Select the magnify button and click near the middle of the sphere. Drag your mouse away from the center of the display to magnify the image or toward the center of the display to shrink the image. Select the left-most button on the XOBJVIEW toolbar to reset the display. The previous figure shows a rotated and magnified view of the world elevation object.</p>
+            </li>
+            <li value="9">
+                <p>After closing the XOBJVIEW display, remove unneeded object references:</p>
+                <p class="Code">OBJ_DESTROY, [oModel, oImage, oPalette]</p>
+            </li>
+        </ol>
+        <h3>JPEG2000 Files for <a name="kanchor3628"></a>Tiling</h3>
+        <p>This example takes a 5000 by 5000 pixel JPEG file containing an aerial photograph of Chicago’s O’Hare International Airport and creates a JPEG2000 file from the data. This file type provides inherent support for image tiles. </p>
+        <p class="ExampleCode">See <code>tilingjp2_doc.<a name="kanchor3629"></a>pro </code>in the <code>examples/doc/objects</code> subdirectory of the IDL installation directory for the tiling application code. Run the example procedure by entering <code>tilingjp2_doc</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT tilingjp2_doc.pro</code>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The first time you run this application, it generates the JPEG2000 file. This might take a noticeable amount of time, depending on your system speed. However, once the JPEG2000 image is created, this file will be used instead of being recreated. </p>
+        <p>The following figure shows the O’Hare image. When the application opens, the view is positioned in the upper-left corner of the full-resolution image. </p>
+        <p>
+            <img src="../../images/tiling_app.gif" style="margin-left: 3.74976px;margin-top: 3.00024px;margin-right: 1.290248px;margin-bottom: 2.039052px;" />
+        </p>
+        <h2 class="API">Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>5.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">
+                        <p>5.6</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">
+                        <p>Added CLIP_PLANES property</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Removed NO_COPY property and documented it as an IDLgrImage::Init keyword.</p>
+                        <p>Added ALPHA_CHANNEL, DEPTH_OFFSET, RENDER_METHOD, TILE_COLOR, TILE_CURRENT_LEVEL, TILE_DIMENSIONS, TILE_LEVEL_MODE, TILE_NUM_LEVELS, TILE_SHOW_BOUNDARIES, TILED_IMAGE_DIMENSIONS, TILING, and TRANSFORM_MODE properties</p>
+                        <p>Added DeleteTileData and SetTileData methods</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added IMAGE_1D, INTERNAL_DATA_TYPE, SHADER, and TILE_BORDER_SIZE properties</p>
+                        <p>Added ReadFilteredData and TileDataLoaded methods</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

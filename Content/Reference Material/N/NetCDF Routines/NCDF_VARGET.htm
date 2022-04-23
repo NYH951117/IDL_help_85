@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: N|NCDF Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>NCDF_VARGET</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../N_list.htm">Routines: N</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../NCDF_Routines.htm">NCDF Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">NCDF_VARGET</span>
+        </div>
+        <h1 class="Routine"><a name="netCDF_2618656010_1007409"></a><a name="netCDF_2618656010_44081"></a>NCDF_VARGET</h1>
+        <p>The <a name="kanchor1941"></a>NCDF_VARGET procedure retrieves a <a name="kanchor1942"></a>hyperslab of values from a NetCDF variable. The NetCDF file must be in <i>data</i> mode to use this procedure.</p>
+        <h2 class="API"><a name="netCDF_2618656010_997502_PageTOC_NCDF_VARGET_"></a>Examples</h2>
+        <p>Suppose that a 230 by 230 image is saved in the NetCDF file <code>dave.nc</code>. The following commands extract both the full image and a 70x70 sub-image starting at [80,20] sampling every other X pixel and every third Y pixel:</p>
+        <p class="Code">; A variable that contains the offset for the sub-image:</p>
+        <p class="Code">offset = [80, 20]</p>
+        <p class="Code">; The dimensions of the sub-image:</p>
+        <p class="Code">count = [70, 70]</p>
+        <p class="Code">; Create a variable to be used as a value for the STRIDE keyword.</p>
+        <p class="Code">; Every other X element and every third Y element will be sampled:</p>
+        <p class="Code">stride = [2, 3]</p>
+        <p class="Code">; Open the NetCDF file:</p>
+        <p class="Code">id = NCDF_OPEN('dave.nc')</p>
+        <p class="Code">; Get the variable ID for the image:</p>
+        <p class="Code">image = NCDF_VARID(id, 'image')</p>
+        <p class="Code">; Get the full image:</p>
+        <p class="Code">NCDF_VARGET, id, image, fullimage</p>
+        <p class="Code">; Extract the sub-sampled image:</p>
+        <p class="Code">NCDF_VARGET, id, image, subimage, $</p>
+        <p class="Code">&#160;&#160;&#160;COUNT=count, STRIDE=stride, OFFSET=offset</p>
+        <p class="Code">; Close the NetCDF file:</p>
+        <p class="Code">NCDF_CLOSE, id</p>
+        <h2 class="API"><a name="netCDF_2618656010_997483_PageTOC_NCDF_VARGET_"></a>Syntax</h2>
+        <p class="Syntax">NCDF_VARGET, <i>Cdfid</i>, <i>Varid</i>, <i>Value </i>[,&#160;<a href="#netCDF_2618656010_1007465" class="selected">COUNT</a>=<i>vector</i>] [,&#160;<a href="#netCDF_2618656010_1007468" class="selected">OFFSET</a>=<i>vector</i>] [,&#160;<a href="#netCDF_2618656010_1007471" class="selected">STRIDE</a>=<i>vector</i>]</p>
+        <h2 class="API"><a name="netCDF_2618656010_997485_PageTOC_NCDF_VARGET_"></a>Arguments</h2>
+        <h3 class="Argument">Cdfid</h3>
+        <p>The NetCDF ID, returned from a previous call to <a href="NCDF_OPEN.htm#netCDF_2618656010_1007165">NCDF_OPEN</a>, <a href="NCDF_CREATE.htm#netCDF_2618656010_1006152">NCDF_CREATE</a>, or <a href="NCDF_GROUPDEF.htm#netCDF_2618656010_1006704">NCDF_GROUPDEF</a>.</p>
+        <h3 class="Argument">Varid</h3>
+        <p>The NetCDF variable ID, returned from a previous call to NCDF_VARDEF or NCDF_VARID, or the name of the variable.</p>
+        <h3 class="Argument">Value</h3>
+        <p>A named variable in which the values are returned. NCDF_VARGET sets <i>Value</i>’s size and data type as appropriate.</p>
+        <h2 class="API"><a name="netCDF_2618656010_997492_PageTOC_NCDF_VARGET_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="netCDF_2618656010_1007465"></a><a name="netCDF_2618656010_997494_Keywords_NCDF_VARGET_"></a>COUNT</h3>
+        <p>An optional vector containing the counts to be used in reading <i>Value</i>. COUNT is a 1-based vector with an element for each dimension of the data to be written.The default matches the size of the variable so that all data is written out.</p>
+        <h3 class="Keyword"><a name="netCDF_2618656010_1007468"></a><a name="netCDF_2618656010_997497_Keywords_NCDF_VARGET_"></a>OFFSET</h3>
+        <p>An optional vector containing the starting position for the read. The default start position is [0, 0, ...].</p>
+        <h3 class="Keyword"><a name="netCDF_2618656010_1007471"></a><a name="netCDF_2618656010_997500_Keywords_NCDF_VARGET_"></a>STRIDE</h3>
+        <p>An optional vector containing the strides, or sampling intervals, between accessed values of the NetCDF variable. The default stride vector is that for a contiguous read, [1, 1, ...].</p>
+        <h2 class="API"><a name="netCDF_2618656010_997513_PageTOC_NCDF_VARGET_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="netCDF_2618656010_1019090_PageTOC_NCDF_VARGET_"></a>See Also</h2>
+        <p><a href="NCDF_VARGET1.htm#netCDF_2618656010_1007518">NCDF_VARGET1</a>, <a href="NCDF_VARID.htm#netCDF_2618656010_1007608">NCDF_VARID</a>, <a href="NCDF_VARINQ.htm#netCDF_2618656010_1007741">NCDF_VARINQ</a>, <a href="NCDF_VARPUT.htm#netCDF_2618656010_1007819">NCDF_VARPUT</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

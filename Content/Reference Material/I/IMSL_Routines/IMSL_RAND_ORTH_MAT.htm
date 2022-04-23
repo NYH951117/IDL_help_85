@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_RAND_ORTH_MAT</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="IMSL_RAND_ORTH_MAT"></a>IMSL_RAND_ORTH_MAT</h1>
+        <p>The IMSL_RAND_ORTH_MAT function generates a pseudorandom orthogonal matrix or a correlation matrix.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>IMSL_RAND_ORTH_MAT generates a pseudorandom orthogonal matrix from the invariant Haar measure. For each column, a random vector from a uniform distribution on a hypersphere is selected and then is projected onto the orthogonal complement of the columns already formed. The method is described by Heiberger (1978). (See also Tanner and Thisted 1982.)</p>
+        <p>If EIGENVALUES is used, a correlation matrix is formed by applying a sequence of planar rotations to matrix A<sup>T</sup>D<sup>A</sup>, where D = diag(Eigenvalues(0), ..., Eigenvalues(n-1)), so as to yield ones along the diagonal. The planar rotations are applied in such an order that in the two by two matrix that determines the rotation, one diagonal element is less than 1.0 and one is greater than 1.0. This method is discussed by Bendel and Mickey (1978) and by Lin and Bendel (1985).</p>
+        <p>The distribution of the correlation matrices produced by this method is not known.</p>
+        <p>See Bendel and Mickey (1978) and Johnson and Welch (1980).</p>
+        <p>For larger matrices, rounding can become severe; and the double precision results may differ significantly from single precision results.</p>
+        <h2 class="API">Examples</h2>
+        <h3>Example 1</h3>
+        <p>In this example, IMSL_RAND_ORTH_MAT is used to generate a 4 by 4 pseudorandom correlation matrix with eigenvalues in the ratio 1:2:3:4.</p>
+        <p class="Code">IMSL_RANDOMOPT, set = 123457</p>
+        <p class="Code">a = IMSL_RAND_ORTH_MAT(4)</p>
+        <p class="Code">ev = .4d0*[1.0d0, 2.0d0, 3.0d0, 4.0d0]</p>
+        <p class="Code">cor = IMSL_RAND_ORTH_MAT(4, EIGENVALUES = ev, A_MATRIX= a)</p>
+        <p class="Code">PM, cor</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">1.00000 -0.235786 -0.325795 -0.110139</p>
+        <p class="Code">-0.235786 1.00000 0.190564 -0.0172391</p>
+        <p class="Code">-0.325795 0.190564 1.00000 -0.435339</p>
+        <p class="Code">-0.110139 -0.0172391 -0.435339 1.00000</p>
+        <h2 class="API">Syntax</h2>
+        <p><i>Result</i> = IMSL_RAND_ORTH_MAT(<i>n</i> [, A_MATRIX=<i>array</i>] [, /DOUBLE] [, EIGENVALUES=<i>array</i>] )</p>
+        <h2 class="API">Return Value</h2>
+        <p>A two-dimensional array containing the <i>n</i> by <i>n</i> random correlation matrix.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">n</h3>
+        <p>The order of the matrix to be generated.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">A_MATRIX</h3>
+        <p>Two-dimensional array containing n by n random orthogonal matrix. A random correlation matrix is generated using orthogonal matrix input in A_MATRIX. Eigenvalues must also be supplied if A_MATRIX is used.</p>
+        <h3 class="Keyword">DOUBLE</h3>
+        <p>If present and nonzero, double precision is used.</p>
+        <h3 class="Keyword">EIGENVALUES</h3>
+        <p>One-dimensional array of length <i>n</i> containing the eigenvalues of the correlation matrix to be generated. The elements of EIGENVALUES must be positive, they must sum to <i>n</i>, and they cannot all be equal.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

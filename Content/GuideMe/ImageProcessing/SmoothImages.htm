@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Image Analysis">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Smooth Images</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/image_analysis_gallery1.htm">Image Analysis</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Smooth Images</span>
+        </div>
+        <h1>Smooth Images<a name="kanchor4225"></a></h1>
+        <p>Smoothing is used to reduce noise or to produce a less pixelated image. Most smoothing methods are based on low-pass filters, but you can also smooth an image using an average or median value of a group of pixels (a <i>kernel</i>) that moves through the image.</p>
+        <p>The following example uses the <a href="../../Reference Material/S/SMOOTH.htm">SMOOTH</a> and <a href="../../Reference Material/M/MEDIAN.htm">MEDIAN</a> functions with a moving average on a photomicrograph image of human red blood cells. This example data is available in the <code>examples/data</code> directory of your IDL installation.</p>
+        <p> The code shown below creates the following images, each displayed in separate windows. </p>
+        <p>
+            <img src="../images/rbcimage_original.jpg" /> <img src="../images/rbcimage_original_plot.gif" /></p>
+        <p>
+            <img src="../images/rbcimage_average.jpg" /> <img src="../images/rbcimage_plot_average.gif" /></p>
+        <p>
+            <img src="../images/rbcimage_median.jpg" /> <img src="../images/rbcimage_plot_median.gif" /></p>
+        <p>Copy the entire code block and paste it into the IDL command line to run it.</p>
+        <p class="Code">; Select the file.</p>
+        <p class="Code">file = FILEPATH('rbcells.jpg', $</p>
+        <p class="Code">&#160;&#160;&#160;SUBDIRECTORY = ['examples', 'data'])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use READ_JPEG to define the image as byte data for </p>
+        <p class="Code">; the SURFACE function.</p>
+        <p class="Code">READ_JPEG, file, rbcimage</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the image.</p>
+        <p class="Code">img01 = IMAGE(rbcimage, LOCATION = [0, 0], $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE = 'Red blood cells original image')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the image as a 3D&#160;surface. The resulting image shows </p>
+        <p class="Code">; many discontinuous values as sharp spikes in the middle range </p>
+        <p class="Code">; of values.</p>
+        <p class="Code">s1 = SURFACE(rbcimage, LOCATION = [500, 0], $</p>
+        <p class="Code">&#160;&#160;&#160;XTITLE = 'Width pixels', $</p>
+        <p class="Code">&#160;&#160;&#160;YTITLE = 'Height pixels', $</p>
+        <p class="Code">&#160;&#160;&#160;ZTITLE = 'Intensity Values', $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE = 'Surface of Original Image', $</p>
+        <p class="Code">&#160;&#160;&#160;COLOR = 'aquamarine', $</p>
+        <p class="Code">&#160;&#160;&#160;ZTICKVALUES = [100, 150, 200, 250, 300])</p>
+        <p class="Code"><a name="kanchor4226"></a>; move the z-axis to the back</p>
+        <p class="Code">(s1['zaxis']).location = [0, (s1.yrange)[1], 0] </p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Smooth the image with the SMOOTH&#160;function, which uses the</p>
+        <p class="Code">; average value of a moving 5 x 5 kernel applied to each pixel </p>
+        <p class="Code">; in the image.</p>
+        <p class="Code">smoothed_image = SMOOTH(rbcimage, 5, /EDGE_TRUNCATE)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the average-smoothed image.</p>
+        <p class="Code">img02 = IMAGE(smoothed_image, LOCATION = [0, 50], $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE = 'Average-smoothed image')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">s2 = SURFACE(smoothed_image, location = [500, 50], $</p>
+        <p class="Code">&#160;&#160;&#160;XTITLE = 'Width pixels', $</p>
+        <p class="Code">&#160;&#160;&#160;YTITLE = 'Height pixels', $</p>
+        <p class="Code">&#160;&#160;&#160;ZTITLE = 'Intensity Values', $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE = 'Surface of Average-Smoothed Image', $</p>
+        <p class="Code">&#160;&#160;&#160;COLOR = 'aquamarine', $</p>
+        <p class="Code">&#160;&#160;&#160;ZTICKVALUES = [100, 150, 200, 250, 300])</p>
+        <p class="Code">; move the z-axis to the back</p>
+        <p class="Code">(s2['zaxis']).location = [0, (s2.yrange)[1], 0]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Smooth the image with the MEDIAN&#160;function, which uses the</p>
+        <p class="Code">; median value of a moving 5 x 5 kernel applied to each pixel </p>
+        <p class="Code">; in the image.</p>
+        <p class="Code">median_image = MEDIAN(rbcimage, 5)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the median-smoothed image.</p>
+        <p class="Code">img03 = image(median_image, LOCATION = [0, 100], $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE = 'Median-smoothed image')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">s3 = SURFACE(median_image, LOCATION = [500, 100], $</p>
+        <p class="Code">&#160;&#160;&#160;XTITLE = 'Width pixels', $</p>
+        <p class="Code">&#160;&#160;&#160;YTITLE = 'Height pixels', $</p>
+        <p class="Code">&#160;&#160;&#160;ZTITLE = 'Intensity Values', $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE = 'Surface of Median-Smoothed Image', $</p>
+        <p class="Code">&#160;&#160;&#160;COLOR = 'aquamarine', $</p>
+        <p class="Code">&#160;&#160;&#160;ZTICKVALUES = [100, 150, 200, 250, 300])</p>
+        <p class="Code">; move the z-axis to the back</p>
+        <p class="Code">(s3['zaxis']).location = [0, (s3.yrange)[1], 0]</p>
+        <h2 class="API">Resources</h2>
+        <ul>
+            <li value="1"><a href="../../Reference Material/S/SMOOTH.htm">SMOOTH</a>
+            </li>
+            <li value="2"><a href="../../Reference Material/M/MEDIAN.htm">MEDIAN</a>
+            </li>
+            <li value="3"><a href="../../Reference Material/S/SURFACE.htm">SURFACE</a>
+            </li>
+            <li value="4"><a href="../../Reference Material/I/IMAGE.htm">IMAGE</a>
+            </li>
+            <li value="5"><a href="../../Reference Material/R/READ_JPEG.htm">READ_JPEG</a>
+            </li>
+            <li value="6"><a href="../../LoadingDefaultColorTables.htm">Loading Default Color Tables</a>
+            </li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

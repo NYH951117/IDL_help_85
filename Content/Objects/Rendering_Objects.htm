@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-conditions="" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Objects|Creating an Object Graphics Display">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Rendering Objects</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Object Classes/ref_part2.htm">Objects</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Creating an Object Graphics Display</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Rendering Objects</span>
+        </div>
+        <h1><a name="obj_graphics_348174843_1018070"></a><a name="obj_graphics_348174843_74987"></a>Rendering Objects</h1>
+        <p>In Object Graphics, <a name="kanchor4934"></a>rendering occurs when the Draw method of a destination object is called. A scene, viewgroup, or view is typically provided as the argument to this Draw method. This argument represents the root of a graphics hierarchy. When the destination’s Draw method is called, the graphics hierarchy is traversed, starting at the root, then proceeding to children in the order in which they were added to their parent.</p>
+        <p>For example, suppose we have the following hierarchy:</p>
+        <p class="Code">oWindow = OBJ_NEW('IDLgrWindow')</p>
+        <p class="Code">oView = OBJ_NEW('IDLgrView')</p>
+        <p class="Code">oModel = OBJ_NEW('IDLgrModel')</p>
+        <p class="Code">oView-&gt;Add, oModel</p>
+        <p class="Code">oXAxis = OBJ_NEW('IDLgrAxis', 0)</p>
+        <p class="Code">oModel-&gt;Add, oXAxis</p>
+        <p class="Code">oYAxis = OBJ_NEW('IDLgrAxis', 1)</p>
+        <p class="Code">oModel-&gt;Add, oYAxis</p>
+        <p>To draw the view (and its contents) to the window, the Draw method of the window is called with the view as its argument:</p>
+        <p class="Code">oWindow-&gt;Draw, oView</p>
+        <p>The window’s Draw method will perform any window-specific drawing setup, then ask the view to draw itself.   The view will then perform view-specific drawing (for example, clearing a rectangular area to a color), then calls the Draw method for each of its children (in this case, there is only one child, a model). The model’s Draw method will push its transformation matrix on a stack, then step through each of its children (in the order in which they were added) and ask them to draw themselves. In this example, oXAxis will be asked to draw itself first; then oYAxis will be asked to draw itself. Once each of the model’s children is drawn, the transformation matrix associated with the model is popped off of the stack.</p>
+        <p>Thus, for each object in the hierarchy, drawing essentially consists of three steps:</p>
+        <ul>
+            <li value="1">Perform setup drawing for this object.</li>
+            <li value="2">Step through list of contained children and ask them to draw themselves.</li>
+            <li value="3">Perform follow-up drawing actions before returning control to parent.</li>
+        </ul>
+        <p>The order in which objects are added to the hierarchy will have an impact on when the objects are drawn. Drawing order can be changed by using the Move method of a scene, viewgroup, view, or model to change the position of a specific object within the hierarchy.</p>
+        <p>The first time a visualization object (such as an axis, plot line, or text) is drawn to a given destination, a device-specific encapsulation of its visual representation is created and stored as a cache. Subsequent draws of this visualization object to the same destination can then be drawn very efficiently. The cache is destroyed only when necessary (for example, when the data associated with the visualization object changes). Graphic attribute changes (such as color changes) typically do not cause cache destruction. To gain maximum benefit from the caches, modification of object graphic properties should be kept to bare minimum.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>See <a href="Performance_Tuning_Objec.htm#obj_graphics_348174843_1018420">Performance Tuning Object Graphics</a> for other performance enhancing strategies. </p>
+        <h2 class="API"><a name="obj_graphics_348174843_20723"></a>Simple Plot Example</h2>
+        <p>The following section shows the IDL code used to create a simple object tree. While you are free to enter the commands shown at the IDL command line, remember that the IDL Object Graphics API is designed as a programmer’s interface, and is not as well suited for interactive, ad hoc work at the IDL command prompt as are IDL Direct Graphics.</p>
+        <p>The following IDL commands construct a simple plot of an array versus the integer indices of the array. Note that no axes, title, or other annotations are included; the commands draw only the plot line itself. (This example is purposefully simple; it is meant to illustrate the skeleton of a graphics tree, not to produce a useful plot.)</p>
+        <p class="Code">; Create a view 2 units high by 100 units wide</p>
+        <p class="Code">; with its origin at (0,-1):</p>
+        <p class="Code">view = OBJ_NEW('IDLgrView', VIEWPLANE_RECT=[0,-1,100,2])</p>
+        <p class="Code">; Create a model:</p>
+        <p class="Code">model = OBJ_NEW('IDLgrModel')</p>
+        <p class="Code">; Create a plot line of a sine wave:</p>
+        <p class="Code">plot = OBJ_NEW('IDLgrPlot', SIN(FINDGEN(100)/10))</p>
+        <p class="Code">; Create a window into which the plot line will be drawn:</p>
+        <p class="Code">window = OBJ_NEW('IDLgrWindow')</p>
+        <p class="Code">; Add the plot line to the model object:</p>
+        <p class="Code">model-&gt;ADD, plot</p>
+        <p class="Code">; Add the model object to the view object:</p>
+        <p class="Code">view-&gt;ADD, model</p>
+        <p class="Code">; Render the contents of the view object in the window:</p>
+        <p class="Code">window-&gt;DRAW, view</p>
+        <p>To destroy the window and remove the objects created from memory, use the following commands:</p>
+        <p class="Code">; Destroy the window and the view.</p>
+        <p class="Code">; Destroying the view object destroys all </p>
+        <p class="Code">; of the objects contained in the view:</p>
+        <p class="Code">OBJ_DESTROY, [window, view]</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

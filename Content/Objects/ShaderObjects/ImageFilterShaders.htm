@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Image Filter Shaders</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1>Image Filter Shaders</h1>
+        <p>Image shader programs are particularly easy to create:</p>
+        <p>• The <a href="../../Object Classes/Graphics/IDLgrImage.htm">IDLgrImage</a> object uses a texture-mapped polygon to draw the image. Most image filters do not change the size or the shape of the image, making it unnecessary to modify the vertices of the polygon. Therefore, a very trivial vertex shader component is all that is required.</p>
+        <p>• Each image pixel color is going to be completely determined by the image filter calculation, with no lighting or shading effects. Therefore, there is no need to worry about applying lighting and shading calculations in a shader program. This further simplifies the shader program.</p>
+        <p>There are several ways to incorporate shader functionality into an image processing application. You can either use one of the pre-built shader objects (<a href="../../Object Classes/Graphics/IDLgrShaderBytscl.htm">IDLgrShaderBytscl</a> or <a href="../../Object Classes/Graphics/IDLgrShaderConvol3.htm">IDLgrShaderConvol3</a>) or create a custom shader program. If you design your own shader, you have additional options that include using a <a href="../../Object Classes/Graphics/IDLgrFilterChain.htm">IDLgrFilterChain</a> object to link a number of shaders together and apply them successively to the image data. See the following topics for sample applications:</p>
+        <ul>
+            <li value="1">“Library of Pre-built Shader Objects” — provides information on the pre-defined IDLgrShaderBytscl and IDLgrShaderConvol3 objects. These are excellent options if you need byte scaling or convolution filtering functionality, and do not want to write custom GLSL shader programs.</li>
+            <li value="2"> “Altering RGB Levels Using a Shader” — creates a simple shader program that allows you to interactively alter the red, green or blue levels in an RGB image.</li>
+            <li value="3"><a href="ApplyLUTShaders.htm">Applying Lookup Tables Using Shaders</a> — loads a LUT into a one-dimensional image object so that the shader program can efficiently accesses it as a texture map.</li>
+            <li value="4">“High Precision Images” — shows how to display 16-bit and 11-bit images using the full precision of the data and how to display an 11-bit image with a contrast adjustment LUT.</li>
+            <li value="5">“Filter Chain Shaders” — lets you apply a sequence of shaders to a single image object.</li>
+        </ul>
+        <h2>Providing a Software Alternative to Shaders</h2>
+        <p>When the appropriate graphics hardware support is missing, a software-based alternative can be provided for image processing applications (when the shader program is associated with an IDLgrImage).</p>
+        <p>When IDL renders the image and hardware shader support is missing, the IDLgrShader::Filter method is automatically called when the image is drawn. (You never call this method directly.) In this method, add code that provides a software-based equivalent to the shader program functionality that will be used when there is insufficient hardware support for the shader program. See “Hardware Requirements for Shaders” on page 321 for graphics card requirements.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When developing a software fallback, use the FORCE_FILTER property during shader object initialization to force the system to test the software-based alternative even when sufficient hardware support is available.</p>
+        <p>If there is no software fallback specified, application execution simply continues as if there were no shader program. Also, no software fallback is available when a shader is associated with a non-image object.</p>
+        <h2>Caching Shader Results</h2>
+        <p>If a shader object is associated with an IDLgrImage object, you may set the IDLgrShader CACHE_RESULT property to determine whether a shader program is executed every time Draw is called. If this property is set to 1, the image is cached after running the shader program and the cached image is used in subsequent draws until shader program parameters are changed. If this property is set to 0 (the default), the result of running the shader program is not cached. See the property description for details on when each CACHE_RESULT setting may prove more useful. If a software fallback is used, the result is always cached.</p>
+        <h2>Capturing Image Data During Shader Execution</h2>
+        <p>When you apply one or more shader programs to image data, you can capture the results of the image filtering shader operation using the IDLgrImage ReadFilteredData method. Using this method, you can capture a portion of a tiled image, capture the image after applying a single shader, or capture the image after applying any number of shaders in a filter chain sequence. See “IDLgrImage::ReadFilteredData” (IDL Reference Guide) for details. After reading the data, you can place it in a new image object and print or display the result.</p>
+        <h2>Altering RGB Levels Using a Shader</h2>
+        <p>This shader program example lets you interactively apply color level correction to an image when you view it. This does not modify the image data itself. This example places the original image data in an IDLgrImage object and attaches the custom shader object using the SHADER property. It then creates a simple user interface that lets you alter the color levels and passes these values to the shader program in a named uniform variable. The Filter method implements the software fallback. When the correct graphics hardware is unavailable, IDL automatically calls the Filter method.</p>
+        <h3>Example Code</h3>
+        <p>See shader_rgb_doc__define.pro, located in the examples/doc/shaders subdirectory of the IDL distribution, for the complete, working example. Run the example by creating an instance of the object at the IDL command prompt using orgbshader=OBJ_NEW('shader_rgb_doc') or view the file in an IDL Editor window by entering .EDIT shader_rgb_doc__define.pro.</p>
+        <p>The example code differs slightly from that presented here for the sake of clarity. Whereas the working example includes code needed to support user interface interaction, the following sections leave out such modifications to highlight the shader program components.</p>
+        <h2>Basic RGB Shader Object Class</h2>
+        <p>First, create a basic object class that inherits from IDLgrShader:</p>
+        <p class="Code">; Initialize object.</p>
+        <p class="Code">FUNCTION shader_rgb_doc::Init, _EXTRA=_extra</p>
+        <p class="Code">&#160;&#160;IF NOT self-&gt;IDLgrShader::Init(_EXTRA=_extra) THEN $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;RETURN, 0</p>
+        <p class="Code">&#160;&#160;&#160;&#160;RETURN, 1</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Clean up.</p>
+        <p class="Code">PRO shader_rgb_doc::Cleanup</p>
+        <p class="Code">&#160;&#160;self-&gt;IDLgrShader::Cleanup</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Filter method for software fallback option.</p>
+        <p class="Code">FUNCTION shader_rgb_doc::Filter, Image</p>
+        <p class="Code">&#160;&#160;RETURN, Image</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Class definition.</p>
+        <p class="Code">PRO shader_rgb_doc__define</p>
+        <p class="Code">COMPILE_OPT hidden</p>
+        <p class="Code">&#160;&#160;struct = { shader_rgb_doc, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;INHERITS IDLgrShader $</p>
+        <p class="Code">&#160;&#160;}</p>
+        <p class="Code">END</p>
+        <h2>Uniform Variable for RGB Values</h2>
+        <p>In this example, a uniform variable contains the values of the red, green and blue levels. You can set or change uniform variables anytime before you draw the scene and their values will remain in effect until you change them again. These types of variables are perfect for making minor adjustments to the image filter and then viewing the image to see if the result is satisfactory. First set the uniform variable to a reasonable default value such as [1,1,1] before you start, otherwise the shader program defaults of [0,0,0] will make the image look dim.</p>
+        <p>Add the following line to your Init function:</p>
+        <p class="Code">self-&gt;SetUniformVariable, 'scl', [1.0, 1.0, 1.0]</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The uniform variable name is case-sensitive, unlike most variable names in IDL.</p>
+        <p>This example lets you change color levels using sliders. You can read the slider values from your GUI, and modify the uniform variable at any time. Assuming that the instance of your shader_rgb_doc object is called oShaderRGB and red, green and blue are floating point values, update the value of the uniform variable as follows:</p>
+        <p class="Code">oShaderRGB-&gt;SetUniformVariable, 'scl', [red, green, blue]</p>
+        <p>Once the needed elements are defined, associate your shader object with oImage, an</p>
+        <p>image object (that has been previously defined).</p>
+        <p class="Code">oImage-&gt;SetProperty, SHADER=self</p>
+        <p>Once the shader object is associated with the image, shader program display updates are activated any time the SetUniformVariable method is called.</p>
+        <h2>Software Fallback for RGB Shader</h2>
+        <p>IDL calls the Filter method when shader functionality is not supported by the graphics hardware. Providing a software-based fallback is never a requirement and you may choose not to if you know sufficient hardware will always be available.</p>
+        <p>However, it is good practice to write this method just in case the application is ever executed on a machine without suitable hardware.</p>
+        <p>In the Filter method, retrieve the uniform variable values using GetUniformVariable, and then return a modified copy of the image data.</p>
+        <p class="Code">Function shader_rgb_doc::Filter, Image</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">newImage=Image</p>
+        <p class="Code">self-&gt;GetUniformVariable, 'scl', s</p>
+        <p class="Code">newImage[0,*,*] *= s[0]</p>
+        <p class="Code">newImage[1,*,*] *= s[1]</p>
+        <p class="Code">newImage[2,*,*] *= s[2]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">RETURN, newImage</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>IDL always passes the image to the Filter method in RGBA floating-point pixelinterleaved format, so you don't have to worry about a lot of input data combinations. IDL also clamps the data this function returns to the [0.0, 1.0] range and scales it to the correct pixel range, usually [0, 255], for your display device.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Uniform variables are, in a sense, free-form properties in the IDLgrShader superclass. Within the Filter method, accessing the scale vector from the uniform variable maintains consistency since this is same place the hardware shader obtains it. This reduces the chance for confusion.</p>
+        <p>At this point, you can test your work by writing a simple display program that loads your data into an IDLgrImage object, creates an instance of your shader_rgb_doc object, and attaches the filter to your image object by setting the object reference of the shader in the SHADER property of IDLgrImage. You also need to set the FORCE_FILTER property on class initialization so that the filter fallback runs, even if you have shader hardware. You can force use of the fallback either when creating the shader object:</p>
+        <p class="Code">oShaderRGB = OBJ_NEW('shader_rgb_doc', /FORCE_FILTER)</p>
+        <p>or explicitly in the shader object’s Init method:</p>
+        <p class="Code">FUNCTION shader_rgb_doc::Init, _EXTRA=_extra</p>
+        <p class="Code">IF NOT self-&gt;IDLgrShader::Init(_EXTRA=_extra, /FORCE_FILTER) $</p>
+        <p class="Code"> &#160;THEN $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;RETURN, 0</p>
+        <p class="Code">...</p>
+        <h2><a name="HardwareShaderProgram"></a>Hardware Shader Program for RGB Shader</h2>
+        <p>The OpenGL Shading Language (GLSL) is a vast subject that requires extensive study to develop an expert level of programming, a subject that is impossible to cover here. However, this example is relatively simple and you can likely easily follow along with the code required for the vertex and fragment shader portions of the shader program. All shader programs need a vertex program and a fragment program.</p>
+        <h3>RGB Vertex Shader Program</h3>
+        <p>The following vertex shader is fairly common among image filtering shader programs. Add the following code to the bottom of your Init function:</p>
+        <p class="Code">vertexProgram = $</p>
+        <p class="Code">[ $</p>
+        <p class="Code">'void main (void) {', $</p>
+        <p class="Code">' gl_TexCoord[0] = gl_MultiTexCoord0;', $</p>
+        <p class="Code">' gl_Position = ftransform();', $</p>
+        <p class="Code">'}' ]</p>
+        <p>The first line after main() transfers the texture coordinate from OpenGL's Texture Unit 0 into the current texture coordinate predefined variable. Remember that IDL draws its images with texture maps applied to rectangles, so you need to pass along the texture coordinate. IDL always uses Texture Unit 0 when drawing images. The gl_TexCoord[0] is a varying variable that transmits data from the vertex program to the fragment shader program.</p>
+        <p>The next line in the program simply applies the current OpenGL ModelViewProjection transform to the vertex, so that it ends up in the right place on the screen.</p>
+        <h3>RGB Fragment Shader Program</h3>
+        <p>The fragment program of an image filtering shader program is where all the work happens. Add the following to the Init function as well:</p>
+        <p class="Code">fragmentProgram = $</p>
+        <p class="Code">[ $</p>
+        <p class="Code">'uniform sampler2D _IDL_ImageTexture;', $</p>
+        <p class="Code">'uniform vec3 scl;', $</p>
+        <p class="Code">'void main(void) {', $</p>
+        <p class="Code">'vec4 c = texture2D(_IDL_ImageTexture, gl_TexCoord[0].xy);', $</p>
+        <p class="Code">' c.rgb *= scl;', $</p>
+        <p class="Code">' gl_FragColor = c;', $</p>
+        <p class="Code">'}' ]</p>
+        <p>This GLSL code can be translated relatively easily. IDLgrImage uses textures to draw image data. Access the texture map associated with the base image's data in the IDL reserved uniform variable, _IDL_ImageTexture, which is automatically created for the base image. The sixth line in the program above fetches the image pixel (a texture texel) from the image texture and stores it in c, which is a 4-element vector that represents the RGBA channel data. Modify the color of the texel in the next tile using the uniform variable, scl, declared on line four. Finally, tell OpenGL about the new color for this particular pixel on the screen by setting gl_FragColor. OpenGL clamps the pixel color values to the appropriate range for your display. </p>
+        <p>This fragment program runs once for every pixel (fragment) on your screen that is covered by the image.</p>
+        <h3>Assign RGB Shader Program to Shader Object</h3>
+        <p>You need to supply the program code to the shader object so that it is available to the graphics card when it is needed. To accomplish this, you can use shader object properties VERTEX_PROGRAM_STRING and FRAGMENT_PROGRAM_STRING to associate inline shader program components with the shader object.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>With more complicated (longer) shader programs, it may be easier to keep the shader program components in separate files. In such a case, associate the shader program elements with a shader object using the VERTEX_PROGRAM_FILE and FRAGMENT_PROGRAM_FILE properties.</p>
+        <p>Add the following code to the bottom of your Init function.</p>
+        <p class="Code">self-&gt;IDLgrShader::SetProperty, $</p>
+        <p class="Code">VERTEX_PROGRAM_STRING=STRJOIN(vertexProgram, STRING(10B)), $</p>
+        <p class="Code">FRAGMENT_PROGRAM_STRING=STRJOIN(fragmentProgram, STRING(10B))</p>
+        <p>Add newlines (STRING(10B)) so that the shader program compiler sees your program as a single long string containing many source code lines, instead of one long line. If you ever get a compile-time error, the shader compiler can tell you on what line the error occurred when you insert the newlines.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>Remove the FORCE_FILTER keyword from the initialization function if you have been testing your software fallback. The following image shows the result of modifying the RGB levels of an image of a rose.</p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

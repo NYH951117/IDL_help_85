@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Using SPAWN and Pipes</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Using SPAWN and Pipes</span>
+        </div>
+        <h1><a name="kanchor5425"></a>Using SPAWN and Pipes</h1>
+        <p>IDL’s <a href="../../Reference Material/S/SPAWN.htm" style="font-weight: bold;">SPAWN</a> procedure spawns a child process to execute a command or series of commands. General use of <b>SPAWN</b> is described in detail in the IDL Online Help. This section describes how to use <b>SPAWN</b> to communicate with the spawned child process using operating system pipes.</p>
+        <p>By default, calls to the <b>SPAWN</b> procedure cause the IDL process to wait until the child process has finished before continuing, with output sent to the standard output or captured in an IDL variable. Alternatively, IDL can attach a bidirectional pipe to the standard input and output of the child process, and then continue without waiting for the child process to finish. The pipe created in this manner appears in the IDL process as a normal logical file unit.</p>
+        <p>Once a process has been started in this way, the normal IDL input/output facilities can be used to communicate with it. The ability to use a child process in this manner allows you to solve specialized problems using other languages and to take advantage of existing programs.</p>
+        <p>In order to start such a process, use the UNIT keyword to <b>SPAWN</b> to specify a named variable in which the logical file unit number will be stored. Once the child process has done its work, use the <a href="../../Reference Material/F/FREE_LUN.htm" style="font-weight: bold;">FREE_LUN</a> procedure to close the pipe and delete the process.</p>
+        <p>When using a child process in this manner, it is important to understand the following points:</p>
+        <ul>
+            <li value="1">Closing the file unit causes the child process to be killed. Therefore, do not close the unit until the child process completes its work.</li>
+            <li value="2">A pipe is simply a buffer maintained by the operating system with an interface that makes it appear as a file to the programs using it. It has a fixed length and can therefore become completely filled. When this happens, the operating system puts the process that is filling the pipe to sleep until the process at the other end consumes the buffered data. The use of a bidirectional pipe can lead to deadlock situations in which both processes are waiting for the other. This can happen if the parent and child processes do not synchronize their reading and writing activities.</li>
+            <li value="3">Most C programs use the input/output facilities provided by the Standard C Library (stdio). In situations where IDL and the child process are carrying on a running dialog (as opposed to a single transaction), the normal buffering performed by stdio on the output file can cause communications to hang. We recommend calling the stdio <b>setbuf()</b> function as the first statement of the child program to eliminate such buffering.</li>
+        </ul>
+        <p class="Code">(void) setbuf(stdout, (char *) 0);</p>
+        <p>It is important that this statement occur before any output operation is executed; otherwise, it may not have any effect.</p>
+        <h2>Example: Communicating with a Child Process via an Operating System Pipe</h2>
+        <p>The C program shown in the following example (<code>test_pipe.c</code>) accepts floating- point values from its standard input and returns their average on the standard output. In actual practice, such a trivial program would never be used from IDL, since it is simpler and more efficient to perform the calculation within IDL itself. The example does, however, serve to illustrate a method by which significant programs can be called from IDL.</p>
+        <p>In the interest of brevity, some error checking that would normally be included in such a program has been omitted. For example, a real program would need to check the non-zero return values from <b>fread(3)</b> and <b>fwrite(3)</b> to ensure that the desired amount of data was actually transferred.</p>
+        <p>The code for this example can be found in the spawn subdirectory of the external directory of the IDL distribution. Instructions for building it can be found in the README file located in that directory.</p>
+        <p>
+            <img src="../../images/test_pipe_c.png" />
+        </p>
+        <p>This program performs the following steps:</p>
+        <ol>
+            <li value="1">Reads a long integer that tells how many data points to expect, because it is desirable to be able to average an arbitrary number of points.</li>
+            <li value="2">Obtains dynamic memory via the <b>malloc()</b> function, and reads the data into it.</li>
+            <li value="3">Calculates the average of the points.</li>
+            <li value="4">Returns the answer as a single floating-point value.</li>
+        </ol>
+        <p>Since the amount of input and output for this program is explicitly known and because it reads all of its input at the beginning and writes all of its results at the end, a deadlock situation cannot occur.</p>
+        <p>The following IDL statements use <b>test_pipe</b> to determine the average of the values 0 to 9:</p>
+        <p class="Code">PRO test_pipe</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">; Start test_pipe. The use of the NOSHELL keyword is not</p>
+        <p class="Code_Indented">; necessary, but serves to speed up the start-up process.</p>
+        <p class="Code_Indented">SPAWN, ’test_pipe’, UNIT=UNIT, /NOSHELL</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Send the number of points followed by the actual data.</p>
+        <p class="Code_Indented">WRITEU, UNIT, 10L, FINDGEN(10)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Read the answer.</p>
+        <p class="Code_Indented">READU, UNIT, ANSWER</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Announce the result.</p>
+        <p class="Code_Indented">PRINT, ’Average = ’, ANSWER</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Close the pipe, delete the child process, and deallocate the</p>
+        <p class="Code_Indented">; logical file unit.</p>
+        <p class="Code_Indented">FREE_LUN, UNIT</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p>Executing the <b>IDL TEST_PIPE</b> procedure gives the result:</p>
+        <p class="Code">Average =	4.50000</p>
+        <p>This mechanism provides the IDL user a simple and efficient way to augment IDL with code written in other languages such as C or Fortran. It is, however, not as efficient as writing the required operation entirely in IDL. The actual cost depends primarily on the amount of data being transferred. For example, the above code can be performed entirely in IDL using a simple statement such as the following:</p>
+        <p class="Code">PRINT, 'Average = ', TOTAL(FINDGEN(10))/10.0</p>
+        <h2>See Also</h2>
+        <p><a href="../../Reference Material/F/FINDGEN.htm">FINDGEN</a>, <a href="../../Reference Material/F/FREE_LUN.htm">FREE_LUN</a>, <a href="../../Reference Material/P/PRINT.htm">PRINT</a>, <a href="../../Reference Material/R/READU.htm">READU</a>, <a href="../../Reference Material/S/SPAWN.htm">SPAWN</a>, <a href="../../Reference Material/W/WRITEU.htm">WRITEU</a> <![CDATA[ ]]></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

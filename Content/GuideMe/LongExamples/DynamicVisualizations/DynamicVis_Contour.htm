@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Long Examples|Dynamic Visualizations">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Dynamic Contour Visualizations</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Long Examples</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Dynamic Contour Visualizations</span>
+        </div>
+        <h1>Dynamic Contour Visualizations</h1>
+        <p>The <a href="../../../Reference Material/C/CONTOUR.htm">CONTOUR</a> function's <i>Equation</i> argument (and the <a href="../../../Reference Material/P/PLOT.htm#EQUATION">EQUATION</a> property) adds  flexibility to the creation of contour plots. This topic explores ways you can use the EQUATION property to create dynamic, interactive contour visualizations.</p>
+        <p>The <i>Equation</i> argument  on the CONTOUR function allows you to specify either a string giving an equation of <i>X</i> and <i>Y</i>, or the name of an IDL&#160;function that accepts <i>X</i> and <i>Y</i> as arguments. The result of the equation (or the function) should be a two-dimensional array of <i>Z</i> coordinates to be contoured.</p>
+        <ul>
+            <li value="1">If <i>Equation</i> is an expression, then IDL calls the <a href="../../../Reference Material/E/EXECUTE.htm">EXECUTE</a> function  once with the <i>X</i> and <i>Y</i> arrays. Note that in certain circumstances (such as the IDL Virtual Machine), you may not be able to use the EXECUTE function.</li>
+            <li value="2">If <i>Equation</i> is a function name, then <a href="../../../Reference Material/C/CALL_FUNCTION.htm">CALL_FUNCTION</a> is called once, with the <i>X</i> and <i>Y</i> arrays as input arguments. The function should return a two-dimensional result array.</li>
+        </ul>
+        <p>Once IDL creates the contour visualization, if you then interactively adjust the contour plot range, IDL will automatically recompute the equation to cover the new range.</p>
+        <h2>Using an Equation String</h2>
+        <p>For the first example, we will have IDL&#160;compute the electric potential for three point charges. The electric potential of a point charge is given by Gauss's law, <i>V = kQ/r</i>, where <i>Q</i> is the electric charge, <i>k</i>= 8.987x10<sup>9</sup>  V m C<sup>-1</sup> is Coulomb's constant, and <i>r</i> is the distance from the charge. </p>
+        <p>Here, we will consider three point charges, the first, of 9 coulombs, at location (2, 4), the second, of 12 coulombs at (5, 2), and the third, of 25 coulombs, at (4, 5). To avoid huge values, the value of the electric potential is divided by <i>k</i>.</p>
+        <p class="Code">; Construct our equation as a function of X and Y.</p>
+        <p class="Code">equation = '9/sqrt((x-2)^2 + (y-4)^2) + 12/sqrt((x-5)^2 + (y-2)^2)' + $</p>
+        <p class="Code_Indented">' + 25/sqrt((x-4)^2 + (y-5)^2)'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Make the graph with filled contours.</p>
+        <p class="Code">title = 'Electric potential (V/k) of three point charges'</p>
+        <p class="Code">cplot = CONTOUR(equation, XRANGE=[0,7], YRANGE=[0,7], $</p>
+        <p class="Code_Indented">RGB_TABLE=55, /FILL, $</p>
+        <p class="Code_Indented">C_VALUE=[0:50:5], $</p>
+        <p class="Code_Indented">TITLE=title, DIMENSIONS=[800, 800], ASPECT_RATIO=1)</p>
+        <p class="Code">cb = COLORBAR(TARGET=cplot, /BORDER)</p>
+        <p>This should produce the following graphic:</p>
+        <p>
+            <img src="../../images/ex_contour_equation1.png" />
+        </p>
+        <p>Once IDL creates the visualization, test out its dynamic capabilities:</p>
+        <ul>
+            <li value="1">Try clicking with the middle mouse button on the graphic and panning around. </li>
+            <li value="2">Use the mouse wheel to zoom in or out, or hold down the &lt;<i>Shift</i>&gt; key and draw a zoom box. </li>
+            <li value="3">You can also programmatically change the plot range:</li>
+        </ul>
+        <p class="Code_Indented">cplot.XRANGE = [-10, 10]</p>
+        <p class="Code_Indented">cplot.YRANGE = [-10, 10]</p>
+        <p>In all of these cases, as the contour plot range changes, IDL recomputes the equation with new <i>X</i> and <i>Y</i> values that span the range.</p>
+        <h2>Using an Equation Function</h2>
+        <p>Using an equation string has some limitations: </p>
+        <ul>
+            <li value="1">You can only have a single statement. </li>
+            <li value="2">You cannot easily change the equation unless you set a new string. </li>
+            <li value="3">You cannot pass parameters into your equation. </li>
+        </ul>
+        <p>As a different approach, create an IDL&#160;function containing your equation and then pass the function name to the <i>Equation</i> argument. We can now repeat the above example using a function.</p>
+        <p>First, create a new IDL routine called <code>ex_contour_function</code> and save it in a file <code>ex_contour_function.pro</code> on IDL's path:</p>
+        <p class="Code">; This code displays the electric field,</p>
+        <p class="Code">; in terms of voltage, made from three point charges.</p>
+        <p class="Code">FUNCTION ex_contour_function, x, y, userdata</p>
+        <p class="Code_Indented">COMPILE_OPT IDL2</p>
+        <p class="Code_Indented">charge = USERDATA.charge</p>
+        <p class="Code_Indented">xcoord = USERDATA.xcoord</p>
+        <p class="Code_Indented">ycoord = USERDATA.ycoord</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Use Gauss's law to convert to an electric potential.</p>
+        <p class="Code_Indented">; Use &gt;1d-4 to avoid a divide-by-zero at each charge's center.</p>
+        <p class="Code_Indented">v1 = charge[0]/(((x-xcoord[0])^2 + (y-ycoord[0])^2) &gt; 1d-4)</p>
+        <p class="Code_Indented">v2 = charge[1]/(((x-xcoord[1])^2 + (y-ycoord[1])^2) &gt; 1d-4)</p>
+        <p class="Code_Indented">v3 = charge[2]/(((x-xcoord[2])^2 + (y-ycoord[2])^2) &gt; 1d-4)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Build the equation for electric field at any given point.</p>
+        <p class="Code_Indented">RETURN, v1 + v2 + v3</p>
+        <p class="Code">END</p>
+        <p>Note that we are now passing in the charge values and locations in <code>USERDATA</code>, so that we can easily modify these parameters later.</p>
+        <p>Next, create our contour visualization by first defining our user data and then passing in the name of our equation:</p>
+        <p class="Code">; Experiment by changing the magnitudes and location of the charges.</p>
+        <p class="Code">userdata = {charge: [9, 12, 25], xcoord: [2d, 5, 4], ycoord: [4d, 2, 5]}</p>
+        <p class="Code">title = 'Electric potential (V/k) of three point charges'</p>
+        <p class="Code">cplot = CONTOUR('ex_contour_function', XRANGE=[0,7], YRANGE=[0,7], $</p>
+        <p class="Code_Indented">RGB_TABLE=55, /FILL, C_VALUE=[0:50:5], $</p>
+        <p class="Code_Indented">EQN_USERDATA=userdata, $</p>
+        <p class="Code_Indented">TITLE=title, DIMENSIONS=[800, 800], ASPECT_RATIO=1)</p>
+        <p class="Code">cb = COLORBAR(TARGET=cplot, /BORDER)</p>
+        <p>This plot should look identical to the one in the previous section. </p>
+        <p>Again, we can pan, zoom, and change the axis range and the contour plot will automatically update to the new ranges. Additionally, we can also change the parameter values and recompute the equation. For example:</p>
+        <p class="Code">USERDATA.charge[2] = 15</p>
+        <p class="Code">USERDATA.ycoord[2] = 3.5</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Reset the user data property to force an update.</p>
+        <p class="Code">cPlot.eqn_userdata = userdata</p>
+        <p>This produces the following graphic:</p>
+        <p>
+            <img src="../../images/ex_contour_equation2.png" />
+        </p>
+        <h2>Bonus: Interactively Changing the Charges and Locations</h2>
+        <p>The previous two sections demonstrate how to use the <i>Equation</i> argument. This section goes beyond just the <i>Equation</i> argument and explains how to enable mouse and keyboard events to manipulate the point charges.</p>
+        <p>The code to create the contour remains essentially unchanged from the examples above. For convenience, save the following code within a new file, <code>ex_contour_equation.pro</code>, somewhere on IDL's path:</p>
+        <p class="Code">; Experiment by changing the magnitudes and location of the charges.</p>
+        <p class="Code">userdata = {charge: [9, 12, 25], xcoord: [2d, 5, 4], ycoord: [4d, 2, 5]}</p>
+        <p class="Code">title = 'Electric potential (V/k) of three point charges'</p>
+        <p class="Code">cPlot = CONTOUR('ex_contour_function', XRANGE=[0,7], YRANGE=[0,7], $</p>
+        <p class="Code_Indented">RGB_TABLE=55, /FILL, C_VALUE=[0:50:5], $</p>
+        <p class="Code_Indented">EQN_USERDATA=userdata, $</p>
+        <p class="Code_Indented">TITLE=title, DIMENSIONS=[800, 800], ASPECT_RATIO=1)</p>
+        <p class="Code">cb = COLORBAR(TARGET=cPlot, /BORDER)</p>
+        <p class="Code">oText = TEXT(userdata.xcoord, userdata.ycoord, $</p>
+        <p class="Code_Indented">STRTRIM(userdata.charge, 2), $</p>
+        <p class="Code_Indented">/DATA, ALIGN=0.5, VERTICAL_ALIGN=0.5)</p>
+        <p class="Code">cPlot.WINDOW.EVENT_HANDLER = Ex_Contour_Handler(cPlot, oText)</p>
+        <p>We are now adding three text objects that display the charge value at each point charge. In addition, we are adding a mouse/keyboard event handler object to the <a href="../../../Reference Material/W/WINDOW.htm">WINDOW</a>'s EVENT_HANDLER property.</p>
+        <p>To create the <code>Ex_Contour_Handler</code> object, save the following code within a file <code>ex_contour_handler__define.pro</code> on IDL's path. Note that there are two underscores in front of the "<code>define</code>" in the filename.</p>
+        <p class="Code">FUNCTION Ex_Contour_Handler::Init, cPlot, oText</p>
+        <p class="Code_Indented">COMPILE_OPT IDL2</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Cache our member data.</p>
+        <p class="Code_Indented">self.cPlot = cPlot</p>
+        <p class="Code_Indented">self.oText = oText</p>
+        <p class="Code_Indented">self.hitCharge = -1</p>
+        <p class="Code_Indented">RETURN, 1 ; success</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">FUNCTION Ex_Contour_Handler::MouseDown, oWin, x, y, button, keymods, clicks</p>
+        <p class="Code_Indented">COMPILE_OPT IDL2</p>
+        <p class="Code_Indented">self.hitCharge = -1</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; User must do a single click with the left button, otherwise return.</p>
+        <p class="Code_Indented">IF (button NE 1 || keymods NE 0 || clicks NE 1) THEN&#160;BEGIN</p>
+        <p class="Code_Indented2">RETURN, 1  ; default handling</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Did we hit one of our Text graphics? It will always be</p>
+        <p class="Code_Indented">; the last item in the array since it was added last.</p>
+        <p class="Code_Indented">oVis = (oWin-&gt;HitTest(x, y))[-1]</p>
+        <p class="Code_Indented">IF (~ISA(oVis)) THEN RETURN, 1</p>
+        <p class="Code_Indented">self.hitCharge = WHERE(self.oText eq oVis[0])</p>
+        <p class="Code_Indented">self.buttonDown = 1b</p>
+        <p class="Code_Indented">RETURN, 1</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">FUNCTION Ex_Contour_Handler::MouseMotion, oWin, x, y, keymods</p>
+        <p class="Code_Indented">COMPILE_OPT IDL2</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Return early if we don't have a charge selected</p>
+        <p class="Code_Indented">IF (self.hitCharge LT 0 || ~KEYWORD_SET(self.buttonDown)) THEN $</p>
+        <p class="Code_Indented2">RETURN, 1</p>
+        <p class="Code_Indented2">&#160;</p>
+        <p class="Code_Indented">; Determine the new X/Y coordinates for the charge.</p>
+        <p class="Code_Indented">xy = self.cPlot.ConvertCoord(x, y, /DEVICE, /TO_DATA)</p>
+        <p class="Code_Indented">userdata = self.cPlot.eqn_userdata</p>
+        <p class="Code_Indented">userdata.xcoord[self.hitCharge] = xy[0]</p>
+        <p class="Code_Indented">userdata.ycoord[self.hitCharge] = xy[1]</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Reset the user data property to force an update</p>
+        <p class="Code_Indented">self.cPlot.eqn_userdata = userdata</p>
+        <p class="Code_Indented">; Be sure to move the charge's text string.</p>
+        <p class="Code_Indented">xy = self.cPlot.ConvertCoord(x, y, /DEVICE, /TO_NORMAL)</p>
+        <p class="Code_Indented">self.oText[self.hitCharge].POSITION = xy[0:1]</p>
+        <p class="Code_Indented">RETURN, 1</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">FUNCTION Ex_Contour_Handler::MouseUp, oWin, x, y, button</p>
+        <p class="Code_Indented">COMPILE_OPT IDL2</p>
+        <p class="Code_Indented">IF (self.hitCharge ge 0) THEN&#160;BEGIN</p>
+        <p class="Code_Indented">void = self-&gt;MouseMotion(oWin, x, y, 0)</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">self.buttonDown = 0b</p>
+        <p class="Code_Indented">RETURN, 1</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">FUNCTION Ex_Contour_Handler::Keyhandler, $</p>
+        <p class="Code_Indented">Window, IsASCII, Character, KeyValue, X, Y, Press, Release, KeyMods</p>
+        <p class="Code_Indented">COMPILE_OPT IDL2</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Return early if no charge has been selected</p>
+        <p class="Code_Indented">IF (self.hitCharge LT 0 || ~Press) THEN&#160;RETURN, 1</p>
+        <p class="Code_Indented">ch = STRING(character)</p>
+        <p class="Code_Indented">IF (ch eq '=' || ch eq '+' || ch eq '-') THEN&#160;BEGIN</p>
+        <p class="Code_Indented2">userdata = self.cPlot.eqn_userdata</p>
+        <p class="Code_Indented2">&#160;</p>
+        <p class="Code_Indented2">; Hit + key to increase charge, - key to decrease</p>
+        <p class="Code_Indented2">userdata.charge[self.hitCharge] += (ch eq '-' ? -1 : 1)</p>
+        <p class="Code_Indented2">&#160;</p>
+        <p class="Code_Indented2">; Reset the user data property to force an update</p>
+        <p class="Code_Indented2">self.cPlot.eqn_userdata = userdata</p>
+        <p class="Code_Indented2">&#160;</p>
+        <p class="Code_Indented2">; Be sure to update the charge's text string.</p>
+        <p class="Code_Indented2">self.oText[self.hitCharge].STRING = $</p>
+        <p class="Code_Indented2">STRTRIM(userdata.charge[self.hitCharge],2)</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">RETURN, 1</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO Ex_Contour_Handler__define</p>
+        <p class="Code_Indented">void = {Ex_Contour_Handler, inherits GraphicsEventAdapter, $</p>
+        <p class="Code_Indented2">cPlot: OBJ_NEW(), $</p>
+        <p class="Code_Indented2">oText: OBJARR(3), $</p>
+        <p class="Code_Indented2">hitCharge: 0, $</p>
+        <p class="Code_Indented2">buttonDown: 0b}</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p>Now run your main procedure:</p>
+        <p class="Code">.run ex_contour_equation</p>
+        <p>When the contour plot appears, you should see the three charges with the charge value in the center of each one. Try clicking on one of the charges and dragging it to a new location. The contour plot should automatically update while you are moving the charge. Once you have one of the charges selected, try pressing the <code>"+"</code> (or <code>"="</code>) key on your keyboard to increase the charge value, or <code>"-"</code> to decrease the value. Again, the contour plot should automatically update. As before, you can also pan and zoom and the contours will update.</p>
+        <p>Now that you have the code working, think about other changes that you could make. For example, currently the contour plot only handles positive charges. You could also add the option to insert or delete charges, or even track the motion of a tiny test charge through the electric field.</p>
+        <h2>Other Topics in this Series</h2>
+        <ul>
+            <li value="1"><a href="DynamicVis_Plot.htm">Dynamic Plot Visualizations</a>
+            </li>
+            <li value="2"><a href="DynamicVis_Surface.htm">Dynamic Surface Visualizations</a>
+            </li>
+        </ul>
+        <h2>See Also</h2>
+        <p><a href="../../../Reference Material/C/COLORBAR.htm">COLORBAR</a>, <a href="../../../Reference Material/C/CONTOUR.htm">CONTOUR</a>, <a href="../../../Reference Material/W/WINDOW.htm">WINDOW</a>, <a href="../../GraphicsEventHandler.htm">Graphics Event Handlers</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

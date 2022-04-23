@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>CONVOL_FFT</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">CONVOL_FFT</span>
+        </div>
+        <h1 class="Routine">CONVOL_FFT<a name="kanchor348"></a></h1>
+        <p>The CONVOL_FFT function computes the convolution of an image using a product of Fourier transforms for speed. Because this algorithm uses Fourier transforms, complex numbers are used during the calculations. The returned result will either be a Float or a Double, and may differ from the CONVOL routine if Byte or Integer data are used.</p>
+        <h2 class="API">Examples</h2>
+        <p>
+            <img src="../images/convol_fft.gif" />
+        </p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Sample image</p>
+        <p class="Code">array = READ_PNG(FILEPATH('mineral.png', $</p>
+        <p class="Code">&#160;&#160;SUBDIRECTORY=['examples','data']))</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Edge detection kernel</p>
+        <p class="Code">kernel = [ [0,1,0],[-1,0,1],[0,-1,0] ]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Convolution</p>
+        <p class="Code">result = CONVOL_FFT(array, kernel)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display images</p>
+        <p class="Code">im1 = IMAGE(array, LAYOUT=[2,1,1], RGB_TABLE=39, $,</p>
+        <p class="Code">&#160;&#160;TITLE='Original Image')</p>
+        <p class="Code">im2 = IMAGE(result, LAYOUT=[2,1,2], /CURRENT, $</p>
+        <p class="Code">&#160;&#160;TITLE='Processed with CONVOL_FFT')</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result </i>= CONVOL_FFT( <i>Image</i>, <i>Kernel </i>[, /<a href="#AUTO_COR" class="selected">AUTO_CORRELATION</a>] [, /<a href="#CORRELAT" class="selected">CORRELATE</a>] [, <a href="#IMAGE_FF" class="selected">IMAGE_FFT</a>=<i>value</i>] [, <a href="#KERNEL_F" class="selected">KERNEL_FFT</a>=<i>value</i>] [, /<a href="#NO_PADDI" class="selected">NO_PADDING</a>] )</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns the result of the convolution as a Float or Double type.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">IMAGE</h3>
+        <p>A two-dimensional array containing the input image. During the computation the image is padded with zeros so the kernel does not overlap one edge of the image with the opposite side of the image.</p>
+        <h3 class="Argument">KERNEL</h3>
+        <p>A two-dimensional array containing the kernel (or point spread function) to be used in calculating the convolution. To avoid shifting the resulting image, the kernel should be symmetric around the center point.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="AUTO_COR"></a>AUTO_CORRELATION</h3>
+        <p>Set this keyword to compute the auto correlation function of the image, which is the convolution of the image with itself. If this keyword is set, the value of <i>Kernel </i>is ignored.</p>
+        <h3 class="Keyword"><a name="CORRELAT"></a>CORRELATE</h3>
+        <p>Set this keyword to use the Fourier transform of the <i>Kernel </i>to compute the cross-correlation of the image and the <i>Kernel</i>.</p>
+        <h3 class="Keyword"><a name="IMAGE_FF"></a>IMAGE_FFT</h3>
+        <p>Set this keyword to the Fourier transform of <i>Image </i>(as returned in a previous call to CONVOL_FFT). If IMAGE_FFT is set to a named variable, the Fourier transform of <i>Image </i>is returned so that it can be used in future calculations.</p>
+        <h3 class="Keyword"><a name="KERNEL_F"></a>KERNEL_FFT</h3>
+        <p>Set this keyword to the Fourier transform of <i>Kernel </i>(as returned in a previous call to CONVOL_FFT). If KERNEL_FFT is set to a named variable, the Fourier transform of <i>Kernel </i>is returned so that it can be used in future calculations.</p>
+        <h3 class="Keyword"><a name="NO_PADDI"></a>NO_PADDING</h3>
+        <p>Set this keyword to prevent padding of the image with zeros.  This will decrease the memory usage of the function, but may introduce artifacts at the edges of the result.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The size of the returned IMAGE_FFT or KERNEL_FFT arrays depends upon the setting of NO_PADDING, and cannot be passed back in if the NO_PADDING setting is different than when the arrays were created.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="CONVOL.htm">CONVOL</a>, <a href="../B/BLK_CON.htm">BLK_CON</a> <![CDATA[ ]]></p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

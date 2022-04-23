@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: D">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>DRAW_ROI Procedure</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="D_list.htm">Routines: D</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">DRAW_ROI Procedure</span>
+        </div>
+        <h1 class="Routine"><a name="dg_routines_3604229493_882720"></a><a name="dg_routines_3604229493_67032"></a>DRAW_ROI Procedure</h1>
+        <p><a name="kanchor683"></a>The DRAW_ROI procedure draws a region or group of regions to the current Direct Graphics device. The primitives used to draw each ROI are based on the TYPE property of the given IDLanROI object. The TYPE property selects between points, polylines, and filled polygons.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_882806"></a><a name="dg_routines_3604229493_986329_PageTOC_DRAW_ROI_"></a>Examples</h2>
+        <p>The following example displays an image and collects data for a region of interest. The resulting ROI is displayed as a filled polygon.</p>
+        <p class="Code">PRO roi_ex<br />; Load and display an image.<br />img=READ_DICOM(FILEPATH('mr_knee.dcm',SUBDIR=['examples','data'])) <br /><br />WINDOW, 0, XSIZE = 256, YSIZE = 400<br />TV, img<br /><br />XYOUTS, 20, 350, 'To create a region:', CHARSIZE=1.25, /DEVICE<br />XYOUTS, 20, 325, 'Left mouse: select points for a region', /DEVICE<br />XYOUTS, 20, 310, 'Right mouse: complete the region', /DEVICE<br />XYOUTS, 20, 285, '(Click right mouse before closing)', /DEVICE<br /><br />; Create a polygon region object.<br />oROI = OBJ_NEW('IDLanROI', TYPE=2)<br /><br />; Collect first vertex for the region.<br />CURSOR, xOrig, yOrig, /UP, /DEVICE<br />oROI-&gt;AppendData, xOrig, yOrig<br />PLOTS, xOrig, yOrig, PSYM=1, /DEVICE<br /><br />;Continue to collect vertices for region until right mouse button.<br />x1 = xOrig<br />y1 = yOrig<br />while !MOUSE.BUTTON ne 4 do begin<br />   x0 = x1<br />   y0 = y1<br />   CURSOR, x1, y1, /UP, /DEVICE<br />   PLOTS, [x0,x1], [y0,y1], /DEVICE<br />   oROI-&gt;AppendData, x1, y1<br />endwhile<br />PLOTS, [x1,xOrig], [y1,yOrig], /DEVICE<br /><br />; Draw the the region with a line fill.<br />DRAW_ROI, oROI, /LINE_FILL, SPACING=0.2, ORIENTATION=45, /DEVICE<br />END</p>
+        <h2 class="API"><a name="dg_routines_3604229493_882740"></a><a name="dg_routines_3604229493_986280_PageTOC_DRAW_ROI_"></a>Syntax</h2>
+        <p class="Syntax">DRAW_ROI, <i>oROI</i> [, /<a href="#dg_routines_3604229493_882756" class="selected">LINE_FILL</a>] [,&#160;<a href="#dg_routines_3604229493_882759" class="selected">SPACING</a>=<i>value</i>]</p>
+        <p class="Syntax"><b>Graphics Keywords:</b> [,&#160;CLIP=<i>[X</i><sub class="italic">0</sub>, <i>Y</i><sub class="italic">0</sub>, <i>X</i><sub class="italic">1</sub>, <i>Y</i><sub class="italic">1</sub><i>]</i>] [,&#160;COLOR=<i>value</i>] [,&#160;/DATA | , /DEVICE | , /NORMAL] [,&#160;LINESTYLE={0 | 1 | 2 | 3 | 4 | 5}] [,&#160;/NOCLIP] [,&#160;ORIENTATION=<i>ccw_degrees_from_horiz</i>] [,&#160;PSYM=<i>integer</i>{0 to 10}] [,&#160;SYMSIZE=<i>value</i>] [,&#160;/T3D] [,&#160;THICK=<i>value</i>]</p>
+        <h2 class="API"><a name="dg_routines_3604229493_882750"></a><a name="dg_routines_3604229493_986283_PageTOC_DRAW_ROI_"></a>Arguments</h2>
+        <h3 class="Argument"><b>oROI</b>
+        </h3>
+        <p>A reference to an IDLanROI object to be drawn.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_882754"></a><a name="dg_routines_3604229493_986286_PageTOC_DRAW_ROI_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_882756"></a><a name="dg_routines_3604229493_986287_Keywords_DRAW_ROI__"></a>LINE_FILL</h3>
+        <p>Set this keyword to indicate that polygonal regions are to be filled with parallel lines, rather than using the default solid fill. When using a line fill, the thickness, linestyle, orientation, and spacing of the lines may be specified by keywords.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_882759"></a><a name="dg_routines_3604229493_986289_Keywords_DRAW_ROI__"></a>SPACING</h3>
+        <p>The spacing, in centimeters, between the parallel lines used to fill polygons.</p>
+        <h3><a name="dg_routines_3604229493_882763"></a><a name="dg_routines_3604229493_986291_Keywords_DRAW_ROI__"></a><a name="dg_routines_3604229493_986291_PageTOC_DRAW_ROI_"></a>Graphics Keywords Accepted</h3>
+        <p><a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_315949">CLIP</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_371352">COLOR</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_315961">DATA</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_369990">DEVICE</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_331728">LINESTYLE</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_370050">NOCLIP</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_315963">NORMAL</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_315964">ORIENTATION</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_367154">PSYM</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316061">SYMSIZE</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_315956">T3D</a>, <a href="../../Direct Graphics/graphkeyw.htm#graphkeyw_3288778166_316006">THICK</a></p>
+        <h2 class="API"><a name="dg_routines_3604229493_882815"></a><a name="dg_routines_3604229493_985305_PageTOC_DRAW_ROI_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

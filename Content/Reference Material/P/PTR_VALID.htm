@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: P">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>PTR_VALID</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="P_list.htm">Routines: P</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">PTR_VALID</span>
+        </div>
+        <h1 class="Routine"><a name="P_817877613_845070"></a><a name="kanchor2112"></a><a name="P_817877613_34100"></a>PTR_VALID</h1>
+        <p><a name="kanchor2113"></a>The PTR_VALID function verifies the validity of its pointer arguments, or alternatively returns a vector of pointers to all the existing valid pointer heap variables.</p>
+        <h2 class="API"><a name="P_817877613_1198911"></a><a name="P_817877613_845082_PageTOC_PTR_VALID_"></a>Examples</h2>
+        <p>To determine if a given pointer refers to a valid heap variable:</p>
+        <p class="Code">IF (PTR_VALID(p)) THEN …</p>
+        <p>To destroy all existing pointer heap variables:</p>
+        <p class="Code">PTR_FREE, PTR_VALID()</p>
+        <p>You can use the CAST keyword to “reclaim” lost heap variables. For example:</p>
+        <p class="Code">A = PTR_NEW(10)</p>
+        <p class="Code">PRINT, A</p>
+        <p>IDL prints:</p>
+        <p class="Code">&lt;PtrHeapVar2&gt;</p>
+        <p>In this case, the integer index to the heap variable is 2. If we reassign the variable A, we will “lose” the pointer, but the heap variable will still exist:</p>
+        <p class="Code">A=0</p>
+        <p class="Code">PRINT, A</p>
+        <p class="Code">PRINT, PTR_VALID()</p>
+        <p>IDL prints:</p>
+        <p class="Code">0</p>
+        <p class="Code">&lt;PtrHeapVar2&gt;</p>
+        <p>We can reclaim the lost heap variable using the CAST keyword:</p>
+        <p class="Code">A = PTR_VALID(2, /CAST)</p>
+        <p class="Code">PRINT, A</p>
+        <p>IDL prints:</p>
+        <p class="Code">&lt;PtrHeapVar2&gt;</p>
+        <h2 class="API"><a name="P_817877613_845074"></a><a name="P_817877613_845074_PageTOC_PTR_VALID_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = PTR_VALID( [<i>Arg</i>] [,&#160;/<a href="#P_817877613_863586" class="selected">CAST</a>] [,&#160;<a href="#P_817877613_863622" class="selected">COUNT</a>=<i>variable</i>] [,&#160;/<a href="#P_817877613_1198886" class="selected">GET_HEAP_IDENTIFIER</a>] )</p>
+        <h2 class="API"><a name="P_817877613_1085617"></a><a name="P_817877613_1085617_PageTOC_PTR_VALID_"></a><a name="P_817877613_58935"></a>Return Value</h2>
+        <p>If called with a pointer or array of pointers as its argument, PTR_VALID returns a byte array of the same size as the argument. Each element of the result is set to True (1) if the corresponding pointer in the argument refers to an existing valid heap variable, or to False (0) otherwise. If the GET_HEAP_IDENTIFIER keyword is set, PTR_VALID returns the heap identifier value(s) for the input pointer(s).</p>
+        <p>If called with an integer or array of integers as its argument and the CAST keyword is set, PTR_VALID returns an array of pointers. Each element of the result is a pointer to the heap variable indexed by the integer value. Integers used to index heap variables are shown in the output of the HELP and PRINT commands. This is useful primarily in programming/debugging when you have lost a reference but see it with HELP and need to get a reference to it interactively in order to determine what it is and take steps to fix the code. See the “Examples” section below for an example.</p>
+        <p>If no argument is specified, PTR_VALID returns a vector of pointers to all existing valid pointer heap variables—<i>even if there are currently no pointers to the heap variable</i>. This usage allows you to “reclaim” pointer heap variables to which all pointers have been lost. If no valid pointer heap variables exist, a scalar null pointer is returned.</p>
+        <h2 class="API"><a name="P_817877613_845076"></a><a name="P_817877613_845076_PageTOC_PTR_VALID_"></a>Arguments</h2>
+        <h3 class="Argument">Arg</h3>
+        <p><i>Arg</i> can be one of the following:</p>
+        <ol>
+            <li value="1">A scalar or array argument of pointer type.</li>
+            <li value="2">If the CAST keyword is set, an integer index or array of integer indices to heap variables. Integers used to index heap variables are shown in the output of the HELP and PRINT commands.</li>
+        </ol>
+        <h2 class="API"><a name="P_817877613_845079"></a><a name="P_817877613_845079_PageTOC_PTR_VALID_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="P_817877613_863586"></a><a name="P_817877613_863586_Keywords_PTR_VALID__"></a>CAST</h3>
+        <p>Set this keyword to create a new pointer to each heap variable index specified in <i>Arg</i>. </p>
+        <h3 class="Keyword"><a name="P_817877613_863622"></a><a name="P_817877613_863622_Keywords_PTR_VALID__"></a>COUNT</h3>
+        <p>Set this keyword equal to a named variable that will contain the number of currently valid heap variables. This value is returned as a longword integer.</p>
+        <h3 class="Keyword"><a name="P_817877613_1198886"></a><a name="P_817877613_76605"></a>GET_HEAP_IDENTIFIER</h3>
+        <p>If <i>Arg</i> is a pointer or array of pointers, set this keyword to return the pointer heap identifier value(s) instead of the default array of True or False values. The value(s) will be unsigned long integers, and the return value will have the same dimensions as <i>Arg</i>.</p>
+        <h2 class="API"><a name="P_817877613_1079256"></a><a name="P_817877613_1079256_PageTOC_PTR_VALID_"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>5.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added GET_HEAP_IDENTIFIER keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="P_817877613_1198650"></a><a name="P_817877613_1198650_PageTOC_PTR_VALID_"></a>See Also</h2>
+        <p><a href="PTR_FREE.htm#P_817877613_845045">PTR_FREE</a>, <a href="PTR_NEW.htm#P_817877613_1086484">PTR_NEW</a>, <a href="PTRARR.htm#P_817877613_845087">PTRARR</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

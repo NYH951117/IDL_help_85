@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|COM Import Bridge and ActiveX|COM Import Bridge">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Managing COM Object Properties</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">COM Import Bridge and ActiveX</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">COM Import Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Managing COM Object Properties</span>
+        </div>
+        <h1><a name="Managing_COM_Object_Properties"></a><a name="kanchor5206"></a>Managing COM Object Properties</h1>
+        <p>As a convenience to the IDL programmer, COM object methods that have been defined using the propget and propput attributes are accessible via the IDLcomIDispatch object’s GetProperty and SetProperty methods. This means that rather than calling the COM object’s methods directly to get and set property values, you use the standard IDL syntax.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If a COM object method’s interface definition includes either the propget or the propput attribute, you must use the IDL GetProperty and SetProperty methods to get and set values. IDL does not allow you to call these methods directly.</p>
+        <p>As with all IDL objects, the IDLcomIDispatch object’s GetProperty and SetProperty methods use procedure syntax. Keywords to the methods represent the names of the properties being retrieved or set, and the keyword values represent either an IDL variable into which the property value is placed or an IDL expression that is the value to which the property is set. You must use the procedure syntax when calling either method, even if the underlying COM object methods being used are functions rather than procedures.</p>
+        <h2><a name="kanchor5207"></a>Setting Properties</h2>
+        <p>To set a property value on a COM object, use the following syntax:</p>
+        <p class="Code">ObjRef-&gt;SetProperty, KEYWORD=Expression</p>
+        <p>where <i>ObjRef</i> is the IDLcomIDispatch object that encapsulates the COM object, KEYWORD is the COM object property name, and <i>Expression</i> is an IDL expression representing the property value to be set.</p>
+        <p>If the underlying COM object’s <i>propput</i> method requires additional arguments, the arguments are supplied in the <i>setProperty</i> method call, using the following syntax:</p>
+        <p class="Code">ObjRef-&gt;SetProperty [, arg0, arg1, ... argn], KEYWORD=Expression</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>KEYWORD must map exactly to the full name of the underlying COM object’s property setting method. The partial keyword name functionality provided by IDL is not valid with IDLcomIDispatch objects.</p>
+        <p>You can set multiple property values in a single statement by supplying multiple KEYWORD=Expression pairs.</p>
+        <p>IDL lets you to set multiple properties at once in the same SetProperty call. For example:</p>
+        <p class="Code">ObjRef-&gt;SetProperty, OPTION=1, INDEX=99L</p>
+        <p>This command is equivalent to the following lines:</p>
+        <p class="Code">ObjRef-&gt;SetProperty, OPTION=1</p>
+        <p class="Code">ObjRef-&gt;SetProperty, INDEX=99L</p>
+        <p>If you pass parameters when setting multiple properties, the parameter or parameters are sent to each property being set. For example:</p>
+        <p class="Code">ObjRef-&gt;SetProperty, 'Parm1', 24L, oRef, OPTION=1, INDEX=99L</p>
+        <p>This command is equivalent to the following lines:</p>
+        <p class="Code">ObjRef-&gt;SetProperty, 'Parm1', 24L, oRef, OPTION=1</p>
+        <p class="Code">ObjRef-&gt;SetProperty, 'Parm1', 24L, oRef, INDEX=99L</p>
+        <p>Thus, when you are setting multiple properties at the same time and passing parameters, all the properties that are set at the same time must be defined as receiving the same sets of parameters.</p>
+        <h2><a name="kanchor5208"></a>Getting Properties</h2>
+        <p>To retrieve a property value from a COM object, use the following syntax:</p>
+        <p class="Code">ObjRef-&gt;GetProperty, KEYWORD=Variable</p>
+        <p>where <i>ObjRef</i> is the IDLcomIDispatch object that encapsulates the COM object, KEYWORD is the COM object property name, and <i>Variable</i> is the name of an IDL variable that will contain the retrieved property value.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>KEYWORD must map exactly to the full name of the underlying COM object’s property getting method. The partial keyword name functionality provided by IDL is not valid with IDLcomIDispatch objects.</p>
+        <p>You can get multiple property values in a single statement by supplying multiple KEYWORD=Variable pairs.</p>
+        <p>Because some of the underlying COM object’s <i>propget</i> methods may require arguments, the IDLcomIDispatch object’s GetProperty method will accept optional arguments. To retrieve a property using a method that takes arguments, use the following syntax:</p>
+        <p class="Code">ObjRef-&gt;GetProperty [, arg0, arg1, ... argn], KEYWORD=Variable</p>
+        <p>Note, however, that if arguments are required, you can only specify one property to retrieve.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

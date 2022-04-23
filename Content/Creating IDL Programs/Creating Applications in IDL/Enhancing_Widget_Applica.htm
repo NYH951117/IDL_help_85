@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|Widget Application Techniques">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Enhancing Widget Application Usability</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widget Application Techniques</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Enhancing Widget Application Usability</span>
+        </div>
+        <h1><a name="widget_techniques_4218446668_142728"></a>Enhancing Widget Application Usability</h1>
+        <p>Implementing features such as tabbing and keyboard accelerators into applications that require extensive user-interaction with widget elements can improve application usability. This allows power-users to quickly make selections and initiate actions using the keyboard instead of the mouse. See the following sections for details:</p>
+        <ul>
+            <li value="1"><a href="#widget_techniques_4218446668_142739" class="selected">Tabbing in Widget Applications</a> in the following section describes the tabbing functionality and the differences in this functionality between platforms.</li>
+            <li value="2"><a href="#widget_techniques_4218446668_142913" class="selected">Assigning Accelerators in Widget Applications</a> describes implementing keyboard accelerators for button widgets including menu items. </li>
+        </ul>
+        <h2 class="API"><a name="widget_techniques_4218446668_142739"></a><a name="kanchor5038"></a>Tabbing in Widget Applications</h2>
+        <p>Microsoft Windows and UNIX platforms support using the <b>Tab</b> key to navigate between IDL widgets (except draw widgets, label widgets and property sheet widgets on Windows). Under Windows, the TAB_MODE keyword determines how IDL widgets are affected by tabbing in an application. Under UNIX, the Motif library controls what widgets can receive and lose focus through tabbing. The TAB_MODE keyword is ignored when running a widget application on the UNIX platform. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>It is not possible to tab to disabled (SENSITIVE=0) or hidden (MAP=0) widgets.</p>
+        <p>The following table highlights other differences in tabbing functionality between the two platforms.</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Widget</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><a name="kanchor5039"></a> WIDGET_BUTTON (Grouped, exclusive button widgets, also known as radio buttons)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>On Windows – radio buttons can receive and lose focus through tabbing as long as there is a selected button within the group. Use the arrow keys to change the selection within the group. </p>
+                        <p>On UNIX — the Motif library controls tabbing functionality.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>WIDGET_BUTTON (Grouped, non-exclusive button widgets also known as check boxes)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>On Windows — toggle buttons (or check boxes) can individually receive and lose focus through tabbing. Use the <b>Space</b> key to select or deselect a check box.</p>
+                        <p>On UNIX — the Motif library controls tabbing functionality. </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><a name="kanchor5040"></a>WIDGET_DROPLIST</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>On Windows — droplist widgets can receive and lose focus through tabbing.</p>
+                        <p>On UNIX — the Motif library controls tabbing functionality. </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p><a name="kanchor5041"></a>WIDGET_TABLE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>On Windows — table widgets can receive and lose focus through tabbing, but the focus is not clearly depicted.</p>
+                        <p>On UNIX — the Motif library controls tabbing functionality. </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>WIDGET_TEXT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>On Windows — text widgets can receive and lose focus through tabbing. When a text widget can lose focus via tabbing, keypress events are not generated for the Tab key and tab characters are not inserted into the text field.</p>
+                        <p>On UNIX — tabbing behavior is controlled by the Motif library, and may vary from platform to platform. For single-line text widgets, the value of the TAB_MODE keyword is ignored, keypress events are not generated for the Tab key, and tab characters are not inserted into the text field. For multi-line text widgets, the behavior is the same as under Windows.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p><a name="kanchor5042"></a>WIDGET_TREE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>On Windows — tree widgets can receive and lose focus through tabbing. Use the arrow keys to select higher or lower level nodes. </p>
+                        <p>On UNIX — the Motif library controls tabbing functionality. </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>WIDGET_LABEL, WIDGET_PROPERTYSHEET, WIDGET_DRAW, and menu-related widgets do not support receiving or losing focus through tabbing. See the TAB_MODE keyword for each widget   for special behavior and navigation notes. </p>
+        <h2 class="API">Defining Tabbing Behavior in a Windows Application</h2>
+        <p>The TAB_MODE keyword provides control over tabbing behavior in a Windows application. This keyword controls navigation by specifying how a given widget should respond to the <b>Tab</b> key. </p>
+        <p>Allowable values are: </p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Disable navigation onto or off of the widget. This is the default unless the TAB_MODE has been set on a parent base. Child widgets automatically inherit the tab mode of the parent base as described in <a href="#widget_techniques_4218446668_142828" class="selected">Inheriting the TAB_MODE Value</a>. </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Enable navigation onto and off of the widget.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Navigate only onto the widget.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Navigate only off of the widget.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Widgets including top level bases have a TAB_MODE value of zero by default. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In widget applications on the UNIX platform, the Motif library controls what widgets are brought into and released from focus using tabbing. The TAB_MODE keyword value is always zero, and any attempt to change it is ignored when running a widget application on the UNIX platform. Tabbing behavior may vary significantly between UNIX platforms; do not rely on a particular behavior being duplicated on all UNIX systems.</p>
+        <p>Many compound widgets also support the TAB_MODE keyword. See each CW_* widget for more information.</p>
+        <h3>Navigation Among Widgets Using Tabbing</h3>
+        <p>Navigation among widgets follows the widget hierarchy. Although it is not possible to specify a tab order, the widget tree hierarchy provides a natural progression among the widgets. Traversal is depth-first, meaning that once a widget receives focus through tabbing, additional tabbing will navigate through the interior nodes of the widget if possible before traversing to the next widget. </p>
+        <p>The TAB_MODE is either inherited from a parent base or explicitly set on a widget. However, to understand the effective range of a TAB_MODE setting, the TAB_MODE keyword value and the current focus must be considered. </p>
+        <ul>
+            <li value="1">Setting TAB_MODE on a top level base — this setting is inherited by all lower level bases and child widgets on which TAB_MODE is not explicitly set. </li>
+            <li value="2">Setting TAB_MODE on an intermediate base — this setting is inherited by child widgets if TAB_MODE is not explicitly set on a widget. For example, if the top level base TAB_MODE=0, but the base associated with a group of buttons has a TAB_MODE=1, then when any of the buttons in the group is selected, tabbing will navigate among the buttons. If focus is anywhere other than on this base’s elements, tabbing is disabled. </li>
+            <li value="3">Setting TAB_MODE on a widget — this setting affects tabbing capabilities only when the widget has focus. For example, if the parent base has a TAB_MODE=1 (enabling tabbing), but a slider widget has a TAB_MODE=3, then the slider cannot receive focus through tabbing, it can only lose focus. </li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Depressing the <b>Tab</b> key navigates down the widget hierarchy or to the right. Depressing <b>Shift</b>+<b>Tab</b> navigates up the widget hierarchy or to the left.</p>
+        <h3><a name="Specifyi"></a>Specifying and Inheriting TAB_MODE </h3>
+        <p>The TAB_MODE keyword is allowed in most widget creation routines with the exception of WIDGET_LABEL, WIDGET_PROPERTYSHEET, and WIDGET_DRAW. The TAB_MODE keyword also <i>cannot</i> be explicitly set for the following widgets:</p>
+        <ul>
+            <li value="1">Grouped, exclusive button widgets (radio buttons)</li>
+            <li value="2">Menu items or menu bases</li>
+        </ul>
+        <p>Attempting to set TAB_MODE on these widgets will generate an error. </p>
+        <h4><a name="widget_techniques_4218446668_142828"></a><a name="widget_techniques_4218446668_11689"></a>Inheriting the TAB_MODE Value</h4>
+        <p>Tabbing behavior is inherited from a WIDGET_BASE. When TAB_MODE is set on a base widget, child widgets inherit the setting when they are created. This provides a quick way of enabling or disabling tabbing for all widgets belonging to a base. This is especially useful for widgets that do not directly support the TAB_MODE keyword. For example, attempting to set TAB_MODE for exclusive, grouped button widgets (radio buttons) will generate an error. Setting the tab mode on the parent base passes the specified tabbing functionality along to all widget children on that base. In the following code, the base (<code>base</code>) is defined as one which can receive and lose focus through tabbing. The child widgets (<code>b1</code>, <code>b2</code>, and <code>b3</code>) inherit this setting and will receive and lose focus through tabbing as well. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>See the following section for the complete, working example.</p>
+        <p class="Code">; Define a base for the radio buttons.</p>
+        <p class="Code">base = WIDGET_BASE(tlb, /COLUMN, /FRAME, /EXCLUSIVE, TAB_MODE = 1)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">b1 = widget_button( base, $</p>
+        <p class="Code">&#160;&#160;&#160;value = "MorphOpen" , UVALUE="Open")</p>
+        <p class="Code">b2 = widget_button( base, $</p>
+        <p class="Code">&#160;&#160;&#160;value = "MorphClose" , UVALUE="Close")</p>
+        <p class="Code">b3 = widget_button( base, $</p>
+        <p class="Code">&#160;&#160;&#160;value = "Dilate ", UVALUE="Dilate")</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Set button one as selected.</p>
+        <p class="Code">WIDGET_CONTROL, b1, /SET_BUTTON</p>
+        <p>Use WIDGET_CONTROL to make an initial selection within the group of radio buttons. This needs to be set before the group can receive focus through tabbing.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For a child widget to receive focus through tabbing, the parent base must have a value of TAB_MODE=1 (receive and lose focus) or TAB_MODE=2 (only receive focus). A parent base with a TAB_MODE=0 or TAB_MODE=3 insulates child widgets from receiving focus. Only when focus is on the child widget would the child’s individual TAB_MODE value be in effect.</p>
+        <h4>Specifying TAB_MODE Values for Individual Widgets</h4>
+        <p>The tab mode of the parent base is inherited by child widgets, but it is possible to control what widgets can receive or lose focus by specifying different TAB_MODE values on lower-level bases or individual widgets. For example, consider a top level base populated with a group of radio buttons, a group of check boxes, and a slider widget. The top level base has TAB_MODE=1, meaning that this base, and all widgets that inherit the setting from the base, will be able to receive and lose focus through tabbing. However, the TAB_MODE of the slider widget is explicitly set to 3 meaning that it can lose, but not receive focus. This excludes the widget from receiving focus when navigating the widget hierarchy. However, when focus is on a widget with a TAB_MODE keyword value of 3, and the <b>Tab</b> key is depressed, focus leaves the current widget and returns to the first widget that accepts focus through tabbing. The following simple example illustrates these concepts.</p>
+        <p class="Code">pro tabbing_example_event, event</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Return and print the uvalue of the widget with focus.</p>
+        <p class="Code">WIDGET_CONTROL, event.ID, GET_UVALUE = uvalue</p>
+        <p class="Code">PRINT, 'Event on: ', UVALUE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">end</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">pro tabbing_example</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a top level base. Specify a tab mode that allows child </p>
+        <p class="Code">; widgets to receive and lose focus (TAB_MODE=1). </p>
+        <p class="Code">tlb = WIDGET_BASE(/COLUMN, TITLE = "Tabbing Example", $</p>
+        <p class="Code">   XPAD=0, YPAD=10, XOFFSET=25, YOFFSET=25, TAB_MODE=1)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a base with radio buttons that inherits the ability</p>
+        <p class="Code">; to receive and lose focus through tabbing from parent tlb. This </p>
+        <p class="Code">; setting is also inherited by widget children of rbase.</p>
+        <p class="Code">rbase = WIDGET_BASE(tlb, /COLUMN, /FRAME, /EXCLUSIVE)</p>
+        <p class="Code">rb1 = WIDGET_BUTTON(rbase, VALUE = "MorphOpen", UVALUE = "Open")</p>
+        <p class="Code">rb2 = WIDGET_BUTTON(rbase, VALUE = "MorphClose", UVALUE = "Close")</p>
+        <p class="Code">rb3 = WIDGET_BUTTON(rbase, VALUE = "Dilate", UVALUE = "Dilate")</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Mark the first button as selected to enable tabbing to the </p>
+        <p class="Code">; group of radio buttons.</p>
+        <p class="Code">WIDGET_CONTROL, rb1, /SET_BUTTON</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a base with check boxes that inherits the ability to </p>
+        <p class="Code">; receive and lose focus through tabbing from tlb. This setting</p>
+        <p class="Code">; is also inherited by widget children of cbase.</p>
+        <p class="Code">cbase = WIDGET_BASE(tlb, /COLUMN, /FRAME, /NONEXCLUSIVE)</p>
+        <p class="Code">b1 = WIDGET_BUTTON(cbase, $</p>
+        <p class="Code">   VALUE = "Structuring Element: 3x3", UVALUE = "se3x3") </p>
+        <p class="Code">b2 = WIDGET_BUTTON(cbase, $</p>
+        <p class="Code">   VALUE = "Structuring Element: 5x5", UVALUE = "se5x5")</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a slider widget. Set the tab mode so that it can </p>
+        <p class="Code">; lose focus, but not receive focus through tabbing.</p>
+        <p class="Code">slider = WIDGET_SLIDER(tlb, UVALUE = 'slider', TAB_MODE=3)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Draw the widgets and activate events.</p>
+        <p class="Code">WIDGET_CONTROL, tlb, /REALIZE</p>
+        <p class="Code">XMANAGER, 'tabbing_example', tlb, /NO_BLOCK</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">end</p>
+        <p>Save and run the above code. This results in a group of widgets similar to the following figure. </p>
+        <p>
+            <img src="../../images/wid_tech_tab.gif" />
+        </p>
+        <p>Select a radio button or check box and then depress the <b>Tab</b> key to navigate between these widgets. With the mouse select and move the slider. Press the <b>Tab</b> key and the focus shifts to the group of radio buttons. </p>
+        <p>On Windows, use the arrow keys to navigate among the radio button options. Tab to the check boxes. Depress the <b>Space</b> key to select or deselect a check box. Use the <b>Tab</b> key to navigate through the check box options. Once the slider has focus, the arrow keys, Page Up and Page Down keys can be used to move the slider marker.</p>
+        <p>On UNIX, the TAB_MODE keyword is ignored. The arrow keys can be used to navigate between radio buttons, check boxes, and move the slider marker.</p>
+        <h3>Modifying and Accessing the TAB_MODE Keyword</h3>
+        <p>The TAB_MODE keyword value can be changed using WIDGET_CONTROL and queried using WIDGET_INFO. A change made to TAB_MODE using WIDGET_CONTROL affects only the widget for which the change is explicitly made. If changed on a widget base, the change is not propagated to the child widgets that have already been created. Use WIDGET_CONTROL to change the TAB_MODE value of any widget that supports the TAB_MODE keyword. </p>
+        <p>For example, if the TAB_MODE keyword value of the top level base is changed from 1 to 0 after child widgets have been created, tabbing will still be enabled for any applicable child bases or widgets when they have focus. </p>
+        <p class="Code">WIDGET_CONTROL, tlb, TAB_MODE=0</p>
+        <p>Use WIDGET_INFO to return any widget’s TAB_MODE keyword value. For example, the following returns the keyword value of a slider widget, <code>slider</code>. </p>
+        <p class="Code">; Query the tabbing capabilities of a slider widget. </p>
+        <p class="Code">vtabmode = WIDGET_INFO(slider, /TAB_MODE) </p>
+        <p class="Code">print, vtabmode</p>
+        <p class="Code">&#160;</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In widget applications on the UNIX platform, the Motif library controls what widgets are brought into and released from focus using tabbing. The TAB_MODE keyword value is always zero, and any attempt to change it is ignored when running a widget application on the UNIX platform. Tabbing behavior may vary significantly between UNIX platforms; do not rely on a particular behavior being duplicated on all UNIX systems.</p>
+        <h2 class="API"><a name="widget_techniques_4218446668_142913"></a><a name="kanchor5043"></a>Assigning Accelerators in Widget Applications</h2>
+        <p>Keyboard accelerators allow the user to activate button <a name="kanchor5044"></a>widget events using keyboard key combinations instead of the mouse. On Windows platforms, accelerators can be defined for menu items and various types of <a name="kanchor5045"></a>WIDGET_BUTTON. Note, however, that:</p>
+        <ul>
+            <li value="1">UNIX and Macintosh platforms support only menu item accelerators</li>
+            <li value="2">context menu items do not support accelerators on any platform</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Ordinarily, accelerators are processed before keyboard events reach a widget. This can cause button accelerators to steal keyboard events from widgets that have focus. If you find that this is an issue, see <a href="#widget_techniques_4218446668_150796" class="selected">Disabling Button Widget Accelerators</a>. </p>
+        <h3><a name="widget_techniques_4218446668_142916"></a>Successfully Implementing Keyboard Accelerators</h3>
+        <p>The following tips should be kept in mind when adding accelerators to button widgets:</p>
+        <ul>
+            <li value="1">Additional work is required to enable accelerators using the <b>Alt</b> key to work on Mac. To get the <b>Apple</b> (command) key to function as the <b>Alt</b> key, see <a href="#widget_techniques_4218446668_155215" class="selected">Enabling Alt Key Accelerators on Macintosh</a>. </li>
+            <li value="2">When an accelerator is implemented, it intercepts keyboard events before they are passed to the widgets. Widgets will never see keyboard events that are mapped to accelerators unless the accelerator is disabled as described in <a href="#widget_techniques_4218446668_150796" class="selected">Disabling Button Widget Accelerators</a>. For example, if <b>Ctrl</b>+<b>C </b>is mapped to a button that creates a contour plot, the key combination will no longer perform the copy function. </li>
+            <li value="3">Under Sun operating systems, the <b>Delete</b> key will not function as an accelerator if a widget has keyboard focus. </li>
+            <li value="4">Be mindful of the inherent operating system keyboard combinations when choosing your accelerators. For example, avoid a <b>Ctrl</b>+<b>Alt</b>+<b>Del</b> accelerator for an application run on the Windows platform. </li>
+            <li value="5">To support the greatest cross-platform portability, consider avoiding mapping function keys <b>F9</b> to <b>F12</b> for the following reasons:</li>
+            <li class="Indent" value="6">Sun operating systems have the <b>F11</b> and <b>F12</b> keys mapped to SunF36 and SunF37. Attempting to reassign them can be problematic.</li>
+            <li class="Indent" value="7">Mac OS 10.3 with Expose uses <b>F9</b>, <b>F10</b>, <b>F11</b>. Additionally, <b>Insert</b> and <b>Alt</b> may be unavailable. </li>
+        </ul>
+        <h4><a name="widget_techniques_4218446668_155215"></a>Enabling Alt Key <a name="kanchor5046"></a>Accelerators on Macintosh</h4>
+        <p>Two steps are required to enable accelerators that use the <b>Alt</b> key to work with the <a name="kanchor5047"></a><a name="kanchor5048"></a>Macintosh <b>Apple</b> key (also known as the <b>Command</b> key): </p>
+        <ol>
+            <li value="1">
+                <p>Create a <code>.Xmodmap</code> file in your <code>home</code> folder and add the following three lines to it:</p>
+                <p class="Code">clear mod1</p>
+                <p class="Code">clear mod2</p>
+                <p class="Code">add mod1 = Meta_L</p>
+                <p>When Apple’s X11 program starts, this file will automatically be read, and the Apple key will be mapped to the left meta key <img src="../../images/meta_mac.gif" style="margin-left: 0.37224px;margin-top: 0.93528px;" />, which for IDL’s purposes is the <b>Alt</b> key. (Windows <b>Alt</b> key accelerators are mapped to the Macintosh <b>Apple</b> key, not the <b>Option (alt)</b> key.) </p>
+            </li>
+            <li value="2">Run Apple’s X11 program and change its preferences. Under <b>Input</b> in the X11 Preferences dialog, make sure that the following two items are <i>unchecked</i>:</li>
+            <ul>
+                <li value="1">Follow system keyboard layout</li>
+                <li value="2">Enable key equivalents under X11</li>
+            </ul>
+        </ol>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You must relaunch Apple’s X11 program for these changes to take effect. </p>
+        <p>Performing these two steps will also have the benefit of making the IDL Workbench’s keyboard shortcuts operate in the normal Macintosh fashion. Namely, pressing the <b>Apple</b> (<img src="../../images/meta_mac.gif" style="margin-left: 0.37224px;margin-top: 0.93528px;" /> key) in conjunction with X, C, and V will perform cut, copy and paste. The IDL Workbench’s other shortcuts will also work. If you distribute your application to other Macintosh users, they too will need to have an appropriate <code>.Xmodmap</code> and correct X11 Preferences dialog settings in order for <b>Alt</b> key accelerators to work.</p>
+        <h3>Specifying WIDGET_BUTTON Accelerators</h3>
+        <p>The ACCELERATOR keyword assigns a key combination that activates a menu item or button event. The value of the keyword is a case-insensitive string that specifies zero or more modifier keys (<b>Ctrl</b>, <b>Shift</b>, or <b>Alt</b>) and one other key. (Mac users must take special steps to enable <b>Alt</b> key accelerators. See <a href="#widget_techniques_4218446668_155215" class="selected">Enabling Alt Key Accelerators on Macintosh</a> for details.) If there is more than one item in the string, a “+” must separate them. For example:</p>
+        <p class="Code">base = WIDGET_BASE( tlb, /COLUMN, /FRAME )</p>
+        <p class="Code">bRun = WIDGET_BUTTON( base, VALUE = "Run", ACCELERATOR = "F5" )</p>
+        <p class="Code">bPause = WIDGET_BUTTON( base, VALUE = "Pause", $</p>
+        <p class="Code">&#160;&#160;&#160;ACCELERATOR = "Ctrl+F5" )</p>
+        <p class="Code">bResume = WIDGET_BUTTON( base, VALUE = "Resume", $</p>
+        <p class="Code">&#160;&#160;&#160;ACCELERATOR = "Ctrl+Shift+F5" )</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Accelerators can be defined for menu items and other types of WIDGET_BUTTON on Windows. However, UNIX supports only menu item accelerators. Context menu items do not support accelerators on any platform.</p>
+        <p>The valid combinations are:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Accelerator Keys</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><b>Ctrl</b>, <b>Shift</b>, or <b>Alt</b> plus an alphanumeric key</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>A modifier key plus any alphabetic character, A-Z (which is case-insensitive), or a number, 0-9, creates a valid accelerator. </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p><b>Ctrl</b>, <b>Shift</b>, or <b>Alt</b> plus a number pad key </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>A modifier key plus any key on the number pad can be used as an accelerator The <b>NumLock</b> key must be activated for any accelerator using number pad keys to function properly. </p>
+                        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>On Windows only, a keyboard accelerator using the <b>Shift</b> key and a number key on the number pad will not work. </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><b>Ctrl</b>, <b>Shift</b>, or <b>Alt</b> plus the <b>BackSpace</b>, <b>Tab</b> or <b>Space</b> key </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>These miscellaneous keys need a modifier key in the accelerator definition.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Navigation keys (<b>Home</b>, <b>End</b>, <b>PageUp</b>, <b>PageDown</b>, <b>Up</b>, <b>Down</b>, <b>Left</b>, <b>Right</b>) </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>The navigation keys do not require a modifier in the accelerator definition. <b>Prior</b> and <b>PageUp</b> are equivalent as are <b>Next</b> and <b>PageDown</b>. <b>Up</b>, <b>Down</b>, <b>Left</b>, and <b>Right</b> map to the arrow keys. </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Function keys (<b>F1</b> to <b>F12</b>)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Function keys do not need a modifier key in the accelerator definition. However, not all platforms support the use of all function keys as accelerators. See <a href="#widget_techniques_4218446668_142916" class="selected">Successfully Implementing Keyboard Accelerators</a> for details. </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p><b>Return</b>, <b>Escape</b>, <b>Insert</b>, <b>Del</b> keys</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>These miscellaneous keys do not need a modifier key in the accelerator definition. You must specify <b>Return</b> in the accelerator definition to indicate the Enter key on Windows. You must specify <b>Del</b> in the accelerator definition to indicate the Delete key. </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>When an accelerator is defined for a menu item, the ACCELERATOR keyword string is automatically displayed next to the menu item value. The ACCELERATOR keyword string is not included with a button value. Therefore, the VALUE keyword of a WIDGET_BUTTON that is not a menu item should also indicate the accelerator keyboard shortcut so that the user is aware of the option. </p>
+        <p>The following simple example creates a variety of WIDGET_BUTTON types with accelerators.</p>
+        <p class="Code">; AcceleratorExample.pro</p>
+        <p class="Code">; Example of the use of keyboard accelerators.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">pro acceleratorexample_event, event</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">WIDGET_CONTROL, event.ID, GET_UVALUE = uvalue</p>
+        <p class="Code">PRINT, 'Event on: ', uvalue</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IF ( uvalue EQ 'Quit' ) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;WIDGET_CONTROL, event.TOP, /DESTROY</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">end</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">pro AcceleratorExample</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">tlb = WIDGET_BASE( /ROW, $</p>
+        <p class="Code">&#160;&#160;&#160;MBAR = mbar, TITLE = "Accelerator Example", $</p>
+        <p class="Code">&#160;&#160;&#160;XPAD = 10, YPAD = 10, XOFFSET = 25, YOFFSET = 25 )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a menu with accelerators. The accelerator string is </p>
+        <p class="Code">; automatically displayed along with the menu item text.</p>
+        <p class="Code">file = WIDGET_BUTTON( mbar, /MENU, $</p>
+        <p class="Code">&#160;&#160;&#160;VALUE = "File" )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">one = WIDGET_BUTTON( file, $</p>
+        <p class="Code">&#160;&#160;&#160;VALUE = "One", UVALUE = "One", $</p>
+        <p class="Code">&#160;&#160;&#160;ACCELERATOR = "Ctrl+1" )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">two = WIDGET_BUTTON( file, $</p>
+        <p class="Code">&#160;&#160;&#160;VALUE = "Two", UVALUE = "Two", $</p>
+        <p class="Code">&#160;&#160;&#160;ACCELERATOR = "Ctrl+2" )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">three = WIDGET_BUTTON( file, $</p>
+        <p class="Code">&#160;&#160;&#160;VALUE = "Three", UVALUE = "Three", $</p>
+        <p class="Code">&#160;&#160;&#160;ACCELERATOR = "Ctrl+3" )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">quit = WIDGET_BUTTON( file, $</p>
+        <p class="Code">&#160;&#160;&#160;VALUE = "Quit", UVALUE = "Quit", $</p>
+        <p class="Code">&#160;&#160;&#160;ACCELERATOR = "Ctrl+Q" )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a base with push buttons. Include the accelerator</p>
+        <p class="Code">; text in the button value so users are aware of it. </p>
+        <p class="Code">base = WIDGET_BASE( tlb, /COLUMN, /FRAME )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">b1 = WIDGET_BUTTON( base, $</p>
+        <p class="Code">&#160;&#160;&#160;VALUE = "Affirmative (Ctrl+Y)", UVALUE = "Yes", $</p>
+        <p class="Code">&#160;&#160;&#160;ACCELERATOR = "Ctrl+Y" )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">b2 = WIDGET_BUTTON( base, $</p>
+        <p class="Code">&#160;&#160;&#160;VALUE = "Negative (Ctrl+N)", UVALUE = "No", $</p>
+        <p class="Code">&#160;&#160;&#160;ACCELERATOR = "Ctrl+N" )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a base with radio buttons. </p>
+        <p class="Code">base = WIDGET_BASE( tlb, /COLUMN, /FRAME, /EXCLUSIVE )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">b1 = widget_button( base, $</p>
+        <p class="Code">&#160;&#160;&#160;VALUE = "Owl (Ctrl+O)", UVALUE = "Owl", $</p>
+        <p class="Code">&#160;&#160;&#160;ACCELERATOR = "Ctrl+O" )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">b2 = WIDGET_BUTTON( base, $</p>
+        <p class="Code">&#160;&#160;&#160;VALUE = "Emu (Shift+E)", UVALUE = "Emu", $</p>
+        <p class="Code">&#160;&#160;&#160;ACCELERATOR = "Shift+E" )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">b3 = WIDGET_BUTTON( base, $</p>
+        <p class="Code">&#160;&#160;&#160;VALUE = "Bat (Alt+B)", UVALUE = "Bat", $</p>
+        <p class="Code">&#160;&#160;&#160;ACCELERATOR = "Alt+B" )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a base with check boxes.</p>
+        <p class="Code">base = WIDGET_BASE( tlb, /COLUMN, /FRAME, /NONEXCLUSIVE )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">b1 = WIDGET_BUTTON( base, $</p>
+        <p class="Code">&#160;&#160;&#160;VALUE = "Hello (F3)", UVALUE = "Hello", $</p>
+        <p class="Code">&#160;&#160;&#160;ACCELERATOR = "F3" )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">b2 = WIDGET_BUTTON( base, $</p>
+        <p class="Code">&#160;&#160;&#160;VALUE = "Goodbye (F4)", UVALUE = "Goodbye", $</p>
+        <p class="Code">&#160;&#160;&#160;ACCELERATOR = "F4" )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create the widgets and accept events.</p>
+        <p class="Code">WIDGET_CONTROL, tlb, /REALIZE</p>
+        <p class="Code">XMANAGER, 'acceleratorexample', tlb, /NO_BLOCK</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IF !VERSION.OS_FAMILY NE 'Windows' THEN BEGIN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">text = ['Accelerators on non-menu items are not supported', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;'on this platform.', ' ', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;'Accelerators on menu items work on all platforms.']</p>
+        <p class="Code">void = DIALOG_MESSAGE(text, /INFO)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">end</p>
+        <p>Save and run the example. The Output Log window reports which button has been activated using the accelerator. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Menu item accelerators are only operational when the menu is closed.</p>
+        <h2 class="API"><a name="widget_techniques_4218446668_150796"></a>Disabling Button Widget <a name="kanchor5049"></a>Accelerators</h2>
+        <p>Keyboard events are intercepted by the accelerators before they are passed along to widgets. This means that a widget will never see a keyboard event that maps to an accelerator. This can be resolved using one of the following methods:</p>
+        <ul>
+            <li value="1">Use the IGNORE_ACCELERATORS keyword on those widgets that you want to receive keyboard input regardless of defined accelerators. This is the recommended method. See <a href="#widget_techniques_4218446668_154497" class="selected">Using IGNORE_ACCELERATORS</a> for details.</li>
+            <li value="2">Disable the accelerated item by programmatically desensitizing the item when the widget that you want to receive events gains focus, and resensitize the item when the widget loses focus. This allows the keystrokes that would ordinarily map to the accelerator to reach the desired widget when it has focus. </li>
+        </ul>
+        <h3><a name="widget_techniques_4218446668_154497"></a>Using IGNORE_ACCELERATORS</h3>
+        <p>The IGNORE_ACCELERATORS keyword is available on the following widgets:</p>
+        <ul>
+            <li value="1">WIDGET_COMBOBOX</li>
+            <li value="2">WIDGET_DRAW</li>
+            <li value="3">WIDGET_PROPERTYSHEET</li>
+            <li value="4">WIDGET_TABLE</li>
+            <li value="5">WIDGET_TEXT</li>
+        </ul>
+        <p>For each widget with a text area, accelerator overrides are active only when focus is on an editable text portion. (Accelerator overrides for draw widgets are active when the drawing area has focus.) For example, when the focus is on a table cell that cannot be edited, accelerators are still enabled. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Depending on system hardware, the number of widgets that have accelerators, and the number of accelerators ignored, you may notice a slight performance penalty. </p>
+        <p>Set the IGNORE_ACCELERATORS equal to the text string of a single accelerator, an array containing multiple accelerator strings, or 1 (to ignore all accelerators). </p>
+        <h4>Managing Accelerators Example </h4>
+        <p>The following example shows various ways accelerators can be managed. This example creates several menu items with accelerators. Three text boxes either allow all accelerators, some accelerators or no accelerators to receive keyboard events. Additionally you can select a checkbox to desensitize the Delete menu item. When the menu item is desensitized, the accelerator never receives keyboard events. </p>
+        <p class="Code">PRO manage_accel, event</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO quit_event, event</p>
+        <p class="Code">  WIDGET_CONTROL, event.top, /DESTROY</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO menu_event, event</p>
+        <p class="Code">  PRINT, WIDGET_INFO( event.id, /UNAME )</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO menu_sense_event, event</p>
+        <p class="Code">   deleteItem = WIDGET_INFO( event.top, FIND_BY_UNAME ="MenuDel" )</p>
+        <p class="Code">   WIDGET_CONTROL, deleteItem, SENSITIVE = event.select</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">pro manage_accel</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create the top level base. </p>
+        <p class="Code">tlb = WIDGET_BASE( /COLUMN, MBAR = mbar, XSIZE = 250, /TAB_MODE)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Build the menu bar. </p>
+        <p class="Code">edit= WIDGET_BUTTON( mbar, /MENU, VALUE = "Edit" )</p>
+        <p class="Code">menuDel = WIDGET_BUTTON( edit, VALUE = "Delete", $</p>
+        <p class="Code">   UNAME = "MenuDel", ACCELERATOR = "Del", $</p>
+        <p class="Code">   EVENT_PRO = "menu_event" )</p>
+        <p class="Code">menuCut = WIDGET_BUTTON( edit, VALUE = "Cut", $</p>
+        <p class="Code">   UNAME = "MenuCut", ACCELERATOR = "Ctrl+X", $</p>
+        <p class="Code">   EVENT_PRO = "menu_event" )</p>
+        <p class="Code">menuCopy = WIDGET_BUTTON( edit, VALUE = "Copy", $</p>
+        <p class="Code">   UNAME = "MenuCopy", ACCELERATOR = "Ctrl+C", $</p>
+        <p class="Code">   EVENT_PRO = "menu_event" )</p>
+        <p class="Code">menuPaste = WIDGET_BUTTON( edit, VALUE = "Paste", $</p>
+        <p class="Code">   UNAME = "MenuPaste", ACCELERATOR = "Ctrl+V", $</p>
+        <p class="Code">   EVENT_PRO = "menu_event" )</p>
+        <p class="Code">menuUndo = WIDGET_BUTTON( edit, VALUE = "Undo", $</p>
+        <p class="Code">   UNAME = "MenuUndo", ACCELERATOR = "Ctrl+Z",$</p>
+        <p class="Code">   EVENT_PRO = "menu_event" )</p>
+        <p class="Code">quit = WIDGET_BUTTON( edit, VALUE = "Quit", $</p>
+        <p class="Code">   ACCELERATOR = "Ctrl+Q", EVENT_PRO = "quit_event" )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add text boxes with various levels of disabled accelerators. </p>
+        <p class="Code">text1 = WIDGET_TEXT( tlb, /EDITABLE, $</p>
+        <p class="Code">   VALUE = "Doesn't use IGNORE_ACCELERATORS." )</p>
+        <p class="Code">text2 = WIDGET_TEXT( tlb, /EDITABLE, $</p>
+        <p class="Code">   VALUE = "Receives Delete key and Ctrl+C combinations.", $</p>
+        <p class="Code">   IGNORE_ACCELERATORS = [ "Del", "Ctrl+C" ] )</p>
+        <p class="Code">text3 = WIDGET_TEXT( tlb, /EDITABLE, $</p>
+        <p class="Code">   VALUE = "Receives all accelerator key combinations.", $</p>
+        <p class="Code">   IGNORE_ACCELERATORS = 1)  </p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add a check box to desensitize the Delete menu item.</p>
+        <p class="Code">base2 = WIDGET_BASE( tlb, /FRAME, /NONEXCLUSIVE )</p>
+        <p class="Code">check1 = WIDGET_BUTTON( base2, VALUE = "Menu DEL sensitive", $</p>
+        <p class="Code">   EVENT_PRO = "menu_sense_event" )</p>
+        <p class="Code">WIDGET_CONTROL, check1, SET_BUTTON = WIDGET_INFO ( menuDel, $</p>
+        <p class="Code">   /SENSITIVE )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Draw the widget.</p>
+        <p class="Code">WIDGET_CONTROL, tlb, /REALIZE</p>
+        <p class="Code">XMANAGER, "manage_accel", tlb, /NO_BLOCK</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>Compile and run the example. Try highlighting and deleting, or copying and pasting text in each textbox using accelerators defined in the <b>Edit</b> menu. All keyboard events are ineffective (stolen by the accelerators) when the first textbox has focus. The second textbox receives only copy and delete keyboard combinations. The third textbox receives all accelerators. When the delete menu item is desensitized, the <b>Delete</b> key can delete text from all textboxes. The IDL Output Log window prints the name of any menu item that is activated using an accelerator. </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

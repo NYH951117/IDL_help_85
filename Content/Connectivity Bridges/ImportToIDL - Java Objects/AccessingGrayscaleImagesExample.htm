@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|Java Import Bridge">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Accessing Grayscale Images Example</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Java Import Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Accessing Grayscale Images Example</span>
+        </div>
+        <h1><a name="Accessing_Grayscale_Images_Example"></a><a name="kanchor5405"></a>Accessing Grayscale Images Example</h1>
+        <p>This example creates a a grayscale ramp image within a Java class, which is contained in a file named <i>GreyBandsImage.java</i>. IDL then accesses this data through the ShowGreyImage routine, which is in the <i>showgreyimage.pro</i> file.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>These files are located in the <i>resource/bridges/import/java/examples</i> directory of the IDL distribution. Run this example procedure by entering window by entering <i>.EDIT   showgreyimage.pro</i>.</p>
+        <p>The <i><a name="kanchor5406"></a>GreyBandsImage.java</i> file contains the following text for creating a grayscale image in Java:</p>
+        <p class="Code">import java.awt.*;</p>
+        <p class="Code">import java.awt.image.*;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">public class GreyBandsImage extends BufferedImage</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">// Members</p>
+        <p class="Code_Indented">private int m_height;</p>
+        <p class="Code_Indented">private int m_width;</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">//</p>
+        <p class="Code_Indented">// ctor</p>
+        <p class="Code_Indented">//</p>
+        <p class="Code_Indented">public GreyBandsImage()</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">super(100, 100, BufferedImage.TYPE_INT_ARGB);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">generateImage();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">m_height = 100;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">m_width = 100;</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">//</p>
+        <p class="Code_Indented">// private method to generate the image</p>
+        <p class="Code_Indented">//</p>
+        <p class="Code_Indented">private void generateImage()</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">Color c;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int width	= getWidth();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int height = getHeight();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">WritableRaster raster = getRaster();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">ColorModel model = getColorModel();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int BAND_PIXEL_WIDTH = 5;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int nBands = width/BAND_PIXEL_WIDTH;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int greyDelta = 255 / nBands;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">for (int i=0 ; i &lt; nBands; i++)</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">c = new Color(i*greyDelta, i*greyDelta, i*greyDelta);</p>
+        <p class="Code_Indented" style="text-indent: 40px;">int argb = c.getRGB();</p>
+        <p class="Code_Indented" style="text-indent: 40px;">Object colorData = model.getDataElements(argb, null);</p>
+        <p class="Code_Indented" style="text-indent: 40px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 40px;">for (int j=0; j &lt; height; j++)</p>
+        <p class="Code_Indented" style="text-indent: 60px;">for (int k=0; k &lt; BAND_PIXEL_WIDTH; k++)</p>
+        <p class="Code_Indented" style="text-indent: 80px;">raster.setDataElements(j, (i*5)+k, colorData);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">}</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">//</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">// mutators</p>
+        <p class="Code_Indented">//</p>
+        <p class="Code_Indented">public int[] getRawData()</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">Raster oRaster = getRaster();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">Rectangle oBounds = oRaster.getBounds();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int[] data = new int[m_height * m_width * 4];</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">data = oRaster.getPixels(0,0,100,100, data);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">return data;</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">public int getH()</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">return m_height;</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">public int getW()</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">return m_width;</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code">}</p>
+        <p>The <i>showgreyimage.pro</i> file contains the following text for accessing the grayscale image within IDL:</p>
+        <p class="Code">PRO ShowGreyImage</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Construct the GreyBandImage in Java. This is a sub-class of BufferedImage.</p>
+        <p class="Code_Indented">; It is actually a 4 band image that happens to display bands in greyscale.</p>
+        <p class="Code_Indented">; It is 100x100 pixels.</p>
+        <p class="Code_Indented">oGrey = OBJ_NEW('IDLjavaObject$GreyBandsImage', 'GreyBandsImage')</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Get the 4 byte pixel values.</p>
+        <p class="Code_Indented">data = oGrey -&gt; GetRawData()</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Get the height and width.</p>
+        <p class="Code_Indented">h = oGrey -&gt; GetH()</p>
+        <p class="Code_Indented">w = oGrey -&gt; GetW()</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Display the graphic in an IDL window</p>
+        <p class="Code_Indented">WINDOW, 0, XSIZE = 100, YSIZE = 100</p>
+        <p class="Code_Indented">TV, REBIN(data, h, w)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Cleanup</p>
+        <p class="Code_Indented">OBJ_DESTROY, oGrey</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">END</p>
+        <p>After saving and compiling the above files (<i>GreyBandsImage.java</i> in Java and <i>showgreyimage.pro</i> in IDL), you can run the ShowGreyImage routine in IDL. The routine should produce the following image:</p>
+        <p>
+            <img src="../Resources/Images/BridgesFigure5-1.png" />
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

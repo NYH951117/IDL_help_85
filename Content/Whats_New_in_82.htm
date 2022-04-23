@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>What's New in IDL 8.2</title>
+        <link href="../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1>What's New in IDL 8.2</h1>
+        <p>IDL 8.2 adds complex functionality to IDL Graphics, provides a new look and new features to Widget programming, and simplified building of custom tools for ENVI. Other improvements include streamlined project builds and new fonts for Unicode math symbols.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you are new to IDL or upgrading from an older version, see also:       <a href="WhatsNew_in_8_0.htm">What's New in IDL&#160;8.0</a> and <a href="WhatsNew_in_8_1.htm">What's New in IDL 8.1</a></p>
+        <h2 class="API">Graphics</h2>
+        <p>IDL 8.2 now draws higher-quality thick lines. This change affects lines with a thickness greater than one pixel, drawing clean joins at corners and intersections. This technology also draws curved and spiral lines smoothly and with enhanced detail. The following examples illustrate the improvements:</p>
+        <p>
+            <img src="Reference Material/images/8_2_Graphics_Improvements.png" />
+        </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The new line-drawing functionality may result in slower performance for thick lines. See the LINE_QUALITY property of the graphics objects classes <a href="Object Classes/Graphics/IDLgrBuffer.htm">IDLgrBuffer</a>, <a href="Object Classes/Graphics/IDLgrClipboard.htm">IDLgrClipboard</a>, <a href="Object Classes/Graphics/IDLgrPDF.htm">IDLgrPDF</a>, <a href="Object Classes/Graphics/IDLgrPrinter.htm">IDLgrPrinter</a>, and <a href="Object Classes/Graphics/IDLgrWindow.htm">IDLgrWindow</a>.</p>
+        <h3>Array Arguments to the ARROW function</h3>
+        <p>Previously, with the ARROW function, you could draw only one arrow at a time. Now, the ARROW function accepts arrays for the start and end points, and also for the COLOR, FILL_COLOR, HEAD_SIZE and THICK properties. This allows you to create an unlimited number of arrows with a single call. For examples see the <a href="Reference Material/A/ARROW.htm">ARROW function</a>.</p>
+        <h3>Custom Ranges for the AXIS function</h3>
+        <p>A new COORD_TRANSFORM property for the <a href="Reference Material/A/AXIS.htm">AXIS function</a> lets you define a linear transform between the graphic's data units and the axis units. For example, if you have a plot in degrees Celsius, you can add an axis in degrees Fahrenheit, with appropriate tick marks and tick labels. The AXIS_RANGE property lets you restrict the axis range to only a portion of the full dataspace range. The DATA property lets you pin an axis to a data position, so that panning or zooming the data will cause the axis to move with the data. See <a href="GuideMe/Axes.htm">Axes</a> for an example.</p>
+        <p>In addition to custom ranges, you can now rotate the tick mark labels on axes with the [XYZ]TEXT_ORIENTATION property.</p>
+        <h3>Array Arguments to the SYMBOL Function</h3>
+        <p>Previously, with the SYMBOL function, you could draw only one symbol at a time. Now, the SYMBOL function accepts arrays for the symbol locations, and also for the LABEL_STRING, SYM_COLOR, and SYM_TEXT properties. This allows you to create an unlimited number of symbols with a single call. For examples see the <a href="Reference Material/S/SYMBOL.htm">SYMBOL function</a>.</p>
+        <h3>New BACKGROUND_COLOR and BACKGROUND_TRANSPARENCY Properties</h3>
+        <p>New BACKGROUND_COLOR and BACKGROUND_TRANSPARENCY properties have been added to the graphics functions. For example, setting the BACKGROUND_COLOR property on the PLOT function will change the background of the region containing the plot. Setting the background color of a 3D graphic (such as a SURFACE) will add in "walls" of that color that sit behind the graphic. Setting the background color on the WINDOW will change the background of the entire window. For graphics, the BACKGROUND_TRANSPARENCY can be used to change the opacity of the background color. For example:</p>
+        <p class="Code">p = PLOT3D(/TEST, BACKGROUND_COLOR='lemon chiffon', $</p>
+        <p class="Code"> &#160;&#160;AXIS_STYLE=2, DEPTH_CUE=[0,1])</p>
+        <p class="Code">p.window.BACKGROUND_COLOR = 'lavender'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">
+            <img src="Resources/Images/backgroundcolor_idl82.png" />
+        </p>
+        <h3>New Erase Method for Graphics Windows</h3>
+        <p>A new ::Erase method has been added to the graphics window object. The Erase method clears out the contents of the window, but does not close the window. This allows you to create new graphics within an existing window, and without the overhead of recreating the window. An optional COLOR keyword lets you change the background color after the erase. For details see the <a href="Reference Material/W/WINDOW.htm">WINDOW function</a>.</p>
+        <h3>New CLIP Property for all Graphics Functions</h3>
+        <p>A new CLIP property has been added to all graphics functions. The default is CLIP=1, which causes the graphics object to be clipped when it extends outside of the dataspace range. If you set CLIP=0 then no clipping will occur. This property is ignored for objects that are in the annotation layer instead of in the dataspace.</p>
+        <h3>New DejaVuSans TruType Font</h3>
+        <p>A new TrueType font has been added to the IDL distribution. The DejaVuSans font contains numerous Unicode mathematical symbols, which are available either through their Unicode numbers or as TeX commands via the <a href="Reference Material/T/TEXT.htm">TEXT function</a>:</p>
+        <p>
+            <img src="Resources/Images/miscSymbols.png" />
+        </p>
+        <p>This font is now available for Direct Graphics, Object Graphics, and the Graphics functions. The Embedded Formatting Commands have been changed so that !10 now selects this font instead of the Symbol font. For examples of the new characters see <a href="Reference Material/S/SHOWFONT.htm">SHOWFONT</a> and the <a href="Reference Material/T/TEXT.htm">TEXT function</a>.</p>
+        <h3>New LABEL_FORMAT, LATITUDES, and LONGITUDES Properties for MAPGRID Function</h3>
+        <p>A new LABEL_FORMAT property has been added to the <a href="Reference Material/M/MAPGRID.htm">MAPGRID function</a>. The label format can be set to an IDL function name, and allows you to create custom labels for the longitude and latitude grid lines on a map.</p>
+        <p>The LATITUDES and LONGITUDES properties allow you to retrieve the MAPGRIDLINE child objects from the MAPGRID object. You can then control all of the display properties for each individual grid line.</p>
+        <p>For details see the <a href="Reference Material/M/MAPGRID.htm">MAPGRID function</a>.</p>
+        <h3>New COLORBAR Properties for Discrete and Custom Colorbars</h3>
+        <p>
+            <img src="Resources/Images/colorbar_contour.png" />
+        </p>
+        <p>The <a href="Reference Material/C/COLORBAR.htm">COLORBAR function</a> now supports discrete colorbars for use with the CONTOUR function. When you create a Colorbar from a Contour plot, the colorbar will automatically have discrete color boxes, one for each contour level. In addition, the COLORBAR function has the following new properties: RANGE, RGB_TABLE, TAPER, and TEXT_ORIENTATION. Together with the existing TICKNAME property, you can define your own custom colorbars (either continuous or discrete).</p>
+        <p>As an example of discrete colorbars with contour plots:</p>
+        <p class="Code">file = FILEPATH('convec.dat', $</p>
+        <p class="Code">&#160;&#160;&#160;SUBDIR=['examples', 'data'])</p>
+        <p class="Code">z = READ_BINARY(file,DATA_DIMS=[248,248])</p>
+        <p class="Code">index = [0,30,60,90,120,150,220]</p>
+        <p class="Code">c1 = CONTOUR(z, /FILL, ASPECT_RATIO=1, DIM=[300,500], $</p>
+        <p class="Code">&#160;&#160;&#160;RGB_TABLE=39, RGB_INDICES=index, C_VALUE=index, $</p>
+        <p class="Code">&#160;&#160;&#160;LAYOUT=[1,2,1], AXIS_STYLE=0, MARGIN=0)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a discrete colorbar with vertical orientation.</p>
+        <p class="Code">; The ends are automatically tapered for a filled contour.</p>
+        <p class="Code">cb = COLORBAR(TARGET=c1, TITLE='Convection', /BORDER, $</p>
+        <p class="Code">&#160;&#160;&#160;ORIENTATION=1, TEXTPOS=1, POSITION=[0.8,0.55,0.85,0.95])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">c2 = CONTOUR(z, C_THICK=2, ASPECT_RATIO=1, /CURRENT, $</p>
+        <p class="Code">&#160;&#160;&#160;RGB_TABLE=39, RGB_INDICES=index, C_VALUE=index, $</p>
+        <p class="Code">&#160;&#160;&#160;LAYOUT=[1,2,2], AXIS_STYLE=0, MARGIN=0)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a discrete colorbar with vertical orientation.</p>
+        <p class="Code">; Labels are centered on the colors for a line contour.</p>
+        <p class="Code">cb = COLORBAR(TARGET=c2, TITLE='Convection', /BORDER, $</p>
+        <p class="Code">&#160;&#160;&#160;ORIENTATION=1, TEXTPOS=1, POSITION=[0.8,0.05,0.85,0.45])</p>
+        <h3>LEGEND Now Supports Vector Plots</h3>
+        <p>
+            <img src="Resources/Images/legend_vector.png" />
+        </p>
+        <p>The <a href="Reference Material/L/LEGEND.htm">LEGEND function</a> now allows you to add a legend to a <a href="Reference Material/V/VECTOR.htm">VECTOR plot</a>. In addition, you can now retrieve the individual legend items and set properties on those objects, including the legend label, the sample vector magnitude (for vector plots), the sample line length (for line plots), and the text color. For example:</p>
+        <p class="Code">; Set up the map projection, grid, and continents.</p>
+        <p class="Code">m = Map('Equirectangular', LIMIT=[0,-150,60,-45], $</p>
+        <p class="Code">&#160;&#160;&#160;LABEL_POSITION=0, COLOR='light gray', LABEL_COLOR='black')</p>
+        <p class="Code">m1 = MapContinents(FILL_COLOR='light gray')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Read the wind data, create a vector plot</p>
+        <p class="Code">RESTORE, FILEPATH('globalwinds.dat', SUBDIR=['examples','data'])</p>
+        <p class="Code">v = Vector(u, v, x, y, /OVERPLOT, LENGTH_SCALE=2)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add the legend</p>
+        <p class="Code">l = Legend(SAMPLE_MAGNITUDE=10, UNITS='$m s^{-1}$', $</p>
+        <p class="Code">&#160;&#160;&#160;POSITION=m.MapForward(-45,61), /DATA, $</p>
+        <p class="Code">&#160;&#160;&#160;VERTICAL_ALIGNMENT='bottom')</p>
+        <p>For details see the <a href="Reference Material/L/LEGEND.htm">LEGEND function</a>.</p>
+        <h3>How to Use IDL&#160;Graphics</h3>
+        <p>The IDL 8.2 Help system provides a new section on Image Analysis, as well as new examples of how to use filtering and other features that were traditionally used in Direct and Object Graphics.</p>
+        <p>&#160;</p>
+        <h2 class="API">Widgets</h2>
+        <h3>Updated Buttons</h3>
+        <p>Widgets on Microsoft Windows oplatforms have a more modern appearance, using rounded edges for bitmap buttons.</p>
+        <h3>Alpha Channel</h3>
+        <p>Widgets can now use 32-bit (RGBA) images for bitmap buttons. See <a href="Reference Material/W/WIDGET_BUTTON.htm">WIDGET_BUTTON</a> and <a href="Reference Material/W/WIDGET_TREE.htm">WIDGET_TREE</a> for complete information.</p>
+        <h3>WIDGET_TREE&#160;Checkboxes</h3>
+        <p>Checkboxes have been added to tree widgets in this release. The checkbox functionality is accessed via the "checkbox" family of keywords. The tree widget must have checkboxes enabled in order for the nodes to have checkboxes. This can be set only at creation and cannot be controlled later. However, the state of each node can be set at any time, either programmatically or by the user clicking on a checkbox. Leaf nodes can have values of 0 (unchecked) or 1 (checked). Folder nodes can have values of 0 (unchecked), 1 (checked) or 2 (mixed). The "mixed" state is intended for folder nodes that have at least one but not all child nodes either checked or mixed. See <a href="Reference Material/W/WIDGET_TREE.htm">WIDGET_TREE</a> for more information.</p>
+        <h3>SENSITIVE Keyword Change</h3>
+        <p>The SENSITIVE keyword to <a href="Reference Material/W/WIDGET_CONTROL.htm">WIDGET_CONTROL</a> now dynamically updates node sensitivity.</p>
+        <h2 class="API">Workbench</h2>
+        <h3>Duplicate File Names</h3>
+        <p>The IDL Workbench now automatically checks for duplicate routine names and displays a warning icon at the relevant code line, and in the Problems View. There is also a preference setting that allows you to control this behavior.</p>
+        <h3>Updates to the IDL&#160;Build Properties Page</h3>
+        <p>The Project build properties have been streamlined. The difference between Default and Custom builds has been removed, and several of the options have been simplified. For details, see <a href="Creating IDL Programs/IDL Projects/IDLBuildProperties.htm">IDL Build Properties</a>.</p>
+        <h3>ENVI&#160;Extension Wizard</h3>
+        <p>You can build custom ENVI tools using the IDL Workbench. Use the <a href="Creating IDL Programs/Extending ENVI with IDL.htm">ENVI Extension Wizard</a> to build tools that appear in the ENVI Toolbox.</p>
+        <h3>Font Size Keyboard Shortcuts</h3>
+        <p>In the IDL Workbench, you can now use &lt;Ctrl&gt;+ and &lt;Ctrl&gt;– to increase or decrease the font size in the Editor and the IDL Console.</p>
+        <h3>Support for Drop-in Plugins</h3>
+        <p>The IDL Workbench now provides support for the Eclipse dropins folder. The dropins folder is located within the system-specific bin directory of your IDL installation. New plugins can be dropped into this folder to provide additional functionality for the IDL Workbench. For details see the README file within the dropins folder.</p>
+        <h2 class="API">Miscellaneous</h2>
+        <h3>PDF&#160;Documentation</h3>
+        <p>The documentation that is provided in PDF is now listed in the Help Contents under <a href="OtherTopics.htm">Additional Topics</a>.</p>
+        <h3>New NULL&#160;Keyword to ISA</h3>
+        <p>The <a href="Reference Material/I/ISA.htm">ISA function</a> now has a NULL keyword, that returns 1 (TRUE) if the input variable is equal to <a href="Creating IDL Programs/Components of the IDL Language/The_Null_Variable.htm">!NULL</a>, and 0 (FALSE) otherwise. This keyword allows you to distinguish between undefined variables and !NULL variables.</p>
+        <h3>New NULL Functionality for IDL_Container</h3>
+        <p>The <a href="Reference Material/I/IDL_Container__Get.htm">IDL_Container::Get</a> method now has a NULL keyword. If this keyword is set, and no objects will be returned, then !NULL is returned instead of -1. In addition, the <a href="Reference Material/I/IDL_Container__Remove.htm">IDL_Container::Remove</a> method has been enhanced so that it now quietly returns if !NULL is passed in. With these changes, you can now remove all objects of a certain type from the container without having to do any error checking. For example:</p>
+        <p class="Code">obj-&gt;Remove, obj-&gt;Get(/ALL, ISA='MyClass', /NULL)</p>
+        <p class="Code">&#160;</p>
+        <h3>Support for Large TIFF&#160;Files</h3>
+        <p>IDL now supports reading and writing TIFF files larger than 4 GB on all platforms, including 32-bit systems. There are no API changes--if you create a TIFF file larger than 4 GB, IDL automatically creates a file with the correct BigTIFF header.</p>
+        <h3>New Help for Video</h3>
+        <p>For detailed information on how to use IDLffVideoWrite, see the new help section <a href="Creating IDL Programs/Application Programming/CreatingVideo.htm">Creating Video</a>.</p>
+        <h3>Support for JSON (JavaScript Object Notation)</h3>
+        <p>The new <a href="Reference Material/J/JSON_PARSE.htm">JSON_PARSE</a> and <a href="Reference Material/J/JSON_SERIALIZE.htm">JSON_SERIALIZE</a> functions allow you to convert files or IDL variables into JSON strings, and vice versa. JSON (JavaScript Object Notation) is a lightweight data-interchange format, that is designed to be easy for humans to read and write, and for machines to parse and generate. Details on the JSON format can be found at <a href="http://www.json.org/">http://www.json.org</a>.</p>
+        <h3>New List::Where and Hash::Where Methods</h3>
+        <p>The List::FindValue and Hash::FindValue methods have been renamed to <a href="Reference Material/L/LIST.htm">List::Where</a> and <a href="Reference Material/H/HASH.htm">Hash::Where</a>, for better consistency with the rest of IDL. The FindValue methods will still work, but are no longer documented and should not be used in new code.</p>
+        <h2 class="API">IDL 8.0 Functionality</h2>
+        <p>If you are new to IDL or upgrading from an older version, see also:       <a href="WhatsNew_in_8_0.htm">What's New in IDL&#160;8.0</a> and <a href="WhatsNew_in_8_1.htm">What's New in IDL 8.1</a><a href="WhatsNew_in_8_0.htm" style="font-weight: bold;">&#160;</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

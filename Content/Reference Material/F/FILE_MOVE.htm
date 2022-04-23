@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: F">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>FILE_MOVE </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="F_list.htm">Routines: F</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">FILE_MOVE</span>
+        </div>
+        <h1 class="Routine"><a name="F_848155245_894357"></a><a name="kanchor926"></a><a name="F_848155245_37547"></a><a name="kanchor927"></a>FILE_MOVE </h1>
+        <p>The FILE_MOVE procedure renames files and directories, effectively moving them to a new location. The moved files retain their permission and ownership attributes. Within a given filesystem or volume, FILE_MOVE does not copy file data. Rather, it simply changes the file names by updating the directory structure of the filesystem. This operation is fast and safe, but is only possible within a single filesystem. Attempts to move a regular file from one filesystem to another are carried out by copying the file using FILE_COPY, and then deleting the original file. It is an error to attempt to use FILE_MOVE to move a directory from one filesystem to another.</p>
+        <p>Rename the file <code>backup.dat</code> to <code>primary.dat</code> in the current working directory:</p>
+        <p class="Code">FILE_MOVE, 'backup.dat', 'primary.dat'</p>
+        <p>Create a subdirectory named <code>BACKUP</code> in the current working directory and move all <code>.pro</code> files, <code>makefile</code>, and <code>mydata.dat</code> into it:</p>
+        <p class="Code">FILE_MKDIR, 'BACKUP'</p>
+        <p class="Code">FILE_MOVE, ['*.pro', 'makefile', 'mydata.dat'], 'BACKUP'</p>
+        <h2 class="API"><a name="F_848155245_894371"></a><a name="F_848155245_894371_PageTOC_FILE_MOVE_"></a>Syntax</h2>
+        <p class="Syntax">FILE_MOVE, <i>SourcePath</i>, <i>DestPath</i> [,&#160;/<a href="#F_848155245_906590" class="selected">ALLOW_SAME</a>] [,&#160;/<a href="#F_848155245_906592" class="selected">NOEXPAND_PATH</a>] [,&#160;/<a href="#F_848155245_906597" class="selected">OVERWRITE</a>] [,&#160;/<a href="#F_848155245_906599" class="selected">REQUIRE_DIRECTORY</a>] [,&#160;/<a href="#F_848155245_906601" class="selected">VERBOSE</a>]</p>
+        <h2 class="API"><a name="F_848155245_894373"></a><a name="F_848155245_894373_PageTOC_FILE_MOVE_"></a>Arguments</h2>
+        <h3 class="Argument">SourcePath</h3>
+        <p>A scalar string or string array containing the names of the files or directories to be moved. </p>
+        <h3 class="Argument">DestPath</h3>
+        <p>A scalar string or string array containing the names of the destinations to which the files and directories specified by <i>SourcePath</i> are to be moved. If more than one file is to be moved to a given destination, that destination must exist and be a directory.</p>
+        <h2 class="API"><a name="F_848155245_894378"></a><a name="F_848155245_894378_PageTOC_FILE_MOVE_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="F_848155245_906590"></a><a name="F_848155245_906590_Keywords_FILE_MOVE__"></a>ALLOW_SAME</h3>
+        <p>Attempting to move a file on top of itself by specifying the same file for <i>SourcePath</i> and <i>DestPath</i> is usually considered to be an error. If the ALLOW_SAME keyword is set, no renaming is done and the operation is considered to be successful.</p>
+        <h3 class="Keyword"><a name="F_848155245_906592"></a><a name="F_848155245_906592_Keywords_FILE_MOVE__"></a>NOEXPAND_PATH</h3>
+        <p>Set this keyword to cause FILE_MOVE to use <i>SourcePath</i> and <i>DestPath</i> exactly as specified, without expanding any wildcard characters or environment variable names included in the paths. See <a href="FILE_SEARCH.htm#F_848155245_893545">FILE_SEARCH</a> for details on path expansion.</p>
+        <h3 class="Keyword"><a name="F_848155245_906597"></a><a name="F_848155245_906597_Keywords_FILE_MOVE__"></a>OVERWRITE</h3>
+        <p>Set this keyword to allow FILE_MOVE to overwrite an existing file.</p>
+        <h3 class="Keyword"><a name="F_848155245_906599"></a><a name="F_848155245_906599_Keywords_FILE_MOVE__"></a>REQUIRE_DIRECTORY</h3>
+        <p>Set this keyword to cause FILE_MOVE to require that <i>DestPath</i> exist and be a directory.</p>
+        <h3 class="Keyword"><a name="F_848155245_906601"></a><a name="F_848155245_906601_Keywords_FILE_MOVE__"></a>VERBOSE</h3>
+        <p>Set this keyword to cause FILE_MOVE to issue an informative message for every file move operation it carries out.</p>
+        <h2 class="API"><a name="F_848155245_906607"></a><a name="F_848155245_93802"></a>Rules Used by FILE_MOVE</h2>
+        <p>The following rules govern how FILE_MOVE operates:</p>
+        <ul>
+            <li value="1">The arguments to FILE_MOVE can be scalar or array. If both arguments are arrays, they must contain the same number of elements, and the files are moved in pairs, with each file from <i>SourcePath</i> being renamed to the corresponding file in the <i>DestPath</i>. If <i>SourcePath</i> is an array and <i>DestPath</i> is a scalar, all files in <i>SourcePath</i> are renamed to the single location given by <i>DestPath</i>, which must exist and be a directory.</li>
+            <li value="2">Elements of <i>SourcePath</i> may use wildcard characters (as accepted by the <a href="FILE_SEARCH.htm#F_848155245_893545">FILE_SEARCH</a> function) to specify multiple files. All the files matched for that element of <i>SourcePath</i> are renamed to the location specified by the corresponding element of <i>DestPath</i>. If multiple files are renamed to a single element of <i>DestPath</i>, that element must exist and be a directory.</li>
+            <li value="3">If a file specified in <i>DestPath</i> does not exist, the corresponding file from <i>SourcePath</i> is moved using the name specified by <i>DestPath</i>. Any parent directories to the filename specified by <i>DestPath</i> must already exist.</li>
+            <li value="4">If <i>DestPath</i> names an existing regular file, FILE_MOVE will not overwrite it, unless the OVERWRITE keyword is specified.</li>
+            <li value="5">If <i>DestPath</i> names an existing directory and <i>SourcePath</i> names a regular (non-directory) file, the source file is moved into the specified directory.</li>
+            <li value="6">If <i>DestPath</i> specifies an existing directory and <i>SourcePath</i> also names a directory, FILE_MOVE checks for the existence of a subdirectory of <i>DestPath</i> with the same name as the source directory. If this subdirectory does not exist, the source directory is moved to the specified location. If the subdirectory does exist, an error is issued, and the rename operation is not carried out.</li>
+        </ul>
+        <h2 class="API"><a name="F_848155245_894395"></a><a name="F_848155245_894395_PageTOC_FILE_MOVE_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.6</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="F_848155245_894397"></a><a name="F_848155245_894397_PageTOC_FILE_MOVE_"></a>See Also</h2>
+        <p><a href="../C/COPY_LUN.htm#C_854643309_1058915">COPY_LUN</a>, <a href="FILE_COPY.htm#F_848155245_894462">FILE_COPY</a>, <a href="FILE_LINK.htm#F_848155245_894186">FILE_LINK</a>, <a href="../Functional List of IDL Routines/Input_Output.htm#funclisting_2438760872_1213961">General File Access&#160;</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

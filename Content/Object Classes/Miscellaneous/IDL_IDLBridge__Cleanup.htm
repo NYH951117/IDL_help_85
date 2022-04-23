@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|Miscellaneous Object Classes|IDL_IDLBridge">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDL_IDLBridge::Cleanup</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_misc.htm">Miscellaneous Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDL_IDLBridge::Cleanup</span>
+        </div>
+        <h1 class="ObjMethod"><a name="objects_misc_904195448_1077067"></a><a name="objects_misc_904195448_23083"></a>IDL_IDLBridge::Cleanup</h1>
+        <p>
+            <MadCap:conditionalText data-mc-conditions="Reference Material.Online_Help_Only"><a href="#objects_misc_904195448_1077085" class="selected">Syntax</a> | <a href="#objects_misc_904195448_1077093" class="selected">Arguments</a></MadCap:conditionalText>
+            <MadCap:conditionalText data-mc-conditions="Reference Material.Online_Help_Only">| <a href="#objects_misc_904195448_1077096" class="selected">Keywords</a> | <a href="#objects_misc_904195448_1080906" class="selected">Examples</a> | <a href="#objects_misc_904195448_1077099" class="selected">Version History</a></MadCap:conditionalText>
+        </p>
+        <p>The IDL_IDLBridge::<a name="kanchor4021"></a>Cleanup procedure method performs all cleanup when the bridge object is destroyed. </p>
+        <p>A program should ensure that a child process executing a command asynchronously has been completed or aborted before the associated IDL_IDLBridge object is destroyed. If you have started a process by calling the <a href="IDL_IDLBridge__Execute.htm#objects_misc_904195448_1077268">IDL_IDLBridge::Execute</a> method with the NOWAIT keyword, you may want to wait for the process to become idle before destroying the bridge object. </p>
+        <p>When you call Cleanup, the following steps will occur:</p>
+        <ul>
+            <li value="1">If there is a currently executing asynchronous command, then <a href="IDL_IDLBridge__Abort.htm#objects_misc_904195448_1077116">IDL_IDLBridge::Abort</a> is called </li>
+            <li value="2">If there is a pending callback, then the <a href="IDL_IDLBridge__OnCallbac.htm#objects_misc_904195448_1091592">IDL_IDLBridge::OnCallback</a> method (and the <a href="IDL_IDLBridge_Properties.htm#objects_misc_904195448_1087185">CALLBACK</a> procedure) is called </li>
+            <li value="3">The child IDL process is destroyed </li>
+        </ul>
+        <h2 class="API"><a name="objects_misc_904195448_1077085"></a><a name="objects_misc_904195448_20031"></a>Syntax</h2>
+        <p class="Syntax"><i>Obj-&gt;</i>Cleanup</p>
+        <p>or</p>
+        <p class="Syntax"><i>Obj</i>-&gt;[<a href="IDL_IDLBridge.htm#objects_misc_904195448_1076300">IDL_IDLBridge</a>::]Cleanup</p>
+        <p>or</p>
+        <p class="Syntax">OBJ_DESTROY, <i>Obj</i></p>
+        <h2 class="API"><a name="objects_misc_904195448_1077093"></a><a name="objects_misc_904195448_91497"></a>Arguments</h2>
+        <p>None. </p>
+        <h2 class="API"><a name="objects_misc_904195448_1077096"></a><a name="objects_misc_904195448_34091"></a>Keywords</h2>
+        <p>None. </p>
+        <h2 class="API"><a name="objects_misc_904195448_1080906"></a><a name="objects_misc_904195448_82536"></a>Examples</h2>
+        <p>Ideally, a program should not destroy an IDL_IDLBridge object while an asynchronous command is busy. However, a cleanup method for child process that executes commands asynchronously should still include code to ensure an executing process is aborted or completed before it is destroyed. </p>
+        <p>For an IDL_IDLBridge object named oIDLBridge, use the following code to abort an executing process: </p>
+        <p class="Code">IF (oIDLBridge-&gt;Status() EQ 1)THEN oIDLBridge-&gt;Abort</p>
+        <p class="Code">OBJ_DESTROY, oIDLBridge</p>
+        <p>If you prefer to wait for the process to reach an idle state before destroying the bridge object, you can use code similar to the following: </p>
+        <p class="Code">WHILE (oIDLBridge-&gt;Status() NE 0) DO WAIT, 0.5</p>
+        <p class="Code">OBJ_DESTROY, oIDLBridge</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The <a href="IDL_IDLBridge__Status.htm#objects_misc_904195448_1077870">IDL_IDLBridge::Status</a> method returns status information for child processes executing commands asynchronously. A child process executing a command synchronously will only return a value of 0 (idle). </p>
+        <h2 class="API"><a name="objects_misc_904195448_1077099"></a><a name="objects_misc_904195448_80482"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Long Examples|Dynamic Visualizations">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Dynamic Surface Visualizations</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Long Examples</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Dynamic Surface Visualizations</span>
+        </div>
+        <h1>Dynamic Surface Visualizations</h1>
+        <p>The <a href="../../../Reference Material/S/SURFACE.htm">SURFACE</a> function's <i>Equation</i> argument (and the <a href="../../../Reference Material/P/PLOT.htm#EQUATION">EQUATION</a> property)  adds  flexibility to the creation of surface plots. This topic explores ways you can use the EQUATION property to create dynamic, interactive surface visualizations.</p>
+        <p>The <i>Equation</i> argument on the SURFACE function allows you to specify either a string giving an equation of <i>X</i> and <i>Y</i>, or the name of an IDL&#160;function that accepts <i>X</i> and <i>Y</i> as arguments. The result of the equation (or the function) should be a two-dimensional array of <i>Z</i> coordinates giving the surface heights.</p>
+        <ul>
+            <li value="1">If <i>Equation</i> is an expression, then IDL calls the <a href="../../../Reference Material/E/EXECUTE.htm">EXECUTE</a> function  once with the <i>X</i> and <i>Y</i> arrays. Note that in certain circumstances (such as the IDL Virtual Machine), you may not be able to use the EXECUTE function.</li>
+            <li value="2">If <i>Equation</i> is a function name, then <a href="../../../Reference Material/C/CALL_FUNCTION.htm">CALL_FUNCTION</a> is called once, with the <i>X</i> and <i>Y</i> arrays as input arguments. The function should return a two-dimensional result array.</li>
+        </ul>
+        <p>Once IDL creates the surface visualization, if you then programmatically adjust the surface <i>X</i> and <i>Y</i> ranges, IDL will automatically recompute the equation to cover the new range.</p>
+        <p>Since the <i>Equation</i> functionality on SURFACE is so similar to the CONTOUR function, we will skip the simple example in favor of a more complicated example using an IDL function.</p>
+        <h2>Using an Equation Function</h2>
+        <p>First, create a new IDL routine called <code>ex_surface_function</code> and save it in a file <code>ex_surface_function.pro</code> on IDL's path:</p>
+        <p class="Code">function ex_surface_function, x, y, userdata</p>
+        <p class="Code_Indented">z = x + !const.I*y</p>
+        <p class="Code_Indented">k = userdata.k</p>
+        <p class="Code_Indented">result = LambertW(z, k)</p>
+        <p class="Code_Indented">result = userdata.real ? Real_Part(result) : Imaginary(result)</p>
+        <p class="Code_Indented">result[WHERE(ABS(z) gt 5, /NULL)] = !values.d_nan</p>
+        <p class="Code_Indented">return, result</p>
+        <p class="Code">end</p>
+        <p>Note that we are passing in the "branch" parameter <i>k</i> and the real/imaginary flag in <code>USERDATA</code>, so that we can easily modify these parameters later.</p>
+        <p>Next, create our surface visualization by passing in the name of our equation and our specific userdata for each surface call:</p>
+        <p class="Code">s1 = SURFACE('ex_surface_function', STYLE=0, LAYOUT=[2,1,1], $</p>
+        <p class="Code_Indented">EQN_USERDATA={real:1, k:0}, EQN_SAMPLES=100, ZRANGE=[-4,2], $</p>
+        <p class="Code_Indented">ASPECT_RATIO=1)</p>
+        <p class="Code">s2 = SURFACE('ex_surface_function', STYLE=0, /OVERPLOT, $</p>
+        <p class="Code_Indented">EQN_USERDATA={real:1, k:1}, EQN_SAMPLES=100, COLOR='blue')</p>
+        <p class="Code">s3 = SURFACE('ex_surface_function', STYLE=0, /OVERPLOT, $</p>
+        <p class="Code_Indented">EQN_USERDATA={real:1, k:2}, EQN_SAMPLES=100, COLOR='green')</p>
+        <p class="Code">s4 = SURFACE('ex_surface_function', STYLE=0, /OVERPLOT, $</p>
+        <p class="Code_Indented">EQN_USERDATA={real:1, k:3}, EQN_SAMPLES=100, COLOR='red')</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">s5 = SURFACE('ex_surface_function', STYLE=0, LAYOUT=[2,1,2], $</p>
+        <p class="Code_Indented">EQN_USERDATA={real:0, k:0}, EQN_SAMPLES=100, /CURRENT, $</p>
+        <p class="Code_Indented">ASPECT_RATIO=1)</p>
+        <p class="Code">s6 = SURFACE('ex_surface_function', STYLE=0, /OVERPLOT, $</p>
+        <p class="Code_Indented">EQN_USERDATA={real:0, k:1}, EQN_SAMPLES=100, COLOR='blue')</p>
+        <p class="Code">s7 = SURFACE('ex_surface_function', STYLE=0, /OVERPLOT, $</p>
+        <p class="Code_Indented">EQN_USERDATA={real:0, k:2}, EQN_SAMPLES=100, COLOR='green')</p>
+        <p class="Code">s8 = SURFACE('ex_surface_function', STYLE=0, /OVERPLOT, $</p>
+        <p class="Code_Indented">EQN_USERDATA={real:0, k:3}, EQN_SAMPLES=100, COLOR='red')</p>
+        <p>This produces the following graphic:</p>
+        <p>
+            <img src="../../images/ex_surface_equation.png" />
+        </p>
+        <h2>Other Topics in this Series</h2>
+        <ul>
+            <li value="1"><a href="DynamicVis_Plot.htm">Dynamic Plot Visualizations</a>
+            </li>
+            <li value="2"><a href="DynamicVis_Contour.htm">Dynamic Contour Visualizations</a>
+            </li>
+        </ul>
+        <h2>See Also</h2>
+        <p><a href="../../../Reference Material/C/COLORBAR.htm">COLORBAR</a>, <a href="../../../Reference Material/S/SURFACE.htm">SURFACE</a>, <a href="../../../Reference Material/W/WINDOW.htm">WINDOW</a>, <a href="../../GraphicsEventHandler.htm">Graphics Event Handlers</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

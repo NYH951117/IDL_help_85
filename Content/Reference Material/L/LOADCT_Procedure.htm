@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: L">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>LOADCT</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="L_list.htm">Routines: L</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">LOADCT Procedure</span>
+        </div>
+        <h1 class="Routine"><a name="dg_routines_3604229493_916202"></a><a name="kanchor1698"></a><a name="dg_routines_3604229493_61192"></a>LOADCT</h1>
+        <p>The LOADCT procedure loads one of the predefined IDL <a href="../../LoadingDefaultColorTables.htm">color tables</a>. These color tables are defined in the file <code>colors1.tbl</code>, located in the <code>\resource\colors</code> subdirectory of the main IDL directory, unless the FILE keyword is specified. The selected colortable is loaded into the COLORS common block as both the “current” and “original” colortable. If the current device has fewer than 256 colors, the color table data is interpolated to cover the number of colors in the device.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>loadct.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h3><a name="dg_routines_3604229493_916228"></a>Obtaining the Color Tables</h3>
+        <p>All of the IDL color-table procedures maintain the current color table in a common block called COLORS, defined as follows:</p>
+        <p class="Code">COMMON COLORS, R_orig, G_orig, B_orig, R_curr, G_curr, B_curr</p>
+        <p>The variables are integer vectors of length equal to the number of color indices. Your program can access these variables by defining the common block. The convention is that routines that modify the current color table should read it from R_orig, G_orig, and B_orig, then load the color table using TVLCT and leave the resulting color table in R_curr, G_curr, and B_curr.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_916282"></a><a name="dg_routines_3604229493_26903"></a>Examples </h2>
+        <p>The following example introduces using LOADCT.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>If you are running IDL on a TrueColor display, set <code>DEVICE, DECOMPOSED = 0</code> before your first color table related routine is used within an IDL session or program. </p>
+        <ol>
+            <li value="1">
+                <p>View a list of IDL’s tables and their related indices by calling LOADCT without an argument:</p>
+                <p class="Code">LOADCT</p>
+                <p>The list of color tables appears in the Output Log:</p>
+                <p>When running LOADCT without an argument, it will prompt you to enter the number of one of the color tables at the IDL command line. </p>
+            </li>
+            <li value="2">
+                <p>Enter in the number 5 at the <code>Enter table number:</code> prompt:</p>
+                <p class="Code">Enter table number: 5</p>
+                <p>The following text is displayed in the Output Log:</p>
+                <p class="Code">% LOADCT: Loading table STD GAMMA-II</p>
+                <p>If you already know the number of the pre-defined color table you want, you can load a color table by providing that number as the first input argument to LOADCT.</p>
+            </li>
+            <li value="3">
+                <p>Load in color table number 13 (RAINBOW):</p>
+                <p class="Code">LOADCT, 13</p>
+                <p>The following text is displayed in the Output Log:</p>
+                <p class="Code">% LOADCT: Loading table RAINBOW</p>
+            </li>
+            <li value="4">
+                <p>View the color table in a simple image display:</p>
+                <p class="Code">TV, DIST(300)</p>
+            </li>
+        </ol>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>To see the organization of the colors associated with each color table, use XLOADCT. </p>
+        <h2 class="API"><a name="dg_routines_3604229493_916234"></a><a name="dg_routines_3604229493_759292_PageTOC_LOADCT_"></a>Syntax</h2>
+        <p class="Syntax">LOADCT [,&#160;<i>Table</i>] [,&#160;<a href="#dg_routines_3604229493_916261" class="selected">BOTTOM</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_916264" class="selected">FILE</a>=<i>string</i>] [,&#160;<a href="#dg_routines_3604229493_916270" class="selected">GET_NAMES</a>=<i>variable</i>] [,&#160;<a href="#dg_routines_3604229493_916273" class="selected">NCOLORS</a>=<i>value</i>] [,&#160;<a href="#dg_routines_3604229493_916276" class="selected">RGB_TABLE</a>=value] [,&#160;/<a href="#dg_routines_3604229493_916279" class="selected">SILENT</a>]</p>
+        <h2 class="API"><a name="dg_routines_3604229493_916255"></a><a name="dg_routines_3604229493_759294_PageTOC_LOADCT_"></a>Arguments</h2>
+        <h3 class="Argument">Table</h3>
+        <p>The number of the pre-defined color table to load. (See <a href="../../LoadingDefaultColorTables.htm">Loading Default Color Tables</a>.) If this value is omitted, a menu of the available tables is printed and the user is prompted to enter a table number.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_916259"></a><a name="dg_routines_3604229493_759297_PageTOC_LOADCT_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_916261"></a><a name="dg_routines_3604229493_168327_Keywords_LOADCT__"></a>BOTTOM</h3>
+        <p>The first color index to use. LOADCT will use color indices from BOTTOM to BOTTOM+NCOLORS-1. The default is BOTTOM=0.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_916264"></a><a name="dg_routines_3604229493_759299_Keywords_LOADCT__"></a>FILE</h3>
+        <p>Set this keyword to the name of a colortable file to be used instead of the file <code>colors1.tbl</code>. See <a href="../M/MODIFYCT_Procedure.htm">MODIFYCT</a> to create and modify colortable files.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_916270"></a><a name="dg_routines_3604229493_759305_Keywords_LOADCT__"></a>GET_NAMES</h3>
+        <p>Set this keyword to a named variable in which the names of the color tables are returned as a string array. No changes are made to the color table.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_916273"></a><a name="dg_routines_3604229493_759308_Keywords_LOADCT__"></a>NCOLORS</h3>
+        <p>The number of colors to use. The default is all available colors (this number is stored in the system variable !D.TABLE_SIZE).</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_916276"></a><a name="dg_routines_3604229493_19576"></a>RGB_TABLE</h3>
+        <p>Set this keyword to a named variable in which to return the desired <a href="../../LoadingDefaultColorTables.htm">color table</a> as an [NCOLORS, <i>3</i>] array. If this keyword is set, then the color table is not loaded into the display, but is simply returned to the user. In addition, if RGB_TABLE is set then SILENT is also set to true.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_916279"></a><a name="dg_routines_3604229493_759311_Keywords_LOADCT__"></a>SILENT</h3>
+        <p>If this keyword is set, the Color Table message is suppressed.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_916302"></a><a name="dg_routines_3604229493_928161_PageTOC_LOADCT_"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added the RGB_TABLE keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dg_routines_3604229493_916314"></a><a name="dg_routines_3604229493_952411_PageTOC_LOADCT_"></a>See Also</h2>
+        <p><a href="../M/MODIFYCT_Procedure.htm">MODIFYCT</a>, <a href="../X/XLOADCT_Procedure.htm">XLOADCT</a></p>
+        <p>&#160;</p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

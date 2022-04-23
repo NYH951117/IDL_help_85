@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|Java Import Bridge">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Accessing URLs Example</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Java Import Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Accessing URLs Example</span>
+        </div>
+        <h1><a name="Accessing_URLs_Example"></a><a name="kanchor5409"></a>Accessing URLs Example</h1>
+        <p>This example finds and reads a given URL, which is contained in a file named <i>URLReader.java</i>. IDL then accesses this data through the URLRead routine, which is in a file named <i>urlread.pro</i>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>These files are located in the <i>resource/bridges/import/java/examples</i> directory of the IDL distribution. Run this example procedure by entering <i>urlread</i> at the IDL command prompt or view the file in an IDL Editor window by entering <i>.EDIT urlread.pro</i>.</p>
+        <p>The <i><a name="kanchor5410"></a>URLReader.java</i> file contains the following text for reading a given URL in Java:</p>
+        <p class="Code">import java.io.*;</p>
+        <p class="Code">import java.net.*;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">public class URLReader</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">private ByteArrayOutputStream m_buffer;</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">// ********************************************************</p>
+        <p class="Code_Indented">//</p>
+        <p class="Code_Indented">// Constructor.	Create the reader</p>
+        <p class="Code_Indented">//</p>
+        <p class="Code_Indented">// ********************************************************</p>
+        <p class="Code_Indented">public URLReader()</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented">m_buffer = new ByteArrayOutputStream();</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">// ********************************************************</p>
+        <p class="Code_Indented">//</p>
+        <p class="Code_Indented">// readURL: read the data from the URL into our buffer</p>
+        <p class="Code_Indented">//</p>
+        <p class="Code_Indented">//	returns: number of bytes read (0 if invalid URL)</p>
+        <p class="Code_Indented">//</p>
+        <p class="Code_Indented">// NOTE: reading a new URL clears out the previous data</p>
+        <p class="Code_Indented">//</p>
+        <p class="Code_Indented">// ********************************************************</p>
+        <p class="Code_Indented">public int readURL(String sURL)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">URL url;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">InputStream in = null;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">m_buffer.reset();	// reset our holding buffer to 0 bytes</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int total_bytes = 0;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">byte[] tempBuffer = new byte[4096];</p>
+        <p class="Code_Indented" style="text-indent: 20px;">try</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">url = new URL(sURL);</p>
+        <p class="Code_Indented" style="text-indent: 40px;">in = url.openStream();</p>
+        <p class="Code_Indented" style="text-indent: 40px;">int bytes_read;</p>
+        <p class="Code_Indented" style="text-indent: 40px;">while ((bytes_read = in.read(tempBuffer)) != -1)</p>
+        <p class="Code_Indented" style="text-indent: 40px;">{</p>
+        <p class="Code_Indented" style="text-indent: 60px;">m_buffer.write(tempBuffer, 0, bytes_read);</p>
+        <p class="Code_Indented" style="text-indent: 60px;">total_bytes += bytes_read;</p>
+        <p class="Code_Indented" style="text-indent: 40px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">catch (Exception e)</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">System.err.println("Error reading URL: "+sURL);</p>
+        <p class="Code_Indented" style="text-indent: 40px;">total_bytes = 0;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">finally</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">try</p>
+        <p class="Code_Indented" style="text-indent: 40px;">{</p>
+        <p class="Code_Indented" style="text-indent: 60px;">in.close();</p>
+        <p class="Code_Indented" style="text-indent: 60px;">m_buffer.close();</p>
+        <p class="Code_Indented" style="text-indent: 40px;">}</p>
+        <p class="Code_Indented" style="text-indent: 40px;">catch (Exception e) {}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">return total_bytes;</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">// ********************************************************</p>
+        <p class="Code_Indented">//</p>
+        <p class="Code_Indented">// getData: return the array of bytes</p>
+        <p class="Code_Indented">//</p>
+        <p class="Code_Indented">// ********************************************************</p>
+        <p class="Code_Indented">public byte[] getData()</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">return m_buffer.toByteArray();</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">// ********************************************************</p>
+        <p class="Code_Indented">//</p>
+        <p class="Code_Indented">// main: reads URL and reports # of bytes read</p>
+        <p class="Code_Indented">//</p>
+        <p class="Code_Indented">//	Usage: java URLReader &lt;URL&gt;</p>
+        <p class="Code_Indented">//</p>
+        <p class="Code_Indented">// ********************************************************</p>
+        <p class="Code_Indented">public static void main(String[] args)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">if (args.length != 1)</p>
+        <p class="Code_Indented" style="text-indent: 40px;">System.err.println("Usage: URLReader &lt;URL&gt;");</p>
+        <p class="Code_Indented" style="text-indent: 20px;">else</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">URLReader o = new URLReader();</p>
+        <p class="Code_Indented" style="text-indent: 40px;">int b = o.readURL(args[0]);</p>
+        <p class="Code_Indented" style="text-indent: 40px;">System.out.println("bytes="+b);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">}</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code">}</p>
+        <p>The <i>urlread.pro</i> file contains the following text for inputting an URL as an IDL string and then accessing its data within IDL:</p>
+        <p class="Code">FUNCTION URLRead, sURLName</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">; Create an URLReader.</p>
+        <p class="Code_Indented">oJURLReader = OBJ_NEW('IDLjavaObject$URLReader', 'URLReader')</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Read the URL data into our Java-side buffer.</p>
+        <p class="Code_Indented">nBytes = oJURLReader-&gt;ReadURL(sURLName)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">;PRINT, 'Read ', nBytes, ' bytes'</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Pull the data into IDL.</p>
+        <p class="Code_Indented">byteArr = oJURLReader-&gt;GetData()</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Cleanup Java object.</p>
+        <p class="Code_Indented">OBJ_DESTROY, oJURLReader</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Return the data.</p>
+        <p class="Code_Indented">RETURN, byteArr</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>After saving and compiling the above files (<i>URLReader.java</i> in Java and <i>urlread.pro</i> in IDL), you can run the URLRead routine in IDL. This routine is a function with one input argument, which should be a IDL string containing an URL. For example:</p>
+        <p class="Code">address = 'http://www.ittvis.com'</p>
+        <p class="Code">data = URLRead(address)</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

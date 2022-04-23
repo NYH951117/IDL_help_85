@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Data Types">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Operations on Pointers</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDL_Data_Types.htm">Data Types</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Operations on Pointers</span>
+        </div>
+        <h1><a name="pointers_3224653378_998079"></a><a name="pointers_3224653378_16275"></a>Operations on Pointers</h1>
+        <p>Pointer <a name="kanchor4528"></a>variables are not directly usable by many of the operators, functions, or procedures provided by IDL. You cannot, for example, do arithmetic on them or plot them. You can, of course, do these things with the heap variables referenced by such pointers, assuming that they contain appropriate data for the task at hand. Pointers exist to allow the construction of dynamic data structures that have lifetimes that are independent of the program scope they are created in.</p>
+        <p>There are 4 IDL operators that work with pointer variables: assignment, dereference, EQ, and NE. The remaining operators (addition, subtraction, etc.) do not make any sense for pointer types and are not defined.</p>
+        <p>Many non-computational functions and procedures in IDL do work with pointer variables. Examples are SIZE, N_ELEMENTS, HELP, and PRINT. It is worth noting that the only I/O allowed directly on pointer variables is default formatted output, where they are printed as a symbolic description of the heap variable they point at. This is merely a debugging aid for the IDL programmer—input/output of pointers does not make sense in general and is not allowed. Please note that this does <i>not</i> imply that I/O on the contents of non-pointer data held in heap variables is not allowed. Passing the contents of a heap variable that contains non-pointer data to the PRINT command is a simple example of this type of I/O.</p>
+        <h2 class="API"><a name="pointers_3224653378_22214"></a>Assignment</h2>
+        <p><a name="kanchor4529"></a>
+            Assignment works in the expected manner—assigning a pointer to a variable gives you another variable with the same pointer. Hence, after executing the statements:</p>
+        <p class="Code">A = PTR_NEW(FINDGEN(10))</p>
+        <p class="Code">B = A</p>
+        <p class="Code">HELP, A, B</p>
+        <p>A and B both point at the same heap variable and we see the output:</p>
+        <p class="Code">A               POINTER  = &lt;PtrHeapVar1&gt;</p>
+        <p class="Code">B               POINTER  = &lt;PtrHeapVar1&gt;</p>
+        <h2 class="API"><a name="pointers_3224653378_998213"></a><a name="pointers_3224653378_51510"></a>Dereference</h2>
+        <p>In order to get at the contents of a heap variable referenced by a pointer variable, you must use the <i><a name="kanchor4530"></a>dereference operator</i>, which is * (the asterisk). The dereference operator precedes the variable dereferenced. For example, if you have entered the above assignments of the variables A and B:</p>
+        <p class="Code">PRINT, *B</p>
+        <p>IDL prints:</p>
+        <p class="Code">0.00000&#160;&#160;&#160;1.00000&#160;&#160;&#160;2.00000&#160;&#160;&#160;3.00000&#160;&#160;&#160;4.00000&#160;&#160;&#160;5.00000</p>
+        <p class="Code">6.00000&#160;&#160;&#160;7.00000&#160;&#160;&#160;8.00000&#160;&#160;&#160;9.00000</p>
+        <p>That is, IDL prints the contents of the heap variable pointed at by the pointer variable B.</p>
+        <h3>Dereferencing Pointer Arrays</h3>
+        <p>Note that the dereference operator requires a <i>scalar</i> pointer operand. This means that if you are dealing with a pointer array, you must specify which element to dereference. For example, create a three-element pointer array, allocating a new heap variable for each element:</p>
+        <p class="Code">ptarr = PTRARR(3, /ALLOCATE_HEAP)</p>
+        <p>To initialize this array such that the heap variable pointed at by the first pointer contains the integer zero, the second the integer one, and the third the integer two, you would use the following statement:</p>
+        <p class="Code">FOR I = 0,2 DO *ptarr[I] = I</p>
+        <p />
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The dereference operator is dereferencing only element I of the array for each iteration. Similarly, if you wanted to print the values of the heap variables pointed at by the pointers in ptarr, you might be tempted to try the following:<br /><br /><code>PRINT, *ptarr</code><br /><br />IDL prints:<br /><br /><code>% Expression must be a scalar in this context: PTARR.% Execution halted at:  $MAIN$</code><br /></p>
+        <p>To print the contents of the heap variables, use the statement:</p>
+        <p class="Code">FOR I = 0, N_ELEMENTS(ptarr)-1 DO PRINT, *ptarr[I]</p>
+        <h3>Dereferencing Pointers to Pointers</h3>
+        <p>The dereference operator can be applied as many times as necessary to access data pointed at indirectly via multiple pointers. For example, the statement:</p>
+        <p class="Code">A = PTR_NEW(PTR_NEW(47))</p>
+        <p>assigns to A a pointer to a pointer to a heap variable containing the value 47.</p>
+        <p>To print this value, use the following statement:</p>
+        <p class="Code">PRINT, **A</p>
+        <h3>Dereferencing Pointers within Structures</h3>
+        <p>If you have a structure field that contains a pointer, dereference the pointer by prepending the dereference operator to the front of the structure name. For example, if you define the following structure:</p>
+        <p class="Code">struct = {data:'10.0', pointer:ptr_new(20.0)}</p>
+        <p>you would use the following command to print the value of the heap variable pointed at by the pointer in the pointer field:</p>
+        <p class="Code">PRINT, *struct.pointer</p>
+        <p>Defining pointers to structures is another common practice. For example, if you define the following pointer:</p>
+        <p class="Code">ptstruct = PTR_NEW(struct)</p>
+        <p>you would use the following command to print the value of the heap variable pointed at by the pointer field of the struct structure, which is pointed at by ptstruct:</p>
+        <p class="Code">PRINT, *(*pstruct).pointer</p>
+        <p>Note that you must dereference both the pointer to the structure and the pointer within the structure.</p>
+        <h3>Dereferencing the Null Pointer</h3>
+        <p>It is an error to dereference the NULL pointer, an invalid pointer, or a non-pointer. These cases all generate errors that stop IDL execution. For example:</p>
+        <p class="Code">PRINT, *45</p>
+        <p>IDL prints:</p>
+        <p class="Code">% Pointer type required in this context: &lt;INT(      45)&gt;.</p>
+        <p class="Code">% Execution halted at:  $MAIN$</p>
+        <p>For example:</p>
+        <p class="Code">A = PTR_NEW() &amp; PRINT, *A</p>
+        <p>IDL prints:</p>
+        <p class="Code">% Unable to dereference NULL pointer: A.</p>
+        <p class="Code">% Execution halted at:  $MAIN$</p>
+        <p>For example:</p>
+        <p class="Code">A = PTR_NEW(23) &amp; PTR_FREE, A &amp; PRINT, *A</p>
+        <p>IDL prints:</p>
+        <p>% Invalid pointer: A.</p>
+        <p>% Execution halted at:  $MAIN$</p>
+        <h2 class="API"><a name="pointers_3224653378_27099"></a>Equality and Inequality</h2>
+        <p>The <a name="kanchor4531"></a>EQ and <a name="kanchor4532"></a>NE operators allow you to compare pointers to see if they point at the same heap variable. For example:</p>
+        <p class="Code">;Make A a pointer to a heap variable containing 23.</p>
+        <p class="Code">A = PTR_NEW(23)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;B points at the same heap variable as A.</p>
+        <p class="Code">B = A</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;C contains the null pointer.</p>
+        <p class="Code">C = PTR_NEW()</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRINT, 'A EQ B: ', A EQ B &amp; $</p>
+        <p class="Code">PRINT, 'A NE B: ', A NE B &amp; $</p>
+        <p class="Code">PRINT, 'A EQ C: ', A EQ C &amp; $</p>
+        <p class="Code">PRINT, 'C EQ NULL: ', C EQ PTR_NEW() &amp; $</p>
+        <p class="Code">PRINT, 'C NE NULL:', C NE PTR_NEW()</p>
+        <p>IDL prints:</p>
+        <p class="Code">A EQ B:&#160;&#160;&#160;&#160;1</p>
+        <p class="Code">A NE B:&#160;&#160;&#160;&#160;0</p>
+        <p class="Code">A EQ C:&#160;&#160;&#160;&#160;0</p>
+        <p class="Code">C EQ NULL:&#160;1</p>
+        <p class="Code">C NE NULL:&#160;0</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Variables">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Getting Dynamic Memory</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDLInternalVariables.htm">IDLInternals - Variables</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Getting Dynamic Memory</span>
+        </div>
+        <h1><a name="kanchor5457"></a>Getting Dynamic Memory</h1>
+        <p>Many programs need to get dynamic memory for some temporary calculation. In the C language, the functions <b>malloc()</b> and <b>free()</b> are used for this purpose, while other languages have their own facilities. IDL provides its own memory allocation routines (see <a href="../IDLInternals - Miscellaneous/DynamicMemory.htm">Dynamic Memory</a>). Use of such facilities within the IDL interpreter and the system routines can lead to the loss of usable dynamic memory. The following code fragment demonstrates how this can happen.</p>
+        <p>For example, assume that there is a need for 100 <b>IDL_LONG</b> integers:</p>
+        <p class="Code">char *c;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">c = (char *) IDL_MemAlloc((unsigned) (sizeof(IDL_LONG) * 100)</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; (char *) 0, IDL_MSG_RET);</p>
+        <p class="Code">.</p>
+        <p class="Code">.</p>
+        <p class="Code">.</p>
+        <p class="Code">if (some_error_condition) IDL_Message(…, IDL_MSG LONGJMP,…);</p>
+        <p class="Code">.</p>
+        <p class="Code">.</p>
+        <p class="Code">.</p>
+        <p class="Code">IDL_MemFree((void *) c, (char *) 0, IDL_MSG_RET);</p>
+        <p>In the normal case, the allocated memory is released exactly as it should be. However, if an error causes the <b>IDL_Message()</b> function to be called, execution will return directly to the interpreter and this code will never have a chance to clean up. The dynamic memory allocated will therefore leak, and although it will continue to occupy space in the IDL processes, will not be used again.</p>
+        <h2>The IDL_GetScratch() Function</h2>
+        <p>To solve this problem, use a temporary variable to obtain dynamic memory. Then, if an error should cause execution to return to the interpreter, the interpreter will</p>
+        <p>reclaim the temporary variable and no dynamic memory will be lost. This frequently- needed operation is provided by the <b>IDL_GetScratch()</b> function:</p>
+        <p class="Code">char *IDL_GetScratch(IDL_VPTR *p, IDL_MEMINT n_elts, IDL_MEMINT elt_size)</p>
+        <p>where:</p>
+        <h3>p</h3>
+        <p>The address of an <b>IDL_VPTR</b> that should be set to the address of the temporary variable allocated.</p>
+        <h3>n_elts</h3>
+        <p>The number of elements for which memory should be allocated.</p>
+        <h3>elt_size</h3>
+        <p>The length of each element, in bytes.</p>
+        <p>Once the need for the temporary memory has passed, it should be returned using the <b>IDL_Deltmp()</b> function. Using these functions, the above example becomes:</p>
+        <p class="Code">char *c; </p>
+        <p class="Code">IDL_VPTR v;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">c = IDL_GetScratch(&amp;v, 100L, (IDL_LONG) sizeof(IDL_LONG));</p>
+        <p class="Code">.</p>
+        <p class="Code">.</p>
+        <p class="Code">.</p>
+        <p class="Code">if (some error condition) IDL_Message(...,MSG LONGJMP,...);</p>
+        <p class="Code">.</p>
+        <p class="Code">.</p>
+        <p class="Code">. IDL_Deltmp(v);</p>
+        <p class="Code">&#160;</p>
+        <p>Using the <b>IDL_GetScratch()</b> and <b>IDL_Deltmp()</b> functions is similar to using <b>IDLMemAlloc()</b> directly. In fact, IDL uses <b>IDL_MemAlloc()</b> and <b>IDL_MemFree()</b> internally to implement array variables. The important difference is that dynamic memory doesn’t leak when error conditions occur.</p>
+        <p>To avoid losing dynamic memory, always use the <b>IDL_GetScratch()</b> function in preference to other ways of allocating dynamic memory, and use <b>IDL_Deltmp()</b> to return it.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>COLORMAP_ROTATION</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">COLORMAP_ROTATION</span>
+        </div>
+        <h1 class="Routine"><a name="C_854643309_1370624"></a><a name="kanchor291"></a>COLORMAP_ROTATION</h1>
+        <p>The COLORMAP_ROTATION function maps pixels within a given hue range to another hue range, using the HSV hue component. The HSV color model describes the hue component as a circular value from 0 to 360 degrees where red is located at 0 degrees, green is 120 degrees, and blue is 240 degrees.</p>
+        <p>A hue range is specified as a pair of start and stop angles and a direction indicator. The angles increase in a counter-clockwise direction. The default direction is counter-clockwise, which describes the direction of the hue range as it is mapped from the start angle to the stop angle.</p>
+        <p>The source range is linearly mapped to the destination range.</p>
+        <h2 class="API"><a name="C_854643309_1370683"></a>Examples</h2>
+        <p>The following sequence will change the red hues in a rose to cyan:</p>
+        <p class="Code">file = FILEPATH('rose.jpg', SUBDIR=['examples', 'data'])<br />IOPEN, file, rose<br />result = COLORMAP_ROTATION(rose, 310, 50, 160, 185)<br />IIMAGE, result, /TRUE</p>
+        <p>This example applies COLORMAP_ROTATION to the rose jpeg in various ways and then visualizes them side-by-side. In this code section, we read the rose image file and do the color map rotations:</p>
+        <p class="Code">file = FILEPATH('rose.jpg', SUBDIR=['examples', 'data'])  <br />IOPEN, file, rose0<br /><br />; These values map red hues to blue:<br />rose1 = COLORMAP_ROTATION(rose0, 310, 50, 160, 200)  <br /><br />;These values map all hues to magenta: <br />rose2 = COLORMAP_ROTATION(rose0, 0, 360, 300, 300)<br /><br />; These values map green hues to brown:<br />rose3 = COLORMAP_ROTATION(rose0, 65, 150, 25, 60)  <br /><br />; These values rotate the entire spectrum "backwards"<br />; around the pure red hue:  <br />rose4 = COLORMAP_ROTATION(rose0, 0, 360, 360, 0, /DEST_CW)  <br /><br />; These values make the purple flowers look like<br />; green leaves:<br />rose5 = COLORMAP_ROTATION(rose0, 130, 310, 240, 60, /DEST_CW)</p>
+        <p>Now, we display the results:</p>
+        <p class="Code">; Display the images side by side:  <br />dims = [(SIZE(rose0))[2]*3, (SIZE(rose0))[3]*2+100]<br />IIMAGE, rose0, VIEW_GRID=[3,2], VIEW_TITLE='Original', $<br />&#160;&#160;&#160;DIMENSIONS=dims, WINDOW_TITLE='COLORMAP_ROTATION Example', $<br />&#160;&#160;&#160;/NO_SAVEPROMPT<br />IIMAGE, rose1, /VIEW_NEXT, VIEW_TITLE='Red to Blue'<br />IIMAGE, rose2, /VIEW_NEXT, VIEW_TITLE='All Magenta'<br />IIMAGE, rose3, /VIEW_NEXT, VIEW_TITLE='Green to Brown'<br />IIMAGE, rose4, /VIEW_NEXT, VIEW_TITLE='Backwards around Red'<br />IIMAGE, rose5, /VIEW_NEXT, VIEW_TITLE='Purple to Green'<br /><br />; Increase the text size<br />ISETPROPERTY, 'text*', FONT_SIZE=40</p>
+        <p>The resulting image appears as follows:</p>
+        <p>
+            <img src="../../images/colormap_rotation_01.gif" style="margin-left: 5.99976px;margin-top: 4.51872px;margin-right: 5.98608px;margin-bottom: 4.848483px;" />
+        </p>
+        <h2 class="API"><a name="C_854643309_1370664"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = COLORMAP_ROTATION(<i>Image</i>, <i>SrcAngleStart</i>, <i>SrcAngleStop</i>, <i>DstAngleStart</i>, <i>DstAngleStop</i> [,&#160;/<a href="#C_854643309_1370678" class="selected">SOURCE_CW</a>] [,&#160;/<a href="#C_854643309_1370680" class="selected">DEST_CW</a>])</p>
+        <h2 class="API"><a name="C_854643309_1370938"></a>Return Value</h2>
+        <p><i>Result</i> is a byte array of the same dimensions as the input Array.</p>
+        <h2 class="API"><a name="C_854643309_1370666"></a>Arguments</h2>
+        <h3 class="Argument">Image</h3>
+        <p>A 3D array of any basic type containing the input image with data in range [0-255]. The image must contain RGB data and be of the form [3,<i>m</i>,<i>n</i>].</p>
+        <h3 class="Argument">SrcAngleStart</h3>
+        <p>A floating-point value specifying the starting position of the source angle on the HSV color wheel, in degrees. Values between <i>SrcAngleStart</i> and <i>SrcAngleStop</i> will be replaced by values from the destination range.</p>
+        <h3 class="Argument">SrcAngleStop</h3>
+        <p>A floating-point value specifying the ending position of the source angle on the HSV color wheel, in degrees. Values between <i>SrcAngleStart</i> and <i>SrcAngleStop</i> will be replaced by values from the destination range.</p>
+        <h3 class="Argument">DstAngleStart</h3>
+        <p>A floating-point value specifying the starting position of the destination angle on the HSV color wheel, in degrees. Values between <i>DstAngleStart</i> and <i>DstAngleStop</i> will replace values in the source range.</p>
+        <h3 class="Argument">DstAngleStop</h3>
+        <p>A floating-point value specifying the ending position of the destination angle on the HSV color wheel, in degrees. Values between <i>DstAngleStart</i> and <i>DstAngleStop</i> will replace values in the source range.</p>
+        <h2 class="API"><a name="C_854643309_1370677"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="C_854643309_1370678"></a>SOURCE_CW</h3>
+        <p>Set this keyword to measure the source angle clockwise from <i>SrcAngleStart</i>. By default, the angle is measured in the counter-clockwise direction.</p>
+        <h3 class="Keyword"><a name="C_854643309_1370680"></a>DEST_CW</h3>
+        <p>Set this keyword to measure the destination angle clockwise from <i>DstAngleStart</i>. By default, the angle is measured in the counter-clockwise direction.</p>
+        <h2 class="API"><a name="C_854643309_1370662"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

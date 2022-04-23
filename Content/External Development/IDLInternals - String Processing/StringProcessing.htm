@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>String Processing</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLInternals - String Processing</span>
+        </div>
+        <h1>String Processing</h1>
+        <p>A number of functions exist to simplify the processing of <b>IDL_STRING</b> descriptors. By using these functions instead of doing your own string management, you can eliminate a common source of errors.</p>
+        <p>Topics included in this section include:</p>
+        <ul>
+            <li value="1"><a href="#Accessin" class="selected">Accessing IDL_STRING Values</a>
+            </li>
+            <li value="2"><a href="#Copying" class="selected">Copying Strings - IDL_StrDup()
+</a>
+            </li>
+            <li value="3"><a href="#Deleting" class="selected">Deleting Strings - IDL_StrDelete()</a>
+            </li>
+            <li value="4"><a href="#Setting" class="selected">Setting an IDL_STRING&#160;Value - IDL_StrStore()</a>
+            </li>
+            <li value="5"><a href="#Obtainin" class="selected">Obtaining a String of Given Length - IDL_StrEnsureLength()</a>
+            </li>
+        </ul>
+        <h2><a name="Accessin"></a><a name="kanchor5465"></a>Accessing IDL_STRING Values</h2>
+        <p>It is important to realize that the s field of an <b>IDL_STRING</b> struct does not contain a valid string pointer in the case of a null string (i.e., when <b>slen</b> is zero). A common error that can cause IDL to crash is illustrated by the following code fragment:</p>
+        <p class="Code">void print_str(IDL_STRING *s)</p>
+        <p class="Code">{</p>
+        <p class="Code">&#160;&#160;&#160;printf("%s", s-&gt;s);</p>
+        <p class="Code">}</p>
+        <p>The problem with this code is that it fails to consider the case where the argument s describes a NULL string. The proper way to write this code is as follows:</p>
+        <p class="Code">void print str(IDL_STRING *s)</p>
+        <p class="Code">{</p>
+        <p class="Code">&#160;&#160;&#160;printf("%s", IDL_STRING_STR(s));</p>
+        <p class="Code">}</p>
+        <p>The macro <b>IDL_STRING_STR</b> takes as its argument a pointer to an <b>IDL_STRING</b> struct. If the string is null, it returns a pointer to a zero length null-terminated string, otherwise it returns the string pointer from the struct. Consistent use of this macro will avoid the most common sort of error involving strings.</p>
+        <p>It is common for IDL system routines to accept arguments that provide names. Such arguments must be scalar strings, or string arrays that contain a single element. To properly process such an argument, it is necessary to screen out non-string types or multi-element arrays, locate the string descriptor, and use the <b>IDL_STRING_STR()</b> macro to extract a usable NULL terminated C string from it. The <b>IDL_VarGetString()</b> is used for this purpose. It encapsulates all of the error checking, and always returns a pointer to a NULL terminated C string, throwing the proper <b>IDL_MSG_LONGJMP</b> error via the <b>IDL_Message()</b> function when this is not possible:</p>
+        <p class="Code">char *IDL_VarGetString(IDL_VPTR v)</p>
+        <p>where</p>
+        <h3>v</h3>
+        <p>Variable from which string value is desired.</p>
+        <h2><a name="Copying"></a><a name="kanchor5466"></a>Copying Strings - IDL_StrDup()</h2>
+        <p>It is often necessary to copy one string to another. Assume, for example, that there are two string descriptors <b>s_src</b> and <b>s_dst</b>, and that <b>s_dst</b> contains garbage. It would almost suffice to simply copy the contents of <b>s_src</b> into <b>s_dst</b>. The reason this is not quite correct is that both descriptors would then contain a pointer to the same string. This aliasing can cause some strange effects, or even cause IDL to crash if one of the two descriptors is freed and the string from the other is accessed.</p>
+        <p><b>IDL_StrDup()</b> takes care of this problem by allocating memory for a second copy of the string, and replacing the string pointer in the descriptor with a pointer to the fresh copy. Naturally, if the string descriptor is for a NULL string, nothing is done.</p>
+        <p class="Code">void IDL_StrDup(IDL_STRING *str, IDL_MEMINT n)</p>
+        <p>where:</p>
+        <h3>str</h3>
+        <p>Pointer to one or more <b>IDL_STRING</b> descriptors which need their strings duplicated.</p>
+        <h3>n</h3>
+        <p>The number of descriptors. The proper way to copy a string is:</p>
+        <p class="Code">s_dst = s_src;	/* Copy the descriptor */ </p>
+        <p class="Code">IDL_StrDup(&amp;s_dst, 1L);	/* Duplicate the string */</p>
+        <h2><a name="Deleting"></a><a name="kanchor5467"></a>Deleting Strings - IDL_StrDelete()</h2>
+        <p>Before an <b>IDL_STRING</b> can be discarded or re-used, it is important to release any dynamic memory it might be using. The <b>IDL_StrDelete()</b> function should be used to delete strings:</p>
+        <p class="Code">void IDL_StrDelete(IDL_STRING *str, IDL_MEMINT n)</p>
+        <p>where:</p>
+        <h3>str</h3>
+        <p>Pointer to one or more <b>IDL_STRING</b> descriptors which need their contents freed.</p>
+        <h3>n</h3>
+        <p>The number of descriptors.</p>
+        <p><b>IDL_StrDelete()</b> deletes all dynamic memory used by the <b>IDL_STRING</b>s. The descriptors contain garbage once this has been done, and their contents should not be used.</p>
+        <p>The <b>IDL_Deltmp()</b> function automatically calls <b>IDL_StrDelete()</b> when returning temporary variables of type <b>IDL_TYP_STRING</b>, so it is not necessary or desirable to call <b>IDL_StrDelete()</b> explicitly in this case.</p>
+        <h2><a name="Setting"></a>Setting an IDL_STRING Value - IDL_StrStore()<a name="kanchor5468"></a></h2>
+        <p>The <b>IDL_StrStore()</b> function should be used to store a null-terminated C string into an <b>IDL_STRING</b> descriptor:</p>
+        <p class="Code">void IDL_StrStore(IDL_STRING *s, char *fs)</p>
+        <p>where:</p>
+        <h3>s</h3>
+        <p>Pointer to an <b>IDL_STRING</b> descriptor. This descriptor is assumed to contain garbage, so call <b>IDL_StrDelete()</b> on it first if this is not the case.</p>
+        <h3>fs</h3>
+        <p>Pointer to the null-terminated string to be copied into s.</p>
+        <p><b>IDL_StrStore()</b> is useful for placing a string value into an <b>IDL_STRING</b>. This <b>IDL_STRING</b> does not need to be a component of a <b>VARIABLE</b>, which makes this function very flexible.</p>
+        <p>One often needs a temporary, scalar <b>VARIABLE</b> of type <b>IDL_TYP_STRING</b> with a given value. The function <b>IDL_StrToSTRING()</b> fills this need:</p>
+        <p class="Code">IDL_VPTR IDL_StrToSTRING(char *s)</p>
+        <p>where:</p>
+        <h3>s</h3>
+        <p>Pointer to the null-terminated string to be copied into the resulting temporary variable.</p>
+        <h2><a name="Obtainin"></a><a name="kanchor5469"></a>Obtaining a String of a Given Length - IDL_StrEnsureLength()</h2>
+        <p>Sometimes you need to make sure that the string in an <b>IDL_STRING</b> descriptor has a specific length. The <b>IDL_StrEnsureLength()</b> function can be used in this case:</p>
+        <p class="Code">void IDL_StrEnsureLength(IDL_STRING *s, int n)</p>
+        <p>where:</p>
+        <h3>s</h3>
+        <p>A pointer to the <b>IDL_STRING</b> that will have its length checked.</p>
+        <h3>n</h3>
+        <p>The number of characters the string must be able to contain, not including the terminating NULL character.</p>
+        <p>If the <b>IDL_STRING</b> passed already has enough room for the specified number of characters, it is not re-allocated. Otherwise, the existing string is freed and a new string of sufficient length is allocated. In either case, the slen field of the <b>IDL_STRING</b> will be set to the requested length.</p>
+        <p>If a new dynamic string is allocated, it will contain garbage values because <b>IDL_StrEnsureLength()</b> only allocates memory of the specified size, it does not copy a value into it. Therefore, the calling routine must copy a null-terminated string into the new dynamic string.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

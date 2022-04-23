@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSP_SP_BDPDSOL</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1>IMSP_SP_BDPDSOL</h1>
+        <p>The IMSL_SP_BDPDSOL function solves a symmetric positive definite system of linear equations Ax = b in band symmetric storage mode. Using keywords, any of several related computations can be performed.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>The IMSL_SP_BDPDSOL function solves a system of linear algebraic equations with a symmetric positive definite band coefficient matrix <i>A</i>. It computes the RTR Cholesky factorization of <i>A</i>. <i>R</i> is an upper triangular band matrix.</p>
+        <p>The <i>L<sub>1</sub></i> condition number of <i>A</i> is computed using Higham’s modifications to Hager’s method, as given in Higham (1988). If the estimated condition number is greater than 1/ε (where ε is the machine precision), a warning message is issued. This indicates that very small changes in <i>A</i> may produce large changes in the solution <i>x</i>.</p>
+        <p>The IMSL_SP_BDPDSOL function fails if any submatrix of <i>R</i> is not positive definite or if <i>R</i> has a zero diagonal element. These errors occur only if A is very close to a singular matrix or to a matrix which is not positive definite.</p>
+        <p>The IMSL_SP_BDPDSOL function is partially based on the LINPACK subroutines CPBFA and SPBSL; see Dongarra et al. (1979).</p>
+        <h2 class="API">Example</h2>
+        <p>Solve a system of linear equations <i>Ax = b</i>, where:</p>
+        <p>
+            <img src="images/IMSL_SP_BDPDSOL_Example.png" />
+        </p>
+        <p>&#160;</p>
+        <p class="Code">n = 4L</p>
+        <p class="Code">ncoda = 2L</p>
+        <p class="Code">a = DBLARR((ncoda+1)*n)</p>
+        <p class="Code">a(0:n-1) = [0, 0, -1, 1]</p>
+        <p class="Code">a(n:2L*n-1) = [0, 0, 2, -1]</p>
+        <p class="Code">a(2L*n:*) = [2, 4, 7, 3]</p>
+        <p class="Code">; Define A in band symmetric storage mode.</p>
+        <p class="Code">b = [6, -11, -11, 19]</p>
+        <p class="Code">x = IMSL_SP_BDPDSOL(b, ncoda, a)</p>
+        <p class="Code">; Compute the solution</p>
+        <p class="Code">PM, x</p>
+        <p class="Code_Indented">4.0000000</p>
+        <p class="Code_Indented">-6.0000000</p>
+        <p class="Code_Indented">2.0000000</p>
+        <p class="Code_Indented">9.0000000</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> =IMSL_SP_BDPDSOL(<i>b</i>, <i>ncoda</i> [, <i>a</i>] [, <a href="#CONDITIO" class="selected">CONDITION</a>=<i>variable</i>] [, /<a href="#DOUBLE" class="selected">DOUBLE</a>] [, <a href="#FACTOR" class="selected">FACTOR</a>=<i>array</i>])</p>
+        <h2 class="API">Return Value</h2>
+        <p>A one-dimensional array containing the solution of the linear system <i>Ax = b.</i></p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">b</h3>
+        <p>One-dimensional matrix containing the right-hand side.</p>
+        <h3 class="Argument">ncoda</h3>
+        <p>Number of upper codiagonals in <i>a</i>.</p>
+        <h3 class="Argument">a</h3>
+        <p>(Optional) Array of size (<i>ncoda</i> + 1) x <i>n</i> containing the <i>n</i> x <i>n</i> banded coefficient matrix in band symmetric storage mode <i>A(i, j)</i>. See “Band Storage Format” for a description of band symmetric storage mode.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="CONDITIO"></a>CONDITION</h3>
+        <p>Named variable into which an estimate of the <i>L<sub>1</sub></i> condition number is stored. This keyword cannot be used if a previously computed factorization is specified with the keyword FACTOR.</p>
+        <h3 class="Keyword"><a name="DOUBLE"></a>DOUBLE</h3>
+        <p>If present and nonzero, double precision is used.</p>
+        <h3 class="Keyword"><a name="FACTOR"></a>FACTOR</h3>
+        <p>An array of size (<i>ncoda</i> + 1) x N_ELEMENTS(<i>b</i>) containing the <i>R</i><sup style="font-style: italic;">T</sup><i>R</i> factorization of <i>A</i> in band symmetric storage mode, as returned from IMSL_SP_BDPDFAC.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="IMSL_SP_BDFAC.htm">IMSL_SP_BDFAC</a>, IMSL_SP_BDPDFAC</p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

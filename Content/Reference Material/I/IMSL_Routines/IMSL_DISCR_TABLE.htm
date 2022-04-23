@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_DISCR_TABLE</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="IMSL_DISCR_TABLE"></a>IMSL_DISCR_TABLE</h1>
+        <p>The IMSL_DISCR_TABLE function sets up table to generate pseudorandom numbers from a general discrete distribution.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>IMSL_DISCR_TABLE sets up a table that <a href="IMSL_RAND_GEN_CONT.htm#IMSL_RAND_GEN_CONT">IMSL_RAND_GEN_CONT</a> uses to generate pseudorandom deviates from a discrete distribution. The distribution can be specified either by its probability function prf or by a vector of values of the cumulative probability function. Note that prf is not the cumulative probability distribution function. If the cumulative probabilities are already available in Cum_Probs, the only reason to call IMSL_DISCR_TABLE is to form an index vector in the upper portion of the result so as to speed up the generation of random deviates by the routine RAND_GEN_CONT.</p>
+        <h2 class="API">Examples</h2>
+        <p>For additional information on using IMSL_DISCR_TABLE, see <a href="#Additional_Examples" class="selected">Additional Examples</a>.</p>
+        <h3>Example 1</h3>
+        <p>In this example, IMSL_DISCR_TABLE is used to set up a table to generate pseudorandom variates from the discrete distribution:</p>
+        <p>Pr(X = 1) = 0.05</p>
+        <p>Pr(X = 2) = 0.45</p>
+        <p>Pr(X = 3) = 0.31</p>
+        <p>Pr(X = 4) = 0.04</p>
+        <p>Pr(X = 5) = 0.15</p>
+        <p>In this example, we input the cumulative probabilities directly using keyword Cum_Probs and request 3 indexes to be computed (nndx = 4). Since the number of mass points is so small, the indexes would not have much effect on the speed of the generation of the random variates.</p>
+        <p class="Code">.RUN</p>
+        <p class="Code">FUNCTION prf, x</p>
+        <p class="Code">RETURN, 0</p>
+        <p class="Code">END</p>
+        <p class="Code">cum_probs = [.05, .5, .81, .85, 1]</p>
+        <p class="Code">cumpr = IMSL_DISCR_TABLE('PRF', 0.00001, 4, 1, 5, $</p>
+        <p class="Code_Indented">CUM_PROBS = cum_probs)</p>
+        <p class="Code">PM, cumpr</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">0.0500000</p>
+        <p class="Code">0.500000</p>
+        <p class="Code">0.810000</p>
+        <p class="Code">0.850000</p>
+        <p class="Code">1.00000</p>
+        <p class="Code">3.00000</p>
+        <p class="Code">1.00000</p>
+        <p class="Code">2.00000</p>
+        <p class="Code">5.00000</p>
+        <h2 class="API">Syntax</h2>
+        <p><i>Result</i> = IMSL_DISCR_TABLE(<i>prf</i>, <i>del</i>, <i>nndx</i>, <i>imin</i>, <i>nmass</i> [, CUM_PROBS=<i>array</i>] [, /DOUBLE])</p>
+        <h2 class="API">Return Value</h2>
+        <p>Array, <i>cumpr</i>, of length <i>nmass</i> + <i>nndx</i> containing in the first <i>nmass</i> positions, the cumulative probabilities and in some of the remaining positions, indexes to speed access to the probabilities.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">del</h3>
+        <p>Maximum absolute error allowed in computing the cumulative probability. Probabilities smaller than del are ignored; hence, del should be a small positive number. If del is too small, however, cumpr (nmass – 1) must be exactly 1.0 since that value is compared to 1.0 – del.</p>
+        <h3 class="Argument">imin</h3>
+        <p>Scalar containing the smallest value the random deviate can assume. By default, prf is evaluated at imin. If this value is less than del, imin is incremented by 1 and again prf is evaluated at imin. This process is continued until prf(imin) ≥ del. imin is output as this value and result(0) is output as prf(imin).</p>
+        <h3 class="Argument">nmass</h3>
+        <p>Scalar containing the number of mass points in the distribution. Input, if keyword Cum_probs is used; otherwise, output. By default, nmass is the smallest integer such that prf(imin + nmass – 1) &gt; 1.0 – del. nmass does include the points iminin + j for which prf(iminin + j) &lt; del, for j = 0, 1, ..., iminout – iminin, where iminin denotes the input value of imin and iminout denotes its output value.</p>
+        <h3 class="Argument">nndx</h3>
+        <p>The number of elements of cumpr available to be used as indexes. nndx must be greater than or equal to 1. In general, the larger nndx is, to within sixty or seventy percent of nmass, the more efficient the generation of random numbers using IMSL_RAND_GEN_DISCR will be.</p>
+        <h3 class="Argument">prf</h3>
+        <p>A scalar string specifying a user-supplied function to compute the probability associated with each mass point of the distribution The argument to the function is the point at which the probability function is to be evaluated. The argument to the function can range from imin to the value at which the cumulative probability is greater than or equal to 1.0 - del.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">CUM_PROBS</h3>
+        <p>One dimensional array of length <i>nmass</i> containing the cumulative probabilities to be used in computing the index portion of the result. If the keyword CUM_PROBS is used, <i>prf</i> is not used and may be a dummy function.</p>
+        <h3 class="Keyword">DOUBLE</h3>
+        <p>If present and nonzero, double precision is used.</p>
+        <h2 class="API"><a name="Additional_Examples"></a>Additional Examples</h2>
+        <h3>Example 2</h3>
+        <p>IMSL_DISCR_TABLE is sets up a table to generate binomial variates with</p>
+        <p>parameters 20 and 0.5. IMSL_BINOMIALPDF is used to compute the probabilities.</p>
+        <p class="Code">.RUN</p>
+        <p class="Code">FUNCTION prf, ix</p>
+        <p class="Code_Indented">RETURN, IMSL_BINOMIALPDF(ix, 20, 0.5)</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">cumpr = IMSL_DISCR_TABLE('PRF', 0.00001, 12, 0, 21)</p>
+        <p class="Code">PM, cumpr</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">1.90735e-05</p>
+        <p class="Code">0.000200272</p>
+        <p class="Code">0.00128746</p>
+        <p class="Code">0.00590802</p>
+        <p class="Code">0.0206938</p>
+        <p class="Code">0.0576583</p>
+        <p class="Code">0.131587</p>
+        <p class="Code">0.251722</p>
+        <p class="Code">0.411901</p>
+        <p class="Code">0.588099</p>
+        <p class="Code">0.748278</p>
+        <p class="Code">0.868413</p>
+        <p class="Code">0.942342</p>
+        <p class="Code">0.979306</p>
+        <p class="Code">0.994092</p>
+        <p class="Code">0.998713</p>
+        <p class="Code">0.999800</p>
+        <p class="Code">0.999981</p>
+        <p class="Code">1.00000</p>
+        <p class="Code">11.0000</p>
+        <p class="Code">1.00000</p>
+        <p class="Code">7.00000</p>
+        <p class="Code">8.00000</p>
+        <p class="Code">9.00000</p>
+        <p class="Code">9.00000</p>
+        <p class="Code">10.0000</p>
+        <p class="Code">11.0000</p>
+        <p class="Code">11.0000</p>
+        <p class="Code">12.0000</p>
+        <p class="Code">13.0000</p>
+        <p class="Code">19.0000</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="IMSL_RAND_GEN_CONT.htm#IMSL_RAND_GEN_CONT">IMSL_RAND_GEN_CONT</a>, <a href="IMSL_RAND_GEN_DISCR.htm#IMSL_RAND_GEN_DISCR">IMSL_RAND_GEN_DISCR</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

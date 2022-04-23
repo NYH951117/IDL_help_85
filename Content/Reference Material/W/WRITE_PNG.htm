@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: W">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>WRITE_PNG </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="W_list.htm">Routines: W</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">WRITE_PNG</span>
+        </div>
+        <h1 class="Routine"><a name="W_811389549_950641"></a><a name="W_811389549_16336"></a>WRITE_PNG </h1>
+        <p><a name="kanchor2929"></a>The WRITE_PNG procedure writes a 2-D or 3-D IDL variable into a Portable Network Graphics (PNG) file. The data in the file is stored using lossless compression with either 8 or 16 data bits per channel, based on the input IDL variable type. 3-D IDL variables must have the number of channels as their leading dimension (pixel interleaved). For BYTE format 2-D IDL variables, an optional palette may be stored in the image file along with a list of pixel values which are to be considered transparent by a reading program.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDL supports version 1.2.7 of the PNG Library.</p>
+        <h2 class="API"><a name="W_811389549_1167811"></a><a name="W_811389549_950661_PageTOC_WRITE_PNG_"></a>Examples</h2>
+        <p>The following lines create an image in an IDL graphics window, read it from the window and write it as a <code>.png</code> file in the temporary directory, then read the <code>.png</code> file and display it in the same graphics window:</p>
+        <p class="Code">; Save device settings and tell IDL to use a color table<br />DEVICE, GET_DECOMPOSED=old_decomposed<br />DEVICE, DECOMPOSED=0<br />LOADCT, 14<br /><br />; Create an image and display it<br />IMAGE1 = DIST(300)<br />WINDOW, 1, XSIZE=300, YSIZE=300<br />TV, IMAGE1<br /><br />; Write a PNG file to the temporary directory<br />; Note the use of the TRUE keyword to TVRD<br />filename = FILEPATH('test.png', /TMP)<br />WRITE_PNG, filename, TVRD(/TRUE)<br />PRINT, 'File written to ', filename<br /><br />; Read in the file<br />IMAGE2 = READ_PNG(filename)<br /><br />; Display the IMAGE1 and IMAGE2 side by side<br />; Note the use of the TRUE keyword to TV<br />WINDOW, 1, XSIZE=600, YSIZE=300, $<br />&#160;&#160;&#160;TITLE='Original (left) and Image read from file (right)'<br />TV, IMAGE1, 0<br />TV, IMAGE2, 1, /TRUE<br /><br />; Restore device settings.<br />DEVICE, DECOMPOSED=old_decomposed</p>
+        <h2 class="API"><a name="W_811389549_950645"></a><a name="W_811389549_950645_PageTOC_WRITE_PNG_"></a>Syntax</h2>
+        <p class="Syntax">WRITE_PNG, <i>Filename</i>, <i>Image</i>[,&#160;<i>R</i>, <i>G</i>, <i>B</i>] [,&#160;/<a href="#W_811389549_950656" class="selected">ORDER</a>]  [,&#160;<a href="#TRANSPAR" class="selected">TRANSPARENT</a>=<i>array</i>] [,&#160;/<a href="#W_811389549_964556" class="selected">VERBOSE</a>] [, <a href="#XRESOLUT" class="selected">XRESOLUTION</a>=<i>value</i>] [, <a href="#YRESOLUT" class="selected">YRESOLUTION</a>=<i>value</i>]</p>
+        <h2 class="API"><a name="W_811389549_964567"></a><a name="W_811389549_964567_PageTOC_WRITE_PNG_"></a>Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>A scalar string containing the full pathname of the PNG file to write.</p>
+        <h3 class="Argument">Image</h3>
+        <p>The array to write into the new PNG file. If <i>Image</i> is one of the integer data types, it is converted to type unsigned integer (UINT) and written out at 16 data bits per channel. All other data types are converted to bytes and written out at 8-bits per channel.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If <i>Image</i> is two-dimensional (single-channel) and <i>R</i>, <i>G</i>, and <i>B</i> are provided, all input data types (including integer) are converted to bytes and written out as 8-bit data.</p>
+        <h3 class="Argument">R, G, B</h3>
+        <p>For single-channel images, <i>R</i>, <i>G</i>, and <i>B</i> should contain the red, green, and blue color vectors, respectively. For multi-channel images, these arguments are ignored.</p>
+        <h2 class="API"><a name="W_811389549_950654"></a><a name="W_811389549_950654_PageTOC_WRITE_PNG_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="W_811389549_950656"></a><a name="W_811389549_950656_Keywords_WRITE_PNG__"></a>ORDER</h3>
+        <p>Set this keyword to indicate that the rows of the image should be written from bottom to top. The rows are written from top to bottom by default. ORDER provides compatibility with PNG files written using versions of IDL prior to IDL 5.4, which wrote PNG files from bottom to top.</p>
+        <h3 class="Keyword"><a name="TRANSPAR"></a>TRANSPARENT</h3>
+        <p>Set this keyword to an array of opacity values (an opacity table) in the range of 0 to 255. A value of 0 (zero) equals full transparency (no opacity). If you specify fewer opacity values than exist in the color table, the missing values are replaced by 255. </p>
+        <p>This keyword is valid only if <i>Image</i> is a single-channel (color indexed) image and the R, G, B palette is provided.</p>
+        <h3 class="Keyword"><a name="W_811389549_964556"></a><a name="W_811389549_964556_Keywords_WRITE_PNG__"></a>VERBOSE</h3>
+        <p>Produces additional diagnostic output during the write.</p>
+        <h3 class="Keyword"><a name="XRESOLUT"></a>XRESOLUTION</h3>
+        <p>Set this keyword to the horizontal resolution (in dots per inch) of the image. This keyword does not affect the actual image data. Internally, the resolution is converted to pixels per meter and stored in the PNG file header for use by other applications. The default behavior is to not write out this attribute.</p>
+        <h3 class="Keyword"><a name="YRESOLUT"></a>YRESOLUTION</h3>
+        <p>Set this keyword to the vertical resolution (in dots per inch) of the image. This keyword does not affect the actual image data. Internally, the resolution is converted to pixels per meter and stored in the PNG file header for use by other applications. The default behavior is to not write out this attribute.<a name="W_811389549_950659"></a><a name="W_811389549_950659_Keywords_WRITE_PNG__"></a></p>
+        <h2 class="API">Additional Examples</h2>
+        <p>The following example demonstrates the use of the TRANSPARENT keyword. Makre sure to set your "datadir" to an existing directory on your system or network before running this example.</p>
+        <p class="Code">pro test_transparency</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">; Make sure to set datadir to your current test directory</p>
+        <p class="Code_Indented">datadir = 'c:\temp\test'</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Create ramp image</p>
+        <p class="Code_Indented">img = BINDGEN(256,256)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; R, G, B color table - make everything red</p>
+        <p class="Code_Indented">r = REPLICATE(255b,256)</p>
+        <p class="Code_Indented">g = REPLICATE(0b,256)</p>
+        <p class="Code_Indented">b = g</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Set "Transparency" to a ramp</p>
+        <p class="Code_Indented">transp = BINDGEN(256)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; This works, too. Missing values are replaced by 255 (opaque)</p>
+        <p class="Code_Indented">;  transp = BINDGEN(128)*2</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Write image with and without transparency.</p>
+        <p class="Code_Indented">; This is a pure red image</p>
+        <p class="Code_Indented">WRITE_PNG, FILEPATH('test_wo_transp.png', ROOT_DIR=datadir), img, r,g,b</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; This image is transparent on the left</p>
+        <p class="Code_Indented">WRITE_PNG, FILEPATH('test_transp.png', ROOT_DIR=datadir), $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;img, r,g,b, TRANSPARENT=transp</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; This returns the "transparency"/opacity table again</p>
+        <p class="Code_Indented">img2 = READ_PNG(FILEPATH('test_transp.png', ROOT_DIR=datadir), $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;r2,g2,b2, TRANSPARENT=transp2)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">PRINT, transp2</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Optionally, view the opacity table</p>
+        <p class="Code_Indented">; opaque = IMAGE(img2)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="W_811389549_1240012"></a><a name="W_811389549_950688_PageTOC_WRITE_PNG_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="W_811389549_983515"></a><a name="W_811389549_983515_PageTOC_WRITE_PNG_"></a>See Also</h2>
+        <p><a href="../R/READ_PNG.htm#R_822202989_1045821">READ_PNG</a>, <a href="../Q/QUERY___Routines.htm#Q_815714925_982368">QUERY_* Routines</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

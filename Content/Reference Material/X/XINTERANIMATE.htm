@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: X">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>XINTERANIMATE </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/NoLines.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="X_list.htm">Routines: X</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">XINTERANIMATE</span>
+        </div>
+        <h1 class="Routine"><a name="X_800576109_894318"></a><a name="kanchor3022"></a><a name="kanchor3023"></a><a name="X_800576109_64099"></a>XINTERANIMATE </h1>
+        <p>The XINTERANIMATE procedure is a utility for displaying an animated sequence of images using off-screen pixmaps or memory buffers. The speed and direction of the display can be adjusted using the widget interface.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>On Microsoft Windows systems, the number of pixmap windows that can be created (and thus the number of images in an animation sequence) is limited by system GDI resources. The number of pixmap windows IDL can create is constrained by the total amount of GDI memory, the amount of GDI memory used by other applications, and the size of the IDL pixmap windows.</p>
+        <p>Only a single copy of XINTERANIMATE can run at a time. If you need to run multiple instances of the animation widget concurrently, use the CW_ANIMATE compound widget.</p>
+        <h3>MPEG Support</h3>
+        <p>MPEG animation files can be created either programmatically using keywords to open and save a file, or interactively using the widget interface. Note that the MPEG standard does not allow movies with odd numbers of pixels to be created.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>MPEG support in IDL requires a special license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales representative or technical support.<br /><br />The <a href="../../Object Classes/File Format/IDLffMJPEG2000.htm#objects_ff_3755668711_1324160">IDLffMJPEG2000</a> object creates and reads Motion JPEG2000 (MJ2) files, and provides more functionality than the MPEG_* routines. No special license is required and animations can consist of monochrome, RGB or multi-component frames that display individual components, tiles or regions. </p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>xinteranimate.pro</code> in the <code>lib/utilities</code> subdirectory of the IDL distribution.</p>
+        <h3><a name="X_800576109_894326_PageTOC_XINTERANIMATE_"></a>Using XINTERANIMATE</h3>
+        <p>Displaying an animated series of images using XINTERANIMATE requires at least three calls to the routine: one to initialize the animation widget, one to load images, and one to display the images. When initialized using the SET keyword, XINTERANIMATE creates an approximately square pixmap or memory buffer, large enough to contain the requested number of frames of the requested size. Images are loaded using the IMAGE and FRAME keywords. Finally, images are displayed by copying them from the pixmap or memory buffer to the visible draw widget.</p>
+        <h2 class="API"><a name="X_800576109_894383"></a><a name="X_800576109_894383_PageTOC_XINTERANIMATE_"></a>Examples</h2>
+        <p>Enter the following commands to open the file <code>ABNORM.DAT</code> (a series of images of a human heart) and animate the images it contains using XINTERANIMATE.</p>
+        <p class="Code">OPENR, unit, FILEPATH('abnorm.dat', $<br />&#160;&#160;&#160;SUBDIR=['examples','data']), /GET_LUN<br />H = BYTARR(64, 64, 16, /NOZERO) <br />READU, unit, H <br />CLOSE, unit <br /><br />; Read the images into variable H:<br />H = REBIN(H, 128, 128, 16)<br /><br />; Initialize XINTERANIMATE:<br />XINTERANIMATE, SET=[128, 128, 16], /SHOWLOAD<br /><br />; Load the images into XINTERANIMATE:<br />FOR I=0,15 DO XINTERANIMATE, FRAME = I, IMAGE = H[*,*,I]<br /><br />; Play the animation:<br />XINTERANIMATE, /KEEP_PIXMAPS</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Since the KEEP_PIXMAPS keyword was supplied, the same animation can be replayed (after the animation widget has been destroyed) with the single command<code> XINTERANIMATE.</code></p>
+        <h2 class="API"><a name="X_800576109_894328"></a><a name="X_800576109_894328_PageTOC_XINTERANIMATE_"></a>Syntax</h2>
+        <p class="Syntax">XINTERANIMATE [,&#160;<i>Rate</i>] </p>
+        <p class="Syntax"><b>Keywords for initialization:</b> [,&#160;<a href="#X_800576109_894336" class="selected">SET</a>=<i>[sizex</i>, <i>sizey</i>, <i>nframes]</i>] [,&#160;/<a href="#X_800576109_964691" class="selected">BLOCK</a>] [,&#160;/<a href="#X_800576109_894339" class="selected">CYCLE</a>] [,&#160;<a href="#X_800576109_964285" class="selected">GROUP</a>=<i>widget_id</i>] [,&#160;/<a href="#X_800576109_964292" class="selected">MODAL</a>] [, <a href="#X_800576109_964699" class="selected">MPEG_BITRATE</a>=<i>value</i>] [,&#160;<a href="#X_800576109_1045976" class="selected">MPEG_FORMAT</a>=<i>value</i>] [,&#160;<a href="#X_800576109_964723" class="selected">MPEG_IFRAME_GAP</a>=<i>integer value</i>] [,&#160;<a href="#X_800576109_964730" class="selected">MPEG_MOTION_VEC_LENGTH</a>={1&#160;|&#160;2&#160;|&#160;3}] [,&#160;/<a href="#X_800576109_934051" class="selected">MPEG_OPEN</a>,&#160;<a href="#X_800576109_934000" class="selected">MPEG_FILENAME</a>=<i>string</i>] [&#160;<a href="#X_800576109_964762" class="selected">MPEG_QUALITY</a>=<i>value</i>{0&#160;to&#160;100}] [,&#160;/<a href="#X_800576109_894342" class="selected">SHOWLOAD</a>] [,&#160;/<a href="#X_800576109_894345" class="selected">TRACK</a>] [,&#160;<a href="#X_800576109_894348" class="selected">TITLE</a>=<i>string</i>]</p>
+        <p class="Syntax"><b>Keywords for loading images:</b> [,&#160;<a href="#X_800576109_894353" class="selected">FRAME</a>=<i>value</i>{0 to (<i>nframes</i>&#8209;1)} [,&#160;<a href="#X_800576109_894356" class="selected">IMAGE</a>=<i>value</i>]] [,&#160;/<a href="#X_800576109_894359" class="selected">ORDER</a>] [,&#160;<a href="#X_800576109_894362" class="selected">WINDOW</a>=<i>[window_num</i> [,&#160;<i>x0</i>, <i>y0</i>, <i>sx</i>, <i>sy</i>]<i>]</i>] </p>
+        <p class="Syntax"><b>Keywords for running animations:</b> [,&#160;/<a href="#X_800576109_894369" class="selected">CLOSE</a>] [,&#160;/<a href="#X_800576109_894375" class="selected">KEEP_PIXMAPS</a>] [,&#160;/<a href="#X_800576109_941497" class="selected">MPEG_CLOSE</a>] [,&#160;<a href="#X_800576109_894378" class="selected">XOFFSET</a>=<i>pixels</i>] [,&#160;<a href="#X_800576109_894381" class="selected">YOFFSET</a>=<i>pixels</i>]</p>
+        <h2 class="API"><a name="X_800576109_894330"></a><a name="X_800576109_894330_PageTOC_XINTERANIMATE_"></a>Arguments</h2>
+        <h3 class="Argument">Rate</h3>
+        <p>A value between 0 and 100 that represents the speed of the animation as a percentage of the maximum display rate. The fastest animation is with a value of 100 and the slowest is with a value of 0. The default animation rate is 100. The animation must be initialized using the SET keyword before calling XINTERANIMATE with a rate value.</p>
+        <h2 class="API" data-mc-conditions="Reference Material.Online_Help_Only"><a name="X_800576109_1063055"></a><a name="X_800576109_894333_PageTOC_XINTERANIMATE_"></a>
+            <MadCap:conditionalText data-mc-conditions="Reference Material.Online_Help_Only">Keywords</MadCap:conditionalText>
+        </h2>
+        <p data-mc-conditions="Reference Material.Online_Help_Only">
+            <MadCap:conditionalText data-mc-conditions="Reference Material.Online_Help_Only">The following keywords are segmented into three categories:</MadCap:conditionalText>
+        </p>
+        <ul>
+            <li value="1" data-mc-conditions="Reference Material.Online_Help_Only">
+                <MadCap:conditionalText data-mc-conditions="Reference Material.Online_Help_Only"><a href="#X_800576109_996664" class="selected">Keywords: Initialization</a>
+                </MadCap:conditionalText>
+            </li>
+            <li value="2" data-mc-conditions="Reference Material.Online_Help_Only">
+                <MadCap:conditionalText data-mc-conditions="Reference Material.Online_Help_Only"><a href="#X_800576109_894350" class="selected">Keywords: Loading Images</a>
+                </MadCap:conditionalText>
+            </li>
+            <li value="3" data-mc-conditions="Reference Material.Online_Help_Only">
+                <MadCap:conditionalText data-mc-conditions="Reference Material.Online_Help_Only"><a href="#X_800576109_894366" class="selected">Keywords: Running Animations</a>
+                </MadCap:conditionalText>
+            </li>
+        </ul>
+        <h2 class="API"><a name="X_800576109_996664"></a><a name="X_800576109_95240"></a>Keywords: Initialization</h2>
+        <p>The following keywords are used to initialize the animation display. The SET keyword <i>must</i> be provided. Other keywords described in this section are optional; note that they work only when SET is specified.</p>
+        <h3><a name="X_800576109_894336"></a><a name="X_800576109_894336_Keywords_XINTERANIMATE__"></a>SET</h3>
+        <p>Set this keyword to a three-element vector [<i>Sizex</i>, <i>Sizey</i>, <i>Nframes</i>] to initialize XINTERANIMATE. <i>Sizex</i> and <i>Sizey</i> represent the width and height of the images to be displayed, in pixels. <i>Nframes</i> is the number of frames in the animation sequence. Note that <i>Nframes</i> must be at least 2 frames.</p>
+        <h3><a name="X_800576109_964691"></a><a name="X_800576109_964691_Keywords_XINTERANIMATE__"></a><a name="X_800576109_17358"></a>BLOCK</h3>
+        <p>Set this keyword to have XMANAGER <i>block</i> when this application is registered. By default, BLOCK is set equal to zero, providing access to the command line if active command line processing is available. Note that setting BLOCK=1 will cause <i>all</i> widget applications to block, not just this application. For more information, see the documentation for the <a href="XMANAGER.htm#X_800576109_921241">NO_BLOCK</a> keyword to XMANAGER.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Only the outermost call to XMANAGER can block. Therefore, to have XINTERANIMATE block, any earlier calls to XMANAGER must have been called with the NO_BLOCK keyword. See the documentation for the <a href="XMANAGER.htm#X_800576109_921241">NO_BLOCK</a> keyword to XMANAGER for an example.</p>
+        <h3><a name="X_800576109_894339"></a><a name="X_800576109_894339_Keywords_XINTERANIMATE__"></a>CYCLE</h3>
+        <p>Normally, frames are displayed going either forward or backwards. If the CYCLE keyword is set, the animation reverses direction after the last frame in either direction is displayed.</p>
+        <h3><a name="X_800576109_964285"></a><a name="X_800576109_964285_Keywords_XINTERANIMATE__"></a>GROUP</h3>
+        <p>Set this keyword to the widget ID of the widget that calls XINTERANIMATE. When GROUP is specified, the death of the calling widget results in the death of XINTERANIMATE.</p>
+        <h3><a name="X_800576109_964292"></a><a name="X_800576109_964292_Keywords_XINTERANIMATE__"></a>MODAL</h3>
+        <p>Set this keyword to block processing of events from other widgets until the user quits XINTERANIMATE. A group leader must be specified (via the GROUP keyword) for the MODAL keyword to have any effect. By default, XINTERANIMATE does not block event processing.</p>
+        <h3><a name="X_800576109_964699"></a><a name="X_800576109_964699_Keywords_XINTERANIMATE__"></a>MPEG_BITRATE</h3>
+        <p>Set this keyword to a double-precision value to specify the MPEG movie bit rate. Higher bit rates will create higher quality MPEGs but will increase file size. The following table describes the valid values:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;mc-caption-repeat: false;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>MPEG Version</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Range</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>MPEG 1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>0.1 to 104857200.0</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>MPEG 2 </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>0.1 to 429496729200.0</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>If you do not set this keyword, IDL computes the MPEG_BITRATE value based upon the value you have specified for the MPEG_QUALITY keyword. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Only use the MPEG_BITRATE keyword if changing the MPEG_QUALITY keyword value does not produce the desired results. It is highly recommended to set the MPEG_BITRATE to at least several times the frame rate to avoid unusable MPEG files or file generation errors.</p>
+        <h3><a name="X_800576109_934000"></a><a name="X_800576109_934000_Keywords_XINTERANIMATE__"></a>MPEG_FILENAME</h3>
+        <p>Set this keyword equal to a string specifying the name of the MPEG file. If no file name is specified, the default value (<code>idl.mpg</code>) is used.</p>
+        <h3><a name="X_800576109_1045976"></a><a name="X_800576109_26090"></a>MPEG_FORMAT</h3>
+        <p>Set this keyword to a boolean value that specifies the type of MPEG encoding to use: </p>
+        <ul>
+            <li value="1">0 = MPEG1 (the default)</li>
+            <li value="2">1 = MPEG2</li>
+        </ul>
+        <h3><a name="X_800576109_964723"></a><a name="X_800576109_964723_Keywords_XINTERANIMATE__"></a>MPEG_IFRAME_GAP</h3>
+        <p>Set this keyword to a positive integer value that specifies the number of frames between I frames to be created in the MPEG file. I frames are full-quality image frames that may have a number of predicted or interpolated frames between them.</p>
+        <p>If you do not specify this keyword, IDL computes the MPEG_IFRAME_GAP value based upon the value you have specified for the MPEG_QUALITY keyword.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Only use the MPEG_IFRAME_GAP keyword if changing the MPEG_QUALITY keyword value does not produce the desired results.</p>
+        <h3><a name="X_800576109_964730"></a><a name="X_800576109_964730_Keywords_XINTERANIMATE__"></a>MPEG_MOTION_VEC_LENGTH</h3>
+        <p>Set this keyword to an integer value specifying the length of the motion vectors to be used to generate predictive frames. Valid values include:</p>
+        <table style="margin-left: 0;margin-right: auto;caption-side: top;mc-table-style: url('../../Resources/TableStyles/NoLines.css');" class="TableStyle_NoLines" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>Small motion vectors</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>Medium motion vectors</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColEnd">
+                        <p>Large motion vectors</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>If you do not set this keyword, IDL computes the MPEG_MOTION_VEC_LENGTH value based upon the value you have specified for the MPEG_QUALITY keyword.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Only use the MPEG_MOTION_VEC_LENGTH keyword if changing the MPEG_QUALITY value does not produce the desired results.</p>
+        <h3><a name="X_800576109_934051"></a><a name="X_800576109_934051_Keywords_XINTERANIMATE__"></a>MPEG_OPEN</h3>
+        <p>Set this keyword to open an MPEG file.</p>
+        <h3><a name="X_800576109_964762"></a><a name="X_800576109_964762_Keywords_XINTERANIMATE__"></a>MPEG_QUALITY</h3>
+        <p>Set this keyword to an integer value between 0 (low quality) and 100 (high quality) inclusive to specify the quality at which the MPEG stream is to be stored. Higher quality values result in lower rates of time compression and less motion prediction which provide higher quality MPEGs but with substantially larger file size. Lower quality factors may result in longer MPEG generation times. The default is 50.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Since MPEG uses JPEG (lossy) compression, the original picture quality can’t be reproduced even when setting QUALITY to its highest setting.</p>
+        <h3><a name="X_800576109_894342"></a><a name="X_800576109_894342_Keywords_XINTERANIMATE__"></a>SHOWLOAD</h3>
+        <p>Set this keyword to display each frame and update the frame slider as frames are loaded.</p>
+        <h3><a name="X_800576109_894345"></a><a name="X_800576109_894345_Keywords_XINTERANIMATE__"></a>TRACK</h3>
+        <p>Set this keyword to cause the frame slider to track the current frame when the animation is in progress. The default is not to track.</p>
+        <h3><a name="X_800576109_894348"></a><a name="X_800576109_894348_Keywords_XINTERANIMATE__"></a>TITLE</h3>
+        <p>Use this keyword to specify a string to be used as the title of the animation widget. If TITLE is not specified, the title is set to “XInterAnimate.”</p>
+        <h2 class="API"><a name="X_800576109_894350"></a><a name="X_800576109_894350_PageTOC_XINTERANIMATE_"></a>Keywords: Loading Images </h2>
+        <p>The following keywords are used to load images into the animation display. They have no effect when initializing or running animations.</p>
+        <h3><a name="X_800576109_894353"></a><a name="X_800576109_894353_Keywords_XINTERANIMATE__"></a>FRAME</h3>
+        <p>Use this keyword to specify the frame number when loading frames. FRAME must be set to a number in the range 0 to <i>Nframes</i>-1.</p>
+        <h3><a name="X_800576109_894356"></a><a name="X_800576109_894356_Keywords_XINTERANIMATE__"></a>IMAGE</h3>
+        <p>Use this keyword to specify a single image to be loaded at the animation position specified by the FRAME keyword. (FRAME <i>must</i> also be specified.)</p>
+        <h3><a name="X_800576109_894359"></a><a name="X_800576109_894359_Keywords_XINTERANIMATE__"></a>ORDER</h3>
+        <p>Set this keyword to display images from the top down instead of the default bottom up.</p>
+        <h3><a name="X_800576109_894362"></a><a name="X_800576109_894362_Keywords_XINTERANIMATE__"></a>WINDOW</h3>
+        <p>When this keyword is specified, an image is copied from an existing window to the animation pixmap or memory buffer. (When using some windowing systems, using this keyword is much faster than reading from the display and then calling XINTERANIMATE with a 2-D array.)</p>
+        <p>The value of this parameter is either an IDL window number (in which case the entire window is copied), or a vector containing the window index and the rectangular bounds of the area to be copied. For example: </p>
+        <p class="Code">WINDOW = [Window_Number, X0, Y0, Sx, Sy]</p>
+        <h2 class="API"><a name="X_800576109_894366"></a><a name="X_800576109_894366_PageTOC_XINTERANIMATE_"></a>Keywords: Running Animations</h2>
+        <p>The following keywords are used when running the animation. They have no effect when initializing the animation or loading images.</p>
+        <h3><a name="X_800576109_894369"></a><a name="X_800576109_894369_Keywords_XINTERANIMATE__"></a>CLOSE</h3>
+        <p>Set this keyword to delete the offscreen pixmaps or buffers and the animation widget itself. This also takes place automatically when the user presses the “Done With Animation” button or closes the window with the window manager.</p>
+        <h3><a name="X_800576109_894375"></a><a name="X_800576109_894375_Keywords_XINTERANIMATE__"></a>KEEP_PIXMAPS</h3>
+        <p>If this keyword is set, XINTERANIMATE will not destroy the animation pixmaps or buffers when it is killed. Calling XINTERANIMATE again without going through the SET and LOAD steps will play the same animation without the overhead of creating the pixmaps.</p>
+        <h3><a name="X_800576109_941497"></a><a name="X_800576109_941497_Keywords_XINTERANIMATE__"></a>MPEG_CLOSE</h3>
+        <p>Set this keyword to close and save the MPEG file. This keyword has no effect if MPEG_OPEN was not used during initialization.</p>
+        <h3><a name="X_800576109_894378"></a><a name="X_800576109_894378_Keywords_XINTERANIMATE__"></a>XOFFSET</h3>
+        <p>Use this keyword to specify the horizontal offset, in pixels from the left of the frame, of the image in the destination window.</p>
+        <h3><a name="X_800576109_894381"></a><a name="X_800576109_894381_Keywords_XINTERANIMATE__"></a>YOFFSET</h3>
+        <p>Use this keyword to specify the vertical offset, in pixels from the bottom of the frame, of the image in the destination window.</p>
+        <h2 class="API"><a name="X_800576109_894395"></a><a name="X_800576109_894395_PageTOC_XINTERANIMATE_"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre-4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added MPEG_FORMAT keyword.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="X_800576109_991418"></a><a name="X_800576109_991418_PageTOC_XINTERANIMATE_"></a>See Also</h2>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

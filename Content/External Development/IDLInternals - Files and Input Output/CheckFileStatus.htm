@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Files and Input Output">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Check File Status - IDL_FileEnsureStatus()</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="FilesIO.htm">IDLInternals - Files and Input Output</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Check File Status - IDL_FileEnsureStatus()</span>
+        </div>
+        <h1><a name="kanchor5492"></a>Check File Status - IDL_FileEnsureStatus()</h1>
+        <p>System routines that deal with files must verify that the files have the proper attributes for the intended operation. Use the function <b>IDL_FileEnsureStatus()</b> for this.</p>
+        <h2 class="API">IDL_FileEnsureStatus()</h2>
+        <p class="Code">int IDL_FileEnsureStatus(int action, int unit, int flags)</p>
+        <h3>action</h3>
+        <p>If the file unit does not satisfy the requirements of the flags argument, <b>IDL_FileEnsureStatus()</b> will issue an error using the IDL_Message() function (see <a href="../IDLInternals - Error Handling/IssuingErrorMessages.htm">Issuing Error Messages</a>. This action is the argument to <b>IDL_Message()</b> and should be <b>IDL_MSG_RET</b>, <b>IDL_MSG_LONGJMP</b>, or <b>IDL_MSG_IO_LONGJMP</b>.</p>
+        <h3>unit</h3>
+        <p>The Logical Unit Number of the file to be checked.</p>
+        <h3>flags</h3>
+        <p><b>IDL_FileEnsureStatus()</b> always checks to make sure unit is a valid logical file unit. In addition, flags is a bit mask specifying the file attributes that should be checked. The possible bit values are listed in the following table:</p>
+        <ul>
+            <li value="1"><b>IDL_EFS_USER</b>: The file must be a user unit. This means that the file is not one of the three special files, stdin, stdout, or stderr.</li>
+            <li value="2"><b>IDL_EFS_IDL_OPEN</b>: The file unit must be open.</li>
+            <li value="3"><b>IDL_EFS_CLOSED</b>: The file unit must be closed.</li>
+            <li value="4"><b>IDL_EFS_READ</b>: The file unit must be open for input.</li>
+            <li value="5"><b>IDL_EFS_WRITE</b>: The file unit must be open for output.</li>
+            <li value="6"><b>IDL_EFS_NOTTY</b>: The file unit cannot be a tty.</li>
+            <li value="7"><b>IDL_EFS_NOGUI</b>: The file unit cannot be a Graphical User Interface.</li>
+            <li value="8"><b>IDL_EFS_NOPIPE</b>: The file unit cannot be a pipe.</li>
+            <li value="9"><b>IDL_EFS_NOXDR</b>: The file unit cannot be a XDR file.</li>
+            <li value="10"><b>IDL_EFS_ASSOC</b>: The file unit can be ASSOC’ed. This implies <b>IDL_EFS_USER</b>, <b>IDL_EFS_OPEN</b>, <b>IDL_EFS_NOTTY</b>, <b>IDL_EFS_NOPIPE</b>, <b>IDL_EFS_NOXDR</b>, <b>IDL_EFS_NOCOMPRESS</b>, and <b>IDL_EFS_NOSOCKET</b>.</li>
+            <li value="11"><b>IDL_EFS_NOT_RAWIO</b>: The file was not opened with the <b>IDL_F_UNIX_RAWIO</b> attribute. This bit was formerly called <b>IDL_F_NOTSTDIO</b>. <b>IDL_EFS_NOT_RAWIO</b> is the preferred form, but both names are accepted.</li>
+            <li value="12"><b>IDL_EFS_NOCOMPRESS</b>: The file unit cannot have been opened for compressed input/output (<b>IDL_F_COMPRESS</b>).</li>
+            <li value="13"><b>IDL_EFS_STDIO</b>: The file must be using the C stdio package (<b>IDL_F_STDIO</b>).</li>
+            <li value="14"><b>IDL_EFS_NOSOCKET</b>: The file unit cannot be a socket (<b>IDL_F_SOCKET</b>).</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Some of these values are contradictory. The caller must select a consistent set.</p>
+        <p>If the file unit meets the desired conditions, <b>IDL_FileEnsureStatus()</b> returns TRUE. If it does not meet the conditions, and action was <b>IDL_MSG_RET</b>, then it returns FALSE.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

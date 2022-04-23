@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: T">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>TRIGRID </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="T_list.htm">Routines: T</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">TRIGRID</span>
+        </div>
+        <h1 class="Routine"><a name="T_809226861_1095045"></a><a name="T_809226861_16540"></a>TRIGRID <a name="kanchor2575"></a></h1>
+        <p>For non-spherical data, given data points defined by the parameters <i>X, Y,</i> and <i>Z</i> and a triangulation of the planar set of points determined by <i>X</i> and <i>Y</i>, the TRIGRID function returns a regular grid of interpolated <i>Z</i> values. Linear or smooth quintic polynomial interpolation can be selected. Extrapolation for gridpoints outside of the triangulation area is also an option. An input triangulation can be constructed using the procedure <a href="TRIANGULATE.htm#T_809226861_679530">TRIANGULATE</a>. TRIGRID uses double precision for all computations.<a name="kanchor2576"></a></p>
+        <p>For spherical data, given the data values <i>F</i> and the spherical triangulation, the TRIGRID function returns a regular grid of interpolated <i>F</i> values using quadratic polynomial interpolation.<a name="kanchor2577"></a><a name="kanchor2578"></a></p>
+        <h2 class="API"><a name="T_809226861_1075871"></a><a name="T_809226861_1075871_PageTOC_TRIGRID_"></a>Examples</h2>
+        <p>See <a href="#Addition" class="selected">Additional Examples</a> for more information on using TRIGRID.</p>
+        <h3><a name="T_809226861_679629_Keywords_TRIGRID__"></a>Example 1</h3>
+        <p>This example creates and displays a 50 point random normal distribution. The random points are then triangulated, with the triangulation displayed. Next, the interpolated surface is computed and displayed using linear and quintic interpolation. Finally, the smooth extrapolated surface is generated and shown.</p>
+        <p class="Code">; Make 50 normal x, y points:<br />x = RANDOMN(seed, 50)<br />y = RANDOMN(seed, 50)<br /><br />; Make the Gaussian:<br />z = EXP(-(x^2 + y^2))<br /><br />; Show points:<br />IPLOT, x, y, SYM_INDEX=1, LINESTYLE=6, $<br />&#160;&#160;&#160;VIEW_TITLE='Random Points', VIEW_GRID=[3,2], $<br />&#160;&#160;&#160;DIMENSIONS=[1000,800]<br /><br />; Obtain triangulation:<br />TRIANGULATE, x, y, tr, b<br /><br />; Show linear surface:<br />ISURFACE, TRIGRID(x, y, z, tr), VIEW_TITLE='Linear Surface', $<br />&#160;&#160;&#160;STYLE=1, /VIEW_NEXT<br /><br />; Show smooth quintic surface:<br />ISURFACE, TRIGRID(x, y, z, tr, /QUINTIC), $<br />&#160;&#160;&#160;VIEW_TITLE='Quintic Surface', STYLE=1, /VIEW_NEXT<br /><br />; Show smooth extrapolated surface:<br />ISURFACE, TRIGRID(x, y, z, tr, EXTRA = b), $<br />&#160;&#160;&#160;VIEW_TITLE='Extrapolated Surface', STYLE=1, /VIEW_NEXT<br /><br />; Set output grid size to 12 x 24:<br />ISURFACE, TRIGRID(X, Y, Z, Tr, NX=12, NY=24), $<br />&#160;&#160;&#160;VIEW_TITLE='12x24 Grid', STYLE=1, /VIEW_NEXT<br /><br />ISETPROPERTY, 'text*', FONT_SIZE=36</p>
+        <h2 class="API"><a name="T_809226861_679605"></a><a name="T_809226861_679605_PageTOC_TRIGRID_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = TRIGRID( <i>X</i>, <i>Y</i>, <i>Z</i>, <i>Triangles</i> [,&#160;<i>GS</i>, <i>Limits</i>] ) </p>
+        <p>For spherical gridding:</p>
+        <p class="Syntax"><i>Result</i> = TRIGRID( <i>F</i> , <i>GS</i>, <i>Limits</i>, <a href="#T_809226861_126737" class="selected">SPHERE</a>=<i>S </i>)</p>
+        <p class="Syntax"><b>Keywords:</b> [,&#160;/<a href="#T_809226861_679620" class="selected">DEGREES</a>] [,&#160;<a href="#T_809226861_126730" class="selected">EXTRAPOLATE</a>=<i>array</i>] [,&#160;<a href="#T_809226861_128106" class="selected">INPUT</a>=<i>variable</i>] [,&#160;<a href="#T_809226861_128088" class="selected">MAX_VALUE</a>=<i>value</i>] [,&#160;<a href="#T_809226861_128089" class="selected">MIN_VALUE</a>=<i>value</i>] [,&#160;<a href="#T_809226861_679622" class="selected">MISSING</a>=<i>value</i>] [,&#160;<a href="#T_809226861_1076987" class="selected">NX</a>=<i>value</i>] [,&#160;<a href="#T_809226861_1076989" class="selected">NY</a>=<i>value</i>] [,&#160;/<a href="#T_809226861_679624" class="selected">QUINTIC</a>] [,&#160;<a href="#T_809226861_126737" class="selected">SPHERE</a>=<i>variable</i>] [,&#160;<a href="#T_809226861_837019" class="selected">XGRID</a>=<i>variable</i>] [,&#160;<a href="#T_809226861_1075935" class="selected">XOUT</a>=<i>vector</i>] [,&#160;<a href="#T_809226861_837021" class="selected">YGRID</a>=<i>variable</i>] [,&#160;<a href="#T_809226861_1139904" class="selected">YOUT</a>=<i>vector</i>]</p>
+        <h2 class="API"><a name="T_809226861_1095033"></a><a name="T_809226861_52444"></a>Return Value</h2>
+        <p>If any of <i>X</i>, <i>Y</i>, or <i>Z</i> are double precision, <i>Result</i> is double precision; otherwise, <i>Result</i> is single precision. If <a href="#T_809226861_126737" class="selected">SPHERE</a> is present, <i>Result</i> is always double precision. </p>
+        <h2 class="API"><a name="T_809226861_1075948"></a><a name="T_809226861_1075948_PageTOC_TRIGRID_"></a>Arguments</h2>
+        <h3 class="Argument">X, Y, Z</h3>
+        <p>Input arrays of <i>X</i>, <i>Y</i>, and <i>Z</i> coordinates of data points. Integer, long, double-precision and floating-point values are allowed. In addition, <i>Z</i> can be a complex array. All three arrays must have the same number of elements.</p>
+        <h3 class="Argument">F</h3>
+        <p>When performing a spherical gridding, this argument should be the named variable that contains the rearranged sample values that were returned by TRIANGULATE’s FVALUE keyword.</p>
+        <h3 class="Argument">Triangles</h3>
+        <p>A longword array of the form output by TRIANGULATE. That is, <i>Triangles</i> has the dimensions (3, <i>number of triangles</i>) and, for each <i>i</i>, <code>Triangles[0,i]</code>, <code>Triangles[1,i]</code>, and <code>Triangles[2,i]</code> are the indices of the vertices of the <i>i-</i>th triangle.</p>
+        <h3 class="Argument">GS</h3>
+        <p>If present, <i>GS</i> should be a two-element vector [<i>XS, YS</i>], where <i>XS</i> is the horizontal spacing between grid points and <i>YS</i> is the vertical spacing. The default is based on the extents of <i>X</i> and <i>Y</i>. If the grid starts at <i>X</i> value <i>x</i><sub>0</sub> and ends at <i>x</i><sub>1</sub>,then the horizontal spacing is</p>
+        <p>(<i>x</i><sub>1</sub>- <i>x</i><sub>0</sub>)/50</p>
+        <p>The default for <i>YS</i> is computed in the same way. Since the default grid spacing divides each axis into 50 intervals and produces 51 samples, TRIGRID returns a grid with dimensions (51, 51).</p>
+        <p>If the NX or NY keywords are set to specify the output grid dimensions, either or both of the values of <i>GS</i> may be set to 0. In this case, the grid spacing is computed as the respective range divided by the dimension minus one:</p>
+        <p>(<i>x</i><sub>1</sub>- <i>x</i><sub>0</sub>)/(NX-1) and (<i>y</i><sub>1</sub>- <i>y</i><sub>0</sub>)/(NY-1)</p>
+        <p>For spherical gridding, <i>GS</i> is assumed to be specified in radians, unless the DEGREES keyword is set.</p>
+        <h3 class="Argument">Limits</h3>
+        <p>If present, <i>Limits</i> should be a four-element vector [<i>x</i><sub>0</sub><i>, y</i><sub>0</sub><i>, x</i><sub>1</sub><i>, y</i><sub>1</sub>] that specifies the data range to be gridded (<i>x</i><sub>0</sub> and <i>y</i><sub>0</sub> are the lower X and Y data limits, and <i>x</i><sub>1</sub> and <i>y</i><sub>1</sub> are the upper limits). The default for <i>Limits</i> is:</p>
+        <p class="Code">[MIN(X), MIN(Y), MAX(X), MAX(Y)]</p>
+        <p>If the NX or NY keywords are not specified, the size of the grid produced is specified by the value of <i>Limits</i>. If the NX or NY keywords are set to specify the output grid dimensions, a grid of the specified size will be used regardless of the value of <i>Limits</i>.</p>
+        <h2 class="API"><a name="T_809226861_899866"></a><a name="T_809226861_899866_PageTOC_TRIGRID_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="T_809226861_679620"></a><a name="T_809226861_679620_Keywords_TRIGRID__"></a>DEGREES</h3>
+        <p>For a spherical gridding, set this keyword to indicate that the grid spacing (the <i>GS</i> argument) is specified in degrees rather than radians.</p>
+        <h3 class="Keyword"><a name="T_809226861_126730"></a><a name="T_809226861_126730_Keywords_TRIGRID__"></a>EXTRAPOLATE</h3>
+        <p>Set this keyword equal to an array of boundary node indices (as returned by the optional parameter B of the <a href="TRIANGULATE.htm#T_809226861_679530">TRIANGULATE</a> procedure) to extrapolate to grid points outside the triangulation. The extrapolation is not smooth, but should give acceptable results in most cases. </p>
+        <p>Setting this keyword sets the quintic interpolation mode, as if the QUINTIC keyword has been specified.</p>
+        <p>This keyword is ignored for spherical gridding.</p>
+        <h3 class="Keyword"><a name="T_809226861_128106"></a><a name="T_809226861_128106_Keywords_TRIGRID__"></a>INPUT</h3>
+        <p>Set this keyword to a named variable (which must be an array of the appropriate size to hold the output from TRIGRID) in which the results of the gridding are returned. This keyword is provided to make it easy and memory-efficient to perform multiple calls to TRIGRID. The interpolates within each triangle overwrite the array and the array is not initialized.</p>
+        <h3 class="Keyword"><a name="T_809226861_128088"></a><a name="T_809226861_128088_Keywords_TRIGRID__"></a>MAX_VALUE</h3>
+        <p>Set this keyword to a value that represents the maximum <i>Z</i> value to be gridded. Data larger than this value are treated as missing data and are not gridded.</p>
+        <p>This keyword is ignored for spherical gridding.</p>
+        <h3 class="Keyword"><a name="T_809226861_128089"></a><a name="T_809226861_128089_Keywords_TRIGRID__"></a>MIN_VALUE</h3>
+        <p>Set this keyword to a value that represents the minimum <i>Z</i> value to be gridded. Data smaller than this value are treated as missing data and are not gridded.</p>
+        <p>This keyword is ignored for spherical gridding.</p>
+        <h3 class="Keyword"><a name="T_809226861_679622"></a><a name="T_809226861_679622_Keywords_TRIGRID__"></a>MISSING</h3>
+        <p><a name="kanchor2579"></a>The <i>Z</i> value to be used for grid points that lie outside the triangles in <i>Triangles</i>. The default is 0. This keyword also applies to data points outside the range specified by MIN_VALUE and MAX_VALUE.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Letting MISSING default to 0 does not always produce the same result as explicitly setting it to 0. For example, if you specify INPUT and not EXTRAPOLATE, letting MISSING default to 0 will result in the INPUT values being used for data outside the Triangles; explicitly setting MISSSING to 0 will result in 0 being used for the data outside the Triangles.</p>
+        <h3 class="Keyword"><a name="T_809226861_1076987"></a><a name="T_809226861_1076987_Keywords_TRIGRID__"></a>NX</h3>
+        <p>The output grid size in the <i>x</i> direction. The default value is 51. </p>
+        <h3 class="Keyword"><a name="T_809226861_1076989"></a><a name="T_809226861_1076989_Keywords_TRIGRID__"></a>NY</h3>
+        <p>The output grid size in the <i>y </i>direction. The default value is 51.</p>
+        <h3 class="Keyword"><a name="T_809226861_679624"></a><a name="T_809226861_679624_Keywords_TRIGRID__"></a>QUINTIC</h3>
+        <p><a name="kanchor2580"></a>If QUINTIC is set, smooth interpolation is performed using Akima’s quintic polynomials from “A Method of Bivariate Interpolation and Smooth Surface Fitting for Irregularly Distributed Data Points” in <i>ACM Transactions on Mathematical Software</i>, 4, 148-159. For non-spherical data, the default method is linear interpolation. For spherical data, the default method is quadratic interpolation, and the QUINTIC keyword is ignored.</p>
+        <p>Derivatives are estimated by Renka’s global method in “A Triangle-Based C1 Interpolation Method” in <i>Rocky Mountain Journal of Mathematics</i>, vol. 14, no. 1, 1984.</p>
+        <p>QUINTIC is not available for complex data values. Setting the EXTRAPOLATE keyword implies the use of quintic interpolation; it is not necessary to specify both.</p>
+        <h3 class="Keyword"><a name="T_809226861_126737"></a><a name="T_809226861_126737_Keywords_TRIGRID__"></a>SPHERE</h3>
+        <p>For a spherical gridding, set this keyword to the named variable that contains the results of the spherical triangulation returned by TRIANGULATE’s SPHERE keyword.</p>
+        <h3 class="Keyword"><a name="T_809226861_837019"></a><a name="T_809226861_837019_Keywords_TRIGRID__"></a>XGRID</h3>
+        <p>Set this keyword to a named variable that will contain a vector of <i>X</i> values for the output grid. </p>
+        <h3 class="Keyword"><a name="T_809226861_1075935"></a><a name="T_809226861_1075935_Keywords_TRIGRID__"></a>XOUT</h3>
+        <p>Set this keyword to a vector specifying the output grid <i>X</i> values. If this keyword is supplied, the <i>GS</i> and <i>Limits</i> arguments are ignored. Use this keyword to specify irregularly spaced rectangular output grids. If XOUT is specified, YOUT must also be specified. If keyword NX is also supplied then only the first NX points of XOUT will be used. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The XOUT keyword cannot be used with the SPHERE keyword.</p>
+        <h3 class="Keyword"><a name="T_809226861_837021"></a><a name="T_809226861_837021_Keywords_TRIGRID__"></a>YGRID</h3>
+        <p>Set this keyword to a named variable that will contain a vector of <i>Y</i> values for the output grid. </p>
+        <h3 class="Keyword"><a name="T_809226861_1139904"></a><a name="T_809226861_1075879_Keywords_TRIGRID__"></a>YOUT</h3>
+        <p>Set this keyword to a vector specifying the output grid <i>Y</i> values. If this keyword is supplied, the <i>GS</i> and <i>Limits</i> arguments are ignored. Use this keyword to specify irregularly spaced rectangular output grids. If keyword NY is also supplied then only the first NY points of YOUT will be used.</p>
+        <p>The following table shows the interrelationships between the keywords EXATRAPOLATE, INPUT, MAX_VALUE, MIN_VALUE, and MISSING. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The YOUT keyword cannot be used with the SPHERE keyword.</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>INPUT</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>EXTRAPOLATE</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>MISSING</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Not in<br />Triangles</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Beyond MIN_VALUE,<br />MAX_VALUE</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>no</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>no</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>no</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>uses 0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>uses 0</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>no</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>no</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>uses MISSING</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>uses MISSING</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>no</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>no</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>EXTRAPOLATEs</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>uses 0</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>no</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>EXTRAPOLATEs</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>uses MISSING</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>no</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>no</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>uses INPUT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>uses INPUT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>no</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>uses MISSING</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>uses MISSING</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>no</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>EXTRAPOLATEs</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>uses INPUT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>EXTRAPOLATEs</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>uses MISSING</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="Addition"></a>Additional Examples</h2>
+        <h3><a name="T_809226861_899782_Keywords_TRIGRID__"></a>Example 2</h3>
+        <p>This example shows how to perform spherical gridding:</p>
+        <p class="Code">; Create some random longitude points:<br />lon = RANDOMU(seed, 50) * 360. - 180.<br /><br />; Create some random latitude points:<br />lat = RANDOMU(seed, 50) * 180. - 90.<br /><br />; Make a fake function value to be passed to FVALUE. The system <br />; variable !DTOR contains the conversion value for degrees to <br />; radians.<br />f = SIN(lon * !DTOR)^2 * COS(lat * !DTOR)<br /><br />; Perform a spherical triangulation:<br />TRIANGULATE, lon, lat, tr, $<br />&#160;&#160;&#160;&#160;SPHERE=s, FVALUE=f, /DEGREES<br /><br />; Perform a spherical triangulation using the values returned from <br />; TRIANGULATE. The result, r, is a 180 by 91 element array:<br />r=TRIGRID(f, SPHERE=s, [2.,2.],$<br />&#160;&#160;&#160;[-180.,-90.,178.,90.], /DEGREES)<br /><br />; Display the surface<br />SURFACE, r</p>
+        <h3><a name="T_809226861_1084139_Keywords_TRIGRID__"></a>Example 3</h3>
+        <p>This example demonstrates the use of the INPUT keyword:</p>
+        <p class="Code">; Make 50 normal x, y points:<br />x = RANDOMN(seed, 50)<br />y = RANDOMN(seed, 50)<br /><br />; Make the Gaussian:<br />z = EXP(-(x^2 + y^2))<br /><br />; Show points:<br />IPLOT, x, y, SYM_INDEX=1, LINESTYLE=6, $<br />&#160;&#160;&#160;VIEW_TITLE='Random Points', VIEW_GRID=[2,2], $<br />&#160;&#160;&#160;DIMENSIONS=[800,600]<br /><br />; Obtain triangulation:<br />TRIANGULATE, x, y, tr, b<br /><br />; xtemp provides temporary space for trigrid and should be <br />; the same type as Z.<br />xtemp=FLTARR(51,51)<br /><br />; Show linear surface:<br />xtemp = TRIGRID(x, y, z, INPUT = xtemp, tr)<br />ISURFACE, xtemp, VIEW_TITLE='Linear surface', STYLE=1, /VIEW_NEXT<br /><br />; Show smooth quintic surface:<br />xtemp = TRIGRID(x, y, z, tr, INPUT = xtemp, /QUINTIC)<br />ISURFACE, xtemp, VIEW_TITLE='Smooth Quintic surface', $<br />&#160;&#160;&#160;STYLE=1, /VIEW_NEXT<br /><br />; Show smooth extrapolated surface:<br />xtemp = TRIGRID(x, y, z, tr, INPUT = xtemp, EXTRA = b)<br />ISURFACE, xtemp, VIEW_TITLE='Smooth Extrapolated surface', $<br />&#160;&#160;&#160;STYLE=1, /VIEW_NEXT<br /><br />ISETPROPERTY, 'text*', FONT_SIZE=36</p>
+        <h3><a name="T_809226861_1083989_Keywords_TRIGRID__"></a>Example 4</h3>
+        <p>The XOUT and YOUT keywords allow you to obtain an irregular interval from the TRIGRID routine. This example creates an irregularly-gridded dataset of a Gaussian surface. A grid is formed from these points with the TRIANGULATE and TRIGRID routines. The inputs to the XOUT and YOUT keywords are determined at random to produce an irregular interval. These inputs are sorted before setting them to XOUT and YOUT because these keywords require monotonically ascending or descending values. The lines of the resulting surface are spaced at the irregular intervals provided by the settings of the XOUT and YOUT keywords. <a name="kanchor2581"></a></p>
+        <p class="Code">; Make 100 normal x, y points:<br />x = RANDOMN(seed, 100)<br />y = RANDOMN(seed, 100)<br /><br />; Make a Gaussian surface:<br />z = EXP(-(x^2 + y^2))<br /><br />; Obtain triangulation:<br />TRIANGULATE, x, y, triangles, boundary<br /><br />; Create random x and y values for the grid.<br />gridX = RANDOMN(seed, 30)<br />gridY = RANDOMN(seed, 30)<br />; Sorted values are required for the XOUT and YOUT keywords.<br />sortX = UNIQ(gridX, SORT(gridX))<br />gridX = gridX[sortX]<br />sortY = UNIQ(gridY, SORT(gridY))<br />gridY = gridY[sortY]<br /><br />; Derive the grid.<br />grid = TRIGRID(x, y, z, triangles, XOUT = gridX, $<br />&#160;&#160;&#160;YOUT = gridY, EXTRAPOLATE = boundary)<br /><br />; Display the grid.  The grid lines are not<br />; at regular intervals because of the randomness of the<br />; inputs to the XOUT and YOUT keywords.<br />SURFACE, grid, gridX, gridY, /XSTYLE, /YSTYLE</p>
+        <h2 class="API"><a name="T_809226861_795982"></a><a name="T_809226861_795982_PageTOC_TRIGRID_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre-4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="T_809226861_1086518"></a><a name="T_809226861_1086518_PageTOC_TRIGRID_"></a>See Also</h2>
+        <p><a href="../S/SPH_SCAT.htm#S_820040301_126787">SPH_SCAT</a>, <a href="TRIANGULATE.htm#T_809226861_679530">TRIANGULATE</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

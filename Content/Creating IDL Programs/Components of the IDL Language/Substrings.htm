@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Data Types|String Operations">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Substrings</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDL_Data_Types.htm">Data Types</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="String_Operations.htm">String Operations</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Substrings</span>
+        </div>
+        <h1><a name="strings_3486979161_288062"></a><a name="strings_3486979161_64287"></a>Substrings</h1>
+        <p><a name="kanchor4556"></a>IDL provides the <a href="../../Reference Material/S/STRPOS.htm#S_820040301_679132">STRPOS</a>, <a href="../../Reference Material/S/STRPUT.htm#S_820040301_679148">STRPUT</a>, and <a href="../../Reference Material/S/STRMID.htm#S_820040301_1074010">STRMID </a>routines to locate, insert, and extract substrings from their string arguments.</p>
+        <h2 class="API"><a name="strings_3486979161_18640"></a>Searching for a Substring</h2>
+        <p><a name="kanchor4557"></a>The <a href="../../Reference Material/S/STRPOS.htm#S_820040301_679132">STRPOS</a> function is used to search for the first occurrence of a substring. It has the form</p>
+        <p class="indent">S = STRPOS(<i>Object</i>, <i>Search_string</i>[, <i>Position</i>])</p>
+        <p>where <i>Object </i>is the string to be searched, <i>Search_string </i>is the substring to search for, and<i> Position </i>is the character position (starting with position 0) at which the search is begun. If the optional argument <i>Position</i> is omitted, the search is started at the first character (character position 0). The following IDL procedure counts the number of times that the word “dog” appears in the string “dog cat duck rabbit dog cat dog”:</p>
+        <p class="Code">PRO Animals</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; The search string, "dog", appears three times.</p>
+        <p class="Code">animals = 'dog cat duck rabbit dog cat dog' </p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Start searching in character position 0.</p>
+        <p class="Code">I = 0</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Number of occurrences found.</p>
+        <p class="Code">cnt = 0</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Search for an occurrence.</p>
+        <p class="Code">WHILE (I NE -1) DO BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;I = STRPOS(animals, 'dog', I)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;IF (I NE -1) THEN BEGIN </p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;; Update counter.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;cnt = cnt + 1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;;I ncrement I so as not to count the same instance of 'dog' </p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;; twice.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;I = I + 1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;ENDIF</p>
+        <p class="Code">ENDWHILE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Print the result.</p>
+        <p class="Code">PRINT, 'Found ', cnt, " occurrences of 'dog'"</p>
+        <p class="Code">END</p>
+        <p>Running the above program produces the result below.</p>
+        <p class="Code">Found         3 occurrences of 'dog'</p>
+        <h2 class="API"><a name="strings_3486979161_79117"></a>Searching For the Last Occurrence of a Substring</h2>
+        <p><a name="kanchor4558"></a>The REVERSE_SEARCH keyword to the <a href="../../Reference Material/S/STRPOS.htm#S_820040301_679132">STRPOS</a> function makes it easy to find the last occurrence of a substring within a string. In the following example, we search for the last occurrence of the letter “I” (or “i”) in a sentence:</p>
+        <p class="Code">sentence = 'IDL is fun.'</p>
+        <p class="Code">sentence = STRUPCASE(sentence)</p>
+        <p class="Code">lasti = STRPOS(sentence, 'I', /REVERSE_SEARCH)</p>
+        <p class="Code">PRINT, lasti</p>
+        <p>This results in:</p>
+        <p class="Code">4</p>
+        <p>Note that although REVERSE_SEARCH tells STRPOS to begin searching from the end of the string, the STRPOS function still returns the position of the search string starting from the beginning of the string (where 0 is the position of the first character).</p>
+        <h2 class="API"><a name="strings_3486979161_63109"></a>Inserting the Contents of One String into Another</h2>
+        <p><a name="kanchor4559"></a>The <a href="../../Reference Material/S/STRPUT.htm#S_820040301_679148">STRPUT </a>procedure is used to insert the contents of one string into another. It has the form,</p>
+        <p class="indent">STRPUT, <i>Destination</i>, <i>Source</i>[, <i>Position</i>]</p>
+        <p>where<i> Destination</i> is the string to be overwritten, <i>Source</i> is the string to be inserted, and <i>Position</i> is the first character position within <i>Destination</i> at which <i>Source </i>will be inserted. If the optional argument <i>Position</i> is omitted, the overwrite is started at the first character (character position 0). The following IDL statements use STRPOS and STRPUT to replace every occurrence of the word “dog” with the word “CAT” in the string “dog cat duck rabbit dog cat dog”:</p>
+        <p class="Code">animals = 'dog cat duck rabbit dog cat dog'</p>
+        <p class="Code">;The string to search, "dog", appears three times.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;While any occurrence of "dog" exists, replace it.</p>
+        <p class="Code">WHILE (((I = STRPOS(animals, 'dog'))) NE -1) DO $</p>
+        <p class="Code">STRPUT, animals, 'CAT', I</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Show the resulting string.</p>
+        <p class="Code">PRINT, animals</p>
+        <p>Running the above statements produces the result below.</p>
+        <p class="Code">CAT cat duck rabbit CAT cat CAT</p>
+        <h2 class="API"><a name="strings_3486979161_33933"></a>Extracting Substrings</h2>
+        <p><a name="kanchor4560"></a>The <a href="../../Reference Material/S/STRMID.htm#S_820040301_1074010">STRMID</a> function is used for extracting substrings from a larger string. It has the form:</p>
+        <p class="indent">STRMID(<i>Expression</i>, <i>First_Character</i> [, <i>Length</i>])</p>
+        <p>where <i>Expression</i> is the string from which the substring will be extracted, <i>First_Character </i>is the starting position within <i>Expression</i> of the substring (the first position is position 0), and <i>Length </i>is the length of the substring to extract. If there are not <i>Length </i>characters following the position <i>First_Character, </i>the substring will be truncated. If the <i>Length</i> argument is not supplied, STRMID extracts all characters from the specified starting position to the end of the string. The following IDL statements use STRMID to print a table matching the number of each month with its three-letter abbreviation:</p>
+        <p class="Code">; String containing all the month names.</p>
+        <p class="Code">months = 'JANFEBMARAPRMAYJUNJULAUGSEPOCTNOVDEC'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Extract each name in turn. The equation (I-1)*3 calculates the </p>
+        <p class="Code">; position within MONTH for each abbreviation</p>
+        <p class="Code">FOR I = 1, 12 DO PRINT, I, '&#160;&#160;&#160;&#160;&#160;&#160;', $</p>
+        <p class="Code">STRMID(months, (I - 1) * 3, 3)</p>
+        <p>The result of executing these statements is as follows:</p>
+        <p class="Code">&#160;1&#160;&#160;&#160;&#160;&#160;&#160;JAN</p>
+        <p class="Code">&#160;2&#160;&#160;&#160;&#160;&#160;&#160;FEB</p>
+        <p class="Code">&#160;3&#160;&#160;&#160;&#160;&#160;&#160;MAR</p>
+        <p class="Code">&#160;4&#160;&#160;&#160;&#160;&#160;&#160;APR</p>
+        <p class="Code">&#160;5&#160;&#160;&#160;&#160;&#160;&#160;MAY</p>
+        <p class="Code">&#160;6&#160;&#160;&#160;&#160;&#160;&#160;JUN</p>
+        <p class="Code">&#160;7&#160;&#160;&#160;&#160;&#160;&#160;JUL</p>
+        <p class="Code">&#160;8&#160;&#160;&#160;&#160;&#160;&#160;AUG</p>
+        <p class="Code">&#160;9&#160;&#160;&#160;&#160;&#160;&#160;SEP</p>
+        <p class="Code">10&#160;&#160;&#160;&#160;&#160;&#160;OCT</p>
+        <p class="Code">11&#160;&#160;&#160;&#160;&#160;&#160;NOV</p>
+        <p class="Code">12&#160;&#160;&#160;&#160;&#160;&#160;DEC</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

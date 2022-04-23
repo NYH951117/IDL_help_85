@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C|CDF Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>CDF_VARGET</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../CDF_Routines.htm">CDF Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">CDF_VARGET</span>
+        </div>
+        <h1 class="Routine"><a name="CDF_1744428779_1008632"></a><a name="CDF_1744428779_10909"></a>CDF_VARGET</h1>
+        <p>The <a name="kanchor221"></a>CDF_VARGET procedure reads multiple values from a Common Data Format file variable. By default, all elements of a record are read. If INTERVAL and/or OFFSET are specified but no COUNT is specified, CDF_VARGET attempts to get as many elements of each record as possible.</p>
+        <h2 class="API">Examples</h2>
+        <p class="Code">; Create a CDF file,  and make a few variables:</p>
+        <p class="Code">id = CDF_CREATE('DEMOvargets')</p>
+        <p class="Code">vid1 = CDF_VARCREATE(id, 'VAR1', /CDF_CHAR, NUMELEM=15)</p>
+        <p class="Code">vid2=CDF_VARCREATE(id, 'VAR2', /CDF_UCHAR, NUMELEM=10)</p>
+        <p class="Code">CDF_VARPUT, id, vid1, BINDGEN(15, 2)+55, COUNT=2</p>
+        <p class="Code">CDF_VARPUT, id, vid2, ['IDLandCDF ', 'AreWayCool'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Retrieve the CDF_CHAR array as byte data:</p>
+        <p class="Code">CDF_VARGET, id,'VAR1',var1_byte,REC_COUNT=2</p>
+        <p class="Code">HELP, var1_byte </p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Retrieve the CDF_CHAR array as string data:</p>
+        <p class="Code">CDF_VARGET, id, 'VAR1', var1_string, REC_COUNT=2, /STRING</p>
+        <p class="Code">HELP, var1_string</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; For demonstration purposes, use the 'VAR2' variable number to</p>
+        <p class="Code">; access 'VAR2' for the duration of this example:</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">var2num = CDF_VARNUM(id, 'VAR2')</p>
+        <p class="Code">HELP, var2num</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Rename 'VAR2' to 'VAR_STRING_2':</p>
+        <p class="Code">CDF_VARRENAME, id, var2num, 'VAR_STRING_2'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Examine VAR_STRING_2 with CDF_VARINQ:</p>
+        <p class="Code">VAR2_INQ = CDF_VARINQ(id, var2num)</p>
+        <p class="Code">HELP, VAR2_INQ, /STRUCTURE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Read in and print out VAR_STRING_2:</p>
+        <p class="Code">CDF_VARGET, id, var2num, var2_string, /STRING, REC_COUNT=2</p>
+        <p class="Code">PRINT, var2_string</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">CDF_DELETE, id ; Delete the CDF file</p>
+        <h4>IDL Output</h4>
+        <p class="Code">% CDF_VARGET: Warning: converting data to unsigned bytes</p>
+        <p>This warning message indicates that the data was stored in the CDF file with type CDF_CHAR (signed 1-byte characters), but was retrieved by IDL with type BYTE (unsigned byte). To turn this warning message off, set !QUIET=1.</p>
+        <p class="Code">VAR1_BYTE       BYTE      = Array(15,  2)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">VAR1_STRING     STRING    = Array(2)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">VAR2NUM         LONG      =            1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">** Structure &lt;400b1600&gt;, 6 tags, length=33, refs=1:</p>
+        <p class="Code">   IS_ZVAR         INT &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;0</p>
+        <p class="Code">   NAME            STRING&#160;&#160;&#160;&#160;&#160;'VAR_STRING_2'</p>
+        <p class="Code">   DATATYPE        STRING&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;'CDF_UCHAR'</p>
+        <p class="Code">   NUMELEM         LONG&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;10</p>
+        <p class="Code">   RECVAR          STRING&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;'VARY'</p>
+        <p class="Code">   DIMVAR          BYTE&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;0</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IDLandCDF  AreWayCool</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax">CDF_VARGET, <i>Id</i>, <i>Variable</i>, <i>Value </i>[,&#160;<a href="#CDF_1744428779_1008690" class="selected">COUNT</a>=<i>vector</i>] [,&#160;<a href="#CDF_1744428779_1008693" class="selected">INTERVAL</a>=<i>vector</i>] [,&#160;<a href="#CDF_1744428779_1008696" class="selected">OFFSET</a>=<i>vector</i>] [,&#160;<a href="#CDF_1744428779_1008699" class="selected">REC_COUNT</a>=<i>records</i>] [,&#160;<a href="#CDF_1744428779_1008702" class="selected">REC_INTERVAL</a>=<i>value</i>] [,&#160;<a href="#CDF_1744428779_1008705" class="selected">REC_START</a>=<i>record</i>] [,&#160;/<a href="#CDF_1744428779_1008708" class="selected">STRING</a>] [,&#160;/<a href="#TOCOLUMN" class="selected">TO_COLUMN_MAJOR</a>] [,&#160;/<a href="#CDF_1744428779_1008711" class="selected">ZVARIABLE</a>]</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Id</h3>
+        <p>The CDF ID, returned from a previous call to CDF_OPEN or CDF_CREATE</p>
+        <h3 class="Argument">Variable</h3>
+        <p>A string containing the name of the variable <i>or</i> the variable number being read.</p>
+        <h3 class="Argument">Value</h3>
+        <p>A named variable in which the values of the variable are returned.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="CDF_1744428779_1008690"></a><a name="CDF_1744428779_997847_Keywords_CDF_VARGET_"></a>COUNT</h3>
+        <p>An optional vector containing the counts to be used in reading Value. The default is to read all elements in each record, taking into account INTERVAL and OFFSET.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1008693"></a><a name="CDF_1744428779_997850_Keywords_CDF_VARGET_"></a>INTERVAL</h3>
+        <p>A vector specifying the interval between values in each dimension. The default value is 1 for each dimension.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1008696"></a><a name="CDF_1744428779_997853_Keywords_CDF_VARGET_"></a>OFFSET</h3>
+        <p>A vector specifying the array indices within the specified record(s) at which to begin writing. OFFSET is a 1-dimensional array containing one element per CDF dimension. The default value is zero for each dimension.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1008699"></a><a name="CDF_1744428779_997856_Keywords_CDF_VARGET_"></a>REC_COUNT </h3>
+        <p>The number of records to read. The default is 1.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1008702"></a><a name="CDF_1744428779_997859_Keywords_CDF_VARGET_"></a>REC_INTERVAL</h3>
+        <p>The interval between records when reading multiple records. The default value is 1.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1008705"></a><a name="CDF_1744428779_997862_Keywords_CDF_VARGET_"></a>REC_START</h3>
+        <p>The record number at which to start reading. The default is 0.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1008708"></a><a name="CDF_1744428779_997865_Keywords_CDF_VARGET_"></a>STRING</h3>
+        <p>Set this keyword to return CDF_CHAR and CDF_UCHAR data from the CDF file into <i>Value</i> as string data rather than byte data. This keyword is ignored if the data in the CDF file is not of type CDF_CHAR or CDF_UCHAR.</p>
+        <h3 class="Keyword"><a name="TOCOLUMN"></a>TO_COLUMN_MAJOR</h3>
+        <p>Set this keyword to convert the returned value from row-major form to column-major form. When this keyword is used with an ISTP-compilant CDF file, the dimensions defined in the meta-data (DEPEND_1, DEPEND_2, etc.) will match the returned data. This keyword is only applicable when reading full variable records.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1008711"></a><a name="CDF_1744428779_997868_Keywords_CDF_VARGET_"></a>ZVARIABLE</h3>
+        <p>If <i>Variable</i> is a variable ID (as opposed to a variable name) and the variable is a zVariable, set this flag to indicate that the variable ID is a zVariable ID. The default is to assume that <i>Variable</i> is an rVariable ID.</p>
+        <h2 class="API">Examples</h2>
+        <p class="Code">; Create a CDF file,  and make a few variables:</p>
+        <p class="Code">id = CDF_CREATE('DEMOvargets')</p>
+        <p class="Code">vid1 = CDF_VARCREATE(id, 'VAR1', /CDF_CHAR, NUMELEM=15)</p>
+        <p class="Code">vid2=CDF_VARCREATE(id, 'VAR2', /CDF_UCHAR, NUMELEM=10)</p>
+        <p class="Code">CDF_VARPUT, id, vid1, BINDGEN(15, 2)+55, COUNT=2</p>
+        <p class="Code">CDF_VARPUT, id, vid2, ['IDLandCDF ', 'AreWayCool'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Retrieve the CDF_CHAR array as byte data:</p>
+        <p class="Code">CDF_VARGET, id,'VAR1',var1_byte,REC_COUNT=2</p>
+        <p class="Code">HELP, var1_byte </p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Retrieve the CDF_CHAR array as string data:</p>
+        <p class="Code">CDF_VARGET, id, 'VAR1', var1_string, REC_COUNT=2, /STRING</p>
+        <p class="Code">HELP, var1_string</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; For demonstration purposes, use the 'VAR2' variable number to</p>
+        <p class="Code">; access 'VAR2' for the duration of this example:</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">var2num = CDF_VARNUM(id, 'VAR2')</p>
+        <p class="Code">HELP, var2num</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Rename 'VAR2' to 'VAR_STRING_2':</p>
+        <p class="Code">CDF_VARRENAME, id, var2num, 'VAR_STRING_2'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Examine VAR_STRING_2 with CDF_VARINQ:</p>
+        <p class="Code">VAR2_INQ = CDF_VARINQ(id, var2num)</p>
+        <p class="Code">HELP, VAR2_INQ, /STRUCTURE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Read in and print out VAR_STRING_2:</p>
+        <p class="Code">CDF_VARGET, id, var2num, var2_string, /STRING, REC_COUNT=2</p>
+        <p class="Code">PRINT, var2_string</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">CDF_DELETE, id ; Delete the CDF file</p>
+        <h4>IDL Output</h4>
+        <p class="Code">% CDF_VARGET: Warning: converting data to unsigned bytes</p>
+        <p>This warning message indicates that the data was stored in the CDF file with type CDF_CHAR (signed 1-byte characters), but was retrieved by IDL with type BYTE (unsigned byte). To turn this warning message off, set !QUIET=1.</p>
+        <p class="Code">VAR1_BYTE       BYTE      = Array(15,  2)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">VAR1_STRING     STRING    = Array(2)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">VAR2NUM         LONG      =            1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">** Structure &lt;400b1600&gt;, 6 tags, length=33, refs=1:</p>
+        <p class="Code">   IS_ZVAR         INT &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;0</p>
+        <p class="Code">   NAME            STRING&#160;&#160;&#160;&#160;&#160;'VAR_STRING_2'</p>
+        <p class="Code">   DATATYPE        STRING&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;'CDF_UCHAR'</p>
+        <p class="Code">   NUMELEM         LONG&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;10</p>
+        <p class="Code">   RECVAR          STRING&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;'VARY'</p>
+        <p class="Code">   DIMVAR          BYTE&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;0</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IDLandCDF  AreWayCool</p>
+        <h2 class="API">Version History</h2>
+        <p>&#160;</p>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">8.3</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">Added TO_COLUMN_MAJOR keyword</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

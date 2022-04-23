@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>COPY_LUN </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">COPY_LUN</span>
+        </div>
+        <h1 class="Routine"><a name="C_854643309_1058915"></a><a name="kanchor352"></a><a name="kanchor353"></a><a name="C_854643309_33678"></a>COPY_LUN </h1>
+        <p>The COPY_LUN procedure copies data between two open files. It allows you to transfer a known amount of data from one file to another without needing to have the data available in an IDL variable. COPY_LUN can copy a fixed amount of data, specified in bytes or lines of text, or it can copy from the current position of the file pointer in the input file to the end of that file.</p>
+        <p>COPY_LUN copies data between open files. To copy entire files based on their names, see the <a href="../F/FILE_COPY.htm#F_848155245_894462">FILE_COPY</a> procedure. To read and discard a known amount of data from a file, see the <a href="../S/SKIP_LUN.htm#S_820040301_1120942">SKIP_LUN</a>.</p>
+        <h2 class="API"><a name="C_854643309_1058943"></a><a name="C_854643309_1058943_PageTOC_COPY_LUN_"></a>Examples</h2>
+        <p>Copy the next 100000 bytes of data between two files:</p>
+        <p class="Code">COPY_LUN, FromUnit, ToUnit, 100000</p>
+        <p>Copy the next 8 lines of text between two files:</p>
+        <p class="Code">COPY_LUN, FromUnit, ToUnit, 8, /LINES</p>
+        <p>Copy the remainder of the data in one file to another, and use the TRANSFER_COUNT keyword to determine how much data was copied:</p>
+        <p class="Code">COPY_LUN, FromUnit, ToUnit, /EOF, TRANSFER_COUNT=n</p>
+        <p>Copy the remaining lines of text from one file to another, and use the TRANSFER_COUNT keyword to determine how many lines were transferred.</p>
+        <p class="Code">COPY_LUN, FromUnit, ToUnit, /EOF, /LINES, TRANSFER_COUNT=n</p>
+        <h2 class="API"><a name="C_854643309_1090883"></a><a name="C_854643309_1058926_PageTOC_COPY_LUN_"></a>Syntax</h2>
+        <p class="Syntax">COPY_LUN, <i>FromUnit</i>, <i>ToUnit</i> [,&#160;<i>Num</i>] [,&#160;/<a href="#C_854643309_1090923" class="selected">EOF</a>] [,&#160;/<a href="#C_854643309_1090926" class="selected">LINES</a>] [,&#160;/<a href="#C_854643309_1090928" class="selected">TRANSFER_COUNT</a>]</p>
+        <h2 class="API"><a name="C_854643309_1058928"></a><a name="C_854643309_1058928_PageTOC_COPY_LUN_"></a>Arguments</h2>
+        <h3 class="Argument">FromUnit</h3>
+        <p>An integer that specifies the file unit for the file from which data is to be taken (the <i>source</i> file). Data is copied from <i>FromUnit</i>, starting at the current position of the file pointer. The file pointer is advanced as data is read. The file specified by <i>FromUnit</i> must be open, and must not have been opened with the RAWIO keyword to OPEN.</p>
+        <h3 class="Argument">ToUnit</h3>
+        <p>An integer that specifies the file unit for the file to which data is to be written (the <i>destination</i> file). Data is written to <i>ToUnit</i>, starting at the current position of the file pointer. The file pointer is advanced as data is written. The file specified by <i>ToUnit</i> must be open for output (OPENW or OPENU), and must not have been opened with the RAWIO keyword to OPEN.</p>
+        <h3 class="Argument">Num</h3>
+        <p>The amount of data to transfer between the two files. This value is specified in bytes, unless the LINES keyword is specified, in which case it is taken to be the number of text lines. If <i>Num</i> is not specified, COPY_LUN acts as if the EOF keyword has been set, and copies all data in <i>FromUnit</i> (the source file) from the current position of the file pointer to the end of the file.</p>
+        <p>If <i>Num</i> is specified and the source file comes to end of file before the specified amount of data is transferred, COPY_LUN issues an end-of-file error. The EOF keyword alters this behavior.</p>
+        <h2 class="API"><a name="C_854643309_1058936"></a><a name="C_854643309_1058936_PageTOC_COPY_LUN_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="C_854643309_1090923"></a><a name="C_854643309_1090923_Keywords_COPY_LUN__"></a>EOF</h3>
+        <p>Set this keyword to ignore the value given by <i>Num</i> (if present) and instead transfer all data between the current position of the file pointer in <i>FromUnit</i> and the end of the file. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If EOF is set, no end-of-file error is issued even if the amount of data transferred does not match the amount specified by <i>Num</i>. The TRANSFER_COUNT keyword can be used with EOF to determine how much data was transferred.</p>
+        <h3 class="Keyword"><a name="C_854643309_1090926"></a><a name="C_854643309_1090926_Keywords_COPY_LUN__"></a>LINES</h3>
+        <p>Set this keyword to indicate that the <i>Num</i> argument specifies the number of lines of text to be transferred. By default, the <i>Num</i> argument specifies the number of bytes of data to transfer.</p>
+        <h3 class="Keyword"><a name="C_854643309_1090928"></a><a name="C_854643309_1090928_Keywords_COPY_LUN__"></a>TRANSFER_COUNT</h3>
+        <p>Set this keyword equal to a named variable that will contain the amount of data transferred. If LINES is specified, this value is the number of lines of text. Otherwise, it is the number of bytes. TRANSFER_COUNT is primarily useful when the <i>Num</i> argument is not specified or the EOF keyword is present. If <i>Num</i> is specified and the EOF keyword is not present, TRANSFER_COUNT will be the same as the value specified for <i>Num</i>.</p>
+        <h2 class="API"><a name="C_854643309_1058952"></a><a name="C_854643309_1058952_PageTOC_COPY_LUN_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.6</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="C_854643309_1058954"></a><a name="C_854643309_1058954_PageTOC_COPY_LUN_"></a>See Also</h2>
+        <p><a href="CLOSE.htm#C_854643309_676114">CLOSE</a>, <a href="../E/EOF.htm#E_841667181_984141">EOF</a>, <a href="../F/FILE_COPY.htm#F_848155245_894462">FILE_COPY</a>, <a href="../F/FILE_LINK.htm#F_848155245_894186">FILE_LINK</a>, <a href="../F/FILE_MOVE.htm#F_848155245_894357">FILE_MOVE</a>, <a href="../O/OPEN.htm#O_828691053_932624">OPENR/OPENU/OPENW</a>, <a href="../R/READ.htm#R_822202989_863816">READ/READF</a>, <a href="../S/SKIP_LUN.htm#S_820040301_1120942">SKIP_LUN</a>, <a href="../W/WRITEU.htm#W_811389549_756607">WRITEU</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|Python Bridge">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Python to IDL Bridge</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Python.htm">Python Bridge</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Python to IDL</span>
+        </div>
+        <h1 class="Routine"><a name="kanchor5415"></a>Python to IDL Bridge</h1>
+        <p>The Python to IDL bridge provides a mechanism for calling IDL code from Python. The IDL module contains a set of methods that allow you to initialize and interact with the IDL interpreter. In addition, each object passed back from IDL is wrapped in an instance of the IDL class; you can then call methods on the underlying IDL object, or set and retrieve attributes on the object.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>See <a href="Python.htm">Python Bridge</a> for installation instructions.</p>
+        <h3>Methods and Additional Information</h3>
+        <ul>
+            <li value="1"><a href="#Import" class="selected">Import the IDL Module</a>
+            </li>
+            <li value="2"><a href="#RunMethod" class="selected">IDL.run( )</a>
+            </li>
+            <li value="3"><a href="#CallingRoutines" class="selected">Calling IDL Routines</a>
+            </li>
+            <li value="4"><a href="#Objects" class="selected">IDL Object Classes</a>
+            </li>
+            <li value="5"><a href="#CaseSensitivity" class="selected">Case Sensitivity</a>
+            </li>
+            <li value="6"><a href="#Passing" class="selected">Passing Variables to and from IDL</a>
+            </li>
+            <li value="7"><a href="#SystemVariables" class="selected">Retrieving IDL System Variables</a>
+            </li>
+            <li value="8"><a href="#ParameterPassing" class="selected">Mechanism for Passing Parameters</a>
+            </li>
+            <li value="9"><a href="#Datatype" class="selected">Datatype Conversion</a>
+            </li>
+            <li value="10"><a href="#ArrayDimensions" class="selected">Array Dimensions and Array Majority</a>
+            </li>
+        </ul>
+        <h2 class="API">Examples</h2>
+        <p>
+            <img src="../../images/python_map_323x162.png" style="width: 323;height: 162;" />
+        </p>
+        <p>Call an IDL function or method directly from Python code, as if it was a Python object:</p>
+        <p class="Code">&gt;&gt;&gt; from idlpy import IDL</p>
+        <p class="Code">&gt;&gt;&gt; arr = IDL.findgen(100)/50*3.14159</p>
+        <p class="Code">&gt;&gt;&gt; x = 50*IDL.sin(arr)</p>
+        <p class="Code">&gt;&gt;&gt; y = 50*IDL.cos(arr)</p>
+        <p class="Code">&gt;&gt;&gt; m = IDL.map(test=1)</p>
+        <p class="Code">% Compiled module: MAP.</p>
+        <p class="Code">&gt;&gt;&gt; p = IDL.plot(x - 90, y, 'r-o2', overplot=1)</p>
+        <p class="Code">% Compiled module: PLOT.</p>
+        <p class="Code">&gt;&gt;&gt; p = IDL.plot(x + 90, y, 'b-o2', overplot=1)</p>
+        <p class="Code">&gt;&gt;&gt; m.save('map.png', resolution=96, border=0, transparent=1)</p>
+        <p>Notice that any output from IDL gets printed out in the Python console.</p>
+        <p>Execute the same commands, but called directly within the IDL interpreter:</p>
+        <p class="Code">&gt;&gt;&gt; IDL.run("arr = findgen(100)/50*3.14159")</p>
+        <p class="Code">&gt;&gt;&gt; IDL.run("help, arr", stdout=1)</p>
+        <p class="Code">ARR&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;FLOAT&#160;&#160;&#160;&#160;&#160;= Array[100]</p>
+        <p class="Code">&gt;&gt;&gt; IDL.run("x = 50*sin(arr)")</p>
+        <p class="Code">&gt;&gt;&gt; IDL.run("y = 50*cos(arr)")</p>
+        <p class="Code">&gt;&gt;&gt; IDL.run("m = map(/test)")</p>
+        <p class="Code">&gt;&gt;&gt; IDL.run("p = plot(x - 90, y, 'r-o2', /overplot)")</p>
+        <p class="Code">&gt;&gt;&gt; IDL.run("p = plot(x + 90, y, 'b-o2', /overplot)")</p>
+        <p class="Code">&gt;&gt;&gt; IDL.run("m.save, 'map.png', resolution=96, border=0, /transparent")</p>
+        <h1><a name="Import"></a>Import the IDL Module</h1>
+        <p>To start using the IDL module from within Python, you can use the following command:</p>
+        <p class="Code">&gt;&gt;&gt; from idlpy import IDL</p>
+        <p>At this point you now have access to all of the methods on the IDL class.</p>
+        <h1><a name="RunMethod"></a>IDL.run</h1>
+        <p>The IDL.run method executes IDL commands within the IDL interpreter. Any output produced by IDL&#160;is either returned in the result or redirected to the Python console.</p>
+        <h2 class="API">Examples</h2>
+        <p>Execute some arbitrary IDL code and print the result:</p>
+        <p class="Code">&gt;&gt;&gt; IDL.run('arr = FINDGEN(100)')</p>
+        <p class="Code">&gt;&gt;&gt; IDL.run('help, arr', stdout=1)</p>
+        <p class="Code">ARR&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;FLOAT&#160;&#160;&#160;&#160;= Array[100]</p>
+        <p>Execute multiple IDL statements using the "&amp;" operator:</p>
+        <p class="Code">&gt;&gt;&gt; result = IDL.run('for i=0,9 do begin &amp; print, i &amp; endfor')</p>
+        <p class="Code">&gt;&gt;&gt; print(result)</p>
+        <p class="Code_Indented2">0</p>
+        <p class="Code_Indented2">1</p>
+        <p class="Code_Indented2">...</p>
+        <p class="Code_Indented2">9</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax" style="font-style: normal;"><i>Result</i> = IDL.run( <i>command</i> [, <i>stdout</i>=False] [, <i>silent</i>=False] )</p>
+        <h2 class="API">Return Value</h2>
+        <p>By default the return value is a Python string containing all of the IDL&#160;output. If <code>stdout</code> is set to <code>True</code> then all of IDL's output is redirected to the Python console and the return value is <code>None</code>.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Command</h3>
+        <p>A string containing the IDL statements to execute in the IDL interpreter.  You can send a multi-statement command by using a single string and separating the statements with the IDL "&amp;" operator.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">stdout</h3>
+        <p>Set this keyword to <code>True</code> to redirect all of IDL's output to the Python console.</p>
+        <h3 class="Keyword">silent</h3>
+        <p>Set this keyword to <code>True</code> to avoid saving the command to IDL's command history.</p>
+        <h1>Additional Information on the IDL Class</h1>
+        <h2 class="API"><a name="CallingRoutines"></a>Calling IDL Routines</h2>
+        <p>
+            <img src="../../images/python_semilog_321x238.png" style="width: 321;height: 238;" />
+        </p>
+        <p>Once you have imported the IDL module, you can call any function or procedure on IDL's path using the "dot" notation. Arguments and keywords can be passed to the routine. For example:</p>
+        <p class="Code">&gt;&gt;&gt; from idlpy import IDL</p>
+        <p class="Code">&gt;&gt;&gt; arr = IDL.randomu(None, 10000)</p>
+        <p class="Code">&gt;&gt;&gt; arr = IDL.smooth(arr, 50)</p>
+        <p class="Code">&gt;&gt;&gt; spec = IDL.fft_powerspectrum(arr, 0.1)</p>
+        <p class="Code">% Compiled module: FFT_POWERSPECTRUM.</p>
+        <p class="Code">&gt;&gt;&gt; import matplotlib.pyplot as plt</p>
+        <p class="Code">&gt;&gt;&gt; plt.semilogy(spec)
+</p>
+        <p class="Code">&gt;&gt;&gt; plt.show()</p>
+        <p>This creates the figure shown to the right.</p>
+        <h2 class="API"><a name="Objects"></a>IDL Object Classes</h2>
+        <p>If you have retrieved an object from IDL, you can call methods or get and set properties on that object by using the "dot" notation. For example, we could construct an IDL graphics plot, modify some properties on the plot, and then save the plot to a file:</p>
+        <p class="Code">&gt;&gt;&gt; from idlpy import IDL</p>
+        <p class="Code">&gt;&gt;&gt; import numpy.random as ran</p>
+        <p class="Code">&gt;&gt;&gt; arr = ran.rand(100)</p>
+        <p class="Code">&gt;&gt;&gt; p = IDL.plot(arr, title='My Plot')</p>
+        <p class="Code">&gt;&gt;&gt; p.color = 'red'</p>
+        <p class="Code">&gt;&gt;&gt; p.save('myplot.pdf')</p>
+        <p class="Code">&gt;&gt;&gt; p.close()</p>
+        <h2 class="API"><a name="CaseSensitivity"></a>Case Sensitivity</h2>
+        <p>IDL variable and method names are case insensitive while Python names are case sensitive. When you call an IDL&#160;function or method, such as the <code>save</code> method on the IDL PLOT class, the bridge will automatically convert the name to uppercase before asking IDL for the routine.</p>
+        <h2 class="API"><a name="Passing"></a>Passing Variables to and from IDL</h2>
+        <p>Normally, you will pass Python variables into IDL function calls as input arguments or keywords, and receive the result back as an Python variable. However, if you use the <code>IDL.run</code> method, you may want to pass variables to or from IDL directly. To do this, you can use the standard Python attribute notation on the IDL class. For example:</p>
+        <h4>Set an IDL variable</h4>
+        <p class="Code">&gt;&gt;&gt; from idlpy import IDL</p>
+        <p class="Code">&gt;&gt;&gt; import numpy.random as ran</p>
+        <p class="Code">&gt;&gt;&gt; arr = ran.rand(5)</p>
+        <p class="Code">&gt;&gt;&gt; IDL.arr = arr&#160;&#160;&#160; # pass by reference</p>
+        <p class="Code">&gt;&gt;&gt; IDL.run('print, arr')</p>
+        <p class="Code">0.64949746      &#160;0.42264582&#160;      0.54525948&#160;      0.54869483&#160;      0.97396999</p>
+        <p class="Code">&gt;&gt;&gt; arr[0] = 99</p>
+        <p class="Code">&gt;&gt;&gt; IDL.run('print, arr')</p>
+        <p class="Code">99.000000&#160;      0.42264582&#160;      0.54525948&#160;      0.54869483&#160;      0.97396999</p>
+        <h4>Retrieve an IDL variable</h4>
+        <p class="Code">&gt;&gt;&gt; from idlpy import IDL</p>
+        <p class="Code">&gt;&gt;&gt; IDL.run('arr2 = FINDGEN(10,20,30)')</p>
+        <p class="Code">&gt;&gt;&gt; arr2 = IDL.arr2&#160;&#160;&#160;&#160;# pass by value</p>
+        <p class="Code">&gt;&gt;&gt; arr2.shape</p>
+        <p class="Code">(30, 20, 10)</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>All variables that are passed from IDL back to Python will be given a lowercase name.</p>
+        <h2 class="API"><a name="SystemVariables"></a>Retrieving IDL System Variables</h2>
+        <p>To retrieve an IDL system variable such as <code>!DPI</code> or <code>!CONST</code>, you can use the Python <code>getattr()</code> method:</p>
+        <p class="Code">&gt;&gt;&gt; from idlpy import IDL</p>
+        <p class="Code">&gt;&gt;&gt; getattr(IDL, "!dpi")</p>
+        <p class="Code">3.1415926535897931</p>
+        <p class="Code">&gt;&gt;&gt; const = getattr(IDL, "!const")</p>
+        <p class="Code">&gt;&gt;&gt; const.keys()</p>
+        <p class="Code">dict_keys(['ME', 'PARSEC', 'DTOR', 'RYDBERG', 'MP', 'F', 'NA', 'M_EARTH', 'RE', 'P0', 'MN', 'G', 'H', 'PI', 'N0', 'T0', 'K', 'MU0', 'R_EARTH', 'VM', 'R', 'EPS0', 'LY', 'E', 'PHI', 'RTOD', 'ALPHA', 'U', 'AU', 'EULER', 'HBAR', 'I', 'GN', 'SIGMA', 'C', 'M_SUN'])</p>
+        <p class="Code">&gt;&gt;&gt; const['PARSEC']</p>
+        <p class="Code">30856775814671912.0</p>
+        <h2 class="API"><a name="ParameterPassing"></a>Mechanism for Passing Parameters</h2>
+        <ul>
+            <li value="1">All scalar values are passed to and from IDL by <i>value</i> — in other words, a copy of the variable is made, and changes to the variable on one side will not affect the other side's value.</li>
+            <li value="2">String arrays, lists, tuples, and dictionaries are passed to and from by <i>value</i>.</li>
+            <li value="3">Numeric arrays are passed by <i>reference</i> when they are used as arguments or keywords to IDL methods.</li>
+            <li value="4">Numeric arrays are passed by <i>reference</i> when they are passed from Python <code>__main__</code> variables to IDL. Changing one of the elements in either IDL or Python will change the corresponding element on the other side.</li>
+            <li value="5">Numeric arrays are passed by <i>value</i> when they are passed from IDL to the Python <code>__main__</code> level. In other words, a copy of the entire array is made. This is because the IDL code could delete the variable, but we have no way of knowing if the variable is still in use on the Python side since Python has no simple way to notify when all references to a variable are gone.</li>
+        </ul>
+        <h2 class="API"><a name="Datatype"></a>Datatype Conversion</h2>
+        <p>When variables are passed from IDL&#160;to Python or Python to IDL (as arguments, keywords, or <code>__main__</code> variables), the following datatype conversions take place in <i>both</i> directions:</p>
+        <table style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th style="text-align: left;" class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>IDL Datatype</p>
+                    </th>
+                    <th style="text-align: left;" class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Python Type</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>!NULL (0)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>None</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Byte (1)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>numpy.uint8</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Int (2)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>numpy.int16</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Long (3)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>numpy.int32</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Float (4)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>numpy.float32</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Double (5)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>numpy.float64, float</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Complex (6)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>numpy.complex64</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>String (7)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>str, unicode</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Structure (8)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p><i>see tables below</i>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Double Complex (9)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>numpy.complex128</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Pointer (10)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p><i>not allowed</i>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Objref (11)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p><i>see tables below</i>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Uint (12)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>numpy.uint16</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Ulong (13)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>numpy.uint32</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Long64 (14)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>numpy.int64</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>Ulong64 (15)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>numpy.uint64</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>The following datatypes are used when converting from IDL to Python:</p>
+        <table style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th style="text-align: left;" class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>IDL Datatype</p>
+                    </th>
+                    <th style="text-align: left;" class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Python Type</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Structure (8)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>dict</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p><a href="../../Reference Material/L/LIST.htm">List</a> object</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>list</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><a href="../../Reference Material/H/HASH.htm">Hash</a>, <a href="../../Reference Material/D/DICTIONARY.htm">Dictionary</a>, <a href="../../Reference Material/O/ORDEREDHASH.htm">OrderedHash</a> object</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>dict</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>IDL PYTHON object</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>corresponding Python object</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>Other IDL class</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p><i>not allowed</i>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>The following datatypes are used when converting from Python to IDL:</p>
+        <table style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th style="text-align: left;" class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Python Type</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p style="text-align: left;">IDL Type</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>bool, numpy.bool_</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Byte (1), with <a href="../../Reference Material/B/BOOLEAN.htm">boolean</a> flag</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>int, long</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Long (3) or Long64 (14), depending upon value</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>float</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Double (5)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>complex</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Double Complex (9)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>bytes, bytearray</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>String (7)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>unicode</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>String (7)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>list</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p><a href="../../Reference Material/L/LIST.htm">List</a> object</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>tuple</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p><a href="../../Reference Material/L/LIST.htm">List</a> object</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>dict</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p><a href="../../Reference Material/H/HASH.htm">Hash</a> object</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>other Python object</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>IDL PYTHON object that wraps the Python object</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>Python IDL object</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>corresponding IDL&#160;PYTHON object</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="ArrayDimensions"></a>Array Dimensions and Array Majority</h2>
+        <p>In IDL the data within a multi-dimensional array is organized as "column major," while in Python the data is organized as "row major."</p>
+        <h4>Column Major Versus Row Major</h4>
+        <p>In IDL, for a two-dimensional array the first dimension represents the "columns" of that array, while the second dimension represents the "rows". In terms of memory layout, the first dimension varies the "fastest", and has a stride equal to the size of the datatype in bytes. The second dimension varies the "slowest" and has a stride equal to the number of columns multiplied by the datatype size in bytes. For example, for a 16-bit integer array each column is separated by two bytes while each row is separated by 6 bytes:</p>
+        <p class="Code">IDL&gt; x = INDGEN(3,2)+1 &#160;; 3 columns by 2 rows</p>
+        <p class="Code">IDL&gt; PRINT, x</p>
+        <p class="Code_Indented2">1&#160;&#160;2&#160;&#160;3</p>
+        <p class="Code_Indented2">4&#160;&#160;5&#160;&#160;6</p>
+        <p class="Code">IDL&gt; PRINT, x[2,1] &#160;; value in column 2, row 1</p>
+        <p class="Code_Indented2">6<br /></p>
+        <p class="Code">IDL&gt; PRINT, BYTE(x, 0, 6*2) ; print the byte representation</p>
+        <p class="Code">&#160;&#160;1&#160;&#160;0&#160;&#160;2&#160;&#160;0&#160;&#160;3&#160;&#160;0&#160;&#160;4&#160;&#160;0&#160;&#160;5&#160;&#160;0&#160;&#160;6&#160;&#160;0</p>
+        <p>In Python, for a two-dimensional array the first dimension represents the "rows" of that array, while the second dimension represents the "columns". In terms of memory layout, the first dimension varies the "slowest", and has a stride equal to the number of columns multiplied by the datatype size in bytes. The second dimension varies the "fastest" and has a stride equal to the  size of the datatype in bytes. For example, for a 16-bit integer array each column is separated by two bytes while each row is separated by 6 bytes:</p>
+        <p class="Code">&gt;&gt;&gt; import numpy as np</p>
+        <p class="Code">&gt;&gt;&gt; x = np.array([[1, 2, 3], [4, 5, 6]], np.int16)</p>
+        <p class="Code">&gt;&gt;&gt; x.shape</p>
+        <p class="Code_Indented2">(2L, 3L)</p>
+        <p class="Code">&gt;&gt;&gt; x.strides</p>
+        <p class="Code_Indented2">(6L, 2L)</p>
+        <p class="Code">&gt;&gt;&gt; x[1,2]&#160;&#160;# value in row 1, column 2</p>
+        <p class="Code_Indented2">6</p>
+        <p class="Code">&gt;&gt;&gt; x.tobytes()</p>
+        <p class="Code_Indented2">'\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\x06\x00'</p>
+        <p>Notice that in both Python and IDL the bytes are organized the same in memory — it is only the way that the dimensions are reported and the indexing order that is different.</p>
+        <h4>Array Conversion</h4>
+        <p>When Python passes an array to IDL, or when IDL passes an array back to Python, the bytes within the data array remain unchanged. Instead, the order of the dimensions is reversed. For example, if we create an array in Python that has dimensions [3, 640, 480], then in IDL the dimensions will be reported as [480, 640, 3]:</p>
+        <p class="Code">&gt;&gt;&gt; import numpy as np</p>
+        <p class="Code">&gt;&gt;&gt; arr = np.ndarray((640, 480, 3), np.uint8)</p>
+        <p class="Code">&gt;&gt;&gt; arr.shape</p>
+        <p class="Code">(640, 480, 3)</p>
+        <p class="Code">&gt;&gt;&gt; IDL.arr = arr</p>
+        <p class="Code">&gt;&gt;&gt; IDL.run('help, arr')</p>
+        <p class="Code">ARR             BYTE      = Array[3, 480, 640]</p>
+        <p>In most cases this will be the desired behavior. However, in some cases you may need to transpose your actual data values. For example, you might read in the data from a file in Python, and then run the data through an IDL or ENVI algorithm that expects a certain order. In IDL you can use the <a href="../../Reference Material/T/TRANSPOSE.htm">TRANSPOSE</a> function to re-order the values within an array before sending it to Python, while in Python you can use <code>numpy.transpose</code>.</p>
+        <h2 class="API">Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.5</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="../../Creating IDL Programs/Components of the IDL Language/The_Null_Variable.htm">!NULL</a>, <a href="../../Reference Material/H/HASH.htm">HASH</a>, <a href="../../Reference Material/L/LIST.htm#L_826528365_1077832">LIST</a>, <a href="IDLToPython.htm">IDL to Python Bridge (PYTHON class)</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

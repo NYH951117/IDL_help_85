@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - UNIX Signals">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>UNIX Signal Masks</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="InternalsUNIX.htm">IDLInternals - UNIX Signals</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">UNIX Signal Masks</span>
+        </div>
+        <h1><a name="kanchor5482"></a>UNIX Signal Masks</h1>
+        <p>UNIX processes contain a signal mask that defines which signals can be delivered and which are blocked from delivery at any given time. When a signal arrives, the UNIX kernel checks the signal mask: If the signal is in the process mask, it is delivered, otherwise it is noted as undeliverable and nothing further is done until the signal mask changes. Sets of signals are represented within IDL with the opaque type <b>IDL_SignalSet_t</b>. UNIX IDL provides several functions that manipulate signal sets to change the process mask and allow/disallow delivery of signals.</p>
+        <h2>IDL_SignalSetInit()</h2>
+        <p><b>IDL_SignalSetInit()</b> initializes a signal set to be empty, and optionally sets it to contain one signal.</p>
+        <p class="Code">void IDL_SignalSetInit(IDL_SignalSet_t *set, int signo)</p>
+        <p>where:</p>
+        <h3>set</h3>
+        <p>The signal set to be emptied/initialized.</p>
+        <h3>signo</h3>
+        <p>If non-zero, a signal to be added to the new set. This is provided as a convenience for the large number of cases where a set contains only one signal. Use <b>IDL_SignalSetAdd()</b> to add additional signals to a set.</p>
+        <h2>IDL_SignalSetAdd()</h2>
+        <p><b>IDL_SignalSetAdd(</b>) adds the specified signal to the specified signal set:</p>
+        <p class="Code">void IDL_SignalSetAdd(IDL_SignalSet_t *set, int signo)</p>
+        <p>where:</p>
+        <h3>set</h3>
+        <p>The signal set to be added to. The signal set must have been initialized by <b>IDL_SignalSetInit()</b>.</p>
+        <h3>signo</h3>
+        <p>The signal to be added to the signal set.</p>
+        <h2>IDL_SignalSetDel()</h2>
+        <p><b>IDL_SignalSetDel()</b> deletes the specified signal from a signal set:</p>
+        <p class="Code">void IDL_SignalSetDel(IDL_SignalSet_t *set, int signo)</p>
+        <p>where:</p>
+        <h3>set</h3>
+        <p>The signal set to delete from. The signal set must have been initialized by <b>IDL_SignalSetInit()</b>.</p>
+        <h3>signo</h3>
+        <p>The signal to be removed from the signal set.</p>
+        <h2>IDL_SignalSetIsMember()</h2>
+        <p>IDL_SignalSetIsMember() tests a signal set for the presence of a specified signal, returning TRUE if the signal is present and FALSE otherwise:</p>
+        <p class="Code">int IDL_SignalSetIsMember(IDL_SignalSet_t *set, int signo)</p>
+        <p>where:</p>
+        <h3>set</h3>
+        <p>The signal set to test. The signal set must have been initialized by <b>IDL_SignalSetInit()</b>.</p>
+        <h3>signo</h3>
+        <p>The signal to be removed from the signal set.</p>
+        <h2>IDL_SignalMaskGet()</h2>
+        <p>IDL_SignalMaskGet() sets a signal set to contain the signals from the current process signal mask:</p>
+        <p class="Code">void IDL_SignalMaskGet(IDL_SignalSet_t *set)</p>
+        <p>where:</p>
+        <h3>set</h3>
+        <p>The signal set in which the current process signal mask will be stored.</p>
+        <h2>IDL_SignalMaskSet()</h2>
+        <p><b>IDL_SignalMaskSet()</b> sets the current process signal mask to contain the signals specified in a signal mask:</p>
+        <p class="Code">void IDL_SignalMaskSet(IDL_SignalSet_t *set, IDL_SignalSet_t *omask)</p>
+        <p>where:</p>
+        <h3>set</h3>
+        <p>The signal set from which the current process signal mask will be set.</p>
+        <h3>omask</h3>
+        <p>If <code>omask</code> is non-NULL, the unmodified process signal mask is stored in it. This is useful for restoring the mask later using <b>IDL_SignalMaskSet()</b>.</p>
+        <p>There are some signals that cannot be blocked. This limitation is silently enforced by the operating system.</p>
+        <h2>IDL_SignalMaskBlock()</h2>
+        <p><b>IDL_SignalMaskBlock()</b> adds signals to the current process signal mask:</p>
+        <p class="Code">void IDL_SignalMaskBlock(IDL_SignalSet_t *set, IDL_SignalSet_t *oset)</p>
+        <p>where:</p>
+        <h3>set</h3>
+        <p>The signal set containing the signals that will be added to the current process signal mask.</p>
+        <h3>oset</h3>
+        <p>If <code>oset</code> is non-NULL, the unmodified process signal mask is stored in it. This is useful for restoring the mask later using <b>IDL_SignalMaskSet()</b>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>There are some signals that cannot be blocked. This limitation is silently enforced by the operating system.</p>
+        <h2>IDL_SignalBlock()</h2>
+        <p><b>IDL_SignalBlock()</b> does the same thing as <b>IDL_SignalMaskBlock()</b> except it accepts a single signal number instead of requiring a mask to be built:</p>
+        <p class="Code">void IDL_SignalBlock(int signo, IDL_SignalSet_t *oset)</p>
+        <p>where:</p>
+        <h3>signo</h3>
+        <p>The signal to be blocked.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>There are some signals that cannot be blocked. This limitation is silently enforced by the operating system.</p>
+        <h2>IDL_SignalSuspend()</h2>
+        <p><b>IDL_SignalSuspend()</b> replaces the process signal mask with the ones in set and then suspends the process until a signal is delivered. On return, the original process signal mask is restored:</p>
+        <p class="Code">void IDL_SignalSuspend(IDL_SignalSet_t *set)</p>
+        <p>where:</p>
+        <h3>set</h3>
+        <p>The signal set containing the signals that will be added to the current process signal mask.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

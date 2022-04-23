@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|About Tree Widgets">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Using Tree Widget Checkboxes</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="About_Tree_Widgets.htm">About Tree Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Using_Tree_Widget_Checkboxes</span>
+        </div>
+        <h1>Using Tree Widget Checkboxes</h1>
+        <p>You can create checkboxes on tree widgets with the  <a href="../../Reference Material/W/WIDGET_TREE.htm#W_811389549_995819">WIDGET_TREE</a> function, using the <a href="../../Reference Material/W/WIDGET_TREE.htm#CHECKBOX">CHECKBOX</a> keyword. To control the state of the checkboxes, use the <a href="../../Reference Material/W/WIDGET_TREE.htm#CHECKED">CHECKED</a> keyword. The following image shows checked nodes in tree widget nodes. The filled-in squares next to folders indicate a mixed check state, where some child nodes of the folder are checked and some are not.</p>
+        <p>
+            <img src="../../Resources/Images/Tree_Checkboxes.png" alt="Checkboxes in a widget tree" />
+        </p>
+        <h2 class="API">Checkbox Example</h2>
+        <p>This example demonstrates a simple tree with checkboxes on some of its nodes.  The tree root's event handler adds business logic to set the state of a node's descendants and ancestors. Checking a folder node sets all child nodes to "checked".  Unchecking a node changes all ancestors to either "unchecked" or "mixed", depending on the state of other nodes. </p>
+        <p class="Code">; This routine sets all descendants of a node</p>
+        <p class="Code">; to the given check state.</p>
+        <p class="Code">PRO MY_TREE_UPDATE_DESCENDANTS, node, state</p>
+        <p class="Code_Indented">COMPILE_OPT IDL2</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Get an array of all child nodes.</p>
+        <p class="Code_Indented">children = WIDGET_INFO( node, /ALL_CHILDREN )</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">IF ( children[0] EQ 0 ) THEN RETURN</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Set the check-state of each child and then recursively</p>
+        <p class="Code_Indented">; update their children</p>
+        <p class="Code_Indented">FOREACH c, children DO BEGIN</p>
+        <p class="Code_Indented">&#160;&#160;WIDGET_CONTROL, c, SET_TREE_CHECKED = state</p>
+        <p class="Code_Indented">&#160;&#160;MY_TREE_UPDATE_DESCENDANTS, c, state</p>
+        <p class="Code_Indented">ENDFOREACH</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; This routine sets the check state of all tree widget ancestors of a</p>
+        <p class="Code">; node. The main rule is that if all children are checked or</p>
+        <p class="Code">; all are unchecked then the parent gets the check-state of the</p>
+        <p class="Code">; children. If at least one, but not all, children are unchecked</p>
+        <p class="Code">; or mixed then the parent gets the state of mixed.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO MY_TREE_UPDATE_ANCESTORS, node</p>
+        <p class="Code_Indented">COMPILE_OPT IDL2</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Get the parent and proceed only if it is a tree widget</p>
+        <p class="Code_Indented">parent = WIDGET_INFO( node, /parent )</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">IF ( parent NE 0 AND WIDGET_INFO( parent, /type ) EQ 11 ) THEN BEGIN</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">&#160;&#160;; Get statistics on the children:</p>
+        <p class="Code_Indented">&#160;&#160;; - number of children that are checked (value of 1)</p>
+        <p class="Code_Indented">&#160;&#160;; - number of children that are mixed (value of 2)</p>
+        <p class="Code_Indented">&#160;&#160;; - total number of children of any state</p>
+        <p class="Code_Indented">&#160;&#160;children = WIDGET_INFO( parent, /all_children )</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">&#160;&#160;nOnes = TOTAL( WIDGET_INFO( children, /TREE_CHECKED ) eq 1 )</p>
+        <p class="Code_Indented">&#160;&#160;nTwos = TOTAL( WIDGET_INFO( children, /TREE_CHECKED ) eq 2 )</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">&#160;&#160;nChildren = N_ELEMENTS( children )</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">&#160;&#160;; Figure out the state of the parent node</p>
+        <p class="Code_Indented">&#160;&#160;IF ( nOnes EQ nChildren ) THEN BEGIN</p>
+        <p class="Code_Indented">&#160;&#160;&#160;&#160;newState = 1</p>
+        <p class="Code_Indented">&#160;&#160;ENDIF ELSE IF ( nOnes GE 1 || nTwos GE 1 ) THEN BEGIN</p>
+        <p class="Code_Indented">&#160;&#160;&#160;&#160;newState = 2</p>
+        <p class="Code_Indented">&#160;&#160;ENDIF ELSE BEGIN</p>
+        <p class="Code_Indented">&#160;&#160;&#160;&#160;newState = 0</p>
+        <p class="Code_Indented">&#160;&#160;ENDELSE</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">&#160;&#160;; Apply the new state and recursively repeat on the next ancestor</p>
+        <p class="Code_Indented">&#160;&#160;WIDGET_CONTROL, parent, SET_TREE_CHECKED = newState</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">&#160;&#160;MY_TREE_UPDATE_ANCESTORS, parent</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create the event handlers</p>
+        <p class="Code">PRO TREE_CHECKBOX_EXAMPLE_EVENT, e</p>
+        <p class="Code">END</p>
+        <p class="Code">PRO HANDLE_TREE_EVENT, e</p>
+        <p class="Code">COMPILE_OPT IDL2</p>
+        <p class="Code_Indented">HELP, e, /STRUCTURE</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">IF ( e.type EQ 2 ) THEN BEGIN</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">&#160;&#160;&#160;MY_TREE_UPDATE_DESCENDANTS, e.id, e.state</p>
+        <p class="Code_Indented">&#160;&#160;&#160;MY_TREE_UPDATE_ANCESTORS, e.id</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; This is the widget creation routine</p>
+        <p class="Code">PRO TREE_CHECKBOX_EXAMPLE</p>
+        <p class="Code_Indented">COMPILE_OPT IDL2</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Create a top level base</p>
+        <p class="Code_Indented">topLevelBase = WIDGET_BASE( $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;XOFFSET = 200, YOFFSET = 100 )</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Create the tree</p>
+        <p class="Code_Indented">root = WIDGET_TREE( topLevelBase, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;event_pro = 'HANDLE_TREE_EVENT' )</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Create the first folder without a checkbox</p>
+        <p class="Code_Indented">f1 = WIDGET_TREE( ROOT, /FOLDER, /EXPANDED, VALUE = 'Folder 1' )</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Create the nodes with checkboxes.</p>
+        <p class="Code_Indented">; Check some of the boxes (CHECKED = 1)</p>
+        <p class="Code_Indented">n11 = WIDGET_TREE( f1, VALUE = 'Node 11', /CHECKBOX, CHECKED = 0 )</p>
+        <p class="Code_Indented">n12 = WIDGET_TREE( f1, VALUE = 'Node 12', /CHECKBOX, CHECKED = 1 )</p>
+        <p class="Code_Indented">n13 = WIDGET_TREE( f1, VALUE = 'Node 13', /CHECKBOX, CHECKED = 0 )</p>
+        <p class="Code_Indented">n14 = WIDGET_TREE( f1, VALUE = 'Node 14', /CHECKBOX, CHECKED = 1 )</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Create the second folder and child nodes with checkboxes.</p>
+        <p class="Code_Indented">; Checkboxes are not checked on creation.</p>
+        <p class="Code_Indented">f2 = WIDGET_TREE( ROOT, /FOLDER, /EXPANDED, /CHECKBOX, VALUE = 'Folder 2' )</p>
+        <p class="Code_Indented">n21 = WIDGET_TREE( f2, VALUE = 'Node 21' )</p>
+        <p class="Code_Indented">f22 = WIDGET_TREE( f2, /FOLDER, VALUE = 'Folder 22' )</p>
+        <p class="Code_Indented">n221 = WIDGET_TREE( f22, VALUE = 'Node 221' )</p>
+        <p class="Code_Indented">n222 = WIDGET_TREE( f22, VALUE = 'Node 222' )</p>
+        <p class="Code_Indented">n23 = WIDGET_TREE( f2, VALUE = 'Node 23' )</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Realize the widgets</p>
+        <p class="Code_Indented">WIDGET_CONTROL, topLevelBase, /REALIZE</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">XMANAGER, 'TREE_CHECKBOX_EXAMPLE', topLevelBase, /NO_BLOCK</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">END</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

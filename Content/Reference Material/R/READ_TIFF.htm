@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: R">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>READ_TIFF </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="R_list.htm">Routines: R</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">READ_TIFF</span>
+        </div>
+        <h1 class="Routine"><a name="R_822202989_843871"></a><a name="kanchor2236"></a><a name="R_822202989_55282"></a>READ_TIFF </h1>
+        <p><a name="kanchor2237"></a>The READ_TIFF function reads single or multi-channel images from TIFF format files and returns the image and color table vectors in the form of IDL variables.</p>
+        <p>Image dimensions may exceed the capacity of IDL integers and even unsigned integers (respective limits being 32,767 and 65,535).  Therefore, it is a good idea to know your data or always use long integers.</p>
+        <p>Image data may exceed the capacity of machine memory, especially RAM and perhaps even virtual memory.  When reading large TIFF files, we recommend that you read only a subset of the image with READ_TIFF's SUB_RECT keyword.  Reading a subset of large image data also improves application and overall machine performance.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>To find information about a potential TIFF file before trying to read its data, use the <a href="../Q/QUERY_TIFF.htm#Q_815714925_1045766">QUERY_TIFF </a>function. The obsolete routine TIFF_DUMP may also be used to examine the structure and tags of a TIFF file.</p>
+        <h2 class="API"><a name="R_822202989_843897"></a><a name="R_822202989_843897_PageTOC_READ_TIFF_"></a>Examples</h2>
+        <p>Please see <a href="#Addition" class="selected">Additional Examples</a> for more information on using READ_TIFF.</p>
+        <h3><a name="R_822202989_845350_Keywords_READ_TIFF__"></a>Example 1</h3>
+        <p>Read the file <code>my.tif</code> in the current directory into the variable <code>image</code>, and save the color tables in the variables, <code>R</code>, <code>G</code>, and <code>B</code> by entering:</p>
+        <p class="Code">image = READ_TIFF('my.tif', R, G, B)</p>
+        <p>To view the image, load the new color table and display the image by entering:</p>
+        <p class="Code">TVLCT, R, G, B</p>
+        <p class="Code">TV, image</p>
+        <h2 class="API"><a name="R_822202989_843878"></a><a name="R_822202989_843878_PageTOC_READ_TIFF_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = READ_TIFF( <i>Filename</i> [,&#160;<i>R</i>, <i>G</i>, <i>B</i>] [,&#160;<a href="#R_822202989_1078044" class="selected">CHANNELS</a>=<i>scalar</i><i>or</i><i>vector</i>] [,&#160;<a href="#R_822202989_1134312" class="selected">DOT_RANGE</a>=<i>variable</i>] [,&#160;<a href="#R_822202989_966463" class="selected">GEOTIFF</a>=<i>variable</i>] [,&#160;<a href="#R_822202989_1134317" class="selected">ICC_PROFILE</a>=<i>variable</i>] [,&#160;<a href="#R_822202989_966504" class="selected">IMAGE_INDEX</a>=<i>value</i>] [,&#160;<a href="#R_822202989_1077871" class="selected">INTERLEAVE</a>={0&#160;|&#160;1&#160;|2}] [,&#160;<a href="#R_822202989_948922" class="selected">ORIENTATION</a>=<i>variable</i>] [,&#160;<a href="#R_822202989_1134329" class="selected">PHOTOSHOP</a>=<i>variable</i>] [,&#160;<a href="#R_822202989_1086578" class="selected">PLANARCONFIG</a>=<i>variable</i>] [,&#160;<a href="#R_822202989_966525" class="selected">SUB_RECT</a>=<i>[x</i>, <i>y</i>, <i>width</i>, <i>height]</i>] [,&#160;/<a href="#R_822202989_966492" class="selected">VERBOSE</a>]&#160;)</p>
+        <h2 class="API"><a name="R_822202989_1078035"></a><a name="R_822202989_1078035_PageTOC_READ_TIFF_"></a>Return Value</h2>
+        <p>READ_TIFF returns a byte, integer (signed or unsigned), long integer (signed or unsigned), 64-bit long integer (signed or unsigned), floating-point, double-precision floating-point, complex, or double-precision complex array (based on the data format in the TIFF file) containing the image data. The dimensions of the <i>Result</i> are [<i>Columns</i>, <i>Rows</i>] for single-channel images, or [<i>Channels</i>, <i>Columns</i>, <i>Rows</i>] for multi-channel images, unless a different type of interleaving is specified with the INTERLEAVE keyword. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Although TIFF files may contain image orientation data, READ_TIFF always returns image pixels in the same order as they are stored in the file. See the <a href="#R_822202989_948922" class="selected">ORIENTATION</a> keyword for additional details.</p>
+        <p>For 1-bit (bilevel) images, the image values are 0 or 1. For 4-bit grayscale images the image values are in the range 0 to 15.</p>
+        <p>RGB images are a special case of multi-channel images, and contain three channels. Most TIFF readers and writers can handle only images with one or three channels.</p>
+        <p>As a special case, for three-channel TIFF image files that are stored in planar interleave format, and if four parameters are provided, READ_TIFF returns the integer value zero, sets the variable defined by the PLANARCONFIG keyword to 2, and returns three separate images in the variables defined by the <i>R</i>, <i>G</i>, and <i>B</i> arguments.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In IDL versions prior to 7.0.6, IDL incorrectly returned signed 32-bit integers for TIFF files that contained unsigned 32-bit integers. As of version 7.0.6, IDL correctly returns unsigned 32-bit integers.</p>
+        <h2 class="API"><a name="R_822202989_843880"></a><a name="R_822202989_843880_PageTOC_READ_TIFF_"></a>Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>A scalar string specifying the full pathname of the TIFF file to read.</p>
+        <h3 class="Argument">R, G, B</h3>
+        <p>Named variables that will contain the Red, Green, and Blue color vectors of the color table from the file if one exists. If the TIFF file is written as a three-channel image, interleaved by plane, and the R, G, and B parameters are present, the three channels of the image are returned in the R, G, and B variables.</p>
+        <h2 class="API"><a name="R_822202989_1071356"></a><a name="R_822202989_1071356_PageTOC_READ_TIFF_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="R_822202989_1078044"></a><a name="R_822202989_1078044_Keywords_READ_TIFF__"></a>CHANNELS</h3>
+        <p>Set this keyword to a scalar or vector giving the channel numbers to be returned for a multi-channel image, starting with zero. The default is to return all of the channels. This keyword is ignored for single-channel images, or for three-channel planar-interleaved images when the <i>R</i>, <i>G</i>, and <i>B</i> arguments are specified.</p>
+        <h3 class="Keyword"><a name="R_822202989_1134312"></a><a name="R_822202989_24689"></a>DOT_RANGE</h3>
+        <p>Set this keyword to a named variable in which to return a two-element integer array containing the TIFF DotRange tag value. If DotRange is not defined in the TIFF file, then a scalar zero will be returned instead. The DotRange tag is typically only present in CMYK TIFF files. DOT_RANGE[0] gives the image value that corresponds to a 0% dot, while DOT_RANGE[1] gives the image value that corresponds to a 100% dot.</p>
+        <h3 class="Keyword"><a name="R_822202989_966463"></a><a name="R_822202989_966463_Keywords_READ_TIFF__"></a>GEOTIFF</h3>
+        <p>Returns an anonymous structure containing one field for each of the GeoTIFF tags and keys found in the file. The GeoTIFF structure closely resembles the TIFF structure, storing projection parameters in a set of keys, which are explained in the GEOTIFF Structures table, below. If no GeoTIFF information is present in the file, the returned variable is undefined. See <a href="#R_822202989_1237437" class="selected">Example 4</a> below for how to use the GEOTIFF keyword.</p>
+        <p>According to http://remotesensing.org, the purpose of the GeoTIFF specification is to define a set of TIFF tags to describe the cartographic information in TIFF imagery that comes from satellite imaging systems, scanned aerial photography, scanned maps, digital elevation models, or from geographic analyses. The specification allows you to tie a raster image to a known model space or map projection.</p>
+        <p>The tags documented in the GeoTIFF specification are unrelated to the raster data descriptions in the TIFF specification. GeoTIFF tags and keys occasionally change, so refer to the GeoTIFF Specification for the most current information.</p>
+        <p>The GeoTIFF structure is formed using any subset of the fields named in the following table.</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Anonymous Structure Field Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>IDLDatatype</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><b>TAGS:</b>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"MODELPIXELSCALETAG"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>DOUBLE[3]</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"MODELTRANSFORMATIONTAG"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>DOUBLE[4,4]</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"MODELTIEPOINTTAG"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>DOUBLE[6,*]</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><b>KEYS:</b>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"GTMODELTYPEGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>INT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"GTRASTERTYPEGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>INT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"GTCITATIONGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>STRING</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"GEOGRAPHICTYPEGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>INT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"GEOGCITATIONGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>STRING</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"GEOGGEODETICDATUMGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>INT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"GEOGPRIMEMERIDIANGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>INT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"GEOGLINEARUNITSGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>INT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"GEOGLINEARUNITSIZEGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"GEOGANGULARUNITSGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>INT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"GEOGANGULARUNITSIZEGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"GEOGELLIPSOIDGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>INT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"GEOGSEMIMAJORAXISGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"GEOGSEMIMINORAXISGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"GEOGINVFLATTENINGGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"GEOGAZIMUTHUNITSGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>INT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"GEOGPRIMEMERIDIANLONGGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"PROJECTEDCSTYPEGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>INT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"PCSCITATIONGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>STRING</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"PROJECTIONGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>INT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"PROJCOORDTRANSGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>INT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"PROJLINEARUNITSGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>INT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"PROJLINEARUNITSIZEGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"PROJSTDPARALLEL1GEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"PROJSTDPARALLEL2GEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"PROJNATORIGINLONGGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"PROJNATORIGINLATGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"PROJFALSEEASTINGGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"PROJFALSENORTHINGGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"PROJFALSEORIGINLONGGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"PROJFALSEORIGINLATGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"PROJFALSEORIGINEASTINGGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"PROJFALSEORIGINNORTHINGGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"PROJCENTERLONGGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"PROJCENTERLATGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"PROJCENTEREASTINGGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"PROJCENTERNORTHINGGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"PROJSCALEATNATORIGINGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"PROJSCALEATCENTERGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"PROJAZIMUTHANGLEGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"PROJSTRAIGHTVERTPOLELONGGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>DOUBLE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"VERTICALCSTYPEGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>INT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>"VERTICALCITATIONGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>STRING</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>"VERTICALDATUMGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>INT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>"VERTICALUNITSGEOKEY"</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>INT</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If a GeoTIFF key appears multiple times in a file, only the value for the first instance of the key is returned.</p>
+        <h3 class="Keyword"><a name="R_822202989_966504"></a><a name="R_822202989_966504_Keywords_READ_TIFF__"></a>IMAGE_INDEX</h3>
+        <p>Selects the image number within the file to be read (see <a href="../Q/QUERY_TIFF.htm#Q_815714925_1045766">QUERY_TIFF </a>to determine the number of images in the file).</p>
+        <h3 class="Keyword"><a name="R_822202989_1134317"></a><a name="R_822202989_91804"></a>ICC_PROFILE</h3>
+        <p>Set this keyword to a named variable in which to return a byte array containing the TIFF ICC_PROFILE tag value. If the ICC_PROFILE tag is not contained in the TIFF file then a scalar zero will be returned instead. The ICC_PROFILE array is returned as an opaque array of byte values which the user can then pass to the WRITE_TIFF routine.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The ICC_PROFILE tag is returned as an opaque array of byte values. It is assumed that the tag will be read from an existing file, and written out to a new file without modification.</p>
+        <h3 class="Keyword"><a name="R_822202989_1077871"></a><a name="R_822202989_1077871_Keywords_READ_TIFF__"></a>INTERLEAVE</h3>
+        <p>For multi-channel images, set this keyword to one of the following values to force the <i>Result</i> to have a specific interleaving, regardless of the type of interleaving in the file being read:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Pixel interleaved: <i>Result</i> will have dimensions [<i>Channels</i>,&#160;<i>Columns</i>,&#160;<i>Rows</i>].</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Scanline (row) interleaved: <i>Result</i> will have dimensions [<i>Columns</i>,&#160;<i>Channels</i>,&#160;<i>Rows</i>].</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Planar interleaved: <i>Result</i> will have dimensions [<i>Columns</i>,&#160;<i>Rows</i>,&#160;<i>Channels</i>].</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>If this keyword is not specified, the <i>Result</i> will always be pixel interleaved, regardless of the type of interleaving in the file being read. For files stored in planar-interleave format, this keyword is ignored if the <i>R</i>, <i>G</i>, and <i>B</i> arguments are specified.</p>
+        <h3 class="Keyword"><a name="R_822202989_948922"></a><a name="R_822202989_948922_Keywords_READ_TIFF__"></a>ORIENTATION</h3>
+        <p>Set this keyword to a named variable that will contain the orientation value from the TIFF file. Possible return values are:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Column 0 represents the left-hand side, and row 0 represents the bottom (same as 4)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Column 0 represents the left-hand side, and row 0 represents the top.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Column 0 represents the right-hand side, and row 0 represents the top.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Column 0 represents the right-hand side, and row 0 represents the bottom.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>4</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Column 0 represents the left-hand side, and row 0 represents the bottom (same as 0)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>5</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Column 0 represents the top, and row 0 represents the left-hand side.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>6</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Column 0 represents the top, and row 0 represents the right-hand side.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>7</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Column 0 represents the bottom, and row 0 represents the right-hand side.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>8</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Column 0 represents the bottom, and row 0 represents the left-hand side.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>If an orientation value does not appear in the TIFF file, an orientation of 0 is returned.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The order of the pixels contained in the returned image array is not affected by the orientation data stored in the TIFF file, or by the ORIENTATION keyword. That is, pixels are always stored in the IDL array in the same order as they are stored in the TIFF file. Since many image formats consider the upper left corner to be the origin, while IDL treats the lower left corner as the origin, this may mean that images read by READ_TIFF and displayed in IDL appear upside down. You are responsible for configuring the display to present the image in accordance with the stored ORIENTATION value. To easily create an image array that reflects orientation data stored in the TIFF file, use the IOPEN routine.</p>
+        <p>You can use the IDL <a href="ROTATE.htm#R_822202989_678594">ROTATE</a> function to efficiently position the image data as specified by the file's ORIENTATION property. Set the ROTATE function DIRECTION value to one of the following based on the ORIENTATION value: </p>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>ORIENTATION Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Rotate Function DIRECTION Value</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>0</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>7</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>2</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>5</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>4</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>0</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>5</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>6</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>6</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>7</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>3</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>8</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>4</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You can also use the IDLgrModel::Rotate method to position the image data in the display.</p>
+        <h3 class="Keyword"><a name="R_822202989_1134329"></a><a name="R_822202989_13297"></a>PHOTOSHOP</h3>
+        <p>Set this keyword to a named variable in which to return a byte array containing the TIFF PHOTOSHOP tag value. If the PHOTOSHOP tag is not contained in the TIFF file, then a scalar zero will be returned instead. The PHOTOSHOP array is returned as an opaque array of byte values which the user can then pass to the WRITE_TIFF routine.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The PHOTOSHOP tag is returned as an opaque array of byte values. It is assumed that the tag will be read from an existing file, and written out to a new file without modification.</p>
+        <h3 class="Keyword"><a name="R_822202989_1086578"></a><a name="R_822202989_1086578_Keywords_READ_TIFF__"></a>PLANARCONFIG</h3>
+        <p>Set this keyword to a named variable that will contain the interleave parameter for the TIFF file. This parameter is returned as 1 for TIFF files that are GrayScale, Palette, or interleaved by pixel. This parameter is returned as 2 for multi-channel TIFF files interleaved by image.</p>
+        <h3 class="Keyword"><a name="R_822202989_966525"></a><a name="R_822202989_966525_Keywords_READ_TIFF__"></a>SUB_RECT</h3>
+        <p>Set this keyword to a four-element array, [<i>x</i>, <i>y</i>, <i>width</i>, <i>height</i>], that specifies a rectangular region within the file to extract. Only the rectangular portion of the image selected by this keyword is read and returned. The rectangle is measured in pixels from the lower left corner (right hand coordinate system).</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>For tiled TIFF images, use the TILE_SIZE tag returned by QUERY_TIFF to determine the optimal sizes for the SUB_RECT keyword.</p>
+        <h3 class="Keyword"><a name="R_822202989_966492"></a><a name="R_822202989_966492_Keywords_READ_TIFF__"></a>VERBOSE</h3>
+        <p>Produce additional diagnostic output during the read.</p>
+        <h2 class="API"><a name="Addition"></a>Additional Examples</h2>
+        <h3><a name="R_822202989_1078093_Keywords_READ_TIFF__"></a>Example 2</h3>
+        <p>Write and read a multi-image TIFF file. The first image is a 16-bit single-channel image stored using compression. The second image is an RGB image stored using 32-bits/channel uncompressed.</p>
+        <p class="Code">PRO ex_read_tiff<br />&#160;&#160;; Write the image data:<br />&#160;&#160;data = FIX(DIST(256))<br />&#160;&#160;rgbdata = LONARR(3,320,240)<br />&#160;&#160;WRITE_TIFF,'multi.tif',data,COMPRESSION=1,/SHORT<br />&#160;&#160;WRITE_TIFF,'multi.tif',rgbdata,/LONG,/APPEND<br />&#160;&#160;<br />&#160;&#160;; Read the image data back:<br />&#160;&#160;ok = QUERY_TIFF('multi.tif',s)<br />&#160;&#160;IF (ok) THEN BEGIN<br />&#160;&#160;&#160;&#160;FOR i=0,s.NUM_IMAGES-1 DO BEGIN<br />&#160;&#160;&#160;&#160;&#160;&#160;imp = QUERY_TIFF('multi.tif',t,IMAGE_INDEX=i)<br />&#160;&#160;&#160;&#160;&#160;&#160;img = READ_TIFF('multi.tif',IMAGE_INDEX=i)<br />&#160;&#160;&#160;&#160;&#160;&#160;HELP,t,/STRUCTURE<br />&#160;&#160;&#160;&#160;&#160;&#160;HELP,img<br />&#160;&#160;&#160;&#160;ENDFOR<br />&#160;&#160;ENDIF<br />END</p>
+        <h3><a name="R_822202989_1078099_Keywords_READ_TIFF__"></a>Example 3</h3>
+        <p>Write and read a multi-channel image:</p>
+        <p class="Code">data = LINDGEN(10, 256, 256)   ; 10 channels<br /><br />; Write the image data:<br />WRITE_TIFF, 'multichannel.tif', data, /LONG<br /><br />; Read back only channels [0,2,4,6,8], using planar-interleaving<br />img = READ_TIFF('multichannel.tif', CHANNELS=[0,2,4,6,8], $<br />&#160;&#160;&#160;INTERLEAVE=2)<br /><br />HELP, img</p>
+        <p>IDL prints:</p>
+        <p class="Code">IMG&#160;&#160;&#160;&#160;&#160;&#160;LONG&#160;&#160;&#160;&#160;&#160;= Array[256, 256, 5]</p>
+        <h3><a name="R_822202989_1237437"></a><a name="R_822202989_41820"></a>Example 4</h3>
+        <p>Using READ_TIFF with the GEOTIFF keyword returns the geotiff structure associated with a geotiff file.</p>
+        <p class="Code">; Define a variable to hold the image file<br />dataFilePath = FILEPATH('boulder.tif', $<br />&#160;&#160;&#160;&#160;&#160;SUBDIR=['examples','data'])<br />; Run READ_TIFF with the geotiff keyword <br />; to expose the geotiff structure<br />data_variable=READ_TIFF(dataFilePath, GEOTIFF=GeoKeys)</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You can also open image files using <b>File</b>&#160;&#160;&gt;&#160;&#160; <b>Open&#160;File</b> or using the IOPEN command. If you use <b>File</b>&#160;&#160;&gt;&#160;&#160; <b>Open&#160;File</b>, IDL defines the variable names. If you use IOPEN, you define the names of the data and GeoTIFF variables.</p>
+        <p>You can view the structure of the variable that holds the GeoTIFF structure by looking at the Variables view or by typing the following at the command line.</p>
+        <p class="Code">HELP, GeoKeys, /STRUCTURE</p>
+        <p>The structure displays as follows:</p>
+        <p class="Code">** Structure &lt;125c498&gt;, 7 tags, length=88, data length=82, refs=1:</p>
+        <p class="Code">   MODELPIXELSCALETAG</p>
+        <p class="Code">                   DOUBLE    Array[3]</p>
+        <p class="Code">   MODELTIEPOINTTAG</p>
+        <p class="Code">                   DOUBLE    Array[6, 1]</p>
+        <p class="Code">   GTMODELTYPEGEOKEY</p>
+        <p class="Code">                   INT              1</p>
+        <p class="Code">   GTRASTERTYPEGEOKEY</p>
+        <p class="Code">                   INT              1</p>
+        <p class="Code">   GEOGLINEARUNITSGEOKEY</p>
+        <p class="Code">                   INT           9001</p>
+        <p class="Code">   GEOGANGULARUNITSGEOKEY</p>
+        <p class="Code">                   INT           9102</p>
+        <p class="Code">   PROJECTEDCSTYPEGEOKEY</p>
+        <p class="Code">                   INT          26713</p>
+        <p>The following image is a screen capture of how the structure appears in the Variables view of the IDL Workbench:</p>
+        <p>
+            <img src="../../images/geotiff.gif" />
+        </p>
+        <p>For more information on GeoTIFF structure, see the GeoTIFF Format Specification website: <a href="http://www.remotesensing.org/geotiff/spec/geotiffhome.html">http://www.remotesensing.org/geotiff/spec/geotiffhome.html</a></p>
+        <h2 class="API"><a name="R_822202989_1078167"></a><a name="R_822202989_1078167_PageTOC_READ_TIFF_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>5.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">
+                        <p>5.5</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">
+                        <p>Deprecated ORDER keyword.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Added DOT_RANGE, ICC_PROFILE, and PHOTOSHOP keywords</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">
+                        <p>Pre-6.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">
+                        <p>Deprecated ORDER and UNSIGNED keywords</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>7.0.6</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>In IDL versions prior to 7.0.6, IDL incorrectly returned signed 32-bit integers for TIFF files that contained unsigned 32-bit integers. As of version 7.0.6, IDL correctly returns unsigned 32-bit integers.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added support for BigTIFF files.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="R_822202989_1092989"></a><a name="R_822202989_1092989_PageTOC_READ_TIFF_"></a>See Also</h2>
+        <p><a href="../I/IOPEN.htm">IOPEN</a>, <a href="../W/WRITE_TIFF.htm#W_811389549_943138">WRITE_TIFF </a>, <a href="../Q/QUERY_TIFF.htm#Q_815714925_1045766">QUERY_TIFF </a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

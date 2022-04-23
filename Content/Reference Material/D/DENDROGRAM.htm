@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: D">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>DENDROGRAM</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="D_list.htm">Routines: D</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">DENDROGRAM</span>
+        </div>
+        <h1 class="Routine"><a name="D_843829869_1032476"></a><a name="kanchor489"></a>DENDROGRAM</h1>
+        <p>Given a hierarchical tree cluster, usually created by the CLUSTER_TREE function, the DENDROGRAM procedure constructs a dendrogram and returns a set of vertices and connectivity that can be used to visualize the dendrite plot.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>dendro_plot.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="D_843829869_1077796"></a>Example</h2>
+        <p class="Code">; Given a set of points in two-dimensional space.<br />m&#160;=&#160;20<br />DATA&#160;=&#160;7*RANDOMN(-1, 2, m)<br /><br />; Compute the Euclidean distance between each point.<br />distance&#160;=&#160;DISTANCE_MEASURE(data)<br /><br />; Compute the cluster analysis.<br />clusters&#160;=&#160;CLUSTER_TREE(distance, linkdistance, LINKAGE=2)<br /><br />; Create the dendrogram.<br />DENDROGRAM, clusters, linkdistance, outverts, outconn, $<br />&#160;&#160;&#160;LEAFNODES&#160;=&#160;LEAFNODES<br /><br />PRINT, STRTRIM(LEAFNODES, 2)<br /><br />OPOLY&#160;=&#160;OBJ_NEW('IDLgrPolyline', outverts, $<br />&#160;&#160;&#160;POLYLINES&#160;=&#160;outconn)<br />LOC&#160;=&#160;FLTARR(2, m)<br />LOC[0, *]&#160;=&#160;FINDGEN(m)<br />OTEXT&#160;=&#160;OBJ_NEW('IDLgrText', STRTRIM(LEAFNODES,2), $<br />&#160;&#160;&#160;ALIGNMENT&#160;=&#160;1, VERTICAL_ALIGN&#160;=&#160;0.5, $<br />&#160;&#160;&#160;BASELINE&#160;=&#160;[0,1,0], UPDIR&#160;=&#160;[-1,0,0], $<br />&#160;&#160;&#160;CHAR_DIM&#160;=&#160;[1,1], LOCATIONS&#160;=&#160;loc)<br />OAXIS&#160;=&#160;OBJ_NEW('IDLgrAxis', 1, /EXACT, $<br />&#160;&#160;&#160;LOCATION&#160;=&#160;[-1,0,0], RANGE&#160;=&#160;[0, MAX(linkdistance)])<br />OAXIS&#160;-&gt;&#160;GetProperty, TICKTEXT&#160;=&#160;oTick<br />OTICK&#160;-&gt;&#160;SetProperty, CHAR_DIM&#160;=&#160;[1,1]<br />OMODEL&#160;=&#160;OBJ_NEW('IDLgrModel')<br />OMODEL&#160;-&gt;&#160;Add, oPoly<br />OMODEL&#160;-&gt;&#160;Add, oText<br />OMODEL&#160;-&gt;&#160;Add, oAxis<br />XOBJVIEW, oModel<br /></p>
+        <p>When this code is run, IDL prints:</p>
+        <p class="Code">4 15 1 2 11 6 9 14 17 0 3 10 16 7 12 8 18 19 5 13</p>
+        <p>
+            <img src="../../images/dendogram.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 6.000484px;margin-bottom: 6.000484px;" />
+        </p>
+        <h2 class="API"><a name="D_843829869_1032886"></a>Syntax</h2>
+        <p class="Syntax">DENDROGRAM, <i>Clusters</i>, <i>Linkdistance</i>, <i>Outverts</i>, <i>Outconn </i>[,&#160;<a href="#D_843829869_1032898" class="selected">LEAFNODES</a>=<i>variable</i>]</p>
+        <h2 class="API"><a name="D_843829869_1032888"></a>Arguments</h2>
+        <h3 class="Argument">Clusters</h3>
+        <p>A 2-by-(<i>m</i>-1) input array containing the cluster indices, where m is the number of items in the original dataset. This array is usually the result of the CLUSTER_TREE function.</p>
+        <h3 class="Argument">Linkdistance</h3>
+        <p>An (<i>m</i>-1)-element input vector containing the distances between cluster items, as returned by the Linkdistance argument to the CLUSTER_TREE function.</p>
+        <h3 class="Argument">Outverts</h3>
+        <p>Set this argument to a named variable that will contain a 2-dimensional array of floating-point vertices that make up the dendrogram.</p>
+        <h3 class="Argument">Outconn</h3>
+        <p>Set this argument to a named variable that will contain an output array of connectivity values. The <i>Outverts</i> and <i>Outconn</i> arguments can be passed directly to IDLgrPolyline to construct the dendrite plot.</p>
+        <h2 class="API"><a name="D_843829869_1032897"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="D_843829869_1032898"></a>LEAFNODES</h3>
+        <p>Set this keyword to a named variable that will return a vector of integers giving the order of leaf nodes within the dendrogram. The LEAFNODES keyword is useful for labeling the nodes in a dendrite plot.</p>
+        <h2 class="API"><a name="D_843829869_1032944"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="D_843829869_1032946"></a>See Also</h2>
+        <p><a href="../C/CLUSTER_TREE.htm#C_854643309_1074886">CLUSTER_TREE</a>, <a href="DISTANCE_MEASURE.htm#D_843829869_1033423">DISTANCE_MEASURE</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

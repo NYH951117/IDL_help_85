@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: Q">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>QUERY_PNG </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Q_list.htm">Routines: Q</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">QUERY_PNG</span>
+        </div>
+        <h1 class="Routine"><a name="Q_815714925_1045630"></a><a name="kanchor2152"></a><a name="Q_815714925_42691"></a>QUERY_PNG </h1>
+        <p>QUERY_PNG is a method of obtaining information about a PNG image file without having to read the file. See <a href="QUERY___Routines.htm#Q_815714925_982368">QUERY_* Routines</a> for more information.</p>
+        <p>When an image is read by <a href="../R/READ_PNG.htm">READ_PNG</a>, it is scaled to the sBIT value, if it is provided in the file. The sBit provides the actual bit depth, which can be different from the "bit depth" byte. See <a href="http://www.w3.org/TR/PNG-Chunks.html">www.w3.org/TR/PNG-Chunks.html</a> for more information.</p>
+        <h2 class="API"><a name="Q_815714925_1045651"></a><a name="Q_815714925_1045651_PageTOC_QUERY_PNG_"></a>Examples</h2>
+        <p>Query included in creating RGBA (16-bit/channel) and Color Indexed <br />(8-bits/channel) image.</p>
+        <p class="Code">PRO ex_query_png</p>
+        <p class="Code">rgbdata = UINDGEN(4,320,240)</p>
+        <p class="Code">cidata = BYTSCL(DIST(256))</p>
+        <p class="Code">red = indgen(256)</p>
+        <p class="Code">green = indgen(256)</p>
+        <p class="Code">blue = indgen(256)</p>
+        <p class="Code">tempdir = GETENV('IDL_TMPDIR')</p>
+        <p class="Code">WRITE_PNG, tempdir+'rgb_image.png',rgbdata</p>
+        <p class="Code">WRITE_PNG, tempdir+'ci_image.png',cidata,red,green,blue</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Query and Read the data:</p>
+        <p class="Code">names = [tempdir+'rgb_image.png',$</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;tempdir+'ci_image.png',$</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;tempdir+'unknown.png']</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">FOR i=0,N_ELEMENTS(names)-1 DO BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;ok = QUERY_PNG(names[i],s)</p>
+        <p class="Code">&#160;&#160;&#160;IF (ok) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;HELP,s,/STRUCTURE</p>
+        <p class="Code">&#160;&#160;&#160;IF (s.HAS_PALETTE) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;img = READ_PNG(names[i],rpal,gpal,bpal)</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;HELP,img,rpal,gpal,bpal</p>
+        <p class="Code">&#160;&#160;&#160;ENDIF ELSE BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;img = READ_PNG(names[i])</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;HELP,img</p>
+        <p class="Code">&#160;&#160;&#160;ENDELSE</p>
+        <p class="Code">&#160;&#160;&#160;ENDIF ELSE BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;PRINT,names[i],' is not a PNG file'</p>
+        <p class="Code">&#160;&#160;&#160;ENDELSE</p>
+        <p class="Code">ENDFOR</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="Q_815714925_1045638"></a><a name="Q_815714925_1045638_PageTOC_QUERY_PNG_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = QUERY_PNG ( <i>Filename </i>[,&#160;<i>Info</i>] )</p>
+        <h2 class="API"><a name="Q_815714925_1073772"></a><a name="Q_815714925_1073772_PageTOC_QUERY_PNG_"></a>Return Value</h2>
+        <p>This routine returns a long with the value of 1 (one) if the query was successful (and the file type was correct) or 0 (zero) on failure.</p>
+        <h2 class="API"><a name="Q_815714925_1045640"></a><a name="Q_815714925_1045640_PageTOC_QUERY_PNG_"></a>Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>A scalar string containing the pathname of the PNG file to query.</p>
+        <h3 class="Argument">Info</h3>
+        <p>Returns an anonymous structure containing information about the image in the file. The Info.TYPE field will return the value ‘PNG’.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>See <a href="QUERY___Routines.htm#Q_815714925_1072337">General Query * Routine Info Structures</a> for detailed structure information.</p>
+        <h2 class="API"><a name="Q_815714925_1045649"></a><a name="Q_815714925_1045649_PageTOC_QUERY_PNG_"></a>Keywords</h2>
+        <p>None</p>
+        <h2 class="API"><a name="Q_815714925_1125445"></a><a name="Q_815714925_1045679_PageTOC_QUERY_PNG_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="Q_815714925_1076508"></a><a name="Q_815714925_1076508_PageTOC_QUERY_PNG_"></a>See Also</h2>
+        <p><a href="QUERY___Routines.htm#Q_815714925_982368">QUERY_* Routines</a>, <a href="../R/READ_PNG.htm#R_822202989_1045821">READ_PNG</a>, <a href="../W/WRITE_PNG.htm#W_811389549_950641">WRITE_PNG</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

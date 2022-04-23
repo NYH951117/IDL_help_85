@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|Java Export Bridge">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Stock Java Wrapper Methods</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Java Export Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Stock Java Wrapper Methods</span>
+        </div>
+        <h1><a name="Stock_Java_Wrapper_Methods"></a><a name="kanchor5356"></a>Stock Java <a name="kanchor5357"></a>Wrapper Methods</h1>
+        <p>This section describes the stock methods in the Java wrapper objects created by the Export Bridge Assistant:</p>
+        <ul>
+            <li value="1"><a href="#abort" class="selected">abort</a>
+            </li>
+            <li value="2"><a href="#createObject" class="selected">createObject</a>
+            </li>
+            <li value="3"><a href="#destroyObject" class="selected">destroyObject</a>
+            </li>
+            <li value="4"><a href="#executeString" class="selected">executeString</a>
+            </li>
+            <li value="5"><a href="#getIDLObjectClassName" class="selected">getIDLObjectClassName</a>
+            </li>
+            <li value="6"><a href="#getIDLObjectVariableName" class="selected">getIDLObjectVariableName</a>
+            </li>
+            <li value="7"><a href="#getIDLVariable" class="selected">getIDLVariable</a>
+            </li>
+            <li value="8"><a href="#getProcessName" class="selected">getProcessName</a>
+            </li>
+            <li value="9"><a href="#isObjectCreated" class="selected">isObjectCreated</a>
+            </li>
+            <li value="10"><a href="#setIDLVariable" class="selected">setIDLVariable</a>
+            </li>
+            <li value="11"><a href="#setProcessName" class="selected">setProcessName</a>
+            </li>
+        </ul>
+        <p>Every Java connector object and custom Java wrapper object has these methods in addition to those defined by the wrapped IDL object.</p>
+        <h2><a name="abort"></a>abort</h2>
+        <p>The abort method requests that the IDL process containing the underlying IDL object abort its current activity. This method is useful if a given IDL method call is busy for a very long time (e.g., a very long image processing command).</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The request is only that, a request, and IDL might take a long time before it actually stops or might completely finish its current activity. Such a wait is an effect of the IDL interpreter.</p>
+        <p>Note that the client can only call abort from a different thread than the one currently executing because the method executing is, by its nature, blocked. The caller cannot abort IDL activity that is occurring from an execution call in another wrapper object. The client can only abort the current IDL activity if that wrapper object is the current owner of the underlying IDL process. For more information on error return code relating to aborting, see <a href="ErrorHandling.htm#Error_Handling">Error Handling</a>.</p>
+        <h3>Syntax</h3>
+        <p class="indent">public void abort()</p>
+        <h3>Arguments</h3>
+        <p class="indent">None</p>
+        <h2><a name="createObject"></a>createObject</h2>
+        <p>The createObject method creates the actual underlying IDL object. The argc, argv, and argpal arguments are used to supply parameters to the underlying IDL object’s Init method. If the Init method does not have any parameters, the caller sets argc, argv, and argpal to 0, null, and null, respectively. The initializer argument is used to specify IDL process initialization parameters (notably the IDL licensing mode).</p>
+        <p>The createObject method does the following:</p>
+        <ol>
+            <li value="1">It calls the Init method for the IDL object.</li>
+            <li value="2">It calls the superclass initListeners method (either JIDLCanvas::initListeners or JIDLObject::initListeners) to initialize any event handlers.</li>
+        </ol>
+        <p>The initListeners method has default behavior, which is different for drawable and nondrawable objects (see <a href="EventHandling.htm#Event_Handling">Event Handling</a> for more information). If the default behavior is not desired, a subclass to modify the listener initialization can override the initListeners method.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Registering or unregistering listeners for events should happen in the initListeners method or AFTER the createObject method.</p>
+        <h3>Syntax</h3>
+        <p class="indent">public void createObject( )</p>
+        <p class="indent">public void createObject(int argc, Object[] argv, int[] argpal)</p>
+        <p class="indent">public void createObject(int argc, Object[] argv, int[] argpal, JIDLProcessInitializer initializer)</p>
+        <p class="indent">public void createObject(JIDLProcessInitializer initializer)</p>
+        <h3>Arguments</h3>
+        <p>argc</p>
+        <p class="indent">The number of parameters to be passed to Init.</p>
+        <p>argv</p>
+        <p class="indent">The array of objects to be passed to IDL. This array should be of length argc and should contain objects of type JIDLNumber, JIDLObjectI, JIDLString, or JIDLArray.</p>
+        <p>argpal</p>
+        <p class="indent">An array of argc flags denoting whether each argv parameter that is of type array should be convolved or not. For parameters that are not arrays, the value within the array will always be 0.</p>
+        <p>initializer</p>
+        <p class="indent">A JIDLProcessInitializer object that encapsulates the IDL process initialization parameters. (Process initialization parameters allow the Java programmer to control the licensing mode of the IDL process. See “IDL Licensing Modes” on page 136 for details on the default licensing mechanism.)</p>
+        <h3>Example</h3>
+        <p>The Init method of the IDL object being wrapped has the following signature:</p>
+        <p class="Code">PRO IDLexFoo::INIT, rect, filename</p>
+        <p>where <i>rect</i> is an array of four integers and <i>filename</i> is a string.</p>
+        <p>The following is an example of Java client code that creates an instance of the wrapper object and calls the createObject method with the <i>rect</i> and <i>filename</i> parameters:</p>
+        <p class="Code">// These are the Java types we want to pass to the ::Init method </p>
+        <p class="Code">int[] rect = {0, 0, 5, 10};</p>
+        <p class="Code">String file = "someFilename.txt";</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">// Wrap the Java types using Export Bridge data types</p>
+        <p class="Code">JIDLArray bRect = new JIDLArray(rect);</p>
+        <p class="Code">JIDLString bFile = new JIDLString(file);</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">// Create the wrapper object</p>
+        <p class="Code">MyWrapper wrapper = new MyWrapper();</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">// Set up parameters to pass to createObject</p>
+        <p class="Code">final int ARGC = 2;</p>
+        <p class="Code">Object[] argv = new Object[ARGC];</p>
+        <p class="Code">int[] argp = new int[ARGC];</p>
+        <p class="Code">argv[0] = bRect;</p>
+        <p class="Code">argp[0] = JIDLConst.PARMFLAG_CONST; // "in-only" parameter argv[1] = bFile;</p>
+        <p class="Code">argp[1] = JIDLConst.PARMFLAG_CONST; // "in-only" parameter</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">// Create the underlying IDL object and call</p>
+        <p class="Code">// its ::Init method with parameters and default IDL</p>
+        <p class="Code">// process initialization settings</p>
+        <p class="Code">wrapper.createObject(ARGC, argv, argp);</p>
+        <p class="Code">&#160;</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>See  <a href="../Appendices - Java Object Creation/SampleIDLObject.htm#Sample_IDL_Object">Java Object Creation</a> for additional examples of creating Java wrapper objects with and without parameters.</p>
+        <h2><a name="destroyObject"></a>destroyObject</h2>
+        <p>The destroyObject method destroys the underlying IDL object associated with the wrapper. If the object being destroyed is the last object within a process, the process is also destroyed.</p>
+        <p>Note that this method does not destroy the actual wrapper object. Because the wrapper object is a Java object, it follows all the Java reference-counting and garbage-collection schemes. Once all references to the wrapper object are released from Java code and once the JVM calls the garbage collector, the wrapper object may be deleted from memory.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Trying to re-create an object after it has been destroyed it is not supported. You must re-define the variable and then re-create the object.</p>
+        <h3>Syntax</h3>
+        <p class="indent">public void destroyObject()</p>
+        <h3>Arguments</h3>
+        <p class="indent">None</p>
+        <h2><a name="executeString"></a>executeString</h2>
+        <p>The executeString method executes the specified command in the IDL process containing the underlying IDL object</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This method is disabled for applications running in the IDL Virtual Machine.</p>
+        <h3>Syntax</h3>
+        <p class="indent">public void executeString(String sCmd)</p>
+        <h3>Arguments</h3>
+        <p>sCmd</p>
+        <p class="indent">The command to be executed.</p>
+        <h3>Examples</h3>
+        <p>See <a href="../ExportFromIDL - Connector Objects/IDLCommandLinewithJavaConnectorObject.htm#IDL_Command_Line_with_Java_Connector_Object">IDL Command Line with Java Connector Object</a> for an example that executes an IDL command entered into one textbox and writes IDL output or error information to a second textbox.</p>
+        <h2><a name="getIDLObjectClassName"></a>getIDLObjectClassName</h2>
+        <p>The getIDLObjectClassName method returns the IDL object class name of the underlying IDL object.</p>
+        <h3>Syntax</h3>
+        <p class="indent">public String getIDLObjectClassName()</p>
+        <h3>Arguments</h3>
+        <p class="indent">None</p>
+        <h2><a name="getIDLObjectVariableName"></a>getIDLObjectVariableName</h2>
+        <p>When the underlying IDL object was created in the IDL process, it was assigned a variable name. The getIDLObjectVariableName method returns that name.</p>
+        <h3>Syntax</h3>
+        <p class="indent">public String getIDLObjectVariableName()</p>
+        <h3>Arguments</h3>
+        <p class="indent">None</p>
+        <h2><a name="getIDLVariable"></a>getIDLVariable</h2>
+        <p>The getIDLVariable method retrieves the named variable from the IDL process associated with the underlying IDL object.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This method is disabled for applications running in the IDL Virtual Machine.</p>
+        <h3>Syntax</h3>
+        <p class="indent">public Object getIDLVariable(String sVar)</p>
+        <h3>Arguments</h3>
+        <p>sVar</p>
+        <p class="indent">The named variable to be retrieved. The returned object is of type <a href="../Appendices - IDL Java Object API/JIDLNumber.htm#JIDLNumber">JIDLNumber</a>, <a href="../Appendices - IDL Java Object API/JIDLString.htm#JIDLString">JIDLString</a>, <a href="../Appendices - IDL Java Object API/JIDLObjectI.htm#JIDLObjectI">JIDLObjectI</a>, or <a href="../Appendices - IDL Java Object API/JIDLArray.htm#JIDLArray">JIDLArray</a>.</p>
+        <p class="indent">If the variable is an array, the array is always converted from IDL majority to the standard Java array majority. (For more information on implications of array majority, see <a href="../Appendices - Multidimensional Array Storage and Access/MASAOverview.htm#Multidimensional_Array_Storage_and_Access_Overview">Multidimensional Array Storage and Access</a>.)</p>
+        <h3>Examples</h3>
+        <p>See <a href="../ExportFromIDL - Connector Objects/DataManipulationwithaJavaConnectorObject.htm#Data_Manipulation_with_a_Java_Connector_Object">Data Manipulation with a Java Connector Object</a> for an array manipulation example that uses the getIDLVariable, setIDLVariable and executeString methods.</p>
+        <h2><a name="getProcessName"></a>getProcessName</h2>
+        <p>The getProcessName method returns the name of the process associated with the underlying IDL object.</p>
+        <h3>Syntax</h3>
+        <p class="indent">public String getProcessName()</p>
+        <h3>Arguments</h3>
+        <p class="indent">None</p>
+        <h2><a name="isObjectCreated"></a>isObjectCreated</h2>
+        <p>The isObjectCreated method returns True if the object has been created successfully and returns False if the object has not yet been created or if the object creation was unsuccessful. This call is often useful in a multi-threaded environment to check that an object is created before making a method call on that object.</p>
+        <h3>Syntax</h3>
+        <p class="indent">public boolean isObjectCreated()</p>
+        <h3>Arguments</h3>
+        <p class="indent">None</p>
+        <h2><a name="setIDLVariable"></a>setIDLVariable</h2>
+        <p>The setIDLVariable method sets the specified variable name to the specified value in the IDL process containing the underlying IDL object. If the type is JIDLArray, it is always converted to IDL majority.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This method is disabled for applications running in the IDL Virtual Machine.</p>
+        <h3>Syntax</h3>
+        <p class="indent">public void setIDLVariable(String sVar, Object value)</p>
+        <h3>Arguments</h3>
+        <p>sVar</p>
+        <p class="indent">A string identifying the variable in the IDL process to be set to value.</p>
+        <p>value</p>
+        <p class="indent">The value for sVar. The value should be an object of type <a href="../Appendices - IDL Java Object API/JIDLNumber.htm#JIDLNumber">JIDLNumber</a>, <a href="../Appendices - IDL Java Object API/JIDLString.htm#JIDLString">JIDLString</a>, <a href="../Appendices - IDL Java Object API/JIDLObjectI.htm#JIDLObjectI">JIDLObjectI</a>, or <a href="../Appendices - IDL Java Object API/JIDLArray.htm#JIDLArray">JIDLArray</a>. If the variable does not exist, it is created.</p>
+        <h3>Examples</h3>
+        <p>See <a href="../ExportFromIDL - Connector Objects/DataManipulationwithaJavaConnectorObject.htm#Data_Manipulation_with_a_Java_Connector_Object">Data Manipulation with a Java Connector Object</a> for an array manipulation example that uses the getIDLVariable, setIDLVariable and executeString methods.</p>
+        <h2><a name="setProcessName"></a>setProcessName</h2>
+        <p>The setProcessName method sets the name of the process that will contain the IDL object. This can only be called before making the createObject call. Once the object is created, the process name cannot be reset and calling this method after createObject has no effect.</p>
+        <h3>Syntax</h3>
+        <p class="indent">public void setProcessName(String sProcess)</p>
+        <h3>Arguments</h3>
+        <p>sProcess</p>
+        <p class="indent">A string containing the name of the process that will contain the IDL object.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

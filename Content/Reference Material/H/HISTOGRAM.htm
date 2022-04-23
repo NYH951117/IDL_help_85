@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: H">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>HISTOGRAM </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="H_list.htm">Routines: H</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">HISTOGRAM</span>
+        </div>
+        <h1 class="Routine"><a name="H_835179117_677165"></a><a name="kanchor1491"></a><a name="H_835179117_31792"></a>HISTOGRAM </h1>
+        <p><a name="kanchor1492"></a><a name="kanchor1493"></a>The HISTOGRAM function computes the density function of <i>Array</i>. In the simplest case, the density function, at subscript <i>i</i>, is the number of <i>Array</i> elements in the argument with a value of <i>i</i>.</p>
+        <p>Let <i>F</i><sub class="italic">i</sub>= the value of element <i>i</i>, 0 ≤ <i>i</i> &lt; <i>n</i>. Let <i>H</i><sub class="italic">v</sub> = result of histogram function, an integer vector. The definition of the histogram function becomes:</p>
+        <p>
+            <img src="../../images/14_1.jpg" />
+        </p>
+        <p>
+            <img src="../../images/14_9.jpg" />
+        </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>There may not always be enough virtual memory available to find the density functions of arrays that contain a large number of bins.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The data type of the values specified for BINSIZE, MAX, and MIN should match the data type of the <i>Array</i> argument. Since these keyword values are converted to the data type of <i>Array</i>, specifying mismatched data types may produce undesired results. For example, if you have a byte image as your input array, but you want to use a fractional binsize, you should convert your input array to floating-point before calling HISTOGRAM.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>For bivariate probability distributions, use the HIST_2D function.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>HISTOGRAM can optionally return an array containing a list of the original array subscripts that contributed to each histogram bin. This list, commonly called the <a name="kanchor1494"></a>reverse (or backwards) index list, efficiently determines which array elements are accumulated in a set of histogram <a name="kanchor1495"></a>bins. A typical application of the reverse index list is reverse histogram or scatter plot interrogation—a histogram bin or 2D scatter plot location is marked with the cursor and the original data items within that bin are highlighted.</p>
+        <h2 class="API">Example</h2>
+        <p>
+            <img src="../images/histogram_ex1.png" />
+        </p>
+        <p>This example computes image histograms and plots the frequencies of their pixel values. Copy and paste the code into the IDL Workbench to run it.</p>
+        <p class="Code">; Read a flat binary file with an image.</p>
+        <p class="Code">file = FILE_WHICH('ctscan.dat')</p>
+        <p class="Code">scan = READ_BINARY(file, DATA_DIMS=[256,256])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Compute the image histogram, using the default bin size of 1.</p>
+        <p class="Code">pdf = HISTOGRAM(scan, LOCATIONS=xbin)</p>
+        <p class="Code">cdf = TOTAL(pdf, /CUMULATIVE) / N_ELEMENTS(scan)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the image and its histogram, setting MAX_VALUE to exclude the spike</p>
+        <p class="Code">; at 0 caused by the black pixels.</p>
+        <p class="Code">pimage = IMAGE(scan, /ORDER, LAYOUT=[3,1,1], DIMENSIONS=[4*256,256], $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE='Image')</p>
+        <p class="Code">phisto = PLOT(xbin, pdf, LAYOUT=[3,1,2], /CURRENT, XRANGE=[0,255], $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE='Histogram', XTITLE='Pixel value', YTITLE='Frequency', $</p>
+        <p class="Code">&#160;&#160;&#160;MAX_VALUE=5e3, AXIS_STYLE=1, COLOR='red')</p>
+        <p class="Code">pcumul = PLOT(xbin, cdf, LAYOUT=[3,1,3], /CURRENT, XRANGE=[0,255], $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE='Cumulative histogram', XTITLE='Pixel value', $</p>
+        <p class="Code">&#160;&#160;&#160;YTITLE='Cumulative frequency', $</p>
+        <p class="Code">&#160;&#160;&#160;AXIS_STYLE=1, COLOR='blue')</p>
+        <p>The Additional Examples section contains more information on using HISTOGRAM.</p>
+        <h2 class="API"><a name="H_835179117_677169"></a><a name="H_835179117_677169_PageTOC_HISTOGRAM_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = HISTOGRAM( <i>Array</i> [,&#160;<a href="#H_835179117_677175" class="selected">BINSIZE</a>=<i>value</i>] [,&#160;<a href="#H_835179117_677177" class="selected">INPUT</a>=<i>variable</i>] [,&#160;<a href="#H_835179117_886107" class="selected">LOCATIONS</a>=<i>variable</i>] [,&#160;<a href="#H_835179117_886113" class="selected">MAX</a>=<i>value</i>] [,&#160;<a href="#H_835179117_677182" class="selected">MIN</a>=<i>value</i>] [,&#160;/<a href="#H_835179117_197674" class="selected">NAN</a>] [,&#160;<a href="#H_835179117_677184" class="selected">NBINS</a>=<i>value</i>] [,&#160;<a href="#H_835179117_873903" class="selected">OMAX</a>=<i>variable</i>] [,&#160;<a href="#H_835179117_677186" class="selected">OMIN</a>=<i>variable</i>] [,&#160;/<a href="#H_835179117_677180" class="selected">L64</a>&#160;|&#160;&#160;<a href="#H_835179117_677188" class="selected">REVERSE_INDICES</a>=<i>variable</i>] )</p>
+        <h2 class="API"><a name="H_835179117_872293"></a><a name="H_835179117_872293_PageTOC_HISTOGRAM_"></a>Return Value</h2>
+        <p>Returns a 32-bit or a 64-bit integer vector equal to the density function of the input <i>Array</i>.</p>
+        <h2 class="API"><a name="H_835179117_677171"></a><a name="H_835179117_677171_PageTOC_HISTOGRAM_"></a>Arguments</h2>
+        <h3 class="Argument">Array</h3>
+        <p>The vector or array for which the density function is to be computed.</p>
+        <h2 class="API"><a name="H_835179117_677174"></a><a name="H_835179117_677174_PageTOC_HISTOGRAM_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="H_835179117_677175"></a><a name="H_835179117_677175_Keywords_HISTOGRAM__"></a>BINSIZE</h3>
+        <p>Set this keyword to the size of the bin to use. If this keyword is not specified, and NBINS is not set, then a bin size of 1 is used. If NBINS is set, the default is BINSIZE&#160;=&#160;(MAX –&#160;MIN)&#160;/&#160;(NBINS&#160;–&#160;1).</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The data type of the value specified for BINSIZE should match the data type of the <i>Array</i> argument. Since BINSIZE is converted to the data type of <i>Array</i>, specifying mismatched data types may produce undesired results.</p>
+        <h3 class="Keyword"><a name="H_835179117_677177"></a><a name="H_835179117_677177_Keywords_HISTOGRAM__"></a>INPUT</h3>
+        <p>Set this keyword to a named variable that contains an array to be added to the output of HISTOGRAM. The density function of <i>Array</i> is added to the existing contents of INPUT and returned as the result. The array is converted to longword type if necessary and must have at least as many elements as are required to form the histogram. Multiple histograms can be efficiently accumulated by specifying partial sums via this keyword.</p>
+        <h3 class="Keyword"><a name="H_835179117_677180"></a><a name="H_835179117_677180_Keywords_HISTOGRAM__"></a>L64</h3>
+        <p>By default, the return value of HISTOGRAM is 32-bit integer when possible, and 64-bit integer if the number of elements being processed requires it. Set L64 to force 64-bit integers to be returned in all cases. L64 controls the type of <i>Result</i> as well as the output from the REVERSE_INDICES keyword.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Only 64-bit versions of IDL are capable of creating variables requiring a 64-bit result. Check the value of !VERSION.MEMORY_BITS to see if your IDL is 64-bit or not.</p>
+        <h3 class="Keyword"><a name="H_835179117_886107"></a><a name="H_835179117_886107_Keywords_HISTOGRAM__"></a>LOCATIONS</h3>
+        <p>Set this keyword to a named variable in which to return the starting locations for each bin. The starting locations are given by MIN + <i>v</i>*BINSIZE, with <i>v&#160;</i>=&#160;0,1,...,NBINS-1. LOCATIONS has the same number of elements as the Result, and has the same type as the input Array.</p>
+        <h3 class="Keyword"><a name="H_835179117_886113"></a><a name="H_835179117_886113_Keywords_HISTOGRAM__"></a>MAX</h3>
+        <p>Set this keyword to the maximum value to consider. If this keyword is not specified, <i>Array</i> is searched for its largest value. If this keyword is not specified, and <i>Array</i> is of type byte, 255 is used.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The data type of the value specified for MAX should match the data type of the input array. Since MAX is converted to the data type of the input array, specifying mismatched data types may produce undesired results.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If NBINS is specified, the value for MAX will be adjusted to NBINS*BINSIZE + MIN. This ensures that the last bin has the same width as the other bins.</p>
+        <h3 class="Keyword"><a name="H_835179117_677182"></a><a name="H_835179117_677182_Keywords_HISTOGRAM__"></a>MIN</h3>
+        <p>Set this keyword to the minimum value to consider. If this keyword is not specified, and <i>Array</i> is of type byte, 0 is used. If this keyword is not specified and <i>Array</i> is not of byte type, <i>Array</i> is searched for its smallest value.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The data type of the value specified for MIN should match the data type of the input array. Since MIN is converted to the data type of the input array, specifying mismatched data types may produce undesired results.</p>
+        <h3 class="Keyword"><a name="H_835179117_197674"></a><a name="H_835179117_197674_Keywords_HISTOGRAM__"></a>NAN</h3>
+        <p>Set this keyword to cause the routine to check for occurrences of the IEEE floating-point values <i>NaN</i> or <i>Infinity</i> in the input data. Elements with the value <i>NaN</i> or <i>Infinity</i> are treated as missing data. </p>
+        <h3 class="Keyword"><a name="H_835179117_677184"></a><a name="H_835179117_677184_Keywords_HISTOGRAM__"></a>NBINS</h3>
+        <p>Set this keyword to the number of bins to use. If BINSIZE is specified, the number of bins in <i>Result</i> is NBINS, starting at MIN and ending at MIN+(NBINS–1)*BINSIZE. If MAX is specified, the bins will be evenly spaced between MIN and MAX. It is an error to specify NBINS with both BINSIZE and MAX.</p>
+        <p>If you define NBINS without specifying MIN, MAX, and BINSIZE, the values are distributed among the (NBINS-1) with the last data value being placed in the last bin.</p>
+        <h3 class="Keyword"><a name="H_835179117_873903"></a><a name="H_835179117_873903_Keywords_HISTOGRAM__"></a>OMAX</h3>
+        <p>Set this keyword to a named variable that will contain the maximum data value used in constructing the histogram.</p>
+        <h3 class="Keyword"><a name="H_835179117_677186"></a><a name="H_835179117_677186_Keywords_HISTOGRAM__"></a>OMIN</h3>
+        <p>A named variable that, upon exit, contains the minimum data value used in constructing the histogram.</p>
+        <h3 class="Keyword"><a name="H_835179117_677188"></a><a name="H_835179117_677188_Keywords_HISTOGRAM__"></a>REVERSE_INDICES</h3>
+        <p>Set this keyword to a named variable in which the list of reverse indices is returned. When possible, this list is returned as a 32-bit integer vector whose number of elements is the sum of the number of elements in the histogram, <i>N</i>, and the number of array elements included in the histogram, plus one. If the number of elements is too large to be contained in a 32-bit integer, or if the L64 keyword is set, REVERSE_INDICES is returned as a 64-bit integer.</p>
+        <p>The subscripts of the original array elements falling in the i<sup class="italic">th </sup>bin, 0 ≤ i &lt; <i>N</i>, are given by the expression: R(R[i] : R[i+1]-1), where R is the reverse index list. If R[i] is equal to R[i+1], no elements are present in the i<sup class="italic">th</sup> bin.</p>
+        <p>For example, make the histogram of array A:</p>
+        <p class="Code">H = HISTOGRAM(A, REVERSE_INDICES = R)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Set all elements of A that are in the ith bin of H to 0.</p>
+        <p class="Code">IF R[i] NE R[i+1] THEN A[R[R[I] : R[i+1]-1]] = 0</p>
+        <p>The above is usually more efficient than the following:</p>
+        <p class="Code">bini = WHERE(A EQ i, count)</p>
+        <p class="Code">IF count NE 0 THEN A[bini] = 0</p>
+        <h2 class="API"><a name="H_835179117_677198"></a><a name="H_835179117_677198_PageTOC_HISTOGRAM_"></a>Additional Examples</h2>
+        <h3>Example Using the STAIRSTEP Property</h3>
+        <p>
+            <img src="../images/histogram_ex2.png" />
+        </p>
+        <p class="Code">; Read the ENSO (El Nino Southern Oscillation) time series</p>
+        <p class="Code">; &#160;and set up a time vector.</p>
+        <p class="Code">enso = READ_BINARY(FILE_WHICH('elnino.dat'), DATA_TYPE=4, ENDIAN='little')</p>
+        <p class="Code">delta = 0.25 ; years</p>
+        <p class="Code">time = FINDGEN(N_ELEMENTS(enso))*delta + 1871</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Calculate histogram of series using bins of given width.</p>
+        <p class="Code">binsize = 0.1 ; in dimensionless units of ENSO index.</p>
+        <p class="Code">h_enso = HISTOGRAM(enso, BINSIZE=binsize, LOCATIONS=binvals)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display times series and histogram.</p>
+        <p class="Code">winsize = 500</p>
+        <p class="Code">w = WINDOW(DIMENSIONS=[2*winsize, winsize])</p>
+        <p class="Code">series = PLOT(time, enso, $</p>
+        <p class="Code_Indented">/CURRENT, $</p>
+        <p class="Code_Indented">POSITION=[0.10, 0.10, 0.65, 0.90], $</p>
+        <p class="Code_Indented">XSTYLE=3, $</p>
+        <p class="Code_Indented">XTITLE='Time (years)', $</p>
+        <p class="Code_Indented">YTITLE='ENSO Index', $</p>
+        <p class="Code_Indented">TITLE='El Ni!Sn!R!U~!No - Southern Oscillation (ENSO) Index (1871-1996)')</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">; Add a dotted line to indicate the zero value.</p>
+        <p class="Code">zero1 = PLOT(series.xrange, [0,0], LINESTYLE='dotted', /OVERPLOT)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Plot up the histogram using the STAIRSTEP property.</p>
+        <p class="Code">histoplot = PLOT(h_enso, binvals, $</p>
+        <p class="Code_Indented">/CURRENT, $</p>
+        <p class="Code_Indented">POSITION=[0.70, 0.10, 0.95, 0.90], $</p>
+        <p class="Code_Indented">/STAIRSTEP, $</p>
+        <p class="Code_Indented">XTITLE='Frequency', $</p>
+        <p class="Code_Indented">TITLE='Histogram of ENSO Index Values')</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">; Add a dotted line to indicate the zero value.</p>
+        <p class="Code">zero2 = PLOT(histoplot.xrange, [0,0], LINESTYLE='dotted', /OVERPLOT)</p>
+        <h3>Examples using NBINS:</h3>
+        <p class="Code">data = FINDGEN(100)</p>
+        <p class="Code">myHist = HISTOGRAM(data, NBINS=2)</p>
+        <p class="Code">myHist2 = HISTOGRAM(data, NBINS=10)</p>
+        <p class="Code">PRINT, myHist</p>
+        <p class="Code">PRINT, myHist2</p>
+        <p>IDL&#160;displays results similar to (notice that the last bin contains just a single element):</p>
+        <p class="Code">&#160;&#160;&#160;99&#160;           1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;11&#160;          11&#160;          11&#160;          11&#160;          11&#160;          11&#160;          11&#160;          11&#160;          11&#160;           1</p>
+        <h3>Examples using NBINS with BINSIZE:</h3>
+        <p class="Code">data = FINDGEN(100)</p>
+        <p class="Code">myHist = HISTOGRAM(data, BINSIZE=50, NBINS=2)</p>
+        <p class="Code">myHist2 = HISTOGRAM(data, BINSIZE=10, NBINS=10)</p>
+        <p class="Code">PRINT, myHist</p>
+        <p class="Code">PRINT, myHist2</p>
+        <p>IDL&#160;displays results similar to:</p>
+        <p class="Code">&#160;&#160;&#160;50&#160;&#160;          &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;50</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;10&#160;          10&#160;          10&#160;          10&#160;          10&#160;          10&#160;          10&#160; 10&#160;          10&#160;          10</p>
+        <h3>Other Examples</h3>
+        <p>&#160;</p>
+        <p class="Code">; Create a simple, 2D dataset:<br />D = DIST(200)<br />; Plot the histogram of D with a bin size of 1 and the default<br />; minimum and maximum:<br />PLOT, HISTOGRAM(D)<br />; Plot a histogram considering only those values from 10 to 50 <br />; using a bin size of 4:<br />PLOT, HISTOGRAM(D, MIN = 10, MAX = 50, BINSIZE = 4)</p>
+        <p>The HISTOGRAM function can also be used to <a name="kanchor1496"></a>increment the elements of one vector whose subscripts are contained in another vector. To increment those elements of vector A indicated by vector B, use the command:</p>
+        <p class="Code">A = HISTOGRAM(B, INPUT=A, MIN=0, MAX=N_ELEMENTS(A)-1)</p>
+        <p>This method works for duplicate subscripts, whereas the following statement never adds more than 1 to any element, even if that element is duplicated in vector B:</p>
+        <p class="Code">A[B] = A[B]+1</p>
+        <p>For example, for the following commands:</p>
+        <p class="Code">A = LONARR(5)<br />B = [2,2,3]<br />PRINT, HISTOGRAM(B, INPUT=A, MIN=0, MAX=4)<br /></p>
+        <p>IDL prints:</p>
+        <p class="Code">&#160;&#160;&#160;0&#160; 0&#160; 2&#160; 1&#160; 0</p>
+        <p>The commands:</p>
+        <p class="Code">A = LONARR(5)<br />A[B] = A[B]+1<br />PRINT, A<br /></p>
+        <p>give the result:</p>
+        <p class="Code">&#160;&#160;&#160;0&#160; 0&#160; 1&#160; 1&#160; 0</p>
+        <p>The following example demonstrates how to use HISTOGRAM:</p>
+        <p class="Code">PRO t_histogram<br />data = [[-5,  4,   2,  -8,  1], $<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;[ 3,  0,   5,  -5,  1], $<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;[ 6, -7,   4,  -4, -8], $<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;[-1, -5, -14,   2,  1]]<br />hist = HISTOGRAM(data)<br />bins = FINDGEN(N_ELEMENTS(hist)) + MIN(data)<br />PRINT, MIN(hist)<br />PRINT, bins<br />PLOT, bins, hist, YRANGE = [MIN(hist)-1, MAX(hist)+1], PSYM = 10, $<br />&#160;&#160;&#160;XTITLE = 'Bin Number', YTITLE = 'Density per Bin'<br />END<br /></p>
+        <p>IDL prints:</p>
+        <p class="Code">0</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">-14.0000&#160;&#160;&#160;-13.0000&#160;&#160;&#160;-12.0000&#160;&#160;&#160;-11.0000&#160;&#160;&#160;-10.0000&#160;&#160;&#160;-9.00000</p>
+        <p class="Code">-8.00000&#160;&#160;&#160;-7.00000&#160;&#160;&#160;-6.00000&#160;&#160;&#160;-5.00000&#160;&#160;&#160;-4.00000&#160;&#160;&#160;-3.00000</p>
+        <p class="Code">-2.00000&#160;&#160;&#160;-1.00000&#160;&#160;&#160;&#160;0.00000&#160;&#160;&#160;&#160;1.00000&#160;&#160;&#160;&#160;2.00000&#160;&#160;&#160;&#160;3.00000</p>
+        <p class="Code"> 4.00000&#160;&#160;&#160;&#160;5.00000&#160;&#160;&#160;&#160;6.00000</p>
+        <h2 class="API"><a name="H_835179117_856918"></a><a name="H_835179117_856918_PageTOC_HISTOGRAM_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.6</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added LOCATIONS keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="H_835179117_880178"></a><a name="H_835179117_880178_PageTOC_HISTOGRAM_"></a>See Also</h2>
+        <p><a href="H_EQ_CT.htm#H_835179117_931377">H_EQ_CT</a>,&#160; <a href="H_EQ_INT.htm#H_835179117_759200">H_EQ_INT</a>,&#160; <a href="HIST_2D.htm#H_835179117_758132">HIST_2D</a>,&#160; <a href="HIST_EQUAL.htm#H_835179117_758147">HIST_EQUAL</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

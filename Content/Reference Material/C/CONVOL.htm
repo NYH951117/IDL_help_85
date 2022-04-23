@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>CONVOL </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">CONVOL</span>
+        </div>
+        <h1 class="Routine"><a name="C_854643309_676395"></a><a name="C_854643309_17663"></a><a name="kanchor341"></a><a name="kanchor342"></a>CONVOL </h1>
+        <p><a name="kanchor343"></a><a name="kanchor344"></a><a name="kanchor345"></a><a name="kanchor346"></a><a name="kanchor347"></a>The CONVOL function convolves an array with a kernel, and returns the result. Convolution is a general process that can be used for various types of smoothing, signal processing, shifting, differentiation, edge detection, etc. The CENTER keyword controls the alignment of the kernel with the array and the ordering of the kernel elements. If CENTER is explicitly set to 0, convolution is performed in the strict mathematical sense; otherwise, the kernel is centered over each data point.</p>
+        <h2 class="API">Example</h2>
+        <p>
+            <img src="../../images/convol_example1.gif" />
+        </p>
+        <p>This example uses a kernel to detect diagonal lines in an image.</p>
+        <p class="Code">; Sample image</p>
+        <p class="Code">array = FIX(READ_PNG(FILEPATH('mineral.png', $</p>
+        <p class="Code">&#160;&#160;SUBDIRECTORY=['examples','data'])))</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Edge detection kernel</p>
+        <p class="Code">kernel = [ [0,1,0],[-1,0,1],[0,-1,0] ]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">result = CONVOL(array, kernel)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">im1 = IMAGE(array, LAYOUT=[2,1,1], RGB_TABLE=39)</p>
+        <p class="Code">im2 = IMAGE(result, LAYOUT=[2,1,2], /CURRENT)</p>
+        <h3>Additional Examples</h3>
+        <p>See <a href="#C_854643309_1297673" class="selected">Additional Examples</a> for more code examples using the CONVOL function.</p>
+        <h3>Using CONVOL</h3>
+        <p>Assume R = CONVOL(A, K, S), where <i>A </i>is an <i>n</i>-element vector, <i>K</i> is an <i>k</i>-element vector (<i style="letter-spacing: 0em;">k</i>≤<i style="letter-spacing: 0em;">n</i>), and <i style="letter-spacing: 0em;">S</i> is the scale factor. If the CENTER keyword is omitted or set to 1:</p>
+        <p>
+            <img src="../../images/9_9.jpg" />
+        </p>
+        <p>where the value <i>k</i>/2 is determined by <i>integer division</i>. This means that the result of the division is the largest <i>integer</i> value less than or equal to the fractional number.</p>
+        <p>If CENTER is explicitly set to 0: </p>
+        <p>
+            <img src="../../images/9_10.jpg" />
+        </p>
+        <p>In the two-dimensional, zero CENTER case where <i>A</i> is an <i>m</i>-by-<i>n</i>-element array, and <i>K</i> is the <i>k</i>-by-<i>k</i> element kernel; the result <i>R</i> is an <i>m</i> by <i>n</i>-element array:</p>
+        <p>
+            <img src="../../images/9_11.jpg" />
+        </p>
+        <p>The centered case is similar, except the <i>t-i</i> and <i>u-j</i> subscripts are replaced by <i>t+i-k</i>/2 and <i>u+j-k</i>/2.</p>
+        <h2 class="API"><a name="C_854643309_1298073"></a><a name="C_854643309_997070_PageTOC_CONVOL_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = CONVOL( <i>Array</i>, <i>Kernel</i> [,&#160;<i>Scale_Factor</i>] [,&#160;<a href="#C_854643309_1297165" class="selected">BIAS</a>=<i>value</i>] [,&#160;/<a href="#C_854643309_676409" class="selected">CENTER</a>] [, /<a href="#EDGE_MIR" class="selected">EDGE_MIRROR</a>] [,&#160;/<a href="#C_854643309_746326" class="selected">EDGE_TRUNCATE</a>] [,&#160;/<a href="#C_854643309_1298048" class="selected">EDGE_WRAP</a>] [,&#160;/<a href="#C_854643309_1297184" class="selected">EDGE_ZERO</a>] [,&#160;<a href="#C_854643309_1297467" class="selected">INVALID</a>=<i>value</i>] [,&#160;<a href="#C_854643309_1028668" class="selected">MISSING</a>=<i>value</i>] [,&#160;/<a href="#C_854643309_1028683" class="selected">NAN</a>] [,&#160;/<a href="#C_854643309_1297207" class="selected">NORMALIZE</a>] )</p>
+        <h2 class="API"><a name="C_854643309_1075476"></a><a name="C_854643309_98790"></a>Return Value</h2>
+        <p>Returns the result of the array convolution. Depending on <i>Array</i>’s type, the computation might be performed using a different type, although the result will always have the same type as <i>Array</i>. The following table shows the types used, as well as any clipping of the result values. The calculation type is also used for <i>Kernel</i>, <i>Scale_Factor</i>, and <a href="#C_854643309_1297165" class="selected">BIAS</a>.</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Array Type</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Kernal and Calculation Type</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Clipping</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>BYTE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>LONG</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>[0,255]</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>INT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>LONG</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>[-32768,32767]</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>LONG</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>LONG</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>None</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>FLOAT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>FLOAT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>None</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>DOUBLE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>DOUBLE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>None</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>COMPLEX</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>COMPLEX</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>None</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>DCOMPLEX</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>DCOMPLEX</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>None</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>UINT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>LONG</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>[0,65535]</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>ULONG</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>LONG</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>None</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>LONG64</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>LONG64</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>None</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>ULONG64</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>LONG64</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>None</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="C_854643309_676400"></a><a name="C_854643309_676400_PageTOC_CONVOL_"></a>Arguments</h2>
+        <h3 class="Argument">Array</h3>
+        <p>An array of any basic type except string. The result of CONVOL has the same type and dimensions as <i>Array</i>.</p>
+        <h3 class="Argument">Kernel</h3>
+        <p>An array of any type except string. If the type of <i>Kernel</i> is not the same as <i>Array</i>, a copy of <i>Kernel</i> is made and converted to the appropriate type before use (for byte data, the kernel is converted to type LONG). The size of the kernel dimensions must be less than or equal to those of <i>Array</i>. CONVOL accepts non-square kernels including one-dimensional kernels.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>According to the mathematical definition of convolution, the kernel should be reversed before performing the computation. Since IDL does not reverse the kernel, it is actually computing the <i>correlation</i> rather than the <i>convolution</i>. For symmetric kernels this distinction is irrelevant. For asymmetric kernels, use <a href="../R/REVERSE.htm#R_822202989_758865">REVERSE</a> to change the order of the kernel argument if you want to produce the convolution.</p>
+        <h3 class="Argument"><a name="Scale_Fa"></a>Scale_Factor</h3>
+        <p>A scale factor that is divided into each resulting value. This argument should be of the same type as the calculation type in, and is automatically converted if necessary. For byte or integer input arrays, the argument allows the use of fractional kernel values and avoids overflow of the result. If omitted or set to zero, a scale factor of 1 is used.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The same <i>Scale_Factor</i> is always divided into each result value, regardless of any missing data as specified by the <a href="#C_854643309_1297467" class="selected">INVALID</a> or <a href="#C_854643309_1028683" class="selected">NAN</a> keywords. It is usually not appropriate to divide the result value by the full scale factor if portions of the kernel were not applied due to missing data. In this case, you might want to use the <a href="#C_854643309_1297207" class="selected">NORMALIZE</a> keyword instead.</p>
+        <h2 class="API"><a name="C_854643309_676408"></a><a name="C_854643309_676408_PageTOC_CONVOL_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="C_854643309_1297165"></a><a name="C_854643309_75137"></a>BIAS</h3>
+        <p>Set this keyword to the bias offset to be added to each result value, after any <i>Scale_Factor</i> has been applied. BIAS should be of the same type as the calculation type inthe previous table, and will be automatically converted if necessary. If you have negative kernel values and a byte or unsigned integer input array, you can use this keyword to ensure that the result values are within the range of your data type.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The same BIAS is always added to each result value, regardless of any missing data as specified by the <a href="#C_854643309_1297467" class="selected">INVALID</a> or <a href="#C_854643309_1028683" class="selected">NAN</a> keywords. It is usually not appropriate to add the full BIAS if portions of the kernel were not applied due to missing data. In this case, you might want to use the <a href="#C_854643309_1297207" class="selected">NORMALIZE</a> keyword instead.</p>
+        <h3 class="Keyword"><a name="C_854643309_676409"></a><a name="C_854643309_676409_Keywords_CONVOL__"></a>CENTER</h3>
+        <p>Set or omit this keyword to center the kernel over each array point. If CENTER is explicitly set to zero, the CONVOL function works in the conventional mathematical sense. In many signal and image processing applications, it is useful to center a symmetric kernel over the data, thereby aligning the result with the original array.</p>
+        <p>Note that for the kernel to be centered, it must be symmetric about the point K(FLOOR(<i>m</i>/2)), where <i>m</i> is the number of elements in the kernel.</p>
+        <h3 class="Keyword"><a name="EDGE_MIR"></a>EDGE_MIRROR</h3>
+        <p>Set this keyword to make CONVOL compute the values of elements at the edge of <i>Array </i>by “mirroring” the subscripts of <i>Array </i>at the edge. For example, if CENTER= 0:</p>
+        <p>
+            <img src="../images/convol3.gif" />
+        </p>
+        <p>If none of the EDGE_* keywords are set, CONVOL sets the values of <i>Result </i>to zero (or the value of BIAS) where the kernel extends beyond the edge.</p>
+        <h3 class="Keyword"><a name="C_854643309_746326"></a><a name="C_854643309_746326_Keywords_CONVOL__"></a>EDGE_TRUNCATE</h3>
+        <p>Set this keyword to make CONVOL compute the values of elements at the edge of <i>Array</i> by repeating the subscripts of <i>Array</i> at the edge. For example, if CENTER is set to zero: </p>
+        <p>
+            <img src="../../images/9_13.jpg" />
+        </p>
+        <p>where <i>n</i> is the number of elements in <i>Array</i>. The “&lt;” and “&gt;” operators in the above formula return the smaller and larger of their operands, respectively.</p>
+        <p>If none of the EDGE_* keywords are set, CONVOL sets the values of <i>Result</i> to zero (or the value of <a href="#C_854643309_1297165" class="selected">BIAS</a>) where the kernel extends beyond the edge.</p>
+        <h3 class="Keyword"><a name="C_854643309_1298048"></a><a name="C_854643309_228821_Keywords_CONVOL__"></a>EDGE_WRAP</h3>
+        <p>Set this keyword to make CONVOL compute the values of elements at the edge of <i>Array</i> by “wrapping” the subscripts of <i>Array</i> at the edge. For example, if CENTER is set to zero: </p>
+        <p>
+            <img src="../../images/9_12.gif" />
+        </p>
+        <p>where <i>n</i> is the number of elements in <i>Array</i>. The mod operator in the formula above is defined as <code>a mod b = a - b * floor(a/b)</code>. For example, -1 mod 5 is 4.</p>
+        <p>If none of the EDGE_* keywords are set, CONVOL sets the values of <i>Result</i> to zero (or the value of <a href="#C_854643309_1297165" class="selected">BIAS</a>) where the kernel extends beyond the edge.</p>
+        <h3 class="Keyword"><a name="C_854643309_1297184"></a><a name="C_854643309_26786"></a>EDGE_ZERO</h3>
+        <p>Set this keyword to make CONVOL compute the values of elements at the edge of <i>Array</i> as if the array were padded with zeroes. For example, if <a href="#C_854643309_676409" class="selected">CENTER</a> is set to zero:</p>
+        <p>
+            <img src="../../images/9_21.jpg" />
+        </p>
+        <p>If none of the EDGE_* keywords are set, CONVOL sets the values of <i>Result</i> to zero (or the value of <a href="#C_854643309_1297165" class="selected">BIAS</a>) where the kernel extends beyond the edge.</p>
+        <h3 class="Keyword"><a name="C_854643309_1297467"></a><a name="C_854643309_85402"></a>INVALID</h3>
+        <p>Set this keyword to a scalar value of the same type as <i>Array</i> that should be used to indicate invalid data within <i>Array</i>. When computing the convolution for a particular point, any invalid values in the kernel's span will not be included within the sum. If all points within the kernel's span are invalid, the result at that point is given by the value of the <a href="#C_854643309_1028668" class="selected">MISSING</a> keyword. See the bottom for examples using the INVALID keyword.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>The use of the INVALID keyword is equivalent to treating those values as 0.0 when computing the convolution sum. You can use the NORMALIZE keyword to exclude these points entirely.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>For floating-point data, you can use the <a href="#C_854643309_1297467" class="selected">INVALID</a> and <a href="#C_854643309_1028683" class="selected">NAN</a> keywords simultaneously to filter out both user-defined values and <i>NaN</i> or <i>Infinity</i> values.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The INVALID keyword uses a simple comparison to ignore values and should <i>not</i> be set to <i>NaN</i>. If you do have <i>NaN</i>'s in your input, you should use the NAN keyword.</p>
+        <h3 class="Keyword"><a name="C_854643309_1028668"></a><a name="C_854643309_1028668_Keywords_CONVOL__"></a>MISSING</h3>
+        <p>Set this keyword to the value to return for elements in the <i>Result</i> where <i>all</i> of the points within the kernel's span were invalid. The default is zero for byte or integer input, and <i>NaN</i> for floating-point input. This keyword is only used if the INVALID or NAN keyword is set. See the bottom for examples using the MISSING keyword.</p>
+        <h3 class="Keyword"><a name="C_854643309_1028683"></a><a name="C_854643309_1028683_Keywords_CONVOL__"></a>NAN</h3>
+        <p>Set this keyword to cause the routine to check for <i>NaN</i> or <i>Infinity</i> values in the input data, and treat these values as invalid. When computing the convolution for a particular point, any invalid values in the kernel's span will not be included within the sum. If all points within the kernel's span are invalid, the result at that point is given by the value of the <a href="#C_854643309_1028668" class="selected">MISSING</a> keyword. See the bottom for examples using the NAN keyword.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>The use of the NAN keyword is equivalent to treating those values as 0.0 when computing the convolution sum. You can use the NORMALIZE keyword to exclude these points entirely.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>For floating-point data, you can use the <a href="#C_854643309_1297467" class="selected">INVALID</a> and <a href="#C_854643309_1028683" class="selected">NAN</a> keywords simultaneously to filter out both user-defined values and <i>NaN</i> or <i>Infinity</i> values.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You should always use the NAN keyword if the input array may possibly contain <i>NaN</i> or <i>Infinity</i> values. Note, however, that searching for these values will slow down the algorithm.</p>
+        <h3 class="Keyword"><a name="C_854643309_1297207"></a><a name="C_854643309_34350"></a>NORMALIZE</h3>
+        <p>Set this keyword to automatically compute a scale factor and bias and apply them to the result values. If this keyword is set, the <i>Scale_Factor</i> argument and the <a href="#C_854643309_1297165" class="selected">BIAS</a> keyword are ignored. For all input types, the scale factor is defined as the sum of the absolute values of <i>Kernel</i>. For BYTE or UINT, the bias is defined as the sum of the absolute values of the negative <i>Kernel</i> values, multiplied by either (255/<i>Scale</i>) for BYTE or (65535/<i>Scale</i>) for UINT, where <i>Scale</i> is the computed scale factor. For all other types, the bias is zero. See the bottom for examples using the NORMALIZE keyword.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>If NORMALIZE is set and your input array has missing data (the <a href="#C_854643309_1297467" class="selected">INVALID</a> or <a href="#C_854643309_1028683" class="selected">NAN</a> keywords are set), then for each result value the scale factor and bias are computed using only those kernel values that contributed to that result value. This ensures that all result values are comparable in magnitude, regardless of any missing data. However, you should use caution when analyzing these values, as the result may be biased by having fewer points within the kernel.</p>
+        <h3>Thread Pool Keywords</h3>
+        <p>This routine is written to make use of IDL’s <i>thread pool</i>, which can increase execution speed on systems with multiple CPUs. The values stored in the !CPU system variable control whether IDL uses the thread pool for a given computation. In addition, you can use the thread pool keywords TPOOL_MAX_ELTS, TPOOL_MIN_ELTS, and TPOOL_NOTHREAD to override the defaults established by !CPU for a single invocation of this routine.  See <a href="../../Creating IDL Programs/Appendices/tpoolkeyw.htm#tpoolkeyw_2501860834_317209">Thread Pool Keywords</a> for details.</p>
+        <h2 class="API"><a name="C_854643309_1297673"></a><a name="C_854643309_746333_PageTOC_CONVOL_"></a>Additional Examples</h2>
+        <h4>Smooth an Image with Missing Data</h4>
+        <p>
+            <img src="../../images/convol_example2.gif" />
+        </p>
+        <p>This example smoothes a noisy image that has missing data and uses the <a href="#C_854643309_1297207" class="selected">NORMALIZE</a> keyword to automatically remove much of the missing data.</p>
+        <p class="Code">; Array with noise</p>
+        <p class="Code">array = HANNING(300,300) + 0.1*RANDOMN(seed,300,300)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Convert to bytes from [0, 254]</p>
+        <p class="Code">array = BYTSCL(array, TOP=254)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add some missing scanlines, plus a large region</p>
+        <p class="Code">; Use 255 as the missimg data value</p>
+        <p class="Code">array[*, RANDOMU(seed,40)*300] = 255</p>
+        <p class="Code">array[*, 10:20] = 255</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Simple 5x5 Gaussian kernel</p>
+        <p class="Code">kernel = GAUSSIAN_FUNCTION([1,1], WIDTH=5, MAXIMUM=255)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Values of 255 are flagged as invalid (missing)</p>
+        <p class="Code">; and replaced by 0 if there are no valid values</p>
+        <p class="Code">; within the kernel</p>
+        <p class="Code">result = CONVOL(array, kernel, INVALID=255, MISSING=0, $</p>
+        <p class="Code">&#160;&#160;/EDGE_ZERO, /NORMALIZE)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">i2 = IMAGE(array, LAYOUT = [2, 1, 1], RGB_TABLE=39)</p>
+        <p class="Code">i2 = IMAGE(result, LAYOUT = [2, 1, 2], RGB_TABLE=39, /CURRENT)</p>
+        <h4>Smooth a Time Series with Missing Data</h4>
+        <p>
+            <img src="../../images/ex_convol_smooth.png" />
+        </p>
+        <p>Here, we consider a time series with noise and missing data.</p>
+        <p class="Code">; Data with invalid values (marked as -999).</p>
+        <p class="Code">data = EXP(-[1:1.75:0.025]^2)</p>
+        <p class="Code">n = N_ELEMENTS(data)</p>
+        <p class="Code">data += 0.1*RANDOMU(1, n)</p>
+        <p class="Code">data[10:16] = -999</p>
+        <p class="Code">; Simple smoothing kernel</p>
+        <p class="Code">kernel = [1,2,4,2,1]/10.0</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Values of -999 are flagged as invalid (missing)</p>
+        <p class="Code">; and are not included in the convolution sum.</p>
+        <p class="Code">; Note: If we had NaN values in our array,</p>
+        <p class="Code">; then we would use NAN instead of INVALID.</p>
+        <p class="Code">smooth1 = CONVOL(data, kernel, INVALID=-999, /EDGE_ZERO)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use NORMALIZE to preserve "energy" near the gap</p>
+        <p class="Code">smooth2 = CONVOL(data, kernel, INVALID=-999, $</p>
+        <p class="Code_Indented">/EDGE_ZERO, /NORMALIZE)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Plot our results. Use MIN_VALUE so we don't include</p>
+        <p class="Code">; the -999 invalid values.</p>
+        <p class="Code">p = PLOT(data, 'o-2', MIN_VALUE=-1, AXIS_STYLE=1, FONT_SIZE=9, $</p>
+        <p class="Code_Indented">XMINOR=2, YMINOR=2, /SYM_FILLED, DIM=[400, 300])</p>
+        <p class="Code">p.name = ' Original data'</p>
+        <p class="Code">p1 = PLOT(smooth1, 'or-2', /OVERPLOT, /SYM_FILLED)</p>
+        <p class="Code">p1.name = ' Convol with missing data'</p>
+        <p class="Code">p2 = PLOT(smooth2, 'ob-2', /OVERPLOT, /SYM_FILLED, SYM_SIZE=0.75)</p>
+        <p class="Code">p2.name = ' Convol with normalized kernel'</p>
+        <p class="Code">l = LEGEND(SHADOW=0,LINESTYLE='none', POSITION=[0.85, 0.9])</p>
+        <p class="Code">x = [0,1.5,1.5,7.5,7.5,18.5,18.5,n-2.5,n-2.5,n-1,n-1,0]</p>
+        <p class="Code">y = [0.5, 0.5, 0,  0,  0.5,   0.5,   0,    0,    0.5, 0.5,  0,0]</p>
+        <p class="Code">s = POLYGON(x, y, /DATA, FILL_COLOR='light gray', LINESTYLE='none')</p>
+        <p class="Code">s.Order, /SEND_TO_BACK</p>
+        <p>The gray regions indicate where the edges or the gap start to affect the returned values.</p>
+        <p>Notice that both <code>smooth1</code> and <code>smooth2</code> were able to fill in some of the <code>INVALID</code> values. However, once the kernel no longer covers any good points, then that value is treated as missing in the result. Notice also that for <code>smooth1</code>, on either side of the gap the smoothed values tend towards 0, as fewer good points are within the kernel. For <code>smooth2</code>, since we used the <code>NORMALIZE</code> keyword, the smoothed values retain their magnitude near the gap.</p>
+        <h2 class="API"><a name="C_854643309_1297681"></a><a name="C_854643309_34603_PageTOC_CONVOL_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">
+                        <p>6.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">
+                        <p>Added BIAS, EDGE_ZERO, INVALID, and NORMALIZE keywords</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added EDGE_MIRROR keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="C_854643309_1052213"></a><a name="C_854643309_1052213_PageTOC_CONVOL_"></a>See Also</h2>
+        <p><a href="../B/BLK_CON.htm">BLK_CON</a>, <a href="CONVOL_FFT.htm">CONVOL_FFT</a>, <a href="../G/GAUSSIAN_FUNCTION.htm">GAUSSIAN_FUNCTION</a>, <a href="../G/GAUSS_SMOOTH.htm">GAUSS_SMOOTH</a>, <a href="../L/LAPLACIAN.htm">LAPLACIAN</a>, <a href="../S/SAVGOL.htm">SAVGOL</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

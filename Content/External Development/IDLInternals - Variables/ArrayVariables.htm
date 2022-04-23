@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Variables">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Array Variables</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDLInternalVariables.htm">IDLInternals - Variables</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Array Variables</span>
+        </div>
+        <h1><a name="kanchor5453"></a>Array Variables</h1>
+        <p>Array variables have the <b>IDL_V_ARR</b> bit of their flags field set, and the <b>value.arr</b> field points to an array descriptor defined by the <b>IDL_ARRAY</b> structure:</p>
+        <p class="Code">typedef IDL_MEMINT IDL_ARRAY_DIM[IDL_MAX_ARRAY_DIM];</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">typedef struct { </p>
+        <p class="Code_Indented">IDL_MEMINT elt_len; </p>
+        <p class="Code_Indented">IDL_MEMINT arr_len; </p>
+        <p class="Code_Indented">IDL_MEMINT n_elts; </p>
+        <p class="Code_Indented">UCHAR *data;</p>
+        <p class="Code_Indented">UCHAR n_dim;</p>
+        <p class="Code_Indented">UCHAR flags; </p>
+        <p class="Code_Indented">short file_unit; </p>
+        <p class="Code_Indented">IDL_ARRAY_DIM dim;</p>
+        <p class="Code">} IDL_ARRAY;</p>
+        <p>The meaning of the fields of an array descriptor are:</p>
+        <h3>elt_len</h3>
+        <p>The length of each array element in bytes (chars). The array descriptor does not keep track of the types of the array elements, only their lengths. Single elements can get quite long in the case of structures.</p>
+        <p>For IDL structures, this value includes any padding necessary to properly align the data along required boundaries. On a given platform, IDL creates structures the same way a C compiler does on that platform. As a result, you should not assume that the size of a structure is the sum of the sizes of the structure fields, or that the field offsets are in specific locations.</p>
+        <h3>arr_len</h3>
+        <p>The length of the entire array in bytes. This value could be calculated as (<b>elt_len * n_elts</b>), but is used so frequently that it is maintained as a separate field in the <b>IDL_ARRAY</b> struct.</p>
+        <h3>n_elts</h3>
+        <p>The number of elements in the array.</p>
+        <h3>data</h3>
+        <p>A pointer to the data area for the array. This is a region of dynamically allocated memory <b>arr_len</b> bytes long. This pointer should be cast to be a pointer of the correct type for the data being manipulated. For example, if the array variable being processed is pointed at by an <b>IDL_VPTR</b> named <b>v</b> and contains <b>IDL_TYP_INT</b> data:</p>
+        <p class="Code">IDL_INT *data;	/* Declare a pointer variable */</p>
+        <p class="Code">data = (IDL_INT *) v-&gt;value.arr-&gt;data;</p>
+        <h3>n_dim</h3>
+        <p>The number of array dimensions. The constant <b>IDL_MAX_ARRAY_DIM</b> defines the upper limit of this value.</p>
+        <h3>flags</h3>
+        <p>A bit mask that specifies characteristics of the array. Allowed values are: </p>
+        <ul>
+            <li value="1"><b>IDL_A_FILE</b> — This flag indicates that the array is a file variable, as created by the <a href="../../Reference Material/A/ASSOC.htm">ASSOC</a> function. The variable has an array block to specify the structure of the variable, but it has no data area. The data field of the <b>IDL_ARRAY</b> structure does not contain useful information, and should not be used.</li>
+            <li value="2"><b>IDL_A_PACKED</b> — If array is an <b>IDL_A_FILE</b> variable and the data type is <b>IDL_TYP_STRUCT</b>, then Input/Output to this struct should use a packed data layout compatible with <a href="../../Reference Material/W/WRITEU.htm">WRITEU</a> instead of being a direct mapping onto the struct (which reflects the C compiler layout of the structure including its alignment holes).</li>
+        </ul>
+        <h3>file_unit</h3>
+        <p>When the <b>IDL_A_FILE</b> bit is set in the flags field, <b>file_unit</b> contains the IDL Logical Unit Number associated with the variable.</p>
+        <h3>dim</h3>
+        <p>An array that contains the dimensions of the IDL variable. There can be up to <b>IDL_MAX_ARRAY_DIM</b> dimensions. The number of dimensions in the current array is given by the <b>n_dim</b> field.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: D">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>DEFINE_MSGBLK</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="D_list.htm">Routines: D</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">DEFINE_MSGBLK</span>
+        </div>
+        <h1 class="Routine"><a name="D_843829869_991824"></a><a name="D_843829869_59124"></a><a name="kanchor477"></a><a name="kanchor478"></a>DEFINE_MSGBLK</h1>
+        <p>The DEFINE_MSGBLK procedure defines and loads a new message block into the currently running IDL session. Messages are issued from a message block using the MESSAGE procedure, which handles the details of IDL message display, including proper formatting, setting the values of the !ERROR_STATE system variable, and displaying traceback information if execution halts. See <a href="../M/MESSAGE.htm#M_824365677_988498">MESSAGE</a> for details.</p>
+        <p>A message block is a collection of messages that are loaded into IDL as a single unit. Each block contains the messages required for a specific application. At startup, IDL contains a single internal message block named IDL_MBLK_CORE, which contains the standard messages required by the IDL system. Dynamically loadable modules (DLMs) usually define additional message blocks for their own needs when they are loaded. At the IDL programming level, the DEFINE_MSGBLK and DEFINE_MSGBLK_FROM_FILE procedures can be used to define and load message blocks. You can use the HELP, /MESSAGES command to see the currently defined message blocks.</p>
+        <h2 class="API"><a name="D_843829869_991850"></a><a name="D_843829869_991850_PageTOC_DEFINE_MSGBLK_"></a>Examples</h2>
+        <p>This example defines a message block called ROADRUNNER that contains 2 messages:</p>
+        <p class="Code">name = ['BADPLAN', 'RRNOTCAUGHT']</p>
+        <p class="Code">fmt  = ['Bad plan detected: %s.', 'Road Runner not captured.']</p>
+        <p class="Code">DEFINE_MSGBLK, PREFIX = 'ACME_M_', 'ROADRUNNER', name, fmt</p>
+        <p>Once this message block is loaded, the ACME_M_BADPLAN message can be issued using the following statement:</p>
+        <p class="Code">MESSAGE, NAME = 'acme_m_badplan', BLOCK = 'roadrunner', $</p>
+        <p class="Code">&#160;&#160;&#160;'Exploding bridge while standing underneath'</p>
+        <p>This MESSAGE statement produces the output similar to:</p>
+        <p class="Code">% Bad plan detected: Exploding bridge while standing underneath.</p>
+        <p class="Code">% Execution halted at:  $MAIN$ </p>
+        <p>The IDL command:</p>
+        <p class="Code">HELP, /STRUCTURES, !ERROR_STATE</p>
+        <p>can be used to examine the effect of this message on IDL’s error state.</p>
+        <h2 class="API"><a name="D_843829869_991829"></a><a name="D_843829869_991829_PageTOC_DEFINE_MSGBLK_"></a>Syntax</h2>
+        <p class="Syntax">DEFINE_MSGBLK, <i>BlockName</i>, <i>ErrorNames</i>, <i>ErrorFormats</i> [,&#160;/<a href="#D_843829869_991846" class="selected">IGNORE_DUPLICATE</a>] [,&#160;<a href="#D_843829869_991848" class="selected">PREFIX</a>&#160;=&#160;<i>PrefixStr</i>]</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDL will force the values of the message bock name, the individual message names, and any message prefix string to upper case before installing the message block. Because IDL is generally case-insensitive, you do not need to use upper case when supplying these values to the DEFINE_MSGBLK or MESSAGE procedures. The values stored in the !ERROR_STATE system variable will, however, be upper-case strings. If you do string comparisons with values in !ERROR_STATE, you should take this case-folding into account.</p>
+        <h2 class="API"><a name="D_843829869_991831"></a><a name="D_843829869_991831_PageTOC_DEFINE_MSGBLK_"></a>Arguments</h2>
+        <h3 class="Argument">BlockName</h3>
+        <p>A string giving the name of the message block to be defined. Block names must be unique within the IDL system.  Use of the PREFIX keyword is also recommended to enforce a consistent naming convention. </p>
+        <h3 class="Argument">ErrorNames</h3>
+        <p>An array of strings giving the names of the messages defined by the message block.</p>
+        <h3 class="Argument">ErrorFormats</h3>
+        <p>An array of strings giving the formats for the messages defined by the message block. Note that the format string can include both static text (displayed every time the error is displayed) and dynamic text (specified when the error is generated by a call to the MESSAGE procedure). Each format is matched with the corresponding name in <i>ErrorNames</i>. For this reason, <i>ErrorFormats</i> should have the same number of elements as <i>ErrorNames</i>. We recommend the use of the PREFIX keyword to enforce a consistent naming scheme for your messages.</p>
+        <p>Error formats are simplified <code>printf</code>-style format strings. For more information on format strings, see <a href="../../Creating IDL Programs/Components of the IDL Language/Format_Codes.htm#files_2839720996_2841070">“C printf-Style Quoted String Format Code”</a>.</p>
+        <h2 class="API"><a name="D_843829869_991845"></a><a name="D_843829869_991845_PageTOC_DEFINE_MSGBLK_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="D_843829869_991846"></a><a name="D_843829869_991846_Keywords_DEFINE_MSGBLK__"></a>IGNORE_DUPLICATE</h3>
+        <p>Attempts to define a given <i>BlockName</i> more than once in the same IDL session usually cause DEFINE_MSGBLK to issue an error and stop execution of the IDL program. Specify IGNORE_DUPLICATE to cause DEFINE_MSGBLK to quietly ignore attempts to redefine a message block. In this case, no error is issued and execution continues. The original message block remains installed and available for use.</p>
+        <h3 class="Keyword"><a name="D_843829869_991848"></a><a name="D_843829869_991848_Keywords_DEFINE_MSGBLK__"></a>PREFIX</h3>
+        <p>It is a common and recommended practice to give each message name defined in <i>ErrorNames</i> a common unique prefix that identifies it as an error from a specific message block. However, specifying this prefix in each entry of <i>ErrorNames</i> is tedious and error prone. The PREFIX keyword can be used to specify a prefix string that will be added to each element of <i>ErrorNames</i>.</p>
+        <h2 class="API"><a name="D_843829869_991864"></a><a name="D_843829869_991864_PageTOC_DEFINE_MSGBLK_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.5</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="D_843829869_997288"></a><a name="D_843829869_997288_PageTOC_DEFINE_MSGBLK_"></a>See Also</h2>
+        <p><a href="DEFINE_MSGBLK_FROM_FILE.htm#D_843829869_991870">DEFINE_MSGBLK_FROM_FILE</a>, &#160;<a href="../M/MESSAGE.htm#M_824365677_988498">MESSAGE</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

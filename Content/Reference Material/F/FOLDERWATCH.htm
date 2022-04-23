@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: F">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>FOLDERWATCH</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="F_list.htm">Routines: F</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">FOLDERWATCH</span>
+        </div>
+        <h1 class="Routine"><a name="kanchor968"></a>FOLDERWATCH</h1>
+        <p>The IDL folder watching system monitors folders for changes and invokes a user-defined callback whenever a change occurs.  This enables IDL programmers to create a "batch" client that watches a specified "hot folder" and subsequently performs processing when specific conditions have been met (i.e., a file has been added to, modified, or deleted from the folder).  </p>
+        <ul>
+            <li value="1">If a file is added and removed between FolderWatch checks of a directory, IDL will not notice an "event" and will not report a change to the contents.</li>
+            <li value="2">Very large directories may take several seconds to check. Execution of IDL will be suspended during the check.</li>
+            <li value="3">Folder watching interrupts PRO code execution.</li>
+            <li value="4">When watching a directory, FOLDERWATCH will only issue "add" or "remove" notifications. A folder will never be reported as being modified.</li>
+        </ul>
+        <h3>Methods and Additional Information</h3>
+        <ul>
+            <li value="1"><a href="#FolderWa" class="selected">FolderWatch::Init</a> (Initialize a watch folder)</li>
+            <li value="2"><a href="#FolderWa4" class="selected">FolderWatch::Check</a> (Forces a check on a folder)</li>
+            <li value="3"><a href="#FolderWa2" class="selected">FolderWatch::Start</a> (Start watching a folder)</li>
+            <li value="4"><a href="#FolderWa3" class="selected">FolderWatch::Stop</a> (Stop watching a folder)</li>
+        </ul>
+        <h2 class="API">Example</h2>
+        <p>This example monitors the files in the current working directory, and its subdirectories,  and prints out which file has changed and how.</p>
+        <p class="Code">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</p>
+        <p class="Code">;;</p>
+        <p class="Code">;; Callback</p>
+        <p class="Code">;;</p>
+        <p class="Code">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">pro MyCallback, obj, data</p>
+        <p class="Code">COMPILE_OPT IDL2</p>
+        <p class="Code">ret = "The file "</p>
+        <p class="Code">ret += data.file</p>
+        <p class="Code">ret += " has been "</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">if data.added then ret += "added to"</p>
+        <p class="Code">if data.modified then ret += "modified in"</p>
+        <p class="Code">if data.removed then ret += "removed from"</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ret += " the working directory. "</p>
+        <p class="Code">ret += strtrim(obj.user_data,2)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRINT, ret</p>
+        <p class="Code">end</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</p>
+        <p class="Code">;;</p>
+        <p class="Code">;; MAIN</p>
+        <p class="Code">;;</p>
+        <p class="Code">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">COMPILE_OPT IDL2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Get working directory</p>
+        <p class="Code">CD, current=c</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">f = FOLDERWATCH( c, 'MyCallback', user_data="HURRAY!", /RECURSIVE )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">end</p>
+        <p>The example monitors the current working directory (and subdirectories)  for all files and prints out what file has changed and how.</p>
+        <h1 class="ObjMethod"><a name="FolderWa"></a>FolderWatch::Init</h1>
+        <p>The FolderWatch::Init method initializes a FolderWatch object. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Creation of a FolderWatch object automatically starts it.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Obj </i>= FolderWatch.Init( <i>Folder</i>, <i>Callback</i> [, /<a href="#ADDED" class="selected">ADDED</a>] [, /<a href="#MODIFIED" class="selected">MODIFIED</a>] [, /<a href="#REMOVED" class="selected">REMOVED</a>] [, <a href="#FREQUENC" class="selected">FREQUENCY</a>=<i>value</i>] [/<a href="#RECURSIV" class="selected">RECURSIVE</a>] [, <a href="#USER_DAT" class="selected">USER_DATA</a>=<i>variable</i>] )</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns an object of type FolderWatch.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Folder</h3>
+        <p>A required string indicating the path of the folder to monitor.</p>
+        <h3 class="Argument">Callback</h3>
+        <p>A required string value specifying the name of the procedure that IDL should invoke when the specified event happens. The Callback is invoked each time a file changes (i.e., there is not just one Callback per time interval that contains an array of all of the changes that occurred, but instead, one per file change).</p>
+        <p>The callback must have the following signature:</p>
+        <p>PRO <i>Name</i> <i>, Obj</i> [, <i>data</i>]</p>
+        <table class="TableStyle_Description" style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <thead>
+                <tr class="Head-Header1">
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Type</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><i>Name</i>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Name of the routine. </p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p><i>Obj</i>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>A reference to the FolderWatch object.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><i>data</i>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><i>Structure</i>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>A required IDLFolderWatchInfo structure containing the following fields:</p>
+                        <ul>
+                            <li value="1">file: a full-qualified path to the file that changed</li>
+                            <li value="2">added: Boolean, set to 1 if the file was added.</li>
+                            <li value="3">removed: Boolean, set to 1 if the file was removed.</li>
+                            <li value="4">modified: Boolean, set to 1 if the file was modified.</li>
+                        </ul>
+                        <p>Use to determine which file changed, and how.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="ADDED"></a>ADDED</h3>
+        <p>Set this optional keyword in order to fire a Callback when a file has been added to the watch folder. If you do not specify ADDED, MODIFIED, or REMOVED, then all are set.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If ADDED is specified, then MODIFIED and REMOVED are unset. </p>
+        <h3 class="Keyword"><a name="MODIFIED"></a>MODIFIED</h3>
+        <p>Set this optional keyword in order to fire a Callback when a file has been modified in the watch folder. If you do not specify ADDED, MODIFIED, or REMOVED, then all are set.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If MODIFIED is specified, then ADDED and REMOVED are unset. </p>
+        <h3 class="Keyword"><a name="REMOVED"></a>REMOVED</h3>
+        <p>Set this optional keyword in order to fire a Callback when a file has been removed from the watch folder. If you do not specify ADDED, MODIFIED, or REMOVED, then all are set.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If REMOVED is specified, then ADDED and MODIFIED are unset. </p>
+        <h3 class="Keyword"><a name="FREQUENC"></a>FREQUENCY</h3>
+        <p>Set this optional keyword to equal the number of seconds to wait before checking the folder for further changes in the files. Defaults to 1 and is a double-precision number.</p>
+        <h3 class="Keyword"><a name="RECURSIV"></a>RECURSIVE</h3>
+        <p>Set this optional keyword to monitor all files in a directory and subdirectories. Defaults to no recursion.</p>
+        <h3 class="Keyword"><a name="USER_DAT"></a>USER_DATA</h3>
+        <p> Optional data to be delivered to the Callback function.  The delivered data will be a copy of the original.  If USER_DATA is not supplied then the callback receives <code>!NULL</code>. USER_DATA can be any valid IDL value. Examples of valid IDL values include: a constant, variable, expression, an array, etc.</p>
+        <h1 class="ObjMethod"><a name="FolderWa4"></a>FolderWatch::Check</h1>
+        <p>Use this method to force IDL to check the specified directory for changes.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This does not start or stop a watch process on a folder.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax" style="font-style: normal;"><i>Obj</i>.Check</p>
+        <h2 class="API">Return Value </h2>
+        <p>None.</p>
+        <h2 class="API">Arguments</h2>
+        <p>None.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="FolderWa2"></a>FolderWatch::Start</h1>
+        <p>Use this method to begin watching a folder.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Creation of a FolderWatch object automatically starts it.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax" style="font-style: normal;"><i>Obj</i>.Start</p>
+        <h2 class="API">Return Value </h2>
+        <p>None.</p>
+        <h2 class="API">Arguments</h2>
+        <p>None.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="FolderWa3"></a>FolderWatch::Stop</h1>
+        <p>Use this method to stop watching a specified folder.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Obj</i>.Stop</p>
+        <h2 class="API">Return Value</h2>
+        <p>None.</p>
+        <h2 class="API">Arguments</h2>
+        <p>None.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h2>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 47px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

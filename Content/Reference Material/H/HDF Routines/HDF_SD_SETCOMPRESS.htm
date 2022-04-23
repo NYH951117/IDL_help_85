@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: H|HDF Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>HDF_SD_SETCOMPRESS</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../H_list.htm">Routines: H</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../HDF_Routines.htm">HDF Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">HDF_SD_SETCOMPRESS</span>
+        </div>
+        <h1 class="Routine"><a name="HDF_1733484267_1012250"></a><a name="HDF_1733484267_14707"></a>HDF_SD_SETCOMPRESS</h1>
+        <p>The <a name="kanchor1264"></a>HDF_SD_SETCOMPRESS procedure compresses an existing HDF SD dataset or sets the compression method of a newly created HDF SD dataset. Available compression methods are No Compression, run-length encoding (RLE), adaptive (skipping) huffman, and GZIP compression. All of these compression methods are lossless. When using skipping huffman compression, IDL automatically determines the correct skipping size. The EFFORT keyword determines the effort applied when using GZIP compression (i.e., when comptype is 4). In general, the default GZIP compression method is the best combination of speed and file size reduction.</p>
+        <h2 class="API"><a name="HDF_1733484267_1074125_PageTOC_HDF_SD_SETCOMPRESS_"></a>Examples</h2>
+        <p class="Code">; Create an HDF SD file:</p>
+        <p class="Code">SDinterface_id = HDF_SD_START('compress.hdf', /CREATE)</p>
+        <p class="Code">; Create an SDS dataset:</p>
+        <p class="Code">SDdataset_id = HDF_SD_CREATE(SDinterface_id, 'dataset1', [9,40], /LONG)</p>
+        <p class="Code">; Maximal GZIP compression:</p>
+        <p class="Code">HDF_SD_SETCOMPRESS,SDdataset_id,4,EFFORT=9</p>
+        <p class="Code">; Write the data to be compressed:</p>
+        <p class="Code">HDF_SD_ADDDATA,SDdataset_id,fix(dist(9,40))</p>
+        <p class="Code">; End access to the SDS:</p>
+        <p class="Code">HDF_SD_ENDACCESS, SDdataset_id</p>
+        <p class="Code">; End access to the SD interface:</p>
+        <p class="Code">HDF_SD_END, SDinterface_id</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Compression of HDF SD datasets is a new feature as of HDF 4.1r2 / IDL 5.2.1. Attempts to read HDF SD datasets not created with HDF 4.1r2 (IDL 5.1) or greater will give unpredictable results. Attempts to read HDF compressed SD datasets with IDL versions prior to IDL 5.1, or other HDF readers that use an HDF version prior to HDF 4.1r2, will fail.</p>
+        <h2 class="API"><a name="HDF_1733484267_1074103_PageTOC_HDF_SD_SETCOMPRESS_"></a>Syntax</h2>
+        <p class="Syntax">HDF_SD_SETCOMPRESS, <i>SDdataset_id</i>, <i>comptype</i> [,&#160;<a href="#HDF_1733484267_1012290" class="selected">EFFORT</a>=<i>integer</i>{1 to 9}]</p>
+        <h2 class="API"><a name="HDF_1733484267_1074351_PageTOC_HDF_SD_SETCOMPRESS_"></a>Arguments</h2>
+        <h3 class="Argument">SDdataset_id</h3>
+        <p>The HDF SD dataset id as returned by HDF_SD_CREATE or HDF_SD_SELECT.</p>
+        <h3 class="Argument">Comptype</h3>
+        <p>The compression type to be applied to the HDF SD dataset. Allowable values are:</p>
+        <ul>
+            <li value="1">0 = NONE (no compression)</li>
+            <li value="2">1 = RLE (run-length encoding)</li>
+            <li value="3">3 = SKIPPING HUFFMAN</li>
+            <li value="4">4 = GZIP</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>All compression types are lossless.</p>
+        <h2 class="API"><a name="HDF_1733484267_1074313_PageTOC_HDF_SD_SETCOMPRESS_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="HDF_1733484267_1012290"></a><a name="HDF_1733484267_1074118_Keywords_HDF_SD_SETCOMPRESS_"></a>EFFORT</h3>
+        <p>If the comptype is set to 4 (GZIP), then this keyword specifies the effort that GZIP expends in compressing the dataset. The EFFORT keyword is restricted to the range 1 (minimal compression, fastest) to 9 (most compressed, slowest). The default is EFFORT=5.</p>
+        <h2 class="API"><a name="HDF_1733484267_1117802_PageTOC_HDF_SD_SETCOMPRESS_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.2.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

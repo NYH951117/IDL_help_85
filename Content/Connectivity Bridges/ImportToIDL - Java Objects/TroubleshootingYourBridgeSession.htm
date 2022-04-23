@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|Java Import Bridge">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Troubleshooting Your Bridge Session</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Java Import Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Troubleshooting Your Bridge Session</span>
+        </div>
+        <h1><a name="Troubleshooting_Your_Bridge_Session"></a><a name="kanchor5411"></a>Troubleshooting Your Bridge Session</h1>
+        <p>The IDL-Java bridge provides <a name="kanchor5412"></a>error <a name="kanchor5413"></a>messages for specific types of operations. These messages can be used to determine when these errors occur, how these errors happen, and what solutions can be applied. The following sections pertain to these error messages and their possible solutions for each type of operation:</p>
+        <ul>
+            <li value="1"><a href="#Calling_System.exit" class="selected">Calling System.exit</a>
+            </li>
+            <li value="2"><a href="#Errors_When_Initializing_the_Bridge" class="selected">Errors When Initializing the Bridge</a>
+            </li>
+            <li value="3"><a href="#Errors_When_Creating_Objects" class="selected">Errors When Creating Objects</a>
+            </li>
+            <li value="4"><a href="#Errors_When_Calling_Methods" class="selected">Errors When Calling Methods</a>
+            </li>
+            <li value="5"><a href="#Errors_When_Accessing_Data_Members" class="selected">Errors When Accessing Data Members</a>
+            </li>
+        </ul>
+        <h2><a name="Calling_System.exit"></a>Calling System.exit</h2>
+        <p>The Java method <i>System.exit</i> terminates the process in which the Java Virtual Machine is running. When the Java Virtual Machine is initialized by IDL, terminating its process also terminates IDL.</p>
+        <h2><a name="Errors_When_Initializing_the_Bridge"></a>Errors When Initializing the Bridge</h2>
+        <p>The IDL-Java bridge initializes when the first Java object in IDL is created. If the bridge is not configured correctly, an error message is issued and the IDL stops. The following errors occur because the IDL-Java bridge cannot find the Java Virtual Machine on your system. On UNIX, check the IDLJAVAB_LIB_LOCATION environment variable, and on Windows, check the IDLJAVAB_LIB_LOCATION environment variable. If this environment variable does not exist on your system, create it and set it equal to the location of the Java Virtual Machine on your system. See <a href="InitializingTheIDL-JavaBridge.htm#Location_of_the_Bridge_Configuration_File">Location of the Bridge Configuration File</a> for details:</p>
+        <ul>
+            <li value="1"><i>Bad JVM Home</i> value: '<i>path</i>', where <i>path</i> is the location of Java Virtual Machine on your system.</li>
+            <li value="2"><i>JVM shared lib</i>  not found in path '<i>JVM LibLocation</i>', where <i>JVM shared lib</i> is the location of the Java Virtual Machine shared library and <i>JVM LibLocation</i> is the value of the IDLJAVAB_LIB_LOCATION environment variable.</li>
+            <li value="3"><i>No valid JVM shared library exists at location pointed to by $IDLJAVAB_LIB_LOCATION</i>
+            </li>
+            <li value="4"><i>idljavab.jar not found in path</i> '<i>path</i>', where <i>path</i> is the location of the <i>/resource/bridges/import/java</i> directory in the IDL distribution.</li>
+            <li value="5"><i>Bridge cannot determine which JVM to run</i>
+            </li>
+            <li value="6"><i>Java virtual machine failed to start</i>
+            </li>
+            <li value="7"><i>Failure loading JVM</i>: <i>path/JVM shared lib</i> name, where <i>path</i> is the location of the Java Virtual Machine and <i>JVM shared lib</i> name is the name of the main Java shared library, which is usually <i>libjvm.so</i> on UNIX and <i>jvm.dll</i> on Windows.</li>
+        </ul>
+        <p>If IDL catches an error and continues, subsequent attempts to call the bridge will generate the following message:</p>
+        <ul>
+            <li value="1"><i>IDL-Java bridge is not running</i>
+            </li>
+        </ul>
+        <p>If this message occurs, fix the error and restart IDL.</p>
+        <h2><a name="Errors_When_Creating_Objects"></a>Errors When Creating Objects</h2>
+        <p>The following error messages can occur while creating a Java object in IDL. Possible solutions for these errors are also provided:</p>
+        <ul>
+            <li value="1"><i>Wrong number of parameters</i> - occurs if OBJ_NEW does not have 2 or more parameters. Make sure you are specifying the class name twice; once in uppercase with periods replaced by underscores for IDL, and another with periods for Java. See <a href="CreatingIDL-JavaObjects.htm#Java_Class_Names_in_IDL">Java Class Names in IDL</a> for details.</li>
+            <li value="2"><i>Second parameter must be the Java class name</i> - occurs if 2nd parameter is not an IDL string. When using OBJ_NEW, make sure the Java class name parameter is an IDL string. In other words, the class name has a single quote mark before and after it. See <a href="CreatingIDL-JavaObjects.htm#Java_Class_Names_in_IDL">Java Class Names in IDL</a> for details.</li>
+            <li value="3"><i>Class classname  not found</i>, where classname is the class name you specified in the first two parameters to OBJ_NEW - occurs if the IDL-Java bridge cannot find the class name specified. Check the spelling of each class name parameter and make sure the class name specified for IDL is referring to the same type of object specified for the Java class name. If the parameters are correct, check the Classpath setting in the IDL-Java bridge configuration file. Make sure the Classpath is set to the correct path for the class files containing the <i>classname</i> class. See <a href="InitializingTheIDL-JavaBridge.htm#Location_of_the_Bridge_Configuration_File">Location of the Bridge Configuration File</a> for details.</li>
+            <li value="4"><i>Class classname is not a public class</i>, where <i>classname</i> is the class name you specified in the first two parameters to OBJ_NEW - occurs if specified class is not a public class. Edit your Java code to make sure the class you want to access is public.</li>
+            <li value="5"><i>Constructor class::class(signature) not found</i>, where <i>class</i> is the class name - occurs if the IDL-Java bridge cannot find the class constructor with the given parameters. Check the spelling of the specified parameters and look in your Java code to see if you are specifying the correct arguments for the class you are trying to create. Also check to ensure your IDL data can be promoted to the data types in the Java signature. See <a href="CreatingIDL-JavaObjects.htm#Java_Class_Names_in_IDL">Java Class Names in IDL</a> for details.</li>
+            <li value="6"><i>Illegal IDL value in parameter n</i>, where <i>n</i> is the position of the parameter - occurs if an illegal parameter type is provided. For example, an IDL structure is not allowed as a parameter to an IDLjavaObject.</li>
+            <li value="7"><i>Exception thrown</i> - occurs if an exception occurs in Java. Either correct or handle the Java exception. The Java exception can be determined with the IDLJavaBridgeSession object. See <a href="TheIDLJavaBridgeSessionObject.htm#The_IDL_Java_Bridge_Session_Object">The IDLJavaBridgeSession Object</a> for details.</li>
+        </ul>
+        <h2><a name="Errors_When_Calling_Methods"></a>Errors When Calling Methods</h2>
+        <p>The following error messages can occur while calling methods to Java objects in IDL. Possible solutions for these errors are also provided:</p>
+        <ul>
+            <li value="1"><i>Illegal IDL value in parameter n</i>, where <i>n</i> is the position of the parameter - occurs if an illegal parameter type is provided. For example, an IDL structure are not allowed as a parameter to an IDLjavaObject.</li>
+            <li value="2"><i>Class class has no method named method</i>, where <i>class</i> is the class name and method is the method name specified when trying to call the Java method - occurs if the method of given name does not exist. Check the spelling of the method name. Also compare the method name in the Java class source file with the method name provided when calling the method in IDL. See <a href="MethodCallsOnIDL-JavaObjects.htm#What_Happens_When_a_Method_Call_Is_Made?">What Happens When a Method Call Is Made?</a> for details.</li>
+            <li value="3"><i>class::method(signature) is a void method</i>. Must be called as a procedure, where <i>class</i> is the class name and <i>method</i> is the method name specified when a void Java method is called as an IDL function. Change the syntax of the method call. See <a href="MethodCallsOnIDL-JavaObjects.htm#Method_Calls_On_IDL-Java_Objects">Method Calls on IDL-Java Objects</a> for details.</li>
+            <li value="4"><i>Method class::method(signature) not found</i>, where <i>class</i> is the class name and <i>method</i> is the method name specified when trying to call the Java method - occurs if the IDL-Java bridge cannot find the method with a matching signature. Check the spelling of the method name. Also compare the method name in the Java class source file with the method name provided when calling the method in IDL. Also check to ensure your IDL data can be promoted to the Java signature. See <a href="MethodCallsOnIDL-JavaObjects.htm#What_Happens_When_a_Method_Call_Is_Made?">What Happens When a Method Call Is Made?</a> for details.</li>
+            <li value="5"><i>Exception thrown</i> - occurs if an exception occurs in Java. Either correct or handle the Java exception. The Java exception can be determined with the IDLJavaBridgeSession object. See <a href="TheIDLJavaBridgeSessionObject.htm#The_IDL_Java_Bridge_Session_Object">The IDLJavaBridgeSession Object</a> for details.</li>
+        </ul>
+        <h2><a name="Errors_When_Accessing_Data_Members"></a>Errors When Accessing Data Members</h2>
+        <p>The following error messages can occur while accessing data members to Java objects in IDL. Possible solutions for these errors are also provided:</p>
+        <ul>
+            <li value="1"><i>Illegal IDL value in parameter n</i>, where <i>n</i> is the position of the parameter - occurs if an illegal parameter type is provided. For example, an IDL structure is not allowed as a parameter to an IDLjavaObject.</li>
+            <li value="2"><i>Class class  has no data member named property</i>, where <i>class</i> is the class name and <i>property</i> is the data member name specified when trying to access the Java data member - occurs if the data member of the given name does not exist. Check the spelling of the property name. Also compare the data member name in the Java class source file with the property name provided when accessing it in IDL. See <a href="ManagingIDL-JavaObjectProperties.htm#Managing_IDL-Java_Object_Properties">Managing IDL-Java Object Properties</a> for details.</li>
+            <li value="3"><i>Property class::property of type type  not found</i>, where <i>class</i> is the class name, <i>property</i> is the data member name specified, and <i>type</i> is <i>property</i>’s data type when trying to access the Java data member - occurs if the IDL-Java bridge cannot find the Java data member of the given type. Check the data type of Java data member and make sure you are trying to use a similar type in IDL. See <a href="ManagingIDL-JavaObjectProperties.htm#Getting_and_Setting_Properties">Getting and Setting Properties</a> for details.</li>
+            <li value="4"><i>Exception thrown</i> - occurs if an exception occurs in Java. Either correct or handle the Java exception. The Java exception can be determined with the IDLJavaBridgeSession object. See <a href="TheIDLJavaBridgeSessionObject.htm#The_IDL_Java_Bridge_Session_Object">The IDLJavaBridgeSession Object</a> for details.</li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

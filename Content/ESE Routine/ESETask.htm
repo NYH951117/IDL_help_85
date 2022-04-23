@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="ESE Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>ESETask</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="ESEAPIOverview.htm">ESE Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">ESETask</span>
+        </div>
+        <h1 class="Routine"><a name="kanchor4193"></a>ESETask</h1>
+        <p>The ESETask class represents ESE tasks. Each time a task is run, a new job is produced. Tasks represent algorithms and jobs represent the execution of an algorithm, with particular inputs, outputs and state. However, ESETask objects do provide the ability to specify input parameter values prior to being run.</p>
+        <h2 class="API">Methods</h2>
+        <ul>
+            <li value="1"><a href="#TGetParameter" class="selected">ESETask::GetParameter</a>
+            </li>
+            <li value="2"><a href="#TGetParameters" class="selected">ESETask::GetParameters</a>
+            </li>
+            <li value="3"><a href="#TGetParent" class="selected">ESETask::GetParent</a>
+            </li>
+            <li value="4"><a href="#TInfo" class="selected">ESETask::Info</a>
+            </li>
+            <li value="5"><a href="#Run" class="selected">ESETask::Run</a>
+            </li>
+        </ul>
+        <h2 class="API">Examples</h2>
+        <h3>Example 1</h3>
+        <p>This example demonstrates the simplest form of how to connect to an ESE server, get a task and run it:</p>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 'ese_addition' )</p>
+        <p class="Code">Job = Task.Run( a = 1, b = 2 )</p>
+        <h3>Example 2</h3>
+        <p>By default, both asynchronous and synchronous tasks are run synchronously. However, asynchronous tasks can be freed to run asynchronously via the ASYNCHRONOUS keyword to run:</p>
+        <p class="Code">Task = ESE.findTask( 'localhost', 'smooth_sailing' )</p>
+        <p class="Code">Job = Task.run( /ASYNCHRONOUS )</p>
+        <h3>Example 3</h3>
+        <p>In this example, the task is run with the same values as in the first example, but the values are set on the task object, instead of in the "run" method.</p>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 'ese_addition' )</p>
+        <p class="Code">Task.a = 1</p>
+        <p class="Code">Task.b = 2</p>
+        <p class="Code">Job = Task.Run()</p>
+        <h3>Example 4</h3>
+        <p>In this example the run method overrides the value of a set on the task object.</p>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 'ese_addition' )</p>
+        <p class="Code">Task.a = 1</p>
+        <p class="Code">Job = Task.Run( a = 9, b = 2 )</p>
+        <p>The task object retains a value of 1 for a, but the job is run with a value of 9. To continue:</p>
+        <p class="Code">PRINT, Task.a</p>
+        <p class="Code">PRINT, Job.a</p>
+        <p>prints out '1' and '9'.</p>
+        <h3>Example 5</h3>
+        <p>This example sets one parameter on the task and then supplies values for the second parameter when the task is run. For all invocations, parameter 'a' will have a value of 1.</p>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 'ese_addition' )</p>
+        <p class="Code">Task.a = 1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">FOR i = 0, 9 DO&#160;BEGIN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">Job = Task.Run( b = i )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRINT, 'Computation: ' + $</p>
+        <p class="Code_Indented">strtrim( Job.a, 2 ) + ' + ' + $</p>
+        <p class="Code_Indented">strtrim( Job.b, 2 ) + ' = ' + $</p>
+        <p class="Code_Indented">strtrim( Job.answer, 2 )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ENDFOR</p>
+        <h2 class="API">Properties</h2>
+        <h3 class="Property"><i>PARAMETERNAME</i>  (IDLVariable, Set, Get)</h3>
+        <p>The name of any of the task's parameters. The ESE API will dynamically set and get the values of task parameters. These values will be used in the Run() method unless they are overridden by a corresponding keyword in the Run() method. The parameter name must be fully specified, without abbreviation.</p>
+        <h1 class="ObjMethod"><a name="TGetParameter"></a>ESETask::GetParameter</h1>
+        <p>Returns an <a href="ESETaskParameter.htm">ESETaskParameter</a> object for the named parameter. If the parameter does not exist, then it returns !null.</p>
+        <h2 class="API">Example</h2>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 'ese_addition' )</p>
+        <p class="Code">Parameter = Task.GetParameter( 'a' )</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>.[ESETask::]GetParameter( <i>Name</i> )</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns an ESETaskParameter object for the named parameter. If the parameter does not exist, then it returns !null.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Name</h3>
+        <p>Specifies the name to match.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="TGetParameters"></a>ESETask::GetParameters</h1>
+        <p>Returns a list of <a href="ESETaskParameter.htm">ESETaskParameter</a> objects.</p>
+        <h2 class="API">Example</h2>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 'ese_addition' )</p>
+        <p class="Code">Parameters = Task.GetParameters()</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>.[ESETask::]GetParameters( [ /NAMES ])</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns a list of ESETaskParameter objects. If the task does not have any parameters then returns an empty list. If NAMES is set, it returns an array of parameter names, or returns !null if the task does not have any parameters.</p>
+        <h2 class="API">Arguments</h2>
+        <p>None.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">NAMES</h3>
+        <p>Set this keyword to have the method return just the names of the parameters, instead of ESETaskParameter objects.</p>
+        <h1 class="ObjMethod"><a name="TGetParent"></a>ESETask::GetParent</h1>
+        <p>This function returns the <a href="ESEService.htm">ESEService</a> object in which this task resides.</p>
+        <h2 class="API">Example</h2>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 'ese_addition' )</p>
+        <p class="Code">Service = Task.GetParent()</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>.[ESETask::]GetParent()</p>
+        <h2 class="API">Return Value</h2>
+        <p>The return value is the ESEService object that this the parent to the task.</p>
+        <h2 class="API">Arguments</h2>
+        <p>None.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="TInfo"></a>ESETask::Info</h1>
+        <p>Returns a dictionary with all the properties of the task.</p>
+        <h2 class="API">Example</h2>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 'ese_addition' )</p>
+        <p class="Code">Info = Task.Info()</p>
+        <p class="Code">Desc = info.description</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>.[ESETask::]Info()</p>
+        <h2 class="API">Return Value</h2>
+        <p>The return value is a dictionary with the following fields:</p>
+        <ul>
+            <li value="1"><b>name:</b> (string) The task's name, which is the name of the PRO-code entry point routine.</li>
+            <li value="2"><b>displayName:</b> (string) The task's display name.</li>
+            <li value="3"><b>description:</b> (string) The description of the task.</li>
+            <li value="4"><b>executionType:</b> (string) The execution type as defined by the constants ESE.synchronous and ESE.asynchronous.</li>
+            <li value="5"><b>version:</b> (string) The version of ESE for which the task was designed.</li>
+            <li value="6"><b>reset:</b> (string) The task's reset option: { 'no', 'closeEnvi', 'yes', 'full', 'restart' }.</li>
+            <li value="7"><b>invocationType:</b> (string) The way in which the task's entry routine will be invoked: { 'keywords', 'positional'&#160;}.</li>
+            <li value="8"><b>uri:</b> (string) The URI to the task.</li>
+        </ul>
+        <h2 class="API">Arguments</h2>
+        <p>None.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="Run"></a>ESETask::Run</h1>
+        <p>Runs the task and produces an <a href="ESEJob.htm">ESEJob</a> object, which can be used to monitor status and get the values of output parameters.</p>
+        <p>The job is run synchronously unless the task is asynchronous and the ASYNCHRONOUS or ASYNC keywords are set. Synchronous tasks are always run synchronously, regardless of the use of the ASYNCHRONOUS and ASYNC keywords.</p>
+        <p>Input parameter values are specified via keywords. Output parameter names and invalid parameter names throw an error (or cause run to return an ESEJob with error information). The conversion from IDL to JSON is performed by default, or by custom serialization and deserialization methods.</p>
+        <h2 class="API">Example</h2>
+        <p>In this example, the 'ese_addition' task is run. The input parameter 'a' is set on the task object and input parameter 'b' is set when the task is run. The optional input parameter 'c' is not specified.</p>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 'ese_addition' )</p>
+        <p class="Code">Task.a = 1</p>
+        <p class="Code">Job = Task.Run( b = 2 )</p>
+        <p class="Code">PRINT, Job.answer</p>
+        <p>The value for the output parameter 'answer' can only be retrieved from the ESEJob object.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Job</i> = <i>Obj</i>.[ESETask::]Run( <i>Keywords</i> [, /ASYNC | /ASYNCHRONOUS ] )</p>
+        <h2 class="API">Return Value</h2>
+        <p>This method returns an ESEJob object, which represents the execution of the task. The job contains all the input and output parameter values as well as the execution state (ESE.jobExecuting, ESE.jobSucceeded, ESE.jobFailed, etc.).</p>
+        <h2 class="API">Arguments</h2>
+        <p>None.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">ASYNC</h3>
+        <p>The only allowable abbreviation of the ASYNCHRONOUS keyword.</p>
+        <h3 class="Keyword">ASYNCHRONOUS</h3>
+        <p>Set this keyword to run jobs asynchronously. Only asynchronous jobs can be run asynchronously. This keyword is ignored with synchronous tasks.</p>
+        <h3 class="Keyword"><i>INPUTPARAMETER</i>
+        </h3>
+        <p>Set input parameters to values using normal IDL keyword-value pairs. For example, if a task has a parameter 'mode' then to run it with a value of 2. it as: Task.run( mode = 2 ).</p>
+        <h2 class="API">Version History</h2>
+        <table class="TableStyle_VersionTable" style="mc-table-style: url('../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;" cellspacing="0">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">IDL 8.4.1</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">Introduced</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="ESE.htm">ESE</a>, <a href="ESEJob.htm">ESEJob</a>, <a href="ESEService.htm">ESEService</a>, <a href="ESEService.htm">ESETaskParameter</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

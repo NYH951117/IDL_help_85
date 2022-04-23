@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|Medical Imaging in IDL|IDL DICOM Reference|IDLffDicomEx">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLffDicomEx::AddGroup
+        </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Expanded DICOM Support in IDL/ExpandedDICOMFunctionality.htm">Medical Imaging in IDL</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="DICOMEX_GETCONFIGFILEPAT.htm">IDL DICOM Reference</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLffDicomEx::AddGroup</span>
+        </div>
+        <h1 class="ObjMethod">IDLffDicomEx::AddGroup
+        </h1>
+        <p>The IDLffDicomEx::AddGroup function method creates a series of repeating tags within a sequence. For example, the same set of 10 tags could be repeated 4 times in one sequence, which means the sequence would have 4 groups, each with the same 10 tags.</p>
+        <p>When calling AddGroup the DicomTag argument specifies a sequence (SQ) attribute. If the sequence does not exist, the AddGroup method creates the sequence before creating the group in this sequence. Once the group has been created, member items can be added via the <a href="IDLffDicomEx__SetValue.htm">IDLffDicomEx::SetValue</a> method using the return value from this method as the SEQID value</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Changes are not written to the DICOM file until you call the <a href="IDLffDicomEx__Commit.htm">IDLffDicomEx::Commit</a> method. When you commit changes, all sequence identifiers are invalidated. You need to call <a href="IDLffDicomEx__GetValue.htm">IDLffDicomEx::GetValue</a> to re-access the sequence identifiers. See <a href="#dicom_ex_4010397576_1032580" class="selected">Adding Groups to a Nested Sequence</a> for an example.</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1006731"></a><a name="dicom_ex_4010397576_1006731_PageTOC_IDLffDicomEx"></a><a name="dicom_ex_4010397576_66744"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>-&gt;[<a href="IDLffDicomEx.htm">IDLffDicomEx</a>::]AddGroup (<i>DicomTag</i> [,&#160;<a href="#dicom_ex_4010397576_1006751" class="selected">PARENTSEQID</a>=<i>integer</i>]&#160;)</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1006733"></a><a name="dicom_ex_4010397576_1006733_PageTOC_IDLffDicomEx"></a><a name="dicom_ex_4010397576_35853"></a>Return Value</h2>
+        <p>Returns a long integer containing the group identifier for the newly created group. This identifier can be used by other methods that use the SEQID keyword such as <a href="IDLffDicomEx__GetValue.htm">IDLffDicomEx::GetValue</a> and <a href="IDLffDicomEx__SetValue.htm#dicom_ex_4010397576_1008627">IDLffDicomEx::SetValue</a> methods.</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1006741"></a><a name="dicom_ex_4010397576_1006741_PageTOC_IDLffDicomEx"></a><a name="dicom_ex_4010397576_45418"></a>Arguments</h2>
+        <h3 class="Argument">DicomTag</h3>
+        <p>A string that identifies the group and element of a DICOM sequence (SQ) attribute in the form <code>'XXXX,XXXX'</code>. The <i>DicomTag</i> argument must reference a public tag that is part of the standard IOD for the image type and must be of the SQ VR type. See <a href="../DICOM Resources/DICOMAttributes.htm">DICOM Attributes</a> for a list of tags.</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1006750"></a><a name="dicom_ex_4010397576_1006750_PageTOC_IDLffDicomEx"></a><a name="dicom_ex_4010397576_90428"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dicom_ex_4010397576_1006751"></a><a name="dicom_ex_4010397576_1006751_Keywords_IDLffDicomEx"></a>PARENTSEQID</h3>
+        <p>Set this keyword only if adding the new group to an existing sequence. Use this keyword to specify a parent sequence identifier to add the group to as follows:</p>
+        <ul>
+            <li value="1">If set to a non-zero value, then the group will be added as a member item to the specified nested sequence. This sequence identifier may have been returned via a previous call to the <a href="IDLffDicomEx__AddSequence.htm#dicom_ex_4010397576_1006866">IDLffDicomEx::AddSequence</a> method. </li>
+            <li value="2">If set to 0 or not specified, then the group is added to a sequence specified by the <i>DicomTag</i> argument, which exists at the root level of the DICOM file. This is the default.</li>
+        </ul>
+        <h2 class="API"><a name="dicom_ex_4010397576_1006760"></a><a name="dicom_ex_4010397576_1006760_PageTOC_IDLffDicomEx"></a><a name="dicom_ex_4010397576_77502"></a>Examples</h2>
+        <h3>Adding Groups to a Root Level Sequence</h3>
+        <p>The following example adds a public sequence containing three groups to the root level of a selected file. This public sequence is typically associated with Ultrasound (US) files. Use the NON-CONFORMING keyword when creating a clone in order to avoid errors encountered when attempting to add non-standard attributes to the DICOM file. The new groups within the sequence are printed to the Output Log window. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For an example that adds groups to a nested sequence, see <a href="#dicom_ex_4010397576_1032580" class="selected">Adding Groups to a Nested Sequence</a>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This example does not write the cloned file to memory. To write to memory, use the <a href="IDLffDicomEx__Commit.htm">IDLffDicomEx::Commit</a> method. </p>
+        <p class="Code">PRO dicom_addgroup_doc</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Select a DICOM file.</p>
+        <p class="Code"> sFile = DIALOG_PICKFILE( $</p>
+        <p class="Code">    PATH=FILEPATH('',SUBDIRECTORY=['examples','data']), $</p>
+        <p class="Code">    TITLE='Select DICOM Patient File', FILTER='*.dcm', $</p>
+        <p class="Code">    GET_PATH=path)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a clone (aImgClone.dcm) of the selected file (sfile).</p>
+        <p class="Code">; Set the NON_CONFORMING keyword to be able to add a public SQ</p>
+        <p class="Code">; of repeating items typically associated with US files to</p>
+        <p class="Code">; the selected file.</p>
+        <p class="Code"> oImg = OBJ_NEW('IDLffDicomEx', path + 'aImgClone.dcm', $</p>
+        <p class="Code">    CLONE=sfile, /NON_CONFORMING)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add a public group to the root level of the file. A</p>
+        <p class="Code">; sequence with the value specified for the DICOM</p>
+        <p class="Code">; attribute is automatically created if it does not exist.</p>
+        <p class="Code">; The AddGroup calls add a Sequence of Ultrasound Regions</p>
+        <p class="Code">; (0018,6011) with 3 sets of repeating tags.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add two tags to each group.</p>
+        <p class="Code">groupId_1 = oImg-&gt;AddGroup('0018,6011')</p>
+        <p class="Code">oImg-&gt;SetValue,'0018,6012', 'US', 1, SEQID = groupId_1</p>
+        <p class="Code">oImg-&gt;SetValue,'0018,6014', 'US', 2, SEQID = groupId_1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">groupId_2 = oImg-&gt;AddGroup('0018,6011')</p>
+        <p class="Code">oImg-&gt;SetValue,'0018,6012', 'US', 3, SEQID = groupId_2</p>
+        <p class="Code">oImg-&gt;SetValue,'0018,6014', 'US', 4, SEQID = groupId_2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">groupId_3 = oImg-&gt;AddGroup('0018,6011')</p>
+        <p class="Code">oImg-&gt;SetValue,'0018,6012', 'US', 5, SEQID = groupId_3</p>
+        <p class="Code">oImg-&gt;SetValue,'0018,6014', 'US', 6, SEQID = groupId_3</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Print a range including the new tags to</p>
+        <p class="Code">; the Output Log window.</p>
+        <p class="Code">vTags = oImg-&gt;EnumerateTags(COUNT=vTagCnt, $</p>
+        <p class="Code">   START_TAG='0018,6011', STOP_TAG='0020,0000')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Format the output.</p>
+        <p class="Code">PRINT, FORMAT= $</p>
+        <p class="Code">   '(%"%3s, %2s, %-12s, %3s, %5s, %30s, %8s")', $</p>
+        <p class="Code">   'IDX', 'LVL', 'TAG', 'VR', 'SEQID', $</p>
+        <p class="Code">   'DESCRIPTION', 'VALUE'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Cycle through the tags.</p>
+        <p class="Code">FOR xx = 0, vTagCnt-1  DO BEGIN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">   ; If the item is nested within another item, indicate the</p>
+        <p class="Code">   ; level using &gt; symbol.</p>
+        <p class="Code">   IF (vTags[xx].Level GT 0) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;vLvl = STRJOIN(REPLICATE('&gt;',vTags[xx].Level))</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;vtg =  vLvl + vTags[xx].Tag</p>
+        <p class="Code">   ENDIF ELSE BEGIN</p>
+        <p class="Code">      vtg = vTags[xx].Tag</p>
+        <p class="Code">   ENDELSE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">   ; If the tags are in a group, indicate this.</p>
+        <p class="Code">   IF (vTags[xx].GroupNum GT 0) THEN BEGIN</p>
+        <p class="Code">      PRINT, FORMAT='(%"%15s, %1d")', 'Group', vTags[xx].GroupNum</p>
+        <p class="Code">   ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">   ; Print the fields of the structure.</p>
+        <p class="Code">   PRINT, FORMAT = $</p>
+        <p class="Code">      '(%"%3d, %2d, %-12s, %3s, %5d, %30s, %8s")', $</p>
+        <p class="Code">      xx, vTags[xx].Level, vtg,vTags[xx].VR, vTags[xx].SeqId, $</p>
+        <p class="Code">      vTags[xx].Description, vTags[xx].Value</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ENDFOR</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Clean up references.</p>
+        <p class="Code">OBJ_DESTROY, oImg</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>This program generates the following output. A root-level sequence (SQ) attribute (0018,6011) and three sets of repeating tags are added to the file. </p>
+        <p>
+            <img src="../../Resources/Images/addgroup_text.gif" />
+        </p>
+        <h3><a name="dicom_ex_4010397576_1032580"></a><a name="dicom_ex_4010397576_63835"></a>Adding Groups to a Nested Sequence</h3>
+        <p>The following example adds two groups to a nested sequence by first adding a sequence (‘0054,0016’) to the root level of the cloned file. The code then adds an attribute (‘0018,1071’) to the sequence. Another sequence (‘0054,0300’) is added to the root level sequence using the IDLffDicomEx::AddGroup method. </p>
+        <p>After adding the first set of repeating tags, call the <a href="IDLffDicomEx__Commit.htm">IDLffDicomEx::Commit</a> method to save the changes. Before you can add a second group of tags, you need to retrieve sequence identifiers. After returning the sequence identifier using <a href="IDLffDicomEx__GetValue.htm">IDLffDicomEx::GetValue</a>, add the second group of tags. The root sequence is defined as the PARENTSEQID of the two groups. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You do not have to call Commit after adding the first group of tags. This example calls Commit at this point simply to illustrates re-accessing the sequence identifier reference, which is lost when Commit is called. </p>
+        <p>Use the NON-CONFORMING keyword when creating a clone in order to avoid errors encountered when attempting to add non-standard attributes to the DICOM file. The new sequences and groups are printed to the Output Log window. </p>
+        <p class="Code">PRO dicom_addgrouptonestedseq_doc</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Select a DICOM file.</p>
+        <p class="Code">sFile = DIALOG_PICKFILE( $</p>
+        <p class="Code">    PATH=FILEPATH('',SUBDIRECTORY=['examples','data']), $</p>
+        <p class="Code">    TITLE='Select DICOM Patient File', FILTER='*.dcm', $</p>
+        <p class="Code">    GET_PATH=path)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a clone (aImgClone.dcm) of the selected file (sfile).</p>
+        <p class="Code">; Set the NON_CONFORMING keyword to be able to add a public SQ</p>
+        <p class="Code">; of radiopharmaceutical items to any file.</p>
+        <p class="Code"> oImg = OBJ_NEW('IDLffDicomEx', path + 'aImgClone.dcm', $</p>
+        <p class="Code">    CLONE=sfile, /NON_CONFORMING)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add a sequence; Radiopharmaceutical Information Sequence.</p>
+        <p class="Code">vRootSeq = oImg-&gt;AddSequence('0054,0016')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add an attribute within the sequence.</p>
+        <p class="Code">oImg-&gt;SetValue, '0018,1071', 'DS', '0', SEQID=vRootSeq</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add two hypothetical groups to the nested sequence,</p>
+        <p class="Code">; (0054,0300), the Radionuclide Code Sequence. Calling AddGroup</p>
+        <p class="Code">; with this sequence specified adds the sequence. Add two groups,</p>
+        <p class="Code">; each consisting of two tags. The parent sequence of the repeating</p>
+        <p class="Code">; tags (which are contained within a sequence) is the root</p>
+        <p class="Code">; sequence.</p>
+        <p class="Code">groupId_1 = oImg-&gt;AddGroup('0054,0300', PARENTSEQID=vRootSeq)</p>
+        <p class="Code">oImg-&gt;SetValue,'0008,0100', 'SH', 'Tc-99m', SEQID = groupId_1</p>
+        <p class="Code">oImg-&gt;SetValue,'0008,0102', 'SH', '99SDM', SEQID = groupId_1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Commit the changes.</p>
+        <p class="Code">oImg-&gt;Commit</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; After committing changes you must re-access any sequence </p>
+        <p class="Code">; identifiers. Failure to do so will cause an error. </p>
+        <p class="Code">vNewSeqid = oImg-&gt;GetValue('0054,0016') </p>
+        <p class="Code">groupId_2 = oImg-&gt;AddGroup('0054,0300', PARENTSEQID=vNewSeqid)</p>
+        <p class="Code">oImg-&gt;SetValue,'0008,0100', 'SH', 'Tc-99m', SEQID = groupId_2</p>
+        <p class="Code">oImg-&gt;SetValue,'0008,0102', 'SH', '99SDM', SEQID = groupId_2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Print a range including the new tags to</p>
+        <p class="Code">; the Output Log window.</p>
+        <p class="Code">vTags = oImg-&gt;EnumerateTags(COUNT=vTagCnt, $</p>
+        <p class="Code">   START_TAG='0054,0016', STOP_TAG='0056,0000')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Format the output.</p>
+        <p class="Code">PRINT, FORMAT= $</p>
+        <p class="Code">   '(%"%3s, %2s, %-12s, %3s, %5s, %30s, %10s")', $</p>
+        <p class="Code">   'IDX', 'LVL', 'TAG',  'VR', 'SEQID', $</p>
+        <p class="Code">   'DESCRIPTION', 'VALUE'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Cycle through the tags.</p>
+        <p class="Code">FOR xx = 0, vTagCnt-1  DO BEGIN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">   ; If the item is nested within another item, indicate the</p>
+        <p class="Code">   ; level using &gt; symbol.</p>
+        <p class="Code">    IF (vTags[xx].Level GT 0) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;vLvl = STRJOIN(REPLICATE('&gt;',vTags[xx].Level))</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;vtg =  vLvl + vTags[xx].Tag</p>
+        <p class="Code">    ENDIF ELSE BEGIN</p>
+        <p class="Code">      vtg = vTags[xx].Tag</p>
+        <p class="Code">    ENDELSE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">    ; If the tags are in a group, indicate this.</p>
+        <p class="Code">    IF (vTags[xx].GroupNum GT 0) THEN BEGIN</p>
+        <p class="Code">       PRINT, FORMAT='(%"%15s, %1d")', 'Group', vTags[xx].GroupNum</p>
+        <p class="Code">    ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">   ; Print the fields of the structure.</p>
+        <p class="Code">   PRINT, FORMAT = $</p>
+        <p class="Code">      '(%"%3d, %2d, %-12s, %3s, %5d, %30s, %10s")', $</p>
+        <p class="Code">       xx, vTags[xx].Level, vtg, vTags[xx].VR, vTags[xx].SeqId, $</p>
+        <p class="Code">       vTags[xx].Description, vTags[xx].Value</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ENDFOR</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Clean up references.</p>
+        <p class="Code">OBJ_DESTROY, oImg</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Delete the file to avoid duplicate file name errors when running</p>
+        <p class="Code">; example multiple times.</p>
+        <p class="Code">FILE_DELETE, path + 'aImgClone.dcm', /ALLOW_NONEXISTENT</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>This produces the following output. Notice that sequence (0054,0300) is nested inside sequence (0054,0016). </p>
+        <p>
+            <img src="../../Resources/Images/addgrouptonestedseq_text.gif" />
+        </p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1036225"></a><a name="dicom_ex_4010397576_1036225_PageTOC_IDLffDicomEx"></a><a name="dicom_ex_4010397576_85724"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

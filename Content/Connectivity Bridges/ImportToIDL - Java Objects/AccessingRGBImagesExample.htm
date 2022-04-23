@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|Java Import Bridge">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Accessing RGB Images Example</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Java Import Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Accessing RGB Images Example</span>
+        </div>
+        <h1><a name="Accessing_RGB_Images_Example"></a><a name="kanchor5407"></a>Accessing RGB Images Example</h1>
+        <p>This example imports an RGB (red, green, and blue) image from the IDL distribution into a Java class. The image is in the <i>glowing_gas.jpg</i> file, which is in the <i>examples/data</i> directory of the IDL distribution. The Java class also displays the image in a Java Swing user-interface. Then, the image is accessed into IDL and displayed with the new iImage tool.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The Java and IDL code for this example is provided in the <i>resource/bridges/import/java/examples</i> directory, but the Java code has not been built as part of the <i>jbexamples.jar</i> file.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This example uses functionality only available in Java 1.6 and later.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Due to a Java bug, this example (and any other example using Swing on AWT) will not work on Linux platforms.</p>
+        <p>The first and main Java class is FrameTest, which creates the Java Swing application that imports the image from the <i>glowing_gas.jpg</i> file. Copy and paste the following text into a file, then save it as <i><a name="kanchor5408"></a>FrameTest.java</i>:</p>
+        <p class="Code">import java.awt.*;</p>
+        <p class="Code">import java.awt.image.*;</p>
+        <p class="Code">import java.awt.event.*;</p>
+        <p class="Code">import javax.swing.*;</p>
+        <p class="Code">import javax.swing.event.*;</p>
+        <p class="Code">import java.io.File;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">public class FrameTest extends JFrame</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">RSIImageArea c_imgArea;</p>
+        <p class="Code_Indented">int m_xsize;</p>
+        <p class="Code_Indented">int m_ysize;</p>
+        <p class="Code_Indented">Box c_controlBox;</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public FrameTest()</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">super("This is a JAVA Swing Program called from IDL");</p>
+        <p class="Code_Indented" style="text-indent: 20px;">// Dispose the frame when the sys close is hit</p>
+        <p class="Code_Indented" style="text-indent: 20px;">setDefaultCloseOperation(DISPOSE_ON_CLOSE);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">m_xsize = 350;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">m_ysize = 371;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">buildGUI();</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public void buildGUI()</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">c_controlBox = Box.createVerticalBox();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">JLabel l1 = new JLabel("Example Java/IDL Interaction");</p>
+        <p class="Code_Indented" style="text-indent: 20px;">JButton bLoadFile = new JButton("Load new file");</p>
+        <p class="Code_Indented" style="text-indent: 20px;">bLoadFile.addActionListener(new ActionListener()</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">public void actionPerformed(ActionEvent e)</p>
+        <p class="Code_Indented" style="text-indent: 40px;">{</p>
+        <p class="Code_Indented" style="text-indent: 60px;">JFileChooser chooser = new JFileChooser(new</p>
+        <p class="Code_Indented" style="text-indent: 60px;">File("c:\\ITT\\IDL63\\EXAMPLES\\DATA"));</p>
+        <p class="Code_Indented" style="text-indent: 60px;">chooser.setDialogTitle("Enter a JPEG file");</p>
+        <p class="Code_Indented" style="text-indent: 60px;">if (chooser.showOpenDialog(FrameTest.this) == JFileChooser.APPROVE_OPTION)</p>
+        <p class="Code_Indented" style="text-indent: 60px;">{</p>
+        <p class="Code_Indented" style="text-indent: 80px;">java.io.File fname = chooser.getSelectedFile();</p>
+        <p class="Code_Indented" style="text-indent: 80px;">String filename = fname.getPath();</p>
+        <p class="Code_Indented" style="text-indent: 80px;">System.out.println(filename);</p>
+        <p class="Code_Indented" style="text-indent: 80px;">c_imgArea.setImageFile(filename);</p>
+        <p class="Code_Indented" style="text-indent: 60px;">}</p>
+        <p class="Code_Indented" style="text-indent: 40px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">});</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">JButton b1 = new JButton("Close this example");</p>
+        <p class="Code_Indented" style="text-indent: 20px;">b1.addActionListener(new ActionListener()</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">public void actionPerformed(ActionEvent e)</p>
+        <p class="Code_Indented" style="text-indent: 40px;">{</p>
+        <p class="Code_Indented" style="text-indent: 60px;">dispose();</p>
+        <p class="Code_Indented" style="text-indent: 40px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">});</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">c_imgArea = new </p>
+        <p class="Code_Indented" style="text-indent: 20px;">RSIImageArea("c:\\itt\\idl63\\examples\\data\\glowing_gas.jpg", new Dimension(m_xsize,m_ysize));</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">Box mainBox = Box.createVerticalBox();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">Box rowBox = Box.createHorizontalBox();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">rowBox.add(b1);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">rowBox.add(bLoadFile);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">c_controlBox.add(l1);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">c_controlBox.add(rowBox);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">mainBox.add(c_controlBox);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">mainBox.add(c_imgArea);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">getContentPane().add(mainBox);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">pack(); setVisible(true);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">c_imgArea.displayImage();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">c_imgArea.addResizeListener(new RSIImageAreaResizeListener()</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">public void areaResized(int newx, int newy)</p>
+        <p class="Code_Indented" style="text-indent: 40px;">{</p>
+        <p class="Code_Indented" style="text-indent: 60px;">Dimension cdim = c_controlBox.getSize(null);</p>
+        <p class="Code_Indented" style="text-indent: 60px;">Insets i = getInsets();</p>
+        <p class="Code_Indented" style="text-indent: 60px;">newx = i.left + i.right + newx;</p>
+        <p class="Code_Indented" style="text-indent: 60px;">newy = i.top + cdim.height + newy + i.bottom;</p>
+        <p class="Code_Indented" style="text-indent: 60px;">setSize(new Dimension(newx, newy));</p>
+        <p class="Code_Indented" style="text-indent: 40px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">});</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public void setImageData(int [] imgData, int xsize, int ysize)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">MemoryImageSource ims = new MemoryImageSource(xsize, ysize, imgData, 0, ysize);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">Image imgtmp = createImage(ims);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">Graphics g = c_imgArea.getGraphics();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">g.drawImage(imgtmp, 0, 0, null);</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public void setImageData(byte [][][] imgData, int xsize, int ysize)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">System.out.println("SIZE = "+xsize+"x"+ysize);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int newArray [] = new int[xsize*ysize];</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int pixi = 0;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int curpix = 0;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">short [] currgb = new short[3];</p>
+        <p class="Code_Indented" style="text-indent: 20px;">for (int i=0;i&lt;m_xsize;i++)</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">for (int j=0;j&lt;m_ysize;j++)</p>
+        <p class="Code_Indented" style="text-indent: 40px;">{</p>
+        <p class="Code_Indented" style="text-indent: 60px;">for (int k=0;k&lt;3;k++)</p>
+        <p class="Code_Indented" style="text-indent: 60px;">{</p>
+        <p class="Code_Indented" style="text-indent: 80px;">currgb[k] = (short) imgData[k][i][j];</p>
+        <p class="Code_Indented" style="text-indent: 80px;">currgb[k] = (currgb[k] &lt; 128) ? (short) currgb[k] : (short) (currgb[k]-256);</p>
+        <p class="Code_Indented" style="text-indent: 60px;">}</p>
+        <p class="Code_Indented" style="text-indent: 60px;">curpix = (int) currgb[0] *	+ </p>
+        <p class="Code_Indented" style="text-indent: 80px;">((int) currgb[1] * (int) Math.pow(2,8)) + </p>
+        <p class="Code_Indented" style="text-indent: 80px;">((int) currgb[2] * (int) Math.pow(2,16));</p>
+        <p class="Code_Indented" style="text-indent: 60px;">if (pixi % 1000 == 0) System.out.println("PIXI = "+pixi+" "+curpix);</p>
+        <p class="Code_Indented" style="text-indent: 60px;">newArray[pixi++] = curpix;</p>
+        <p class="Code_Indented" style="text-indent: 40px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">MemoryImageSource ims = new MemoryImageSource(xsize, ysize, newArray, 0, ysize);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">c_imgArea.setImageObj(c_imgArea.createImage(ims));</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public byte[][][] getImageData()</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int width = 1;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int height = 1;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">PixelGrabber pGrab;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">width = m_xsize;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">height = m_ysize;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">// pixarray for the grab - 3D bytearray for display</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int [] pixarray = new int[width*height];</p>
+        <p class="Code_Indented" style="text-indent: 20px;">byte [][][] bytearray = new byte[3][width][height];</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">// create a pixel grabber</p>
+        <p class="Code_Indented" style="text-indent: 20px;">pGrab = new PixelGrabber(c_imgArea.getImageObj(),0,0, width,height, pixarray, 0, width);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">// grab the pixels from the image</p>
+        <p class="Code_Indented" style="text-indent: 20px;">try</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">boolean b = pGrab.grabPixels();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">catch (InterruptedException e)</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">System.err.println("pixel grab interrupted");</p>
+        <p class="Code_Indented" style="text-indent: 40px;">return bytearray;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">// break down the 32-bit integers from the grab into 8-bit bytes</p>
+        <p class="Code_Indented" style="text-indent: 20px;">// and fill the return 3D array</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int pixi = 0;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int curpix = 0;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">for (int j=0;j&lt;m_ysize;j++)</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">for (int i=0;i&lt;m_xsize;i++)</p>
+        <p class="Code_Indented" style="text-indent: 40px;">{</p>
+        <p class="Code_Indented" style="text-indent: 60px;">curpix = pixarray[pixi++];</p>
+        <p class="Code_Indented" style="text-indent: 60px;">bytearray[0][i][j] = (byte) ((curpix &gt;&gt; 16) &amp; 0xff);</p>
+        <p class="Code_Indented" style="text-indent: 60px;">bytearray[1][i][j] = (byte) ((curpix &gt;&gt;	8) &amp; 0xff);</p>
+        <p class="Code_Indented" style="text-indent: 60px;">bytearray[2][i][j]	= (byte) ((curpix		) &amp; 0xff);</p>
+        <p class="Code_Indented" style="text-indent: 40px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">return bytearray;</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public static void main(String [] args)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">FrameTest f = new FrameTest();</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code">}</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The above text is for the FrameTest class that accesses the <i>glowing_gas.jpg</i> file in the <i>examples/data</i> directory of a default installation of IDL on a Windows system. The file’s location is specified as <i>c:\\ITT\\IDL70\\EXAMPLES\\DATA</i> in the above text. If the <i>glowing_gas.jpg</i> file is not in the same location on system, edit the text to change the location of this file to match your system.</p>
+        <p>The FrameTest class uses two other user-defined classes, RSIImageArea and RSIImageAreaResizeListener. These classes help to define the viewing area and display the image in Java. Copy and paste the following text into a file, then save it as <i>RSIImageArea.java</i>:</p>
+        <p class="Code">import javax.swing.*;</p>
+        <p class="Code">import java.awt.*;</p>
+        <p class="Code">import java.awt.event.*;</p>
+        <p class="Code">import java.util.Vector;</p>
+        <p class="Code">import java.io.File;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">public class RSIImageArea extends JComponent implements MouseMotionListener, MouseListener</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">Image c_img;</p>
+        <p class="Code_Indented">int m_boxw = 100;</p>
+        <p class="Code_Indented">int m_boxh = 100;</p>
+        <p class="Code_Indented">Dimension c_dim;</p>
+        <p class="Code_Indented">boolean m_pressed = false;</p>
+        <p class="Code_Indented">int m_button = 0;</p>
+        <p class="Code_Indented">Vector c_resizelisteners = null;</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public RSIImageArea(String imgFile, Dimension dim)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">c_img = getToolkit().getImage(imgFile);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">c_dim = dim;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">setPreferredSize(dim);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">setSize(dim);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">addMouseMotionListener(this);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">addMouseListener(this);</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public void addResizeListener(RSIImageAreaResizeListener l)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">if (c_resizelisteners == null) c_resizelisteners = new Vector();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">if (! c_resizelisteners.contains(l))	c_resizelisteners.add(l);</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public void removeResizeListener(RSIImageAreaResizeListener l)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">if (c_resizelisteners == null) return;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">if (c_resizelisteners.contains(l)) c_resizelisteners.remove(l);</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public void displayImage()</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">repaint();</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public void paint(Graphics g)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int xsize = c_img.getWidth(null);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int ysize = c_img.getHeight(null);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">if (xsize != -1 &amp;&amp; ysize != -1)</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">if (xsize != c_dim.width || ysize != c_dim.height)</p>
+        <p class="Code_Indented" style="text-indent: 40px;">{</p>
+        <p class="Code_Indented" style="text-indent: 60px;">c_dim.width = xsize;</p>
+        <p class="Code_Indented" style="text-indent: 60px;">c_dim.height = ysize;</p>
+        <p class="Code_Indented" style="text-indent: 60px;">setPreferredSize(c_dim);</p>
+        <p class="Code_Indented" style="text-indent: 60px;">setSize(c_dim);</p>
+        <p class="Code_Indented" style="text-indent: 60px;">if (c_resizelisteners != null)</p>
+        <p class="Code_Indented" style="text-indent: 60px;">{</p>
+        <p class="Code_Indented" style="text-indent: 80px;">RSIImageAreaResizeListener l = null;</p>
+        <p class="Code_Indented" style="text-indent: 80px;">for (int j=0;j&lt;c_resizelisteners.size();j++)</p>
+        <p class="Code_Indented" style="text-indent: 80px;">{</p>
+        <p class="Code_Indented" style="text-indent: 100px;">l = (RSIImageAreaResizeListener)</p>
+        <p class="Code_Indented" style="text-indent: 100px;">c_resizelisteners.elementAt(j);</p>
+        <p class="Code_Indented" style="text-indent: 100px;">l.areaResized(xsize, ysize);</p>
+        <p class="Code_Indented" style="text-indent: 80px;">}</p>
+        <p class="Code_Indented" style="text-indent: 60px;">}</p>
+        <p class="Code_Indented" style="text-indent: 40px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">g.drawImage(c_img, 0, 0, null);</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public void setImageFile(String fileName)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">c_img = null;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">c_img = getToolkit().getImage(fileName);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">repaint();</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public Image getImageObj()</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">return c_img;</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public void setImageObj(Image img)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">c_img = img;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">repaint();</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public void drawZoomBox(MouseEvent e)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int bx = e.getX() - m_boxw/2;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">bx = (bx &gt;=0) ? bx :0;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int by = e.getY() - m_boxh/2;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">by = (by &gt;=0) ? by :0;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int ex = bx + m_boxw;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">if (ex &gt; c_dim.width)</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">ex = c_dim.width;</p>
+        <p class="Code_Indented" style="text-indent: 40px;">bx = c_dim.width-m_boxw;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">int ey = by + m_boxh;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">if (ey &gt; c_dim.height)</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">ey = c_dim.height;</p>
+        <p class="Code_Indented" style="text-indent: 40px;">by = c_dim.height-m_boxh;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">repaint();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">Graphics g = getGraphics();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">g.drawImage(c_img, bx, by, ex, ey, bx+(m_boxw/4), by+(m_boxh/4), ex-(m_boxw/4),ey-(m_boxh/4), null);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">g.setColor(Color.white);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">g.drawRect(bx, by, m_boxw, m_boxh);</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public void mouseDragged(MouseEvent e)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">drawZoomBox(e);</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public void mouseMoved(MouseEvent e)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">Graphics g = getGraphics();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">if (m_pressed &amp;&amp; (m_button == 1))</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">drawZoomBox(e);</p>
+        <p class="Code_Indented" style="text-indent: 40px;">g.setColor(Color.white);</p>
+        <p class="Code_Indented" style="text-indent: 40px;">g.drawString("DRAG", 10,10);</p>
+        <p class="Code_Indented" style="text-indent: 20px;">}</p>
+        <p class="Code_Indented" style="text-indent: 20px;">else</p>
+        <p class="Code_Indented" style="text-indent: 20px;">{</p>
+        <p class="Code_Indented" style="text-indent: 40px;">g.setColor(Color.white);</p>
+        <p class="Code_Indented" style="text-indent: 40px;">String s = "("+e.getX()+","+e.getY()+")";</p>
+        <p class="Code_Indented" style="text-indent: 40px;">repaint();</p>
+        <p class="Code_Indented" style="text-indent: 40px;">g.drawString(s, e.getX(), e.getY());</p>
+        <p class="Code_Indented" style="text-indent: 20px;">}</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public void mouseClicked(MouseEvent e) {}</p>
+        <p class="Code_Indented">public void mouseEntered(MouseEvent e) {}</p>
+        <p class="Code_Indented">public void mouseExited(MouseEvent e) {}</p>
+        <p class="Code_Indented">public void mousePressed(MouseEvent e)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">m_pressed = true;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">m_button = e.getButton();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">repaint();</p>
+        <p class="Code_Indented" style="text-indent: 20px;">if (m_button == 1) drawZoomBox(e);</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">public void mouseReleased(MouseEvent e)</p>
+        <p class="Code_Indented">{</p>
+        <p class="Code_Indented" style="text-indent: 20px;">m_pressed = false;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">m_button = 0;</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code">}</p>
+        <p>And copy and paste the following text into a file, then save it as <i>RSIImageAreaResizeListener.java</i>:</p>
+        <p class="Code">public interface RSIImageAreaResizeListener</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">public void areaResized(int newx, int newy);</p>
+        <p class="Code">}</p>
+        <p>Compile these classes in Java. Then either update the <i>jbexamples.jar</i> file in the <i>resource/bridges/import/java</i> directory with the new compiled class, place the resulting compiled classes in your Java class path, or edit the JVM Classpath setting in the IDL-Java bridge configuration file to specify the location (path) of these compiled classes. See <a href="InitializingTheIDL-JavaBridge.htm#Location_of_the_Bridge_Configuration_File">Location of the Bridge Configuration File</a> for more information.</p>
+        <p>With the Java classes compiled, you can now access them in IDL. Copy and paste the following text into the IDL Editor window, then save it as <i>ImageFromJava.pro</i>:</p>
+        <p class="Code">PRO ImageFromJava</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">; Create a Swing Java object and have it load image data into IDL.</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Create the Java object first.</p>
+        <p class="Code_Indented">oJSwing = OBJ_NEW('IDLjavaObject$FrameTest', 'FrameTest')</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Get the image from the Java object.</p>
+        <p class="Code_Indented">image = oJSwing -&gt; GetImageData()</p>
+        <p class="Code_Indented">PRINT, 'Loaded Image Information:'</p>
+        <p class="Code_Indented">HELP, image</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Delete the Java object. OBJ_DESTROY, oJSwing</p>
+        <p class="Code_Indented">; Interactively display the image.</p>
+        <p class="Code_Indented">IIMAGE, image</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">END</p>
+        <p>After compiling the above routine, you can run it in IDL. This routine produces the following Java Swing application.</p>
+        <p>
+            <img src="../Resources/Images/BridgesFigure5-2.png" />
+        </p>
+        <p>&#160;</p>
+        <p>Then, the routine produces the following iImage tool.</p>
+        <p>
+            <img src="../Resources/Images/BridgesFigure5-3.png" />
+        </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>After IDL starts the Java Swing application, the two displays are independent of each other. If a new image is loaded into the Java application, the IDL iImage tool is not updated. If the iImage tool modifies the existing image or opens a new image, the Java Swing application is not updated.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

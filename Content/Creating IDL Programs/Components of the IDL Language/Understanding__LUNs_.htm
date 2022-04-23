@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Understanding (LUNs)</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="files_2839720996_168544"></a><a name="kanchor5656"></a><a name="files_2839720996_73437"></a>Understanding <a name="kanchor5657"></a>(LUNs)</h1>
+        <p>IDL <a name="kanchor5658"></a>Logical Unit Numbers (LUNs) fall within the range -2 to 128. Some LUNs are reserved for special functions as described below.</p>
+        <h2 class="API"><a name="files_2839720996_83663"></a>The Standard Input, Output, and Error LUNs</h2>
+        <p>The three LUNs described below have special meanings that are operating system dependent:</p>
+        <h3>UNIX</h3>
+        <p>Logical Unit Numbers 0, -1, and -2 are tied to <i>stdin</i>, <i>stdout</i>, and <i>stderr</i>, respectively. This means that the normal UNIX file redirection and pipe operations work with IDL. For example, the shell command</p>
+        <p class="Code">%idl &lt; idl.inp &gt;&amp; idl.out &amp;</p>
+        <p>will cause IDL to execute in the background, reading its input from the file <i>idl.inp</i> and writing its output to the file <i>idl.out</i>. Any messages sent to stderr are also sent to <i>idl.out</i>.</p>
+        <p>When using the IDL Workbench, Logical Unit Numbers 0, -1, and -2 are tied to <i>stdin </i>(the command line), <i>stdout </i>(the log window), and <i>stderr </i>(the log window), respectively.</p>
+        <h3>Windows</h3>
+        <p>Logical Unit Numbers 0, -1, and -2 are tied to <i>stdin </i>(the command line), <i>stdout </i>(the log window), and <i>stderr </i>(the log window), respectively.</p>
+        <p>These special file units are described in more detail below.</p>
+        <h3>File Unit 0</h3>
+        <p>This LUN represents the standard input stream, which is usually the keyboard. Therefore, the IDL statement:</p>
+        <p class="Code">READ, X</p>
+        <p>is equivalent to the following:</p>
+        <p class="Code">READF, 0, X</p>
+        <h3>File Unit -1</h3>
+        <p>This LUN represents the standard output stream, which is usually the terminal screen. Therefore, the IDL statement:</p>
+        <p class="Code">PRINT, X</p>
+        <p>is equivalent to the following:</p>
+        <p class="Code">PRINTF, -1, X</p>
+        <h3>File Unit -2</h3>
+        <p>This LUN represents the standard error stream, which is usually the terminal screen.</p>
+        <h2 class="API"><a name="files_2839720996_29209"></a>File Units (1–99)</h2>
+        <p>These are the file units for normal interactive use. When using IDL interactively, the user arbitrarily selects the file units used. The file units from 1 to 99 are available for this use.</p>
+        <h2 class="API"><a name="files_2839720996_68904"></a>File Units (100–128)</h2>
+        <p>These are the file units managed by the GET_LUN and FREE_LUN procedures. If an IDL procedure or function that uses files is written to explicitly use a given file unit, there is a chance that it will conflict with other routines that use the same unit. It is therefore necessary to avoid explicit file unit numbers when writing IDL procedures and functions. The GET_LUN and FREE_LUN procedures provide a standard mechanism for IDL routines to obtain unique file units. GET_LUN allocates a file unit from a pool of free units in the range 100 to 128. This unit will not be allocated again until it is released by a call to FREE_LUN. Meanwhile, it is available for the exclusive use of the program that allocated it. A typical procedure that needs a file unit might be structured as follows:</p>
+        <p class="Code">PRO DEMO</p>
+        <p class="Code">;Get a unique file unit and open the file.</p>
+        <p class="Code">OPENR, UNIT, /GET_LUN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Body of program goes here.</p>
+        <p class="Code">.</p>
+        <p class="Code">.</p>
+        <p class="Code">.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Return file unit. </p>
+        <p class="Code">FREE_LUN, UNIT</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Since the file is still open, FREE_LUN will automatically call </p>
+        <p class="Code">;CLOSE.</p>
+        <p class="Code">END</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>All IDL procedures and functions that open files should use GET_LUN/ FREE_LUN to obtain file units. Furthermore, the file units between 100 and 128 should never be used unless previously allocated by GET_LUN.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

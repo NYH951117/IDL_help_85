@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: U">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>UNSHARP_MASK</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="U_list.htm">Routines: U</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">UNSHARP_MASK</span>
+        </div>
+        <h1 class="Routine"><a name="U_807064173_966134"></a><a name="kanchor2665"></a><a name="U_807064173_36272"></a>UNSHARP_MASK</h1>
+        <p>The UNSHARP_MASK function performs an unsharp-mask sharpening filter on a two-dimensional array or a TrueColor image. For TrueColor images the unsharp mask is applied to each channel.</p>
+        <p>The unsharp mask algorithm works by enhancing the contrast between neighboring pixels in an image, and is widely used for astronomical images and for digital photographs.</p>
+        <p>The algorithm involves the following steps:</p>
+        <ol>
+            <li value="1">Smooth the original image with a Gaussian filter, with the width controlled by the RADIUS keyword.</li>
+            <li value="2">Subtract the smoothed image from the original to create a high-pass filtered image.</li>
+            <li value="3">Apply any clipping needed on the high-pass image, as controlled by the THRESHOLD keyword.</li>
+            <li value="4">Add a certain percentage of the high-pass filtered image to the original image, with the percentage controlled by the AMOUNT keyword.</li>
+        </ol>
+        <p>In pseudocode this algorithm can be written as:</p>
+        <p class="Code">HighPass = Image - Convol ( Image, Gaussian )</p>
+        <p class="Code">Result = Image + A * HighPass * ( |HighPass| ≥ T )</p>
+        <p>where A is the amount, T is the threshold, and ≥ indicates a Boolean operation, 1 if true, or 0 otherwise.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>To avoid overflow for byte or integer data, the computations are performed using a larger integer type, the result is clipped to the minimum and maximum values for the original type, and the result is then converted back to the original type.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>unsharp_mask.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API">Example</h2>
+        <p>
+            <img src="../images/unsharp_mask_ex1.gif" />
+        </p>
+        <p>This example sharpens an image of Mars by applying an unsharp mask filter:</p>
+        <p class="Code">file = FILEPATH('marsglobe.jpg', SUBDIR=['examples','data'])</p>
+        <p class="Code">READ_JPEG, file, marsImage</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the original image</p>
+        <p class="Code">i = IMAGE(marsImage, LAYOUT = [2, 1, 1], DIMENSIONS = [800, 500])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the unsharp-mask-filtered image</p>
+        <p class="Code">result = UNSHARP_MASK(marsImage, RADIUS=4)</p>
+        <p class="Code">i = IMAGE(result, LAYOUT = [2, 1, 2], /CURRENT)</p>
+        <h2 class="API"><a name="U_807064173_968696"></a><a name="U_807064173_968696_PageTOC_UNSHARP_MASK_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = UNSHARP_MASK(<i>Image</i> [, <a href="#U_807064173_968717" class="selected">AMOUNT</a>=<i>value</i>] [, <a href="#U_807064173_968720" class="selected">RADIUS</a>=<i>value</i>] [,&#160;<a href="#U_807064173_968725" class="selected">THRESHOLD</a>=<i>value</i>] [, <a href="#U_807064173_968729" class="selected">TRUE</a>={1|2|3}] )</p>
+        <h2 class="API"><a name="U_807064173_968710"></a><a name="U_807064173_968710_PageTOC_UNSHARP_MASK_"></a>Return Value</h2>
+        <p>The <i>Result</i> is an array with the same dimensions and type as <i>Image</i> that contains the filtered image.</p>
+        <h2 class="API"><a name="U_807064173_968712"></a><a name="U_807064173_968712_PageTOC_UNSHARP_MASK_"></a>Arguments</h2>
+        <h3 class="Argument">Image</h3>
+        <p>The two-dimensional array or multichannel image to be filtered. If <i>Image</i> is a multichannel image, then the TRUE keyword may be used to indicate which dimension represents the channels.</p>
+        <h2 class="API"><a name="U_807064173_968715"></a><a name="U_807064173_968715_PageTOC_UNSHARP_MASK_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="U_807064173_968717"></a><a name="U_807064173_79073"></a>AMOUNT</h3>
+        <p>Set this keyword to a floating-point value giving the amount (or strength) of filtering to be applied. The default is AMOUNT=1.0, which implies that 100% of the filter difference will be applied to the <i>Image</i>. AMOUNT may be negative, which will have the effect of blurring the image instead of sharpening.</p>
+        <h3 class="Keyword"><a name="U_807064173_968720"></a><a name="U_807064173_11081"></a>RADIUS</h3>
+        <p>Set this keyword to a floating-point value giving the radius in pixels of the Gaussian smoothing filter. The default is RADIUS=3. The Gaussian filter is designed to fall to 1/e (~0.367) at a distance of RADIUS/sqrt(2). The total width of the Gaussian filter is given by ceil(3 * RADIUS)/2 * 2 + 1 (if RADIUS is an integer then this is just 3 * RADIUS + 1).</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The value of RADIUS must be smaller than one-half of the largest array dimension.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>Use small RADIUS values (such as 3) for small images or images with fine details. Use larger RADIUS values for large images with larger details.</p>
+        <h3 class="Keyword"><a name="U_807064173_968725"></a><a name="U_807064173_98517"></a>THRESHOLD</h3>
+        <p>Set this keyword to a non-negative integer (or a floating-point if <i>Image</i> is floating point) giving the clipping threshold. For each element, if the absolute value of the difference between the original image and the low-pass filtered array is greater than or equal to THRESHOLD then the filter is applied to that point. The default is THRESHOLD=0, which implies that every point will be filtered.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>Lower values of THRESHOLD will provide greater sharpening but may cause more speckling, while higher values of THRESHOLD will exclude regions of low contrast and cause less speckling.</p>
+        <h3 class="Keyword"><a name="U_807064173_968729"></a><a name="U_807064173_42529"></a>TRUE</h3>
+        <p>If <i>Image</i> is a three-dimensional array (a multichannel image), set this keyword to 1, 2, or 3 to indicate which dimension represents the channels. The default is 1, for pixel interleaving, (3, <i>m</i>, <i>n</i>). A value of 2 indicates line interleaving (<i>m</i>, 3, <i>n</i>), and 3 indicates band interleaving, (<i>m</i>, <i>n</i>, 3).</p>
+        <h2 class="API"><a name="U_807064173_968747"></a><a name="U_807064173_968747_PageTOC_UNSHARP_MASK_"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>7.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Changed the total width definition of Gaussian filter from: </p>
+                        <p class="Code">ceil(2 * RADIUS)/2 * 2 +1 </p>
+                        <p>to: </p>
+                        <p class="Code">ceil(3 * RADIUS)/2 * 2 +1</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="U_807064173_968749"></a><a name="U_807064173_968749_PageTOC_UNSHARP_MASK_"></a>See Also</h2>
+        <p><a href="../C/CONVOL.htm#C_854643309_676395">CONVOL</a>, <a href="../L/LEEFILT.htm#L_826528365_758191">LEEFILT</a>, <a href="../R/ROBERTS.htm#R_822202989_678584">ROBERTS</a>, <a href="../S/SOBEL.htm#S_820040301_678928">SOBEL</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

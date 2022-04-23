@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|About Table Widgets">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Example: Single Data Type Data in a Table Widget</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="About_Table_Widgets.htm">About Table Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Example: Single Data Type Data in a Table Widget</span>
+        </div>
+        <h1><a name="widget_table_1174167527_105294"></a><a name="widget_table_1174167527_85392"></a>Example: Single Data Type Data in a Table Widget</h1>
+        <p>The following procedures build a simple application that allows the user to select data from a table, plotting the data in a draw window and optionally displaying the data values in a text widget. The user can switch the table between standard and disjoint selection modes.</p>
+        <p class="ExampleCode">This example is included in the file <code>table_widget_example1.<a name="kanchor5088"></a>pro</code> in the <code>examples/doc/widgets</code> subdirectory of the IDL distribution. Run this example procedure by entering <code>table_widget_example1</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT table_widget_example1.pro</code>. See <a href="About_Widget_Application.htm#widget_apps_4063420628_1041756">Running the Example Code</a> if IDL does not run the program as expected.</p>
+        <p class="Code">; Event-handler routine</p>
+        <p class="Code">PRO table_widget_example1_event, ev</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Retrieve the anonymous structure contained in the user value of</p>
+        <p class="Code">&#160;&#160;; the top-level base widget.</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, ev.top, GET_UVALUE=stash</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Retrieve the table's selection mode and selection.</p>
+        <p class="Code">&#160;&#160;disjoint = WIDGET_INFO(stash.table, /TABLE_DISJOINT_SELECTION)</p>
+        <p class="Code">&#160;&#160;selection = WIDGET_INFO(stash.table, /TABLE_SELECT)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Check to see whether a selection exists, setting the</p>
+        <p class="Code">&#160;&#160;; variable 'hasSelection' accordingly.</p>
+        <p class="Code">&#160;&#160;IF (selection[0] ne -1) THEN hasSelection = 1 $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;ELSE hasSelection = 0</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; If there is a selection, get the value.</p>
+        <p class="Code">&#160;&#160;IF (hasSelection) THEN WIDGET_CONTROL, stash.table, $ &#160;&#160;&#160;&#160;GET_VALUE=value, /USE_TABLE_SELECT</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; The following sections define the application's reactions to</p>
+        <p class="Code">&#160;&#160;; various types of events.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; If the event came from the table, plot the selected data.</p>
+        <p class="Code">&#160;&#160;IF ((ev.ID eq stash.table) AND hasSelection) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;WSET, stash.draw</p>
+        <p class="Code">&#160;&#160;&#160;&#160;PLOT, value</p>
+        <p class="Code">&#160;&#160;ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; If the event came from the 'Show Selected Data' button, display</p>
+        <p class="Code">&#160;&#160;; the data in the text widget.</p>
+        <p class="Code">&#160;&#160;IF ((ev.ID eq stash.b_value) AND hasSelection) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;IF (disjoint eq 0) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;WIDGET_CONTROL, stash.text, SET_VALUE=STRING(value, /PRINT)</p>
+        <p class="Code">&#160;&#160;&#160;&#160;ENDIF ELSE BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;WIDGET_CONTROL, stash.text, SET_VALUE=STRING(value)</p>
+        <p class="Code">&#160;&#160;&#160;&#160;ENDELSE</p>
+        <p class="Code">&#160;&#160;ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; If the event came from the 'Show Selected Cells' button,</p>
+        <p class="Code">&#160;&#160;; display the selection information in the text widget. Use</p>
+        <p class="Code">&#160;&#160;; different displays for standard and disjoint selections.</p>
+        <p class="Code">&#160;&#160;IF ((ev.ID eq stash.b_select) AND hasSelection) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;IF (disjoint eq 0) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; Create a string array containing the column and row</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; values of the selected rectangle.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;list0 = 'Standard Selection'</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;list1 = 'Left:   ' + STRING(selection[0])</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;list2 = 'Top:    ' + STRING(selection[1])</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;list3 = 'Right:  ' + STRING(selection[2])</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;list4 = 'Bottom: ' + STRING(selection[3])</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;list = [list0, list1, list2, list3, list4]</p>
+        <p class="Code">&#160;&#160;&#160;&#160;ENDIF ELSE BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; Create a string array containing the column and row</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; information for the selected cells.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;n = N_ELEMENTS(selection)</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;list = STRARR(n/2+1)</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;list[0] = 'Disjoint Selection'</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;FOR j=0,n-1,2 DO BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;list[j/2+1] = 'Column: ' + STRING(selection[j]) + $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;', Row: ' + STRING(selection[j+1])</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;ENDFOR</p>
+        <p class="Code">&#160;&#160;&#160;&#160;ENDELSE</p>
+        <p class="Code">&#160;&#160;&#160;&#160;WIDGET_CONTROL, stash.text, SET_VALUE=list</p>
+        <p class="Code">&#160;&#160;ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; If the event came from the 'Change Selection Mode' button,</p>
+        <p class="Code">&#160;&#160;; change the table selection mode and the title of the button.</p>
+        <p class="Code">&#160;&#160;IF (ev.ID eq stash.b_change) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;IF (disjoint eq 0) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;WIDGET_CONTROL, stash.table, TABLE_DISJOINT_SELECTION=1</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;WIDGET_CONTROL, stash.b_change, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;SET_VALUE='Change to Standard Selection Mode'</p>
+        <p class="Code">&#160;&#160;&#160;&#160;ENDIF ELSE BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;WIDGET_CONTROL, stash.table, TABLE_DISJOINT_SELECTION=0</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;WIDGET_CONTROL, stash.b_change, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;SET_VALUE='Change to Disjoint Selection Mode'</p>
+        <p class="Code">&#160;&#160;&#160;&#160;ENDELSE</p>
+        <p class="Code">&#160;&#160;ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; If the event came from the 'Quit' button, close the</p>
+        <p class="Code">&#160;&#160;; application.</p>
+        <p class="Code">&#160;&#160;IF (ev.ID eq stash.b_quit) THEN WIDGET_CONTROL, ev.TOP, /DESTROY</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Widget creation routine.</p>
+        <p class="Code">PRO table_widget_example1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Create data to be displayed in the table.</p>
+        <p class="Code">&#160;&#160;data = DIST(7)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Create initial text to be displayed in the text widget.</p>
+        <p class="Code">&#160;&#160;help = ['Select data from the table below using the mouse.']</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Create the widget hierarchy.</p>
+        <p class="Code">&#160;&#160;base = WIDGET_BASE(/COLUMN)</p>
+        <p class="Code">&#160;&#160;subbase1 = WIDGET_BASE(base, /ROW)</p>
+        <p class="Code">&#160;&#160;draw = WIDGET_DRAW(subbase1, XSIZE=250, YSIZE=250)</p>
+        <p class="Code">&#160;&#160;subbase2 = WIDGET_BASE(subbase1, /COLUMN)</p>
+        <p class="Code">&#160;&#160;text = WIDGET_text(subbase2, XS=50, YS=8, VALUE=help, /SCROLL)</p>
+        <p class="Code">&#160;&#160;b_value = WIDGET_BUTTON(subbase2, VALUE='Show Selected Data')</p>
+        <p class="Code">&#160;&#160;b_select = WIDGET_BUTTON(subbase2, VALUE='Show Selected Cells')</p>
+        <p class="Code">&#160;&#160;b_change = WIDGET_BUTTON(subbase2, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;VALUE='Change to Disjoint Selection Mode')</p>
+        <p class="Code">&#160;&#160;b_quit = WIDGET_BUTTON(subbase2, VALUE='Quit')</p>
+        <p class="Code">&#160;&#160;table = WIDGET_TABLE(base, VALUE=data, /ALL_EVENTS)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Realize the widgets.</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, base, /REALIZE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Get the widget ID of the draw widget.</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, draw, GET_VALUE=drawID</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Create an anonymous structure to hold widget IDs. This</p>
+        <p class="Code">&#160;&#160;; structure becomes the user value of the top-level base</p>
+        <p class="Code">&#160;&#160;; widget.</p>
+        <p class="Code">&#160;&#160;stash = {draw:drawID, table:table, text:text, b_value:b_value, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;b_select:b_select, b_change:b_change, b_quit:b_quit}</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Set the user value of the top-level base and call XMANAGER</p>
+        <p class="Code">&#160;&#160;; to manage everything.</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, base, SET_UVALUE=stash</p>
+        <p class="Code">&#160;&#160;XMANAGER, 'table_widget_example1', base</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>The following things about this example are worth noting:</p>
+        <ul>
+            <li value="1">It is important to check whether a selection exists before using WIDGET_CONTROL to retrieve the selection.</li>
+            <li value="2">Data from disjoint selections is handled differently than data from standard selections.</li>
+            <li value="3">For a relatively simple application, passing a group of widget IDs via the top-level base widget’s user value allows the use of a single event routine rather than separate event routines for each widget.</li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

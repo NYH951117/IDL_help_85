@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Data Types">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Relaxed Structure Assignment</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDL_Data_Types.htm">Data Types</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Relaxed Structure Assignment</span>
+        </div>
+        <h1><a name="structures_2305844932_211088"></a><a name="structures_2305844932_32734"></a>Relaxed Structure Assignment</h1>
+        <p>The IDL “=” operator is unable to assign a <a name="kanchor4507"></a>structure value to a structure with a different definition. For example, suppose we have an existing structure definition SRC, as follows:</p>
+        <p class="Code">source = { SRC, A:FINDGEN(4), B:12 }</p>
+        <p>and we wish to create a second instance of the same structure, but with slightly different data and a different field:</p>
+        <p class="Code">dest = { SRC, A:INDGEN(2), C:20 }</p>
+        <p>Attempting to execute these two statements at the IDL command prompt gives the following results:</p>
+        <p class="Code">% Conflicting data structures: &lt;INT       Array[2]&gt;,SRC.</p>
+        <p class="Code">% Execution halted at:  $MAIN$</p>
+        <p>Versions of IDL beginning with IDL 5.1 include a mechanism to solve this problem. The <a name="kanchor4508"></a>STRUCT_ASSIGN procedure performs “<a name="kanchor4509"></a>relaxed structure assignment,” which is a field-by-field copy of a structure to another structure. Fields are copied according to the following rules:</p>
+        <ol>
+            <li value="1">Any fields found in the destination structure that are not found in the source structure are “zeroed” (set to zero, the empty string, or a null pointer or object reference depending on the type of field).</li>
+            <li value="2">Any fields in the source structure that are not found in the destination structure are quietly ignored.</li>
+            <li value="3">Any fields that are found in both the source and destination structures are copied one at a time. If necessary, type conversion is done to make their types agree. If a field in the source structure has fewer data elements than the corresponding field in the destination structure, then the “extra” elements in the field in the destination structure are zeroed. If a field in the source structure has more elements than the corresponding field in the destination structure, the extra elements are quietly ignored.</li>
+        </ol>
+        <p>Using STRUCT_ASSIGN, we can make the assignment that failed using the = operator:</p>
+        <p class="Code">source = { src, a:FINDGEN(4), b:12 }</p>
+        <p class="Code">dest = { dest, a:INDGEN(2), c:20 }</p>
+        <p class="Code">STRUCT_ASSIGN, source, dest, /VERBOSE</p>
+        <p>IDL prints:</p>
+        <p class="Code">% STRUCT_ASSIGN: SRC tag A is longer than destination. </p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;The end will be clipped.</p>
+        <p class="Code">% STRUCT_ASSIGN: Destination lacks SRC tag B. Not copied.</p>
+        <p>If we check the variable dest, we see that it has the definition of the dest structure and the data from the source structure:</p>
+        <p class="Code">HELP, dest, /STRUCTURE</p>
+        <p>IDL prints:</p>
+        <p class="Code">** Structure DEST, 2 tags, length=6:</p>
+        <p class="Code">   A               INT       Array[2]</p>
+        <p class="Code">   C               INT              0</p>
+        <h2 class="API"><a name="structures_2305844932_53939"></a>Using Relaxed Structure Assignment</h2>
+        <p>Why would you want to use Relaxed Structure Assignment? One case where this type of structure definition is very useful is in restoring object structures into an environment where the structure definition may have changed since the restored objects were saved. </p>
+        <p>Suppose you have created an application that saves data in structures. Your application may use the IDL SAVE routine to save the data structures to disk files. If you later change your application such that the definition of the data structures changes, you would not be able to <a name="kanchor4510"></a>restore your saved data into your application’s framework without relaxed structure assignment. The RELAXED_STRUCTURE_ASSIGNMENT keyword to the RESTORE procedure allows you to make relaxed assignments in such cases.</p>
+        <p>To see how this works, try the following exercise:</p>
+        <ol>
+            <li value="1">
+                <p>Start IDL, create a named structure, and use the SAVE procedure to save it to a file:</p>
+                <p class="Code">mystruct = { STR, A:10, B:20L, C:'a string' }</p>
+                <p class="Code">SAVE, mystruct, FILE='test.dat'</p>
+            </li>
+            <li value="2">Exit and restart IDL.</li>
+            <li value="3">
+                <p>Create a new structure definition with the same name you used previously:</p>
+                <p class="Code">newstruct = { STR, A:20L, B:10.0, C:'a string', D:ptr_new() }</p>
+            </li>
+            <li value="4">
+                <p>Attempt to restore the variable mystruct from the test.dat file:</p>
+                <p class="Code">RESTORE, 'test.dat'</p>
+                <p class="Code">IDL prints:</p>
+                <p class="Code">% Wrong number of tags defined for structure: STR.</p>
+                <p class="Code">% RESTORE: Structure not restored due to conflict with</p>
+                <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;existing definition: STR.</p>
+            </li>
+            <li value="5">
+                <p>Now use relaxed structure definition when restoring:</p>
+                <p class="Code">RESTORE, 'test.dat', /RELAXED_STRUCTURE_ASSIGNMENT</p>
+            </li>
+            <li value="6">
+                <p>Check the contents of mystruct:</p>
+                <p class="Code">HELP, mystruct, /STRUCTURE</p>
+                <p class="Code">IDL prints:</p>
+                <p class="Code">** Structure STR, 4 tags, length=20:</p>
+                <p class="Code">   A               LONG                10</p>
+                <p class="Code">   B               FLOAT           20.0000</p>
+                <p class="Code">   C               STRING    'a string'</p>
+                <p class="Code">   D               POINTER   &lt;NullPointer&gt;</p>
+            </li>
+        </ol>
+        <p>The structure in the variable mystruct now uses the definition from the new version of the STR structure, but contains the data from the old (restored) structure. In cases where the data type of a field has changed, the data type of the old data element has been converted to the new data type. Fields in the new structure definition that do not correspond to fields in the old definition contain “zero” values (zeroes for numeric fields, empty strings for string fields, null pointer or references for pointer or reference fields).</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

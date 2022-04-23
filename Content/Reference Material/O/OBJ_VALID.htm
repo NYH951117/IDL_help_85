@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: O">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>OBJ_VALID </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="O_list.htm">Routines: O</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">OBJ_VALID</span>
+        </div>
+        <h1 class="Routine"><a name="O_828691053_889488"></a><a name="O_828691053_20524"></a>OBJ_VALID </h1>
+        <p><a name="kanchor1973"></a><a name="kanchor1974"></a>The OBJ_VALID function verifies the validity of its argument object references, or alternatively returns a vector of references to valid objects.</p>
+        <h2 class="API"><a name="O_828691053_889510"></a><a name="O_828691053_889510_PageTOC_OBJ_VALID__"></a>Examples</h2>
+        <p>To determine if a given object reference refers to a valid heap variable, use:</p>
+        <p class="Code">&#160;&#160;&#160;IF (OBJ_VALID(obj)) THEN …</p>
+        <p>To destroy all existing pointer heap variables:</p>
+        <p class="Code">&#160;&#160;&#160;OBJ_DESTROY, OBJ_VALID()</p>
+        <p>You can use the CAST keyword to “reclaim” lost object references. For example:</p>
+        <p class="Code">; Create a class structure:<br />junk = {junk, data1:0, data2:0.0}<br /><br />; Create an object:<br />A = OBJ_NEW('junk')<br /><br />; Find the integer index:<br />PRINT, A<br /><br />; If we reassign the variable A, we will "lose" the object<br />; reference, but the heap variable will still exist.<br />; Lose the object reference:<br />A = 0<br />PRINT, A, OBJ_VALID()<br /><br />; We can reclaim a lost heap variable using the CAST keyword:<br />A = OBJ_VALID(1, /CAST)<br />PRINT, A</p>
+        <p>The IDL output looks something like this (the valid objects already in memory will affect the output):</p>
+        <p class="Code">&lt;ObjHeapVar3(JUNK)&gt;</p>
+        <p class="Code">0 &lt;ObjHeapVar3(JUNK)&gt;</p>
+        <p class="Code">&lt;ObjHeapVar3(JUNK)&gt;</p>
+        <h2 class="API"><a name="O_828691053_889498"></a><a name="O_828691053_889498_PageTOC_OBJ_VALID__"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = OBJ_VALID( [<i>Arg</i>] [,&#160;/<a href="#O_828691053_889505" class="selected">CAST</a>] [,&#160;<a href="#O_828691053_889508" class="selected">COUNT</a>=<i>variable</i>] [,&#160;/<a href="#O_828691053_957959" class="selected">GET_HEAP_IDENTIFIER</a>] )</p>
+        <h2 class="API"><a name="O_828691053_934075"></a><a name="O_828691053_934075_PageTOC_OBJ_VALID__"></a>Return Value</h2>
+        <p>If called with an integer or array of object references as its argument, OBJ_VALID returns a byte array of the same size as the argument. Each element of the result is set to True (1) if the corresponding object reference in the argument refers to an existing object, and False (0) otherwise. If the GET_HEAP_IDENTIFIER keyword is set, OBJ_VALID returns the heap object identifier value(s) for the input object reference(s).</p>
+        <p>If called with an integer or array of integers as its argument and the CAST keyword is set, OBJ_VALID returns an array of object references. Each element of the result is a reference to the heap variable indexed by the integer value. Integers used to index heap variables are shown in the output of the HELP and PRINT commands. This is useful primarily in programming/debugging when the you have lost a reference but see it with HELP and need to get a reference to it interactively in order to determine what it is and take steps to fix the code. See the <a href="#O_828691053_889510" class="selected">Examples</a> section below for an example.</p>
+        <p>If no argument is specified, OBJ_VALID returns a vector of references to all existing valid objects. If no valid objects exist, a scalar null object reference is returned. </p>
+        <h2 class="API"><a name="O_828691053_889500"></a><a name="O_828691053_889500_PageTOC_OBJ_VALID__"></a>Arguments</h2>
+        <h3 class="Argument">Arg</h3>
+        <p>An object reference or array of object references. If the CAST keyword is set, then <i>Arg</i> should contain a scalar integer or array of integers.</p>
+        <h2 class="API"><a name="O_828691053_889503"></a><a name="O_828691053_889503_PageTOC_OBJ_VALID__"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="O_828691053_889505"></a><a name="O_828691053_889505_Keywords_OBJ_VALID__"></a>CAST</h3>
+        <p>Set this keyword to cast integers contained in <i>Arg</i> to their corresponding object references, and to return the object references in <i>Result</i>. If an integer contained in <i>Arg</i> does not correspond to a valid object reference, a null object is returned in that integer’s place. If <i>Arg</i> contains object references rather than integers, the object references are simply returned. See the <a href="#O_828691053_889510" class="selected">Examples</a> section below for an example.</p>
+        <h3 class="Keyword"><a name="O_828691053_889508"></a><a name="O_828691053_889508_Keywords_OBJ_VALID__"></a>COUNT</h3>
+        <p>Set this keyword equal to a named variable that will contain the number of currently valid objects. This value is returned as a longword integer.</p>
+        <h3 class="Keyword"><a name="O_828691053_957959"></a><a name="O_828691053_58270"></a>GET_HEAP_IDENTIFIER</h3>
+        <p>If <i>Arg</i> is an integer or array of object references, set this keyword to return the heap object identifier value(s) instead of the default array of True or False values. The value(s) will be unsigned long integers, and the return value will have the same dimensions as <i>Arg</i>.</p>
+        <h2 class="API"><a name="O_828691053_931659"></a><a name="O_828691053_931659_PageTOC_OBJ_VALID__"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>5.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added GET_HEAP_IDENTIFIER keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="O_828691053_956052"></a><a name="O_828691053_956052_PageTOC_OBJ_VALID__"></a>See Also</h2>
+        <p><a href="OBJ_CLASS.htm#O_828691053_955134">OBJ_CLASS</a>, <a href="OBJ_ISA.htm#O_828691053_889439">OBJ_ISA</a>, <a href="OBJ_NEW.htm#O_828691053_889454">OBJ_NEW</a>, <a>Overview of Object Graphic Destination</a><a>s&#160;</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

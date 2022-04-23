@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: T">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>TRI_SURF </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="T_list.htm">Routines: T</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">TRI_SURF</span>
+        </div>
+        <h1 class="Routine"><a name="T_809226861_758595"></a><a name="T_809226861_16346"></a>TRI_SURF </h1>
+        <p><a name="kanchor2565"></a>The TRI_SURF function interpolates a regularly- or irregularly-gridded set of points with a smooth quintic surface. </p>
+        <p>TRI_SURF is similar to MIN_CURVE_SURF but the surface fitted is a smooth surface, not a minimum curvature surface. TRI_SURF has the advantage of being much more efficient for larger numbers of points.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The TRI_SURF function is designed to interpolate low resolution data. Large arrays may cause TRI_SURF to issue the following error message:<br /><code>"Partial Derivative Approximation Failed to Converge</code>”<br />In such cases, interpolation is most likely unnecessary.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>tri_surf.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="T_809226861_758642"></a><a name="T_809226861_758642_PageTOC_TRI_SURF_"></a>Examples</h2>
+        <h3><a name="T_809226861_1069336_Keywords_TRI_SURF__"></a>Example 1</h3>
+        <p>Regularly gridded case:</p>
+        <p class="Code">; Make some random data<br />Z = randomu(seed, 5, 6)<br /><br />; Interpolate to a 26 x 26 grid:<br />CONTOUR, TRI_SURF(Z, /REGULAR)</p>
+        <h3><a name="T_809226861_758643_Keywords_TRI_SURF__"></a>Example 2</h3>
+        <p>Irregularly gridded case:</p>
+        <p class="Code">; Make a random set of points that lie on a Gaussian:<br />N = 15<br />X = RANDOMU(seed, N)<br />Y = RANDOMU(seed, N)<br /><br />; The Gaussian:<br />Z = EXP(-2 * ((X-.5)^2 + (Y-.5)^2))<br /><br />; Use a 26 by 26 grid over the rectangle bounding x and y.<br />; Get the surface:<br />R = TRI_SURF(Z, X, Y)<br /><br />; Alternatively, get a surface over the unit square, with spacing <br />; of 0.05:<br />R = TRI_SURF(z, x, y, GS=[0.05, 0.05], BOUNDS=[0,0,1,1])<br /><br />; Alternatively, get a 10 by 10 surface over the rectangle bounding<br />; x and y:<br />R = TRI_SURF(z, x, y, NX=10, NY=10)</p>
+        <h2 class="API"><a name="T_809226861_758600"></a><a name="T_809226861_758600_PageTOC_TRI_SURF_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = TRI_SURF( <i>Z</i> [,&#160;<i>X</i>, <i>Y</i>] [,&#160;/<a href="#T_809226861_758607" class="selected">EXTRAPOLATE</a>] [,&#160;/<a href="#T_809226861_758610" class="selected">LINEAR</a>] [,&#160;<a href="#T_809226861_949473" class="selected">MISSING</a>=<i>value</i>] [,&#160;/<a href="#T_809226861_851712" class="selected">REGULAR</a>] [,&#160;<a href="#T_809226861_758617" class="selected">XGRID</a>=<i>[xstart</i>, <i>xspacing]</i> | [,&#160;<a href="#T_809226861_758620" class="selected">XVALUES</a>=<i>array</i>]] [,&#160;<a href="#T_809226861_758623" class="selected">YGRID</a>=<i>[yxstart</i>, <i>yspacing]</i> | [,&#160;<a href="#T_809226861_758626" class="selected">YVALUES</a>=<i>array</i>]] [,&#160;<a href="#T_809226861_758631" class="selected">GS</a>=<i>[xspacing</i>, <i>yspacing]</i>] [,&#160;<a href="#T_809226861_758634" class="selected">BOUNDS</a>=<i>[xmin</i>, <i>ymin</i>, <i>xmax</i>, <i>ymax]</i>] [,&#160;<a href="#T_809226861_758637" class="selected">NX</a>=<i>value</i>] [,&#160;<a href="#T_809226861_758640" class="selected">NY</a>=<i>value</i>] )</p>
+        <h2 class="API"><a name="T_809226861_1095016"></a><a name="T_809226861_34100"></a>Return Value </h2>
+        <p>The result is a two-dimensional floating-point array containing the interpolated surface, sampled at the grid points.</p>
+        <h2 class="API"><a name="T_809226861_758602"></a><a name="T_809226861_758602_PageTOC_TRI_SURF_"></a>Arguments </h2>
+        <h3 class="Argument">X, Y, Z</h3>
+        <p>arrays containing the X, Y, and Z coordinates of the data points on the surface. Points need not be regularly gridded. For regularly gridded input data, X and Y are not used: the grid spacing is specified via the XGRID and YGRID (or XVALUES and YVALUES) keywords, and Z must be a two dimensional array. For irregular grids, all three parameters must be present and have the same number of elements. </p>
+        <h2 class="API"><a name="T_809226861_758605"></a><a name="T_809226861_758605_PageTOC_TRI_SURF_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="T_809226861_758607"></a><a name="T_809226861_758607_Keywords_TRI_SURF__"></a>EXTRAPOLATE</h3>
+        <p>Set this keyword to cause TRI_SURF to extrapolate the surface to points outside the convex hull of input points. This keyword has no effect if the input points are regularly gridded.</p>
+        <h3 class="Keyword"><a name="T_809226861_758610"></a><a name="T_809226861_758610_Keywords_TRI_SURF__"></a>LINEAR</h3>
+        <p>Set this keyword to use linear interpolation, without gradient estimates, instead of quintic interpolation. Linear interpolation does not extrapolate, although it is faster and more numerically stable.</p>
+        <h3 class="Keyword"><a name="T_809226861_949473"></a><a name="T_809226861_949473_Keywords_TRI_SURF__"></a>MISSING</h3>
+        <p><a name="kanchor2566"></a>Set this keyword equal to the value to which points outside the convex hull of input points should be set. The default is 0. This keyword has no effect if the input points are regularly gridded.</p>
+        <h4>Input Grid Description:</h4>
+        <h3 class="Keyword"><a name="T_809226861_851712"></a><a name="T_809226861_851712_Keywords_TRI_SURF__"></a>REGULAR</h3>
+        <p>If set, the <i>Z</i> parameter is a two-dimensional array of dimensions (<i>n,m</i>), containing measurements over a regular grid. If any of XGRID, YGRID, XVALUES, or YVALUES are specified, REGULAR is implied. REGULAR is also implied if there is only one parameter, <i>Z</i>. If REGULAR is set, and no grid specifications are present, the grid is set to (0, 1, 2, ...). </p>
+        <h3 class="Keyword"><a name="T_809226861_758617"></a><a name="T_809226861_758617_Keywords_TRI_SURF__"></a>XGRID</h3>
+        <p>A two-element array, [<i>xstart, xspacing</i>], defining the input grid in the <i>x</i> direction. Do not specify both XGRID and XVALUES. </p>
+        <h3 class="Keyword"><a name="T_809226861_758620"></a><a name="T_809226861_758620_Keywords_TRI_SURF__"></a>XVALUES</h3>
+        <p>An <i>n</i>-element array defining the <i>x</i> locations of Z[<i>i,j</i>]. Do not specify both XGRID and XVALUES.</p>
+        <h3 class="Keyword"><a name="T_809226861_758623"></a><a name="T_809226861_758623_Keywords_TRI_SURF__"></a>YGRID</h3>
+        <p>A two-element array, [<i>ystart, yspacing</i>], defining the input grid in the <i>y </i>direction. Do not specify both YGRID and YVALUES. </p>
+        <h3 class="Keyword"><a name="T_809226861_758626"></a><a name="T_809226861_758626_Keywords_TRI_SURF__"></a>YVALUES</h3>
+        <p>An <i>n</i>-element array defining the <i>y </i>locations of Z[<i>i,j</i>]. Do not specify both YGRID and YVALUES.</p>
+        <h4>Output Grid Description:</h4>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The output grid must enclose the convex hull of the input points.</p>
+        <h3 class="Keyword"><a name="T_809226861_758631"></a><a name="T_809226861_758631_Keywords_TRI_SURF__"></a>GS</h3>
+        <p>The output grid spacing. If present, GS must be a two-element vector [<i>xs, ys</i>], where <i>xs</i> is the horizontal spacing between grid points and <i>ys</i> is the vertical spacing. The default is based on the extents of <i>x</i> and <i>y</i>. If the grid starts at <i>x</i> value <i>xmin</i> and ends at <i>xmax</i>, then the default horizontal spacing is (<i>xmax</i> - <i>xmin</i>)/(NX-1). YS is computed in the same way. The default grid size, if neither NX or NY are specified, is 26 by 26. </p>
+        <h3 class="Keyword"><a name="T_809226861_758634"></a><a name="T_809226861_758634_Keywords_TRI_SURF__"></a>BOUNDS</h3>
+        <p>If present, BOUNDS must be a four-element array containing the grid limits in <i>x</i> and <i>y</i> of the output grid: [<i>xmin, ymin, xmax, ymax</i>]. If not specified, the grid limits are set to the extent of <i>x</i> and <i>y</i>. </p>
+        <h3 class="Keyword"><a name="T_809226861_758637"></a><a name="T_809226861_758637_Keywords_TRI_SURF__"></a>NX</h3>
+        <p>The output grid size in the <i>x</i> direction. NX need not be specified if the size can be inferred from GS and BOUNDS. The default value is 26.</p>
+        <h3 class="Keyword"><a name="T_809226861_758640"></a><a name="T_809226861_758640_Keywords_TRI_SURF__"></a>NY</h3>
+        <p>The output grid size in the <i>y</i> direction. NY need not be specified if the size can be inferred from GS and BOUNDS. The default value is 26.</p>
+        <h2 class="API"><a name="T_809226861_758659"></a><a name="T_809226861_758659_PageTOC_TRI_SURF_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre-4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="T_809226861_1086510"></a><a name="T_809226861_1086510_PageTOC_TRI_SURF_"></a>See Also</h2>
+        <p><a href="../M/MIN_CURVE_SURF.htm#M_824365677_888757">MIN_CURVE_SURF</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

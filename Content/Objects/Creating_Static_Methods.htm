@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Objects|Creating Object Classes">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Creating Static Methods</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Object Classes/ref_part2.htm">Objects</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Creating Custom Objects.htm">Creating Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Creating Static Methods</span>
+        </div>
+        <h1>Creating Static Methods</h1>
+        <p>IDL object classes can have both instance methods and static methods. </p>
+        <p>When you create a method on a class, by default the method is an "instance" method. Instance methods can only be called on an actual "instance" of that class. Within an instance method, you have access to the <code>self</code> variable and the object's instance data. </p>
+        <p>However, you can also mark a method as "static" by using the <code>compile_opt static</code> directive at the top of the routine. When a static method is called, the normal object lifecycle is bypassed: the ::<code>Init</code> and ::<code>Cleanup</code> methods are not called, and the <code>self</code> variable will be set to a null object.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Marking a method as "static" just means that you are <i>allowed</i> to call that method as a static method. You can also call the same method on an instance of that object. In that case, just like any other object, the <code>self</code> variable will be defined and will contain the object's instance data. If a method is <i>not</i> marked with the <code>compile_opt static</code> directive , then trying to call it as a static method will result in a runtime error.</p>
+        <h2>Static Method Calls versus Array Indexing</h2>
+        <p>In IDL, by default both square brackets [ ] and parentheses ( ) can be used for array indexing. However, parentheses are also used for function calls. Because of this duplication, the IDL compiler cannot distinguish between function calls and array indexing. For example, you might have a static method call:</p>
+        <p class="Code">Result = MyClass.Calculate(a, b)</p>
+        <p>However, it is just as likely that you might be doing an array index into a structure:</p>
+        <p class="Code">Result = MyStruct.Field(a, b)</p>
+        <p>By default, IDL will be unable to distinguish between these two calls and in certain cases will throw a syntax error. To avoid any confusion, you should always use <code>compile_opt strictarr</code> (or <code>compile_opt idl2</code>) at the top of your procedures and functions. This will force you to use square brackets for all array indexing within that routine. The IDL compiler will then treat any parentheses as function calls.</p>
+        <h3>Use of Static Methods at the Main Program Level</h3>
+        <p>Normally, if you are doing static method calls within a routine, it is straightforward to insert <code>compile_opt strictarr</code> to avoid any confusion with parentheses. However, if you are executing ad-hoc IDL commands at the main program level, it might be confusing to suddenly receive syntax errors when trying to make static method calls.</p>
+        <p>Because of this issue, if you use a static method call at the main program level (either at the command prompt or in a $MAIN program), IDL will then automatically turn on <code>compile_opt strictarr</code> for the main level. From that point on, you must then be sure to use square brackets for array indexing. See <a href="../Reference Material/C/COMPILE_OPT.htm">compile_opt</a> for details.</p>
+        <p>&#160;</p>
+        <h2>See Also</h2>
+        <p><a href="Static_Methods.htm">Static Methods</a> &#160;&#160;&#160;&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

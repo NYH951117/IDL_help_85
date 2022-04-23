@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|Medical Imaging in IDL|IDL DICOM Reference|IDLffDicomEx">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title> IDLffDicomEx::SetPixelData
+        </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Expanded DICOM Support in IDL/ExpandedDICOMFunctionality.htm">Medical Imaging in IDL</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="DICOMEX_GETCONFIGFILEPAT.htm">IDL DICOM Reference</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLffDicomEx::SetPixelData</span>
+        </div>
+        <h1> IDLffDicomEx::SetPixelData
+        </h1>
+        <p>The IDLffDicomEx::SetPixelData function method writes pixel data to the DICOM image file. DICOM files can store pixel data for a single-frame image or a multi-frame image. This method accepts uncompressed pixel data. If the transfer syntax of the DICOM file indicates the image is to be stored in a compressed format, the data will be compressed by this method. As long as the specified pixel data array has the correct number of bytes, it can have any dimensions. See the PixelData argument for details.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Pixel data changes are written to the DICOM file only when you call the <a href="IDLffDicomEx__Commit.htm" class="MCXref xref">IDLffDicomEx::Commit    </a>method. </p>
+        <h3>Writing Frames of Pixel Data to Lossy and Lossless Formats</h3>
+        <p>When the transfer syntax indicates a lossy JPEG compression format (JPEG Baseline, JPEG Extended, or JPEG 2000), you must pass in all the pixel data for all the frames in a multi-frame image. This method does not support writing a single frame of pixel data to a multi-frame image that is stored in a lossy JPEG compression format. This is prohibited to prevent the degradation of data that occurs when a frame is uncompressed then recompressed in a lossy format.</p>
+        <p>This method does support writing a single frame of pixel data to multi-frame image stored in a lossless JPEG compression format (JPEG Lossless, JPEG 2000 Lossless). When the compression format is lossless, a frame of data can be uncompressed and recompressed without losing of data.</p>
+        <h3><a name="dicom_ex_4010397576_1008366"></a><a name="dicom_ex_4010397576_44255"></a>Specifying Pixel Data For a New Image</h3>
+        <p>When assigning pixel data to a brand new image, you must set the following properties either before setting the pixel data or while setting pixel data. Once these values are set in a new image, and the SetPixelData method has been called, do not change the values as the underlying pixel data will not reflect changes to these tags.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Many other tags are needed (and specified by the DICOM standard) for the creation of a valid DICOM image for a particular SOP Class. (Complete details can be found in <i>Digital Imaging and Communications in Medicine (DICOM) - Part 3: Information Object Definitions</i>.) This list shows only the tags needed to permit pixel data to be added to an image. </p>
+        <p>When setting pixel data on a new image, the following attributes are required to the construct the pixel data array. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You can set these attributes using <a href="IDLffDicomEx__SetValue.htm" class="MCXref xref">IDLffDicomEx::SetValue
+        </a>, <a href="IDLffDicomEx__SetProperty.htm" class="MCXref xref">IDLffDicomEx::SetProperty
+        </a>, or by setting keywords to this method.</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>DICOM Attribute</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLffDicomExProperties.htm#BITS_ALL">BITS_ALLOCATED</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Typical values are 8 bits or 16 bits. An error is issued if this is absent.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p><a href="IDLffDicomExProperties.htm#COLUMNS">COLUMNS</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Number of vertical lines in a frame. An error is issued if this is absent.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLffDicomExProperties.htm#NUMBER_O">NUMBER_OF_FRAMES</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>This tag is required for a multi-frame image. This tag is only allowed in SOP Classes that support multi-frame images. The default value is&#160;1.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p><a href="IDLffDicomExProperties.htm#PHOTOMET">PHOTOMETRIC_INTERPRETATION</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>This tag is required for RGB images, but should be set when creating a new image.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLffDicomExProperties.htm#PIXEL_RE">PIXEL_REPRESENTATION</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>This tag is not required to set pixel data, but is required to properly determine how to return the data (using the GetPixelData method) in the correct format for images with greater than 8 bit signed or unsigned data. The default value is 0.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p><a href="IDLffDicomExProperties.htm#PLANAR_C">PLANAR_CONFIGURATION</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p> This tag is required for non-monochrome images as it is used in determining how the GetPixelData method ORDER keyword operates on the pixel data. The default value is&#160;0.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLffDicomExProperties.htm#ROWS">ROWS</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Number of horizontal lines in a frame. An error is issued if this is absent.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p><a href="IDLffDicomExProperties.htm#SAMPLES_">SAMPLES_PER_PIXEL</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Typical values are 1 for monochrome frames and 3 for RGB frames. An error is issued if this is absent.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Typical values for attributes that are dependent upon the data type of the image are shown in the following table: </p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Property</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>UINT</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>INT</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>BYTE</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>RGB</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLffDicomExProperties.htm#BITS_ALL">BITS_ALLOCATED</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>16</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>16</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>8</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>8</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p><a href="IDLffDicomExProperties.htm#BITS_STO">BITS_STORED</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>10</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>16</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>8</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>8</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLffDicomExProperties.htm#HIGH_BIT">HIGH_BIT</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>9</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>15</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>7</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>7</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p><a href="IDLffDicomExProperties.htm#PHOTOMET">PHOTOMETRIC_INTERPRETATION</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>†</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>†</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>†</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>RGB</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><a href="IDLffDicomExProperties.htm#SAMPLES_">SAMPLES_PER_PIXEL</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>3</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p><a href="IDLffDicomExProperties.htm#PIXEL_RE">PIXEL_REPRESENTATION</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>0</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p><a href="IDLffDicomExProperties.htm#PLANAR_C">PLANAR_CONFIGURATION</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>N/A</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>N/A</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>N/A</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>0 or 1</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>† MONOCHROME2</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1027701"></a><a name="dicom_ex_4010397576_1027701_PageTOC_IDLffDicomEx"></a>Syntax</h2>
+        <p class="Syntax"><i>Obj</i>-&gt;[<a href="IDLffDicomEx.htm" class="MCXref xref">IDLffDicomEx</a>::] SetPixelData, <i>PixelData</i> [,&#160;<a href="#FRAME" class="selected">FRAME</a>&#160;=<i>integer</i>] [,&#160;/<a href="#ORDER" class="selected">ORDER</a>&#160;] [,&#160;<a href="IDLffDicomExProperties.htm#BITS_ALL">BITS_ALLOCATED</a>=<i>integer</i>] [,&#160;<a href="IDLffDicomExProperties.htm#COLUMNS">COLUMNS</a>=<i>integer</i>] [,&#160;<a href="IDLffDicomExProperties.htm#NUMBER_O">NUMBER_OF_FRAMES</a>=<i>string</i>] [, <a href="IDLffDicomExProperties.htm#PHOTOMET">PHOTOMETRIC_INTERPRETATION</a>={MONOCHROME1 | MONOCHROME2 | PALETTECOLOR | RGB | HSV | CMYK}] [, <a href="IDLffDicomExProperties.htm#PIXEL_RE">PIXEL_REPRESENTATION</a>={0 | 1}] [, <a href="IDLffDicomExProperties.htm#PLANAR_C">PLANAR_CONFIGURATION</a>={0&#160;|&#160;1}] [, <a href="IDLffDicomExProperties.htm#ROWS">ROWS</a>=<i>integer</i>] [,&#160;<a href="IDLffDicomExProperties.htm#SAMPLES_">SAMPLES_PER_PIXEL</a>={1 | 3 | 4}] </p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1008435"></a><a name="dicom_ex_4010397576_1008435_PageTOC_IDLffDicomEx"></a>Arguments</h2>
+        <h3 class="Argument">PixelData</h3>
+        <p>The pixel data array for one frame of data or a pixel data array for all the frames.</p>
+        <p>The incoming array of pixel data must be the exact size of a single frame (when setting a single frame) or of all the frames (when setting all frames). While the array can have any dimensions, it must conform to the following:</p>
+        <ul>
+            <li value="1">The format of the array must conform to the PLANAR_CONFIGURATION and PHOTOMETRIC_INTERPRETATION values of the image.</li>
+            <li value="2">The size of the pixel data array must be equal to:</li>
+        </ul>
+        <p class="Code_Indented">SamplesPerPixel * Rows * Columns * NumFramesToWrite *</p>
+        <p class="Code_Indented">&#160;&#160;&#160;NumBytesPerSample</p>
+        <p class="indent">where:</p>
+        <ul>
+            <li class="Indent" value="1">SamplesPerPixel = DICOM attribute (0028,0002)</li>
+            <li class="Indent" value="2">Rows = DICOM attribute (0028,0010)</li>
+            <li class="Indent" value="3">Columns = DICOM attribute (0028,0011)</li>
+            <li class="Indent" value="4">NumFramesToWrite = 1 or DICOM attribute Number of Frames (0028,0008) in the image file</li>
+            <li class="Indent" value="5">NumBytesPerSample = 1 when the Bits Allocated (0028,0100) is less then or equal to 8, or NumBytesPerSample = 2 when the Bits Allocated (0028,0100) is greater then 8.</li>
+        </ul>
+        <h2 class="API"><a name="dicom_ex_4010397576_1008449"></a><a name="dicom_ex_4010397576_1008449_PageTOC_IDLffDicomEx"></a>Keywords</h2>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>See <a href="#dicom_ex_4010397576_1008366" class="MCXref xref selected">Specifying Pixel Data For a New Image</a> for information on keywords listed in the syntax, but not shown here.</p>
+        <h3 class="Keyword"><a name="FRAME"></a>FRAME</h3>
+        <p>Set this keyword to the zero-based index of the frame of pixel data to write. Allowable values for FRAME range from 0 to NUMBER_OF_FRAMES - 1. If FRAME is not specified, the pixel data of all frames in the PixelData array are written to the image. Otherwise, only the pixel data of the one, specified frame is written. </p>
+        <h3 class="Keyword"><a name="ORDER"></a>ORDER</h3>
+        <p>Set the keyword when passing in pixel data in DICOM format, where the first pixel in the array is the top left-hand pixel in the frame. The SetPixelData method will not flip the rows when writing the data. If this keyword is not set, the array is in standard IDL format, where the first pixel in the array is the bottom left-hand pixel in the frame. The SetPixelData method will flip the rows before writing the pixel data to the DICOM image.</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1008458"></a><a name="dicom_ex_4010397576_1008458_PageTOC_IDLffDicomEx"></a>Example</h2>
+        <p>The following example allows you to select an image file of any format. Based on properties of the data, the required pixel data attributes are set. The example creates a MR file for monochrome or palette image data, or a US file for <a name="kanchor5599"></a>RGB data. Note that this example sets only the smallest possible number of attributes required for setting pixel data. This does not create a valid DICOM file as the other tags mandated by the SOP class have not been set as required by a the DICOM standard. (Complete details can be found in <i>Digital Imaging and Communications in Medicine (DICOM) - Part 3: Information Object Definitions</i>.)</p>
+        <p>The code for <a name="kanchor5600"></a><code>dicomex_importimage_doc.pro </code>is provided in the IDL distribution, in the <code>examples/doc/dicom</code> subdirectory of the main IDL directory. You can run the example code directly by entering <code>.EDIT dicomex_importimage_doc</code> at the IDL prompt. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>By default, the transfer syntax is set to Explicit VR Little Endian when a new file is created. After pixel data has been set on the new image, you can use the <a href="IDLffDicomEx__ChangeTransferSyntax.htm" class="MCXref xref">IDLffDicomEx::ChangeTransferSyntax
+        </a> method to change the file compression. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The last few lines of the program delete the files that are created, so that the example can be run multiple times without an error occurring because you are attempting to create a file with an existing filename. Comment out these lines to retain the images. </p>
+        <p class="Code">PRO dicomex_importimage_doc</p>
+        <p class="Code_Indented">; Import in the pixel data of an image, and</p>
+        <p class="Code_Indented">; then set it as the pixel data for a new Image</p>
+        <p class="Code_Indented">; object.</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Determine the full path to the image file.</p>
+        <p class="Code_Indented">sFile = DIALOG_PICKFILE(/MUST_EXIST, $</p>
+        <p class="Code_Indented">   &#160;&#160;&#160;&#160;&#160;&#160;TITLE = 'Select an Image File', $</p>
+        <p class="Code_Indented">   &#160;&#160;&#160;&#160;&#160;&#160;FILTER = ['*.bmp', '*.jpg', '*.png', $</p>
+        <p class="Code_Indented">      &#160;&#160;&#160;&#160;&#160;&#160;'*.ppm', '*.srf', '*.tif'], $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;     GET_PATH=path)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; If no file is selected, return to the previous</p>
+        <p class="Code_Indented">; level.</p>
+        <p class="Code_Indented">IF (sFile EQ '') THEN RETURN</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Query the image file.</p>
+        <p class="Code_Indented">vOpenStatus = QUERY_IMAGE(sFile, vQueryInfo)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; If the file cannot be openned with IDL, return</p>
+        <p class="Code_Indented">; to the previous level.</p>
+        <p class="Code_Indented">IF (vOpenStatus NE 1) THEN RETURN</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Initialize some of the image parameters.</p>
+        <p class="Code_Indented">vNumSamples = vQueryInfo.channels</p>
+        <p class="Code_Indented">vCols = vQueryInfo.dimensions[0]</p>
+        <p class="Code_Indented">vRows = vQueryInfo.dimensions[1]</p>
+        <p class="Code_Indented">vImgSize = vQueryInfo.dimensions</p>
+        <p class="Code_Indented">vNumFrames = vQueryInfo.num_images</p>
+        <p class="Code_Indented">vPixelType = vQueryInfo.pixel_type</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Handle single channel images.</p>
+        <p class="Code_Indented">If vNumSamples EQ 1 THEN BEGIN</p>
+        <p class="Code_Indented">   CASE vPixelType of</p>
+        <p class="Code_Indented">      &#160;&#160;&#160;&#160;&#160;&#160;1: BEGIN</p>
+        <p class="Code_Indented">&#160;&#160;&#160;&#160;&#160;&#160;         &#160;&#160;&#160;&#160;&#160;&#160;; Set properties for byte data.</p>
+        <p class="Code_Indented">         &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;vBitsAlloc = 8</p>
+        <p class="Code_Indented">&#160;&#160;&#160;&#160;&#160;&#160;vPixelRep = 0 ; accept the default.</p>
+        <p class="Code_Indented">         &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;vPhotoInterp = 'MONOCHROME2'</p>
+        <p class="Code_Indented">&#160;&#160;&#160;      &#160;&#160;&#160;END</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">&#160;&#160;&#160;      &#160;&#160;&#160;2: BEGIN</p>
+        <p class="Code_Indented">         &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;; Set properties for signed integer.</p>
+        <p class="Code_Indented">         &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;vBitsAlloc = 10</p>
+        <p class="Code_Indented">&#160;&#160;&#160;         &#160;&#160;&#160;&#160;&#160;vPixelRep = 1</p>
+        <p class="Code_Indented">&#160;&#160;&#160;&#160;&#160;&#160;vPhotoInterp = 'MONOCHROME2'</p>
+        <p class="Code_Indented">      &#160;&#160;&#160;&#160;&#160;&#160;END</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">      &#160;&#160;&#160;&#160;&#160;&#160;12: BEGIN</p>
+        <p class="Code_Indented">&#160;&#160;&#160;&#160;&#160;&#160;        ; Set properties for unsigned integer.</p>
+        <p class="Code_Indented">&#160;&#160;&#160; &#160;        &#160;&#160;&#160;vBitsAlloc = 16</p>
+        <p class="Code_Indented">&#160;&#160;&#160;&#160;&#160;&#160;         &#160;&#160;&#160;&#160;&#160;&#160;vPixelRep = 0</p>
+        <p class="Code_Indented">         &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;vPhotoInterp = 'MONOCHROME2'</p>
+        <p class="Code_Indented">      &#160;&#160;&#160;&#160;&#160;&#160;END</p>
+        <p class="Code_Indented">   ENDCASE</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">   ; If the file contains multiple images, access these</p>
+        <p class="Code_Indented">   ; images as multiple frames. If the file contains</p>
+        <p class="Code_Indented">   ; only one image, access just that image.</p>
+        <p class="Code_Indented">   IF (vNumFrames GT 1) THEN BEGIN</p>
+        <p class="Code_Indented">      &#160;&#160;&#160;&#160;&#160;&#160;vPixelData = MAKE_ARRAY(vCols, vRows, vNumFrames, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;         &#160;&#160;&#160;&#160;&#160;&#160;TYPE = vPixelType)</p>
+        <p class="Code_Indented">&#160;&#160;&#160;      FOR vIndex = 0L, (vNumFrames - 1) DO $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;         &#160;&#160;&#160;&#160;&#160;&#160;vPixelData[*, *, vIndex] = READ_IMAGE(sFile, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;&#160;&#160;&#160;IMAGE_INDEX = vIndex)</p>
+        <p class="Code_Indented">&#160;&#160;&#160;   ENDIF ELSE BEGIN</p>
+        <p class="Code_Indented">      &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;vPixelData = READ_IMAGE(sFile)</p>
+        <p class="Code_Indented">&#160;&#160;&#160;   ENDELSE</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">   ; Create a new DICOM file and set properties.</p>
+        <p class="Code_Indented">   oImg = OBJ_NEW('IDLffDicomEx', $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;path+PATH_SEP()+'aNewMonoImg.dcm', $</p>
+        <p class="Code_Indented">      &#160;&#160;&#160;SOP_CLASS = 'STANDARD_MR', /NON_CONFORMING, /CREATE)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">   ; Call set pixel data with only required properties.</p>
+        <p class="Code_Indented">   oImg-&gt;SetPixelData, vPixelData, $</p>
+        <p class="Code_Indented">      &#160;&#160;&#160;&#160;&#160;&#160;BITS_ALLOCATED = vBitsAlloc, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;     COLUMNS = vCols, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;     NUMBER_OF_FRAMES = vNumFrames, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;PHOTOMETRIC_INTERPRETATION = vPhotoInterp, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;PIXEL_REPRESENTATION = vPixelRep, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;ROWS = vRows, $</p>
+        <p class="Code_Indented">      &#160;&#160;&#160;&#160;&#160;&#160;SAMPLES_PER_PIXEL = vNumSamples, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;/ORDER</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">   ; Commit the file.</p>
+        <p class="Code_Indented">   oImg-&gt;Commit</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">   ; Display monochrome image (frames).</p>
+        <p class="Code_Indented">   WINDOW, XSIZE=vcols, YSIZE=vrows, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;TITLE = 'New Monochrome DICOM Image'</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">   FOR i = 1, vNumFrames DO BEGIN</p>
+        <p class="Code_Indented">      &#160;&#160;&#160;TVSCL, vPixelData[*,*,i-1]</p>
+        <p class="Code_Indented">      &#160;&#160;&#160;WAIT, 1</p>
+        <p class="Code_Indented">   ENDFOR</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; If it is an RGB image, determine interleaving.</p>
+        <p class="Code_Indented">IF (vNumSamples EQ 3) THEN BEGIN</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">   ; Determine the size of all the dimensions of the pixel</p>
+        <p class="Code_Indented">   ; data array.</p>
+        <p class="Code_Indented">   vDataSize = SIZE(vPixelData, /DIMENSIONS)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Determine the planar configuration of the image.</p>
+        <p class="Code_Indented">   vInterleave = WHERE((vDataSize NE vCols) AND $</p>
+        <p class="Code_Indented">      &#160;&#160;&#160;&#160;&#160;&#160;(vDataSize NE vRows))</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">   ; Return if line interleaved (vCols,3,vRows)</p>
+        <p class="Code_Indented">   IF (vInterleave[0] EQ 1) THEN RETURN</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">   ; If pixel interleaved (3,vCols,vRows), set to 0.</p>
+        <p class="Code_Indented">   ; If planar interleaved (vCols,vRows,3), set to 1</p>
+        <p class="Code_Indented">   IF (vInterleave[0] EQ 0) THEN vPlanarConfig = 0 $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;     ELSE vPlanarConfig = 1</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">   ; Set other properties for RGB images.</p>
+        <p class="Code_Indented">   vBitsAlloc = 8</p>
+        <p class="Code_Indented">   vPhotoInterp = 'RGB'</p>
+        <p class="Code_Indented">   vPixelRep = 0</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">   ; Use READ_IMAGE to access the image array.</p>
+        <p class="Code_Indented">   vPixelData = READ_IMAGE(sFile)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">   ; Create a new DICOM file and set properties.</p>
+        <p class="Code_Indented">   oImg = OBJ_NEW('IDLffDicomEx', $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;path+PATH_SEP()+'aNewRBGImg.dcm', $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;      SOP_CLASS = 'STANDARD_US', /NON_CONFORMING, /CREATE)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">   ; Call set pixel data with required properties</p>
+        <p class="Code_Indented">   oImg-&gt;SetPixelData, vPixelData, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;      &#160;&#160;&#160;BITS_ALLOCATED = vBitsAlloc, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;     COLUMNS = vCols, $</p>
+        <p class="Code_Indented">      &#160;&#160;&#160;&#160;&#160;&#160;NUMBER_OF_FRAMES = vNumFrames, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;      &#160;&#160;&#160;PHOTOMETRIC_INTERPRETATION = vPhotoInterp, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;PIXEL_REPRESENTATION = vPixelRep, $</p>
+        <p class="Code_Indented">      &#160;&#160;&#160;&#160;&#160;&#160;PLANAR_CONFIGURATION = vPlanarConfig, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;ROWS = vRows, $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;SAMPLES_PER_PIXEL = vNumSamples, $</p>
+        <p class="Code_Indented">      &#160;&#160;&#160;&#160;&#160;&#160;/ORDER</p>
+        <p class="Code_Indented">   oImg-&gt;Commit</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">   ; Display RGB image.</p>
+        <p class="Code_Indented">   WINDOW, XSIZE=vcols, YSIZE=vrows, TITLE = 'New RGB DICOM Image'</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">   IF vPlanarConfig EQ 0 THEN vTrue = 1 ELSE vTrue = 3</p>
+        <p class="Code_Indented">   TV,  vPixelData, TRUE = vTrue</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Clean up the object references.</p>
+        <p class="Code_Indented">OBJ_DESTROY, [oImg]</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Note: the following lines allow you to run the program</p>
+        <p class="Code_Indented">; multiple times without having to manually delete files.</p>
+        <p class="Code_Indented">; You cannot duplicate an existing file when creating or cloning</p>
+        <p class="Code_Indented">; a DICOM file.</p>
+        <p class="Code_Indented">FILE_DELETE, path+PATH_SEP()+'aNewMonoImg.dcm', /ALLOW_NONEXISTENT</p>
+        <p class="Code_Indented">FILE_DELETE, path+PATH_SEP()+'aNewRBGImg.dcm', /ALLOW_NONEXISTENT</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1037021"></a><a name="dicom_ex_4010397576_1037021_PageTOC_IDLffDicomEx"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

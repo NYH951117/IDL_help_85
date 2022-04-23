@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Modifying Visualizations|Fonts and Colors">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Using Device Fonts</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/modifying_vis_gallery.htm">Modifying Visualizations</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Using Device Fonts</span>
+        </div>
+        <h1><a name="fonts_2203613354_1049926"></a><a name="fonts_2203613354_11429"></a>Using Device Fonts</h1>
+        <p>Device, or hardware, fonts are fonts that are provided directly by your system’s hardware or by software other than IDL. In past releases of IDL, we have used the term “<i>hardware fonts</i>” extensively to discuss these types of fonts. This is because in the early days of IDL, computer displays were either text-only terminals or dedicated graphics display devices such as plotters or Tektronix graphics terminals. These graphics displays generally came with a set of fonts built-in; when IDL asked the device to display characters in a built-in font, it was making a request to the hardware to display those characters.</p>
+        <p>As computer displays have become more sophisticated, the concept of fonts provided “by the hardware” has expanded to include fonts provided by the computer’s operating system, or by font-management software. For example, many computers now use font management software like Adobe Type Manager to manage the fonts made available by the operating system to all applications. We use the term “device font” to refer to a font that is available to one of IDL’s graphics devices from a source <i>other than IDL itself</i>. (In this case, a “graphics device” can be a Direct Graphics device as specified by the DEVICE routine.) While device fonts may include fonts only available because a particular piece of hardware knows how to draw characters in that font (a pen plotter is an example of a device that may still have its own special fonts), in most cases device fonts are fonts supplied by the operating system to any application that may want to use them.</p>
+        <h2 class="API"><a name="fonts_2203613354_98583"></a>Which Device Fonts Are Available?</h2>
+        <p>To determine which device fonts are available on your system and the exact font strings to specify for each, use the GET_FONTNAMES keyword to the <a href="../../Reference Material/D/DEVICE_Procedure.htm" class="Heading">DEVICE Procedure</a>. Use one of the following operating-system specific methods to determine which fonts are available:</p>
+        <ul>
+            <li value="1"><b>UNIX </b>— on most systems, the <code>xlsfonts</code> utility displays a list of fonts available to the operating system.</li>
+            <li value="2"><b>Microsoft Windows</b> — fonts available to the system are displayed in the Fonts control panel. You may also have other fonts available if you use font-management software such as Adobe Type Manager.</li>
+        </ul>
+        <h2 class="API"><a name="fonts_2203613354_1049947"></a><a name="fonts_2203613354_59946"></a>Using Device Fonts</h2>
+        <p>To use the Device font system with IDL Direct Graphics, either set the value of the IDL system variable !P.FONT equal to 0 (zero), or set the FONT keyword to one of the Direct Graphics routines equal to 0.</p>
+        <p>Once the Device font system is selected, use the SET_FONT keyword to the DEVICE routine to select the font to use. Because device fonts are specified differently on different platforms, the syntax of the <i>fontname</i> string depends on which platform you are using.</p>
+        <h3>UNIX</h3>
+        <p>Usually, the window system provides a directory of font files that can be used by all applications. List the contents of that directory to find the fonts available on your system. The size of the font selected also affects the size of vector drawn text. On some machines, fonts are kept in subdirectories of <code>/usr/lib/X11/fonts</code>. You can use the <code>xlsfonts</code> command to list available X Windows fonts.</p>
+        <p>For example, to select the font 8X13:</p>
+        <p class="Code">!P.FONT = 0</p>
+        <p class="Code">DEVICE, SET_FONT = '8X13'</p>
+        <h3>Microsoft Windows</h3>
+        <p>The SET_FONT keyword should be set to a string with the following form:</p>
+        <p class="Code">!P.FONT = 0</p>
+        <p class="Code">DEVICE, SET_FONT="<i>font*modifier1*modifier2*...modifiern</i>"</p>
+        <p>where the asterisk (*) acts as a delimiter between the font’s name (<i>font</i>) and any modifiers. The string is <i>not</i> case sensitive. Modifiers are simply “keywords” that change aspects of the selected font. Valid modifiers are:</p>
+        <ul>
+            <li value="1">For font weight: THIN, LIGHT, BOLD, HEAVY</li>
+            <li value="2">For font quality: DRAFT, PROOF</li>
+            <li value="3">For font pitch: FIXED, VARIABLE</li>
+            <li value="4">For font angle: ITALIC</li>
+            <li value="5">For strikeout text: STRIKEOUT</li>
+            <li value="6">For underlined text: UNDERLINE</li>
+            <li value="7">For font size: Any number is interpreted as the font height in pixels.</li>
+        </ul>
+        <p>For example, if you have Garamond installed as one of your Windows fonts, you could select 24-pixel cell height Garamond italic as the font to use in plotting. The following commands tell IDL to use hardware fonts, change the font, and then make a simple plot:</p>
+        <p class="Code">!P.FONT = 0</p>
+        <p class="Code">DEVICE, SET_FONT = "Garamond*ITALIC*24"</p>
+        <p class="Code">PLOT, FINDGEN(10), TITLE = "IDL Plot"</p>
+        <p>This feature is compatible with TrueType and <a name="kanchor4235"></a>Adobe Type Manager (and, possibly, other type scaling programs for Windows). If you have TrueType or ATM installed, the TrueType or PostScript outline fonts are used so that text looks good at any size. See SET_FONT for more information.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you set the output device to PostScript (<code>SET_PLOT, 'PS')</code>, attempting to use the (*) delimiter with SET_PLOT will cause an error. You must use SET_PLOT with specific PostScript font strings as described in the following section. </p>
+        <h2 class="API"><a name="fonts_2203613354_28132"></a>Fonts and the PostScript Device</h2>
+        <p>A special set of device fonts are available when the current Direct Graphics device is <code>PS</code> (PostScript). IDL includes font metric information for 35 standard PostScript fonts, and can create PostScript language files that include text in these fonts. (The 35 fonts known to IDL are listed in the following table; theses are standard fonts included in memory in the vast majority of modern PostScript printers.) The PostScript font metric files (<code>*.afm</code> files) are located in the <code>resource/fonts/ps</code> subdirectory of the IDL directory.</p>
+        <h3><a name="fonts_2203613354_68781"></a>Using PostScript Fonts</h3>
+        <p>To use a PostScript font in your Direct Graphics output, you must first specify that IDL use the device font system, then switch to the <code>PS</code> device, then choose a font using the SET_FONT keyword to the DEVICE procedure. </p>
+        <p>The following IDL commands choose the correct font system (0 designates the device font system), set the graphics device, select the font Palatino Roman, open a PostScript file to print to, plot a simple data set, and close the PostScript file:</p>
+        <p class="Code">!P.FONT = 0</p>
+        <p class="Code">SET_PLOT, 'PS'</p>
+        <p class="Code">DEVICE, SET_FONT='Palatino-Roman', FILE='testfile.ps'</p>
+        <p class="Code">PLOT, INDGEN(10), TITLE = 'My Palatino Title'</p>
+        <p class="Code">DEVICE, /CLOSE</p>
+        <p>Allowable values for the SET_FONT keyword are listed in the following table. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Subsequent PostScript output will continue to use the font Palatino Roman until you explicitly change the font again, or exit IDL.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When using SET_FONT with the PostScript device on Windows, you cannot use the (*) delimiter to specify font characteristics. You must use the names shown in the following table, without modifiers. </p>
+        <p>You can also specify PostScript fonts using a set of keywords to the DEVICE procedure. The keyword combinations for the fonts included with IDL are listed in the following table. For example to use the PostScript font Palatino Bold Italic, you could use either of the following DEVICE commands:</p>
+        <p class="Code">DEVICE, SET_FONT = 'Bookman-LightItalic'</p>
+        <p class="Code">DEVICE, /BKMAN, /LIGHT, /ITALIC</p>
+        <p>Below are the standard 35 PostScript fonts:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>PostScript Font <br />SET_FONT Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>DEVICE Keywords</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>AvantGarde-Book</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>/AVANTGARDE, /BOOK</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>AvantGarde-BookOblique</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>/AVANTGARDE, /BOOK, /OBLIQUE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>AvantGarde-Demi</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>/AVANTGARDE, /DEMI</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>AvantGarde-DemiOblique</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>/AVANTGARDE, /DEMI, /OBLIQUE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Bookman-Demi</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>/BKMAN, /DEMI</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Bookman-DemiItalic</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>/BKMAN, /DEMI, /ITALIC</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Bookman-Light</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>/BKMAN, /LIGHT</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Bookman-LightItalic</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>/BKMAN, /LIGHT, /ITALIC</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Courier</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>/COURIER</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Courier-Bold</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>/COURIER, /BOLD</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Courier-BoldOblique</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>/COURIER, /BOLD, /OBLIQUE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Courier-Oblique</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>/COURIER, /OBLIQUE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Helvetica</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>/HELVETICA</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Helvetica-Bold</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>/HELVETICA, /BOLD</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Helvetica-BoldOblique</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>/HELVETICA, /BOLD, /OBLIQUE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Helvetica-Narrow</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>/HELVETICA, /NARROW</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Helvetica-Narrow-Bold</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>/HELVETICA, /NARROW, /BOLD</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Helvetica-Narrow-BoldOblique</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>/HELVETICA, /NARROW, /BOLD, /OBLIQUE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Helvetica-Narrow-Oblique</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>/HELVETICA, /NARROW, /OBLIQUE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Helvetica-Oblique</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>/HELVETICA, /OBLIQUE</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>NewCenturySchlbk-Bold</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>/SCHOOLBOOK, /BOLD</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>NewCenturySchlbk-BoldItalic</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>/SCHOOLBOOK, /BOLD, /ITALIC</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>NewCenturySchlbk-Italic</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>/SCHOOLBOOK, /ITALIC</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>NewCenturySchlbk-Roman</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>/SCHOOLBOOK</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Palatino-Bold</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>/PALATINO, /BOLD</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Palatino-BoldItalic</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>/PALATINO, /BOLD, /ITALIC</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Palatino-Italic</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>/PALATINO, /ITALIC</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Palatino-Roman</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>/PALATINO</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Symbol</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>/SYMBOL</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Times-Bold</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>/TIMES, /BOLD</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Times-BoldItalic</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>/TIMES, /ITALIC, /BOLD</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Times-Italic</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>/TIMES, /ITALIC</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Times-Roman</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>/TIMES</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>ZapfChancery-MediumItalic</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>/ZAPFCHANCERY, /MEDIUM, /ITALIC</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>ZapfDingats</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>/ZAPFDINGBATS</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3><a name="fonts_2203613354_1050156"></a><a name="fonts_2203613354_71805"></a>Changing the PostScript Font Assigned to an Index</h3>
+        <p>You can change the PostScript font assigned to a given font index using the FONT_INDEX keyword to the <a href="../../Reference Material/D/DEVICE_Procedure.htm">DEVICE Procedure</a>. Font indices and their use are discussed in <a href="Embedded_Formatting_Comm.htm#fonts_2203613354_1050246">Embedded Formatting Commands</a>. There is a slot available for a user-defined font (index number 20). However, any index from 3 to 20 can contain a user-defined font. See <a href="#fonts_2203613354_1050181" class="selected">Adding Your Own PostScript Fonts</a> for details. </p>
+        <p>After choosing the PostScript device using<code> SET_PLOT, 'PS'</code>, you can see which fonts are associated with the available index numbers by typing <code>HELP, /DEVICE</code> at the command line. You can add default fonts or user-defined fonts to the font mapping list. In the following example, a font that is not mapped to a font index number by default (but is a standard PostScript font) is associated with index number 20 and used in the plot title. </p>
+        <p class="Code">SET_PLOT, 'PS'</p>
+        <p class="Code">!P.FONT=0</p>
+        <p class="Code">DEVICE, SET_FONT = 'ZapfChancery-MediumItalic', FONT_INDEX=20</p>
+        <p class="Code">PLOT, INDGEN(10), TITLE='!20Simple Plot Example'</p>
+        <p class="Code">DEVICE, /CLOSE</p>
+        <p>View the default <code>idl.ps</code> file to see the results. </p>
+        <p>Changing the font index assigned to a font can be useful when changing PostScript fonts in the middle of a text string. For example, the following statements map Palatino Bold Italic to font index 4, and then output text using that font and the Symbol font:</p>
+        <p class="Code">; Map the font selected by !4 to be PalatinoBoldItalic:</p>
+        <p class="Code">DEVICE, /PALATINO, /BOLD, /ITALIC, FONT_INDEX=4</p>
+        <p class="Code">; Output "Alpha :" in PalatinoBoldItalic followed by an </p>
+        <p class="Code">; Alpha character:</p>
+        <p class="Code">XYOUTS, .3, .5, /NORMAL, "!4Alpha: !9a", FONT=0, SIZE=5.0</p>
+        <h3><a name="fonts_2203613354_1050181"></a><a name="fonts_2203613354_27915"></a>Adding Your Own PostScript Fonts</h3>
+        <p>Because the 35 PostScript fonts included with IDL are built in to a PostScript printer’s memory, the IDL distribution includes only the font metric files, which provide positioning information. In addition, the <code>.afm</code> files used by IDL are specially processed to provide the information in a format IDL expects.</p>
+        <p>You can add your own PostScript fonts to the list of fonts known to IDL if you have access to the PostScript font file (usually named <i>font</i><code>.pfb</code>) to load into your printer and to the <i>font</i><code>.afm</code> file supplied by Adobe. You can convert the standard <code>.afm</code> file into a file IDL understands using the IDL routine <a href="../../Reference Material/P/PSAFM.htm">PSAFM</a>. Consult the file <code>README.TXT</code> in the <code>resource/fonts/ps</code> subdirectory of the IDL directory for details on adding PostScript fonts to your system. In general, you will need to do the following: </p>
+        <ol>
+            <li value="1">Add the font to the <code>resource/fonts/ps</code> subdirectory of the IDL directory using <a href="../../Reference Material/P/PSAFM.htm">PSAFM</a>. </li>
+            <li value="2">Add an entry for the font to the <code>fonts.map</code> file located in the <code>resource/fonts/ps</code> directory. You can locate the required fontname by examining the font file in a text editor. </li>
+            <li value="3">Use the font directly by calling it with SET_FONT or add it to the list of font mappings using FONT_INDEX. See <a href="#fonts_2203613354_1050156" class="selected">Changing the PostScript Font Assigned to an Index</a> for details. </li>
+        </ol>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

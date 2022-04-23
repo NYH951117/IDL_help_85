@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: F">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>FOR </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="F_list.htm">Routines: F</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">FOR</span>
+        </div>
+        <h1 class="Routine"><a name="F_848155245_852430"></a><a name="kanchor969"></a><a name="F_848155245_37952"></a>FOR </h1>
+        <p>The FOR statement executes one or more statements repeatedly, incrementing or decrementing a variable with each repetition, until a condition is met.</p>
+        <h2 class="API"><a name="F_848155245_870885"></a><a name="F_848155245_870885_PageTOC_FOR__"></a>Syntax</h2>
+        <p class="Syntax">FOR <i>variable</i> = <i>init</i>, <i>limit</i> [,&#160;<i>Increment</i>] DO <i>statement</i></p>
+        <p>or</p>
+        <p class="Syntax">FOR <i>variable</i> = <i>init</i>, <i>limit </i>[,&#160;<i>Increment</i>] DO BEGIN</p>
+        <p class="Syntax">&#160;&#160;&#160;<i>statements</i></p>
+        <p class="Syntax">ENDFOR</p>
+        <h2 class="API">Data Type for the Loop Variable</h2>
+        <p>By default the data type of the index variable is determined by the type of the initial value. However, if the value of the second expression (the loop limit) is larger than the maximum integer value for the initial value, then the index variable will be automatically promoted to the larger type. For example:</p>
+        <p class="Code">FOR I=0,32000 DO J = I</p>
+        <p class="Code">HELP, I</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">FOR I=0,33000 DO J = I</p>
+        <p class="Code">HELP, I</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">FOR I=0,33000.0 DO J = I</p>
+        <p class="Code">HELP, I</p>
+        <p>IDL prints:</p>
+        <p class="Code">I&#160;&#160;             INT       &#160;&#160;&#160;=    32001</p>
+        <p class="Code">I&#160;&#160;              LONG      &#160;=        33001</p>
+        <p class="Code">I               &#160;&#160;FLOAT     =       33001.0</p>
+        <p>In the first case the loop limit is within the short integer range -32768...32767, and the type for the loop variable is INT. In the second and third cases the loop limit is greater than 32767, and the loop variable is automatically promoted to type LONG or type FLOAT.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Changing the data type of an index variable within a loop is not allowed, and will cause an error.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the initial value is an unsigned integer type (such as BYTE, UINT, ULONG, ULONG64), then the index variable is not automatically promoted. Instead, the loop limit is converted to the unsigned integer type. Note that if your loop limit is larger than the maximum value for that unsigned type, then the limit will wrap around when converted to the unsigned type, which may make the loop prematurely finish. For example:</p>
+        <p class="Code">FOR i=0b,257 DO PRINT, i </p>
+        <p class="Code">&#160;</p>
+        <p>IDL displays:</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">0</p>
+        <p class="Code">1</p>
+        <p class="Code">&#160;</p>
+        <p>The integer 257 gets converted to type byte which gives the value 1b, and therefore the loop executes twice.</p>
+        <p class="Code">&#160;</p>
+        <h2 class="API">Avoid Invariant Expressions</h2>
+        <p>When using FOR loops, you can increase program efficiency by avoiding invariant expressions. <a name="kanchor970"></a>Expressions whose values do not change inside a loop should be moved outside the loop. For example, in the loop:</p>
+        <p class="Code">FOR I = 0, N - 1 DO arr[I, 2*J-1] = ...,</p>
+        <p>the expression (2*J-1) is invariant and should be evaluated only once before the loop is entered:</p>
+        <p class="Code">temp = 2*J-1</p>
+        <p class="Code">FOR I = 0, N-1 DO arr[I, temp] = ....</p>
+        <h2 class="API"><a name="prog_control_2688138422_710114"></a><a name="prog_control_2688138422_77572"></a>FOR Statement with an Increment of One</h2>
+        <p>The FOR statement with an implicit increment of one is written as follows:</p>
+        <p class="Code">FOR <i>Variable</i> = <i>Expression</i>, <i>Expression</i> DO <i>Statement</i></p>
+        <p>The variable after the FOR is called the index variable and is set to the value of the first expression. The subject statement is executed, and the index variable is incremented by 1 until the index variable is larger than the second expression. This second expression is called the limit expression. Complex limit and increment expressions are converted to floating-point type.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>&#160;</p>
+        <h3>Example — FOR Statement with Increment of One</h3>
+        <p>A simple FOR statement:</p>
+        <p class="Code">FOR I = 1, 4 DO PRINT, I, I^2</p>
+        <p>This statement produces the following output:</p>
+        <p class="Code">1 &#160;&#160;&#160;1</p>
+        <p class="Code">2 &#160;&#160;&#160;4</p>
+        <p class="Code">3 &#160;&#160;&#160;9</p>
+        <p class="Code">4 &#160;&#160;16</p>
+        <p>The index variable I is first set to an integer variable with a value of one. The call to the PRINT procedure is executed, then the index is incremented by one. This is repeated until the value of I is greater than four at which point execution continues at the statement following the FOR statement.</p>
+        <p>The next example displays the use of a block structure (instead of a single statement) as the subject of the FOR statement. The example is a common process used for computing a count-density histogram. (Note that a <a href="../H/HISTOGRAM.htm">HISTOGRAM</a> function is provided by IDL.)</p>
+        <p class="Code">FOR K = 0, N - 1 DO BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;C = A[K]</p>
+        <p class="Code">&#160;&#160;&#160;&#160;HIST(C) = HIST(C)+1</p>
+        <p class="Code">ENDFOR</p>
+        <p>The next example displays a FOR statement with floating-point index and limit expressions, where X is set to a floating-point variable and steps through the values (1.5, 2.5, ..., 10.5):</p>
+        <p class="Code">FOR X = 1.5, 10.5 DO S = S + SQRT(X)</p>
+        <p>The indexing variables and expressions can be integer, longword, floating-point, or double-precision. The type of the index variable is determined by the type of the first expression after the “=” character.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Due to the inexact nature of IEEE floating-point numbers, using floating-point indexing can cause “infinite loops” and other problems. This problem is also manifested in both the C and FORTRAN programming languages. See <a href="../../Creating IDL Programs/Components of the IDL Language/Accuracy_and_Floating_Po.htm#constants_818058343_705345">Accuracy and Floating Point Operations</a> for more information about floating-point numbers.</p>
+        <h2 class="API"><a name="prog_control_2688138422_710143"></a><a name="prog_control_2688138422_77744"></a>FOR Statement with Variable Increment</h2>
+        <p>The format of the second type of FOR statement is as follows:</p>
+        <p class="Code">FOR <i>Variable</i> = <i>Expression</i><sub>1</sub>, <i>Expression</i><sub>2</sub>, <i>Increment</i> DO <i>Statement</i></p>
+        <p>This form is used when an increment other than 1 is desired.</p>
+        <p>The first two expressions describe the range of numbers for the index variable. The Increment specifies the increment of the index variable. A negative increment allows the index variable to step downward.</p>
+        <h3>Example — FOR Statement with Variable Increment</h3>
+        <p>The following examples demonstrate the second type of FOR statement.</p>
+        <p class="Code">;Decrement, K has the values 100., 99., ..., 1.</p>
+        <p class="Code">FOR K = 100.0, 1.0, -1 DO ...</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Increment by 2., loop has the values 0., 2., 4., ..., 1022.</p>
+        <p class="Code">FOR loop = 0, 1023, 2 DO ...</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Divide range from bottom to top by 4.</p>
+        <p class="Code">FOR mid = bottom, top, (top - bottom)/4.0 DO ...</p>
+        <p class="Code">&#160;</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the value of the increment expression is zero, an infinite loop occurs. A common mistake resulting in an infinite loop is a statement similar to the following:</p>
+        <p><code>FOR X = 0, 1, .1 DO ....</code>
+        </p>
+        <p>The variable X is first defined as an integer variable because the initial value expression is an integer zero constant. Then the limit and increment expressions are converted to the type of X, integer, yielding an increment value of zero because .1 converted to integer type is 0. The correct form of the statement is:</p>
+        <p><code>FOR X = 0.0, 1, .1 DO ....</code>
+        </p>
+        <p>which defines X as a floating-point variable.</p>
+        <h2 class="API"><a name="prog_control_2688138422_710159"></a><a name="prog_control_2688138422_62675"></a>Sequence of the FOR Statement</h2>
+        <p>The FOR statement performs the following steps:</p>
+        <ol>
+            <li value="1">The value of the first expression is evaluated and stored in the specified variable, which is called the index variable. The index variable is set to the type of this expression (unless the value of the limit is greater than the maximum integer for that data type).</li>
+            <li value="2">The value of the second expression is evaluated, converted to the type of the index variable, and saved in a temporary location. This value is called the limit value.</li>
+            <li value="3">The value of the third expression, called the step value, is evaluated, type-converted if necessary, and stored. If omitted, a value of 1 is assumed.</li>
+            <li value="4">If the index variable is greater than the limit value (in the case of a positive step value) the FOR statement is finished and control resumes at the next statement. Similarly, in the case of a negative step value, if the index variable is less than the limit value, control resumes after the FOR statement.</li>
+            <li value="5">The statement or block following the DO is executed.</li>
+            <li value="6">The step value is added to the index variable.</li>
+            <li value="7">Steps 4, 5, and 6 are repeated until the test of Step 4 fails.</li>
+        </ol>
+        <h2 class="API"><a name="F_848155245_891355"></a><a name="F_848155245_891355_PageTOC_FOR__"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="F_848155245_971718"></a><a name="F_848155245_971718_PageTOC_FOR__"></a>See Also</h2>
+        <p><a href="../B/BEGIN___END.htm">BEGIN...END</a>,
+			<a href="../B/BREAK.htm">BREAK</a>,
+			<a href="../C/CASE.htm">CASE</a>,
+			<a href="../C/CONTINUE.htm">CONTINUE</a>,
+			<a href="FOREACH.htm">FOREACH</a>,
+			<a href="../G/GOTO.htm">GOTO</a>,
+			<a href="../I/IF___THEN___ELSE.htm">IF...THEN...ELSE</a>,
+			<a href="../R/REPEAT___UNTIL.htm">REPEAT...UNTIL</a>,
+			<a href="../S/SWITCH.htm">SWITCH</a>,
+			<a href="../W/WHILE___DO.htm">WHILE...DO</a>, <a href="../../IDL Programming.htm">IDL Programming</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

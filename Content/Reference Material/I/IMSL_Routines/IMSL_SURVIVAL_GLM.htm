@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_SURVIVAL_GLM</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="IMSL_SURVIVAL_GLM"></a>IMSL_SURVIVAL_GLM</h1>
+        <p>The IMSL_SURVIVAL_GLM function analyzes censored survival data using a generalized linear model and estimates survival probabilities and hazard rates for the various parametric models.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>The routine described in this topic has primary application in the areas of reliability and life testing, but they may find application in any situation in which time is a variable of interest. Kalbfleisch and Prentice (1980), Elandt-Johnson and Johnson (1980), Lee (1980), Gross and Clark (1975), Lawless (1982), and Chiang (1968) are references for discussing the models and methods used here.</p>
+        <p>IMSL_SURVIVAL_GLM fits any of several generalized linear models, and computes estimates of survival probabilities based on the same models.</p>
+        <p>The IMSL_SURVIVAL_GLM function computes the maximum likelihood estimates of parameters and associated statistics in generalized linear models commonly found in survival (reliability) analysis. Although the terminology used will be from the survival area, the methods discussed have applications in many areas of data analysis, including reliability analysis and event history analysis. These methods can be used anywhere a random variable from one of the discussed distributions is parameterized via one of the models available in IMSL_SURVIVAL_GLM. Thus, while it is not advisable to do so, standard multiple linear regression can be performed by routine IMSL_SURVIVAL_GLM. Estimates for any of 10 standard models can be computed.</p>
+        <p>Exact, left-censored, right-censored, or interval-censored observations are allowed (note that left censoring is the same as interval censoring with the left endpoint equal to the left endpoint of the support of the distribution).</p>
+        <p>Let <i>η = x<sup>T</sup>β</i> be the linear parameterization, where <i>x</i> is a design vector obtained by IMSL_SURVIVAL_GLM via IMSL_REGRESSORS from a row of <i>x</i>, and β is a vector of parameters associated with the linear model. Let <i>T</i> denote the random response variable and <i>S(t)</i> denote the probability that <i>T &gt; t</i>. All models considered also allow a fixed parameter <i>w<sub>i</sub></i> for observation <i>i</i> (input in column <i>Ifix</i> of <i>x</i>). Use of this parameter is discussed below. There also may be nuisance parameters θ &gt; 0, or σ &gt; 0 to be estimated (along with β) in the various models. Let Φ denote the cumulative normal distribution. The survival models available in IMSL_SURVIVAL_GLM are listed below.</p>
+        <table style="mc-table-style: url('../../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>model</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>S(t)</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Exponential</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>
+                            <img src="images/IMSL_SURVIVAL_GLM01.svg" />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p> Linear hazard</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>
+                            <img src="images/IMSL_SURVIVAL_GLM02.svg" />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Log-normal</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>
+                            <img src="images/IMSL_SURVIVAL_GLM03.svg" />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Normal</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>
+                            <img src="images/IMSL_SURVIVAL_GLM04.svg" />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>4</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Log-logistic</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>
+                            <img src="images/IMSL_SURVIVAL_GLM05.svg" />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>5</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Logistic</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>
+                            <img src="images/IMSL_SURVIVAL_GLM06.svg" />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>6</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Log least extreme value</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>
+                            <img src="images/IMSL_SURVIVAL_GLM07.svg" />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>7</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p> Least extreme value</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>
+                            <img src="images/IMSL_SURVIVAL_GLM08.svg" />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>8</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Log extreme value</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>
+                            <img src="images/IMSL_SURVIVAL_GLM09.svg" />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>9</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Extreme value</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>
+                            <img src="images/IMSL_SURVIVAL_GLM10.svg" />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>10</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>Weibull</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>
+                            <img src="images/IMSL_SURVIVAL_GLM11.svg" />
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Note that the log-least-extreme-value model is a re-parameterization of the Weibull model. Moreover, models 0, 1, 2, 4, 6, 8, and 10 require that <i>T</i> &gt; 0, while all of the remaining models allow any value for <i>T</i>, –∞ &lt; <i>T</i> &lt; ∞.</p>
+        <p>Each row vector in the data matrix can represent a single observation; or, through the use of vector frequencies, each row can represent several observations. Also note that classification variables and their products are easily incorporated into the models via the usual regression-type specifications.</p>
+        <p>The constant parameter <i>W<sub>i</sub></i> is input in <i>x</i> and may be used for a number of purposes.</p>
+        <p>For example, if the parameter in an exponential model is known to depend upon the size of the area tested, volume of a radioactive mass, or population density, and so on, then a multiplicative factor of the exponential parameter λ= exp(xβ) may be known beforehand. This factor can be input in <i>W<sub>i</sub></i> (<i>W<sub>i</sub></i> is the log of the factor).</p>
+        <p>An alternate use of <i>W<sub>i</sub></i> is as follows: It may be that λ = exp(<i>x<sub>1</sub>β<sub>1</sub> + x<sub>2</sub>β<sub>2</sub></i>), where β<sub>2</sub> is known. Letting <i>W<sub>i</sub> = x<sub>2</sub>β<sub>2</sub></i>, estimates for β<sub>1</sub> can be obtained via IMSL_SURVIVAL_GLM with the known fixed values for β<sub>2</sub>. Standard methods can then be used to test hypothesis about β<sub>1</sub> via computed log-likelihoods.</p>
+        <h3>Computational Details</h3>
+        <p>The computations proceed as follows:</p>
+        <ol>
+            <li value="1">The input parameters are checked for consistency and validity.<br />Estimates of the means of the “independent” or design variables are computed. Means are computed as:<br /><br /><img src="images/IMSL_SURVIVAL_GLM12.svg" /></li>
+            <li value="2">If initial estimates are not provided (see keyword Init_Est), they are calculated as follows:<br />Models 2-10:<br />A. Kaplan-Meier estimates of the survival probability:<br /><img src="images/IMSL_SURVIVAL_GLM13.svg" /><br />at the upper limit of each failure interval are obtained. (Because upper limits are used, interval- and left-censored data are assumed to be exact failures at the upper endpoint of the failure interval.) The Kaplan-Meier estimate is computed under the assumption that all failure distributions are identical (i.e., all β’s but the intercept, if present, are assumed to be zero). <br /><br />B. If there is an intercept in the model, a simple linear regression is perform predicting:<br /><br /><img src="images/IMSL_SURVIVAL_GLM14.svg" /><br />where t' is computed at the upper endpoint of each failure interval, <i>t' = t</i> in models 3, 5, 7, and 9, and <i>t'</i> = ln(<i>t</i>) in models 2, 4, 6, 8, and 10, and <i>w<sub>i</sub></i> is the fixed constant, if present.<br />If there is no intercept in the model, then α is fixed at zero, and the model:<br /><br /><img src="images/IMSL_SURVIVAL_GLM15.svg" /><br />is fit instead. In this model, the coefficients β are used in place of the location estimate α above. Here:<br /><br /><img src="images/IMSL_SURVIVAL_GLM16.svg" /><br />is estimated from the simple linear regression with α = 0.<br /><br />C. If the intercept is in the model, then in log-location-scale models (models 1-8):<br /><br /><img src="images/IMSL_SURVIVAL_GLM17.svg" /><br />and the initial estimate of the intercept is assumed to be:<br /><br /><img src="images/IMSL_SURVIVAL_GLM18.svg" /><br />In the Weibull model:<br /><br /><img src="images/IMSL_SURVIVAL_GLM19.svg" /><br />and the intercept is assumed to be:<br /><img src="images/IMSL_SURVIVAL_GLM18.svg" /><br />Initial estimates of all parameters β, other than the intercept, are assumed to be zero.<br />If there is no intercept in the model, the scale parameter is estimated as above, and the estimates:<br /><br /><img src="images/IMSL_SURVIVAL_GLM20.svg" /><br />from Step 2 are used as initial estimates for the β’s.<br />Models 0 and 1:<br />For the exponential models (<i>model</i> = 0 or 1), the “average total time on” test statistic is used to obtain an estimate for the intercept. Specifically, let <i>T<sub>t</sub></i> denote the total number of failures divided by the total time on test. The initial estimates for the intercept is then ln(<i>T<sub>t</sub></i>). Initial estimates for the remaining parameters β are assumed to be zero, and if <i>model</i> = 1, the initial estimate for the linear hazard parameter θ is assumed to be a small positive number. When the intercept is not in the model, the initial estimate for the parameter θ is assumed to be a small positive number, and initial estimates of the parameters β are computed via multiple linear regression as in Part A.<br /></li>
+            <li value="3">A quasi-Newton algorithm is used in the initial iterations based on a Hessian estimate:<br /><br /><img src="images/IMSL_SURVIVAL_GLM21.svg" /><br />where l'iα j is the partial derivative of the <i>i-th</i> term in the log-likelihood with respect to the parameter α<i style="vertical-align: sub;">j</i> , and a<i style="vertical-align: sub;">j</i> denotes one of the parameters to be estimated.<br />When the relative change in the log-likelihood from one iteration to the next is 0.1 or less, exact second partial derivatives are used for the Hessian so the Newton-Rapheson iteration is used.<br />If the initial step size results in an increase in the log-likelihood, the full step is used. If the log-likelihood decreases for the initial step size, the step size is halved, and a check for an increase in the log-likelihood performed. Step-halving is performed (as a simple line search) until an increase in the log-likelihood is detected, or until the step size becomes very small (the initial step size is 1.0).</li>
+            <li value="4">Convergence is assumed when the maximum relative change in any coefficient update from one iteration to the next is less than Eps or when the relative change in the log-likelihood from one iteration to the next is less than Eps/100.<br />Convergence is also assumed after Itmax iterations or when step halving leads to a very small step size with no increase in the log-likelihood.</li>
+            <li value="5">If requested (see keyword Lp_Max), the methods of Clarkson and Jennrich (1988) are used to check for the existence of infinite estimates in:<br /><br /><img src="images/IMSL_SURVIVAL_GLM22.svg" /><br />As an example of a situation in which infinite estimates can occur, suppose that observation <i>j</i> is right-censored with <i>t<sub>j</sub></i> &gt; 15 in a normal distribution model in which the mean is:<br /><br /><img src="images/IMSL_SURVIVAL_GLM23.svg" /><br />where <i>x<sub>j</sub></i> is the observation design vector. If the design vector <i>x<sub>j</sub></i> for parameter β<i style="vertical-align: sub;">m</i> is such that <i>x<sub>jm</sub></i> = 1 and <i>x<sub>im</sub></i> = 0 for all <i>i ≠ j</i>, then the optimal estimate of β<i style="vertical-align: sub;">m</i> occurs at:<br /><br /><img src="images/IMSL_SURVIVAL_GLM24.svg" /><br />leading to an infinite estimate of both β<i style="vertical-align: sub;">m</i> and η<i style="vertical-align: sub;">j</i>. In IMSL_SURVIVAL_GLM, such estimates can be “computed.”<br />In all models fit by IMSL_SURVIVAL_GLM, infinite estimates can only occur when the optimal estimated probability associated with the left- or right-censored observation is 1. If infinity checking is on, left- or right-censored observations that have estimated probability greater than 0.995 at some point during the iterations are excluded from the log-likelihood, and the iterations proceed with a log-likelihood based on the remaining observations. This allows convergence of the algorithm when the maximum relative change in the estimated coefficients is small and also allows for a more precise determination of observations with infinite:<br /><img src="images/IMSL_SURVIVAL_GLM22.svg" /><br />At convergence, linear programming is used to ensure that the eliminated observations have infinite η<i style="vertical-align: sub;">i</i>. If some (or all) of the removed observations should not have been removed (because their estimated η<i style="vertical-align: sub;">i</i>’s must be finite), then the iterations are restarted with a log-likelihood based upon the finite η<i style="vertical-align: sub;">i</i> observations. See Clarkson and Jennrich (1988) for more details.<br />By default, or when not using keyword Lp_Max (see keyword Lp_Max), no observations are eliminated during the iterations. In this case, the infinite estimates occur, some (or all) of the coefficient estimates:<br /><img src="images/IMSL_SURVIVAL_GLM20.svg" /><br />will become large, and it is likely that the Hessian will become (numerically) singular prior to convergence.</li>
+            <li value="6">The case statistics are computed as follows: Let <i>I<sub>i</sub></i> (θ<i style="vertical-align: sub;">i</i>) denote the log-likelihood of the <i>i-th</i> observation evaluated at θ<i style="vertical-align: sub;">i</i> , let I'<i style="vertical-align: sub;">i</i> denote the vector of derivatives of <i>I<sub>i</sub></i> with respect to all parameters, denote the derivative of <i>I<sub>i</sub></i> with respect to η = <i>x<sup>T</sup></i>β, <i>H</i> denote the Hessian, and <i>E</i> denote expectation. Then the columns of Case_Analysis are:<br />A. Predicted values are computed as E (T/x) according to standard formulas.<br />If model is 4 or 8, and if <i>s</i> ≥ 1, then the expected values cannot be computed because they are infinite.<br /><br />B. Following Cook and Weisberg (1982), the influence (or leverage) of the <i>i-th</i> observation is assumed to be:<br /><br /><img src="images/IMSL_SURVIVAL_GLM25.svg" /><br />This quantity is a one-step approximation of the change in the estimates when the <i>i-th</i> observation is deleted (ignoring the nuisance parameters).<br /><br />C. The “residual” is computed as I'<sub>η,i</sub>.<br /><br />D. The cumulative hazard is computed at the observation covariate values and, for interval observations, the upper endpoint of the failure interval.<br />The cumulative hazard also can be used as a “residual” estimate. If the model is correct, the cumulative hazards should follow a standard exponential distribution. See Cox and Oakes (1984).<br />The IMSL_SURVIVAL_GLM function computes estimates of survival probabilities and hazard rates for the parametric survival/reliability models when using the EST_* keywords.<br />Let η = <i>x<sup>T</sup></i>β be the linear parameterization, where <i>x</i> is the design vector corresponding to a row of x (IMSL_SURVIVAL_GLM generates the design vector using IMSL_REGRESSORS), and β is a vector of parameters associated with the linear model. Let <i>T</i> denote the random response variable and <i>S(t)</i> denote the probability that <i>T &gt; t</i>. All models considered also allow a fixed parameter <i>w</i> (input in column <i>Ifix</i> of <i>x</i>). Use of the keyword is discussed in above. There also may be nuisance parameters θ &gt; 0 or σ &gt; 0. Let λ(<i>t</i>) denote the hazard rate at time <i>t</i>. Then λ(<i>t</i>) and <i>S(t)</i> are related at:<br /><br /><img src="images/IMSL_SURVIVAL_GLM26.svg" /><br />Models 0, 1, 2, 4, 6, 8, and 10 require that <i>T</i> &gt; 0 (in which case assume λ(<i>s</i>) = 0 for <i>s</i> &lt; 0), while the remaining models allow arbitrary values for <i>T</i>, −∞ &lt; <i>T</i> &lt; ∞. The computations proceed in IMSL_SURVIVAL_GLM when using the keywords EST_* as follows:<br />1. The input arguments are checked for consistency and validity.<br />2. For each row of <i>x</i>, the explanatory variables are generated from the classification and variables and the covariates using IMSL_REGRESSORS with keyword Dummy_Method.<br />3. For each point requested in the time grid, the survival probabilities and hazard rates are computed.</li>
+        </ol>
+        <h3>Programming Notes</h3>
+        <p>Indicator (dummy) variables are created for the classification variables using IMSL_REGRESSORS (Chapter 3, Regression) using keyword Dummy_Method.</p>
+        <h2 class="API">Examples</h2>
+        <p>For additional information on using IMSL_SURVIVAL_GLM, see <a href="#Additional_Examples" class="selected">Additional Examples</a>.</p>
+        <p>The examples within this topic all use the array <i>x</i>, defined as follows:</p>
+        <p class="Code">x1 = [[1.0, 0.0, 7.0, 64.0, 5.0, 411.0, 0.0] , $</p>
+        <p class="Code_Indented">[1.0, 0.0, 6.0, 63.0, 9.0, 126.0, 0.0] , $</p>
+        <p class="Code_Indented">[1.0, 0.0, 7.0, 65.0, 11.0, 118.0, 0.0] , $</p>
+        <p class="Code_Indented">[1.0, 0.0, 4.0, 69.0, 10.0, 92.0, 0.0] , $</p>
+        <p class="Code_Indented">[1.0, 0.0, 4.0, 63.0, 58.0, 8.0, 0.0] , $</p>
+        <p class="Code_Indented">[1.0, 0.0, 7.0, 48.0, 9.0, 25.0, 1.0] , $</p>
+        <p class="Code_Indented">[1.0, 0.0, 7.0, 48.0, 11.0, 11.0, 0.0] , $</p>
+        <p class="Code_Indented">[2.0, 0.0, 8.0, 63.0, 4.0, 54.0, 0.0] , $</p>
+        <p class="Code_Indented">[2.0, 0.0, 6.0, 63.0, 14.0, 153.0, 0.0] , $</p>
+        <p class="Code_Indented">[2.0, 0.0, 3.0, 53.0, 4.0, 16.0, 0.0]]</p>
+        <p class="Code">x2 = [[2.0, 0.0, 8.0, 43.0, 12.0, 56.0, 0.0] , $</p>
+        <p class="Code_Indented">[2.0, 0.0, 4.0, 55.0, 2.0, 21.0, 0.0] , $</p>
+        <p class="Code_Indented">[2.0, 0.0, 6.0, 66.0, 25.0, 287.0, 0.0] , $</p>
+        <p class="Code_Indented">[2.0, 0.0, 4.0, 67.0, 23.0, 10.0, 0.0] , $</p>
+        <p class="Code_Indented">[3.0, 0.0, 2.0, 61.0, 19.0, 8.0, 0.0] , $</p>
+        <p class="Code_Indented">[3.0, 0.0, 5.0, 63.0, 4.0, 12.0, 0.0] , $</p>
+        <p class="Code_Indented">[4.0, 0.0, 5.0, 66.0, 16.0, 177.0, 0.0] , $</p>
+        <p class="Code_Indented">[4.0, 0.0, 4.0, 68.0, 12.0, 12.0, 0.0] , $</p>
+        <p class="Code_Indented">[4.0, 0.0, 8.0, 41.0, 12.0, 200.0, 0.0] , $</p>
+        <p class="Code_Indented">[4.0, 0.0, 7.0, 53.0, 8.0, 250.0, 0.0]]</p>
+        <p class="Code">x3 = [[4.0, 0.0, 6.0, 37.0, 13.0, 100.0, 0.0] , $</p>
+        <p class="Code_Indented">[1.0, 1.0, 9.0, 54.0, 12.0, 999.0, 0.0] , $</p>
+        <p class="Code_Indented">[1.0, 1.0, 5.0, 52.0, 8.0, 231.0, 1.0] , $</p>
+        <p class="Code_Indented">[1.0, 1.0, 7.0, 50.0, 7.0, 991.0, 0.0] , $</p>
+        <p class="Code_Indented">[1.0, 1.0, 2.0, 65.0, 21.0, 1.0, 0.0] , $</p>
+        <p class="Code_Indented">[1.0, 1.0, 8.0, 52.0, 28.0, 201.0, 0.0] , $</p>
+        <p class="Code_Indented">[1.0, 1.0, 6.0, 70.0, 13.0, 44.0, 0.0] , $</p>
+        <p class="Code_Indented">[1.0, 1.0, 5.0, 40.0, 13.0, 15.0, 0.0] , $</p>
+        <p class="Code_Indented">[2.0, 1.0, 7.0, 36.0, 22.0, 103.0, 1.0] , $</p>
+        <p class="Code_Indented">[2.0, 1.0, 4.0, 44.0, 36.0, 2.0, 0.0]]</p>
+        <p class="Code">x4 = [[2.0, 1.0, 3.0, 54.0, 9.0, 20.0, 0.0] , $</p>
+        <p class="Code_Indented">[2.0, 1.0, 3.0, 59.0, 87.0, 51.0, 0.0] , $</p>
+        <p class="Code_Indented">[3.0, 1.0, 4.0, 69.0, 5.0, 18.0, 0.0] , $</p>
+        <p class="Code_Indented">[3.0, 1.0, 6.0, 50.0, 22.0, 90.0, 0.0] , $</p>
+        <p class="Code_Indented">[3.0, 1.0, 8.0, 62.0, 4.0, 84.0, 0.0] , $</p>
+        <p class="Code_Indented">[4.0, 1.0, 7.0, 68.0, 15.0, 164.0, 0.0] , $</p>
+        <p class="Code_Indented">[4.0, 1.0, 3.0, 39.0, 4.0, 19.0, 0.0] , $</p>
+        <p class="Code_Indented">[4.0, 1.0, 6.0, 49.0, 11.0, 43.0, 0.0] , $</p>
+        <p class="Code_Indented">[4.0, 1.0, 8.0, 64.0, 10.0, 340.0, 0.0] , $</p>
+        <p class="Code_Indented">[4.0, 1.0, 7.0, 67.0, 18.0, 231.0, 0.0]]</p>
+        <p class="Code">x = [[x1], [x2], [x3], [x4]]</p>
+        <p class="Code">x = TRANSPOSE(x)</p>
+        <h3>Example 1</h3>
+        <p>This example is taken from Lawless (1982, p. 287) and involves the mortality of patients suffering from lung cancer. An exponential distribution is fit for the model:</p>
+        <p>η = µ + α i + γ k + β 6 x3 + β 7x4 + β 8x5</p>
+        <p>where αi is associated with a classification variable with four levels, and γk is associated with a classification variable with two levels. Note that because the computations are performed in single precision, there will be some small variation in the estimated coefficients across different machine environments.</p>
+        <p class="Code">.RUN</p>
+        <p class="Code">PRO print_results, cs</p>
+        <p class="Code_Indented">PRINT, ' Coefficient Satistics'</p>
+        <p class="Code_Indented">PRINT, ' Coefficient s.e z p'</p>
+        <p class="Code_Indented">PM, cs, FORMAT = '(4F14.4)'</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">n_class = 2</p>
+        <p class="Code">n_continuous = 3</p>
+        <p class="Code">model = 0</p>
+        <p class="Code">icen = 6</p>
+        <p class="Code">irt = 5</p>
+        <p class="Code">lp_max = 40</p>
+        <p class="Code">n_coef = IMSL_SURVIVAL_GLM(n_class, n_continuous, model, x, $</p>
+        <p class="Code_Indented">ICEN = icen, IRT = irt, LP_MAX = lp_max, COEF_STAT = cs)</p>
+        <p class="Code">print_results, cs</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Coefficient Satistics</p>
+        <p class="Code">Coefficient s.e z p</p>
+        <p class="Code">-1.1027 1.3091 -0.8423 0.3998</p>
+        <p class="Code">-0.3626 0.4446 -0.8156 0.4149</p>
+        <p class="Code">0.1271 0.4863 0.2613 0.7939</p>
+        <p class="Code">0.8690 0.5861 1.4825 0.1385</p>
+        <p class="Code">0.2697 0.3882 0.6948 0.4873</p>
+        <p class="Code">-0.5400 0.1081 -4.9946 0.0000</p>
+        <p class="Code">-0.0090 0.0197 -0.4594 0.6460</p>
+        <p class="Code">-0.0034 0.0117 -0.2912 0.7710</p>
+        <h2 class="API">Syntax</h2>
+        <p><i>Result</i> = IMSL_SURVIVAL_GLM(<i>n_class</i>, <i>n_continuous</i>, <i>model</i>, <i>x</i> [, /CASE_ANALYSIS=<i>variable</i>] [,CLASS_VALS=<i>variable</i>] [, COEF_STAT=<i>variable</i>] [, COVARIANCES=<i>variable</i>] [, CRITERION=<i>variable</i>] [, /DOUBLE] [, EPS=<i>value</i>] [, EST_DELTA=<i>value</i>] [, EST_NOBS=<i>value</i>] [, EST_NPT=<i>value</i>] [, EST_PROB=<i>variable</i>] [, EST_TIME=<i>value</i>] [, EST_XBETA=<i>variable</i>] [, ICEN=<i>value</i>] [, IFIX=<i>value</i>] [, IFREQ=<i>value</i>] [, ILT=<i>value</i>] [, INDICES_EFFECTS=<i>array</i>] [, INIT_EST=<i>array</i>] [,IRT=<i>value</i>] [, ITERATIONS=<i>variable</i>] [, ITMAX=<i>value</i>] [, LAST_STEP=<i>variable</i>] [, LP_MAX=<i>value</i>] [, MAX_CLASS=<i>value</i>] [, MEANS=<i>variable</i>] [, N_CLASS_VALS=<i>variable</i>] [, NMISSING=<i>variable</i>] [, /NO_INTERCEPT] [, OBS_STATUS=<i>variable</i>] [, VAR_EFFECTS=<i>array</i>])</p>
+        <h2 class="API">Return Value</h2>
+        <p>An integer value indicating <i>n_coefficients</i>, where <i>n_coefficients</i> is the number of estimated coefficients in the model.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">model</h3>
+        <p>Specifies the model used to analyze the data.</p>
+        <p>0—Exponential</p>
+        <p>1—Linear hazard</p>
+        <p>2—Log-normal</p>
+        <p>3—Normal</p>
+        <p>4—Log-logistic</p>
+        <p>5—Logistic</p>
+        <p>6—Log least extreme value</p>
+        <p>7—Least extreme value</p>
+        <p>8—Log extreme value</p>
+        <p>9—Extreme value</p>
+        <p>10—Weibull</p>
+        <p>See the Discussion section for more information about these models.</p>
+        <h3 class="Argument">n_class</h3>
+        <p>Number of classification variables.</p>
+        <h3 class="Argument">n_continuous</h3>
+        <p>Number of continuous variables.</p>
+        <h3 class="Argument">x</h3>
+        <p>Two-dimensional array of size <i>n_observations</i> by ((<i>n_class</i> + <i>n_continuous</i>) + m) containing data for the independent variables, dependent variable, and optional parameters where <i>n_observations</i> is the number of observations and the optional parameters correspond to keywords <i>Icen</i>, <i>Ilt</i>, <i>Irt</i>, <i>Ifreq</i>, and <i>Ifix</i>.</p>
+        <p>The columns must be ordered such that the first <i>n_class</i> columns contain data for the class variables, the next <i>n_continuous</i> columns contain data for the continuous variables, and the next column contains the response variable. The final (and optional) <i>m</i> − 1 columns contain optional parameters.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">CASE_ANALYSIS</h3>
+        <p>Named variable into which a two-dimensional array of size <i>n_observations</i> by 5 containing the case analysis below is stored:</p>
+        <p>0—Estimated predicted value.</p>
+        <p>1—Estimated influence or leverage.</p>
+        <p>2—Estimated residual.</p>
+        <p>3—Estimated cumulative hazard.</p>
+        <p>4—Non-censored observation: Estimated density at the observation failure time and covariate values. Censored observations: The corresponding estimated probability.</p>
+        <h3 class="Keyword">CLASS_VALS</h3>
+        <p>Named variable into which one-dimensional array of length:</p>
+        <p>
+            <img src="images/IMSL_SURVIVAL_GLM29.svg" />
+        </p>
+        <p>containing the distinct values of the classification variables in ascending order is stored. The first <i>N_Class_Vals</i>(0) elements of <i>Class_Vals</i> contain the values for the first classification variables, the next <i>N_Class_Vals</i>(1) elements contain the values for the second classification variable, etc.</p>
+        <h3 class="Keyword">COEF_STAT</h3>
+        <p>Named variable into which a two-dimensional array of size <i>n_coefficients</i> by 4 containing the parameter estimates and associated statistics is stored:</p>
+        <p>0—Coefficient estimate.</p>
+        <p>1—Estimated standard deviation of the estimated coefficient.</p>
+        <p>2—Asymptotic normal score for testing that the coefficient is zero.</p>
+        <p>3—The p-value associated with the normal score in Column 2.</p>
+        <p>When present in the model, the first coefficient in <i>Coef_Stat</i> is the estimate of the “nuisance” parameter, and the remaining coefficients are estimates of the parameters associated with the “linear” model, beginning with the intercept, if present. Nuisance parameters are as follows:</p>
+        <p>0—No nuisance parameter</p>
+        <p>1—Coefficient of the quadratic term, term in time, θ</p>
+        <p>2–9—Scale parameter, σ</p>
+        <p>10—Scale parameter, θ</p>
+        <h3 class="Keyword">COVARIANCES</h3>
+        <p>Named variable into which a two-dimensional array of size <i>n_coefficients</i> by <i>n_coefficients</i> containing the estimated asymptotic covariance matrix of the coefficients is stored. For <i>Itmax</i> = 0, this is the Hessian computed at the initial parameter estimates.</p>
+        <h3 class="Keyword">CRITERION</h3>
+        <p>Named variable into which the optimized criterion is stored. The criterion to be maximized is a constant plus the log-likelihood.</p>
+        <h3 class="Keyword">DOUBLE</h3>
+        <p>If present and nonzero, double precision is used.</p>
+        <h3 class="Keyword">EPS</h3>
+        <p>Convergence criterion. Convergence is assumed when maximum relative change in any coefficient estimate is less than Eps from one iteration to the next or when the relative change in the log-likelihood, criterion, from one iteration to the next is less than Eps/100.0. Default: Eps = 0.001</p>
+        <h3 class="Keyword">EST_DELTA</h3>
+        <p>Increment between time points on the time grid. Keywords <i>Est_Delta</i>, <i>Est_Nobs</i>, <i>Est_Time</i>, <i>Est_Npt</i>, and <i>Est_Prob</i> must be used together.</p>
+        <h3 class="Keyword">EST_NOBS</h3>
+        <p>Number of observations for which estimates are to be calculated. <i>Est_Nobs</i> must be positive. Keywords <i>Est_Nobs</i>, Est_Time, Est_Npt, Est_Delta, and Est_Prob must be used together.</p>
+        <h3 class="Keyword">EST_NPT</h3>
+        <p>Number of points on the time grid for which survival probabilities are desired. <i>Est_Npt</i> must be positive. Keywords <i>Est_Npt</i>, <i>Est_Nobs</i>, <i>Est_Time</i>, <i>Est_Delta</i>, and <i>Est_Prob</i> must be used together.</p>
+        <h3 class="Keyword">EST_PROB</h3>
+        <p>Named variable into which a two-dimensional array of size <i>Est_Npt</i> by (2*<i>n_observations</i> + 1) containing the estimated survival probabilities for the covariate groups specified in <i>x</i> is stored. Column 0 contains the survival time.</p>
+        <p>Columns 1 and 2 contain the estimated survival probabilities and hazard rates, respectively, for the covariates in the first row of <i>x</i>. In general, the survival and hazard row <i>i</i> of <i>x</i> is contained in columns 2<i>i</i> – 1 and 2<i>i</i>, respectively, for <i>i</i> = 1, 2, ..., <i>Est_Npt.</i></p>
+        <p>Keywords Est_Prob, <i>Est_Nobs</i>, <i>Est_Time</i>, <i>Est_Npt</i>, and <i>Est_Delta</i> must be used together.</p>
+        <h3 class="Keyword">EST_TIME</h3>
+        <p>Beginning of the time grid for which estimates are desired. Survival probabilities and hazard rates are computed for each covariate vector over the grid of time points <i>Est_Time + i*Est_Delta</i> for <i>i</i> = 0, 1, ..., <i>Est_Npt</i> −1. Keywords <i>Est_Time, Est_Nobs, Est_Npt, Est_Delta</i>, and <i>Est_Prob</i> must be used together.</p>
+        <h3 class="Keyword">EST_XBETA</h3>
+        <p>Named variable into which an one-dimensional array of length <i>n_observations</i> containing the estimated linear response:</p>
+        <p>
+            <img src="images/IMSL_SURVIVAL_GLM30.svg" />
+        </p>
+        <p>for each row of <i>x</i> is stored. To use keyword <i>Est_Xbeta</i>, you must also use keywords <i>Est_Nobs, Est_Time, Est_Npt, Est_Delta</i>, and <i>Est_Prob</i>.</p>
+        <h3 class="Keyword">ICEN</h3>
+        <p>The column in <i>x</i> containing the censoring code for each observation. Possible values are shown below.</p>
+        <table style="margin-left: 0;margin-right: auto;caption-side: bottom;mc-table-style: url('../../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>x (I, Icen)</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Censoring type</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Exact failure at <i>x</i> (<i>i</i>, <i>Irt</i>)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p> Right Censored. The response is greater than <i>x</i> (<i>i, Irt</i>) 
+</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Left Censored. The response is less than or equal to <i>x</i> (<i>i</i>, <i>Irt</i>) 
+</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p> Interval Censored. The response is greater than <i>x</i> (<i>i</i>, <i>Irt</i>), but less 
+than or equal to <i>x</i> (<i>i</i>, <i>Irt</i>).</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Keyword">IFIX</h3>
+        <p>Column number in x containing a fixed parameter for each observation that is added to the linear response prior to computing the model parameter. The “fixed” parameter allows one to test hypothesis about the parameters via the log-likelihoods.</p>
+        <h3 class="Keyword">IFREQ</h3>
+        <p>The column number of <i>x</i> containing the frequency of response for each observation.</p>
+        <h3 class="Keyword">ILT</h3>
+        <p>The column number of <i>x</i> containing the upper endpoint of the failure interval for interval- and left-censored observations.</p>
+        <h3 class="Keyword">INDICES_EFFECTS</h3>
+        <p>One-dimensional index array of length Var_Effects(0) + Var_Effects(1) + ... + Var_Effects(n_effects − 1). The first Var_Effects(0) elements give the column numbers of <i>x</i> for each variable in the first effect. The next Var_Effects(1) elements give the column numbers for each variable in the second effect. The last Var_Effects(n_effects − 1) elements give the column numbers for each variable in the last effect. Keywords Indices_Effects and Var_Effects must be used together.</p>
+        <h3 class="Keyword">INIT_EST</h3>
+        <p>One-dimensional array containing the initial estimates of the parameters (which requires that you know the number of coefficients in the model prior to the use of IMSL_SURVIVAL_GLM). See output keyword Coef_Stat for a description of the “nuisance” parameter, which is the first element of array Init_Est. By default, un-weighted linear regression is used to obtain initial estimates.</p>
+        <h3 class="Keyword">IRT</h3>
+        <p>The column number of <i>x</i> containing the lower endpoint of the failure interval for interval- and right-censored observations.</p>
+        <h3 class="Keyword">ITERATIONS</h3>
+        <p>Named variable into which a two-dimensional array of size, n by 5 containing information about each iteration of the analysis is stored, where <i>n</i> is equal to the number of iterations. This is shown in Table 22-2.</p>
+        <table style="margin-left: 0;margin-right: auto;caption-side: bottom;mc-table-style: url('../../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Column</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Statistic</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Method of iteration
+Q-N Step = 0
+N-R Step = 1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p> Iteration number</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p> Step size</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Maximum scaled coefficient update</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>4</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Log-likelihood</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Keyword">ITMAX</h3>
+        <p>Maximum number of iterations. Use Itmax = 0 to compute the Hessian, stored in Covariances, and the Newton step, stored in Last_Step, at the initial estimates (The initial estimates must be input. Use keyword Init_Est). See Example 3. Default: Itmax = 30</p>
+        <h3 class="Keyword">LAST_STEP</h3>
+        <p>Named variable into which an one-dimensional array of length n_coefficients containing the last parameter updates (excluding step halvings) is stored. Keyword Last_Step is computed as the inverse of the matrix of second partial derivatives times the vector of first partial derivatives of the log-likelihood. When Itmax = 0, the derivatives are computed at the initial estimates.</p>
+        <h3 class="Keyword">LP_MAX</h3>
+        <p>Remove a right- or left-censored observation from the log-likelihood whenever the probability of the observation exceeds 0.995. At convergence, use linear programming to check that all removed observations actually have infinite linear response:</p>
+        <p>
+            <img src="images/IMSL_SURVIVAL_GLM31.svg" />
+        </p>
+        <p>Obs_Status(i) is set to 2 if the linear response is infinite (See keyword Obs_Status). If not all removed observations have infinite linear response, recompute the estimates based upon the observations with finite:</p>
+        <p>
+            <img src="images/IMSL_SURVIVAL_GLM31.svg" />
+        </p>
+        <p>Keyword Lp_Max is the maximum number of observations that can be handled in the linear programming. Setting Lp_Max = n_observations is always sufficient. By default, the function iterates without checking for infinite estimates. Default: No infinity checking; Lp_Max = 0</p>
+        <h3 class="Keyword">MAX_CLASS</h3>
+        <p>An upper bound on the sum of the number of distinct values taken on by each classification variable. Internal workspace usage can be significantly reduced with an appropriate choice of Max_Class. Default: Max_Class = n_observations * n_class.</p>
+        <h3 class="Keyword">MEANS</h3>
+        <p>Named variable into which an one-dimensional array containing the means of the design variables is stored. The array is of length n_coefficients – <i>k</i> if keyword No_Intercept is used, and of length n_coefficients – k – 1 otherwise. Here, k is equal to 0 if model = 0, and equal to 1 otherwise.</p>
+        <h3 class="Keyword">N_CLASS_VALS</h3>
+        <p>Named variable into which an one-dimensional array of length n_class containing the number of values taken by each classification variable is stored; the <i>i-th</i> classification variable has N_Class_Vals(i).</p>
+        <h3 class="Keyword">NMISSING</h3>
+        <p>Named variable into which the number of rows of data that contain missing values in one or more of the following vectors or columns of x is stored: <i>Icen</i>, <i>Ilt</i>, <i>Irt</i>, <i>Ifreq</i>, <i>Ifix</i>, or <i>Indicies_Effects</i>.</p>
+        <h3 class="Keyword">NO_INTERCEPT</h3>
+        <p>If present and nonzero, there is no intercept in the model. By default, the intercept is automatically included in the model.</p>
+        <h3 class="Keyword">OBS_STATUS</h3>
+        <p>Named variable into which an one-dimensional array of length n_observations indicating which observations are included in the extended likelihood is stored.</p>
+        <p>• 0—Observation i is in the likelihood</p>
+        <p>• 1—Observation i cannot be in the likelihood because it contains at least one missing value in x.</p>
+        <p>• 2—Observation i is not in the likelihood. Its estimated parameter is infinite.</p>
+        <h3 class="Keyword">VAR_EFFECTS</h3>
+        <p>One-dimensional array of length n_effects containing the number of variables associated with each effect in the model, where n_effects is the number of effects (sources of variation) in the model. Keywords Var_Effects and Indicies_Effects must be used together.</p>
+        <h3>Comments</h3>
+        <ol>
+            <li value="1">Dummy variables are generated for the classification variables as follows: An ascending list of all distinct values of each classification variable is obtained and stored in Class_Vals. Dummy variables are then generated for each but the last of these distinct values. Each dummy variable is zero unless the classification variable equals the list value corresponding to the dummy variable, in which case the dummy variable is one. See keyword Dummy_Method in the “IMSL_REGRESSORS” on page 600.</li>
+            <li value="2">The “product” of a classification variable with a covariate yields dummy variables equal to the product of the covariate with each of the dummy variables associated with the classification variable.</li>
+            <li value="3">The “product” of two classification variables yields dummy variables in the usual manner. Each dummy variable associated with the first classification variable multiplies each dummy variable associated with the second classification variable. The resulting dummy variables are such that the index of the second classification variable varies fastest.</li>
+        </ol>
+        <h2 class="API">Errors</h2>
+        <h3 class="Keyword">Warning Errors</h3>
+        <p><code>STAT_CONVERGENCE_ASSUMED_1</code> - Too many step halvings. Convergence is assumed.</p>
+        <p><code>STAT_CONVERGENCE_ASSUMED_2</code> - Too many step iterations. Convergence is assumed.</p>
+        <p><code>STAT_NO_PREDICTED_1</code> - —“estimates(0)” &gt; 1.0. The expected value for the log logistic distribution (“model” = 4) does not exist. Predicted values will not be calculated.</p>
+        <p><code>STAT_NO_PREDICTED_2</code> - “estimates(0)” &gt; 1.0. The expected value for the log extreme value distribution(“model” = 8) does not exist. Predicted values will not be calculated.</p>
+        <p><code>STAT_NEG_EIGENVALUE</code> - The Hessian has at least one negative eigenvalue. An upper bound on the absolute value of the minimum eigenvalue is # corresponding to variable index #.</p>
+        <p><code>STAT_INVALID_FAILURE_TIME_4—</code> - “x(#)(“Ilt”= #)” = # and “x(#)(“Irt”= #)” = #. The censoring interval has length 0.0. The censoring code for this observation is being set to 0.0.</p>
+        <h3 class="Keyword">Fatal Errors</h3>
+        <p><code>STAT_MAX_CLASS_TOO_SMALL</code> - The number of distinct values of the classification variables exceeds “Max_Class” = #.</p>
+        <p><code>STAT_TOO_FEW_COEF</code> - Init_Est is specified, and “Init_Est” = #. The model specified requires # coefficients.</p>
+        <p><code>STAT_TOO_FEW_VALID_OBS</code> - “n_observations” = # and “Nmissing” = #.“n_observations”(”Nmissing” must be greater than or equal to 2 in order to estimate the coefficients.</p>
+        <p><code>STAT_SVGLM_1</code> - For the exponential model (“model” = 0) with “n_effects” = #</p>
+        <p>and no intercept, “n_coef” has been determined to equal 0. With no coefficients in the model, processing cannot continue.</p>
+        <p><code>STAT_INCREASE_LP_MAX</code> - Too many observations are to be deleted from the model. Either use a different model or increase the workspace.</p>
+        <p><code>STAT_INVALID_DATA_8</code> - “Class_Vals(#)” = #. The number of distinct values for each classification variable must be greater than one.</p>
+        <h2 class="API"><a name="Additional_Examples"></a>Additional Examples</h2>
+        <h3>Example 2</h3>
+        <p>This example uses the same array <i>x</i> defined in Example 1, but more optional</p>
+        <p>arguments are demonstrated.</p>
+        <p class="Code">.RUN</p>
+        <p class="Code">PRO print_results, cs, iter, crit, nmiss</p>
+        <p class="Code_Indented">PRINT, ' Coefficient Satistics'</p>
+        <p class="Code_Indented">PRINT, ' Coefficient s.e z p'</p>
+        <p class="Code_Indented">PM, cs, FORMAT = '(4F14.4)'</p>
+        <p class="Code_Indented">PRINT</p>
+        <p class="Code_Indented">PRINT, ' Iteration Information'</p>
+        <p class="Code_Indented">PRINT, 'Method Iteration Step Size Coef Update ', $</p>
+        <p class="Code_Indented">'Log-Likelihood'</p>
+        <p class="Code_Indented">PM, iter, FORMAT = '(I3, I10, 2F14.4, F14.1)'</p>
+        <p class="Code_Indented">PRINT</p>
+        <p class="Code_Indented">PRINT, 'Log-Likelihood =', crit</p>
+        <p class="Code_Indented">PRINT</p>
+        <p class="Code_Indented">PRINT, 'Number of Missing Value = ', nmiss, $</p>
+        <p class="Code_Indented">FORMAT = '(A26, I3)'</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">n_class = 2</p>
+        <p class="Code">n_continuous = 3</p>
+        <p class="Code">model = 0</p>
+        <p class="Code">icen = 6</p>
+        <p class="Code">irt = 5</p>
+        <p class="Code">lp_max = 40</p>
+        <p class="Code">n_coef = IMSL_SURVIVAL_GLM(n_class, n_continuous, model, x, $</p>
+        <p class="Code_Indented">ICEN = icen, IRT = irt, LP_MAX = lp_max, $</p>
+        <p class="Code_Indented">N_CLASS_VALS = ncv, CLASS_VALS = cv, $</p>
+        <p class="Code_Indented">COEF_STAT = cs, CRITERION = crit, $</p>
+        <p class="Code_Indented">MEANS = means, CASE_ANALYSIS = ca, $</p>
+        <p class="Code_Indented">ITERATIONS = iter, OBS_STATUS = os, NMISSING = nmiss)</p>
+        <p class="Code">print_results, cs, iter, crit, nmiss</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Coefficient Satistics</p>
+        <p class="Code">Coefficient s.e z p</p>
+        <p class="Code">-1.1027 1.3091 -0.8423 0.3998</p>
+        <p class="Code">-0.3626 0.4446 -0.8156 0.4149</p>
+        <p class="Code">0.1271 0.4863 0.2613 0.7939</p>
+        <p class="Code">0.8690 0.5861 1.4825 0.1385</p>
+        <p class="Code">0.2697 0.3882 0.6948 0.4873</p>
+        <p class="Code">-0.5400 0.1081 -4.9946 0.0000</p>
+        <p class="Code">-0.0090 0.0197 -0.4594 0.6460</p>
+        <p class="Code">-0.0034 0.0117 -0.2912 0.7710</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Iteration Information</p>
+        <p class="Code">Method Iteration Step Size Coef Update Log-Likelihood</p>
+        <p class="Code">0 0 NaN NaN -224.0</p>
+        <p class="Code">0 1 1.0000 0.9839 -213.4</p>
+        <p class="Code">1 2 1.0000 3.6034 -207.3</p>
+        <p class="Code">1 3 1.0000 10.1238 -204.3</p>
+        <p class="Code">1 4 1.0000 0.1430 -204.1</p>
+        <p class="Code">1 5 1.0000 0.0117 -204.1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Log-Likelihood = -204.139</p>
+        <p class="Code">Number of Missing Value = 0</p>
+        <h3>Example 3</h3>
+        <p>In this example, the same data and model as example 1 are used, but Itmax is set to zero iterations with model coefficients restricted such that µ = −1.25, β<sub>6</sub> = −0.6, and the remaining six coefficients are equal to zero. A chi-squared statistic, with 8 degrees of freedom for testing the coefficients is specified as above (versus the alternative that it is not as specified), can be computed, based on the output, as:</p>
+        <p>
+            <img src="images/IMSL_SURVIVAL_GLM27.svg" />
+        </p>
+        <p>where:</p>
+        <p>
+            <img src="images/IMSL_SURVIVAL_GLM28.svg" />
+        </p>
+        <p>is output in Covariances. The resulting test statistic, χ<sup>2</sup> = 6.107, based upon no iterations is comparable to likelihood ratio test that can be computed from the log-likelihood output in this example (−206.683) and the log-likelihood output in Example 2 (-204.139).</p>
+        <p class="Code">.RUN</p>
+        <p class="Code">PRO print_results, cs, means, cov, crit, ls</p>
+        <p class="Code">PRINT, ' Coefficient Statistics'</p>
+        <p class="Code">PRINT, ' Coefficient s.e z p'</p>
+        <p class="Code">PM, cs, FORMAT = '(4F14.4)'</p>
+        <p class="Code">PRINT</p>
+        <p class="Code">PRINT, ' Covariate Means'</p>
+        <p class="Code">PRINT, means, FORMAT = '(7F8.2)'</p>
+        <p class="Code">PRINT</p>
+        <p class="Code">PRINT, ' Hessian'</p>
+        <p class="Code">PM, cov, FORMAT = '(8F8.4)'</p>
+        <p class="Code">PRINT</p>
+        <p class="Code">PRINT, 'Log-Likelihood =', crit</p>
+        <p class="Code">PRINT</p>
+        <p class="Code">PRINT, ' Newton_Raphson Step'</p>
+        <p class="Code">PRINT, ls, FORMAT = '(8F8.4)'</p>
+        <p class="Code">END</p>
+        <p class="Code">n_class = 2</p>
+        <p class="Code">n_continuous = 3</p>
+        <p class="Code">model = 0</p>
+        <p class="Code">icen = 6</p>
+        <p class="Code">irt = 5</p>
+        <p class="Code">lp_max = 40</p>
+        <p class="Code">itmax = 0</p>
+        <p class="Code">init_est = [-1.25, 0.0, 0.0, 0.0, 0.0, -0.6, 0.0, 0.0]</p>
+        <p class="Code">n_coef = IMSL_SURVIVAL_GLM(n_class, n_continuous, model, x, $</p>
+        <p class="Code_Indented">ICEN = icen, IRT = irt, ITMAX = itmax, $</p>
+        <p class="Code_Indented">LP_MAX = lp_max, INIT_EST = init_est, $</p>
+        <p class="Code_Indented">COEF_STAT = cs, CRITERION = crit, $</p>
+        <p class="Code_Indented">COVARIANCES = cov, MEANS = means, LAST_STEP = ls)</p>
+        <p class="Code">print_results, cs, means, cov, crit, ls</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Coefficient Statistics</p>
+        <p class="Code">Coefficient s.e z p</p>
+        <p class="Code">-1.2500 1.3773 -0.9076 0.3643</p>
+        <p class="Code">0.0000 0.4288 0.0000 1.0000</p>
+        <p class="Code">0.0000 0.5299 0.0000 1.0000</p>
+        <p class="Code">0.0000 0.7748 0.0000 1.0000</p>
+        <p class="Code">0.0000 0.4051 0.0000 1.0000</p>
+        <p class="Code">-0.6000 0.1118 -5.3652 0.0000</p>
+        <p class="Code">0.0000 0.0215 0.0000 1.0000</p>
+        <p class="Code">0.0000 0.0109 0.0000 1.0000</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Covariate Means</p>
+        <p class="Code">0.35 0.28 0.12 0.53 5.65 56.58 15.65</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Hessian</p>
+        <p class="Code">1.8969 -0.0906 -0.1641 -0.1681 0.0778 -0.0818 -0.0235 -0.0012</p>
+        <p class="Code">-0.0906 0.1839 0.0996 0.1191 0.0358 -0.0005 -0.0008 0.0006</p>
+        <p class="Code">-0.1641 0.0996 0.2808 0.1264 -0.0226 0.0104 0.0005 -0.0021</p>
+        <p class="Code">-0.1681 0.1191 0.1264 0.6003 0.0460 0.0193 -0.0016 0.0007</p>
+        <p class="Code">0.0778 0.0358 -0.0226 0.0460 0.1641 0.0060 -0.0040 0.0017</p>
+        <p class="Code">-0.0818 -0.0005 0.0104 0.0193 0.0060 0.0125 0.0000 0.0003</p>
+        <p class="Code">-0.0235 -0.0008 0.0005 -0.0016 -0.0040 0.0000 0.0005 -0.0001</p>
+        <p class="Code">-0.0012 0.0006 -0.0021 0.0007 0.0017 0.0003 -0.0001 0.0001</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Log-Likelihood = -206.683</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Newton_Raphson Step</p>
+        <p class="Code">0.1706 -0.3365 0.1333 1.2967 0.2985 0.0625 -0.0112 -0.0026</p>
+        <h3>Example 4</h3>
+        <p>This example is a continuation of the first example above. Keywords EST_* are used in IMSL_SURVIVAL_GLM to compute the parameter estimates. The example is taken from Lawless (1982, p. 287) and involves the mortality of patients suffering from lung cancer.</p>
+        <p class="Code">.RUN</p>
+        <p class="Code">PRO print_results, ep</p>
+        <p class="Code">PRINT, ' Survival and Hazard Estimates'</p>
+        <p class="Code">PRINT, ' Time S1 H1 S2 H2'</p>
+        <p class="Code">PM, ep, FORMAT = '(F7.2, F10.4, F13.6, F10.4, F13.6)'</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">n_class = 2</p>
+        <p class="Code">n_continuous = 3</p>
+        <p class="Code">model = 0</p>
+        <p class="Code">icen = 6</p>
+        <p class="Code">irt = 5</p>
+        <p class="Code">lp_max = 40</p>
+        <p class="Code">time = 10.0</p>
+        <p class="Code">npt = 10</p>
+        <p class="Code">delta = 20.0</p>
+        <p class="Code">n_coef = IMSL_SURVIVAL_GLM(n_class, n_continuous, model, x, $</p>
+        <p class="Code_Indented">ICEN=icen, IRT=irt, LP_MAX=lp_max, N_CLASS_VALS=nvc, $</p>
+        <p class="Code_Indented">CLASS_VALS=cv, COEF_STAT=cs, CRITERION=crit, MEANS=means, $</p>
+        <p class="Code_Indented">CASE_ANALYSIS=ca, OBS_STATUS=os, ITERATIONS=iter, $</p>
+        <p class="Code_Indented">EST_NOBS=2, EST_TIME=time, EST_NPT=npt, $</p>
+        <p class="Code_Indented">EST_DELTA=delta, EST_PROB=ep, EST_XBETA=xb)</p>
+        <p class="Code">print_results, ep</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Survival and Hazard Estimates</p>
+        <p class="Code">Time S1 H1 S2 H2</p>
+        <p class="Code">10.00 0.9626 0.003807 0.9370 0.006503</p>
+        <p class="Code">30.00 0.8921 0.003807 0.8228 0.006503</p>
+        <p class="Code">50.00 0.8267 0.003807 0.7224 0.006503</p>
+        <p class="Code">70.00 0.7661 0.003807 0.6343 0.006503</p>
+        <p class="Code">90.00 0.7099 0.003807 0.5570 0.006503</p>
+        <p class="Code">110.00 0.6579 0.003807 0.4890 0.006503</p>
+        <p class="Code">130.00 0.6096 0.003807 0.4294 0.006503</p>
+        <p class="Code">150.00 0.5649 0.003807 0.3770 0.006503</p>
+        <p class="Code">170.00 0.5235 0.003807 0.3310 0.006503</p>
+        <p class="Code">190.00 0.4852 0.003807 0.2907 0.006503</p>
+        <h2 class="API">Version History</h2>
+        <table style="mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

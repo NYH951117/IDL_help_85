@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: Q">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>QUERY_VIDEO</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Q_list.htm">Routines: Q</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">QUERY_VIDEO</span>
+        </div>
+        <h1>QUERY_VIDEO<a name="kanchor2156"></a></h1>
+        <p>QUERY_VIDEO obtains information about a video file without having to open and read it. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Frame counts may vary slightly depending on the method used to obtain the count. Variabilities in timestamps and video standards, discontinuities in the videos themselves, or differences in the types of frames may influence the apparent frame count.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Animated GIF files do not contain header information on the frame rate, duration, or the number of frames. These values are estimated from other header information and may be incorrect.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>QUERY_VIDEO is not available with the <a href="../../Creating IDL Programs/Distributing IDL Applications/VirtualMachineApplications/VirtualMachineApplicationsIntro.htm">IDL Virtual Machine</a>.</p>
+        <h2 class="API" data-mc-conditions="">Examples</h2>
+        <h3 data-mc-conditions="">Example 1 - Obtain Information About a Video File</h3>
+        <p data-mc-conditions="">The following example uses a NASA video displaying the Coronal Mass Ejection (CME) event of August, 2012. The video is available online (see <a href="#Resource" class="selected">Resources and References</a>, below) or in the \examples\data directory of your IDL installation. </p>
+        <p data-mc-conditions="">Copy the following to the IDL command line to obtain information about the CME.mp4 file:</p>
+        <p class="Code">; Define the file to query.</p>
+        <p class="Code">file = FILEPATH('CME.mp4', $</p>
+        <p class="Code">&#160;&#160;&#160;SUBDIRECTORY=['examples','data'])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">myVideoQuery = QUERY_VIDEO(file, info, STREAMS=vidStreams)</p>
+        <p class="Code">PRINT, info</p>
+        <p class="Code">HELP, info</p>
+        <p class="Code">&#160;</p>
+        <p>IDL returns:</p>
+        <p>
+            <img src="../images/QueryVidResult2.png" />
+        </p>
+        <p class="Code">&#160;</p>
+        <p>From this we can tell that the dimensions are 512x288, it's a video with 574 frames, is 19.1525 seconds long, written in the H.264/MPEG-4 codec, and has 29.97 frames per second playback rate. Now check the content of the vidStreams variable:</p>
+        <p>&#160;</p>
+        <p class="Code">HELP, vidStreams</p>
+        <p class="Code">&#160;</p>
+        <p>IDL displays similar information stored in the vidStreams variable:</p>
+        <p class="Code">&#160;</p>
+        <p>
+            <img src="../images/QueryVidResult1.png" />
+        </p>
+        <h3>Example 2: Get Codec and Format Information</h3>
+        <p>Copy the following lines of code to the IDL command line to obtain general information about the codecs and formats currently supported in IDL:</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">result = QUERY_VIDEO(CODECS_READ=cRead, CODECS_WRITE=cWrite, $</p>
+        <p class="Code">&#160;&#160;&#160;FORMATS_READ=fRead, FORMATS_WRITE=fWrite)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRINT, cRead</p>
+        <p class="Code">PRINT, cWrite</p>
+        <p class="Code">PRINT, fRead</p>
+        <p class="Code">PRINT, fWrite</p>
+        <p class="Code">&#160;</p>
+        <p>IDL displays all of the current codec and format information.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = QUERY_VIDEO( <i>Filename </i>[,&#160;<i>Info</i>] [,&#160;/<a href="#AUDIO" class="selected">AUDIO</a>] [, <a href="#CODECS_R" class="selected">CODECS_READ</a>=<i>variable</i>] [, <a href="#CODECS_W" class="selected">CODECS_WRITE</a>=<i>variable</i>] [, <a href="#FORMATS_" class="selected">FORMATS_READ</a>=<i>variable</i>] [, <a href="#FORMATS_2" class="selected">FORMATS_WRITE</a>=<i>variable</i>] [, <a href="#METADATA" class="selected">METADATA</a>=<i>variable</i>] [, <a href="#STREAMS" class="selected">STREAMS</a>=<i>variable</i>] [,&#160;/<a href="#VIDEO" class="selected">VIDEO</a>])</p>
+        <h2 class="API">Return Value</h2>
+        <p>This routine returns a long with the value of 1 (one) if the query was successful and the file type was correct, or 0 (zero) on failure, along with other information about the file.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>Set Filename to a scalar string containing the full path to a video file to query.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This argument is not required when retrieving information on codecs or formats.</p>
+        <h3 class="Argument">Info</h3>
+        <p>Returns an anonymous structure containing information about the file. </p>
+        <table class="TableStyle_Description" style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <thead>
+                <tr class="Head-Header1">
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Field</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>IDL Data Type</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>IDL&#160;Data Type</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Dimensions</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2-D long array</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>[width, height] of the first video stream in the file.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Type</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>String</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>String identifying the file format: "VIDEO".</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Num_Frames</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Long</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The number of frames in the first video stream.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Length</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Float</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>The length, in seconds, of the first video stream.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Codec</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>String</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The codec used to encode the first video stream.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>Rate</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>Float</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>The desired playback rate of the first video stream.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="AUDIO"></a>AUDIO</h3>
+        <p>Set this keyword in conjunction with CODECS_READ or CODECS_WRITE to return the audio codecs. The default is to return both video and audio codecs.</p>
+        <h3 class="Keyword"><a name="CODECS_R"></a>CODECS_READ</h3>
+        <p>Assign CODECS_READ to a named variable in which to return a string array listing all the readable codecs currently supported.</p>
+        <h3 class="Keyword"><a name="CODECS_W"></a>CODECS_WRITE</h3>
+        <p>Set this keyword to a named variable in which to return a string array listing all the writable codecs currently supported.</p>
+        <h3 class="Keyword"><a name="FORMATS_"></a>FORMATS_READ</h3>
+        <p>Set this keyword to a named variable in which to return a string array listing all the readable formats currently supported.</p>
+        <h3 class="Keyword"><a name="FORMATS_2"></a>FORMATS_WRITE</h3>
+        <p>Assign FORMATS_WRITE to a named variable in which to return a string array listing all the writable formats currently supported.</p>
+        <h3 class="Keyword"><a name="METADATA"></a>METADATA</h3>
+        <p>Set this keyword to a named variable in which to return a 2-dimensional string array containing all of the metadata in the file. Each pair of strings will represent a [key, value] pair of metadata.</p>
+        <h3 class="Keyword"><a name="STREAMS"></a>STREAMS</h3>
+        <p>Assign STREAMS&#160;to a named variable to return an array of structures describing the streams available in the currently open file. If no streams are found, IDL returns !NULL.</p>
+        <table class="TableStyle_Description" style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <thead>
+                <tr class="Head-Header1">
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Field</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>IDL Data Type</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>IDL&#160;Data Type</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>PID</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Long</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Internal ID&#160;of the stream.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Type</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Ulong</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>0=unknown; 1=video; 2=audio; 3=data.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Rate</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Float</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>For video: frames per second. For audio: Hertz </p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Width</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Ulong</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>For video: width in pixels of a frame </p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Height</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Ulong</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>For video: height in pixels of a frame </p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Channels</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Ulong</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Number of audio channels in the stream.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Codec</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>String</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Codec used for encoding the stream.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Length</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Float</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Time, in seconds, of the stream.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>Count</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>Ulong</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Number of frames or data packets in the stream.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDL takes the information returned from the metadata written in the file. It is possible, depending on the file's encoding, for the actual length and count to be different than what is returned here. To obtain the actual number of frames and the time stamp on each frame, use the TIME_OUT and NODATA keywords to <a href="../R/READ_VIDEO.htm">READ_VIDEO</a>.</p>
+        <h3 class="Keyword"><a name="VIDEO"></a>VIDEO</h3>
+        <p>Set this keyword in conjunction with <a href="#CODECS_R" class="selected">CODECS_READ</a> or <a href="#CODECS_W" class="selected">CODECS_WRITE</a> to return the video codecs. The default is to return both video and audio codecs.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.2.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="Resource"></a>Resources and References</h2>
+        <p data-mc-conditions="">The NASA "CME.mp4" video used in the example is courtesy of the Solar Dynamics Observatory (SDO) and the Solar and Heliospheric Observatory (SOHO). The file is available for download here:</p>
+        <p data-mc-conditions=""><a href="http://www.nasa.gov/multimedia/videogallery/index.html?media_id=160387251">http://www.nasa.gov/multimedia/videogallery/index.html?media_id=160387251</a>
+        </p>
+        <p data-mc-conditions="">&#160;</p>
+        <p data-mc-conditions="">A longer, similar video that can be substituted in the example code, is available for download here:</p>
+        <p data-mc-conditions=""><a href="http://www.nasa.gov/mission_pages/sdo/news/coronal-rain.html">http://www.nasa.gov/mission_pages/sdo/news/coronal-rain.html</a>
+        </p>
+        <h2 class="API">See Also</h2>
+        <p><a href="../../Creating IDL Programs/Application Programming/CreatingVideo.htm">Creating Video</a>, <a href="../../Object Classes/File Format/IDLffVideoRead.htm">IDLffVideoRead</a>, <a href="../../Object Classes/File Format/IDLffVideoWrite.htm">IDLffVideoWrite</a>, <a href="../R/READ_VIDEO.htm">READ_VIDEO</a>, <a href="../W/WRITE_VIDEO.htm">WRITE_VIDEO</a> <![CDATA[ ]]></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

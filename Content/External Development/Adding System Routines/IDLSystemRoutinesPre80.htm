@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Adding System Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDL and System Routines Pre-IDL 8.0</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="AddingSystRoutines.htm">Adding System Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDL and System Routines</span>
+        </div>
+        <h1><a name="kanchor5515"></a>IDL and System Routines Pre-IDL 8.0</h1>
+        <p>An IDL system routine is an IDL procedure or function that is written in a compiled language with an IDL specific interface and linked into IDL, instead of being written in the IDL language itself. The best way to create an IDL system routine is to compile and link the routine into a sharable library and then to add the routine to IDL at runtime using either the <a href="LinkImage.htm">LINKIMAGE</a> procedure or by making your routines part of a <a href="DLM.htm">Dynamically Loadable Module (DLM)</a>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>We recommend the use of Dynamically Loadable Modules rather than LINKIMAGE whenever possible. </p>
+        <h2 class="API">Debugging System Routines</h2>
+        <p>To debug system routines and DLMs, you must attach your debugger to the IDL process that is running your library code. In IDL 7.x, the process to which you should attach the debugger varies depending on your platform and your version of IDL.</p>
+        <h3>If the IDL Workbench is Running</h3>
+        <p>When the IDL Workbench is running, IDL comprises two processes:</p>
+        <p><b>IDL Workbench</b> — This process runs the IDL Workbench interface. It will show up in a process list as <code>idlde.exe</code> on Windows systems, and as a Java command containing the string <code>idlde</code>on Unix-based systems.</p>
+        <p><b>IDL Out-of-Process server</b> — This process runs the IDL interpreter and loads shared libraries (DLMs). It will show up in a process list as <code>idl_opserver.exe</code> on Windows systems, and as <code>idl_opserver</code> on Unix-based systems.</p>
+        <p>To debug your shared library code when the IDL Workbench is running, attach your debugger (gdb, Visual Studio, etc.) to one of the following:</p>
+        <ul>
+            <li value="1">On Windows, using Visual Studio, you can select "Attach to Process" and choose the <code>idl_opserver.exe</code> process.</li>
+            <li value="2">On Unix-based systems, using gdb or dbx, you can use the <code>ps</code> command to retrieve the ID of the <code>idl_opserver</code> process, and then attach your debugger to that process ID.</li>
+        </ul>
+        <h3>If the IDL Workbench is Not Running</h3>
+        <p>When IDL is running in command-line mode, it comprises either one or two processes:</p>
+        <p><b>IDL</b> — On Unix-based systems, the <code>idl</code> process is the only IDL process. On Windows systems, the <code>idl.exe</code> process is a front-end to the <code>idl_engine.exe</code> process.</p>
+        <p><b>IDL Out-of-Process server</b> — On Windows systems, the <code>idl_opserver.exe</code> process runs the IDL interpreter and loads shared libraries (DLMs). Unix-based systems do not use an <code>idl_opserver</code> process when running in command-line mode.</p>
+        <p>To debug your shared library code when IDL is running in command-line mode, attach your debugger (gdb, Visual Studio, etc.) to one of the following:</p>
+        <ul>
+            <li value="1">On Windows, using Visual Studio, you can select Attach to Process and choose the <code>idl_opserver.exe</code> process.</li>
+            <li value="2">On Unix-based systems, using gdb or dbx, you can use the <code>ps</code> command to retrieve the ID of the idl process, and then attach your debugger to that process ID.</li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: V">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>VORONOI </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="V_list.htm">Routines: V</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">VORONOI</span>
+        </div>
+        <h1 class="Routine"><a name="V_813552237_758676"></a><a name="kanchor2685"></a><a name="V_813552237_19060"></a>VORONOI </h1>
+        <p>The VORONOI procedure computes the Voronoi polygon of a point within an irregular grid of points, given the Delaunay triangulation. The Voronoi polygon of a point contains the region closer to that point than to any other point.</p>
+        <p>For interior points, the polygon is constructed by connecting the midpoints of the lines connecting the point with its Delaunay neighbors. Polygons are traversed in a counterclockwise direction.</p>
+        <p>For exterior points, the set is described by the midpoints of the connecting lines, plus the circumcenters of the two triangles that connect the point to the two adjacent exterior points.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>voronoi.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="V_813552237_758695"></a><a name="V_813552237_758695_PageTOC_VORONOI_"></a>Examples</h2>
+        <p>To draw the Voronoi polygons of each point of an irregular grid:</p>
+        <p class="Code">; Use a color table:<br />DEVICE, GET_DECOMPOSED=old_decomposed<br />DEVICE, DECOMPOSED=0<br />LOADCT, 15<br /><br />; Create a random grid of N points:<br />N = 20<br />X = RANDOMU(seed, N)<br />Y = RANDOMU(seed, N)<br /><br />; Triangulate it:<br />TRIANGULATE, X, Y, tr, CONN=C<br /><br />FOR I=0, N-1 DO BEGIN &amp; $<br />&#160;&#160;&#160;; Get the ith polygon:<br />&#160;&#160;&#160;VORONOI, X, Y, I, C, Xp, Yp &amp; $<br />&#160;&#160;&#160;&#160;&#160;&#160;; Draw it:<br />&#160;&#160;&#160;&#160;&#160;&#160;POLYFILL, Xp, Yp, COLOR = I * 10 &amp; $<br />ENDFOR<br /><br />; Reset device paramters<br />DEVICE, DECOMPOSED=old_decomposed<br />LOADCT, 0</p>
+        <h2 class="API"><a name="V_813552237_758682"></a><a name="V_813552237_758682_PageTOC_VORONOI_"></a>Syntax</h2>
+        <p class="Syntax">VORONOI, <i>X</i>,<i> Y</i>,<i> I0</i>,<i> C</i>,<i> Xp</i>,<i> Yp</i>,<i> Rect</i></p>
+        <h2 class="API"><a name="V_813552237_758684"></a><a name="V_813552237_758684_PageTOC_VORONOI_"></a>Arguments</h2>
+        <h3 class="Argument">X</h3>
+        <p>An array containing the X locations of the points.</p>
+        <h3 class="Argument">Y</h3>
+        <p>An array containing the Y locations of the points.</p>
+        <h3 class="Argument">I0</h3>
+        <p>An array containing the indices of the points.</p>
+        <h3 class="Argument">C</h3>
+        <p>A connectivity list from the Delaunay triangulation. This list is produced with the CONNECTIVITY keyword of the TRIANGULATE procedure.</p>
+        <h3 class="Argument">Xp, Yp</h3>
+        <p>Named variables that will contain the X and Y vertices of Voronoi polygon.</p>
+        <h3 class="Argument">Rect</h3>
+        <p>The bounding rectangle: [Xmin, Ymin, Xmax, Ymax]. Because the Voronoi polygon (VP) for points on the convex hull extends to infinity, a clipping rectangle must be supplied to close the polygon. This rectangle has no effect on the VP of interior points. If this rectangle does not enclose all the Voronoi vertices, the results will be incorrect. If this parameter, which must be a named variable, is undefined or set to a scalar value, it will be calculated.</p>
+        <h2 class="API"><a name="V_813552237_758704"></a><a name="V_813552237_758704_PageTOC_VORONOI_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre-4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="V_813552237_958771"></a><a name="V_813552237_958771_PageTOC_VORONOI_"></a>See Also</h2>
+        <p><a href="../T/TRIANGULATE.htm#T_809226861_679530">TRIANGULATE</a>
+        </p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

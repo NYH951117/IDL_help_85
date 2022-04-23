@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Data Types|String Operations">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Comparing Strings</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDL_Data_Types.htm">Data Types</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="String_Operations.htm">String Operations</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Comparing Strings</span>
+        </div>
+        <h1><a name="strings_3486979161_298878"></a><a name="strings_3486979161_68186"></a>Comparing Strings</h1>
+        <p>IDL provides several different mechanisms for performing string comparisons. In addition to the EQ operator, the STRCMP, STRMATCH, and STREGEX functions can all be used for string comparisons.</p>
+        <h2 class="API"><a name="strings_3486979161_70640"></a>Case-Insensitive Comparisons of the First N Characters</h2>
+        <p><a name="kanchor4549"></a>The <a href="../../Reference Material/S/STRCMP.htm#S_820040301_679036">STRCMP</a> function simplifies case-insensitive comparisons, and comparisons of only the first N characters of two strings. The STRCMP function uses the following syntax:</p>
+        <p class="indent"><i>Result</i> = STRCMP( <i>String1</i>, <i>String2</i> [, <i>N</i>] )</p>
+        <p>where <i>String1</i> and <i>String2</i> are the strings to be compared, and <i>N</i> is the number of characters from the beginning of the string to compare.</p>
+        <p>Using the EQ operator to compare the first 3 characters of the strings “Moose” and “mOO” requires the following steps:</p>
+        <p class="Code">A = 'Moose'</p>
+        <p class="Code">B = 'mOO'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">C=STRMID(A,0,3)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IF (STRLOWCASE(C) EQ STRLOWCASE(B)) THEN PRINT, "It's a match!"</p>
+        <p>Using the EQ operator for this case-insensitive comparison of the first 3 characters requires the STRMID function to extract the first 3 characters, and the STRLOWCASE (or STRUPCASE) function to change the case.</p>
+        <p>The STRCMP function could be used to simplify this comparison:</p>
+        <p class="Code">A='Moose'</p>
+        <p class="Code">B='mOO'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IF (STRCMP(A,B,3, /FOLD_CASE) EQ 1) THEN PRINT, "It's a match!"</p>
+        <p>The optional <i>N</i> argument of the STRCMP function allows us to easily specify how many characters to compare (from the beginning of the input strings), and the FOLD_CASE keyword specifies a case-insensitive search. If <i>N</i> is omitted, the full strings are compared.</p>
+        <h2 class="API"><a name="strings_3486979161_42391"></a>String Comparisons Using Wildcards</h2>
+        <p><a name="kanchor4550"></a><a name="kanchor4551"></a>The <a href="../../Reference Material/S/STRMATCH.htm#S_820040301_679108">STRMATCH</a> function can be used to compare a search string containing wildcard characters to another string. It is similar in function to the way the standard UNIX command shell processes file wildcard characters.</p>
+        <p>The STRMATCH function uses the following syntax:</p>
+        <p class="indent"><i>Result</i> = STRMATCH( <i>String</i>, <i>SearchString</i> )</p>
+        <p>where <i>String </i>is the string in which to search for <i>SearchString</i>.</p>
+        <p><i>SearchString </i>can contain the following wildcard characters:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Wildcard Character</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>*</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Matches any string, including an empty string.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>?</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Matches any single character.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>[...]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Matches any one of the enclosed characters. A pair of characters separated by "-" matches any character lexically between the pair, inclusive. If the first character following the opening [ is a !, any character not enclosed is matched. To prevent one of these characters from acting as a wildcard, it can be quoted by preceding it with a backslash character (e.g. "\*" matches the asterisk character). Quoting any other character (including \ itself) is equivalent to the character (e.g. "\a" is the same as "a").</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>The following examples demonstrate various uses of wildcard matching:</p>
+        <p><b>Example 1:</b> Find all 4-letter words in a string array that begin with “f” or “F” and end with “t” or “T”:</p>
+        <p class="Code">str = ['foot', 'Feet', 'fate', 'FAST', 'ferret', 'fort'] </p>
+        <p class="Code">PRINT, str[WHERE(STRMATCH(str, 'f??t', /FOLD_CASE) EQ 1)]</p>
+        <p>This results in:</p>
+        <p class="Code">foot Feet FAST fort</p>
+        <p><b>Example 2:</b> Find words of any length that begin with “f” and end with “t”:</p>
+        <p class="Code">str = ['foot', 'Feet', 'fate', 'FAST', 'ferret', 'fort']</p>
+        <p class="Code">PRINT, str[WHERE(STRMATCH(str, 'f*t', /FOLD_CASE) EQ 1)]</p>
+        <p>This results in:</p>
+        <p class="Code">foot Feet FAST ferret fort</p>
+        <p><b>Example 3:</b> Find 4-letter words beginning with “f” and ending with “t”, with any combination of “o” and “e” in between:</p>
+        <p class="Code">str = ['foot', 'Feet', 'fate', 'FAST', 'ferret', 'fort']</p>
+        <p class="Code">PRINT, str[WHERE(STRMATCH(str, 'f[eo][eo]t', /FOLD_CASE) EQ 1)]</p>
+        <p>This results in:</p>
+        <p class="Code">foot Feet</p>
+        <p><b>Example 4:</b> Find all words beginning with “f” and ending with “t” whose second character is not the letter “o”:</p>
+        <p class="Code">str = ['foot', 'Feet', 'fate', 'FAST', 'ferret', 'fort']</p>
+        <p class="Code">PRINT, str[WHERE(STRMATCH(str, 'f[!o]*t', /FOLD_CASE) EQ 1)]</p>
+        <p>This results in:</p>
+        <p class="Code">Feet FAST ferret</p>
+        <h2 class="API"><a name="strings_3486979161_92313"></a><b>Complex Comparisons Using Regular Expressions</b>
+        </h2>
+        <p><a name="kanchor4552"></a>A more difficult search than the one above would be to find words of any length beginning with “f” and ending with “t” without the letter “o” in between. This would be difficult to accomplish with STRMATCH, but could be easily accomplished using the <a href="../../Reference Material/S/STREGEX.htm#S_820040301_1077065">STREGEX </a>function:</p>
+        <p class="Code">str = ['foot', 'Feet', 'fate', 'FAST', 'ferret', 'fort']</p>
+        <p class="Code">PRINT, STREGEX(str, '^f[^o]*t$', /EXTRACT, /FOLD_CASE)</p>
+        <p>This statement results in:</p>
+        <p class="Code">Feet FAST ferret</p>
+        <p>Note the following about this example:</p>
+        <ul>
+            <li value="1">
+                <p>Unlike the * wildcard character used by STRMATCH, the * meta character used by STREGEX applies to the item directly on its left, which in this case is [^o], meaning “any character except the letter ‘o’ ”. Therefore, [^o]* means “zero or more characters that are not ‘o’ ”, whereas the following statement would find only words whose second character is not “o”:</p>
+                <p class="Code">PRINT, str[WHERE(STRMATCH(str, 'f[!o]*t', /FOLD_CASE) EQ 1)]</p>
+            </li>
+            <li value="2">The anchors (^ and $) tell STREGEX to find only words that begin with “f” and end with “t”. If we left out the $ anchor, STREGEX would also return “fat”, which is a substring of “fate”.</li>
+        </ul>
+        <p>Regular expressions are somewhat more difficult to use than simple wildcard matching (which is why the UNIX shell does matching) but in exchange offers unparalleled expressive power.</p>
+        <p>For more on the STREGEX function, see <a href="../../Reference Material/S/STREGEX.htm#S_820040301_1077065">STREGEX</a>, and for an introduction to regular expressions, see <a href="Learning_About_Regular_E.htm#strings_3486979161_298753">Learning About Regular Expressions</a>.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

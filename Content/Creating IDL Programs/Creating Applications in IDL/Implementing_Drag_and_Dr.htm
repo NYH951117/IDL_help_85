@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|About Draw Widgets">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Implementing Drag and Drop Functionality</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="About_Draw_Widgets.htm">About Draw Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Implementing Drag and Drop Functionality</span>
+        </div>
+        <h1><a name="widget_draw_834959296_223948"></a><a name="widget_draw_834959296_39597"></a>Implementing Drag and Drop Functionality</h1>
+        <p>In IDL versions 6.3 and later, you can create applications that allow users to <a name="kanchor5073"></a>drag tree nodes from a tree widget to a draw widget. Drag and drop functionality is not enabled by default. When creating an IDL application that incorporates both a tree widget and a draw widget you can enable drag and drop behavior to drag values from the tree widget to the draw widget. This section discusses the steps necessary to implement drag and drop functionality in your application.</p>
+        <p>Implementing drag and drop functionality in your application entails three steps:</p>
+        <ol>
+            <li value="1">Making Nodes Draggable. You must explicitly specify that a node or group of nodes in the tree widget can be dragged. See <a href="Dragging_and_Dropping_Tr.htm#widget_tree_1678712652_222913">Dragging and Dropping Tree Nodes</a> for details.</li>
+            <li value="2"><a href="#widget_draw_834959296_223967" class="selected">Responding to Drag Notifications (Callbacks)</a>. When the user drags a tree node onto a draw widget, IDL generates a notification, which is passed to a callback function. In most cases, you can use the default callback function, but you can create your own callback function to handle special or complex situations. Drag notifications allow you to control if and where drops are allowed.</li>
+            <li value="3"><a href="#widget_draw_834959296_224129" class="selected">Responding to Drop Events</a>. When the user releases the mouse button to drop the selected nodes, IDL generates a drop event. You can use the information contained in the drop event structure to perform an operation, such as loading an image or other visualization in the draw widget.</li>
+        </ol>
+        <h2 class="API"><a name="widget_draw_834959296_223967"></a><a name="widget_draw_834959296_72242"></a>Responding to Drag Notifications (Callbacks)</h2>
+        <p>When the user drags a group of selected nodes over a draw widget, IDL automatically calls the routine defined as the <i>drag notification callback</i> for the draw widget. The purpose of the <a name="kanchor5074"></a>drag notification callback is to provide the widget system with information about where dragged nodes can be dropped, allowing it to change the cursor display to indicate to the user whether nodes can be dropped at the current position. You, as an IDL application programmer, cannot respond to the value returned by the drag notification callback directly, but you can choose to specify your own version of the callback function to override the default behavior. Drag notification callbacks are specified via the DRAG_NOTIFY keyword to WIDGET_DRAW, or the SET_DRAG_NOTIFY keyword to WIDGET_CONTROL.</p>
+        <p>Drag notifications are also generated when the state of a drag modifier key changes (either up or down). If you override the default drag notification callback, you can use this information to update the drag cursor with a plus symbol (<code>+</code>).</p>
+        <p>If no callback is defined for the draw widget, the default callback will be used.</p>
+        <h3>Drag Notification Callback Return Values</h3>
+        <p>The drag notification callback function returns an integer value calculated by performing an OR operation on the following values:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Meaning</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>User cannot drop</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>User can drop above</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>User can drop onto</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">4</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">User can drop below</td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">8</td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">Show the plus indicator</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>For example, if the callback returns the value 3, the use can drop onto the draw widget and the plus indicator will be displayed.</p>
+        <h3>The Default Drag Notification Callback</h3>
+        <p>The default drag notification callback function is used if no function is specified for the draw widget. The default callback returns 0 if drop events are not enabled (DROP_EVENTS=0) and 1 otherwise.</p>
+        <h3>Writing Custom Drag Notification Callbacks</h3>
+        <p>In most cases, the default drag notification callback should be adequate for an application that allows the user to drop tree nodes onto a draw widget. If it proves inadequate, however, you can create a custom callback to perform extra processing.</p>
+        <p>The drag notification callback routine has the following signature:</p>
+        <p class="Code">FUNCTION Callback_Function_Name, <i>Destination</i>, <i>Source</i>, $<br />&#160;&#160;&#160;<i>X</i>, <i>Y</i>, <i>Modifiers</i>, <i>Default</i></p>
+        <p>where</p>
+        <ul>
+            <li value="1"><i>Callback_Function_Name</i> is the name of the callback function. This value is specified as the value of the DRAG_NOTIFY keyword.</li>
+            <li value="2"><i>Destination</i> is the widget ID of the draw widget over which the item is dragged.</li>
+            <li value="3"><i>Source</i> is the widget ID of the source tree, from which a list of widget IDs representing the list of selected nodes can be retrieved using the TREE_SELECT or TREE_DRAG_SELECT keywords to WIDGET_INFO.</li>
+            <li value="4"><i>X</i> is the position to the right of the lower left corner of the drawable area, in device coordinates (pixels).</li>
+            <li value="5"><i>Y</i> is the position above the lower left corner of the drawable area, in device coordinates (pixels).</li>
+            <li value="6">
+                <p><i>Modifiers</i> indicates the state of the modifier keys. The widget system generates them by ORing the following values together for the depressed keys:</p>
+                <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+                    <col />
+                    <col />
+                    <thead>
+                        <tr>
+                            <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                                <p>Bitmask</p>
+                            </td>
+                            <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                                <p>Modifier Key</p>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                                <p>1</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                                <p>Shift</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                                <p>2</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                                <p>Control</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                                <p>4</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                                <p>Caps Lock</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                                <p>8</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                                <p>Alt</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For UNIX, the <b>Alt</b> key is the currently mapped MOD1 key.</p>
+            </li>
+            <li value="7"><i>Default </i>is the value that the default callback would have returned. A common usage is to have the callback return its value after modifying it to show the <code>+</code> indicator.</li>
+        </ul>
+        <p>The return value should indicate where a drop is allowed to take place relative to the destination widget and whether the “+” symbol should appear with the drag cursor, as described in the table above under "Drag Notification Callback Return Values." For additional information on writing drag notification callbacks, see <a href="Dragging_and_Dropping_Tr.htm#widget_tree_1678712652_222913">Dragging and Dropping Tree Nodes</a>.</p>
+        <h2 class="API"><a name="widget_draw_834959296_224129"></a><a name="widget_draw_834959296_46934"></a>Responding to Drop Events</h2>
+        <p>When the user releases the mouse button over a valid drop target (that is, when the DROP_EVENTS keyword to WIDGET_DRAW has been set), a <a name="kanchor5075"></a>WIDGET_DROP event is generated. Your application’s event handler should recognize this drop event and perform some action.</p>
+        <p>The drop event’s information is contained in a WIDGET_DROP structure. (See <a href="../../Reference Material/W/WIDGET_DRAW.htm#W_811389549_1222865">DROP_EVENTS</a> in the reference section for <a href="../../Reference Material/W/WIDGET_DRAW.htm#W_811389549_680218">WIDGET_DRAW</a>for a full definition of the WIDGET_DROP structure.) The important components of the structure when responding to drop events are:</p>
+        <ul>
+            <li value="1"><b>ID</b> — The widget ID of the destination node.</li>
+            <li value="2"><b>DRAG_ID</b> — The widget ID of the source tree widget. The selected nodes of this tree are the nodes that are being dragged. You can use the TREE_SELECT keyword to <a href="../../Reference Material/W/WIDGET_INFO.htm#W_811389549_680333">WIDGET_INFO</a>along with this widget ID to retrieve the list of selected nodes.</li>
+            <li value="3"><b>X </b>and<b> Y </b>— The drop position relative to the lower left corner of the drawable area.</li>
+            <li value="4"><b>MODIFIERS</b> — An integer representing the state of the modifier keys, calculated by ORing together the values shown in the table under "Drag Notification Callback Return Values" above. On some platforms it is common for the <b>Ctrl</b> key to be used as the copy key, with simple move operations being performed when <b>Ctrl</b> is not pressed.</li>
+        </ul>
+        <h2 class="API"><a name="widget_draw_834959296_51444"></a>Draw Widget Drag and Drop Example</h2>
+        <p>The IDL distribution contains an example that contains a tree widget representing various image files and a draw widget onto which the tree nodes can be dragged to display the images. </p>
+        <p class="ExampleCode">The draw widget drag and drop example is included in the file <code>drag_and_drop_draw.pro<a name="kanchor5076"></a></code>in the<code> examples/doc/widgets </code>subdirectory of the IDL distribution. Run this example procedure by entering <code>drag_and_drop_draw</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT drag_and_drop_draw.pro</code>. </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

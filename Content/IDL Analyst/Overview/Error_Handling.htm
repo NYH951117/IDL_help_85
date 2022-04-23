@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDL Analyst Error Handling</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1>IDL Analyst Error Handling</h1>
+        <p>IDL Analyst uses IDL’s built-in error handling mechanisms for most errors. This section describes areas in which IDL Analyst may provide a greater level of control than IDL itself.</p>
+        <h2 class="API">Underflow and Overflow</h2>
+        <p>In most cases, IDL Analyst routines are written so that computations are not affected by underflow, provided the system (hardware or software) replaces an underflow with the value zero. Normally, system error messages indicating underflow can be ignored.</p>
+        <p>IDL Analyst routines also are written to avoid overflow. A program that produces system error messages indicating overflow should be examined for programming errors such as incorrect input data, mismatch of parameter types, or improper dimensions.</p>
+        <p>In many cases, the documentation for a function points out common pitfalls that can lead to failure of the algorithm.</p>
+        <h2 class="API">Missing Values</h2>
+        <p>Some IDL Analyst routines allow input data to contain missing values. These routines recognize as a missing value the special floating-point value referred to as “Not a Number” or NaN. The actual value varies on different computers, but it can be obtained by reference to the IMSL_MACHINE function.</p>
+        <p>The manner in which missing values are treated depends on the individual function as described in the documentation for that function.</p>
+        <p>For more information on special floating-point values (including NaN), see “Math Errors” (Chapter 8, Application Programming).</p>
+        <h2 class="API">Errors in User Code</h2>
+        <p>IDL Analyst functions attempt to detect user errors and handle them in a way that provides as much information to the user as possible. In addition to the basic IDL error-handling facility, five levels of Informational Error severity are recognized. The error levels are described below.</p>
+        <h3>Error Levels and Default Actions</h3>
+        <p>The IMSL numerical library categorizes library errors with one of five severity levels:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" class="TableStyle_Description" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Type</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Meaning</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Note</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>A note is issued to indicate the possibility of a trivial error or simply to provide information about the computations. A note does not update !ERROR_STATE.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Alert</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>An alert indicates that the user should be advised about conditions that arise during computation. Underflow errors are generally categorized as alerts. An alert does not update !ERROR_STATE.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Warning</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>A warning indicates the existence of a condition that may require corrective action by the user or calling routine. A warning error may be issued because the results are accurate to only a few decimal places, because some of the output may be erroneous but most of the output is correct, or because some assumptions underlying the analysis technique are violated. Often no corrective action is necessary and the condition can be ignored. A warning does not update !ERROR_STATE.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Fatal</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>A fatal error indicates the existence of a condition that may be serious. In most cases, the user or calling routine must take corrective action to recover. A fatal error updates !ERROR_STATE.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>Terminal</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>A terminal error is serious. It usually is the result of an incorrect specification, such as specifying a negative number as the number of
+equations. Terminal errors may also be caused by various
+programming errors that are impossible to diagnose correctly within
+the IMSL library. If a terminal error occurs, first check that the
+arguments passed to the routine are in the correct order and have the
+correct data types. A terminal error updates !ERROR_STATE.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Although IDL Analyst does not allow users to directly manipulate how these errors are interpreted internally, you can control which errors are printed to the IDL output log. All informational error messages are printed by default. Setting the system variable !QUIET to a nonzero value suppresses output of Notes, Alerts, and Warnings. Fatal and Terminal errors always halt execution of the IDL program and change the value of !ERROR_STATE.</p>
+        <h2 class="API">Handling Errors in IMSL Routines</h2>
+        <p>When a fatal or terminal error occurs in an IMSL routine, the value of !ERROR_STATE is updated to reflect the fact that the error occurred. If you have implemented a CATCH block to handle errors in your own routine, you can use the value of !ERROR_STATE to determine which fatal or terminal error occurred in the IMSL library.</p>
+        <p>To determine whether the most recent error was generated by the IMSL library, inspect the NAME field of the !ERROR_STATE structure. Errors generated by the IMSL library will populate the NAME field with the string:</p>
+        <p class="Code">IDL_M_IMSL_LIBRARYERROR</p>
+        <p>If the error was generated in the IMSL library, inspect the MSG field of the !ERROR_STATE structure for information on which specific fatal or terminal error occurred. For example, attempting to invert a matrix in which every element is zero will generate a fatal error with the following message:</p>
+        <p class="Code">IMSL Error: IMSL_INV: Fatal error: MATH_SINGULAR_MATRIX: The input matrix is singular.</p>
+        <p>You could, for example, use the following code fragment to test for this particular</p>
+        <p>error:</p>
+        <p class="Code">if (STRPOS(!error_state.msg,'MATH_SINGULAR_MATRIX') GE 0) then $</p>
+        <p class="Code_Indented">begin</p>
+        <p class="Code_Indented">Error handling code here...</p>
+        <p class="Code">endif</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

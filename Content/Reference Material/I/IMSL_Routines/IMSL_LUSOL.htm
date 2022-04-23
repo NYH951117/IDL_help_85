@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_LUSOL</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="IMSL_LUSOL"></a>IMSL_LUSOL</h1>
+        <p>The IMSL_LUSOL function solves a general system of real or complex linear equations <i>Ax = b</i>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>The IMSL_LUSOL function solves a system of linear algebraic equations with a real or complex coefficient matrix <i>A</i>. Any of several related computations can be performed by using keywords. These extra tasks include solving <i>A<sup>H</sup>x = b</i> or computing the solution of <i>Ax = b</i> given the <i>LU</i> factorization of <i>A</i>. The function first computes the <i>LU</i> factorization of <i>A</i> with partial pivoting such that <i>L<sup>–1</sup>PA = U</i>.</p>
+        <p>The matrix <i>U</i> is upper-triangular, while <i>L</i><sup style="font-style: italic;">–1</sup><i>A ≡ P</i><sub style="font-style: italic;">n – 1</sub><i> L</i><sub style="font-style: italic;">n – 2</sub><i>P</i><sub style="font-style: italic;">n – 2</sub><i>...L</i><sub style="font-style: italic;">0</sub><i> P</i><sub style="font-style: italic;">0</sub><i> A ≡ U</i>. The factors <i>P</i><sub style="font-style: italic;">i</sub> and<i> L</i><sub style="font-style: italic;">i</sub> are defined by the partial pivoting. Each<i> P</i><sub style="font-style: italic;">i</sub> is an interchange of row <i>i</i> with row <i>j ≥ i</i>. Thus, <i>P</i><sub style="font-style: italic;">i</sub> is defined by that value of <i>j</i>. Every <i>L</i><sub style="font-style: italic;">i</sub><i> = m</i><sub style="font-style: italic;">i</sub><i>e</i><sub style="font-style: italic;">i</sub><i> T</i> is an elementary elimination matrix. The vector <i>m<sub>i</sub></i> is zero in entries 0, ... , <i>i – 1</i>. This vector is stored as column <i>i</i> in the strictly lower-triangular part of the working matrix containing the decomposition information.</p>
+        <p>The factorization efficiency is based on a technique of “loop unrolling and jamming” by Dr. Leonard J. Harding of the University of Michigan, Ann Arbor, Michigan. The solution of the linear system is then found by solving two simpler systems, <i>y = L<sup>–1</sup>b</i> and <i>x = U<sup>–1</sup>y</i>. When the solution to the linear system or the inverse of the matrix is sought, an estimate of the<i> L</i><sub style="font-style: italic;">1</sub> condition number of <i>A</i> is computed using the same algorithm as in Dongarra <i>et al.</i> (1979). If the estimated condition number is greater than 1/ε (where ε is the machine precision), a warning message is issued. This indicates that very small changes in <i>A</i> may produce large changes in the solution <i>x</i>. The IMSL_LUSOL function fails if <i>U</i>, the upper-triangular part of the factorization, has a zero diagonal element.</p>
+        <h2 class="API">Examples</h2>
+        <p>For additional information on using IMSL_LUSOL&#160;Routine, see <a href="#Addition" class="selected">Additional Examples</a>.</p>
+        <h3><a name="I_833016429_53575_Keywords_IBETA__"></a>Example 1</h3>
+        <p>This example solves a system of three linear equations. This is the simplest use of the function. The equations are as follows:</p>
+        <p><i>x</i><sub>0</sub> + 3<i>x</i><sub>1</sub> + 3<i>x</i><sub>2</sub> = 1</p>
+        <p><i>x</i><sub>0</sub> + 3<i>x</i><sub>1</sub> + 4<i>x</i><sub>2</sub> = 4</p>
+        <p><i>x</i><sub>0</sub> + 4<i>x</i><sub>1</sub> + 3<i>x</i><sub>2</sub> = –1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">RM, a, 3, 3</p>
+        <p class="Code">; Input a matrix containing the coefficients.</p>
+        <p class="Code">row 0: 1 3 3</p>
+        <p class="Code">row 1: 1 3 4</p>
+        <p class="Code">row 2: 1 4 3</p>
+        <p class="Code">RM, b, 3, 1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Input a vector containing the right-hand side.</p>
+        <p class="Code">row 0: 1</p>
+        <p class="Code">row 1: 4</p>
+        <p class="Code">row 2: -1</p>
+        <p class="Code">x = IMSL_LUSOL(b, a)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Call IMSL_LUSOL to compute the solution.</p>
+        <p class="Code">PM, x, Title = 'Solution'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Print solution and residual.</p>
+        <p class="Code">Solution</p>
+        <p class="Code_Indented">-2.00000</p>
+        <p class="Code_Indented">-2.00000</p>
+        <p class="Code_Indented">3.00000</p>
+        <p class="Code">PM, a # x - b, Title = 'Residual'</p>
+        <p class="Code">Residual</p>
+        <p class="Code_Indented">0.00000</p>
+        <p class="Code_Indented">0.00000</p>
+        <p class="Code_Indented">0.00000</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> =IMSL_LUSOL(<i> B</i>,  <i>A,</i>  [, CONDITION=variable] [, /DOUBLE] </p>
+        <p class="Syntax">&#160;&#160;&#160;[, FACTOR=variable] [, INVERSE=variable] [, PIVOT=variable] [, TRANSPOSE=value])</p>
+        <h2 class="API">Return Value</h2>
+        <p>A one-dimensional array containing the solution of the linear system <i>Ax = b</i>.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">B</h3>
+        <p>One-dimensional matrix containing the right-hand side.</p>
+        <h3 class="Argument">A</h3>
+        <p>Two-dimensional matrix containing the coefficient matrix. Element <i>A(i, j)</i> contains the <i>j</i>-th coefficient of the <i>i</i>-th equation.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">CONDITION</h3>
+        <p>Named variable into which an estimate of the<i> L</i><sub style="font-style: italic;">1</sub> condition number is stored. This keyword cannot be used with keywords PIVOT and FACTOR.</p>
+        <h3 class="Keyword">DOUBLE</h3>
+        <p>If present and nonzero, double precision is used.</p>
+        <h3 class="Keyword">FACTOR</h3>
+        <p>Named variable in which the <i>LU</i> factorization of <i>A</i>, computed by the IMSL_LUFAC procedure, is stored. The strictly lower-triangular part of this array contains information necessary to construct <i>L</i>, and the upper-triangular part contains <i>U</i>. The PIVOT and FACTOR keywords must be used together. The FACTOR and CONDITION keywords cannot be used together.</p>
+        <h3 class="Keyword">INVERSE</h3>
+        <p>Named variable into which the inverse of the matrix <i>A</i> is stored.</p>
+        <h3 class="Keyword">PIVOT</h3>
+        <p>Named variable into which the pivot sequence for the factorization, computed by the IMSL_LUFAC procedure, is stored. The PIVOT and FACTOR keywords must be used together. The PIVOT and CONDITION keywords cannot be used together.</p>
+        <h3 class="Keyword">TRANSPOSE</h3>
+        <p>If present and nonzero, <i>A</i><sup style="font-style: italic;">H</sup><i> x = b</i> is solved.</p>
+        <h2 class="API">Errors </h2>
+        <h3 class="Keyword">Warning Errors</h3>
+        <p><code>MATH_ILL_CONDITIONED</code> - Input matrix is too ill-conditioned. An estimate of the reciprocal of its <i>L</i><sub style="font-style: italic;">1</sub> condition number is #. The solution might not be accurate.</p>
+        <h3 class="Keyword">Fatal Errors</h3>
+        <p><code>MATH_SINGULAR_MATRIX</code> - Input matrix is singular.</p>
+        <h2 class="API"><a name="Addition"></a>Additional Examples</h2>
+        <h3>Example 2</h3>
+        <p>This example solves the transpose problem AHx = b.</p>
+        <p class="Code">RM, a, 3, 3</p>
+        <p class="Code">; Input the matrix containing the coefficients.</p>
+        <p class="Code">row 0: 1 3 3</p>
+        <p class="Code">row 1: 1 3 4</p>
+        <p class="Code">row 2: 1 4 3</p>
+        <p class="Code">RM, b, 3, 1</p>
+        <p class="Code">; Input the vector containing the right-hand side.</p>
+        <p class="Code">row 0: 1</p>
+        <p class="Code">row 1: 4</p>
+        <p class="Code">row 2: -1</p>
+        <p class="Code">x = IMSL_LUSOL(b, a, /Transpose)</p>
+        <p class="Code">; Call IMSL_LUSOL with keyword Transpose set.</p>
+        <p class="Code">PM, x, Title = 'Solution'</p>
+        <p class="Code">; Print the solution and the residual.</p>
+        <p class="Code">Solution</p>
+        <p class="Code_Indented">4.00000</p>
+        <p class="Code_Indented">-4.00000</p>
+        <p class="Code_Indented">1.00000</p>
+        <p class="Code">PM, TRANSPOSE(a) # x - b, Title = 'Residual'</p>
+        <p class="Code">Residual</p>
+        <p class="Code_Indented">0.00000</p>
+        <p class="Code_Indented">0.00000</p>
+        <p class="Code_Indented">0.00000</p>
+        <p class="Code_Indented">&#160;</p>
+        <h3>Example 2</h3>
+        <p>This example computes the solution of two systems. Only the right-hand sides differ. The matrix and first right-hand side are given in the initial example. The second right-hand side is the vector c = [0.5, 0.3, 0.4]<sup>T</sup>. The factorization information is computed by the IMSL_LUFAC procedure and is used to compute the solutions in calls to IMSL_LUSOL.</p>
+        <p class="Code">RM, a, 3, 3</p>
+        <p class="Code">; Input the coefficient matrix.</p>
+        <p class="Code">row 0: 1 3 3</p>
+        <p class="Code">row 1: 1 3 4</p>
+        <p class="Code">row 2: 1 4 3</p>
+        <p class="Code">RM, b, 3, 1</p>
+        <p class="Code">; Input the first right-hand side.</p>
+        <p class="Code">row 0: 1</p>
+        <p class="Code">row 1: 4</p>
+        <p class="Code">row 2: -1</p>
+        <p class="Code">RM, c, 3, 1</p>
+        <p class="Code">; Input the second right-hand side.</p>
+        <p class="Code">row 0: .5</p>
+        <p class="Code">row 1: .3</p>
+        <p class="Code">row 2: .4</p>
+        <p class="Code">IMSL_LUFAC, a, pvt, fac</p>
+        <p class="Code">; Call IMSL_LUFAC to factor the coefficient matrix.</p>
+        <p class="Code">x = IMSL_LUSOL(b, Factor = fac, Pivot = pvt)</p>
+        <p class="Code">; Call IMSL_LUSOL with factored form of the coefficient</p>
+        <p class="Code">; matrix and the first right-hand side.</p>
+        <p class="Code">PM, x, Title = 'Solution'</p>
+        <p class="Code">; Print the solution of Ax = b.</p>
+        <p class="Code">Solution</p>
+        <p class="Code_Indented">-2.00000</p>
+        <p class="Code_Indented">-2.00000</p>
+        <p class="Code_Indented">3.00000</p>
+        <p class="Code">PM, a # x - b, Title = 'Residual'</p>
+        <p class="Code">Residual</p>
+        <p class="Code_Indented">0.00000</p>
+        <p class="Code_Indented">0.00000</p>
+        <p class="Code_Indented">0.00000</p>
+        <p class="Code">y = IMSL_LUSOL(c, Factor = fac, Pivot = pvt)</p>
+        <p class="Code">; Call IMSL_LUSOL with factored form of the coefficient</p>
+        <p class="Code">; matrix and the second right-hand side.</p>
+        <p class="Code">PM, y, Title = 'Solution'</p>
+        <p class="Code">; Print the solution of Ax = b.</p>
+        <p class="Code">Solution</p>
+        <p class="Code_Indented">1.40000</p>
+        <p class="Code_Indented">-0.100000</p>
+        <p class="Code_Indented">-0.200000</p>
+        <p class="Code">PM, a # y - c, $</p>
+        <p class="Code">Title = 'Residual', Format = '(f8.5)'</p>
+        <p class="Code">Residual</p>
+        <p class="Code_Indented">0.00000</p>
+        <p class="Code_Indented">0.00000</p>
+        <p class="Code_Indented">0.00000</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p>IMSL_SP_LUFAC, </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

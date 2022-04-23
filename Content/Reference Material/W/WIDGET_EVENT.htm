@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: W">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>WIDGET_EVENT </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="W_list.htm">Routines: W</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">WIDGET_EVENT</span>
+        </div>
+        <h1 class="Routine"><a name="W_811389549_680296"></a><a name="W_811389549_89308"></a>WIDGET_EVENT </h1>
+        <p><a name="kanchor2819"></a><a name="kanchor2820"></a>The WIDGET_EVENT function returns events for the widget hierarchy rooted at <i>Widget_ID</i>. Widgets communicate information by generating events. Events are generated when a button is pressed, a slider position is changed, and so forth.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span><a name="kanchor2821"></a>Widget applications should use the XMANAGER procedure in preference to calling WIDGET_EVENT directly. See <a href="../../Creating IDL Programs/Creating Applications in IDL/Widget_Event_Processing.htm#widget_apps_4063420628_1042201">Widget Event Processing</a>.</p>
+        <h3><a name="kanchor2822"></a>Event Processing</h3>
+        <p>Events for a given widget are processed in the order that they are generated. The event processing performed by WIDGET_EVENT consists of the following steps, applied iteratively:</p>
+        <ol>
+            <li value="1">Wait for an event from one of the specified widgets to arrive.</li>
+            <li value="2">Starting with the widget that generated the event, move up the widget hierarchy looking for a widget that has an associated event-handling procedure or function. Event-handling routines are associated with a widget via the EVENT_PRO and EVENT_FUNC keywords to the widget creation functions or the WIDGET_CONTROL procedure. </li>
+            <li value="3">If an event-handling <i>procedure</i> is found, it is called with the event as its argument. The <code>HANDLER</code> field of the event is set to the widget ID of the widget associated with the handling procedure. When the procedure returns, WIDGET_EVENT returns to the first step above and starts searching for events. Hence, event-handling procedures are said to “swallow” events.</li>
+            <li value="4">
+                <p>If an event-handling <i>function</i> is found, it is called with the event as its argument. The <code>HANDLER</code> field of the event is set to the widget ID of the widget associated with the handling function.</p>
+                <p>When the function returns, its value is examined. If the value is not a structure, it is discarded and WIDGET_EVENT returns to the first step. This behavior allows event-handling functions to selectively act like event-handling procedures and “swallow” events.</p>
+                <p>If the returned value is a structure, it is checked to ensure that it has the standard first three fields: <code>ID</code>, <code>TOP</code>, and <code>HANDLER</code>. If any of these fields is missing, IDL issues an error. Otherwise, the returned value replaces the event found in the first step and WIDGET_EVENT continues moving up the widget hierarchy looking for another event handler routine, as described in step 2, above. </p>
+                <p>In situations where an event structure is returned, event functions are said to “rewrite” events. This ability to rewrite events is the basis of <i>compound widgets</i>, which combine several widgets to give the appearance of a single, more complicated widget. Compound widgets are an important widget programming concept. For more information, see <a href="../../Creating IDL Programs/Creating Applications in IDL/Creating_a_Compound_Widg.htm#widget_apps_4063420628_1042476">Creating a Compound Widget</a>.</p>
+            </li>
+            <li value="5">If an event reaches the top of a widget hierarchy without being swallowed by an event handler, it is returned as the value of WIDGET_EVENT.</li>
+            <li value="6">If WIDGET_EVENT was called without an argument, and there are no widgets left on the screen that are being managed (as specified via the MANAGED keyword to the WIDGET_CONTROL procedure) and could generate events, WIDGET_EVENT ends the search and returns an <i>empty event</i> (a standard widget event structure with the top three fields set to zero).</li>
+        </ol>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Do not interrupt the event loop by placing a STOP or EXIT command in the event-handler or other callback routine. The presence of either command will cause the widget routine to exit with an error.</p>
+        <h2 class="API"><a name="W_811389549_680299"></a><a name="W_811389549_680299_PageTOC_WIDGET_EVENT_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = WIDGET_EVENT([<i>Widget_ID</i>]) [,&#160;<a href="#W_811389549_680307" class="selected">BAD_ID</a>=<i>variable</i>] [,&#160;/<a href="#W_811389549_680311" class="selected">NOWAIT</a>] [,&#160;/<a href="#W_811389549_680313" class="selected">SAVE_HOURGLASS</a>]</p>
+        <p class="Syntax"><b>UNIX Keywords:</b> [,&#160;/<a href="#W_811389549_675439" class="selected">YIELD_TO_TTY</a>]</p>
+        <h2 class="API"><a name="W_811389549_1002026"></a><a name="W_811389549_69487"></a>Return Value</h2>
+        <p><a name="kanchor2823"></a>A widget event is returned in a structure. The exact contents of this <a name="kanchor2824"></a>structure vary depending upon the type of widget involved. The first three elements of this structure, however, are always the same. </p>
+        <p class="Code">{ <i>WIDGET</i>, ID:0L, TOP:0L, HANDLER:0L, ... }</p>
+        <p>Any other elements vary from widget type to type. The three fixed elements are:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Meaning</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>ID</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The widget ID of the widget that generated the event.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>TOP</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>The widget ID of the top level base for the widget hierarchy containing <code>ID</code>.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>HANDLER</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>When an event is passed as the argument to an event handling procedure or function, as discussed in the previous section, this field contains the identifier of the widget associated with the handler routine. When an event is returned from WIDGET_EVENT, this value is always zero to indicate that no handler routine was found.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="W_811389549_680301"></a><a name="W_811389549_680301_PageTOC_WIDGET_EVENT_"></a>Arguments</h2>
+        <h3 class="Argument">Widget_ID</h3>
+        <p><i>Widget_ID</i> specifies the widget hierarchy for which events are desired. The first available event for the specified widget or any of its children is returned. If this argument is not specified, WIDGET_EVENT processes events for all existing widgets.</p>
+        <p><i>Widget_ID</i> can also be an array of widget identifiers, in which case all of the specified widget hierarchies are searched.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Attempting to obtain events for a widget hierarchy which is not producing events will hang IDL, unless the NOWAIT keyword is used.</p>
+        <h2 class="API"><a name="W_811389549_680306"></a><a name="W_811389549_680306_PageTOC_WIDGET_EVENT_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="W_811389549_680307"></a><a name="W_811389549_680307_Keywords_WIDGET_EVENT__"></a>BAD_ID</h3>
+        <p><a name="kanchor2825"></a>If one of the values supplied via <i>Widget_ID</i> is not a valid widget identifier, this function normally issues an error and causes program execution to stop. However, if BAD_ID is present and specifies a named variable, the invalid ID is stored into the variable, and this routine quietly returns. If no error occurs, a zero is stored.</p>
+        <p>This keyword can be used to handle the situation in which IDL is waiting within WIDGET_EVENT when the user kills the widget hierarchy.</p>
+        <p>This keyword has meaning only if <i>Widget_ID</i> is explicitly specified.</p>
+        <h3 class="Keyword"><a name="W_811389549_680311"></a><a name="W_811389549_680311_Keywords_WIDGET_EVENT__"></a>NOWAIT</h3>
+        <p>When no events are currently available for the specified widget hierarchy, WIDGET_EVENT normally waits until one is available and then returns it. However, if NOWAIT is set and no events are present, it immediately returns. In this case, the ID field of the returned structure will be zero.</p>
+        <h3 class="Keyword"><a name="W_811389549_680313"></a><a name="W_811389549_680313_Keywords_WIDGET_EVENT__"></a>SAVE_HOURGLASS</h3>
+        <p><a name="kanchor2826"></a>Set this keyword to prevent the hourglass cursor from being cleared by WIDGET_EVENT. This keyword can be of use if a program has to poll a widget periodically during a long computation.</p>
+        <h3 class="Keyword"><a name="W_811389549_675439"></a><a name="W_811389549_675439_Keywords_WIDGET_EVENT__"></a>YIELD_TO_TTY</h3>
+        <p><i>This keyword is only available on UNIX platforms.</i>
+        </p>
+        <p>Unless the NOWAIT keyword is specified, WIDGET_EVENT does not return until the asked for event is available. If the user should enter a line of input from the keyboard, it cannot be processed until WIDGET_EVENT returns. If the YIELD_TO_TTY keyword is specified and the user enters a line of input, WIDGET_EVENT returns immediately. In this case, the ID field of the returned structure will be zero.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This keyword is supported under UNIX only, and there are no plans to extend it to other operating systems. Do not use it if you intend to use non-UNIX systems.</p>
+        <h2 class="API"><a name="W_811389549_820464"></a><a name="W_811389549_820464_PageTOC_WIDGET_EVENT_"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre-4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="W_811389549_983447"></a><a name="W_811389549_983447_PageTOC_WIDGET_EVENT_"></a>See Also</h2>
+        <p><a href="../X/XMANAGER.htm#X_800576109_762775">XMANAGER</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: H|HDF Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>HDF_SD_SETEXTFILE</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../H_list.htm">Routines: H</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../HDF_Routines.htm">HDF Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">HDF_SD_SETEXTFILE</span>
+        </div>
+        <h1 class="Routine"><a name="HDF_1733484267_1012317"></a><a name="HDF_1733484267_48072"></a>HDF_SD_SETEXTFILE</h1>
+        <p>The <a name="kanchor1265"></a>HDF_SD_SETEXTFILE procedure moves data values from a dataset into an external file. Only the data is moved—all other information remains in the original file. This routine can only be used with HDF version 3.3 (and later) files, not on older HDF files or NetCDF files. Data can only be moved once, and the user must keep track of the external file(s). The OFFSET keyword allows writing to an arbitrary location in the external file.</p>
+        <p>As shown in the example, when adding data to an external file SD, you <i>must</i> first use HDF_SD_ENDACCESS to sync the file, then reacquire the SDS ID with HDF_SD_SELECT before using HDF_SD_SETEXTFILE.</p>
+        <h2 class="API"><a name="HDF_1733484267_1054490_PageTOC_HDF_SD_SETEXTFILE_"></a>Examples</h2>
+        <p class="Code">; Create an HDF file:</p>
+        <p class="Code">SDinterface_id = HDF_SD_START('ext_main.hdf', /CREATE)</p>
+        <p class="Code">; Add an SD:</p>
+        <p class="Code">SDdataset_id = HDF_SD_CREATE(SDinterface_id, 'float_findgen', [3,5], /FLOAT)</p>
+        <p class="Code">; Put some data into the SD:</p>
+        <p class="Code">HDF_SD_ADDDATA, SDdataset_id, FINDGEN(3,5)</p>
+        <p class="Code">; Call HDF_SD_ENDACCESS to sync the file:</p>
+        <p class="Code">HDF_SD_ENDACCESS,SDdataset_id</p>
+        <p class="Code">; Reacquire the SDdataset_id:</p>
+        <p class="Code">SDdataset_id = HDF_SD_SELECT(SDinterface_id, 0)</p>
+        <p class="Code">; Move data to an external file named findgen.hdf:</p>
+        <p class="Code">HDF_SD_SETEXTFILE, SDdataset_id, 'findgen.hdf'</p>
+        <p class="Code">; Retrieve data from the external file into the variable fout:</p>
+        <p class="Code">HDF_SD_GETDATA, SDdataset_id, fout</p>
+        <p class="Code">; Print the contents of fout:</p>
+        <p class="Code">PRINT, fout</p>
+        <p class="Code">; Sync and close the files:</p>
+        <p class="Code">HDF_SD_ENDACCESS, SDdataset_id</p>
+        <p class="Code">HDF_SD_END, SDinterface_id</p>
+        <h4>IDL Output</h4>
+        <p class="Code">0.00000 1.00000 2.00000</p>
+        <p class="Code">3.00000 4.00000 5.00000</p>
+        <p class="Code">6.00000 7.00000 8.00000</p>
+        <p class="Code">9.00000 10.0000 11.0000</p>
+        <p class="Code">12.0000 13.0000 14.0000</p>
+        <h2 class="API"><a name="HDF_1733484267_1054480_PageTOC_HDF_SD_SETEXTFILE_"></a>Syntax</h2>
+        <p class="Syntax">HDF_SD_SETEXTFILE, <i>SDdataset_id</i>, <i>Filename</i> [,&#160;<a href="#HDF_1733484267_1012355" class="selected">OFFSET</a>=<i>bytes</i>]</p>
+        <h2 class="API"><a name="HDF_1733484267_1054482_PageTOC_HDF_SD_SETEXTFILE_"></a>Arguments</h2>
+        <h3 class="Argument">SDdataset_id</h3>
+        <p>An SD dataset ID as returned by HDF_SD_SELECT.</p>
+        <h3 class="Argument">Filename</h3>
+        <p>The name of the external file to be written.</p>
+        <h2 class="API"><a name="HDF_1733484267_1054487_PageTOC_HDF_SD_SETEXTFILE_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="HDF_1733484267_1012355"></a><a name="HDF_1733484267_1054488_Keywords_HDF_SD_SETEXTFILE_"></a>OFFSET</h3>
+        <p>Set this keyword to a number of bytes from the beginning of the external file at which data writing should begin. Exercise extreme caution when using this keyword with existing files.</p>
+        <h2 class="API"><a name="HDF_1733484267_1054507_PageTOC_HDF_SD_SETEXTFILE_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="HDF_1733484267_1117807_PageTOC_HDF_SD_SETEXTFILE_"></a>See Also</h2>
+        <p><a href="HDF_SD_END.htm#HDF_1733484267_1011423">HDF_SD_END</a>, <a href="HDF_SD_ENDACCESS.htm#HDF_1733484267_1011494">HDF_SD_ENDACCESS</a>, <a href="HDF_SD_SELECT.htm#HDF_1733484267_1012166">HDF_SD_SELECT</a>, <a href="HDF_SD_START.htm#HDF_1733484267_1012597">HDF_SD_START</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

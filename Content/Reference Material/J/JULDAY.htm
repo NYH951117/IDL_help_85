@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: J">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>JULDAY </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="J_list.htm">Routines: J</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">JULDAY</span>
+        </div>
+        <h1 class="Routine"><a name="J_839504493_762378"></a><a name="kanchor1571"></a><a name="J_839504493_52189"></a>JULDAY </h1>
+        <p>The JULDAY function calculates the Julian Date (which begins at noon) for the specified date. This is the inverse of the CALDAT procedure.</p>
+        <p><b>Notes</b>
+        </p>
+        <ul>
+            <li value="1">The Julian calendar, established by Julius Caesar in the year 45 BCE, was corrected by Pope Gregory XIII in 1582, excising ten days from the calendar. For dates after 4 October 1582, the calendar specifies that every 4 years is a leap year, except if the year ends in a "00" then it is not a leap year, unless it is also divisible by 400 (in which case it is a leap year).</li>
+            <li value="2">There is no year 0 in the calendar as defined by IDL. Instead,year 1 CE is immediately preceeded by year 1 BCE. This means that leap years are offset by 1. For example, -5, -9, -13, etc. are all leap years.</li>
+            <li value="3">The Julian Date is typically used by astronomers. For other research areas, you may need to use the proleptic Gregorian calendar system, especially for dates before 1582. In this case you should use the <a href="../G/GREG2JUL.htm">GREG2JUL</a> and <a href="JUL2GREG.htm">JUL2GREG</a> routines instead.</li>
+            <li value="4">The <a href="#">JULDAY</a> function should only be used with <a href="../C/CALDAT.htm">CALDAT</a>. Similarly, the <a href="../G/GREG2JUL.htm">GREG2JUL</a> function should only be used with the <a href="JUL2GREG.htm">JUL2GREG</a> procedure. For dates between 1 Jan CE and 15 Oct 1582 the two calendar systems differ by up to 10 days. For dates on or after 15 Oct 1582 the two calendar systems are identical.</li>
+            <li value="5">Calendar dates must be in the range 1 Jan 4800 BCE to 31 Dec 5000000, which corresponds to Julian values -31776 and 1827933925, respectively.</li>
+            <li value="6">A small offset is added to the returned Julian date to eliminate roundoff errors when calculating the day fraction from hours, minutes, seconds. This offset is given by the larger of EPS and EPS*Julian, where Julian is the integer portion of the Julian date, and EPS is the EPS field from MACHAR (using double precision). For typical Julian dates, this offset is approximately 6x10<sup>–10 </sup>(which corresponds to 5x10<sup>–5 </sup>seconds). This offset ensures that if the Julian date is converted back to hour, minute, and second, then the hour, minute, and second will have the same integer values as were originally input. </li>
+            <li value="7">This routine is written in the IDL language. Its source code can be found in the file <code>julday.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</li>
+        </ul>
+        <h2 class="API">Examples</h2>
+        <p>In 1582, Pope Gregory XIII adjusted the Julian calendar to correct for its inaccuracy of slightly more than 11 minutes per year. As a result, the day following October 4, 1582 was October 15, 1582. JULDAY follows this convention, as illustrated by the following commands:</p>
+        <p class="Code">PRINT, JULDAY(10,4,1582), JULDAY(10,5,1582), JULDAY(10,15,1582)</p>
+        <p>IDL prints:</p>
+        <p class="Code">2299160&#160;&#160;&#160;&#160;2299161&#160;&#160;&#160;&#160;2299161</p>
+        <p>Using arrays, this can also be calculated as follows:</p>
+        <p class="Code">PRINT, JULDAY(10, [4, 5, 15], 1582)</p>
+        <p>If you are using JULDAY to calculate an absolute number of days elapsed, be sure to account for the Gregorian adjustment.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = JULDAY(<i>Month, Day, Year, Hour, Minute, Second</i>)</p>
+        <h2 class="API">Return Value</h2>
+        <p><i>Result</i> is of type double-precision if Hour, Minute, or Second is specified, otherwise <i>Result</i> is of type long integer. If all arguments are scalar, the function returns a scalar. If all arguments are arrays, the function matches up the corresponding elements of the arrays, returning an array with the same dimensions as the smallest array. If the inputs contain both scalars and arrays, the function uses the scalar value with each element of the arrays, and returns an array with the same dimensions as the smallest input array.</p>
+        <h2 class="API">Arguments</h2>
+        <p>If no arguments are given then the Julian date corresponding to the current system time is returned.</p>
+        <h3 class="Argument">Month</h3>
+        <p>Number of the desired month (1 = January, ..., 12 = December). <i>Month</i> can be either a scalar or an array.</p>
+        <h3 class="Argument">Day</h3>
+        <p>Number of the day of the month (1-31). <i>Day</i> can be either a scalar or an array.</p>
+        <h3 class="Argument">Year</h3>
+        <p>Number of the desired year (e.g., 1994). <i>Year</i> can be either a scalar or an array.</p>
+        <h3 class="Argument">Hour</h3>
+        <p>Number of the hour of the day (0-23). <i>Hour</i> can be either a scalar or an array.</p>
+        <h3 class="Argument">Minute</h3>
+        <p>Number of the minute of the hour (0-59). <i>Minute</i> can be either a scalar or an array.</p>
+        <h3 class="Argument">Second</h3>
+        <p>Number of the second of the minute (0-59). <i>Second</i> can be either a scalar or an array.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="../B/BIN_DATE.htm#B_856805997_762117">BIN_DATE</a>, <a href="../C/CALDAT.htm#C_854643309_1083750">CALDAT</a>, <a href="../G/GREG2JUL.htm">GREG2JUL</a>, <a href="JUL2GREG.htm">JUL2GREG</a>, <a href="../S/SYSTIME.htm#S_820040301_762665">SYSTIME</a>, <a href="../../Creating IDL Programs/Components of the IDL Language/Date_Time_Data.htm">Date/Time Data</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

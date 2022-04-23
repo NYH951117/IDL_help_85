@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Providing Help Within the User Interface</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Providing Help Within the User Interface</span>
+        </div>
+        <h1><a name="exthelp_609318733_786136"></a><a name="exthelp_609318733_40195"></a>Providing Help Within the User Interface</h1>
+        <p>There are numerous ways to supply <a name="kanchor5115"></a>help and feedback to users of a widget application without the need to display a help file in an external window. The following techniques can augment, if not necessarily replace, a more complete online help file.</p>
+        <h2 class="API"><a name="exthelp_609318733_87423"></a>Tooltips</h2>
+        <p><a name="kanchor5116"></a>Tooltips are short text strings that appear when the mouse cursor is positioned over a button or draw widget for a few seconds. Often a tooltip is enough to remind a user of the function of a button, eliminating the need for the user to consult more extensive documentation.</p>
+        <p>
+            <img src="../../images/bldhelp1.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 5.999767px;margin-bottom: 5.999752px;" />
+        </p>
+        <p>Tooltips are created by specifying a text string as the value of the TOOLTIP keyword to the WIDGET_BUTTON function:</p>
+        <p class="Code">DoneButton = WIDGET_BUTTON(base, VALUE='Done', $</p>
+        <p class="Code">&#160;&#160;&#160;TOOLTIP='Click here to close the application')</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Draw widgets can also display tooltips.</p>
+        <h2 class="API"><a name="exthelp_609318733_50313"></a>Status Lines</h2>
+        <p>You can give users feedback about the status of an operation or the function of an interface element by updating a <a name="kanchor5117"></a>status line included in your widget interface. Status lines are generally located at the bottom of the interface, and can be updated as the user moves the mouse cursor over interface elements or as the status of the application changes.</p>
+        <p>
+            <img src="../../images/bldhelp2.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 5.999752px;margin-bottom: 5.999752px;" />
+        </p>
+        <p>The following example demonstrates how a status line can be updated as the mouse cursor moves over a set of buttons. Similar code could update the value of the label widget as other events occur. To view the results, paste the code into an IDL editor window and save it as <code>label_update.pro</code>, then compile and run.</p>
+        <p class="Code">; Event-handler routine</p>
+        <p class="Code">PRO label_update_event, ev</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; If the event is a tracking event, update the label widget.</p>
+        <p class="Code">IF (TAG_NAMES(ev, /STRUCTURE) EQ 'WIDGET_TRACKING') THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;WIDGET_CONTROL, ev.TOP, GET_UVALUE=label  </p>
+        <p class="Code">&#160;&#160;&#160;WIDGET_CONTROL, ev.ID, GET_VALUE=val, GET_UVALUE=uval</p>
+        <p class="Code">&#160;&#160;&#160;WIDGET_CONTROL, label, SET_VALUE=uval</p>
+        <p class="Code">&#160;&#160;&#160;WIDGET_CONTROL, label, SET_VALUE=uval</p>
+        <p class="Code">ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; If the event is a button event, and comes from Button 2,</p>
+        <p class="Code">; then destroy the application.</p>
+        <p class="Code">IF (TAG_NAMES(ev, /STRUCTURE) EQ 'WIDGET_BUTTON') THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;WIDGET_CONTROL, ev.ID, GET_VALUE=val</p>
+        <p class="Code">&#160;&#160;&#160;IF (val EQ 'Button 2') THEN WIDGET_CONTROL, ev.TOP, /DESTROY</p>
+        <p class="Code">ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Widget creation routine</p>
+        <p class="Code">PRO label_update</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">base=WIDGET_BASE(/COLUMN, XSIZE=200)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Set the button widgets to generate tracking events, so we</p>
+        <p class="Code">; know when the mouse cursor is over them.</p>
+        <p class="Code">b1 = WIDGET_BUTTON(base, VALUE='Button 1', $</p>
+        <p class="Code">&#160;&#160;&#160;UVALUE='Button One does nothing', /TRACKING_EVENTS)</p>
+        <p class="Code">b2 = WIDGET_BUTTON(base, VALUE='Button 2', $</p>
+        <p class="Code">&#160;&#160;&#160;UVALUE='Button Two closes the application', /TRACKING_EVENTS)</p>
+        <p class="Code">label = WIDGET_LABEL(base, XSIZE=190, /SUNKEN_FRAME)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Set the user value of the base widget equal to the widget ID</p>
+        <p class="Code">; of the label widget.</p>
+        <p class="Code">WIDGET_CONTROL, base, SET_UVALUE=label</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Realise the widgets and call XMANAGER.</p>
+        <p class="Code">WIDGET_CONTROL, base, /REALIZE</p>
+        <p class="Code">XMANAGER, 'label_update', base</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="exthelp_609318733_15580"></a>Text Widgets</h2>
+        <p>To display larger amounts of text than will fit conveniently in a status line, you can include a <a name="kanchor5118"></a>text widget in your application’s interface. The process of updating the text widget’s value depending on user actions is similar to the process described in the status line example, above.</p>
+        <p>To display larger blocks of text that would not fit conveniently within the body of your application’s interface, consider using the <a href="../../Reference Material/X/XDISPLAYFILE.htm">XDISPLAYFILE</a> procedure. </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

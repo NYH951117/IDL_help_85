@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: R">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>READ_PNG 
+        </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="R_list.htm">Routines: R</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">READ_PNG</span>
+        </div>
+        <h1 class="Routine"><a name="R_822202989_READ_PNG"><a name="R_822202989_1045821"></a><a name="R_822202989_39133"></a></a>READ_PNG 
+        </h1>
+        <p><a name="kanchor2223"></a><a name="kanchor2224"></a>The READ_PNG routine reads the image contents of a Portable Network Graphics (PNG) file and returns the image in an IDL variable. If the image contains a palette (see <a href="../Q/QUERY_PNG.htm#Q_815714925_1045630">QUERY_PNG</a>), it can be returned  in three IDL variables. READ_PNG supports 1, 2, 3 and 4 channel images with channel depths of 8 or 16 bits.</p>
+        <p>When an image is read, it is scaled to the sBit value, if it is provided in the file. The sBit provides the actual bit depth, which can be different from the "bit depth" byte. See <a href="http://www.w3.org/TR/PNG-Chunks.html">www.w3.org/TR/PNG-Chunks.html</a> for more information.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDL supports version 1.2.7 of the PNG Library.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Only single channel 8-bit images may have palettes. If an 8-bit, single-channel image has index values marked as “transparent,” these can be retrieved as well.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>To find information about a potential PNG file before trying to read its data, use the <a href="../Q/QUERY_PNG.htm#Q_815714925_1045630">QUERY_PNG</a> function.</p>
+        <h2 class="API"><a name="R_822202989_1045847"></a><a name="R_822202989_1045847_PageTOC_READ_PNG_"></a>Examples</h2>
+        <p>Create an RGBA (16-bits/channel) and a Color Indexed (8-bit/channel) image with a palette:</p>
+        <p class="Code">PRO ex_read_png<br />rgbdata = UINDGEN(4,320,240)<br />cidata = BYTSCL(DIST(256))<br />red = indgen(256)<br />green = indgen(256)<br />blue = indgen(256)<br />WRITE_PNG,'rgb_image.png',rgbdata<br />WRITE_PNG,'ci_image.png',cidata,red,green,blue<br />;Query and read the data<br />names = ['rgb_image.png','ci_image.png','unknown.png']<br />FOR i=0,N_ELEMENTS(names)-1 DO BEGIN<br />&#160;&#160;&#160;ok = QUERY_PNG(names[i],s)<br />&#160;&#160;&#160;IF (ok) THEN BEGIN<br />&#160;&#160;&#160;&#160;&#160;&#160;HELP,s,/STRUCTURE<br />&#160;&#160;&#160;&#160;&#160;&#160;IF (s.HAS_PALETTE) THEN BEGIN<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;img = READ_PNG(names[i],rpal,gpal,bpal)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;HELP,img,rpal,gpal,bpal<br />&#160;&#160;&#160;&#160;&#160;&#160;ENDIF ELSE BEGIN<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;img = READ_PNG(names[i])<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;HELP,img<br />&#160;&#160;&#160;&#160;&#160;&#160;ENDELSE<br />&#160;&#160;&#160;ENDIF ELSE BEGIN<br />&#160;&#160;&#160;&#160;&#160;&#160;PRINT,names[i],' is not a PNG file'<br />&#160;&#160;&#160;ENDELSE<br />ENDFOR<br />END</p>
+        <h2 class="API"><a name="R_822202989_1045833"></a><a name="R_822202989_1045833_PageTOC_READ_PNG_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = READ_PNG ( <i>Filename </i>[,&#160;<i>R</i>, <i>G</i>, <i>B</i>] [,/<a href="#R_822202989_1045842" class="selected">ORDER</a>] [,&#160;/<a href="#R_822202989_1075225" class="selected">VERBOSE</a>] [,&#160;<a href="#R_822202989_1045845" class="selected">TRANSPARENT</a>=<i>variable</i>] )</p>
+        <p>or</p>
+        <p class="Syntax">READ_PNG, <i>Filename, Image</i> [,&#160;<i>R</i>, <i>G</i>, <i>B</i>] [,/<a href="#R_822202989_1045842" class="selected">ORDER</a>] [,&#160;/<a href="#R_822202989_1075225" class="selected">VERBOSE</a>] [,&#160;<a href="#R_822202989_1045845" class="selected">TRANSPARENT</a>=<i>variable</i>]</p>
+        <h2 class="API"><a name="R_822202989_1045835"></a><a name="R_822202989_1045835_PageTOC_READ_PNG_"></a>Return Value</h2>
+        <p>For 8-bit images, <i>Result</i> will be a two- or three-dimensional array of type byte. For 16-bit images, <i>Result</i> will be of type unsigned integer (UINT).</p>
+        <h2 class="API"><a name="R_822202989_1081516"></a><a name="R_822202989_1081516_PageTOC_READ_PNG_"></a>Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>A scalar string containing the full pathname of the PNG file to read.</p>
+        <h3 class="Argument">Image</h3>
+        <p>A named variable in which the image array will be stored, if READ_PNG is called as a procedure. For 8-bit images, <i>Image</i> will be a two- or three-dimensional array of type byte. For 16-bit images, <i>Image</i> will be of type unsigned integer (UINT).</p>
+        <h3 class="Argument">R, G, B</h3>
+        <p>Named variables that will contain the Red, Green, and Blue color vectors if a color table exists. </p>
+        <h2 class="API"><a name="R_822202989_1045840"></a><a name="R_822202989_1045840_PageTOC_READ_PNG_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="R_822202989_1045842"></a><a name="R_822202989_1045842_Keywords_READ_PNG__"></a>ORDER</h3>
+        <p>Set this keyword to indicate that the rows of the image should be read from bottom to top. The rows are read from top to bottom by default. ORDER provides compatibility with PNG files written using versions of IDL prior to IDL 5.4, which wrote PNG files from bottom to top.</p>
+        <h3 class="Keyword"><a name="R_822202989_1075225"></a><a name="R_822202989_1075225_Keywords_READ_PNG__"></a>VERBOSE</h3>
+        <p>Set this keyword to produce additional diagnostic output during the read operation.</p>
+        <h3 class="Keyword"><a name="R_822202989_1045845"></a><a name="R_822202989_1045845_Keywords_READ_PNG__"></a>TRANSPARENT</h3>
+        <p>Set this keyword to a named variable in which to return an array of opacity values (an opacity table) in the range of 0 to 255. A value of 0 (zero) equals full transparency (no opacity). If you specify fewer opacity values than exist in the color table, the missing values are replaced by 255. If the file does not contain an opacity table, then a scalar 0 is returned.</p>
+        <p>This keyword is valid only if <i>Image</i> is a single-channel (color indexed) image and the R, G, B palette is provided.</p>
+        <h2 class="API"><a name="R_822202989_1045873"></a><a name="R_822202989_1045873_PageTOC_READ_PNG_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="R_822202989_1092969"></a><a name="R_822202989_1092969_PageTOC_READ_PNG_"></a>See Also</h2>
+        <p><a href="../I/IOPEN.htm">IOPEN</a>, <a href="../W/WRITE_PNG.htm#W_811389549_950641">WRITE_PNG</a>, <a href="../Q/QUERY_PNG.htm#Q_815714925_1045630">QUERY_PNG </a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

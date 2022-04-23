@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_QRSOL</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="IMSL_QRSOL"></a>IMSL_QRSOL</h1>
+        <p>The IMSL_QRSOL function solves a real linear least-squares problem <i>Ax = b</i>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>IMSL_QRSOL solves a system of linear least-squares problems <i>Ax = b</i> with column pivoting. It computes a <i>QR</i> factorization of the matrix <i>AP</i>, where <i>P</i> is the permutation matrix defined by the pivoting, and computes the smallest integer <i>k</i> satisfying |<i>r</i><sub style="font-style: italic;">k,k</sub>| &lt; TOLERANCE*|<i>r</i><sub style="font-style: italic;">0,0</sub>| to the output keyword BASIS.</p>
+        <p>Householder transformations:</p>
+        <p><i>Q</i><sub style="font-style: italic;">k</sub><i> = I – τ<sub>k</sub>u<sub>k</sub>u<sub>k</sub> <sup>T</sup>, k</i> = 0, ..., min(<i>m</i> – 1, <i>n</i>) – 1</p>
+        <p>compute the factorization. The decomposition is computed in the form Q<sub style="font-style: italic;">min (m – 1, n) – 1</sub> ... <i>Q<sub>0</sub> AP = R</i>, so <i>AP = QR</i> where <i>Q = Q<sub>0</sub> ... Q<sub>min (m – 1, n) – 1</sub></i>. Since each Householder vector <i><sub>u</sub>k</i> has zeros in the first <i>k + 1</i> entries, it is stored as part of column <i>k</i> of <i>QR</i>. The upper-trapezoidal matrix <i>R</i> is stored in the upper-trapezoidal part of the first min(<i>m, n</i>) rows of <i>QR</i>. The solution <i>x</i> to the least-squares problem is computed by solving the upper-triangular system of linear equations <i>R (0:k, 0:k) y (0:k) = (Q<sup>T</sup>b) (0:k)</i> with <i>k</i> = Basis – 1. The solution is completed by setting <i>y (k:n – 1)</i> to zero and rearranging the variables, <i>x = Py</i>.</p>
+        <p>If the <i>QR</i> and AUXQR keywords are specified, then the function computes the leastsquares solution to <i>Ax = b</i> given the <i>QR</i> factorization previously defined. There are Basis columns used in the solution. Hence, in the case that all columns are free, <i>x</i> is computed as described in the default case.</p>
+        <h2 class="API">Example</h2>
+        <p>This example illustrates the least-squares solution of four linear equations in three unknowns by using column pivoting. This is equivalent to least-squares quadratic polynomial fitting to four data values. The polynomial is written as <i>p(t) = x<sub>0</sub> + tx<sub>1</sub> + t<sup>2</sup>x<sub>2</sub></i> and the data pairs <i>(t<sub>i</sub>, b<sub>i</sub> ), t<sub>i</sub> = 2(i + 1), i = 0, 1, 2, 3</i>. The solution to <i>Ax = b</i> is returned by the IMSL_QRSOL function.</p>
+        <p class="Code">RM, a, 4, 3</p>
+        <p class="Code">; Define the coefficient matrix.</p>
+        <p class="Code_Indented">row 0: 1 2 4</p>
+        <p class="Code_Indented">row 1: 1 4 16</p>
+        <p class="Code_Indented">row 2: 1 6 36</p>
+        <p class="Code_Indented">row 3: 1 8 64</p>
+        <p class="Code">RM, b, 4, 1</p>
+        <p class="Code">; Define the right-hand side.</p>
+        <p class="Code_Indented">row 0: 4.999</p>
+        <p class="Code_Indented">row 1: 9.001</p>
+        <p class="Code_Indented">row 2: 12.999</p>
+        <p class="Code_Indented">row 3: 17.001</p>
+        <p class="Code">x = IMSL_QRSOL(b, a)</p>
+        <p class="Code">; Call IMSL_QRSOL.</p>
+        <p class="Code">PM, x, Title = 'Solution', Format = '(f8.5)'</p>
+        <p class="Code">; Output the results.</p>
+        <p class="Code">Solution</p>
+        <p class="Code_Indented">0.99900</p>
+        <p class="Code_Indented">2.00020</p>
+        <p class="Code_Indented">0.00000</p>
+        <p class="Code">PM, a # x - b, Title = 'Residual', Format = '(f10.7)'</p>
+        <p class="Code">Residual</p>
+        <p class="Code_Indented">0.0004015</p>
+        <p class="Code_Indented">-0.0011997</p>
+        <p class="Code_Indented">0.0012007</p>
+        <p class="Code_Indented">-0.0004005</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> =IMSL_QRSOL(b <i>, A</i> [,&#160;<a href="#AUXQR" class="selected">AUXQR</a>=<i>variable</i>] [,&#160;<a href="#BASIS" class="selected">BASIS</a>=<i>variable</i>] [,&#160;/<a href="#DOUBLE" class="selected">DOUBLE</a>] [,&#160;<a href="#QR" class="selected">QR</a>=<i>variable</i>] [,&#160;<a href="#PIVOT" class="selected">PIVOT</a>=<i>variable</i>] [,&#160;<a href="#RESIDUAL" class="selected">RESIDUAL</a>=<i>variable</i>] [,&#160;<a href="#TOLERANC" class="selected">TOLERANCE</a>=<i>value</i>)</p>
+        <h2 class="API">Return Value</h2>
+        <p>The solution, <i>x</i>, of the linear least-squares problem <i>Ax = b</i>.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">b</h3>
+        <p>Matrix containing the right-hand side.</p>
+        <h3 class="Argument">a</h3>
+        <p>(Optional) Two-dimensional matrix containing the coefficient matrix. Element A <i>(i, j)</i> contains the <i>j</i>-th coefficient of the <i>i</i>-th equation.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="AUXQR"></a>AUXQR</h3>
+        <p>Named variable in which the matrix containing the scalars τ<sub>k</sub> of the Householder transformations that define the decomposition, as computed in the IMSL_QRFAC procedure, is stored. The AUXQR, PIVOT, and QR keywords must be used together.</p>
+        <h3 class="Keyword"><a name="BASIS"></a>BASIS</h3>
+        <p>Named variable containing an integer specifying the number of columns used in the solution. The value BASIS = <i>k</i>, if |<i>r</i><sub style="font-style: italic;">k,k</sub>| &lt; TOLERANCE*|<i>r</i><sub style="font-style: italic;">0,0</sub>| and |<i>r<sub>i,i</sub></i>| ≥ TOLERANCE*|<i>r</i><sub style="font-style: italic;">0,0</sub>| for <i>i</i> = 0, 1, ..., <i>k</i> – 1. </p>
+        <h3 class="Keyword"><a name="DOUBLE"></a>DOUBLE</h3>
+        <p>If present and nonzero, double precision is used.</p>
+        <h3 class="Keyword"><a name="QR"></a>QR</h3>
+        <p>Named variable which stores the matrix containing Householder transformations that define the decomposition, as computed in the IMSL_QRFAC procedure. The AUXQR, PIVOT, and QR keywords must be used together.</p>
+        <h3 class="Keyword"><a name="PIVOT"></a>PIVOT</h3>
+        <p>Named variable in which the array containing the desired variable order and usage</p>
+        <p>information is stored. The AUXQR, PIVOT, and QR keywords must be used</p>
+        <p>together.</p>
+        <ul>
+            <li value="1">On input, if PIVOT (<i>k</i>) &gt; 0, then column <i>k</i> of <i>A</i> is an initial column. If PIVOT (<i>k</i>) = 0, then the column <i>k</i> of <i>A</i> is a free column and can be interchanged in the column pivoting. If PIVOT (<i>k</i>) &lt; 0, then column <i>k</i> of <i>A</i> is a final column. If all columns are specified as initial (or final) columns, then no pivoting is performed. (The permutation matrix <i>P</i> is the identity matrix in this case.)</li>
+            <li value="2">On output, PIVOT (<i>k</i>) contains the index of the column of the original matrix that has been interchanged into column k. </li>
+            <li value="3">Default: PIVOT (*) = 0</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If IMSL_QRSOL is used to solve a problem previously factored in IMSL_QRFAC, the matrix specified by PIVOT should contain the same information that the IMSL_QRFAC parameter PIVOT contained upon output.</p>
+        <h3 class="Keyword"><a name="RESIDUAL"></a>RESIDUAL</h3>
+        <p>Named variable in which the matrix containing the residual vector <i>b – Ax</i> is stored.</p>
+        <h3 class="Keyword"><a name="TOLERANC"></a>TOLERANCE</h3>
+        <p>Nonnegative tolerance used to determine the subset of columns of A to be included in the solution. Default: TOLERANCE = SQRT(ε), where ε is machine precision.</p>
+        <h2 class="API">Errors</h2>
+        <h3 class="Keyword">Fatal Errors</h3>
+        <p><code>MATH_SINGULAR_TRI_MATRIX</code> - Input triangular matrix is singular. The index of the first zero diagonal element is #.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="IMSL_SP_LUFAC.htm">IMSL_SP_LUFAC</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

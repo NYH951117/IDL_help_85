@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>READ_EXIF</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1 class="Routine"><a name="kanchor5915"></a>READ_EXIF</h1>
+        <p>The READ_EXIF function reads Exif (Exchangeable image file format) metadata from JPEG, TIFF, and BigTIFF files.</p>
+        <p>The routine returns an IDL dictionary containing all of the Exif tags within the file. The Exif tags typically contain the image's date and time, GPS location, camera settings, a thumbnail, copyrights, or other information.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>read_exif.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API">Example</h2>
+        <p>Access the Exif metadata within a JPEG file:</p>
+        <p class="Code">IDL&gt; filename = FILEPATH('Clouds.jpg', SUBDIR=['examples','data'])</p>
+        <p class="Code">IDL&gt; result = READ_EXIF(filename, THUMB_IMAGE=thumb)</p>
+        <p class="Code">IDL&gt; PRINT, result, /IMPLIED</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">"ifd1": {</p>
+        <p class="Code_Indented2">"Exif_Image_XResolution": 72.000000000000000,</p>
+        <p class="Code_Indented2">"Exif_Image_YResolution": 72.000000000000000,...</p>
+        <p class="Code_Indented">},</p>
+        <p class="Code_Indented">"ifd0_subifd0_EXIF": {...},</p>
+        <p class="Code_Indented">"ifd0": {</p>
+        <p class="Code_Indented2">"Exif_Image_XResolution": 72.000000000000000,</p>
+        <p class="Code_Indented2">"Exif_Image_Orientation": 1,</p>
+        <p class="Code_Indented2">"Exif_Image_DateTime": "2006:06:07 09:39:08",</p>
+        <p class="Code_Indented2">"Exif_Image_YResolution": 72.000000000000000...</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code">}</p>
+        <p class="Code">IDL&gt; PRINT, result.DateTime</p>
+        <p class="Code">2006:06:07 09:39:08</p>
+        <p>Now display the thumbnail image:</p>
+        <p class="Code">IDL&gt; i = IMAGE(thumb)</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = READ_EXIF( <i>Filename</i>, THUMB_DATA=<i>variable</i>, THUMB_IMAGE=<i>variable</i> )</p>
+        <h2 class="API">Return Value</h2>
+        <p>The result is an IDL object of class EXIFMetadata that is a subclass of <a href="../D/DICTIONARY.htm">Dictionary</a>. If the file has no Exif data then the result is <a href="../../Creating IDL Programs/Components of the IDL Language/The_Null_Variable.htm">!NULL</a>.</p>
+        <p>The dictionary contains all of the EXIF tags organized into IFD's (image file directories). Each IFD is itself a dictionary containing the actual key/value pairs. If the IFD contains a "sub-IFD", this will be returned as a separate item within the main dictionary.</p>
+        <p>An example result might look like:</p>
+        <p class="Code">IDL&gt; PRINT, result, /IMPLIED</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">"ifd0": {</p>
+        <p class="Code_Indented2">"Exif_Image_Model": "iPhone 5s",</p>
+        <p class="Code_Indented2">"Exif_Image_Orientation": 6,</p>
+        <p class="Code_Indented2">"Exif_Image_DateTime": "2014:10:01 19:35:18",</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">"ifd0_subifd0_EXIF": {</p>
+        <p class="Code_Indented2">"Exif_Photo_PixelYDimension": 2448,</p>
+        <p class="Code_Indented2">"Exif_Photo_PixelXDimension": 3264,</p>
+        <p class="Code_Indented">},</p>
+        <p class="Code_Indented">"ifd0_subifd0_GPS": {</p>
+        <p class="Code_Indented2">"Exif_GPSInfo_GPSLongitude": [105.0000, 0.0000000, 0.0000000],</p>
+        <p class="Code_Indented2">"Exif_GPSInfo_GPSLatitudeRef": "N",</p>
+        <p class="Code_Indented2">"Exif_GPSInfo_GPSLongitudeRef": "W",</p>
+        <p class="Code_Indented2">"Exif_GPSInfo_GPSLatitude": [40.0000, 0.0000000, 0.0000000],</p>
+        <p class="Code_Indented2">"Exif_GPSInfo_GPSAltitude": 1667.0468750000000,</p>
+        <p class="Code_Indented">},</p>
+        <p class="Code">}</p>
+        <p>You can access any field within the result using the standard dictionary "dot" notation:</p>
+        <p class="Code">IDL&gt; PRINT, result.ifd0.Exif_Image_DateTime</p>
+        <p class="Code">2014:10:01 19:35:18</p>
+        <p>However, to make it even easier, you can simply specify the last portion of a tag. READ_EXIF will then search through all of the tags to find a match:</p>
+        <p class="Code">IDL&gt; PRINT,result.GPSLatitude</p>
+        <p class="Code">39.000000       58.000000       3.3900000</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>A string containing the name of a JPEG or TIFF file.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">THUMB_DATA</h3>
+        <p>Set this keyword to a named variable in which the thumbnail data will be returned. The thumbnail data is returned as a byte array containing a raw JPEG byte stream. To retrieve the thumbnail from this byte stream, you could save the data out to a binary file and then use <a href="READ_JPEG.htm">READ_JPEG</a>. Or, you could use the THUMB_IMAGE keyword to retrieve just the image.</p>
+        <h3 class="Keyword">THUMB_IMAGE</h3>
+        <p>Set this keyword to a named variable in which the thumbnail image will be returned. The thumbnail image is returned as a 3xMxN byte array containing the image.</p>
+        <h2 class="API">Notes</h2>
+        <ol>
+            <li value="1">READ_EXIF understands and parses all known Exif data types. For undefined datatypes, the data will be returned as a raw byte array.</li>
+            <li value="2">There are several fields that use APEX units to store their values. For example, ShutterSpeedValue uses an APEX unit defined on a logarithmic scale. READ_EXIF will return the raw APEX unit value.</li>
+            <li value="3">The Orientation value is given by a lookup table. The following table shows the conversion between the Exif orientation and the value used by IDL's <a href="ROTATE.htm">ROTATE</a> function:</li>
+        </ol>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Exif</p>
+                        <p>Orientation</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">Definition</th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>IDL Rotate</p>
+                        <p>Direction</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">1</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">Horizontal (normal)</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">0</td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">2</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">Mirror horizontal [X,Y]  →[–X,Y]</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">5</td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">3</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">Rotate 180° [X,Y]  →[–X,–Y]</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">2</td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">4</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">Mirror vertical [X,Y]  →[X,–Y]</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">7</td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">5</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Mirror horizontal, rotate 90° counterclockwise [X,Y]  →[Y,X]</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">4</td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">6</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">Rotate 90° clockwise [X,Y]  →[–Y,X]</td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">1</td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">7</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">Mirror horizontal, rotate 90° clockwise [X,Y]  →[–Y,–X]</td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">6</td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">8</td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">Rotate 90° counterclockwise [X,Y]  →[Y,–X]</td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">3</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.4.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="../D/DICTIONARY.htm">DICTIONARY</a>, <a href="READ_JPEG.htm">READ_JPEG</a>, <a href="READ_TIFF.htm">READ_TIFF</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

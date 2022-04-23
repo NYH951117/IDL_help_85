@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|Java Import Bridge">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Java Exceptions</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Java Import Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Java Exceptions</span>
+        </div>
+        <h1><a name="Java_Exceptions"></a><a name="kanchor5399"></a>Java Exceptions</h1>
+        <p>During the operation of the bridge, an error may occur when initializing the bridge, creating an <i>IDLjavaObject</i>, calling methods, setting properties, or getting properties. Typically, these errors will be fixed by changing your IDL or Java code (or by changing the bridge configuration). Java bridge errors operate like other IDL errors in that they stop execution of IDL and post an error message. These errors can be caught like any other IDL error.</p>
+        <p>On the other hand, Java uses the exception mechanism to report errors. For example, in Java, if we attempt to create a <i>java.lang.StringBuffer</i> of negative length, a <i>java.lang.NegativeArraySizeException</i> is issued.</p>
+        <p>Java exceptions are handled much like bridge errors. They stop IDL execution (if uncaught) and they report an error message containing a line number. In addition, a mechanism is provided to grab the exception object (a subclass of <i>java.lang.Throwable</i>) via the session object. Once connected with the exception object, IDL can call any of the methods provided by this Java object. For example, IDL can query the exception name to determine how to handle it, or print a stack trace of where the exception occurred in your Java code.</p>
+        <p>The exception object is provided through the GetException method to the IDLJavaBridgeSession object. See <a href="TheIDLJavaBridgeSessionObject.htm#The_IDL_Java_Bridge_Session_Object">The IDLJavaBridgeSession Object</a> for more information about this object.</p>
+        <h2><a name="kanchor5400"></a>Uncaught Exceptions</h2>
+        <p>If a Java exception is not caught, IDL will stop execution and display an <i>Exception thrown</i> error message. For example, when the following program is saved as <i>ExceptIssued.pro</i>, compiled, and ran in IDL:</p>
+        <p class="Code">PRO ExceptIssued</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">; This will throw a Java exception</p>
+        <p class="Code_Indented">oJStrBuffer = OBJ_NEW($</p>
+        <p class="Code_Indented" style="text-indent: 20px;">'IDLJavaObject$java_lang_StringBuffer', $</p>
+        <p class="Code_Indented" style="text-indent: 20px;">’java.lang.StringBuffer’, -2)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">END</p>
+        <p>IDL issues the following output:</p>
+        <p class="Code">IDL&gt; ExceptIssued</p>
+        <p class="Code">% Exception thrown</p>
+        <p class="Code">% Execution halted at: EXCEPTISSUED 4 ExceptIssues.pro</p>
+        <p class="Code">%	$MAIN$</p>
+        <p>From the IDL command line, you can then use the session object to help debug the problem:</p>
+        <p class="Code">IDL&gt; oJSession = OBJ_NEW('IDLJavaObject$IDLJAVABRIDGESESSION')</p>
+        <p class="Code">IDL&gt; oJExc = oJSession-&gt;GetException()</p>
+        <p class="Code">IDL&gt; oJExc-&gt;PrintStackTrace</p>
+        <p class="Code">% java.lang.NegativeArraySizeException:</p>
+        <p class="Code">%	at java.lang.StringBuffer.&lt;init&gt;(StringBuffer.java:116)</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>A similar example is also provided in the <i>exception.pro</i> file, which is in the <i>resource/bridges/import/java/examples</i> directory of the IDL distribution. The <i>exception.pro</i> example shows how to use the utility routine provided in the showexcept.pro file. This showexcept utility routine can be re- used to provide consist error messages when Java exceptions occur. The <i>showexcept.pro</i> file is also provided in the <i>resource/bridges/import/java/examples</i> directory of the IDL distribution. Run the example procedure by entering <i>exception</i> at the IDL command prompt or view the file in an IDL Editor window by entering <i>.EDIT exception.pro</i>.</p>
+        <h2><a name="kanchor5401"></a>Caught Exceptions</h2>
+        <p>Java exceptions can be caught just like IDL errors. Consult the documentation of the Java classes that you are using to ensure IDL is catching any expected exceptions. For example:</p>
+        <p class="Code">PRO ExceptCaught</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">; Grab the special IDLJavaBridgeSession object</p>
+        <p class="Code_Indented">oJBridgeSession = OBJ_NEW('IDLJavaObject$IDLJAVABRIDGESESSION')</p>
+        <p class="Code_Indented">bufferSize = -2</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Our Java constructor might throw an exception, so let’s catch it</p>
+        <p class="Code_Indented">CATCH, error_status</p>
+        <p class="Code_Indented">IF (error_status NE 0) THEN BEGIN</p>
+        <p class="Code_Indented" style="text-indent: 20px;">; Use session object to get our Exception</p>
+        <p class="Code_Indented" style="text-indent: 20px;">oJExc = oJBridgeSession-&gt;GetException()</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">; should be of type</p>
+        <p class="Code_Indented" style="text-indent: 20px;">; IDLJAVAOBJECT$JAVA_LANG_NEGATIVEARRAYSIZEEXCEPTION</p>
+        <p class="Code_Indented" style="text-indent: 20px;">HELP, oJExc</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">; Now we can access the members java.lang.Throwable</p>
+        <p class="Code_Indented" style="text-indent: 20px;">PRINT, 'Exception thrown:', oJExc-&gt;ToString()</p>
+        <p class="Code_Indented" style="text-indent: 20px;">oJExc-&gt;PrintStackTrace</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">; Cleanup</p>
+        <p class="Code_Indented" style="text-indent: 20px;">OBJ_DESTROY, oJExc</p>
+        <p class="Code_Indented" style="text-indent: 20px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 20px;">; Increase the buffer size to avoid the exception.</p>
+        <p class="Code_Indented" style="text-indent: 20px;">bufferSize = bufferSize + 100</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; This throws a Java exception the 1st time, but pass the 2nd time.</p>
+        <p class="Code_Indented">oJStrBuffer = OBJ_NEW('IDLJavaObject$java_lang_StringBuffer', $</p>
+        <p class="Code_Indented" style="text-indent: 20px;">'java.lang.StringBuffer', bufferSize)</p>
+        <p class="Code_Indented" style="text-indent: 0px;">&#160;</p>
+        <p class="Code_Indented" style="text-indent: 0px;">OBJ_DESTROY, oJStrBuffer</p>
+        <p class="Code_Indented" style="text-indent: 0px;">OBJ_DESTROY, oJBridgeSession</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>A similar example is also provided in the <i>exception.pro</i> file, which is in the <i>resource/bridges/import/java/examples</i> directory of the IDL distribution. The <i>exception.pro</i> example shows how to use the utility routine provided in the <i>showexcept.pro</i> file. This showexcept utility routine can be re- used to provide consist error messages when Java exceptions occur. The <i>showexcept.pro</i> file is also provided in the <i>resource/bridges/import/java/examples</i> directory of the IDL distribution. Run the example procedure by entering <i>showexcept</i> at the IDL command prompt or view the file in an IDL Editor window by entering <i>.EDIT showexcept.pro</i>.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

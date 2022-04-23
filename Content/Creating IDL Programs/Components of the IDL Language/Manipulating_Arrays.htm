@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Arrays">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Manipulating Arrays</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Arrays.htm">Arrays</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Manipulating Arrays</span>
+        </div>
+        <h1><a name="arrays_3727706888_752335"></a>Manipulating Arrays</h1>
+        <p>IDL provides a variety of mechanisms for working with multidimensional data sets. Understanding these mechanisms requires a familiarity with linear algebra and the concept of a two-dimensional data set.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>There are two terms commonly used to refer to two-dimensional data sets: <i>array</i> and <i>matrix</i>. People who work with images tend to call two-dimensional data sets arrays, while mathematicians tend to call two-dimensional data sets matrices. The terms are interchangeable, but the different conventions assumed by people who use them may lead to confusion.</p>
+        <p>Consider a two-dimensional data set, with dimensions <i>m</i> and <i>n</i>. In a computer, the data from this data set is stored in a unidimensional set of memory addresses; what makes the data “two-dimensional” is the way the individual elements are indexed by the software that accesses the data in memory. This topic is discussed in detail in <a href="Columns__Rows__and_Array.htm#arrays_3727706888_737332">Columns, Rows, and Array Majority</a>; if you are unsure of your understanding of the process of mapping multidimensional data into unidimensional computer memory, please read that section carefully.</p>
+        <p>There are two possible ways to depict a two-dimensional data set on paper — row by row or column by column. For example, the standard mathematical representation of an <i>m&#160;x&#160;n</i> data set is shown in the next figure, with <i>m</i> rows and <i>n</i> columns:</p>
+        <p>
+            <img src="../../images/64_4.jpg" />
+        </p>
+        <p>Here, the first dimension (<i>m</i>) represents the row index, and the second dimension (<i>n</i>) represents the column index. Thus, if the data set is represented using this notation, the term <code>Array[3,2]</code> refers to an element that is four rows down and three columns to the right. (Note that indices are zero-based.)</p>
+        <p>The next figure depicts the standard image-processing representation of the same data set, with <i>m</i> columns and <i>n</i> rows:</p>
+        <p>
+            <img src="../../images/64_5.jpg" />
+        </p>
+        <p>Here, the first dimension (<i>m</i>) represents the column index, and the second dimension (<i>n</i>) represents the row index. Thus, if the data set is represented using this notation, the term <code>Array[3,2]</code> refers to an element that is four columns to the right and three rows down. This is the representation used by IDL.</p>
+        <p>It is important to understand that these are two views of the <i>same</i> data; all that has changed is the notational convention applied. Why is this notational convention important? Because when reading or writing data in a two-dimensional data set, performance improves if elements that are contiguous in the computer’s memory are accessed consecutively. Incrementing the index of the first dimension by one shifts one “slot” in computer memory, whereas incrementing the index of the second dimension by one shifts a number of “slots” at least as large as the size of the first dimension. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The terms <i>column-major</i> and <i>row-major</i> are commonly used to define which dimension of a two-dimensional array represents the column index and which represents the row index. These terms are defined and discussed in detail in <a href="Columns__Rows__and_Array.htm#arrays_3727706888_737332">Columns, Rows, and Array Majority</a>.</p>
+        <h2 class="API"><a name="kanchor4451"></a>Transposing Arrays</h2>
+        <p>You should be aware that many numerical algorithms — especially those that are written in a row-major language such as C or C++ — assume data is indexed (row, column). Since IDL assumes data is indexed (column, row), it is important to keep this distinction in mind. In order to work with data indexed (row, column), you can use IDL’s <a href="../../Reference Material/T/TRANSPOSE.htm#T_809226861_1152946">TRANSPOSE</a> function to interchange the order of the indices.</p>
+        <p><a name="kanchor4452"></a>Note that it is possible for an array to be indistinguishable from its transpose. In this case the number of columns and rows are identical and there is a symmetry between the rows of the array and the columns of its transpose. Arrays satisfying this condition are said to be <i>symmetric</i>. When dealing with symmetric arrays the use of the TRANSPOSE function is unnecessary, since <i>A</i><sup>T</sup> = <i>A</i>.</p>
+        <h2 class="API"><a name="arrays_3727706888_752395"></a><a name="kanchor4453"></a><a name="arrays_3727706888_30621"></a>Multiplying Arrays</h2>
+        <p>IDL has two operators used to multiply arrays. To illustrate the difference between the two operators, consider the following two arrays:</p>
+        <p class="Code">; A 3-column by 2-row array:</p>
+        <p class="Code">A = [ [0, 1, 2],$</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;[3, 4, 5] ]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; A 2-column by 3-row array:</p>
+        <p class="Code">B = [ [0, 1],$</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;[2, 3],$</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;[4, 5] ]</p>
+        <h3><a name="kanchor4454"></a>The # Operator</h3>
+        <p>The # operator computes array elements by multiplying the columns of the first array by the rows of the second array. The resulting array has the same number of columns as the first array and the same number of rows as the second array. The second array must have the same number of columns as the first array has rows.</p>
+        <p>For example, consider the arrays defined above:</p>
+        <p>
+            <img src="../../images/64_6.jpg" />
+        </p>
+        <p>We obtain the elements of A # B as follows:</p>
+        <p>
+            <img src="../../images/64_7.jpg" />
+        </p>
+        <p>Or, using the actual values from the arrays:</p>
+        <p>
+            <img src="../../images/64_8.jpg" />
+        </p>
+        <p>Therefore, when we issue the following command:</p>
+        <p class="Code">PRINT, A#B</p>
+        <p>IDL prints:</p>
+        <p class="Code">&#160;3&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;4&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;5</p>
+        <p class="Code">&#160;9&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;14&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;19</p>
+        <p class="Code">15&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;24&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;33</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>If one or both of the arrays are also transposed, such as TRANSPOSE(A) # B, it is more efficient to use the <a href="../../Reference Material/M/MATRIX_MULTIPLY.htm#M_824365677_960643">MATRIX_MULTIPLY</a> function, which does the transpose simultaneously with the multiplication.</p>
+        <h4>Note on the Definition of Matrix Multiplication</h4>
+        <p>While the definition of the IDL # operator may <i>appear</i> to be at odds with the standard mathematical definition of matrix multiplication — namely, that the operator multiplies each row of the first matrix by each column of the second matrix — this is a case of slightly imprecise terminology. The confusion arises from the mappings of the words “row” and “column” — which refer to elements in a two-dimensional entity called an <i>array</i> or a <i>matrix</i> — to the one-dimensional vector of values stored in computer memory. In reality, what the matrix multiplication operator does is multiply the elements of the first <i>dimension</i> of the first array/matrix by the elements of the second <i>dimension</i> of the second array/matrix. IDL’s convention is to consider the first dimension to be the column and the second dimension to be the row, whereas the standard mathematical convention considers the first dimension to be the row and the second dimension to be the column. For a more complete discussion of this topic, see <a href="Columns__Rows__and_Array.htm#arrays_3727706888_737332">Columns, Rows, and Array Majority</a>.</p>
+        <h3><a name="kanchor4455"></a>The ## Operator</h3>
+        <p>The ## operator computes array elements by multiplying the rows of the first array by the columns of the second array. The resulting array has the same number of rows as the first array and the same number of columns as the second array. The second array must have the same number of rows as the first array has columns.</p>
+        <p>For example, consider the arrays defined above:</p>
+        <p>
+            <img src="../../images/64_9.jpg" />
+        </p>
+        <p>We obtain the elements of A ## B as follows:</p>
+        <p>
+            <img src="../../images/64_10.jpg" />
+        </p>
+        <p>Or, using the actual values from the arrays:</p>
+        <p>
+            <img src="../../images/64_11.jpg" />
+        </p>
+        <p>Therefore, when we issue the following command:</p>
+        <p class="Code">PRINT, A##B</p>
+        <p>IDL prints:</p>
+        <p class="Code" style="font-family: Courier;"><code>10&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;13</code>
+        </p>
+        <p class="Code" style="font-family: Courier;"><code>28&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;40</code>
+        </p>
+        <h3><a name="kanchor4456"></a>Multiplying Vectors</h3>
+        <p>When using the # and ## operators to multiply vectors, note the following:</p>
+        <ul>
+            <li value="1">For A # B, where A and B are vectors, IDL performs A&#160;#&#160;TRANSPOSE(B). In this case, C = A # B is a matrix with Cij = Ai Bj. Mathematically, this is equivalent to the <i><a name="kanchor4457"></a>outer product</i>, usually denoted by A&#160;<span style="font-family: 'Symbol'">Å</span> B.</li>
+            <li value="2">For A ## B, where A and B are vectors, IDL performs TRANSPOSE(A)&#160;##&#160;B. In this case, C = A ## B is a matrix with Cij&#160;=&#160;Bi Aj.</li>
+            <li value="3">To compute the <i><a name="kanchor4458"></a>dot product</i>, usually denoted by A • B, use TRANSPOSE(A)&#160;#&#160;B.</li>
+        </ul>
+        <h3>Notes on the # and ## Operators</h3>
+        <p>Note the following with regard to the array multiplication operators:</p>
+        <ul>
+            <li value="1">The # and ## operators are order specific.</li>
+            <li value="2">A # B = B ## A</li>
+            <li value="3">A # B = (B<sup>T</sup> # A<sup>T</sup>)<sup>T</sup></li>
+        </ul>
+        <h3>Routines for Multiplying Arrays</h3>
+        <p>The MATRIX_MULTIPLY and MATRIX_POWER routines are also available:</p>
+        <ul>
+            <li value="1">MATRIX_MULTIPLY calculates the value of the # operator applied to two (possibly transposed) arrays. See <a href="../../Reference Material/M/MATRIX_MULTIPLY.htm#M_824365677_960643">MATRIX_MULTIPLY</a> for details.</li>
+            <li value="2">MATRIX_POWER computes the product of a matrix with itself. See <a href="../../Reference Material/M/MATRIX_POWER.htm#M_824365677_988387">MATRIX_POWER</a> for details.</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Also see <a href="../../Reference Material/Functional List of IDL Routines/Array_Manipulation.htm#funclisting_2438760872_1154207">Array Manipulation</a> for a list of other array manipulation routines. </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

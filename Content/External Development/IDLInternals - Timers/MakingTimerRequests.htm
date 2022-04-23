@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Timers">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Making Timer Requests</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDLandTimers.htm">IDLInternals - Timers</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Making Timer Requests</span>
+        </div>
+        <h1><a name="kanchor5484"></a>Making Timer Requests</h1>
+        <p>The <b>IDL_TimerSet()</b> function registers a timer request. IDL timer requests are one- shot timers. If you wish to have a timer go off repeatedly, your callback function must make a new request each time it is called to set up the next timer.</p>
+        <p class="Code">void IDL_TimerSet(length, callback, from_callback, context)</p>
+        <p>where:</p>
+        <h3>length</h3>
+        <p>The length of time to delay before issuing the alarm, in microseconds. You should be aware that other activity on the system, overhead incurred in managing the timers, and non-realtime attributes of the operating system can cause the actual duration of the timer to be longer than requested.</p>
+        <h3>callback</h3>
+        <p>Under UNIX:</p>
+        <ul>
+            <li value="1">If <b>callback</b> is non-NULL, the timer request is queued and <b>IDL_TimerSet()</b> returns immediately. When the alarm is due, the function pointed at by <b>callback</b> is called. </li>
+            <li value="2">If <b>callback</b> is NULL (and not <b>from_callback</b>), the request is queued and <b>IDL_TimerSet()</b> blocks until the requested time expires.</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When called, the callback function will be running in signal scope, meaning that it has been called from a signal handler running asynchronously from the rest of the program. There are significant restrictions on what code running in signal scope is allowed to do. Most common C library functions (such as printf()) are disallowed. Consult a book on UNIX programming or your system documentation for details.</p>
+        <p>Under Windows, <b>callback</b> should always be NULL. <b>IDL_TimerSet()</b> does not support non-blocking timers on these platforms.</p>
+        <h3>from_callback</h3>
+        <p>Set this argument to TRUE if this invocation is from a callback function previously set up via a call to <b>IDL_TimerSet()</b>. Set this argument to FALSE if this is the first invocation. In other words, this argument should only be TRUE if you call <b>IDL_TimerSet()</b> from within a timer callback.</p>
+        <h3>context</h3>
+        <p>This argument is a pointer to a variable of type <b>IDL_TIMER_CONTEXT</b>, an opaque IDL data type that uniquely identifies a timer request. If this is a top level request (if <b>from_callback</b> is FALSE), the context pointed at will be assigned a unique value that identifies the request.</p>
+        <p>If this request is coming from within a timer callback in order to make another request on the same timer, the context pointed at should contain the value from the previous request.</p>
+        <p>If <b>context</b> is NULL, no context value is returned.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>It is an error to queue more than one request using the same callback. The results are undefined.</p>
+        <p>For the timer module to perform adequately, the time request must be large compared to the run-time of the called function. Re-queuing an extremely short request repeatedly will cause any other requests to starve.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

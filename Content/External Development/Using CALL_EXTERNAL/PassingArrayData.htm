@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Using CALL_EXTERNAL">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Passing Array Data</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="CALL_EXTERNAL.htm">Using CALL_EXTERNAL</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Passing Array Data</span>
+        </div>
+        <h1><a name="kanchor5433"></a>Passing Array Data</h1>
+        <p>When you pass an IDL array into a <a href="CALL_EXTERNAL.htm">CALL_EXTERNAL</a> routine, that routine gets a pointer to the first memory location in the array. In order to perform any processing on the array, an external routine needs more information—such as the array’s size and number of dimensions. With <b>CALL_EXTERNAL</b>, you will need to pass this information explicitly as additional arguments to the routine.</p>
+        <p>In order to handle multi-dimensional arrays, C needs to know the size of the array at compile time. In most cases, this means that you will need to treat multi-dimensional arrays passed in from IDL as one dimensional arrays. However, you can still build your own indices to access an array as if it had more than one dimension in C. For example, the IDL array index:</p>
+        <p class="Code">array[x,y]</p>
+        <p>could be represented in a CALL_EXTERNAL routine as:</p>
+        <p class="Code">array_ptr[x + x_size*y];</p>
+        <p>The following routine, found in sum_2d_array.c, calculates the sum of a subsection of a two dimensional array. This is implemented as a function with a natural C interface, and a second glue routine that implements the IDL portable convention, using the one with the natural interface to do the actual work:</p>
+        <p>&#160;</p>
+        <p class="Code"> #include &lt;stdio.h&gt;</p>
+        <p class="Code">	#include "idl_export.h"</p>
+        <p class="Code">	double sum_2d_array_natural(double *arr, IDL_LONG x_start, IDL_LONG x_end,</p>
+        <p class="Code">	IDL_LONG x_size, IDL_LONG y_start,</p>
+        <p class="Code">	IDL_LONG y_end, IDL_LONG y_size)</p>
+        <p class="Code">	/* Since we didn’t know the dimensions of the array at compile time, we</p>
+        <p class="Code">	* must treat the input array as if it were a one dimensional vector. */</p>
+        <p class="Code">	IDL_LONG x,y;</p>
+        <p class="Code">	double result = 0.0;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">	/* Make sure that we don’t go outside the array.strictly speaking, this</p>
+        <p class="Code">	*is redundant since identical checks are performed in the IDL wrapper</p>
+        <p class="Code">	* routine.IDL_MIN() and IDL_MAX() are macros from idl_export.h */</p>
+        <p class="Code">	x_start = IDL_MAX(x_start,0);</p>
+        <p class="Code">	y_start = IDL_MAX(y_start,0);</p>
+        <p class="Code">	x_end = IDL_MIN(x_end,x_size-1);</p>
+        <p class="Code">	y_end = IDL_MIN(y_end,y_size-1);</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">	/* loop through the subsection */</p>
+        <p class="Code">	for (y = y_start;y &lt;= y_end;y++)</p>
+        <p class="Code">	for (x = x_start;x &lt;= x_end;x++)</p>
+        <p class="Code">	result += arr[x + y*x_size]; /* build the 2d index: arr[x,y] */</p>
+        <p class="Code">	return result;</p>
+        <p class="Code">	}</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">	double sum_2d_array(int argc,void* argv[])</p>
+        <p class="Code">	{</p>
+        <p class="Code">	if (argc != 7) return 0.0;</p>
+        <p class="Code">	return sum_2d_array_natural((double *) argv[0], (IDL_LONG) argv[1],</p>
+        <p class="Code">	(IDL_LONG) argv[2], (IDL_LONG) argv[3],</p>
+        <p class="Code">	(IDL_LONG) argv[4], (IDL_LONG) argv[5],</p>
+        <p class="Code">	(IDL_LONG) argv[6]);</p>
+        <p class="Code">	}</p>
+        <p>The IDL system routine interface provides much more support for the manipulation of IDL array variables.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

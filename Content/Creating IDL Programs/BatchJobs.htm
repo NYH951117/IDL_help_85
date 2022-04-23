@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Environment|Using Procedures, Functions, SAVE Files">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Executing Batch Job Files in IDL</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../IDL Concepts.htm">Environment</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDL Program Types.htm">Using Procedures, Functions, SAVE Files</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Executing Batch Jobs in IDL</span>
+        </div>
+        <h1><a name="kanchor4415"></a>Executing Batch Job Files in IDL</h1>
+        <p>Batch files in IDL are <code>.PRO</code> files that contain a series of single IDL statements, executed in order. Batch files are not programs - they cannot be compiled and run. Instead, IDL interprets and executes each statement inside of a batch file sequentially, as if you had entered them directly at the IDL command prompt. </p>
+        <p>You can run IDL in non-interactive mode (batch mode) by entering the character @ followed by the name of a file containing IDL executive commands and statements. </p>
+        <p>To enter batch mode from the IDL&#160;command line, type:</p>
+        <p class="Code">@filename</p>
+        <p>at the IDL prompt, where filename is the name of the batch file. (Note that the @ symbol must be the first character on the line in order for it to be interpreted properly.) IDL reads commands inside the specified file until the end of the file is reached. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Batch files can be nested by placing a call to one batch file within another, or they can call functions or routines.</p>
+        <p>If filename does not include a file extension, IDL searches the current working directory and the directories specified by the !PATH system variable for a file with filename as its base, with the file extension .pro. If filename.pro is not found in a given directory, IDL searches for filename with no extension in that directory. If filename is found (with or without the <code>.PRO</code> extension), the file is executed and the search ends. If filename includes a full path specification, IDL does not search the directories in !PATH.</p>
+        <p>Batch execution can be terminated before the end of the file, with control returning to interactive mode without exiting IDL, by calling the <a href="../Reference Material/S/STOP.htm">STOP</a> procedure from the batch file. Calling the <a href="../Reference Material/E/EXIT.htm">EXIT</a> procedure from the batch procedure has the usual effect of terminating IDL.</p>
+        <h2>Interpretation of Batch Statements</h2>
+        <p>Each line of a batch file is interpreted exactly as if it was entered from the keyboard at the IDL command line. In batch mode, IDL executes each statement before reading the next statement. This differs from the interpretation of programs compiled using .RNEW or .RUN, in which all statements in a program are compiled as a single unit and then executed.</p>
+        <p>Labels are illegal in the batch mode because each statement is compiled and executed independently.</p>
+        <p>Multiline statements must be continued on the next line using the $ continuation character, because IDL terminates every interactive mode statement not ending with $ by an END statement. A common mistake is to include a multiple-line block statement in a batch file as shown below:</p>
+        <p class="Code">; This will not work in batch mode.</p>
+        <p class="Code">FOR I = 1, 10 DO BEGIN</p>
+        <p class="Code_Indented">A = X[I]</p>
+        <p class="Code_Indented">...</p>
+        <p class="Code_Indented">...</p>
+        <p class="Code">ENDFOR</p>
+        <p>In batch mode, IDL compiles and executes each line separately, causing syntax errors in the above example because no matching ENDFOR is found on the line containing the BEGIN statement when the line is compiled. The above example could be made to work by writing the block of statements as a single line using the $ (continuation) and &amp; (multiple commands on a single line) characters.</p>
+        <h2>Example</h2>
+        <p>An example of an IDL executive command line that initiates batch execution:</p>
+        <p class="Code">@myfile</p>
+        <p>This command causes the file <code>myfile.pro</code> to be used for statement and command input. If this file is not in the current directory, the directories specified by !PATH are also searched.</p>
+        <p>An example of the contents of a batch file called<code> in.pro</code> follows:</p>
+        <p class="Code">PRINT, 'Job started'</p>
+        <p class="Code">n = 100</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">TASK1, n</p>
+        <p class="Code">;TASK2</p>
+        <p class="Code">;TASK3</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRINT, 'Job complete'</p>
+        <p class="Code">&#160;</p>
+        <p>Note there is no END statement in the batch file, above. The job of the batch file&#160;<code> in.pro </code>is to line up the tasks  to execute. In this case we named them TASK1, TASK2, etc., each of which is an IDL program. This example uses procedures to represent the tasks, but any program type will work. The program TASK1 that was called in the batch file (above) executes a single task:</p>
+        <p class="Code">PRO TASK1, n</p>
+        <p class="Code_Indented">COMPILE_OPT idl2</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">IF n EQ !null THEN n = 100</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">x = FINDGEN(n)</p>
+        <p class="Code_Indented">p = PLOT(x, /BUFFER, TITLE='Plot #000')</p>
+        <p class="Code_Indented">p.SAVE, 'plot000.png', RESOLUTION=96</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">FOR i=1, n-1 DO&#160;BEGIN</p>
+        <p class="Code_Indented">&#160;&#160;&#160;si = STRING(i, FORMAT='(i3.3)')</p>
+        <p class="Code_Indented">&#160;&#160;&#160;p.TITLE = 'Plot #' + si</p>
+        <p class="Code_Indented">&#160;&#160;&#160;p.SETDATA, x + i</p>
+        <p class="Code_Indented">&#160;&#160;&#160;p.SAVE, 'plot' + si + '.png', RESOLUTION=96</p>
+        <p class="Code_Indented">ENDFOR</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">p.CLOSE</p>
+        <p class="Code">END</p>
+        <h2>See Also</h2>
+        <p><a href="../Reference Material/C/Command_Line_Options_for.htm">Command-line Options for IDL&#160;Startup</a>, <a href="IncludeFiles.htm">Include Files</a>, <a href="IDL Projects/IDLBuildProperties.htm">IDL&#160;Build Properties</a>, <a href="Application Programming/Overview_of_IDL_Program.htm">Overview of IDL&#160;Program Types</a>, <a href="Distributing IDL Applications/RuntimeModeApplications/StartingRuntimeApplication.htm">Starting A Runtime Application</a>, <a href="Appendices/specchars.htm">Special Characters</a> &#160;&#160;&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

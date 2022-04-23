@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: H">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>HIST_2D </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="H_list.htm">Routines: H</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">HIST_2D</span>
+        </div>
+        <h1 class="Routine"><a name="H_835179117_758132"></a><a name="H_835179117_87584"></a>HIST_2D </h1>
+        <p><a name="kanchor1487"></a>The HIST_2D function returns the two dimensional density function (histogram) of two variables. </p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>hist_2d.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The data type of the values specified for BIN1, BIN2, MAX1, MAX2, MIN1, and MIN2 should match the data type of the <i>V1</i> and <i>V2</i> arguments. Since these keyword values are converted to the data type of <i>V1</i> and <i>V2</i>, specifying mismatched data types may produce undesired results. For example, if you have two byte images as inputs, but you want to use a fractional binsize, you should convert your input arrays to floating-point before calling HIST_2D.</p>
+        <h2 class="API"><a name="H_835179117_832276"></a><a name="H_835179117_832276_PageTOC_HIST_2D_"></a>Examples</h2>
+        <p>
+            <img src="../images/hist_2d.png" />
+        </p>
+        <p class="Code">; Read an RGB image of a rose.</p>
+        <p class="Code">file = FILE_WHICH('rose.jpg')</p>
+        <p class="Code">rose = READ_IMAGE(file)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Compare the red versus green bands of the image, </p>
+        <p class="Code">; in 5 x 5 bins.</p>
+        <p class="Code">red_band = rose[0,*,*]</p>
+        <p class="Code">green_band = rose[1,*,*]</p>
+        <p class="Code">h2d = HIST_2D(red_band, green_band, bin1=5, bin2=5)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Resize (with nearest-neighbor sampling) the </p>
+        <p class="Code">; output array of bins to the original range of </p>
+        <p class="Code">; intensities in the red and green bands, [0-255].</p>
+        <p class="Code">h2d = CONGRID(h2d, MAX(red_band), MAX(green_band))</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Squash peaks by displaying logs of bins.</p>
+        <p class="Code">h2d = BYTSCL(ALOG10(h2d &gt; 1))</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Plot the 2D histogram.</p>
+        <p class="Code">ct = COLORTABLE(0, /REVERSE)</p>
+        <p class="Code">g0 = IMAGE(h2d, RGB_TABLE=ct, AXIS_STYLE=2, MARGIN=0.1, $</p>
+        <p class="Code">&#160;&#160;&#160;XTITLE='Red band pixel intensity', $</p>
+        <p class="Code">&#160;&#160;&#160;YTITLE='Green band pixel intensity', $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE='Density plot of red vs green intensities in $\bf rose.jpg$')</p>
+        <p class="Code">g1 = IMAGE(rose, POSITION=[0.20, 0.65, 0.40, 0.85], /CURRENT)</p>
+        <h2 class="API"><a name="H_835179117_758136"></a><a name="H_835179117_758136_PageTOC_HIST_2D_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = HIST_2D( <i>V</i><sub class="italic">1</sub>, <i>V</i><sub class="italic">2</sub> [,&#160;<a href="#H_835179117_832830" class="selected">BIN1</a>=<i>width</i>] [,&#160;<a href="#H_835179117_832832" class="selected">BIN2</a>=<i>height</i>] [,&#160;<a href="#H_835179117_832284" class="selected">MAX1</a>=<i>value</i>] [,&#160;<a href="#H_835179117_832345" class="selected">MAX2</a>=<i>value</i>] [,&#160;<a href="#H_835179117_832837" class="selected">MIN1</a>=<i>value</i>] [,&#160;<a href="#H_835179117_832839" class="selected">MIN2</a>=<i>value</i>] )</p>
+        <h2 class="API"><a name="H_835179117_883186"></a><a name="H_835179117_52435"></a>Return Value</h2>
+        <p>Returns a longword array of dimensions (MAX(<i>V1</i>)+1, MAX(<i>V2</i>)+1). <i>Result</i>(<i>i,j</i>) is equal to the number of simultaneous occurrences of <i>V1</i> = <i>i</i> and <i>V2</i> = <i>j</i> at the specified element.</p>
+        <h2 class="API"><a name="H_835179117_758138"></a><a name="H_835179117_758138_PageTOC_HIST_2D_"></a>Arguments</h2>
+        <h3 class="Argument">V1, V2</h3>
+        <p>The arguments are arrays containing the variables. <i>V1</i> and <i>V2</i> may be of any numeric type except complex. If <i>V1</i> and <i>V2</i> do not contain the same number of elements, then the extra elements in the longer array are ignored.</p>
+        <h2 class="API"><a name="H_835179117_758141"></a><a name="H_835179117_758141_PageTOC_HIST_2D_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="H_835179117_832830"></a><a name="H_835179117_832830_Keywords_HIST_2D__"></a>BIN1</h3>
+        <p>Set this keyword equal to the size of each bin in the <i>V1</i> direction (column width). If this keyword is not specified, the size is set to 1.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The data type of the value specified for BIN1 should match the data type of the <i>V1</i> and <i>V2</i> arguments. Since BIN1 is converted to the data type of <i>V1</i> and <i>V2</i>, specifying mismatched data types may produce undesired results.</p>
+        <h3 class="Keyword"><a name="H_835179117_832832"></a><a name="H_835179117_832832_Keywords_HIST_2D__"></a>BIN2 </h3>
+        <p>Set this keyword equal to the size of each bin in the <i>V2</i> direction (row height). If this keyword is not specified, the size is set to 1.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The data type of the value specified for BIN2 should match the data type of the <i>V1</i> and <i>V2</i> arguments. Since BIN2 is converted to the data type of <i>V1</i> and <i>V2</i>, specifying mismatched data types may produce undesired results.</p>
+        <h3 class="Keyword"><a name="H_835179117_832284"></a><a name="H_835179117_832284_Keywords_HIST_2D__"></a>MAX1</h3>
+        <p>Set this keyword equal to the maximum <i>V1</i> value to consider. If this keyword is not specified, then <i>V1</i> is searched for its largest value.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The data type of the value specified for MAX1 should match the data type of the <i>V1</i> and <i>V2</i> arguments. Since MAX1 is converted to the data type of <i>V1</i> and <i>V2</i>, specifying mismatched data types may produce undesired results.</p>
+        <h3 class="Keyword"><a name="H_835179117_832345"></a><a name="H_835179117_832345_Keywords_HIST_2D__"></a>MAX2</h3>
+        <p>Set this keyword equal to the maximum <i>V2</i> value to consider. If this keyword is not specified, then <i>V2</i> is searched for its largest value.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The data type of the value specified for MAX2 should match the data type of the <i>V1</i> and <i>V2</i> arguments. Since MAX2 is converted to the data type of <i>V1</i> and <i>V2</i>, specifying mismatched data types may produce undesired results.</p>
+        <h3 class="Keyword"><a name="H_835179117_832837"></a><a name="H_835179117_832837_Keywords_HIST_2D__"></a>MIN1</h3>
+        <p>Set this keyword to the minimum <i>V1</i> value to consider. If this keyword is not specified and if the smallest value of <i>V1</i> is greater than zero, then MIN1=0 is used, otherwise the smallest value of <i>V1</i> is used.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The data type of the value specified for MIN1 should match the data type of the <i>V1</i> and <i>V2</i> arguments. Since MIN1 is converted to the data type of <i>V1</i> and <i>V2</i>, specifying mismatched data types may produce undesired results.</p>
+        <h3 class="Keyword"><a name="H_835179117_832839"></a><a name="H_835179117_832839_Keywords_HIST_2D__"></a>MIN2</h3>
+        <p>Set this keyword to the minimum <i>V2</i> value to consider. If this keyword is not specified and if the smallest value of <i>V2</i> is greater than zero, then MIN2=0 is used; otherwise, the smallest value of <i>V2</i> is used.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The data type of the value specified for MIN2 should match the data type of the <i>V1</i> and <i>V2</i> arguments. Since MIN2 is converted to the data type of <i>V1</i> and <i>V2</i>, specifying mismatched data types may produce undesired results.</p>
+        <h2 class="API">Additional Examples</h2>
+        <p>To return the 2D histogram of two byte images:</p>
+        <p class="Code">R = HIST_2D(image1, image2)</p>
+        <p>To display the 2D histogram made from two floating point images, restricting the range from -1 to +1, and with 101 bins:</p>
+        <p class="Code">F1 = RANDOMN(seed, 256, 256)<br />F2 = RANDOMN(seed, 256, 256)<br />Result = HIST_2D(F1, F2, MIN1=-1, MAX1=1, $<br />&#160;&#160;&#160;MIN2=-1, MAX2=1, BIN1=0.02, BIN2=0.02)<br />TVSCL, Result</p>
+        <h2 class="API"><a name="H_835179117_832270"></a><a name="H_835179117_832270_PageTOC_HIST_2D_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="H_835179117_880170"></a><a name="H_835179117_880170_PageTOC_HIST_2D_"></a>See Also</h2>
+        <p><a href="H_EQ_CT.htm#H_835179117_931377">H_EQ_CT</a>, <a href="H_EQ_INT.htm#H_835179117_759200">H_EQ_INT</a>, <a href="HIST_EQUAL.htm#H_835179117_758147">HIST_EQUAL</a>, <a href="HISTOGRAM.htm#H_835179117_677165">HISTOGRAM</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

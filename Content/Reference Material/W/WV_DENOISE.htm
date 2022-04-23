@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: W">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>WV_DENOISE</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="W_list.htm">Routines: W</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">WV_DENOISE</span>
+        </div>
+        <h1 class="Routine"><a name="ref_3320460235_1017368"></a><a name="kanchor2967"></a><a name="ref_3320460235_80479"></a>WV_DENOISE</h1>
+        <p><a name="kanchor2968"></a>The WV_DENOISE function uses the wavelet transform to filter (or de-noise) a multi-dimensional array.</p>
+        <p>WV_DENOISE computes the discrete wavelet transform of <i>Array</i>, and then discards wavelet coefficients smaller than a certain threshold. WV_DENOISE then computes the inverse wavelet transform on the filtered coefficients and returns the result.</p>
+        <h2 class="API"><a name="ref_3320460235_1011302"></a><a name="ref_3320460235_1011302_PageTOC_WV_DENOISE_"></a>Examples</h2>
+        <p>Remove the noise from a 128 x 128 image:</p>
+        <p class="Code">image = dist(128) + 5*randomn(1, 128, 128)</p>
+        <p class="Code">; Keep only 100 out of 16384 coefficients:</p>
+        <p class="Code">denoise = WV_DENOISE(image, 'Daubechies', 2, COEFF=100, $</p>
+        <p class="Code">&#160;&#160;&#160;DENOISE_STATE=denoise_state)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">window, xsize=256, ysize=155</p>
+        <p class="Code">tvscl, image, 0</p>
+        <p class="Code">tvscl, denoise, 1</p>
+        <p class="Code">xyouts, [64, 196], [5, 5], ['Image', 'Filtered'], $</p>
+        <p class="Code">&#160;&#160;&#160;/device, align=0.5, charsize=2</p>
+        <p class="Code">print, 'Percent of power retained: ', denoise_state.percent</p>
+        <p>IDL prints:</p>
+        <p class="Code">Percent of power retained:        93.151491</p>
+        <p>Change to a “soft” threshold (use DENOISE_STATE to avoid re-computing):</p>
+        <p class="Code">denoise2 = WV_DENOISE(image, COEFF=100, $</p>
+        <p class="Code">&#160;&#160;&#160;DENOISE_STATE=denoise_state, THRESHOLD=1)</p>
+        <p>
+            <img src="../../Resources/Images/waveref1.gif" />
+        </p>
+        <h2 class="API"><a name="ref_3320460235_1010321"></a><a name="ref_3320460235_1010321_PageTOC_WV_DENOISE_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = WV_DENOISE(<i>Array </i>[<i>, Family, Order</i>] [,&#160;<a href="#ref_3320460235_1010533" class="selected">COEFFICIENTS</a>=<i>value</i>] [,&#160;<a href="#ref_3320460235_1010481" class="selected">CUTOFF</a>=<i>variable</i>] [,&#160;<a href="#ref_3320460235_1010485" class="selected">DENOISE_STATE</a>=<i>variable</i>] [,&#160;/<a href="#ref_3320460235_1010505" class="selected">DOUBLE</a>] [,&#160;<a href="#ref_3320460235_1010508" class="selected">DWT_FILTERED</a>=<i>variable</i>] [,&#160;<a href="#ref_3320460235_1010511" class="selected">PERCENT</a>=<i>value</i>] [,&#160;<a href="#ref_3320460235_1010517" class="selected">THRESHOLD</a>=<i>value</i>] [,&#160;<a href="#ref_3320460235_1010522" class="selected">WPS_FILTERED</a>=<i>variable</i>])</p>
+        <h2 class="API"><a name="ref_3320460235_1010323"></a><a name="ref_3320460235_1010323_PageTOC_WV_DENOISE_"></a>Return Value</h2>
+        <p>The result is an array of the same dimensions as the input <i>Array</i>. If <i>Array</i> is double precision or /DOUBLE is set then the result is double precision, otherwise the result is single precision.</p>
+        <h2 class="API"><a name="ref_3320460235_1010325"></a><a name="ref_3320460235_1010325_PageTOC_WV_DENOISE_"></a>Arguments</h2>
+        <h3 class="Argument">Array</h3>
+        <p>A one-dimensional array of length N, of floating-point or complex type.</p>
+        <h3 class="Argument">Family</h3>
+        <p>A scalar string giving the name of the wavelet function to use for the transform. WV_DENOISE will construct the actual function name by removing all white space and attaching a prefix of 'WV_FN_'.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>WV_DENOISE may only be used with discrete wavelets, such as WV_FN_COIFLET, WV_FN_DAUBECHIES, WV_FN_HAAR, and WV_FN_SYMLET.</p>
+        <h3 class="Argument">Order</h3>
+        <p>The order number, or parameter, for the wavelet function given by <i>Family</i>. If not specified the default for the wavelet function will be used.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you pass in a DENOISE_STATE structure, then <i>Family</i> and <i>Order</i> may be omitted. In this case the values from DENOISE_STATE are used.</p>
+        <h2 class="API"><a name="ref_3320460235_1010471"></a><a name="ref_3320460235_1010471_PageTOC_WV_DENOISE_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="ref_3320460235_1010533"></a><a name="ref_3320460235_1010533_Keywords_WV_DENOISE_"></a>COEFFICIENTS</h3>
+        <p>Set this keyword to a scalar specifying the number of wavelet coefficients to retain in the filtered wavelet transform. This keyword is ignored if keyword PERCENT is present.</p>
+        <h3 class="Keyword"><a name="ref_3320460235_1010481"></a><a name="ref_3320460235_1010481_Keywords_WV_DENOISE_"></a>CUTOFF</h3>
+        <p>Set this keyword to a named variable that, upon return, will contain the cutoff value of wavelet power that was used for the threshold.</p>
+        <h3 class="Keyword"><a name="ref_3320460235_1010485"></a><a name="ref_3320460235_1010485_Keywords_WV_DENOISE_"></a>DENOISE_STATE</h3>
+        <p>This is both an input and an output keyword. If this keyword is set to a named variable, then on exit, DENOISE_STATE will contain the following structure:</p>
+        <table cellspacing="0" style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr style="background-color: #cbcbff;">
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Tag</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Type</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Definition</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>FAMILY</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>STRING</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Name of the wavelet function used.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>ORDER</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>DOUBLE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Order for the wavelet function.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>DWT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>FLT/DBLARR</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Discrete wavelet transform of <i>Array</i></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>WPS</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>FLT/DBLARR</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Wavelet power spectrum, equal to |DWT|^2</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>SORTED</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>FLT/DBLARR</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Percent-normalized WPS, sorted</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>CUMULATIVE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>FLT/DBLARR</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Cumulative sum of SORTED</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>COEFFICIENTS</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>LONG</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Number of coefficients retained</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>PERCENT</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>DOUBLE</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Percent of coefficients retained</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the DOUBLE keyword is set, then the arrays will be of type double.</p>
+        <p>Upon input, if DENOISE_STATE is set to a structure with the above form, then DWT, WPS, SORTED, and CUMULATIVE will not be recomputed by WV_DENOISE. This is useful if you want to make multiple calls to WV_DENOISE using the same <i>Array</i>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>No error checking is made on the input values. The values should not be modified between calls to DENOISE_STATE.</p>
+        <h3 class="Keyword"><a name="ref_3320460235_1010505"></a><a name="ref_3320460235_1010505_Keywords_WV_DENOISE_"></a>DOUBLE</h3>
+        <p>Set this keyword to force the computation to be done using double-precision arithmetic.</p>
+        <h3 class="Keyword"><a name="ref_3320460235_1010508"></a><a name="ref_3320460235_1010508_Keywords_WV_DENOISE_"></a>DWT_FILTERED</h3>
+        <p>Set this keyword to a named variable in which the filtered discrete wavelet transform will be returned.</p>
+        <h3 class="Keyword"><a name="ref_3320460235_1010511"></a><a name="ref_3320460235_1010511_Keywords_WV_DENOISE_"></a>PERCENT</h3>
+        <p>Set this keyword to a scalar specifying the percentage of cumulative power to retain.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If neither COEFFICIENTS nor PERCENT is present then all of the coefficients are retained (i.e. no filtering is done).</p>
+        <h3 class="Keyword"><a name="ref_3320460235_1010517"></a><a name="ref_3320460235_1010517_Keywords_WV_DENOISE_"></a>THRESHOLD</h3>
+        <p>Set this keyword to a scalar specifying the type of threshold. The actual threshold, <i>T, </i>is set using COEFFICIENTS or PERCENT. Possible values are:</p>
+        <ul>
+            <li value="1"><b>0:</b> Hard threshold (this is the default). The hard threshold sets all wavelet coefficients with magnitude less than or equal to <i>T</i> to zero.</li>
+            <li value="2"><b>1:</b> Soft threshold. The soft threshold sets all DWT[i] with magnitude less than <i>T</i> to zero, and also linearly reduces the magnitude of the each retained wavelet coefficient by <i>T</i>: Positive coefficients are set equal to DWT[i] – <i>T</i>, while negative coefficients are set equal to DWT[i] + <i>T</i>.</li>
+        </ul>
+        <h3 class="Keyword"><a name="ref_3320460235_1010522"></a><a name="ref_3320460235_1010522_Keywords_WV_DENOISE_"></a>WPS_FILTERED</h3>
+        <p>Set this keyword to a named variable in which the filtered wavelet power spectrum will be returned.</p>
+        <h2 class="API"><a name="ref_3320460235_1023185"></a><a name="ref_3320460235_1023185_PageTOC_WV_DENOISE_"></a>Version History</h2>
+        <table cellpadding="0" cellspacing="0" class="TableStyle_VersionTable" style="border-spacing-x: 0;border-spacing-y: 0;border-collapse: collapse;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="ref_3320460235_1016215"></a><a name="ref_3320460235_1016215_PageTOC_WV_DENOISE_"></a>See Also</h2>
+        <p><a href="WV_DWT.htm#ref_3320460235_1010303">WV_DWT</a>, <a href="WV_TOOL_DENOISE.htm#ref_3320460235_1004900">WV_TOOL_DENOISE</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

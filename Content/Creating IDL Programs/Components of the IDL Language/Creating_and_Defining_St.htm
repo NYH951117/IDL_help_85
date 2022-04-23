@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Data Types">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Creating and Defining Structures</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDL_Data_Types.htm">Data Types</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Creating and Defining Structures</span>
+        </div>
+        <h1><a name="structures_2305844932_211001"></a><a name="kanchor4504"></a><a name="structures_2305844932_25128"></a>Creating and Defining Structures</h1>
+        <p>A named structure is created by executing a structure-definition expression, which is an expression of the following form:</p>
+        <p>{<i>Structure_Name, Tag_Name<sub>1</sub> : Tag_Definition<sub>1</sub>, ..., Tag_Name<sub>n</sub> : Tag_Definition<sub>n</sub></i>}</p>
+        <p>Anonymous structures are created in the same way, but with the structure’s name omitted.</p>
+        <p>{<i>Tag_Name<sub>1</sub> : Tag_Definition<sub>1</sub> , ..., Tag_Name<sub>n</sub> : Tag_Definition<sub>n</sub></i>}</p>
+        <p>Anonymous structures can also be created and combined using the <a href="../../Reference Material/C/CREATE_STRUCT.htm#C_854643309_676445">CREATE_STRUCT </a>function. </p>
+        <p>Tag names may not be IDL Reserved Words, and must be unique within a given structure, although the same tag name can be used in more than one structure. Structure names and tag names follow the rules of IDL identifiers: they must begin with a letter; following characters can be letters, digits, or the underscore or dollar sign characters; and case is ignored. </p>
+        <p>As mentioned above, each tag definition is a constant, variable, or expression whose structure defines the structure and initial value of the field. The result of the structure definition expression is an instance of the structure, with each field set equal to its tag definition.</p>
+        <p>A named structure that has already been defined can be referred to by simply enclosing the structure’s name in braces, as shown below:</p>
+        <p>{<i>Structure_Name</i> }</p>
+        <p>The result of this expression is a structure of the designated name.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span><a name="kanchor4505"></a>When a new instance of a structure is created from an existing named structure, all of the fields in the newly-created structure are <i>zeroed</i>. This means that fields containing numeric values will contain zeros, fields containing string values will contain empty strings, and fields containing pointers or objects will contain null pointers or null objects. In other words, no matter what data the original structure contained, the new structure will contain only a template for that type of data.</p>
+        <p>Also, when making a named structure that has already been defined, the tag names need not be present:</p>
+        <p>{<i>Structure_Name, expression<sub>1</sub>, ..., expression<sub>n</sub></i>}</p>
+        <p>All of the expressions must agree in structure with the original tag definition.</p>
+        <p><i>Once defined, a given named structure type cannot be changed.</i> If a structure definition with tag names is executed and the structure already exists, each tag name and the structure of each tag field must agree with the original definition. Anonymous structures do not have this restriction because each instance has its own definition.</p>
+        <h2 class="API"><a name="structures_2305844932_127876"></a><a name="kanchor4506"></a><a name="structures_2305844932_23119"></a>Structure Inheritance</h2>
+        <p>Structures can inherit tag names and definitions from other structures. To cause one structure to inherit tags from another, use the INHERITS specifier. For example, if we define a structure one as follows:</p>
+        <p class="Code">A = {one, data1a:0, data1b:0L }</p>
+        <p>we can define a second structure two that includes the tags from the one structure with the following definition statement:</p>
+        <p class="Code">B = { two, INHERITS one, data2:0.0 }</p>
+        <p>This is the same as defining the structure two with the statement:</p>
+        <p class="Code">B = { two, data1a:0, data1b:0L, data2:0.0 }</p>
+        <p>Note that the fields of the one structure are included in the two structure in the position that the INHERITS specifier appears in the structure definition.</p>
+        <p>Remember that tag names must be unique. If you use structure inheritance, be sure that the tag names in the inherited structure do not conflict with the tag names in the inheriting structure.</p>
+        <p>Structures that are inherited must be defined before the inheriting structure can be defined. If a structure inherits tags from another structure that is not yet defined, IDL will search for a routine to define the inherited structure. If the inherited structure cannot be defined, definition of the new structure fails.</p>
+        <p>While structure inheritance can be used with any structure, it is most useful when dealing with <i>object class structures</i>. When the INHERITS specifier is used in a class structure definition, it has the added effect of defining the inheriting object as a <i>subclass</i> of the inherited class.</p>
+        <h2 class="API"><a name="structures_2305844932_66354"></a>Example of Creating a Structure</h2>
+        <p>Assume that a star catalog is to be processed. Each entry for a star contains the following information: star name, right ascension, declination, and an intensity measured each month over the last 12 months. A structure for this information is defined with the following IDL statement:</p>
+        <p class="Code">A = {star, name:'', ra:0.0, dec:0.0, inten:FLTARR(12)}</p>
+        <p>This structure definition is the basis for all examples in this chapter. The statement above defines a structure type named star, which contains four fields. The tag names are name, ra, dec, and inten. The first field, with the tag name, contains a scalar string as given by its tag definition. The following two fields each contain floating-point scalars. The fourth field, inten, contains a 12-element, floating-point array. Note that the type of the constants, 0.0, is floating point. If the constants had been written as 0, the fields ra and dec would contain short integers.</p>
+        <p> The same structure is created as an anonymous structure by the statement:</p>
+        <p class="Code">A = {name:'', ra:0.0, dec:0.0, inten:FLTARR(12)}</p>
+        <p>or by using the <a href="../../Reference Material/C/CREATE_STRUCT.htm#C_854643309_676445">CREATE_STRUCT </a>function:</p>
+        <p class="Code">A = CREATE_STRUCT('name', '', 'ra', 0.0, 'dec', 0.0, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;'inten', FLTARR(12))</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

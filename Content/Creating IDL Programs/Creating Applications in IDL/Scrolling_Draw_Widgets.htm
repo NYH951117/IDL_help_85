@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|About Draw Widgets">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Scrolling Draw Widgets</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="About_Draw_Widgets.htm">About Draw Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Scrolling Draw Widgets</span>
+        </div>
+        <h1><a name="widget_draw_834959296_96330"></a><a name="widget_draw_834959296_43068"></a>Scrolling Draw Widgets</h1>
+        <p>Another difference between a draw <a name="kanchor5065"></a>widget and either a graphics window created with the WINDOW procedure or an IDLgrWindow object is that draw widgets can include scroll bars. Setting the APP_SCROLL keyword or the SCROLL keyword to the WIDGET_DRAW function causes scrollbars to be attached to the drawing widget, which allows the user to view images or graphics larger than the visible area. </p>
+        <h2 class="API">Differences Between SCROLL and APP_SCROLL</h2>
+        <p>The amount of memory used by a draw widget is directly related to the size of the drawable area of the widget. If a draw widget does not have scroll bars, the entire drawable area is viewable. In this case, the size of the drawable area is controlled by the XSIZE and YSIZE keywords to WIDGET_DRAW.</p>
+        <p>With the addition of scroll bars, it is possible to display an image that is larger than the viewable area (the <i>viewport</i>) of the draw widget. IDL provides two options for dealing with images larger than the viewport:</p>
+        <ol>
+            <li value="1">Create the draw widget using the SCROLL keyword. This method creates a draw widget whose drawable area is specified by the XSIZE and YSIZE keywords, and whose viewable area is specified by the X_SCROLL_SIZE and Y_SCROLL_SIZE keywords. Since the entire image is kept in memory, IDL can display the appropriate portions automatically when the scroll bars are adjusted.</li>
+            <li value="2">Create the draw widget using the APP_SCROLL keyword. This method creates a draw widget whose drawable area is the same size as its viewable area (specified by the X_SCROLL_SIZE and Y_SCROLL_SIZE keywords), but which can be different from the <i>virtual drawable area</i> (specified by the XSIZE and YSIZE keywords) that is equal to the full size of the image. In this case, only the portion of the image that is currently visible in the viewport is kept in memory; the IDL programmer must use viewport events to determine when the scroll bars have been adjusted and display the appropriate portion of the full image.</li>
+        </ol>
+        <p>The concept of a virtual drawable area allows you to display portions of very large images in a draw widget without the need for enough memory to display the entire image. The price for this facility is the need to manually handle display of the correct portion of the image in an event-handling routine.</p>
+        <h2 class="API">Example Using SCROLL</h2>
+        <p>The following code creates a simple scrollable draw widget and displays an image.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This example is included in the file <code>draw_scroll.pro</code> in the <code>examples/doc/widgets</code> subdirectory of the IDL distribution. You can either open the file in an IDL editor window and compile and run the code using items on the <b>Run</b> menu, or simply enter<br /><code>&#160;&#160;&#160;draw_scroll</code><br />at the IDL command prompt. See <a href="About_Widget_Application.htm#widget_apps_4063420628_1041756">Running the Example Code</a> if IDL does not run the program as expected. You may need to enter <code>DEVICE, RETAIN=2</code> at the IDL command prompt before running this example.</p>
+        <p class="Code">; Event-handler routine. Does nothing in this example.</p>
+        <p class="Code">PRO draw_scroll_event, ev</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Widget creation routine.</p>
+        <p class="Code">PRO draw_scroll</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Read an image for use in the example.</p>
+        <p class="Code">&#160;&#160;READ_JPEG, FILEPATH('muscle.jpg', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;SUBDIR=['examples', 'data']), image</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Create the base widget.</p>
+        <p class="Code">&#160;&#160;base = WIDGET_BASE()</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Create the draw widget. The size of the viewport is set to</p>
+        <p class="Code">&#160;&#160;; 200x200 pixels, but the size of the drawable area is</p>
+        <p class="Code">&#160;&#160;; set equal to the dimensions of the image array using the</p>
+        <p class="Code">&#160;&#160;; XSIZE and YSIZE keywords.</p>
+        <p class="Code">&#160;&#160;draw = WIDGET_DRAW(base, X_SCROLL_SIZE=200, Y_SCROLL_SIZE=200, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;XSIZE=(SIZE(image))[1], YSIZE=(SIZE(image))[2], /SCROLL)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Realize the widgets.</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, base, /REALIZE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Retrieve the window ID from the draw widget.</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, draw, GET_VALUE=drawID</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Set the draw widget as the current drawable area.</p>
+        <p class="Code">&#160;&#160;WSET, drawID</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Load the image.</p>
+        <p class="Code">&#160;&#160;TVSCL, image</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Call XMANAGER to manage the widgets.</p>
+        <p class="Code">&#160;&#160;XMANAGER, 'draw_scroll', base, /NO_BLOCK</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>In this example, the drawable area created for the draw widget is the full size of the displayed image. Since IDL handles the display of the image as the scroll bars are adjusted, no event-handling is necessary to update the display.</p>
+        <h2 class="API">Example Using APP_SCROLL with Object Graphics</h2>
+        <p>The following example shows how to use the APP_SCROLL keyword with WIDGET_DRAW using Object Graphics. As in the previous example, APP_SCROLL allows only the viewable part of the image to load in memory rather than loading the entire image at one time. </p>
+        <p>This example code demonstrates how WIDGET_DRAW's APP_SCROLL keyword can display an oversized image in a scrollable WIDGET_DRAW widget. In this case, “oversized” implies a dimension greater than 2048 pixels, which is a limit imposed by OpenGL for maximum window or pixel map size. The Object Graphics example in the example is an 864 x 2592 image. </p>
+        <p class="Code">; Event handler for the example application</p>
+        <p class="Code">; Since our application creates an object tree, we must</p>
+        <p class="Code">; explicitly destroy the objects when we destroy the</p>
+        <p class="Code">; top-level base widget.</p>
+        <p class="Code">PRO object_app_scroll_doc_event, event</p>
+        <p class="Code">&#160;&#160;&#160;IF TAG_NAMES(event, /STRUCTURE_NAME) EQ $</p>
+        <p class="Code">&#160;&#160;&#160;'WIDGET_KILL_REQUEST' THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;WIDGET_CONTROL, event.TOP, GET_UVALUE=state</p>
+        <p class="Code">&#160;&#160;&#160;&#160;OBJ_DESTROY, state.OWINDOW</p>
+        <p class="Code">&#160;&#160;&#160;&#160;WIDGET_CONTROL, event.TOP, /DESTROY</p>
+        <p class="Code">&#160;&#160;&#160;ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Event handler for WIDGET_DRAW</p>
+        <p class="Code">PRO wdraw_event, event</p>
+        <p class="Code">&#160;&#160;&#160;; Case of the viewport event</p>
+        <p class="Code">&#160;&#160;&#160;IF event.TYPE EQ 3 THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;WIDGET_CONTROL, event.ID, GET_VALUE=oWindow</p>
+        <p class="Code">&#160;&#160;&#160;&#160;; By using /GEOMETRY we can deal with viewport scrolling</p>
+        <p class="Code">&#160;&#160;&#160;&#160;geom = WIDGET_INFO(event.ID, /GEOMETRY)</p>
+        <p class="Code">&#160;&#160;&#160;&#160;viewW = geom.XSIZE &lt; geom.DRAW_XSIZE</p>
+        <p class="Code">&#160;&#160;&#160;&#160;viewH = geom.YSIZE &lt; geom.DRAW_YSIZE</p>
+        <p class="Code">&#160;&#160;&#160;&#160;; oWindow and oView pass the drawing info</p>
+        <p class="Code">&#160;&#160;&#160;&#160;; and close all objects in the graphics hierarchy</p>
+        <p class="Code">&#160;&#160;&#160;&#160;; when window is closed.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;oWindow-&gt;GetProperty, GRAPHICS_TREE=oView</p>
+        <p class="Code">&#160;&#160;&#160;&#160;oView-&gt;SetProperty, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;VIEWPLANE_RECT=[event.X, event.Y, viewW, viewH]</p>
+        <p class="Code">&#160;&#160;&#160;&#160;oWindow-&gt;Draw</p>
+        <p class="Code">&#160;&#160;&#160;ENDIF</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Widget Creation routine</p>
+        <p class="Code">PRO object_app_scroll_doc</p>
+        <p class="Code">&#160;&#160;&#160;;make a large Object Graphics image to display (8641 X 2592)</p>
+        <p class="Code">&#160;&#160;&#160;xs=864L</p>
+        <p class="Code">&#160;&#160;&#160;ys=3*864L</p>
+        <p class="Code">&#160;&#160;&#160;img1=dist(xs)</p>
+        <p class="Code">&#160;&#160;&#160;img=FLTARR(xs,ys)</p>
+        <p class="Code">&#160;&#160;&#160;img[0,0]=img1</p>
+        <p class="Code">&#160;&#160;&#160;img[0,xs]=SHIFT(img1,200,200)</p>
+        <p class="Code">&#160;&#160;&#160;img[0,xs*2]=SHIFT(img1,400,400)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Initial viewport size</p>
+        <p class="Code">&#160;&#160;&#160;viewW = 400</p>
+        <p class="Code">&#160;&#160;&#160;viewH = 400</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Define the top level base.</p>
+        <p class="Code">&#160;&#160;&#160;tlb = WIDGET_BASE(/COLUMN, TLB_FRAME_ATTR=1, /TLB_KILL_REQUEST_EVENTS)</p>
+        <p class="Code">&#160;&#160;&#160;; APP_SCROLL allows XSIZE and YSIZE to handle  large dimensions</p>
+        <p class="Code">&#160;&#160;&#160;; because only the part of the image in the viewport</p>
+        <p class="Code">&#160;&#160;&#160;; is loaded at one time.</p>
+        <p class="Code">&#160;&#160;&#160;wDraw = WIDGET_DRAW(tlb, XSIZE=xs, YSIZE=ys, GRAPHICS_LEVEL=2, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;X_SCROLL_SIZE=viewW, Y_SCROLL_SIZE=viewH, /APP_SCROLL, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;/VIEWPORT_EVENTS, EVENT_PRO='wdraw_event')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Realize the top level base and draw widgets.</p>
+        <p class="Code">&#160;&#160;&#160;WIDGET_CONTROL, tlb, /REALIZE</p>
+        <p class="Code">&#160;&#160;&#160;WIDGET_CONTROL, wDraw, GET_VALUE=oWindow</p>
+        <p class="Code">&#160;&#160;&#160;oImg = OBJ_NEW('IDLgrImage', img, ORDER=1)</p>
+        <p class="Code">&#160;&#160;&#160;oModel = OBJ_NEW('IDLgrModel')</p>
+        <p class="Code">&#160;&#160;&#160;oView = OBJ_NEW('IDLgrView', PROJECTION=1, EYE=3., $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;VIEWPLANE_RECT=[0,0,viewW,viewH], COLOR=[0,0,0])</p>
+        <p class="Code">&#160;&#160;&#160;oModel-&gt;Add, oImg</p>
+        <p class="Code">&#160;&#160;&#160;oView-&gt;Add, oModel</p>
+        <p class="Code">&#160;&#160;&#160;; Use GRAPHICS_TREE as an alternative to passing all</p>
+        <p class="Code">&#160;&#160;&#160;; the object states to the event handler.</p>
+        <p class="Code">&#160;&#160;&#160;oWindow-&gt;SetProperty, GRAPHICS_TREE=oView</p>
+        <p class="Code">&#160;&#160;&#160;oWindow-&gt;Draw, oView</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;state = { oWindow:oWindow }</p>
+        <p class="Code">&#160;&#160;&#160;WIDGET_CONTROL, tlb, SET_UVALUE=state</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;XMANAGER, 'object_app_scroll_doc', tlb</p>
+        <p class="Code">END</p>
+        <p>This example routine produces the following display:</p>
+        <p>
+            <img src="../../images/app_scroll.gif" />
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

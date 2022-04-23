@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: L">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>LAMBDA</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="L_list.htm">Routines: L</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">LAMBDA</span>
+        </div>
+        <h1><a name="kanchor1652"></a>LAMBDA</h1>
+        <p>The LAMBDA function creates small, inline functions that can be passed around as IDL strings. These Lambda routines can be used to make function calls, or used as inputs to the <a href="../Static Methods/IDL_Variable.htm#Filter">::Filter</a>, <a href="../Static Methods/IDL_Variable.htm#Map">::Map</a>, and <a href="../Static Methods/IDL_Variable.htm#Reduce">::Reduce</a> methods.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>You can use the <a href="LAMBDAP.htm">LAMBDAP</a> routine to create inline procedures instead of functions.</p>
+        <h2 class="API">Examples</h2>
+        <p>First we use a simple Lambda function with the <a href="../Static Methods/IDL_Variable.htm#Map">Map</a> method, to return the square root of a number:</p>
+        <p class="Code">var = [0:5]</p>
+        <p class="Code">PRINT, var.Map(LAMBDA(n: sqrt(n)))</p>
+        <p>IDL prints:</p>
+        <p class="Code">0.000000      1.00000      1.41421      1.73205      2.00000      2.23607</p>
+        <p>Next we use a LAMBDA function with the <a href="../Static Methods/IDL_Variable.htm#Filter">Filter</a> method, to return only prime numbers:</p>
+        <p class="Code">var = [2:50]</p>
+        <p class="Code">lam = LAMBDA(n:n le 3 || MIN(n mod [2:FIX(SQRT(n))]))</p>
+        <p class="Code">newvar = var.Filter(lam)</p>
+        <p class="Code">PRINT, newvar</p>
+        <p>IDL&#160;prints:</p>
+        <p class="Code">2  3  5  7 11 13 17 19 23 29 31 37 41 43 47</p>
+        <p>We can also make function calls directly on the returned Lambda variable:</p>
+        <p class="Code">; Are these prime numbers?</p>
+        <p class="Code">PRINT, lam(499), lam(4999), lam(49999), lam(499999), lam(4999999)</p>
+        <p>IDL&#160;prints:</p>
+        <p class="Code">1   1   1   0   1</p>
+        <p>See the bottom of this topic for more examples.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = LAMBDA( <i>Code</i> )</p>
+        <h2 class="API">Return Value</h2>
+        <p>A string giving IDL's internal name for the Lambda function. You should ignore the actual value, but instead, you should simply pass the string into your Filter, Map, or Reduce call. You can also make direct function calls on the returned string and IDL will call your Lambda routine. For example:</p>
+        <p class="Code">lam1 = Lambda('n: n^3')</p>
+        <p class="Code">PRINT, lam1([5,10,15])</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>To make direct calls on a Lambda function, you should make sure that <code>compile_opt strictarr</code> (or <code>compile_opt idl2</code>) is turned on so that IDL&#160;interprets the parentheses as a function call instead of array indices. See <a href="../C/COMPILE_OPT.htm">COMPILE_OPT</a> for details.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Code</h3>
+        <p>A string containing your Lambda code, or the actual code itself. The string or code should have the following form:</p>
+        <p class="Code">"arg1, arg2, arg3,... : expression"</p>
+        <p>Your Lambda routine must accept at least one argument, although it doesn't necessarily need to use that argument.</p>
+        <p>The expression must be any valid IDL&#160;expression statement and can include any combination of unary, binary, or ternary (conditional) operators as well as function calls. The expression cannot contain multiple statements (using "&amp;") and cannot contain any flow-control statements (such as if/then, while, etc.).</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you use actual code within the LAMBDA call, then all of your statements must fit on a single line. You  cannot use "$" to continue the code onto the next line. If your code is too long to easily fit on a single line, you should use a string containing the code. You can then break the string across multiple lines.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The actual names of the arguments do not matter, as long as they are valid IDL variable names, and they match the variable names within the expression. When the Lambda function is called, the input variables will be passed into your Lambda function in the same order as the call.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you call Lambda again with the identical <i>Code</i> string, then for efficiency a new Lambda routine will not be created. Instead, the existing Lambda routine will be returned. If for some reason you must have a new function, you should change the code string, for example by changing the names of the arguments.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h2 class="API">Implementation</h2>
+        <p>LAMBDA creates a new function  with the following form:</p>
+        <p class="Code">FUNCTION IDL$LAMBDAFxxx, <i>arg1</i>, <i>arg2</i>,...</p>
+        <p class="Code_Indented">COMPILE_OPT IDL2, hidden</p>
+        <p class="Code_Indented">RETURN, <i>expression</i></p>
+        <p class="Code">END</p>
+        <p>The "<code>xxx</code>" is filled in with a unique number for each call to Lambda.</p>
+        <p>IDL&#160;then compiles the newly-created routine, and returns the name of the routine in the <i>Result</i>.</p>
+        <p>If you call Lambda again with the identical <i>Code</i> string, IDL first looks in its list to see if this routine already exists, and returns the same routine name. This makes it efficient to do nested Lambda calls and avoids the overhead of creating extra routines.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Since Lambda functions are dynamically created at runtime, the routines are not saved within IDL&#160;SAVE files. To use the Lambda function in a future IDL&#160;session, you must re-run the code that creates the Lambda function.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span><a href="../R/RESOLVE_ALL.htm">RESOLVE_ALL</a> cannot resolve calls to <a href="#">LAMBDA</a> functions, and will throw an error with the name of the "unresolved" variable. You should either set the SKIP_ROUTINES keyword to the name of your Lambda variable, or use CONTINUE_ON_ERROR to suppress the errors.</p>
+        <h2 class="API">More Examples</h2>
+        <h4>Nested Lambdas with Function Calls</h4>
+        <p>Now, we use a nested Lambda function that creates other Lambda functions. Notice that we use a string containing the code, which allows us to dynamically convert the "n" argument to an actual value:</p>
+        <p class="Code">; Create Lambda functions that return a "sum of exponents"</p>
+        <p class="Code">lexp = LAMBDA('n: LAMBDA("sum,x: sum + x^" + n.ToString())')</p>
+        <p class="Code">; Returns Lambda("sum,x: sum + x^2")</p>
+        <p class="Code">lam2 = lexp(2)</p>
+        <p class="Code"> ; Returns Lambda("sum,x: sum + x^3")</p>
+        <p class="Code">lam3 = lexp(3)</p>
+        <p class="Code">a = [1, 2, 3, 4, 5]</p>
+        <p class="Code">PRINT, a.Reduce(lam2), a.Reduce(lam3)</p>
+        <p>IDL&#160;prints:</p>
+        <p class="Code">55         225</p>
+        <h4>Using Lambda as a User-Defined Function</h4>
+        <p>You can also pass the Lambda function into another IDL routine that expects a user-defined function. For example, we can use <a href="../Q/QROMB.htm">QROMB</a> to integrate a cubic polynomial over a certain range:</p>
+        <p class="Code">result = QROMB(LAMBDA(x:x^3 + (x-1)^2 + 3), -4, 4)</p>
+        <p class="Code">PRINT, result</p>
+        <p>IDL&#160;prints:</p>
+        <p class="Code">74.6667</p>
+        <p>We can also pass in this same Lambda function to the <a href="../P/PLOT.htm">Plot</a>'s EQUATION property:</p>
+        <p class="Code">p = PLOT(Lambda(x:x^3 + (x-1)^2 + 3), $</p>
+        <p class="Code_Indented">XRANGE=[-4,4], /FILL_BACKGROUND, FILL_LEVEL=0)</p>
+        <p class="Code">t = TEXT(-2, 55, '$y = x^3 + (x-1)^2 + 3$', /DATA)</p>
+        <p class="Code">t = TEXT(-2, 40, 'Area = ' + result.ToString('(F5.2)'), /DATA)</p>
+        <p>
+            <img src="../images/ex_lambda1.png" />
+        </p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="LAMBDAP.htm">LAMBDAP</a>, <a href="../../Objects/Static_Methods.htm">Static Methods and Properties</a>, <a href="../Static Methods/IDL_Variable.htm#Filter">Filter method</a>, <a href="../Static Methods/IDL_Variable.htm#Map">Map method</a>, <a href="../Static Methods/IDL_Variable.htm#Reduce">Reduce method</a></p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

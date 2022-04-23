@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|Java and COM - Export Bridge Assistant">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Specifying Information For Exporting</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/NoLines.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Java and COM - Export Bridge Assistant</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Specifying Information For Exporting</span>
+        </div>
+        <h1><a name="Specifying_Information_For_Exporting"></a><a name="kanchor5278"></a>Specifying Information For Exporting</h1>
+        <p>When the Assistant creates a new project, it supplies default values for the attributes that must be specified. Most of these values are set to UNSPECIFIED to indicate that you must modify this attribute. Some attributes do not have a default value because there is no reasonable one; also, supplying a default value could cause the wrappers to be built with incorrect values.</p>
+        <p>The one value that is set by default in most cases is the Convert Majority flag, used if the value is an array. The default setting for this attribute (True) provides the most expected behavior. For more information, see <a href="#Converting_Array_Majority" class="selected">Converting Array Majority</a>.</p>
+        <p>Note that in the IDL language, parameters are optional, so the Assistant does not require the user to export every parameter that is retrieved from the IDL source object and presented in the Assistant. It is up to the user to decide which parameters should be exported. This might require defensive programming in the IDL source object to ensure that parameters are not used if they are not supplied.</p>
+        <p>Information that can be specified includes:</p>
+        <ul>
+            <li value="1"><a href="#Bridge_Information" class="selected">Bridge Information</a> — defines general wrapper object information, the output directory, package name (Java only) and GUIDS settings (COM only)</li>
+            <li value="2"><a href="#Source_Object_Information" class="selected">Source Object Information</a> — indicates whether the object is drawable or not (this cannot be changed)</li>
+            <li value="3"><a href="#Property_Information" class="selected">Property Information</a> — defines the property data type, whether it is an array (and the array majority if it is), and whether or not it is to be exported</li>
+            <li value="4"><a href="#Method_Information" class="selected">Method Information</a> — defines the export characteristics of a procedure or function method, and defines the return value data type and array characteristics if the method is a function</li>
+            <li value="5"><a href="#Parameter_Information" class="selected">Parameter Information</a> — defines the mutability, data type, array characteristics and export selection for method parameters</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>See <a href="../ExportFromIDL - IDL Objects/ParameterPassingAndTypeConversion.htm#Parameter_Passing_And_Type_Conversion">Parameter Passing and Type Conversion</a> for important information about passing objects, arrays and variables as parameters.</p>
+        <h3><a name="About_the_Export_Property"></a>About the Export Property</h3>
+        <p>The first (and only the first time) any attribute of a property, method, or parameter other than Export is set, the item has its Export property set to True. This behavior is provided as a convenience.</p>
+        <h2><a name="Converting_Array_Majority"></a>Converting <a name="kanchor5279"></a>Array Majority</h2>
+        <p>The Convert Majority property may be an option for a property, function return value or method parameter that is defined as an array (the Array property is True). The rules for the Convert Majority property vary depending on destination (COM or Java) and whether the array is a property value, function return value or method parameter. The settings and default values are described below.</p>
+        <table style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Where to Specify</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Can Specify in COM?</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Can Specify in Java?</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Get Property</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>No (arrays always converted)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Yes (default is to convert)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Set Property</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Yes (default is to convert)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Yes (default is to convert)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Function return values</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>No (arrays always converted)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Yes (default is to convert)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>Procedure parameters</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>Yes (default is to convert)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Yes (default is to convert)</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>See the following for more information on these rules:</p>
+        <ul>
+            <li value="1"><a href="#Property_Information" class="selected">Property Information</a>
+            </li>
+            <li value="2"><a href="#Method_Information" class="selected">Method Information</a>
+            </li>
+            <li value="3"><a href="#Parameter_Information" class="selected">Parameter Information</a>
+            </li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For COM wrappers, you could theoretically set the Convert Majority flag for the property setting call but not the property retrieval call. In practice, the Assistant uses one flag to control the Convert Majority setting for both Get and Set Property, and so for COM, the setting for properties is always Convert Majority, which is set to True and disabled.</p>
+        <p>For more information on array majority, see <a href="../Appendices - Multidimensional Array Storage and Access/MASAOverview.htm#Multidimensional_Array_Storage_and_Access_Overview">Multidimensional Array Storage and Access</a>. Also see <a href="../ExportFromIDL - IDL Objects/ParameterPassingAndTypeConversion.htm#Array_Order_Conversion">Array Order Conversion</a>.</p>
+        <h2><a name="Supported_Data_Types"></a>Supported Data Types</h2>
+        <p>The following data types are supported with the Export Bridge technology.</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/NoLines.css');margin-left: 0;margin-right: auto;" class="TableStyle_NoLines" cellspacing="0">
+            <col />
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">COM</td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <ul>
+                            <li value="1"> Unsigned char</li>
+                            <li value="2"> Char</li>
+                            <li value="3"> Short</li>
+                            <li value="4"> Unsigned short</li>
+                            <li value="5"> Long</li>
+                            <li value="6"> Unsigned long</li>
+                            <li value="7">LONGLONG
+</li>
+                        </ul>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <ul>
+                            <li value="1">ULONGLONG</li>
+                            <li value="2">Float</li>
+                            <li value="3">Double</li>
+                            <li value="4">BSTR</li>
+                            <li value="5">IUnknown*</li>
+                            <li value="6">VARIANT
+</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">Java</td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">
+                        <ul>
+                            <li value="1">JIDLNumber</li>
+                            <li value="2">JIDLObjectI</li>
+                            <li value="3">JIDLString</li>
+                        </ul>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>See  <a href="../Appendices - IDL Java Object API/PackageSummary.htm#Package_Summary">IDL Java Object API</a> for information on JIDL* objects.</p>
+        <h2><a name="Bridge_Information"></a><a name="kanchor5280"></a>Bridge Information</h2>
+        <p>The project has general information about the bridge being used (COM or Java).</p>
+        <p>
+            <img src="../Resources/Images/BridgesFigure7-8.png" />
+        </p>
+        <p>The following describes the general bridge information’s properties and values</p>
+        <table style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Property</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Value</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Defaults to “IDL Export Bridge Project for &lt;dest&gt;” where
+&lt;dest&gt; is “COM” or “Java.” Displayed in the sheet header only, it is distinct from the project filename and source object classname and cannot be modified.
+</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Source object classname</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Specified by selection of IDL object definition file. The file must be selected, rather than specification of the object by name only. Because this value is obtained from the source object filename, the capitalization is the same as the filename.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Output classname</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Defaults to IDL source object class name; must be non-null and a valid IDL identifier. Because this value is obtained from the source object filename, the capitalization is the same as the filename.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Process name</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Defaults to ‘Default_Process_Name’; must be non-null and valid IDL identifier</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>Output directory</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Defaults to location of source object file (.pro or .sav); independent from location of project file and source file (except for initial default to source location).</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>The other properties displayed for the project depends on which bridge it is using: COM or Java. The following describes COM-specific values.</p>
+        <p>
+            <img src="../Resources/Images/BridgesFigure7-9.png" />
+        </p>
+        <table style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Property</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Value</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Regenerate GUIDs</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>On the first build operation, GUIDS are always generated, so this property is desensitized until after the first build. On subsequent builds, if Regenerate GUIDs is False, the existing GUIDs are used, allowing a developer to use the newly built object without re-registering. If Regenerate GUIDs is true, new GUIDS will be created during a build operation. Any time GUIDs are regenerated during a build operation. they are saved and can be used by setting Regenerate GUIDs to False.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>Explicit CreateObject</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>By default, graphical COM objects (ActiveX objects) call the createObject method automatically when the control is created. If this property is set to True, the automatic call to the createObject method is removed; the client code must then explicitly call one of the <a href="../ExportFromIDL - COM Objects/StockCOMWrapperMethods.htm#CreateObject">CreateObject</a> or <a href="../ExportFromIDL - COM Objects/StockCOMWrapperMethods.htm#CreateObjectEx">CreateObjectEx</a> methods to create the IDL process.
+This property is disabled for nongraphical COM objects, which always require an explict call to one of the CreateObject methods.
+</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>The following describes Java-specific properties and values.</p>
+        <p>
+            <img src="../Resources/Images/BridgesFigure7-10.png" />
+        </p>
+        <table style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Property</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Value</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>Package name</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Defaults to source object class name. Because this value is obtained from the source object filename, the capitalization is the same as the filename.</p>
+                        <p>This property is optional and can be blank. If blank, the Java file and class file will be created in the output directory. If not blank, the name is used to create one or more subdirectories below the output directory. Period characters are separator characters that produce a directory hierarchy in the resulting subdirectory for the result. Each segment between period characters must be a valid identifier.
+</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2><a name="Source_Object_Information"></a><a name="kanchor5281"></a>Source Object Information</h2>
+        <p>The source object for which you are making a wrapper has its own set of properties.</p>
+        <p>
+            <img src="../Resources/Images/BridgesFigure7-11.png" />
+        </p>
+        <p>The following  describes the characteristics of the source object.</p>
+        <table style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Property</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Value</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Name of this IDL source object; specified when project was created and shown in the sheet header only</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>Drawable object</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>True if IDL source object is a subclass of IDLitWindow, IDLgrWindow, or IDLitDirectWindow; otherwise False.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2><a name="Property_Information"></a><a name="kanchor5282"></a>Property Information</h2>
+        <p>Each property of the source object has its own set of properties.</p>
+        <p>
+            <img src="../Resources/Images/BridgesFigure7-12.png" />
+        </p>
+        <p>&#160;</p>
+        <p>The following  describes the properties and values of the source object’s properties.</p>
+        <table style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Property</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Value</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Name of the object’s property; shown in the sheet header only.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Type</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>One of the types supported by the Export Bridge technology. For the list, see <a href="#Supported_Data_Types" class="selected">Supported Data Types</a>.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Array</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Indicates if property is of type array: True if it is, False otherwise. If True, Convert Majority is sensitive.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Convert Majority</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Sensitive only if Array is True. Set to True if the property value is an array and needs to be converted when setting the property. (For COM, when retrieving a property value, the majority is always converted regardless of this attribute setting.) The default value for both COM and Java is True.
+For more information, see <a href="#Converting_Array_Majority" class="selected">Converting Array Majority</a>.
+</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>Export</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Indicates if the Assistant will export this property: True if it will, False otherwise.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>About Property Extraction</h3>
+        <p>The object properties are extracted from the IDL source object by compiling the list of all keywords on either or both of the SetProperty and GetProperty methods of the object.</p>
+        <p>The following factors are not used to determine source object properties:</p>
+        <ul>
+            <li value="1">Whether a property is registered or not (the export bridges do not require that an object uses the component framework)</li>
+            <li value="2">The presence of a member variable in the source object's definition structure</li>
+            <li value="3">Keywords to the object's Init method</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Properties of built-in superclasses are not extracted (see <a href="ExportingASourceObjectsSuperclasses.htm#Exporting_A_Source_Object's_Superclasses">Exporting a Source Object’s Superclasses</a>). To obtain wrapper routines to get or set a superclass property, you must add an explicit property handler to your SetProperty and/or GetProperty methods for the superclass property.</p>
+        <h2><a name="Method_Information"></a><a name="kanchor5283"></a>Method Information</h2>
+        <p>Each method of the source object has its own set of properties. The following figure displays a procedure’s property information.</p>
+        <p>
+            <img src="../Resources/Images/BridgesFigure7-13.png" />
+        </p>
+        <p>The following table describes the procedure information’s properties and values.</p>
+        <table style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Property</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Value</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Name of the procedure; shown in the sheet header only.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Output Method Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>The name of the wrapper method in the wrapper object. Defaults to the method name obtained from the source object, but can be changed to reflect native platform naming conventions and case. Regardless of the output method name, the wrapper method will call through the Export Bridge technology layers to the original source object method name in the IDL object.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>Export</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Indicates if the Assistant will export this property: True if it will, False otherwise.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p> The following figure shows the property information for a function.</p>
+        <p>
+            <img src="../Resources/Images/BridgesFigure7-14.png" />
+        </p>
+        <p>The following describes the function information’s properties and values. In addition to the values that can be specified for procedure methods above), the following can also be defined.</p>
+        <table style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Property</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Value</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Return Type</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>One of the types supported by the Export Bridge technology. For the list, see <a href="#Supported_Data_Types" class="selected">Supported Data Types</a>.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Array</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Indicates if property is of type array: True if it is, False otherwise. If True and the destination is Java, Convert Majority is sensitive.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>Convert Majority</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Sensitive only if Array is True and the destination is Java. Set to True if the property value is an array and needs to be converted when setting the property. (For COM, when retrieving a property value, the majority is always converted regardless of this setting, which is why this property does not appear with COM.) The default value is True.
+For more information, see <a href="#Converting_Array_Majority" class="selected">Converting Array Majority</a>.
+</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2><a name="Parameter_Information"></a><a name="kanchor5284"></a>Parameter Information</h2>
+        <p>Each parameter of the source object’s methods has its own set of properties.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If a method parameter has its Export property set to True, all parameters of the method to the left of the current parameter are marked for export as well so as to not leave holes in the parameters list and cause parameters to be out of sequence.<br />If a parameter has its Export property set to False, all parameters to the right will also have their Export property set to False. If a parameter has its Export property set to True, the parent method will have its Export property set to True.</p>
+        <p>
+            <img src="../Resources/Images/BridgesFigure7-15.png" />
+        </p>
+        <p>&#160;</p>
+        <p>The following describes the parameter information’s properties and values.</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Property</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Value</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Name of the procedure; shown in the sheet header only.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Mutability</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Either In or In/Out. Use In for parameters that are constant (In- Only, meaning that their values cannot be changed). Use In/Out for parameters that are not constant and require a value to be passed back to the caller (can be In/Out or Out-only).</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Return Type</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>One of the types supported by the Export Bridge technology. For the list, see <a href="#Supported_Data_Types" class="selected">Supported Data Types</a>.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Array</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Indicates if property is of type array: True if it is, False otherwise. If True, Convert Majority is sensitive.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Convert Majority</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Sensitive only if Array is True. Set to True if the property value is an array and needs to be converted when setting the property. The default value is True.
+For more information, see <a href="#Converting_Array_Majority" class="selected">Converting Array Majority</a>.
+</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>Export</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Indicates if the Assistant will export this property: True if it will, False otherwise.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

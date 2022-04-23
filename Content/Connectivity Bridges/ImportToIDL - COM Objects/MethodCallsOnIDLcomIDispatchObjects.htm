@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|COM Import Bridge and ActiveX|COM Import Bridge">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Method Calls On IDLcomIDispatch Objects</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">COM Import Bridge and ActiveX</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">COM Import Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Method Calls On IDLcomIDispatch Objects</span>
+        </div>
+        <h1><a name="Method_Calls_On_IDLcomIDispatch_Objects"></a><a name="kanchor5209"></a>Method <a name="kanchor5210"></a>Calls On IDLcomIDispatch Objects</h1>
+        <p>IDL allows you to call the underlying COM object’s methods by calling methods on the IDLcomIDispatch object. IDL handles conversion between IDL data types and the data types used by the component, and any results are returned in IDL variables of the appropriate type.</p>
+        <p>As with all IDL objects, the general syntax is:</p>
+        <p class="Code">result = ObjRef -&gt; Method([Arguments])</p>
+        <p>or</p>
+        <p class="Code">ObjRef -&gt; Method[, Arguments]</p>
+        <p>where ObjRef is an object reference to an instance of a dynamic subclass of the IDLcomIDispatch class.</p>
+        <h2>Function vs. Procedure Methods</h2>
+        <p>In COM, all object methods are functions. IDL’s implementation of the IDLcomIDispatch object maps COM methods that supply a return value using the <i>retval</i> attribute as IDL functions, and COM methods that do not supply a return value via the <i>retval</i> attribute as procedures. See <a href="#Displaying_Interface_Information_using_the_Object_Viewer" class="selected">Displaying Interface Information using the Object Viewer</a> for more information on determining which methods use the <i>retval</i> attribute.</p>
+        <p>The IDLcomIDispatch::GetProperty and IDLcomIDispatch::SetProperty methods are special cases. These methods are IDL object methods — not methods of the underlying COM object — and they use procedure syntax. The process of getting and setting properties on COM objects encapsulated in IDLcomIDispatch objects is discussed in <a href="ManagingCOMObjectProperties.htm#Managing_COM_Object_Properties">Managing COM Object Properties</a>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The IDL object system uses method names to identify and call object lifecycle methods (Init and Cleanup). If the COM object underlying an IDLcomIDispatch object implements Init or Cleanup methods, they will be overridden by IDL’s lifecycle methods, and the COM object’s methods will be inaccessible from IDL. Similarly, IDL implements the GetProperty and SetProperty methods for the IDLcomIDispatch object, so any methods of the underlying COM object that use these names will be inaccessible from IDL.</p>
+        <h2>What Happens When a Method Call Is Made?</h2>
+        <p>When a method is called on an IDLcomIDispatch object, the method name and arguments are passed to the internal IDL COM subsystem, where they are used to construct the appropriate IDispatch method calls for the underlying COM object.</p>
+        <p>From the point of view of an IDL user issuing method calls on the IDLcomIDispatch object, this process is completely transparent. The IDL user simply calls the COM object’s method using IDL syntax, and IDL handles the translation.</p>
+        <h2><a name="kanchor5211"></a>Data Type Conversions</h2>
+        <p>IDL and COM use different data types internally. While you should be aware of the types of data expected by the COM object’s methods and the types it returns, you do not need to worry about converting between IDL data types and COM data types manually. IDL’s dynamic type conversion facilities handle all conversion of data types between IDL and the COM system. The data type mappings are described in <a href="COM-IDLDataTypeMapping.htm#COM-IDL_Data_Type_Mapping">COM-IDL Data Type Mapping</a>.</p>
+        <p>For example, if the COM object that underlies an IDLcomIDispatch object has a method that requires a value of type INT as an input argument, you would supply the value as an IDL Long. If you supplied the value as any other IDL data type, IDL would first convert the value to an IDL Long using its normal data type conversion mechanism before passing the value to the COM object as an INT.</p>
+        <p>Similarly, if a COM object returns a BOOL value, IDL will place the value in a variable of Byte type, with a value of 1 (one) signifying True or a value of 0 (zero) signifying False.</p>
+        <h2><a name="kanchor5212"></a>Optional <a name="kanchor5213"></a>Arguments</h2>
+        <p>Like IDL routines, COM object methods can have optional arguments. Optional arguments eliminate the need for the calling program to provide input data for all possible arguments to the method for each call. The COM optional argument functionality is passed along to COM object methods called on IDLcomIDispatch objects, and to the IDLcomIDispatch::GetProperty method. This means that if an argument is not required by the underlying COM object method, it can be omitted from the method call used on the IDLcomIDispatch object.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Only method arguments defined with the optional token in the object’s interface definition are optional. See <a href="#Displaying_Interface_Information_using_the_Object_Viewer" class="selected">Displaying Interface Information using the Object Viewer</a> for more information regarding the object’s interface definition file.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If an argument that is not optional is omitted from the method call used on the IDLcomIDispatch object, IDL will generate an error.</p>
+        <h3>Argument Order</h3>
+        <p>Like IDL, COM treats arguments as positional parameters. This means that it makes a difference where in the argument list an argument occurs. (Contrast this with IDL’s handling of keywords, which can occur anywhere in the argument list after the routine name.) COM enforces the following ordering for arguments to object methods:</p>
+        <ol>
+            <li value="1">  Required arguments</li>
+            <li value="2">  Optional arguments for which default values are defined</li>
+            <li value="3">  Optional arguments for which no default values are defined</li>
+        </ol>
+        <p>The same order applies when the method is called on an IDLcomIDispatch object.</p>
+        <h3>Default Argument Values</h3>
+        <p>COM allows objects to specify a default value for any method arguments that are optional. If a call to a method that has an optional argument with a default value omits the optional argument, the default value is used. IDL behaves in the same way as COM when calling COM object methods on IDLcomIDispatch objects, and when calling the IDLcomIDispatch::GetProperty method.</p>
+        <p>Method arguments defined with the defaultvalue() token in the object’s interface definition are optional, and will use the specified default value if omitted from the method call. See <a href="#Displaying_Interface_Information_using_the_Object_Viewer" class="selected">Displaying Interface Information using the Object Viewer</a> for more information regarding the object’s interface definition file.</p>
+        <h3>Argument Skipping</h3>
+        <p>COM allows methods with optional arguments to accept a subset of the full argument list by specifying which arguments are not present. This allows the calling routine to supply, for example, the first and third arguments to a method, but not the second. IDL provides the same functionality for COM object methods called on</p>
+        <p>IDLcomIDispatch objects, but not for the IDLcomIDispatch::GetProperty or SetProperty methods.</p>
+        <p>To skip one or more arguments from a list of optional arguments, include the SKIP keyword in the method call. The SKIP keyword accepts either a scalar or a vector of numbers specifying which arguments are not provided.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The indices for the list of method arguments are zero-based — that is, the first method argument (either optional or required) is argument 0 (zero), the next is argument 1 (one), <i>etc</i>.</p>
+        <p>For example, suppose a COM object method accepts four arguments, of which the second, third, and fourth are optional:</p>
+        <p class="Code">ObjMethod, arg1, arg2-optional, arg3-optional, arg4-optional</p>
+        <p>To call this method on the IDLcomIDispatch object that encapsulates the underlying COM object, skipping arg2, use the following command:</p>
+        <p class="Code">objRef-&gt;ObjMethod, arg1, arg3, arg4, SKIP=1</p>
+        <p>Note that the SKIP keyword uses the index value 1 to indicate the second argument in the argument list. Similarly, to skip arg2 and arg3, use the following command:</p>
+        <p class="Code">objRef-&gt;ObjMethod, arg1, arg4, SKIP=[1,2]</p>
+        <p>Finally, note that you do not need to supply the SKIP keyword if the arguments are supplied in order. For example, to skip arg3 and arg4, use the following command:</p>
+        <p class="Code">objRef-&gt;ObjMethod, arg1, arg2</p>
+        <h2><a name="kanchor5214"></a>Finding Object Methods</h2>
+        <p>In most cases, when you incorporate a COM object into an IDL program, you will know what the COM object’s methods are and what arguments and data types those methods take, either because you created the COM object yourself or because the developer of the object provided you with the information.</p>
+        <p>If for some reason you do not know what methods the COM object supports, you may be able to determine which methods are available and what parameters they accept using the OLE/COM Object Viewer application provided by Microsoft. (See <a href="IDLcomIDispatchObjectNamingScheme.htm#Finding_COM_Class_and_Program_IDs">Finding COM Class and Program IDs</a> for information on acquiring the OLE/COM Object Viewer.)</p>
+        <p class="NoteIndent" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Finding information about a COM object’s methods using the OLE/COM Object<br />Viewer requires a moderately sophisticated understanding of COM programming, or at least COM interface definitions. While we provide some hints in this section on how to interpret the interface definition, if you are not already familiar with the structure of COM objects you may find this material inadequate. If possible, consult the developer of the COM object you wish to use rather than attempting to determine its structure using the object viewer.</p>
+        <h3><a name="Displaying_Interface_Information_using_the_Object_Viewer"></a>Displaying Interface Information using the Object Viewer</h3>
+        <p>You can use the OLE/COM Object Viewer to view the interface definitions for any COM object on your Windows machine. Select a COM object in the leftmost panel of the object viewer, click the right mouse button, and select “View Type Information...” A new window titled “ITypeLib Viewer” will be displayed, showing all of the component’s interfaces:</p>
+        <p>
+            <img src="../Resources/Images/BridgesFigure3-2.png" />
+        </p>
+        <p class="NoteIndent" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The top lines in the right-hand panel will say something like:<br />// Generated .IDL file (by the OLE/COM Object Viewer)<br />//<br />// typelib filename: RSIDemoComponent.dll<br />The “<i>.IDL file</i>” in this case has nothing to do with IDL, the Interactive Data Language. Here “IDL” stands for <i>Interface Description Language</i> — a language used to define component interfaces. If you are familiar with the Interface Description Language, you can often determine what a component is designed to do.</p>
+        <p>With the top-level object selected in the left-hand pane of the ITypelib Viewer, scroll down in the right-hand pane until you find the section that defines the IDispatch interface for the object in question. The definition will look something like this:</p>
+        <p class="Code">interface IRSIDemoObj1 : IDispatch</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">[id(0x00000001)]</p>
+        <p class="Code_Indented">HRESULT GetCLSID([out, retval] BSTR* pBstr);</p>
+        <p class="Code_Indented">[id(0x00000002), propput]</p>
+        <p class="Code_Indented">HRESULT MessageStr([in] BSTR pstr);</p>
+        <p class="Code_Indented">[id(0x00000002), propget]</p>
+        <p class="Code_Indented">HRESULT MessageStr([out, retval] BSTR* pstr);</p>
+        <p class="Code_Indented">[id(0x00000003)]</p>
+        <p class="Code_Indented">HRESULT DisplayMessageStr();</p>
+        <p class="Code_Indented">[id(0x00000004)]</p>
+        <p class="Code_Indented">HRESULT Msg2InParams(</p>
+        <p class="Code_Indented">[in] BSTR str, [in] long val, [out, retval] BSTR* pVal);</p>
+        <p class="Code_Indented">[id(0x00000005)]</p>
+        <p class="Code_Indented">HRESULT GetIndexObject( [in] long ndxObj, [out, retval] IDispatch** ppDisp);</p>
+        <p class="Code_Indented">[id(0x00000006)]</p>
+        <p class="Code_Indented">HRESULT GetArrayOfObjects( [out] long* pObjCount, [out, retval] VARIANT* psaObjs);</p>
+        <p class="Code">};</p>
+        <p>Method definitions look like this:</p>
+        <p class="Code">[id(0x00000001)]</p>
+        <p class="Code">HRESULT GetCLSID([out, retval] BSTR* pBstr);</p>
+        <p>where the line including the id string is an identifier used by the object to refer to its methods and the following line or lines (usually beginning with HRESULT) define the method’s interface.</p>
+        <p>Again, while it is beyond the scope of this manual to discuss COM object methods in detail, the following points may assist you in determining how to use a COM object:</p>
+        <ul>
+            <li value="1">Methods whose definitions include the <i>retval</i> attribute will appear in IDL as functions.</li>
+            <p class="Code">[id(0x00000001)]<br />HRESULT GetCLSID([out, retval] BSTR* pBstr);</p>
+            <li value="2">Methods that do not include the <i>retval</i> attribute will appear in IDL as procedures.</li>
+            <p class="Code">[id(0x00000003)] <br />HRESULT DisplayMessageStr();</p>
+            <li value="3">Methods whose definitions include the <i>propget</i> attribute allow you to retrieve an object property using the IDLcomIDispatch::GetProperty method. You cannot call these methods directly in IDL; see <a href="ManagingCOMObjectProperties.htm#Managing_COM_Object_Properties">Managing COM Object Properties</a> for additional details.</li>
+            <p class="Code">[id(0x00000002), propget] <br />HRESULT MessageStr([out, retval] BSTR* pstr);</p>
+            <li value="4">Methods whose definitions include the propput attribute allow you to set an object property using the IDLcomIDispatch::SetProperty method. You cannot call these methods directly in IDL; see <a href="ManagingCOMObjectProperties.htm#Managing_COM_Object_Properties">Managing COM Object Properties</a> for additional details.</li>
+            <p class="Code">[id(0x00000002), propput] <br />HRESULT MessageStr([in] BSTR pstr);</p>
+            <li value="5">Methods that accept optional input values will include the <i>optional</i> token in the argument’s definition. For example, the following definition indicates that the second input argument is optional:</li>
+            <p class="Code">[id(0x00000004)] <br />HRESULT Msg1or2InParams( [in] BSTR str, [in, optional] int val, [out, retval] BSTR* pVal);</p>
+            <li value="6">Methods that provide default values for optional arguments replace the <i>optional</i> token with the <i>defaultvalue()</i> token, where the default value of the argument is supplied between the parentheses. For example, the following definition indicates that the second input argument is optional, and has a default value of 15:</li>
+            <p class="Code">HRESULT Msg1or2InParams( [in] BSTR str, [in, defaultvalue(15)] int val, [out, retval] BSTR* pVal);</p>
+            <li value="7">While methods generally return an HRESULT value, this is not a requirement.</li>
+        </ul>
+        <h3>Displaying Interface Information Using the IDL HELP Procedure</h3>
+        <p>If you have an IDL program that instantiates a COM object running on your computer, you can determine either the class ID or the program ID by using the HELP command with the OBJECTS keyword. IDL displays a list of objects, along with their methods, with function and procedure methods in separate groups for each object class.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

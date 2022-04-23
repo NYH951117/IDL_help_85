@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|Creating Widget Applications|Widget Event Processing">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Example: Event Processing and User Values
+        </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Application Programming/Creating Widget Applications.htm">Creating Widget Applications</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Example: Event Processing and User Values</span>
+        </div>
+        <h1><a name="widget_apps_4063420628_1042349"></a><a name="widget_apps_4063420628_61852"></a>Example: Event Processing and User Values
+        </h1>
+        <p>The following example demonstrates how user values can be used to simplify event processing and to pass values between routines. It creates a base widget with three buttons and a text field that reports which button was pressed.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you are new to IDL widget programming, don’t be worried if parts of this example are not immediately clear to you. As you read further through this chapter, the principles of the event-driven programming model and IDL’s specific implementation of that model will become clearer.</p>
+        <p class="ExampleCode">This example is included in the file <code>doc_widget2.<a name="kanchor5005"></a>pro</code> in the <code>examples/doc/widgets</code> subdirectory of the IDL distribution. Run this example procedure by entering <code>doc_widget2 </code>at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT doc_widget2.pro</code>. See <a href="About_Widget_Application.htm#widget_apps_4063420628_1041756">Running the Example Code</a> if IDL does not run the program as expected.</p>
+        <p class="Code">PRO doc_widget2_event, ev</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, ev.TOP, GET_UVALUE=textwid</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, ev.ID, GET_UVALUE=uval</p>
+        <p class="Code">&#160;&#160;CASE uval OF</p>
+        <p class="Code">&#160;&#160;&#160;&#160;'ONE' : WIDGET_CONTROL, textwid, SET_VALUE='Button 1 Pressed'</p>
+        <p class="Code">&#160;&#160;&#160;&#160;'TWO' : WIDGET_CONTROL, textwid, SET_VALUE='Button 2 Pressed'</p>
+        <p class="Code">&#160;&#160;&#160;&#160;'DONE': WIDGET_CONTROL, ev.TOP, /DESTROY</p>
+        <p class="Code">&#160;&#160;ENDCASE</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO doc_widget2</p>
+        <p class="Code">&#160;&#160;base = WIDGET_BASE(/COLUMN)</p>
+        <p class="Code">&#160;&#160;button1 = WIDGET_BUTTON(base, VALUE='One', UVALUE='ONE')</p>
+        <p class="Code">&#160;&#160;button2 = WIDGET_BUTTON(base, VALUE='Two', UVALUE='TWO')</p>
+        <p class="Code">&#160;&#160;text = WIDGET_TEXT(base, XSIZE=20)</p>
+        <p class="Code">&#160;&#160;button3 = WIDGET_BUTTON(base, value='Done', UVALUE='DONE')</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, base, SET_UVALUE=text</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, base, /REALIZE</p>
+        <p class="Code">&#160;&#160;XMANAGER, 'doc_widget2', base</p>
+        <p class="Code">END</p>
+        <p>Let’s examine the creation routine, <code>doc_widget2</code>, first. We first create a top-level base, this time specifying the COLUMN keyword to ensure that the widgets contained in the base are stacked vertically. We create two buttons with values “One” and “Two,” and user values “ONE” and “TWO.” Remember that the <i>value</i> of a button widget is also the button’s label. We create a text widget, and specify its width to be 20 characters using the XSIZE keyword. The last button is the “Done” button, with a the user value “DONE.”</p>
+        <p>Next follow two calls to the WIDGET_CONTROL procedure. The first call sets the user value of the top-level base widget equal to the widget ID of our text widget, allowing easy access to the text widget from the event handling routine. The second call realizes the top-level base and all its child widgets. Finally, we invoke the XMANAGER to manage the widget application.</p>
+        <p>The <code>doc_widget2_event</code> routine is slightly more complicated than the event handler in <a href="Example__A_Simple_Widget.htm#widget_apps_4063420628_1041902">Example: A Simple Widget Application</a>, but it is still relatively simple. We begin by using WIDGET_CONTROL to retrieve the widget ID of our text widget from the user value of the top-level base. We can do this because the widget ID of our top-level base is contained in the <code>TOP</code> field of the widget event structure. We use the GET_UVALUE keyword to store the widget ID of the text widget in the variable <code>textwid</code>.</p>
+        <p>Next, we use WIDGET_CONTROL with the GET_UVALUE keyword to retrieve the user value of the widget that generated the event. Again, we can do this because we know that the widget ID of the widget that generated the event is stored in the <code>ID</code> field of the event structure. We then use a CASE statement to compare the user value of the widget, now stored in the variable <code>uval</code>, with the list of possible user values to determine which button was pressed and act accordingly.</p>
+        <p>In the CASE statement, we check to see if <code>uval</code> is the user value associated with either button one or button two. If it is, we use WIDGET_CONTROL and the SET_VALUE keyword to alter the value of the text widget, whose ID we stored in the variable <code>textwid</code>. If <code>uval</code> is <code>'DONE'</code>, we recognize that the user has clicked on the “Done” button and use WIDGET_CONTROL to destroy the widget hierarchy.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

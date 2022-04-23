@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|Java and COM - IDL Objects">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Exporting Drawable Objects</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Java and COM - IDL Objects</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Exporting Drawable Objects</span>
+        </div>
+        <h1><a name="Exporting_Drawable_Objects"></a><a name="kanchor5303"></a>Exporting <a name="kanchor5304"></a>Drawable Objects</h1>
+        <p>If you want to create a COM or Java application that uses a drawable wrapper object, you must subclass your IDL object from one of the following object classes before generating the wrapper:</p>
+        <ul>
+            <li value="1">IDLgrWindow — provides a canvas for graphic objects</li>
+            <li value="2">IDLitWindow — provides a canvas for iTool visualizations</li>
+            <li value="3">IDLitDirectWindow — provides a canvas for Direct Graphic routine output</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Java drawable objects are not supported on the Macintosh OS X platform.</p>
+        <h2><a name="Requirements_for_Drawable_Objects"></a>Requirements for Drawable Objects</h2>
+        <p>Objects that inherit from IDLgrWindow must set the GRAPHICS_TREE property following creation of the objects hierarchy. This supports the automatic redraw capabilities of the OnExpose method.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Common drawable object methods (such as OnKeyboard or OnMouseMotion) are typically not displayed in the Export Bridge Assistant when exporting a drawable object. See <a href="../ExportFromIDL - Export Bridge Assistant/InformationSkippedDuringExport.htm#Drawable_Object_Event_Handlers">Drawable Object Event Handlers</a> for details.</p>
+        <p>In addition, IDL objects derived from IDLitDirectWindow must first provide a call of <i>self-&gt;makeCurrent</i> at the beginning of each method to ensure that the graphics rendering occurs in the wrapper’s drawable window, as described below.</p>
+        <h2><a name="Direct_Graphics_Support"></a><a name="kanchor5305"></a>Direct Graphics Support</h2>
+        <p>To provide IDL Direct Graphics support, the export bridge uses an object to create an IDL Direct Graphics drawing surface. The Direct Graphics object, IDLitDirectWindow, differs from standard IDL Direct Graphics in the following manner:</p>
+        <ul>
+            <li value="1">The object implements the Active Window event handler callback methods to manage events. As such, to perform any event processing in IDL the user must sub-class this object and override the desired event callback methods.</li>
+            <li value="2">To make the window object current in the underlying direct graphics driver the user calls the IDLitDirectWindow::MakeCurrent method on the object. This is similar to a WSET operation in IDL, but no window index is required.</li>
+            <li value="3">Once a window is current, any IDL direct graphics routine can be called to draw graphics on the provided drawing surface. The user can add a method on the object they implement to render graphics or use the execute string functionality of the bridge to issue IDL commands.</li>
+        </ul>
+        <p>While the Export Bridge implementation provides a different method to create and interact with a Direct Graphics Window, the differences are minor and let users rapidly port their IDL Direct Graphics implementation for use with this technology.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

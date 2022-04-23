@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: K">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>KRIG2D </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="K_list.htm">Routines: K</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">KRIG2D</span>
+        </div>
+        <h1 class="Routine"><a name="K_837341805_750558"></a><a name="kanchor1573"></a><a name="K_837341805_19008"></a>KRIG2D </h1>
+        <p><a name="kanchor1574"></a>The KRIG2D function using the kriging method to interpolate a regularly- or irregularly-gridded set of points to a regular grid. <a name="kanchor1575"></a></p>
+        <p>
+            <img src="../../images/krig2d.png" />
+        </p>
+        <p>The parameters of the data model – the range, nugget, and sill – are highly dependent upon the degree and type of spatial variation of your data, and should be determined statistically. Experimentation, or preferably rigorous analysis, is required.</p>
+        <p>For <i>n</i> data points, a system of <i>n</i>+1 simultaneous equations are solved for the coefficients of the surface. For any output point, the interpolated value is then given by the sum of all of the input points, weighted by the distance of each input point to the desired output point. Four different models are available for the weighting function. The equations are shown in the plot below:</p>
+        <p>
+            <img src="../../images/kriging_equations.png" />
+        </p>
+        <p>In the above equations, <i>N</i> is the <i>Nugget</i> value, <i>S</i> is the <i>Scale</i>, and <i>R</i> is the <i>Range</i>. The value <i>d</i> is the distance from a point in the input array to a point in the result. All four models have a covariance weighting of <i>N + S</i> at <i>d</i>=0. The Linear and Spherical models are both zero for <i>d</i> &gt; <i>R</i>.</p>
+        <ul>
+            <li value="1">At distances beyond <i>R</i>, the semivariogram or covariance remains essentially constant. </li>
+            <li value="2">The <i>nugget</i> <i>N</i> provides a discontinuity at the origin. </li>
+            <li value="3">The <i>scale S</i> is optional. If specified, <i>S</i> is the covariance value for a zero distance, and the variance of the random sample <i>z</i> variable. If only a two element vector is supplied for the model parameters, <i>S</i> is set to the sample variance.</li>
+        </ul>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>krig2d.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API">Example</h2>
+        <p>In the following example, we create an irregularly-gridded 2-D data set. The KRIG2D function interpolates the data at a specified grid size. The resulting plot is shown at the top of this topic.</p>
+        <p class="Code">n = 500 ; # of scattered points</p>
+        <p class="Code">seed = -121147L</p>
+        <p class="Code">x = 2*RANDOMU(seed, n)</p>
+        <p class="Code">y = RANDOMU(seed, n)</p>
+        <p class="Code">; Create a dependent variable as a function of (x,y)</p>
+        <p class="Code">z = 100*(EXP(-((4*x-2)^2 + (7-9*y)^2)/4) + $</p>
+        <p class="Code_Indented">EXP(-((4*x+1)^2)/49 - (1-0.9*y)) + $</p>
+        <p class="Code_Indented">EXP(-((4*x-7)^2 + (6-9*y)^2)/4) - $</p>
+        <p class="Code_Indented">EXP(-(4*x-4)^2 - (2-9*y)^2))</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a regular grid, 200 x 200</p>
+        <p class="Code">result = KRIG2D(z, x, y, EXPONENTIAL=[0.5,0.2,1], $</p>
+        <p class="Code_Indented">NX=200, NY=200, XOUT=xout, YOUT=yout)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Plot the original points and the new 2D grid</p>
+        <p class="Code">p = PLOT(x, y, 's', RGB_TABLE=74, ASPECT_RATIO=1, $</p>
+        <p class="Code_Indented">/SYM_FILLED, VERT_COLORS=BYTSCL(z))</p>
+        <p class="Code">c = CONTOUR(result, xout, yout, C_THICK=2, $</p>
+        <p class="Code_Indented">COLOR='black', C_VALUE=[-60:160:10], /OVERPLOT)</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = KRIG2D( <i>Z</i> [,&#160;<i>X</i>, <i>Y</i>] [, /<a href="#DOUBLE" class="selected">DOUBLE</a>] [,&#160;<a href="#K_837341805_750596" class="selected">EXPONENTIAL</a>=<i>vector</i>] [,&#160;<a href="#GAUSSIAN" class="selected">GAUSSIAN</a>=<i>vector</i>] [,&#160;<a href="#LINEAR" class="selected">LINEAR</a>=<i>vector</i>] [,&#160;<a href="#K_837341805_750598" class="selected">SPHERICAL</a>=<i>vector</i>] [,&#160;/<a href="#K_837341805_750607" class="selected">REGULAR</a>] [,&#160;<a href="#K_837341805_750609" class="selected">XGRID</a>=<i>[xstart</i>, <i>xspacing]</i>] [,&#160;<a href="#K_837341805_750611" class="selected">XVALUES</a>=<i>array</i>] [,&#160;<a href="#K_837341805_750613" class="selected">YGRID</a>=<i>[ystart</i>, <i>yspacing]</i>] [,&#160;<a href="#K_837341805_750615" class="selected">YVALUES</a>=<i>array</i>] [,&#160;<a href="#K_837341805_930292" class="selected">GS</a>=<i>[xspacing</i>, <i>yspacing]</i>] [,&#160;<a href="#K_837341805_750620" class="selected">BOUNDS</a>=<i>[xmin</i>, <i>ymin</i>, <i>xmax</i>, <i>ymax]</i>] [,&#160;<a href="#K_837341805_750622" class="selected">NX</a>=<i>value</i>] [,&#160;<a href="#K_837341805_750624" class="selected">NY</a>=<i>value</i>] [,&#160;<a href="#XOUT" class="selected">XOUT</a>=variable] [,&#160;<a href="#YOUT" class="selected">YOUT</a>=variable]&#160;)</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns a two dimensional floating-point array containing the interpolated surface, sampled at the grid points.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Z, X, Y</h3>
+        <p>Arrays containing the <i>Z</i>, <i>X</i>, and <i>Y</i> coordinates of the data points on the surface. Points need not be regularly gridded. For regularly gridded input data, <i>X</i> and <i>Y</i> are not used: the grid spacing is specified via the XGRID and YGRID (or XVALUES and YVALUES) keywords, and <i>Z</i> must be a two dimensional array. For irregular grids, all three parameters must be present and have the same number of elements. </p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="DOUBLE"></a>DOUBLE</h3>
+        <p>Set this keyword to force the computation to be done using double-precision arithmetic, and return a double-precision result. By default, single precision is used, regardless of the precision of the input arrays.</p>
+        <h3 class="Keyword"><a name="XOUT"></a>XOUT</h3>
+        <p>Set this keyword to a named variable in which to return a vector containing the output <i>X</i> coordinates.</p>
+        <h3 class="Keyword"><a name="YOUT"></a>YOUT</h3>
+        <p>Set this keyword to a named variable in which to return a vector containing the output <i>Y</i> coordinates.</p>
+        <h3>Model Parameter Keywords:</h3>
+        <h3 class="Keyword"><a name="K_837341805_750596"></a><a name="K_837341805_750596_Keywords_KRIG2D__"></a>EXPONENTIAL</h3>
+        <p>Set this keyword to a two- or three-element vector of model parameters [<i>R, N</i>] or [<i>R, N, S</i>] to use the exponential semivariogram model.</p>
+        <h3 class="Keyword"><a name="GAUSSIAN"></a>GAUSSIAN</h3>
+        <p>Set this keyword to a two- or three-element vector of model parameters [<i>R, N</i>] or [<i>R, N, S</i>] to use the Gaussian semivariogram model.</p>
+        <h3 class="Keyword"><a name="LINEAR"></a>LINEAR</h3>
+        <p>Set this keyword to a two- or three-element vector of model parameters [<i>R, N</i>] or [<i>R, N, S</i>] to use the linear semivariogram model.</p>
+        <h3 class="Keyword"><a name="K_837341805_750598"></a><a name="K_837341805_750598_Keywords_KRIG2D__"></a>SPHERICAL</h3>
+        <p>Set this keyword to a two- or three-element vector of model parameters [<i>R, N</i>] or [<i>R, N, S</i>] to use the spherical semivariogram model.</p>
+        <h3>Input Grid Keywords:</h3>
+        <h3 class="Keyword"><a name="K_837341805_750607"></a><a name="K_837341805_750607_Keywords_KRIG2D__"></a>REGULAR</h3>
+        <p>If set, the <i>Z</i> parameter is a two dimensional array of dimensions (<i>n,m</i>), containing measurements over a regular grid. If any of XGRID, YGRID, XVALUES, or YVALUES are specified, REGULAR is implied. REGULAR is also implied if there is only one parameter, <i>Z</i>. If REGULAR is set, and no grid specifications are present, the grid is set to (0, 1, 2, ...). </p>
+        <h3 class="Keyword"><a name="K_837341805_750609"></a><a name="K_837341805_750609_Keywords_KRIG2D__"></a>XGRID</h3>
+        <p>A two-element array, [<i>xstart</i>, <i>xspacing</i>], defining the input grid in the <i>x </i>direction. Do not specify both XGRID and XVALUES. </p>
+        <h3 class="Keyword"><a name="K_837341805_750611"></a><a name="K_837341805_750611_Keywords_KRIG2D__"></a>XVALUES</h3>
+        <p>An <i>n</i>-element array defining the <i>x</i> locations of Z[<i>i,j</i>]. Do not specify both XGRID and XVALUES. </p>
+        <h3 class="Keyword"><a name="K_837341805_750613"></a><a name="K_837341805_750613_Keywords_KRIG2D__"></a>YGRID</h3>
+        <p>A two-element array, [<i>ystart</i>, <i>yspacing</i>], defining the input grid in the <i>y </i>direction. Do not specify both YGRID and YVALUES. </p>
+        <h3 class="Keyword"><a name="K_837341805_750615"></a><a name="K_837341805_750615_Keywords_KRIG2D__"></a>YVALUES</h3>
+        <p>An <i>n</i>-element array defining the <i>y</i> locations of Z[<i>i,j</i>]. Do not specify both YGRID and YVALUES. </p>
+        <h3>Output Grid Keywords:</h3>
+        <h3 class="Keyword"><a name="K_837341805_750620"></a><a name="K_837341805_750620_Keywords_KRIG2D__"></a>BOUNDS</h3>
+        <p>If present, BOUNDS must be a four-element array containing the grid limits in <i>x</i> and <i>y</i> of the output grid: [<i>xmin, ymin, xmax, ymax</i>]. If not specified, the grid limits are set to the extent of <i>x</i> and <i>y</i>. </p>
+        <h3 class="Keyword"><a name="K_837341805_930292"></a><a name="K_837341805_930292_Keywords_KRIG2D__"></a>GS</h3>
+        <p>The output grid spacing. If present, GS must be a two-element vector [<i>xs, ys</i>], where <i>xs </i>is the horizontal spacing between grid points and <i>ys</i> is the vertical spacing. The default is based on the extents of <i>x</i> and <i>y</i>. If the grid starts at <i>x</i> value <i>xmin</i> and ends at <i>xmax</i>, then the default horizontal spacing is (<i>xmax</i> - <i>xmin</i>)/(NX-1). <i>ys</i> is computed in the same way. The default grid size, if neither NX or NY are specified, is 26 by 26. </p>
+        <h3 class="Keyword"><a name="K_837341805_750622"></a><a name="K_837341805_750622_Keywords_KRIG2D__"></a>NX</h3>
+        <p>The output grid size in the <i>x</i> direction. NX need not be specified if the size can be inferred from GS and BOUNDS. The default value is 26.</p>
+        <h3 class="Keyword"><a name="K_837341805_750624"></a><a name="K_837341805_750624_Keywords_KRIG2D__"></a>NY</h3>
+        <p>The output grid size in the <i>y </i>direction. NY need not be specified if the size can be inferred from GS and BOUNDS. The default value is 26.</p>
+        <h2 class="API">Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">8.3</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">Added DOUBLE, GAUSSIAN, LINEAR, XOUT, and YOUT keywords. Rewrote the algorithm to improve performance.</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="../B/BILINEAR.htm#B_856805997_998860">BILINEAR</a>, <a href="../G/GRIDDATA.htm">GRIDDATA</a>, <a href="../I/INTERPOLATE.htm#I_833016429_677258">INTERPOLATE</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

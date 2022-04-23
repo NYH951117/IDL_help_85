@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|Miscellaneous Object Classes|IDL_Object">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDL_Object::_overloadMethod</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_misc.htm">Miscellaneous Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDL_Object::_overloadMethod</span>
+        </div>
+        <h1 class="ObjMethod"><a name="kanchor4048"></a>IDL_Object::_overloadMethod</h1>
+        <p>The IDL_Object::_overloadMethod function method allows you to create dynamic methods off of IDL objects. By implementing _overloadMethod on your class, users can then make an arbitrary method call on an object reference. This method call could then execute different code based upon the object's current state.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This method is designed to replicate the default behavior of objects that do not use operator overloading. As a result, object classes that <i>do</i> inherit from the IDL_Object class but that do not override this particular method will simply throw an error when you try to call an unknown method on the object.</p>
+        <h2 class="API">Example</h2>
+        <p>Let's create an IDL_PROXY class that wraps other objects and lets you call any method. Save the following code in a file called <span style="font-family: monospace;">idl_proxy__define.pro</span>:</p>
+        <p class="Code">function IDL_Proxy::Init, objref</p>
+        <p class="Code_Indented">self.objref = objref</p>
+        <p class="Code_Indented">return, 1</p>
+        <p class="Code">end</p>
+        <p class="Code">function IDL_Proxy::_overloadMethod, method, arg1, arg2, _EXTRA=ex</p>
+        <p class="Code_Indented">if (ISA(ex)) then begin</p>
+        <p class="Code_Indented2">case N_PARAMS()-1 of</p>
+        <p class="Code_Indented2">1: result = CALL_METHOD(method, self.objref, arg1, _EXTRA=ex)</p>
+        <p class="Code_Indented2">2: result = CALL_METHOD(method, self.objref, arg1, arg2, _EXTRA=ex)</p>
+        <p class="Code_Indented2">endcase</p>
+        <p class="Code_Indented">endif else begin</p>
+        <p class="Code_Indented2">case N_PARAMS()-1 of</p>
+        <p class="Code_Indented2">1: result = CALL_METHOD(method, self.objref, arg1)</p>
+        <p class="Code_Indented2">2: result = CALL_METHOD(method, self.objref, arg1, arg2)</p>
+        <p class="Code_Indented2">endcase</p>
+        <p class="Code_Indented">endelse</p>
+        <p class="Code_Indented">return, result</p>
+        <p class="Code">end</p>
+        <p class="Code">pro IDL_Proxy__define</p>
+        <p class="Code_Indented">void = {IDL_Proxy, inherits IDL_Object, objref: OBJ_NEW()}</p>
+        <p class="Code">end</p>
+        <p>Now execute the following code to wrap an IDLgrModel object and call an arbitrary method on it:</p>
+        <p class="Code">COMPILE_OPT idl2</p>
+        <p class="Code">objref = IDLgrModel()</p>
+        <p class="Code">proxy = IDL_Proxy(objref)</p>
+        <p class="Code">PRINT, proxy.GetByName('foo')</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>We need to ensure that <a href="../../Reference Material/C/COMPILE_OPT.htm">compile_opt idl2</a> is set so that parentheses are treated like a function call instead of array indexing.</p>
+        <h2 class="API">Syntax</h2>
+        <p>In most cases, this method is called indirectly when you make a method call on your object reference. When called explicitly, the syntax is:</p>
+        <p class="Syntax"><i>Result = Obj</i>-&gt;[<a href="IDL_Object.htm#objects_misc_904195448_1098343">IDL_Object</a>::]_overloadMethod( <i>Method</i>, <i>Arg1, Arg2, ..., Keyword1=..., Keyword2=...</i> )</p>
+        <h2 class="API">Return Value</h2>
+        <p>The return value is an IDL&#160;variable containing whatever result your method decides to return.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Method</h3>
+        <p>A string giving the name of the method which was called on your object.</p>
+        <h3 class="Argument">Arg1...ArgN</h3>
+        <p>The input arguments to your function.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">Keywords</h3>
+        <p>The keyword values for your function.</p>
+        <h2 class="API">Routine Signature</h2>
+        <p>To overload this function method for an object class, implement a method with the following signature:</p>
+        <p class="Code">FUNCTION class::_overloadMethod, <i>method</i>, <i>arg1, arg2, ..., Keyword1=...</i></p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 45px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.5</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="IDL_Object_overloadFunction.htm">IDL_Object::_overloadFunction</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|About Tree Widgets">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Dragging and Dropping Tree Nodes</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="About_Tree_Widgets.htm">About Tree Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Dragging and Dropping Tree Nodes</span>
+        </div>
+        <h1><a name="widget_tree_1678712652_222913"></a><a name="widget_tree_1678712652_15224"></a>Dragging and Dropping Tree Nodes</h1>
+        <p><a name="kanchor5101"></a>In IDL versions 6.3 and later, you can create applications that allow users to drag tree nodes within a single tree widget, between tree widgets, or from a tree widget to a draw widget. Depending on the circumstances, the dragged tree node is either copied to the new location (leaving the source node intact) or moved to the new location (removing the source node). IDL provides a variety of controls that allow you to define the exact behavior of the application when a user drags and drops tree nodes.</p>
+        <p>This section discusses the following topics:</p>
+        <ul>
+            <li value="1"><a href="#widget_tree_1678712652_218866" class="selected">The Drag and Drop User Interface</a>
+            </li>
+            <li value="2"><a href="#widget_tree_1678712652_218919" class="selected">Implementing Drag and Drop Functionality</a>
+            </li>
+            <li value="3"><a href="Tree_Widget_Drag_and_Dro.htm#widget_tree_1678712652_219112">Tree Widget Drag and Drop Examples</a>
+            </li>
+        </ul>
+        <h2 class="API"><a name="widget_tree_1678712652_218866"></a><a name="widget_tree_1678712652_14367"></a><a name="kanchor5102"></a>The Drag and Drop User Interface</h2>
+        <p>To the user of an IDL program that supports drag and drop functionality, the activity of dragging and dropping conforms to platform guidelines. The user selects one or more nodes using the left mouse button and drags them while holding the mouse button down. When dragging a node, the cursor indicates where the drop is allowed (above, on, below) or not allowed. Optionally, the cursor can include a + symbol to indicate the different between copy and move operations.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>On Windows platforms, the cursor shows an opaque copy of the node under the mouse pointer, but does not show all selected nodes, even though they are selected and are dragged. On UNIX platforms, a cursor reflecting the active drag is all that is shown.</p>
+        <p>In addition to the default platform-specific drag and drop behavior, IDL tree widgets implement the following:</p>
+        <ul>
+            <li value="1">If the tree widget includes a vertical scroll bar, dragging nodes into the region at the top or bottom of the widget will automatically scroll to bring new nodes into view.</li>
+            <li value="2">If the user has dragged one or more nodes to a new location, but presses the Escape key before releasing the mouse button, the drag operation is canceled.</li>
+        </ul>
+        <p>As the user drags the selected nodes, the drag and drop cursor changes to indicate whether a drop is allowed at the current position. The drag and drop cursor is displayed differently on different platforms:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Node<br />Placement</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Windows</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>UNIX</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep" style="font-weight: bold;">
+                        <p>Above</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Horizontal line above target node</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Arrow bent and pointed up</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p><b>On</b>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Target node highlighted</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Straight arrow</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep" style="font-weight: bold;">
+                        <p>Below</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Horizontal line below target node</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Arrow bent and pointed down</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p><b>Not Allowed</b>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>Circle with slash through</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Circle with slash through</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>The following figure shows the appearance of the drag and drop cursor when inserting a node (here named <i>Leopard</i>) after a node named <i>Jaguar</i>, but within the node category <i>Spotted</i>.</p>
+        <p>
+            <img src="../../images/TWexample01.gif" />
+        </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The IDL application ultimately controls which nodes to copy or move, where they are placed, and the destination tree’s final state. For example, IDL may override the restoration of a previous selection and instead select newly copied nodes.</p>
+        <h2 class="API"><a name="widget_tree_1678712652_218919"></a>Implementing Drag and Drop Functionality</h2>
+        <p><a name="kanchor5103"></a>Drag and drop functionality is not enabled by default. When creating an IDL application that incorporates a tree widget, you can enable drag and drop behavior to copy, move, or otherwise rearrange tree widget nodes. This section discusses the steps necessary to implement drag and drop functionality in your application.</p>
+        <p>Implementing drag and drop functionality in your tree widget application entails three steps:</p>
+        <ol>
+            <li value="1"><a href="#widget_tree_1678712652_218927" class="selected">Making Nodes Draggable</a>. You must explicitly specify that a node or group of nodes can be dragged.</li>
+            <li value="2"><a href="#widget_tree_1678712652_218938" class="selected">Responding to Drag Notifications (Callbacks)</a>. When the user drags a node, IDL generates a <i>notification</i>, which is passed to a <i>callback function</i>. You can use the default callback function for simple situations, or create your own callback function to handle special or complex situations. Drag notifications allow you to control if and where drops are allowed.</li>
+            <li value="3"><a href="#widget_tree_1678712652_219122" class="selected">Responding to Drop Events</a>. When the user releases the mouse button to drop the selected nodes, IDL generates a <i>drop event</i>. You can use the information contained in the drop event structure to copy, move, or otherwise modify the tree widget.</li>
+        </ol>
+        <h3>Drag and Drop Properties are Inheritable</h3>
+        <p>Drag and drop-related properties of a tree widget node (the values of the DRAG_NOTIFY, DRAGGABLE, and DROP_EVENTS keywords) are inheritable. This means that unless the value of one of these keywords is set specifically for a given tree node, that node will inherit the value of its parent. This means that if you set these values on the root node of a tree, but not on any child node, all nodes will have the values specified for the root node.</p>
+        <p>Inheritance is dynamic. This means that if the value of one of the inherited properties changes after the tree widget has been created (via a change of parent, due to a drag and drop operation, or via a call to WIDGET_CONTROL), the values for all of the inheriting nodes will change as well. One advantage of this type of inheritance is that nodes don’t keep track of their own property settings as they are copied and moved. This allows you to create, for example, a folder that allows items to be dropped in, but not dragged out, simply by setting properties on the folder.</p>
+        <p>The drag and drop-related properties can all be queried using the <a href="../../Reference Material/W/WIDGET_INFO.htm#W_811389549_680333">WIDGET_INFO </a>function.</p>
+        <h3><a name="widget_tree_1678712652_218927"></a>Making Nodes Draggable</h3>
+        <p><a name="kanchor5104"></a>The value of the DRAGGABLE property of a tree widget node (as set via the DRAGGABLE keyword to <a href="../../Reference Material/W/WIDGET_TREE.htm#W_811389549_995819">WIDGET_TREE</a> or the SET_DRAGGABLE keyword to <a href="../../Reference Material/W/WIDGET_CONTROL.htm#W_811389549_1232714">WIDGET_CONTROL</a>) determines whether or not it can be used to initiate drag and drop operations.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The value of a tree node’s draggability is independent of its dropability. Making a node draggable does make it droppable, but it is possible to have no allowable place to drop it. See <a href="#widget_tree_1678712652_218938" class="selected">Responding to Drag Notifications (Callbacks)</a> for information on allowing users to drop nodes.</p>
+        <p>If a tree widget allows multiple selection (if the MULTIPLE keyword was set on the root node of the tree), it is possible that a user could select a mixture of draggable and non-draggable nodes. If the user attempts to drag this mixed selection by moving a draggable node, your IDL application will have to determine whether to allow a drop. You have several possible options to respond to this situation:</p>
+        <ul>
+            <li value="1"><b>Prevent the problem</b> — Prevent the user from creating a mixed selection by responding to selection events and then programmatically altering the selection to make it legal.</li>
+            <li value="2"><b>Deny all drops</b> — Use a drag notification callback to inspect the selection (the dragged items) and reject all drops if any of the selected items are non-draggable.</li>
+            <li value="3"><b>Allow the drag but only drop a subset of the nodes</b> — Create a routine that checks (and possibly modifies) the list of selected nodes before calling the <a href="../../Reference Material/W/WIDGET_TREE_MOVE.htm#W_811389549_1222300">WIDGET_TREE_MOVE</a> routine. Alternately, create your own copy/move routine.</li>
+        </ul>
+        <h3><a name="widget_tree_1678712652_218938"></a><a name="widget_tree_1678712652_30549"></a>Responding to Drag Notifications (Callbacks)</h3>
+        <p><a name="kanchor5105"></a>When the user drags a group of selected nodes over another node, IDL automatically calls the routine defined as the <i>drag notification callback</i> for the node over which the selection is dragged. The purpose of the drag notification callback is to provide the widget system with information about where dragged nodes can be dropped, allowing it to change the cursor display to indicate to the user whether nodes can be dropped at the current position. You, as an IDL application programmer can choose to specify your own version of the callback function to override the default behavior. Drag notification callbacks are specified via the DRAG_NOTIFY keyword to WIDGET_TREE, or the SET_DRAG_NOTIFY keyword to WIDGET_CONTROL.</p>
+        <p>Drag notifications are also generated when the state of a drag modifier key changes (either up or down). If you override the default drag notification callback, you can use this information to update the drag cursor with a plus symbol (<code>+</code>).</p>
+        <p>You can specify a unique drag notification callback function for each node. If you choose not to specify a callback for a particular node, it will inherit the callback defined for its parent node. If no callback is defined for any of a particular node’s ancestors, the default callback will be used.</p>
+        <h4>Drag Notification Callback Return Values</h4>
+        <p>The drag notification callback function returns an integer value calculated by performing an OR&#160;operation on the following values:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Meaning</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>User cannot drop</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>User can drop above</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>User can drop onto</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>4</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>User can drop below</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>8</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Show the plus indicator</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>For example, if the drag notification callback returns 7, this means that dragged nodes can be dropped above, onto, or below the currently selected node. If the callback returns 10, the dragged nodes can be dropped onto (but not above or below) the current node, and the plus-sign indicator is included in the cursor.</p>
+        <h4>The Default Drag Notification Callback</h4>
+        <p>The default drag notification callback function is used if no function is specified for a given node or any of its ancestors. The return values for the default callback depend on the location of the node being targeted and (if it is a folder) whether it is expanded or not:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Tree Widget <br />Node Type</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Expanded</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Return Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Meaning</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Root</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Onto</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td rowspan="2" class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Folder</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>No</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>7</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Above, Onto, Below</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Above, Onto</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>Leaf</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>5</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Above, Below</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>The default callback also compares the dragged nodes with the destination. If the destination matches or is a descendant of any of the dragged nodes then the default callback returns 0. Finally, if the destination will not generate drop events (DROP_EVENTS = 0) then the default callback will return 0.</p>
+        <h4>Writing Custom Drag Notification Callbacks</h4>
+        <p>The signature of a drag notification callback function is:</p>
+        <p class="Code">FUNCTION <i>Callback_Function_Name</i>, <i>Destination</i>, <i>Source</i>, $<br /><i>&#160;&#160;&#160;Modifiers, Default</i></p>
+        <p>where:</p>
+        <ul>
+            <li value="1"><i>Callback_Function_Name</i> is the name of the callback function</li>
+            <li value="2"><i>Destination</i> is the widget ID of the node over which the drag cursor is currently positioned</li>
+            <li value="3"><i>Source</i> is the widget ID of the source tree, from which a list of widget IDs representing the list of selected nodes can be retrieved using the TREE_SELECT or TREE_DRAG_SELECT keywords to WIDGET_INFO.</li>
+            <li value="4">
+                <p><i>Modifiers</i> is an integer value calculated by ORing the following values together, depending on which modified keys are currently depressed:</p>
+                <p class="TableAnchor_Indented"><a name="widget_tree_1678712652_223756"></a>
+                </p>
+                <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" class="TableStyle_Description" cellspacing="0">
+                    <col />
+                    <col />
+                    <thead>
+                        <tr>
+                            <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                                <p>Value</p>
+                            </td>
+                            <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                                <p>Modifier Key</p>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                                <p>1</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                                <p>Shift</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                                <p>2</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                                <p>Control</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                                <p>4</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                                <p>Caps Lock</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                                <p>8</p>
+                            </td>
+                            <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                                <p>Alt</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </li>
+            <li value="5"><i>Default</i> is the value that would be returned by the default drag notification callback. If your criteria are similar to the default criteria for where nodes can be dropped, using this value can greatly simplify your callback code.</li>
+        </ul>
+        <p>The return value should indicate where a drop is allowed to take place relative to the destination widget and whether the “+” symbol should appear with the drag cursor, as described in the above table.</p>
+        <p>When you write drag notify callbacks, remember that “above” one node may be “below” another node. Also, the concepts of “above,” “on,” and “below” are relative to the level of the destination node. For example, if a node is the final (bottom) node, then its defined “below” is a different position than it would be for its parent. The default callback takes these differences into account and does not allow you to drop below an open folder, preventing confusion over whether the dropped nodes will got into or below the folder.</p>
+        <p>When writing drag notification callbacks, keep the following in mind:</p>
+        <ol>
+            <li value="1">Drag callbacks should execute quickly. If a callback takes too long to drag, events may be skipped. Remember that the drag callback is invoked after every change in position of the cursor.</li>
+            <li value="2">The source and destination trees should not be modified during the drag. Callbacks should not select, unselect, create, move, or delete nodes of the source or destination trees. Additionally, layout changes affecting the trees are also strongly discouraged.</li>
+            <li value="3">The drag callback should be tested thoroughly using a CATCH statement. Although the widget system will do its best to recover from errors that occur in a drag callback function, errors inside the callback function could lead to loss of keyboard and mouse input.</li>
+        </ol>
+        <p class="NoteIndented">In Windows recovery an error in the callback function is simple: click away from IDL and then back on IDL. Recovery on UNIX systems may require that the IDL session be killed from another terminal session.</p>
+        <p class="indent">The following code shows a callback function that intentionally generates an error, along with a CATCH statement that can be used to prevent the error from freezing IDL:</p>
+        <p class="Code_Indented">FUNCTION bad_callback, dest, source, modifiers, default</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; The following CATCH statement protects against UI freezes.</p>
+        <p class="Code_Indented">CATCH, Error_status</p>
+        <p class="Code_Indented">IF Error_status NE 0 THEN BEGIN</p>
+        <p class="Code_Indented">&#160;&#160;&#160;CATCH, /CANCEL</p>
+        <p class="Code_Indented">&#160;&#160;&#160;PRINT, 'Error index: ', Error_status</p>
+        <p class="Code_Indented">&#160;&#160;&#160;PRINT, 'Error message: ', !ERROR_STATE.MSG</p>
+        <p class="Code_Indented">&#160;&#160;&#160;RETURN, 0</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; The undefined variable caused an IDL interpreter error.</p>
+        <p class="Code_Indented">IF (undefined EQ 0) THEN RETURN, 7 $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;ELSE RETURN, 0</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">END</p>
+        <p>In this example, an error occurs because the variable <code>undefined</code> is undefined. The catch block handles this error and prevents loss of keyboard and mouse control. </p>
+        <p>You can also test your callback functions by explicitly calling them before the widget system does. This would test the callbacks from a safe state where the implications of errors are minor.</p>
+        <p><a href="Tree_Widget_Drag_and_Dro.htm#widget_tree_1678712652_219112">Tree Widget Drag and Drop Examples</a> shows several uses of the default and custom callbacks. All of these examples have reliable static callbacks, allowing for safe removal of CATCH statements.</p>
+        <h3><a name="widget_tree_1678712652_219122"></a>Responding to Drop Events</h3>
+        <p><a name="kanchor5106"></a><a name="kanchor5107"></a>When the user releases the mouse button over a valid drop target, a WIDGET_DROP event is generated. Your application’s event handler should recognize this drop event and perform some action. In most cases, the event handler will call code to move or copy the selected nodes (see the <a href="../../Reference Material/W/WIDGET_TREE_MOVE.htm#W_811389549_1222300">WIDGET_TREE_MOVE</a> routine for a ready-made move/copy routine), but you can execute any action you wish when the drop event is generated.</p>
+        <p>The drop event’s information is contained in a WIDGET_DROP structure. (See <a href="../../Reference Material/W/WIDGET_TREE.htm#W_811389549_1219862">DROP_EVENTS</a> in the reference section for <a href="../../Reference Material/W/WIDGET_TREE.htm#W_811389549_995819">WIDGET_TREE </a>for a full definition of the WIDGET_DROP structure.) The important components of the structure when responding to drop events are:</p>
+        <ul>
+            <li value="1"><b>ID</b> — The widget ID of the destination node. You can use the INDEX keyword to <a href="../../Reference Material/W/WIDGET_INFO.htm#W_811389549_680333">WIDGET_INFO</a> along with this widget ID to determine the index of the destination node within the tree widget.</li>
+            <li value="2"><b>DRAG_ID</b> — The widget ID of the source tree widget. The selected nodes of this tree are the nodes that are being dragged. You can use the TREE_DRAG_SELECT and TREE_SELECT keywords to <a href="../../Reference Material/W/WIDGET_INFO.htm#W_811389549_680333">WIDGET_INFO</a> along with this widget ID to retrieve the list of selected nodes or TREE_DRAG_SELECT.</li>
+            <li value="3"><b>POSITION</b> — The drop position (above, on, or below) relative to the drop target (returned in the ID field). Use this value, along with index of the destination node, to determine the index of the location where the dropped nodes should be inserted.</li>
+            <li value="4"><b>MODIFIERS</b> — An integer representing the state of the modifier keys, calculated by performing an OR operation on the values shown in the table under "Writing Custom Drag Notification Callbacks" above. On some platforms it is common for the <b>Ctrl</b> key to be used as the copy key, with simple move operations being performed when <b>Ctrl</b> is not pressed.</li>
+        </ul>
+        <h4>Issues Related to Dropping Nodes</h4>
+        <p>IDL’s drag and drop functionality is quite general, because applications can have diverse requirements. Trees might allow only a single node to be selected, or may allow multiple selection. The application might use the <b>Ctrl</b> key to distinguish between copy and move operations. Other drag and drop issues that need to be solved by your specific application include:</p>
+        <ul>
+            <li value="1"><b>Copying nodes that are not marked as DRAGGABLE</b> — IDL’s widget system does not mandate what can or will be copied. The DRAGGABLE keyword controls only the initiation of dragging. Applications can choose not to copy any node that is not DRAGGABLE.</li>
+            <li value="2"><b>Dragging a node to one of its descendants</b> — The default drag notification callback invalidates all drops that occur on a drag source or any of the drag source’s descendants. If you write your own drag notification callback, be sure to reject drops onto a source node (or any of its descendents) to avoid infinite recursion.</li>
+            <li value="3">
+                <p><b>Copying unselected children of selected parents</b> — This is shown in the following figure.</p>
+                <p>
+                    <img src="../../images/TWexample02.gif" />
+                </p>
+            </li>
+        </ul>
+        <p class="indent">If <b>treeNode12</b> is dragged and dropped, should <b>treeNode121</b> also be copied, if we know that <b>treeNode122</b> has been specifically selected and <b>treeNode121</b> has not? One solution to this could be an individual copy of only the selected nodes. Another solution could be to attempt to preserve the hierarchy. Also, an application could choose to use the drag callback to reject the selection as unsuitable for dropping anywhere. The examples used here assume that a folder is dragged and dropped because all descendents are wished to be copied along with that folder, regardless of the selection state.</p>
+        <p>The following code illustrates one way to handle drop events:</p>
+        <p class="Code">PRO handle_drop_event, event</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; figure out the new node's parent and the index</p>
+        <p class="Code">; </p>
+        <p class="Code">; The key to this is to know whether or not the drop took</p>
+        <p class="Code">; place directly on a folder.  If it was then the new node</p>
+        <p class="Code">; will be created within the folder as the last child.</p>
+        <p class="Code">; Otherwise the new node will be created as a sibling of</p>
+        <p class="Code">; the drop target and the index must be computed based on</p>
+        <p class="Code">; the index of the destination widget and the position</p>
+        <p class="Code">; information (below or above/on).</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IF (( event.position EQ 2 &amp;&amp; $</p>
+        <p class="Code">&#160;&#160;&#160;WIDGET_INFO( event.id, /TREE_FOLDER ))) THEN BEGIN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;wParent = event.id</p>
+        <p class="Code">&#160;&#160;&#160;index = -1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ENDIF ELSE BEGIN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;wParent = WIDGET_INFO( event.id, /PARENT )</p>
+        <p class="Code">&#160;&#160;&#160;index = WIDGET_INFO( event.id, /TREE_INDEX )</p>
+        <p class="Code">&#160;&#160;&#160;IF ( event.position EQ 4 ) THEN index++</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ENDELSE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; move the dragged node (single selection tree)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">wDraggedNode = WIDGET_INFO( event.drag_id, /TREE_SELECT )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">WIDGET_TREE_MOVE, wDraggedNode, wParent, INDEX = index</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>This code does the following things:</p>
+        <ul>
+            <li value="1"><b>Determines the parent and insertion position (index) for the new node</b> — Drops can be above, on, or below, and the destination node can be a folder or a leaf. This example determines where to place the new node. Dropping onto a folder is the simplest option, but other situations require a knowledge of where the destination sits relative to its siblings. The INDEX group of tree widget keywords allows us to query and set the position of tree widget nodes. For more information on these keywords, see <a href="../../Reference Material/W/WIDGET_TREE.htm#W_811389549_995819">WIDGET_TREE</a>.</li>
+            <li value="2"><b>Moves the selected node to the new position </b>— First, we determine the widget ID of the dragged node, then use the <a href="../../Reference Material/W/WIDGET_TREE_MOVE.htm#W_811389549_1222300">WIDGET_TREE_MOVE</a> procedure to move it to the new location.</li>
+        </ul>
+        <p>The above example works well for single selection trees that use the default drag notification callback. Situations involving multiple selection should use the TREE_DRAG_SELECT keyword to <a href="../../Reference Material/W/WIDGET_INFO.htm#W_811389549_680333">WIDGET_INFO</a> rather than TREE_SELECT.</p>
+        <p>A more complete version of the previous example and more complex examples involving multiple selection and custom callbacks can be found in the next section.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

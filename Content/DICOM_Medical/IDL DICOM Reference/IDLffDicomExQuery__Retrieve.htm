@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|Medical Imaging in IDL|IDL DICOM Reference|IDLffDicomExQuery">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLffDicomExQuery::Retrieve</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Expanded DICOM Support in IDL/ExpandedDICOMFunctionality.htm">Medical Imaging in IDL</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="DICOMEX_GETCONFIGFILEPAT.htm">IDL DICOM Reference</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLffDicomExQuery::Retrieve</span>
+        </div>
+        <h1 class="ObjMethod"><a name="dicom_ex_4010397576_1135755"></a><a name="dicom_ex_4010397576_80778"></a>IDLffDicomExQuery::Retrieve</h1>
+        <p>The IDLffDicomExQuery::Retrieve function method moves a DICOM file or files from a source node to a destination node. The source node is the remote Query/Retrieve SCP Application Entity that is queried. The destination node is a local or remote Storage SCP Application Entity. To accomplish the retrieval, the local Query/Retrieve SCU issues a move request to the remote Query/Retrieve SCP, which moves the file to the destination node.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In DICOM terminology, the process of transferring data from a Query/Retrieve SCP to a Storage SCP is called a <i>move</i>. Note, however, that this process actually places a <i>copy</i> of the data on the destination node, leaving the original data intact.</p>
+        <p>This method does not return to the caller until one of the following occurs:</p>
+        <ul>
+            <li value="1">The retrieve is complete (all matches have been returned)</li>
+            <li value="2">The retrieve encounters an error condition</li>
+            <li value="3">The callback function defined by the <a href="IDLffDicomExQuery Properties.htm#dicom_ex_4010397576_1133806">CALLBACK_FUNCTION</a> property returns zero</li>
+        </ul>
+        <h3>Properties Required by a Retrieve</h3>
+        <p>The following properties must be defined in order for the Retrieve method to succeed:</p>
+        <ul>
+            <li value="1">The <a href="IDLffDicomExQuery Properties.htm#dicom_ex_4010397576_1134289">QUERY_SCP</a> property must contain the name of a valid Query/Retrieve SCP node.</li>
+            <li value="2">The <a href="IDLffDicomExQuery Properties.htm#dicom_ex_4010397576_1134442">STORAGE_SCP</a> property must contain the name of a valid Storage SCP node.</li>
+        </ul>
+        <p>All other properties used by the Retrieve method have usable default values. If no properties other than QUERY_SCP and STORAGE_SCP are set, this method will perform a Patient Root / Patient Level retrieve, retrieving all patients on the remote node.</p>
+        <h3>Retrieval Specification</h3>
+        <p>Specify which files to retrieve using the PATIENT_ID, STUDY_INSTANCE_UID, SERIES_INSTANCE_UID, and SOP_INSTANCE_UID keywords. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Query field properties are not used by the Retrieve method to specify which files should be retrieved.</p>
+        <ul>
+            <li value="1">If you specify a Patient ID, all of the DICOM files or images associated with the specified patient are retrieved.</li>
+            <li value="2">If you specify a Study Instance UID, only DICOM files or images associated with the specified study and its associated series are retrieved.</li>
+            <li value="3">If you specify a Series Instance UID, only DICOM files or images associated with the specified series are retrieved.</li>
+            <li value="4">If you specify an SOP Instance UID, a single DICOM file or image is retrieved.</li>
+        </ul>
+        <h3>Callbacks and Retrieval Status Information</h3>
+        <p>If the <a href="IDLffDicomExQuery Properties.htm#dicom_ex_4010397576_1133806">CALLBACK_FUNCTION</a> property contains the name of an IDL function, that function is called in the following circumstances:</p>
+        <ul>
+            <li value="1">If the source node (the remote Query/Retrieve SCP) implements the optional response mechanism, the callback function is called each time a DICOM file is moved from the source node to the destination node.</li>
+            <li value="2">If the source node (the remote Query/Retrieve SCP) does not implement the optional response mechanism, the callback function is called every 3 seconds.</li>
+        </ul>
+        <p>The function is called with an array of strings containing status information about the query as its first parameter. See <a href="IDLffDicomExQuery Properties.htm#dicom_ex_4010397576_1135332">Using Callbacks with the IDLffDicomExQuery Object</a> for a discussion of callback functions.</p>
+        <h3>Canceling a Retrieve</h3>
+        <p>To cancel a retrieve before all matches are returned, the callback function specified by the <a href="IDLffDicomExQuery Properties.htm#dicom_ex_4010397576_1133806">CALLBACK_FUNCTION</a> property must return zero.</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1135799"></a><a name="dicom_ex_4010397576_1135799_PageTOC_IDLffDicomExQuery"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>-&gt;[<a href="IDLffDicomExQuery.htm#dicom_ex_4010397576_1157043">IDLffDicomExQuery</a>::]Retrieve( [,&#160;<a href="#dicom_ex_4010397576_1135809" class="selected">COUNT</a>=<i>variable</i>] [,&#160;<a href="#dicom_ex_4010397576_1135811" class="selected">PATIENT_ID</a>=<i>string</i>] [,&#160;<a href="#dicom_ex_4010397576_1135817" class="selected">STUDY_INSTANCE_UID</a>=<i>string</i>] [,&#160;<a href="#dicom_ex_4010397576_1135823" class="selected">SERIES_INSTANCE_UID</a>=<i>string</i>] [,&#160;<a href="#dicom_ex_4010397576_1135829" class="selected">SOP_INSTANCE_UID</a>=<i>string</i>] )</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1135804"></a><a name="dicom_ex_4010397576_1135804_PageTOC_IDLffDicomExQuery"></a>Return Value</h2>
+        <p>This method returns one (success) if the retrieval operation completes successfully or if the retrieval is cancelled based on the return value of the callback function. This method returns zero (failure) if the retrieve does not complete because an error is encountered.</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1135806"></a><a name="dicom_ex_4010397576_1135806_PageTOC_IDLffDicomExQuery"></a>Arguments</h2>
+        <p>None</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1135808"></a><a name="dicom_ex_4010397576_1135808_PageTOC_IDLffDicomExQuery"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dicom_ex_4010397576_1135809"></a><a name="dicom_ex_4010397576_1135809_Keywords_IDLffDicomExQuery"></a>COUNT</h3>
+        <p>Set this keyword equal to a named variable that will contain an integer representing the number of files successfully retrieved as reported by the remote Query SCP node.</p>
+        <h3 class="Keyword"><a name="dicom_ex_4010397576_1135811"></a><a name="dicom_ex_4010397576_1135811_Keywords_IDLffDicomExQuery"></a>PATIENT_ID</h3>
+        <p>Set this keyword equal to a scalar string containing the value of the Patient ID attribute (0010,0020) for the DICOM files to be retrieved.</p>
+        <p>The combination of query model and query level determine whether this keyword is required. See <a href="#dicom_ex_4010397576_1135836" class="selected">Unique ID Keyword Interactions With Query Model/Level</a> for details.</p>
+        <h3 class="Keyword"><a name="dicom_ex_4010397576_1135817"></a><a name="dicom_ex_4010397576_1135817_Keywords_IDLffDicomExQuery"></a>STUDY_INSTANCE_UID</h3>
+        <p>Set this keyword equal to a scalar string containing the value of the Study Instance UID attribute (0020,000D) for the DICOM files to be retrieved.</p>
+        <p>The combination of query model and query level determine whether this keyword is required. See <a href="#dicom_ex_4010397576_1135836" class="selected">Unique ID Keyword Interactions With Query Model/Level</a> for details.</p>
+        <h3 class="Keyword"><a name="dicom_ex_4010397576_1135823"></a><a name="dicom_ex_4010397576_1135823_Keywords_IDLffDicomExQuery"></a>SERIES_INSTANCE_UID</h3>
+        <p>Set this keyword equal to a scalar string containing the value of the Series Instance UID attribute (0020,000E) for the DICOM files to be retrieved.</p>
+        <p>The combination of query model and query level determine whether this keyword is required. See <a href="#dicom_ex_4010397576_1135836" class="selected">Unique ID Keyword Interactions With Query Model/Level</a> for details.</p>
+        <h3 class="Keyword"><a name="dicom_ex_4010397576_1135829"></a><a name="dicom_ex_4010397576_1135829_Keywords_IDLffDicomExQuery"></a>SOP_INSTANCE_UID </h3>
+        <p>Set this keyword equal to a scalar string containing the value of the SOP Instance UID attribute (0008,0018) for the DICOM files to be retrieved.</p>
+        <p>The combination of query model and query level determine whether this keyword is required. See <a href="#dicom_ex_4010397576_1135836" class="selected">Unique ID Keyword Interactions With Query Model/Level</a> for details.</p>
+        <h3><a name="dicom_ex_4010397576_1135836"></a><a name="dicom_ex_4010397576_54312"></a>Unique ID Keyword Interactions With Query Model/Level</h3>
+        <p>The following table defines which unique ID keywords are required for different combinations of query model and query level. An "x" in the column indicates that the keyword is required when retrieving files using the specified combination of <a href="IDLffDicomExQuery Properties.htm#dicom_ex_4010397576_1134235">QUERY_MODEL</a> and <a href="IDLffDicomExQuery Properties.htm#dicom_ex_4010397576_1134178">QUERY_LEVEL</a> properties.</p>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <thead>
+                <tr class="Head-Header1">
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Patient_ID</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Study_Instance_UID</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Series_Instance_UID</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>SOP_Instance_UID</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Patient Root / Patient Level</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>x
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Patient Root / Study Level</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>x
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>x
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Patient Root / Series Level</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>x
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>x
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>x
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Patient Root / Image Level</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>x
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>x
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>x
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>x
+                        </p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Study Root / Study Level</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>x
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Study Root / Series Level</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>x
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>x
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Study Root / Image Level</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>x
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>x
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>x
+                        </p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>Patient Study Only Root </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>x
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>x
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>&#160;</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>&#160;</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dicom_ex_4010397576_1135950"></a><a name="dicom_ex_4010397576_1135950_PageTOC_IDLffDicomExQuery"></a>Example</h2>
+        <p>The following example code shows how to programmatically configure a Query/Retrieve SCP Application Entity and retrieve files.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In order to run this code, you must supply values for the <code>REMOTE_AET</code>, <code>REMOTE_HOST</code>, <code>REMOTE_PORT</code>, and <code>PATIENT_ID</code> variables. You must also have a local storage SCP configured on a remote query/retrieve SCP node.</p>
+        <p>To run the example, do the following:</p>
+        <ol>
+            <li value="1">Copy the example code and paste it into an IDL editor window or another text editor of your choice.</li>
+            <li value="2">Edit the text to supply the values for the four required variables.</li>
+            <li value="3">Save the file as <code>retrieve_dicom_patient_files.pro</code>.</li>
+            <li value="4">Execute <code>retrieve_dicom_patient_files.pro</code> in IDL.</li>
+        </ol>
+        <p class="Code">PRO retrieve_dicom_patient_files</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; NOTE:</p>
+        <p class="Code">; To run this example on your own system, define the following</p>
+        <p class="Code">; variables to be valid and existing remote query/retrieve SCP</p>
+        <p class="Code">; node values.</p>
+        <p class="Code">REMOTE_AET = 'remote_aet'</p>
+        <p class="Code">REMOTE_HOST = 'remote_host_name'</p>
+        <p class="Code">REMOTE_PORT = 'remote_port_number'</p>
+        <p class="Code">; In addition, define the following variable to contain</p>
+        <p class="Code">; a numeric Patient ID number for a patient known to exist</p>
+        <p class="Code">; on the remote server.</p>
+        <p class="Code">PATIENT_ID = 000001</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Update the local user configuration file.</p>
+        <p class="Code">; Note that in a production application, you would probably</p>
+        <p class="Code">; not need to update the configuration file each time the</p>
+        <p class="Code">; application runs.</p>
+        <p class="Code">;</p>
+        <p class="Code">; First create a new local user configuration object.</p>
+        <p class="Code">ocfg = OBJ_NEW('IDLffDicomExCfg')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add the Remote Query/Retrieve SCP Application Entity.</p>
+        <p class="Code">ocfg-&gt;SetApplicationEntity, 'remote_qr_scp_aen', $</p>
+        <p class="Code">&#160;&#160;&#160;REMOTE_AET, REMOTE_HOST, REMOTE_PORT, $</p>
+        <p class="Code">&#160;&#160;&#160;'Query_SCP_Service_List', 'Query_SCP'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Retrieve the value of the current Storage SCP Application</p>
+        <p class="Code">; Entity. We will use this later to restore the original value.</p>
+        <p class="Code">origStorScpAEname = ocfg-&gt;GetValue('StorScpServiceAE')</p>
+        <p class="Code">origStorScpAE = ocfg-&gt;GetApplicationEntity(origStorScpAEname)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add the local IDL Storage SCP Application Entity to the</p>
+        <p class="Code">; local configuration file. Note that 'my_stor_scp' must be</p>
+        <p class="Code">; configured on the remote query/retrieve SCP node.</p>
+        <p class="Code">ocfg-&gt;SetApplicationEntity, 'my_stor_scp_aen', $</p>
+        <p class="Code">&#160;&#160;&#160;'my_stor_scp', 'localhost', 2510, $</p>
+        <p class="Code">&#160;&#160;&#160;'Storage_SCP_Service_List', 'Storage_SCP'</p>
+        <p class="Code">ocfg-&gt;SetValue, 'StorScpServiceAE', 'my_stor_scp_aen'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Save the changes to the configuration file.</p>
+        <p class="Code">ocfg-&gt;Commit</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Destroy the configuration file object.</p>
+        <p class="Code">OBJ_DESTROY, ocfg</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Update the system configuration file.</p>
+        <p class="Code">; Note that in a production application, you would probably</p>
+        <p class="Code">; not need to update the configuration file each time the</p>
+        <p class="Code">; application runs.</p>
+        <p class="Code">;</p>
+        <p class="Code">; First create a new system configuration object.</p>
+        <p class="Code">ocfg = OBJ_NEW('IDLffDicomExCfg', /SYSTEM)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Stop the Storage SCP Service before making changes.</p>
+        <p class="Code">status = ocfg-&gt;StorageScpService('stop')</p>
+        <p class="Code">PRINT, 'Stopping Storage SCP. Status: ', status</p>
+        <p class="Code">WAIT, 5</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add the Storage SCP Application Entity to the system</p>
+        <p class="Code">; configuration file. Note that 'my_stor_scp' must be</p>
+        <p class="Code">; configured on the remote query/retrieve SCP node.</p>
+        <p class="Code">ocfg-&gt;SetApplicationEntity, 'my_stor_scp_aen', $</p>
+        <p class="Code">&#160;&#160;&#160;'my_stor_scp', 'localhost', 2510, $</p>
+        <p class="Code">&#160;&#160;&#160;'Storage_SCP_Service_List', 'Storage_SCP'</p>
+        <p class="Code">ocfg-&gt;SetValue, 'StorScpServiceAE', 'my_stor_scp_aen'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Retrieve the original value of the Storage SCP directory.</p>
+        <p class="Code">origStorScpDir = ocfg-&gt;GetValue('StorScpDir')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Set the Storage SCP directory to the temporary directory.</p>
+        <p class="Code">tmpDir = FILEPATH('', /TMP)</p>
+        <p class="Code">ocfg-&gt;SetValue, 'StorScpDir', tmpDir</p>
+        <p class="Code">storScpDir = ocfg-&gt;GetValue('StorScpDir')</p>
+        <p class="Code">PRINT, 'Setting Storage SCP Directory to: ', storScpDir</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Save the changes to the configuration file.</p>
+        <p class="Code">ocfg-&gt;Commit</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Restart the Storage SCP Service.</p>
+        <p class="Code">status = ocfg-&gt;StorageScpService('start')</p>
+        <p class="Code">PRINT, 'Starting Storage SCP. Status: ', status</p>
+        <p class="Code">WAIT, 5</p>
+        <p class="Code">status = ocfg-&gt;StorageScpService('status')</p>
+        <p class="Code">PRINT, 'Storage SCP Status: ', status</p>
+        <p class="Code">WAIT, 5</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Destroy the configuration file object.</p>
+        <p class="Code">OBJ_DESTROY, ocfg</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Retrieve all patient files for the patient from</p>
+        <p class="Code">; the remote node.</p>
+        <p class="Code">; First, create a new Query/Retrieve SCU object.</p>
+        <p class="Code">oqr  = OBJ_NEW('IDLffDicomExQuery')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Specify the node to be queried.</p>
+        <p class="Code">oqr-&gt;SetProperty, QUERY_SCP = 'remote_qr_scp_aen'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Specify the node to which files will be retrieved.</p>
+        <p class="Code">oqr-&gt;SetProperty, STORAGE_SCP = 'my_stor_scp_aen'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Retrieve the files</p>
+        <p class="Code">res = oqr-&gt;Retrieve(PATIENT_ID=PATIENT_ID, COUNT=cnt )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRINT, 'Retrieve Status: ', cnt, ' files retrieved into ', storScpDir</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Destory the Query/Retrieve SCU object.</p>
+        <p class="Code">OBJ_DESTROY, oqr</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Restore the Storage SCP Application Entity to its </p>
+        <p class="Code">; original state.</p>
+        <p class="Code">;</p>
+        <p class="Code">PRINT, ''</p>
+        <p class="Code">PRINT, 'Restoring original Storage SCP configuration.'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Get a new local user configuration object.</p>
+        <p class="Code">ocfg = OBJ_NEW('IDLffDicomExCfg')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Replace the orginal Storage SCP Application Entity.</p>
+        <p class="Code">ocfg-&gt;SetApplicationEntity, origStorScpAE.APPLENTITYNAME, $</p>
+        <p class="Code">&#160;&#160;&#160;origStorScpAE.AET, origStorScpAE.HOSTNAME, $</p>
+        <p class="Code">&#160;&#160;&#160;origStorScpAE.PORT, origStorScpAE.SERVICELISTNAME, $</p>
+        <p class="Code">&#160;&#160;&#160;origStorScpAE.SERVICETYPE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ocfg-&gt;SetValue, 'StorScpServiceAE', origStorScpAE.APPLENTITYNAME</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Save the changes to the configuration file.</p>
+        <p class="Code">ocfg-&gt;Commit</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Destroy the local configuration file object.</p>
+        <p class="Code">OBJ_DESTROY, ocfg</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Get a new System configuration object.</p>
+        <p class="Code">ocfg = OBJ_NEW('IDLffDicomExCfg', /SYSTEM)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Stop the Storage SCP Service before making changes</p>
+        <p class="Code">; to the system configuration.</p>
+        <p class="Code">status = ocfg-&gt;StorageScpService('stop')</p>
+        <p class="Code">PRINT, 'Stopping Storage SCP. Status: ', status</p>
+        <p class="Code">WAIT, 5</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Replace the orginal Storage SCP Application Entity.</p>
+        <p class="Code">ocfg-&gt;SetApplicationEntity, origStorScpAE.APPLENTITYNAME, $</p>
+        <p class="Code">&#160;&#160;&#160;origStorScpAE.AET, origStorScpAE.HOSTNAME, $</p>
+        <p class="Code">&#160;&#160;&#160;origStorScpAE.PORT, origStorScpAE.SERVICELISTNAME, $</p>
+        <p class="Code">&#160;&#160;&#160;origStorScpAE.SERVICETYPE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ocfg-&gt;SetValue, 'StorScpServiceAE', origStorScpAE.APPLENTITYNAME</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Restore the Storage SCP directory.</p>
+        <p class="Code">ocfg-&gt;SetValue, 'StorScpDir', origStorScpDir</p>
+        <p class="Code">PRINT, 'Storage SCP Directory is now ', $</p>
+        <p class="Code">&#160;&#160;&#160;ocfg-&gt;GetValue('StorScpDir')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Restart the Storage SCP Service.</p>
+        <p class="Code">status = ocfg-&gt;StorageScpService('start')</p>
+        <p class="Code">PRINT, 'Starting Storage SCP. Status: ', status</p>
+        <p class="Code">WAIT, 5</p>
+        <p class="Code">status = ocfg-&gt;StorageScpService('status')</p>
+        <p class="Code">PRINT, 'Storage SCP Status: ', status</p>
+        <p class="Code">WAIT, 5</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Save the changes to the configuration file.</p>
+        <p class="Code">ocfg-&gt;Commit</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Destroy the configuration file object.</p>
+        <p class="Code">OBJ_DESTROY, ocfg</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1136047"></a><a name="dicom_ex_4010397576_1136047_PageTOC_IDLffDicomExQuery"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

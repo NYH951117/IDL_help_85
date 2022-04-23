@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|About Property Sheet Widgets">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Changing Properties</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="About_Property_Sheet_Wid.htm">About Property Sheet Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Changing Properties</span>
+        </div>
+        <h1><a name="widget_propertysheet_3756481120_127534"></a><a name="widget_propertysheet_3756481120_73577"></a>Changing Properties<a name="kanchor5080"></a></h1>
+        <p>A change event is generated whenever a new value is entered for a property. It is also used to signal that a user-defined property needs changing. The event structure (WIDGET_PROPSHEET_CHANGE) provided when a change occurs contains a COMPONENT, an IDENTIFIER, a PROPTYPE, and a SET_DEFINED tag. The COMPONENT tag contains a reference to the object associated with the property sheet. When multiple objects are associated with the property sheet, this member indicates which object is to change. The IDENTIFIER tag specifies the value of the property’s identifier attribute. This identifier is unique among all of the component’s properties. The PROPTYPE tag indicates the type of the property (integer, string, etc.). Integer values for these types can be found in the documentation for components. The SET_DEFINED tag indicates whether or not an undefined property is having its value set. In most circumstances, along with its new value, the property should have its ‘UNDEFINED’ attribute set to zero. If a property is never marked as undefined, this field can be ignored.</p>
+        <p>Although the component’s object reference is included in the event structure, it can also be retrieved via the following call:</p>
+        <p class="Code">WIDGET_CONTROL, event.id, GET_VALUE = obj</p>
+        <p>where <code>event</code> is the event structure and <code>obj</code> is the object reference of the component.</p>
+        <p>The PROPTYPE field is provided for convenience. The property type should be known implicitly based on <code>IDENTIFIER</code>, but can be retrieved (in integer form) by:</p>
+        <p class="Code">obj-&gt;GetPropertyAttribute, event.identifier, TYPE = type</p>
+        <p>where <code>obj</code> is the object reference of the component, <code>event</code> is the event structure, and <code>type</code> represents the data type of the property. Here, the value returned in by the TYPE keyword is the same as the value of the PROPTYPE field of the widget event structure.</p>
+        <p>Properties can use their UNDEFINED attribute to show an indeterminate state (set attribute UNDEFINED = 1). This might arise after the aggregation of two or more properties. One could imagine a COLOR property representing both the border and the interior color of a polygon so that just one color property is displayed in the property sheet. When set, the chosen color would be applied to both, and then the following code could be used to mark the property as defined:</p>
+        <p class="Code">IF (event.set_defined) THEN $</p>
+        <p class="Code">&#160;&#160;&#160;event.component-&gt;SetPropertyAttribute, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;event.identifier, UNDEFINED = 0</p>
+        <p class="Code">WIDGET_CONTROL, event.id, REFRESH_PROPERTY&#160;=&#160;event.identifier</p>
+        <p>where <code>event</code> is the event structure.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The REFRESH_PROPERTY keyword to WIDGET_CONTROL is used to refresh the property sheet. This is necessary because although the property sheet knows about its component, it does not directly change the component itself. Just as with changing properties values, the property sheet and underlying component have a clear boundary and can only affect each other through IDL statements.</p>
+        <p>Properties can also be hidden (removing them from the property sheet entirely) or desensitized (displaying the property in the property sheet, but not allowing the user to change its value).</p>
+        <h2 class="API"><a name="widget_propertysheet_3756481120_60857"></a>Updating the Component</h2>
+        <p>When a value has been changed in the property sheet, you can access this resulting value through the WIDGET_INFO function:</p>
+        <p class="Code">value = WIDGET_INFO(event.id, PROPERTY_VALUE = event.identifier)</p>
+        <p>where <code>event</code> is the event structure. This value can then be used to update the changed property in the component object by calling its SetPropertyByIdentifier method:</p>
+        <p class="Code">event.component-&gt;SetPropertyByIdentifier, event.identifier, $</p>
+        <p class="Code">&#160;&#160;&#160;value</p>
+        <p>where <code>event</code> is the event structure and <code>value</code> is the modified property value. </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

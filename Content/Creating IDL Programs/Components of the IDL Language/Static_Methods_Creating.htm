@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Static Methods and Attributes">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Creating Static Methods</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Static_Methods_Using.htm">Static Methods and Attributes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Creating Static Methods</span>
+        </div>
+        <h1><a name="kanchor4956"></a><a name="Static_Methods_and_Attributes"></a>Creating Static Methods</h1>
+        <p>This document describes how to create static methods. Also see:</p>
+        <ul>
+            <li value="1"><a href="Static_Methods_Using.htm">Using Static Methods and Attributes</a>
+            </li>
+            <li value="2"><a href="../../Reference Material/Functional List of IDL Routines/Static_Methods.htm">List of Static Methods and Attributes</a>
+            </li>
+        </ul>
+        <h3>Static Class Inheritance</h3>
+        <p>You can create your own static methods for any IDL data type (except structures and objects). The static classes have the following inheritance structure:</p>
+        <p>&#160;</p>
+        <p>
+            <img src="../../Reference Material/images/idl_variable.png" />
+        </p>
+        <p>&#160;</p>
+        <p>You can create new methods on any of the IDL Data Type classes (such as IDL_Byte) or any of the superclasses (IDL_Integer, IDL_Number, and IDL_Variable).</p>
+        <p>When you create a new method and add it to IDL's path, that method will immediately become available to all variables of that data type within your IDL session. In addition, if your method is on one of the superclasses, then the method will become available to all subclasses. For example:</p>
+        <ul>
+            <li value="1">If you create a method called <code>IDL_Float::Fraction</code>, the <code>::Fraction</code> method will be available on all variables of type FLOAT.</li>
+            <li value="2">If you create a method called <code>IDL_Number::IsWhole</code>, the <code>::IsWhole</code> method will be available on all IDL numeric data types.</li>
+            <li value="3">If you create a method called <code>IDL_Variable::Save</code>, the <code>::Save</code> method will be available for all IDL variables (except structures and objects).</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>All static methods must be function methods, not procedures.</p>
+        <h3>Arguments and Keywords</h3>
+        <p>Your static method should have the following signature:</p>
+        <p class="Code">function Class::MyMethod, variable [, arg2, arg3, ...] [KEYWORD=keyword, ...]</p>
+        <p class="Code_Indented">compile_opt IDL2, STATIC</p>
+        <p class="Code_Indented">...</p>
+        <p class="Code_Indented">return, result</p>
+        <p class="Code">end</p>
+        <p>The first argument is always set equal to the variable that was used to invoke the static method. You can have any number of other arguments and keywords.</p>
+        <p>Be sure to use "compile_opt STATIC" to mark your method as a static class method.</p>
+        <h3>Example: IDL_Variable Method</h3>
+        <p>We will create a method called <code>IDL_Variable::Serialize</code> that will convert any IDL variable (except structures and objects) to a JSON string and optionally save the string to a file. Create the following code and save it to a file called "<code>idl_variable__serialize.pro</code>":</p>
+        <p class="Code">function IDL_Variable::Serialize, variable, FILE=file</p>
+        <p class="Code_Indented">; Use STATIC to mark this as a static method</p>
+        <p class="Code_Indented">compile_opt IDL2, STATIC</p>
+        <p class="Code_Indented">ON_ERROR, 2</p>
+        <p class="Code_Indented">; Convert the variable to a JSON string.</p>
+        <p class="Code_Indented">; If type is a pointer, then dereference.</p>
+        <p class="Code_Indented">result = JSON_SERIALIZE((variable.tname eq 'POINTER') ? $</p>
+        <p class="Code_Indented2">*variable : variable)</p>
+        <p class="Code_Indented">; Optionally save the JSON to a file.</p>
+        <p class="Code_Indented">if (ISA(file)) then begin</p>
+        <p class="Code_Indented2">OPENW, lun, file, /GET_LUN</p>
+        <p class="Code_Indented2">PRINTF, lun, result</p>
+        <p class="Code_Indented2">FREE_LUN, lun</p>
+        <p class="Code_Indented">endif</p>
+        <p class="Code_Indented">return, result</p>
+        <p class="Code">end</p>
+        <p>For example:</p>
+        <p class="Code">IDL&gt; data = FINDGEN(3,2)</p>
+        <p class="Code">IDL&gt; HELP, data.Serialize()</p>
+        <p class="Code">IDL&gt; PRINT, data.Serialize()</p>
+        <p class="Code">[[0.0,1.0,2.0],[3.0,4.0,5.0]]</p>
+        <p>IDL prints:</p>
+        <p class="Code">&lt;Expression&gt;    STRING    = '[[0.0,1.0,2.0],[3.0,4.0,5.0]]'</p>
+        <p class="Code">[[0.0,1.0,2.0],[3.0,4.0,5.0]]</p>
+        <p>Using the same method with a string array for input:</p>
+        <p>IDL&gt; arr = ['abc', 'def', 'ghi', 'idl']</p>
+        <p>IDL&gt; void = arr.Serialize(FILE='mydata.json')</p>
+        <h3>Example: IDL_String Method</h3>
+        <p>Now we will create a method that will take a JSON string and convert it back to an IDL variable. Create the following code and save it to a file called "<code>idl_string__parsejson.pro</code>":</p>
+        <p class="Code">function IDL_String::ParseJSON, json</p>
+        <p class="Code_Indented">; Use STATIC to mark this as a static method</p>
+        <p class="Code_Indented">compile_opt IDL2, STATIC</p>
+        <p class="Code_Indented">ON_ERROR, 2</p>
+        <p class="Code_Indented">result = JSON_PARSE(json, /TOARRAY, /TOSTRUCT)</p>
+        <p class="Code_Indented">return, result</p>
+        <p class="Code">end</p>
+        <p>Here, we take a valid JSON string and call the method:</p>
+        <p class="Code">IDL&gt; json = '{"key1":0.0, "key2":[1,2,3], "key3":true}'</p>
+        <p class="Code">IDL&gt; result = json.ParseJSON()</p>
+        <p class="Code">IDL&gt; help, result</p>
+        <p>IDL prints:</p>
+        <p class="Code">** Structure &lt;107234a0&gt;, 3 tags, length=40, data length=33, refs=1:</p>
+        <p class="Code_Indented">KEY1            DOUBLE          0.00000000</p>
+        <p class="Code_Indented">KEY2            LONG64    Array[3]</p>
+        <p class="Code_Indented">KEY3            BOOLEAN   true (1)</p>
+        <p>Notice that even though static methods do not work on structures or objects, we can return a structure as the result.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

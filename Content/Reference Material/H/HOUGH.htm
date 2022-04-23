@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: H">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>HOUGH </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="H_list.htm">Routines: H</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">HOUGH</span>
+        </div>
+        <h1 class="Routine"><a name="H_835179117_875881"></a>HOUGH </h1>
+        <p><a name="kanchor1499"></a><a name="kanchor1500"></a><a name="kanchor1501"></a>The HOUGH function implements the Hough transform, used to detect straight lines within a two-dimensional image. This function can be used to return either the Hough transform, which transforms each nonzero point in an image to a sinusoid in the Hough domain, or the Hough backprojection, where each point in the Hough domain is transformed to a straight line in the image.<a name="kanchor1502"></a><a name="kanchor1503"></a></p>
+        <h3><a name="H_835179117_875896_PageTOC_HOUGH_"></a>Hough Transform Theory</h3>
+        <p>The Hough transform is defined for a function <i>A</i>(<i>x</i>, <i>y</i>) as: </p>
+        <p>
+            <img src="../../images/14_2.jpg" />
+        </p>
+        <p>where δ is the Dirac delta-function. With <i>A</i>(<i>x</i>,&#160;<i>y</i>), each point (<i>x</i>,&#160;<i>y</i>) in the original image, <i>A</i>, is transformed into a sinusoid ρ = <i>x</i>cosθ – <i>y</i>sinθ, where ρ is the perpendicular distance from the origin of a line at an angle θ (The angle θ will be limited to 0 &lt;= θ &lt; π which could result in negative ρ values.): </p>
+        <p>
+            <img src="../../images/hough02.gif" style="margin-left: 5.99976px;margin-top: 5.99976px;margin-right: 3.228481px;margin-bottom: 3.242161px;" /><![CDATA[  ]]></p>
+        <p>Points that lie on the same line in the image will produce sinusoids that all cross at a single point in the Hough transform. For the inverse transform, or backprojection, each point in the Hough domain is transformed into a straight line in the image.</p>
+        <p>Usually, the Hough function is used with binary images, in which case <i>H</i>(θ,&#160;ρ) gives the total number of sinusoids that cross at point (θ,&#160;ρ), and hence, the total number of points making up the line in the original image. By choosing a threshold <i>T</i> for <i>H</i>(θ,&#160;ρ), and using the inverse Hough function, you can filter the original image to keep only lines that contain at least <i>T</i> points.</p>
+        <h4>How IDL Implements the Hough Transform</h4>
+        <p>Consider an image <i>A</i><sub class="italic">mn</sub> of dimensions <i>M</i> by <i>N</i>, with array indices <i>m&#160;</i>=&#160;0,...,&#160;<i>M</i>–1 and <i>n&#160;</i>=&#160;0,...,&#160;<i>N</i>–1.</p>
+        <p> The discrete formula for the HOUGH function for <i>A</i><sub class="italic">mn</sub> is:  </p>
+        <p>
+            <img src="../../images/14_4.jpg" />
+        </p>
+        <p>where the brackets [ ] indicate rounding to the nearest integer, and  </p>
+        <p>
+            <img src="../../images/14_5.jpg" />
+        </p>
+        <p>The pixels are assumed to have spacing Δ<i>x</i> and Δ<i>y</i> in the x and y directions. The delta-function is defined as:  </p>
+        <p>
+            <img src="../../images/14_6.jpg" />
+        </p>
+        <h4>How IDL Implements the Hough Backprojection</h4>
+        <p>The backprojection,<i> B</i><sub class="italic">mn</sub>, contains all of the straight lines given by the (θ,&#160;ρ) points given in <i>H</i>(θ,&#160;ρ). The discrete formula is  </p>
+        <p>
+            <img src="../../images/14_7.jpg" />
+        </p>
+        <p>where the slopes and offsets are given by:   </p>
+        <p>
+            <img src="../../images/14_8.jpg" />
+        </p>
+        <p>
+            <img src="../../images/14_10.jpg" />
+        </p>
+        <p>
+            <img src="../../images/hough06.gif" style="margin-left: 5.99976px;margin-right: 6.000484px;" />
+        </p>
+        <h2 class="API"><a name="H_835179117_875889"></a>Syntax</h2>
+        <p><b>Hough Transform:</b>
+        </p>
+        <p class="Syntax"><i>Result</i> = HOUGH( <i>Array </i>[,&#160;/<a href="#H_835179117_875960" class="selected">DOUBLE</a>] [,&#160;<a href="#H_835179117_875962" class="selected">DRHO</a>=<i>scalar</i>] [,&#160;<a href="#H_835179117_875964" class="selected">DX</a>=<i>scalar</i>] [,&#160;<a href="#H_835179117_875966" class="selected">DY</a>=<i>scalar</i>] [,&#160;/<a href="#H_835179117_875968" class="selected">GRAY</a>] [,&#160;<a href="#H_835179117_875970" class="selected">NRHO</a>=<i>scalar</i>] [,&#160;<a href="#H_835179117_875972" class="selected">NTHETA</a>=<i>scalar</i>] [,&#160;<a href="#H_835179117_875978" class="selected">RHO</a>=<i>variable</i>] [,&#160;<a href="#H_835179117_875980" class="selected">RMIN</a>=<i>scalar</i>] [,&#160;<a href="#H_835179117_875982" class="selected">THETA</a>=<i>variable</i>] [,&#160;<a href="#H_835179117_875984" class="selected">XMIN</a>=<i>scalar</i>] [,&#160;<a href="#H_835179117_875986" class="selected">YMIN</a>=<i>scalar</i>] )</p>
+        <p><b>Hough Backprojection:</b>
+        </p>
+        <p class="Syntax"><i>Result</i> = HOUGH( <i>Array</i>, /<a href="#H_835179117_875957" class="selected">BACKPROJECT</a>, <a href="#H_835179117_875978" class="selected">RHO</a>=<i>variable</i>, <a href="#H_835179117_875982" class="selected">THETA</a>=<i>variable </i>[,&#160;/<a href="#H_835179117_875960" class="selected">DOUBLE</a>] [,&#160;<a href="#H_835179117_875964" class="selected">DX</a>=<i>scalar</i>] [,&#160;<a href="#H_835179117_875966" class="selected">DY</a>=<i>scalar</i>] [,&#160;<a href="#H_835179117_875974" class="selected">NX</a>=<i>scalar</i>] [,&#160;<a href="#H_835179117_875976" class="selected">NY</a>=<i>scalar</i>] [,&#160;<a href="#H_835179117_875984" class="selected">XMIN</a>=<i>scalar</i>] [,&#160;<a href="#H_835179117_875986" class="selected">YMIN</a>=<i>scalar</i>] )</p>
+        <h2 class="API"><a name="H_835179117_875894"></a>Return Value</h2>
+        <p>The result of this function is a two-dimensional floating-point array, or a complex array if the input image is complex. If <i>Array</i> is double-precision, or if the DOUBLE keyword is set, the result is double-precision, otherwise, the result is single-precision.</p>
+        <h2 class="API"><a name="H_835179117_875953"></a>Arguments</h2>
+        <h3 class="Argument">Array</h3>
+        <p>The two-dimensional array of size <i>M</i> by <i>N</i> which will be transformed. If the keyword GRAY is not set, then, for the forward transform, <i>Array</i> is treated as a binary image with all nonzero pixels considered as 1.</p>
+        <h2 class="API"><a name="H_835179117_875956"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="H_835179117_875957"></a>BACKPROJECT</h3>
+        <p>If set, the backprojection is computed, otherwise, the forward transform is computed. When BACKPROJECT is set, <i>Result</i> will be an array of dimension <i>NX</i> by <i>NY</i>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The Hough transform is not one-to-one: each point (<i>x</i>,&#160;<i>y</i>) is not mapped to a single (θ, ρ). Therefore, instead of the original image, the backprojection, or inverse transform, returns an image containing the set of all lines given by the (θ, ρ) points.</p>
+        <h3 class="Keyword"><a name="H_835179117_875960"></a>DOUBLE</h3>
+        <p>Set this keyword to force the computation to be done using double-precision arithmetic.</p>
+        <h3 class="Keyword"><a name="H_835179117_875962"></a>DRHO</h3>
+        <p>Set this keyword equal to a scalar specifying the spacing Δρ between ρ coordinates, expressed in the same units as <i>Array</i>. The default is [(DX<sup>2</sup>&#160; +&#160;DY<sup>2</sup>)/2]<sup>1/2</sup>, which is 1/SQRT(2) times the diagonal distance between pixels. A larger value produces a coarser resolution by mapping multiple pixels onto a single ρ; this is useful for images that do not contain perfectly straight lines. A smaller value may produce undersampling by trying to map fractional pixels onto ρ, and is not recommended. If BACKPROJECT is specified, this keyword is ignored.</p>
+        <h3 class="Keyword"><a name="H_835179117_875964"></a>DX</h3>
+        <p>Set this keyword equal to a scalar specifying the spacing between the horizontal (X) coordinates. The default is 1.0.</p>
+        <h3 class="Keyword"><a name="H_835179117_875966"></a>DY</h3>
+        <p>Set this keyword equal to a scalar specifying the spacing between the vertical (Y) coordinates. The default is 1.0.</p>
+        <h3 class="Keyword"><a name="H_835179117_875968"></a>GRAY</h3>
+        <p>Set this keyword to perform a weighted Hough transform, with the weighting given by the pixel values. If GRAY is not set, the image is treated as a binary image with all nonzero pixels considered as 1. If BACKPROJECT is specified, this keyword is ignored.</p>
+        <h3 class="Keyword"><a name="H_835179117_875970"></a>NRHO</h3>
+        <p>Set this keyword equal to a scalar specifying the number of ρ coordinates to use. The default is 2 CEIL([MAX(X<sup>2</sup>&#160;+&#160;Y<sup>2</sup>)]<sup>1/2</sup>&#160;/&#160;DRHO) + 1. If BACKPROJECT is specified, this keyword is ignored.</p>
+        <h3 class="Keyword"><a name="H_835179117_875972"></a>NTHETA</h3>
+        <p>Set this keyword equal to a scalar specifying the number of θ coordinates to use over the interval [0,π]. The default is CEIL(π&#160;[MAX(X<sup>2</sup><sup>&#160;&#160;</sup>+&#160;Y<sup>2</sup>)]<sup>1/2</sup><sup>&#160;</sup>/&#160;DRHO). A larger value will produce smoother results, and is useful for filtering before backprojection. A smaller value will result in broken lines in the transform, and is not recommended. If BACKPROJECT is specified, this keyword is ignored.</p>
+        <h3 class="Keyword"><a name="H_835179117_875974"></a>NX</h3>
+        <p>If BACKPROJECT is specified, set this keyword equal to a scalar specifying the number of horizontal coordinates in the output array. The default is FLOOR(2&#160;MAX(|RHO|)(DX<sup>2</sup>&#160;+&#160;DY<sup>2</sup>)<sup>–1/2</sup> + 1). For the forward transform this keyword is ignored.</p>
+        <h3 class="Keyword"><a name="H_835179117_875976"></a>NY</h3>
+        <p>If BACKPROJECT is specified, set this keyword equal to a scalar specifying the number of vertical coordinates in the output array. The default is FLOOR(2&#160;MAX(|RHO|)(DX<sup>2</sup>&#160;+&#160;DY<sup>2</sup>)<sup>–1/2 </sup>+ 1). For the forward transform, this keyword is ignored.</p>
+        <h3 class="Keyword"><a name="H_835179117_875978"></a>RHO</h3>
+        <p>For the forward transform, set this keyword to a named variable that, on exit, will contain the radial (ρ) coordinates, in units defined by the DX and DY keywords (pixels by default). If BACKPROJECT is specified, this keyword must contain the ρ coordinates of the input <i>Array</i>.</p>
+        <h3 class="Keyword"><a name="H_835179117_875980"></a>RMIN</h3>
+        <p>Set this keyword equal to a scalar specifying the minimum ρ coordinate to use for the forward transform. The default is –0.5(NRHO – 1) DRHO. If BACKPROJECT is specified, this keyword is ignored.</p>
+        <h3 class="Keyword"><a name="H_835179117_875982"></a>THETA</h3>
+        <p>For the forward transform, set this keyword to a named variable containing a vector of angular (θ) coordinates (in radians) to use for the transform. If NTHETA is specified instead, and THETA is set to a named variable, then on exit THETA will contain the θ coordinates. If BACKPROJECT is specified, this keyword must contain the θ coordinates of the input <i>Array</i>. HOUGH returns θ in [0,π].</p>
+        <h3 class="Keyword"><a name="H_835179117_875984"></a>XMIN</h3>
+        <p>Set this keyword equal to a scalar specifying the X coordinate of the lower-left corner of the input <i>Array</i>. The default is –(<i>M–</i>1)/2, where <i>Array</i> is an <i>M</i> by <i>N</i> array. If BACKPROJECT is specified, set this keyword equal to a scalar specifying the X coordinate of the lower-left corner of the <i>Result</i>. In this case the default is –DX&#160;(NX–1)/2.</p>
+        <h3 class="Keyword"><a name="H_835179117_875986"></a>YMIN</h3>
+        <p>Set this keyword equal to a scalar specifying the Y coordinate of the lower-left corner of the input <i>Array</i>. The default is –(<i>N–</i>1)/2, where <i>Array</i> is an <i>M</i> by <i>N</i> array. If BACKPROJECT is specified, set this keyword equal to a scalar specifying the Y coordinate of the lower-left corner of the <i>Result</i>. In this case the default is <br />–DY&#160;(NY–1)/2.</p>
+        <h2 class="API"><a name="H_835179117_876044_PageTOC_HOUGH_"></a>References</h2>
+        <ol>
+            <li value="1">Gonzalez, R.C., and R.E. Woods. <i>Digital Image Processing</i>. Reading, MA: Addison Wesley, 1992.</li>
+            <li value="2">Jain, Anil K. <i>Fundamentals of Digital Image Processing</i>. Englewood Cliffs, NJ: Prentice-Hall, 1989.</li>
+            <li value="3">Toft, Peter. <i>The Radon Transform: Theory and Implementation</i>. Denmark: Technical University; 1996. Ph.D. Thesis.</li>
+            <li value="4">Weeks, Arthur. R. <i>Fundamentals of Electronic Image Processing</i>. New York: SPIE Optical Engineering Press, 1996.</li>
+        </ol>
+        <h2 class="API"><a name="H_835179117_883439"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="H_835179117_883430"></a>See Also</h2>
+        <p><a href="../R/RADON.htm#R_822202989_1081840">RADON</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

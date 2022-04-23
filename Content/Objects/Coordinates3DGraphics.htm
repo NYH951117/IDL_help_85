@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Overview">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Coordinates of 3D Graphics</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../GuideMe/Graphics Overview.htm">Graphics Overview</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Coordinates of 3D Graphics</span>
+        </div>
+        <h1>Coordinates of 3D Graphics</h1>
+        <p>Points in xyz space are expressed by vectors of homogeneous coordinates. These vectors are translated, rotated, scaled, and projected onto the two-dimensional drawing surface by multiplying them by transformation matrices. The geometric transformations used by IDL are taken from Chapters 7 and 8 of Foley and Van Dam (Foley, J.D., and A. Van Dam (1982), <i>Fundamentals of Interactive Computer Graphics</i>, Addison-Wesley Publishing Co.). Consult this book for a detailed description of homogeneous coordinates and transformation matrices since this topic is simply an overview. </p>
+        <h2>Homogeneous Coordinates</h2>
+        <p>A point in homogeneous coordinates is represented as a four-element column vector of three coordinates and a scale factor w ¹¹¹ 0. For example:</p>
+        <p class="Code">P(wx, wy, wz, w) º P(x/w, y/w, z/w, 1) º (x, y, z)</p>
+        <p>One advantage of this approach is that translation, which normally must be expressed as an addition, can be represented as a matrix multiplication. Another advantage is that homogeneous coordinate representations simplify perspective transformations. The notion of rows and columns used by IDL is opposite that of Foley and Van Dam (1982). In IDL, the column subscript is first, while in Foley and Van Dam (1982) the row subscript is first. This changes all row vectors to column vectors and transposes matrices.</p>
+        <h2>Right-Handed Coordinate System</h2>
+        <p>The coordinate system is right-handed so that when looking from a positive axis to the origin, a positive rotation is counterclockwise. As usual, the x-axis runs across the display, the y-axis is vertical, and the positive z-axis extends out from the display to the viewer. For example, a 90-degree positive rotation about the z-axis transforms the x-axis to the y-axis.</p>
+        <h2>Transformation Matrices</h2>
+        <p>Transformation matrices, which post-multiply a point vector to produce a new point vector, must be (4, 4). A series of transformation matrices can be concatenated into a single matrix by multiplication. If A1, A2, and A3 are transformation matrices to be applied in order, and the matrix A is the product of the three matrices, the following applies.</p>
+        <p class="Code">((P · A1) · A2) · A3 º P · ((A1 · A2) · A3) = P · A</p>
+        <p>In Object Graphics, IDL the model object that contains the displayed object stores the transformation matrix. In Direct Graphics, IDL stores the concatenated transformation matrix in the system variable field !P.T.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When displaying objects in a three-dimensional view, you can precisely configure the object position using transformation matrices. See Translating, Rotating and Scaling Objects for details.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For most Direct Graphic applications, it is not necessary to create, manipulate, or to even understand transformation matrices. See the T3D procedure, which implements most of the common transformations.</p>
+        <p>Each of the operations of translation, scaling, rotation, and shearing can be represented by a transformation matrix.</p>
+        <h2>Translation</h2>
+        <p>The transformation matrix to translate a point by (D<sub>x</sub>, D<sub>y</sub>, D<sub>z</sub>) is shown below.</p>
+        <p>
+            <img src="../images/translation_matrix.png" />
+        </p>
+        <p>&#160;</p>
+        <h2>Scaling</h2>
+        <p>Scaling by factors of S<sub>x</sub>, S<sub>y</sub>, and S<sub>z</sub> about the x-, y-, and z-axes respectively, is represented by the matrix below.</p>
+        <p>
+            <img src="../images/scaling_matrix.png" />
+        </p>
+        <p>&#160;</p>
+        <h2>Rotation</h2>
+        <p>Rotation about the x-, y-, and z-axes is represented respectively by the following three matrices:</p>
+        <p>
+            <img src="../images/rotation_matrix.png" />
+        </p>
+        <h2>See Also</h2>
+        <p><a href="../Object Classes/Graphics/IDLgrModel.htm">IDLgrModel</a>, <a href="TranslatingRotatingScaling.htm">Translating, Rotating, and Scaling Objects</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

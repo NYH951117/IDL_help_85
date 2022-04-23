@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Callable IDL">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>When is Callable IDL Appropriate</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="CallableIDL.htm">Callable IDL</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">When is Callable IDL Appropriate</span>
+        </div>
+        <h1>When is Callable IDL Appropriate</h1>
+        <p>Although Callable IDL is very powerful and convenient, it is not always the best method of communication between with other programs. There may be easier approaches that will solve a given problem. See <a href="../External Development Overview/InterlanguageCommunication.htm">Supported Inter-Language Communication Techniques in IDL</a> for alternatives.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDL will not integrate with all programs. This topic will help you decide when Callable IDL is and is not appropriate.</p>
+        <h2 class="API">Technical Issues Relating to Callable IDL</h2>
+        <p>IDL makes computing easier by raising the level at which users interface with the computer. It is natural to think that calling IDL from other programs will have the same effect, and under the correct circumstances this is true. However, using Callable IDL is not as easy as using IDL. Programmers who wish to use Callable IDL need to possess the skills described in <a href="../External Development Overview/RequiredSkills.htm">Skills Required to Combine External Code with IDL</a>.</p>
+        <p>Be aware that the same things that make IDL powerful at the user level can make it difficult to include in other programs. As an interactive, interpreted language, IDL is a decidedly non-trivial object to add to a process. Unlike a simple mathematical subroutine IDL includes a compiler, a language interpreter, and related code that the caller must work around. As an interactive program, IDL must control the process to a high degree which can conflict with the caller’s wishes. </p>
+        <p>The following list touches on a few issues that you may encounter.</p>
+        <h3>UNIX IDL Signal API</h3>
+        <p>IDL uses UNIX signals to manage many of its features, including exception handling, user interrupts, and child processes. The exact signals used and the manner in which they are used can change from one IDL release to another. Although the IDL signal API (described in <a href="../IDLInternals - UNIX Signals/SignalHandlers.htm">IDL Internals: UNIX Signals</a>) allows you to use signals in an IDL-compatible way, the resulting constraints may require changes to your code.</p>
+        <h3>IDL Timer API</h3>
+        <p>IDL’s use of the process timer requires you to use the IDL timer API instead of the standard system routines. This restriction may require changes to some programs. Under UNIX, the timer module can interrupt system calls. Timers are discussed in <a href="../IDLInternals - Timers/IDLandTimers.htm">IDL Internals: Timers</a>.</p>
+        <h3>GUI Considerations</h3>
+        <p>Most applications will call IDL and display IDL graphics in an IDL window. However, programmers may want to write applications in which they create the graphical user interface (GUI) and then have IDL draw graphics into windows that IDL did not create. It is not always possible for IDL to draw into windows that it did not create for the reasons described below:</p>
+        <h4>X Windows</h4>
+        <p>The IDL X Windows graphics driver can draw in windows it did not create as long as the window is compatible with the IDL display connection. However, the design of IDL’s X Windows driver requires that it open its own display connection and run its own event loop. If your program cannot support a separate display connection, or if dividing time between two event loops is not acceptable, consider the following options:</p>
+        <ul>
+            <li value="1">Run IDL in a separate process and use interprocess communication (possibly <a href="../Remote Procedure Calls/IDLandRPC.htm">Remote Procedure Calls</a>), to control it.</li>
+            <li value="2">If you choose to use Callable IDL, use the IDL Widget stub interface described in <a href="../Adding External Widgets to IDL/ExternalWidgets.htm">Adding External Widgets to IDL</a>, to obtain the IDL display connection, and create your GUI using that connection rather than creating your own. The IDL event loop will dispatch your events along with IDL’s, creating a well-integrated system.</li>
+        </ul>
+        <h4>Microsoft Windows</h4>
+        <p>At this time, the IDL for Windows graphics driver does not have the ability to draw into windows that were not created by IDL.</p>
+        <h3>Program Size Considerations</h3>
+        <p>On systems that support preemptive multitasking, a single huge program is a poor use of system capabilities. Such programs inevitably end up implementing primitive task- scheduling mechanisms better left to the operating system.</p>
+        <h3>Troubleshooting</h3>
+        <p>Troubleshooting and debugging applications that call IDL can be very difficult. With standard IDL, malfunctions in the program are clearly the fault of <span class="DocumentTitleCompanyName">Exelis VIS</span> and given a reproducible bug report, we attempt to fix them promptly. A program that combines IDL with other code makes it difficult to  determine where the problem lies. The level of support we can provide in such troubleshooting is minimal. The programmer is responsible for locating the source of the difficulty. If the problem is in IDL, a simple program demonstrating the problem must be provided before we can address the issue.</p>
+        <h3>Threading</h3>
+        <p>IDL uses threads to implement its thread pool functionality which is used to speed numerical computation on multi-CPU hardware. Despite this, it is essentially a single threaded program and is not designed to be called from different threads of a threaded application. Attempting to use IDL from any thread other than the main thread is unsupported, and may cause unpredictable results.</p>
+        <h3>Inter-language Calling Conventions</h3>
+        <p>IDL is written in standard ANSI C. Calling it from other languages is possible, but it is the programmer’s responsibility to understand the inter-language calling conventions of the target machine and compiler.</p>
+        <h2 class="API">Appropriate Applications of Callable IDL</h2>
+        <p>Callable IDL is most appropriate in the following situations:</p>
+        <ul>
+            <li value="1">Callable IDL is clearly the correct choice when the resulting program is to be a front-end that creates a different interface for IDL. For example, you might wish to turn IDL into an RPC server that uses an RPC protocol not directly supported by IDL, or use IDL as a module in a distributed system.</li>
+            <li value="2">Callable IDL is appropriate if either the calling program or IDL handles all graphics, including the Graphical User Interface, without the involvement of the other. Intermediate situations are possible but more difficult. In particular, beware of attempts to have two event/message loops.</li>
+            <li value="3">Callable IDL is appropriate when the calling program makes little or no use of signals, timers, or exception handling, or is able to operate within the constraints imposed by IDL.</li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

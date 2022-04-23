@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|Creating Widget Applications">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Widget Event Processing</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Application Programming/Creating Widget Applications.htm">Creating Widget Applications</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Widget Event Processing</span>
+        </div>
+        <h1><a name="widget_apps_4063420628_1042201"></a><a name="widget_apps_4063420628_99142"></a><a name="kanchor4991"></a>Widget Event Processing</h1>
+        <p><a name="kanchor4992"></a><a name="kanchor4993"></a>The concepts of events and event processing underlie every aspect of widget programming. It is important to understand how IDL handles widget events in order to use widgets effectively.</p>
+        <p>This section discusses the following topics:</p>
+        <ul>
+            <li value="1"><a href="#widget_apps_4063420628_1042226" class="selected">What are Widget Events?</a>
+            </li>
+            <li value="2"><a href="#widget_apps_4063420628_1042229" class="selected">Structure of Widget Events</a>
+            </li>
+            <li value="3"><a href="#widget_apps_4063420628_1042241" class="selected">Managing Widget Events with XMANAGER</a>
+            </li>
+            <li value="4"><a href="#widget_apps_4063420628_1042328" class="selected">Event Processing and Callbacks</a>
+            </li>
+        </ul>
+        <p>For a discussion of techniques you can use to detect and respond to specific types of events, see <a href="Working_with_Widget_Even.htm#widget_techniques_4218446668_96232">Working with Widget Events</a>.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_1042226"></a><a name="widget_apps_4063420628_63655"></a>What are Widget Events?</h2>
+        <p>A widget event is a message returned from the window system when a user manipulates a widget. In response to an event, a widget program usually performs some action (<i>e.g.</i>, opens a file, updates a plot).</p>
+        <h2 class="API"><a name="widget_apps_4063420628_1042229"></a><a name="widget_apps_4063420628_45790"></a>Structure of Widget Events</h2>
+        <p><a name="kanchor4994"></a>As events arrive from the window system, IDL saves them in a queue for the target widget. The WIDGET_EVENT function delivers these events to the IDL program as IDL structures. Every widget event structure has the same first three fields: these are long integers named <code>ID</code>, <code>TOP</code>, and <code>HANDLER</code>:</p>
+        <ul>
+            <li value="1"><code>ID</code> is the widget ID of the widget that generated the event. </li>
+            <li value="2"><code>TOP</code> is the widget ID of the top-level base containing <code>ID</code>. </li>
+            <li value="3"><code>HANDLER</code> is the widget ID of the widget associated with the event handling routine. The importance of <code>HANDLER</code> will become apparent when we discuss event routines and compound widgets, below.</li>
+        </ul>
+        <p>Event structures for different widgets may contain other fields as well. The exact form of the event structure for any given widget is described in the documentation for that widget’s creation function in the <span class="Reference MaterialbkReference Guide">IDL Reference Guide</span>.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_1042241"></a><a name="widget_apps_4063420628_67444"></a><a name="kanchor4995"></a>Managing Widget Events with XMANAGER</h2>
+        <p>The XMANAGER procedure provides a convenient, simplified interface IDL’s event-handling capabilities. At the highest level, creating a widget application consists of the following steps:</p>
+        <ol>
+            <li value="1">Creating routines to react to widget events.</li>
+            <li value="2">Creating the widgets that make up the application’s interface.</li>
+            <li value="3">Realizing the widgets.</li>
+            <li value="4">Calling XMANAGER to manage events flowing from the widget interface.</li>
+        </ol>
+        <p>XMANAGER arranges for an event-handling procedure supplied by the application to be called when events for it arrive. The application is shielded from the details of calling the underlying WIDGET_EVENT function and interacting with other widget applications that may be running simultaneously.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>While it is possible for a user-written program to call the WIDGET_EVENT function directly, in practice this is very unusual. For details on how events are handled at a low level, see <a href="#widget_apps_4063420628_1042310" class="selected">The WIDGET_EVENT Function</a>.</p>
+        <p>The file <code>xmng_tmpl.pro</code>, found in the <code>lib</code> subdirectory of the IDL distribution, is a template for writing widget applications that use XMANAGER.</p>
+        <h3><a name="widget_apps_4063420628_31124"></a>XMANAGER and <i>Blocking</i></h3>
+        <p><a name="kanchor4996"></a>The term <i>blocking</i> is used to describe a situation in which processing by IDL is suspended until some event or action takes place. Unless you specifically arrange otherwise, IDL will only allow one user interface (the IDL command line or a single widget application) to be active at one time. XMANAGER simplifies the process of arranging things so that multiple user interfaces can run at the same time — that is, managing events so that applications do not need to <i>block</i> in order to be assured of receiving the correct event information.</p>
+        <p>IDL’s blocking behavior is discussed in detail in <a href="../../Reference Material/X/XMANAGER.htm#X_800576109_762775">XMANAGER</a>. In most cases, specifying the NO_BLOCK keyword when calling XMANAGER will allow your application to “play nicely with others,” but you should keep the following things in mind when writing widget applications:</p>
+        <h4>Active Command Line</h4>
+        <p>IDL can provide an<i> active command line</i>. If the command line is active, IDL will execute commands entered at the command line even if one or more widget applications are already running. In order for IDL to behave in this way, all widget applications must be run via XMANAGER with the NO_BLOCK keyword set. See <a href="../../Reference Material/X/XMANAGER.htm#X_800576109_991244">Active Command Line</a> under XMANAGER for details</p>
+        <h4>Blocking and Non-Blocking Applications</h4>
+        <p>By default, widget applications — even those managed with XMANAGER — will block. To enable your application to run without blocking other widget applications or the IDL command line, you must explicitly set the NO_BLOCK keyword to XMANAGER when registering the application. Put another way, any running widget application that does not have this keyword set will block all event processing for widget applications and the IDL command line. See <a href="../../Reference Material/X/XMANAGER.htm#X_800576109_921528">Blocking vs. Non-blocking Applications</a> under <a href="../../Reference Material/X/XMANAGER.htm#X_800576109_762775">XMANAGER</a> for details.</p>
+        <h4>Registering Applications Without Processing Their Events</h4>
+        <p>In order to allow multiple widget applications to run simultaneously, each application must be <i>registered</i> with XMANAGER, so it knows how to recognize events generated by the application. In most cases, the registration step takes place automatically when XMANAGER is called to begin processing events for the application.</p>
+        <p>In some cases, however, it may be useful to register an application with XMANAGER before asking it to begin processing the application’s events. In these cases, you can use the JUST_REG keyword to XMANAGER; the application is added to XMANAGER’s list of known applications without starting event processing, and XMANAGER returns immediately. See <a href="../../Reference Material/X/XMANAGER.htm#X_800576109_900708">JUST_REG vs. NO_BLOCK</a> under XMANAGER for details.</p>
+        <h3>Tips on Working With XMANAGER</h3>
+        <p>Because XMANAGER buffers you from direct handling of widget events, you <i>cannot</i> explicitly specify an event-handling function or procedure for the top-level base using the EVENT_FUNC or EVENT_PRO keywords to WIDGET_BASE or WIDGET_CONTROL. Event handlers for top-level bases specified via these keywords will be overwritten by XMANAGER. </p>
+        <p>Instead, provide the name of the event handler routine to XMANAGER via the EVENT_HANDLER keyword. If you do not supply the name of an event handler via the EVENT_HANDLER keyword, XMANAGER will construct a default name by adding the suffix “_event” to the <i>Name</i> argument. </p>
+        <p>Note that this guideline applies only to top-level bases (base widgets created with no parent widget). Child base widgets should use the EVENT_FUNC or EVENT_PRO keywords to specify event handling routines, if necessary.</p>
+        <p>In addition, it is often convenient to specify the death-notification routine for the top-level base of a widget application via the CLEANUP routine to XMANAGER rather than via the KILL_NOTIFY keyword to WIDGET_BASE or WIDGET_CONTROL. Either method will work, but the <i>last</i> routine specified is the routine that will be called when the base widget is destroyed. Since the call to XMANAGER is often the last call made when creating a widget application, using the CLEANUP keyword to specify the routine to be called when the application ends is preferred.</p>
+        <h3><a name="kanchor4997"></a>The XREGISTERED Function</h3>
+        <p><a name="kanchor4998"></a>The XMANAGER procedure allows multiple instances of a widget application to run simultaneously. In some cases, however, you may wish to ensure that only a single instance of application can run at a given time. An obvious example of this is an application that uses a COMMON block to maintain its current state (see <a href="Managing_Application_Sta.htm#widget_apps_4063420628_1042385">Managing Application State</a>).</p>
+        <p><a name="kanchor4999"></a>The <a href="../../Reference Material/X/XREGISTERED.htm#X_800576109_762885">XREGISTERED</a> function can be used in such applications to ensure that only a single copy of the application run at a time. Place the following statement at the start of the widget creation routine:</p>
+        <p class="Code">IF (XREGISTERED('<i>routine_name</i>') NE 0) THEN RETURN</p>
+        <p>where <i>routine_name</i> is the name of the widget application.</p>
+        <p>See <a href="../../Reference Material/X/XREGISTERED.htm#X_800576109_762885">XREGISTERED </a>for further information.</p>
+        <h3><a name="widget_apps_4063420628_1042310"></a><a name="widget_apps_4063420628_76451"></a>The WIDGET_EVENT Function</h3>
+        <p><a name="kanchor5000"></a>All widget event processing in IDL is eventually handled by the <a href="../../Reference Material/W/WIDGET_EVENT.htm#W_811389549_680296">WIDGET_EVENT </a>function. Note that while we will discuss WIDGET_EVENT here for completeness, in most cases you will <i>not</i> want to call WIDGET_EVENT directly. The <a href="../../Reference Material/X/XMANAGER.htm#X_800576109_762775">XMANAGER </a>routine provides a convenient, simplified interface to WIDGET_EVENT and allows IDL to take over the task of managing multiple widget applications.</p>
+        <p>In its simplest form, the WIDGET_EVENT function is called with a widget ID (usually, the ID of a base widget) as its argument. WIDGET_EVENT checks the queue of undelivered events for that widget <i>or any of its children</i>. If an event is present, it is immediately dequeued and returned. If no event is available, WIDGET_EVENT blocks all other processing by IDL until an event arrives, and then returns it. Typically, the request is made for a top-level base, so WIDGET_EVENT returns events for any widget in the widget hierarchy rooted at that base widget.</p>
+        <p>This simple usage suffers from a major weakness. Since each call to WIDGET_EVENT is looking for events from a specified widget hierarchy, it is not possible to receive events for more than one widget hierarchy at a time. It is important to be able to run multiple widget applications (each with a separate top-level base) simultaneously. An example would be an image processing application, a color table manipulation tool, and an on-line help reader all running together.</p>
+        <p>One solution to this problem is to call WIDGET_EVENT with an array of widget identifiers instead of a single ID. In this case, WIDGET_EVENT returns events for any widget hierarchy in the list. This solution is effective, but it still requires that you maintain a complete list of all interesting top-level base identifiers, which implies that all cooperating applications need to know about each other.</p>
+        <p>The most powerful way to use WIDGET_EVENT is to call it without any arguments at all. Called this way, it will return events for any currently-realized widgets that have expressed an interest in being managed. (You specify that a widget wants to be managed by setting the MANAGED keyword to the WIDGET_CONTROL procedure.) This form of WIDGET_EVENT is especially useful when used in conjunction with widget event callback routines, discussed in <a href="#widget_apps_4063420628_1042328" class="selected">Event Processing and Callbacks</a>.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_1042328"></a><a name="widget_apps_4063420628_96919"></a><a name="kanchor5001"></a><a name="kanchor5002"></a>Event Processing and Callbacks<a name="kanchor5003"></a></h2>
+        <p>Previously, we mentioned that when IDL receives an event, the event is queued until a call to WIDGET_EVENT is made (either explicitly by the user program or by XMANAGER), whereupon the event is dequeued and returned. The following is a more complete description of what actually happens in IDL’s <i>event loop</i>.</p>
+        <p>Events for a given widget are processed in the order that they are generated. The event processing performed by WIDGET_EVENT consists of the following steps, applied iteratively:</p>
+        <ol>
+            <li value="1">Wait for an event from one of the specified widgets to arrive.</li>
+            <li value="2">Starting with the widget that generated the event, search up the widget hierarchy for a widget with an associated event-handling procedure or function.</li>
+            <li value="3">Event-handling routines associated with widgets are known as <i><a name="kanchor5004"></a>callback</i> routines. Other cases where an IDL system routine (WIDGET_EVENT, in this instance) calls a user-specified, user-written routine include routines specified via the KILL_NOTIFY or NOTIFY_REALIZE keywords to the widget creation functions and WIDGET_CONTROL, as well as the corollary keywords to XMANAGER.</li>
+            <li value="4">If an event-handling <i>procedure</i> is found, it is called with the event as its argument. The <code>HANDLER</code> field of the event is set to the widget ID of the widget associated with the handling procedure. When the procedure returns, WIDGET_EVENT returns to the first step above and starts searching for events. Hence, event-handling procedures are said to “swallow” events.</li>
+            <li value="5">
+                <p>If an event-handling <i>function</i> is found, it is called with the event as its argument. The <code>HANDLER</code> field of the event is set to the widget ID of the widget associated with the handling function.</p>
+                <p>When the function returns, its value is examined. If the value is not a structure, it is discarded and WIDGET_EVENT returns to the first step. This behavior allows event-handling functions to selectively act like event-handling procedures and “swallow” events.</p>
+                <p>If the returned value is a structure, it is checked to ensure that it has the standard first three fields: <code>ID</code>, <code>TOP</code>, and <code>HANDLER</code>. If any of these fields is missing, IDL issues an error. Otherwise, the returned value replaces the event found in the first step and WIDGET_EVENT continues moving up the widget hierarchy looking for another event handler routine, as described in step 2, above. </p>
+                <p>In situations where an event structure is returned, event functions are said to “rewrite” events. This ability to rewrite events is the basis of <i>compound widgets</i>, which combine several widgets to give the appearance of a single, more complicated widget. Compound widgets are an important widget programming concept. For more information, see <a href="Creating_a_Compound_Widg.htm#widget_apps_4063420628_1042476">Creating a Compound Widget</a>.</p>
+            </li>
+            <li value="6">If an event reaches the top of a widget hierarchy without being swallowed by an event handler, it is returned as the value of WIDGET_EVENT.</li>
+            <li value="7">If WIDGET_EVENT was called without an argument, and there are no widgets left on the screen that are being managed (as specified via the MANAGED keyword to the WIDGET_CONTROL procedure) and could generate events, WIDGET_EVENT ends the search and returns an <i>empty event</i> (a standard widget event structure with the top three fields set to zero).</li>
+        </ol>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

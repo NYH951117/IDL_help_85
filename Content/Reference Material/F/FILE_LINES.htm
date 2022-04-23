@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: F">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>FILE_LINES </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="F_list.htm">Routines: F</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">FILE_LINES</span>
+        </div>
+        <h1 class="Routine"><a name="F_848155245_894303"></a><a name="kanchor917"></a><a name="F_848155245_55406"></a>FILE_LINES </h1>
+        <p>The FILE_LINES function reports the number of lines of text contained within the specified file or files.<a name="kanchor918"></a></p>
+        <p>Text files containing data are very common. To read such a file usually requires knowing how many lines of text it contains. Under UNIX and Windows, there is no special text file type, and it is not possible to tell how many lines are contained in a file from basic file attributes. Rather, lines are encoded using a special character or characters at the end of each line:</p>
+        <ul>
+            <li value="1">UNIX operating systems use an ASCII linefeed (LF) character at the end of each line.</li>
+            <li value="2">Older Macintosh systems (prior to the UNIX-based Mac OS X) use a carriage return (CR).</li>
+            <li value="3">Microsoft Windows uses a two character CR/LF sequence.</li>
+        </ul>
+        <p>The only way to determine the number of lines of text contained within a file is to open it and count lines while reading and skipping over them until the end of the file is encountered. Since files are often copied from one type of system to another without going through the proper line termination conversion, portable software needs to be able to recognize any of these terminations, regardless of the system being used. FILE_LINES performs this operation in an efficient and portable manner, handling all three of the line termination conventions listed above.</p>
+        <p>This routine works by opening the file and reading the data contained within. It is therefore only suitable for regular disk files, and only when access to that file is fast enough to justify reading it more than once. For other types of files, other approaches are necessary, such as:</p>
+        <ul>
+            <li value="1">Reading the file once, using an adaptive (expandable) data structure, counting the number of lines as they are input, and growing the data structure as necessary.</li>
+            <li value="2">Building a header into your file format that includes the necessary information, or somehow embedding the number of lines into the file data.</li>
+            <li value="3">Maintaining file information in a separate file associated with each file.</li>
+            <li value="4">Using a self describing data format that avoids these issues.</li>
+        </ul>
+        <p>This routine assumes that the specified file or files contain only lines of text. It is unable to correctly count lines in files that contain binary data, or which do not use the standard line termination characters. Results are undefined for such files.</p>
+        <p>Note that FILE_LINES is equivalent to the following IDL code:</p>
+        <p class="Code">FUNCTION file_lines, filename</p>
+        <p class="Code">&#160;&#160;&#160;OPENR, unit, filename, /GET_LUN</p>
+        <p class="Code">&#160;&#160;&#160;str = ''</p>
+        <p class="Code">&#160;&#160;&#160;count = 0ll</p>
+        <p class="Code">&#160;&#160;&#160;WHILE ~ EOF(unit) DO BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;READF, unit, str</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;count = count + 1</p>
+        <p class="Code">&#160;&#160;&#160;ENDWHILE</p>
+        <p class="Code">&#160;&#160;&#160;FREE_LUN, unit</p>
+        <p class="Code">&#160;&#160;&#160;RETURN, count</p>
+        <p class="Code">END</p>
+        <p>The primary advantage of FILE_LINES over the IDL version shown here is efficiency. FILE_LINES is able to avoid the overhead of the WHILE loop as well as not having to create an IDL string for each line of the file.</p>
+        <h2 class="API"><a name="F_848155245_894339"></a><a name="F_848155245_894339_PageTOC_FILE_LINES_"></a>Examples</h2>
+        <p>Read the contents of the text file <code>mydata.dat</code> into a string array.</p>
+        <p class="Code">nlines = FILE_LINES('mydata.dat')</p>
+        <p class="Code">sarr = STRARR(nlines)</p>
+        <p class="Code">OPENR, unit, 'mydata.dat',/GET_LUN</p>
+        <p class="Code">READF, unit, sarr</p>
+        <p class="Code">FREE_LUN, unit</p>
+        <h2 class="API"><a name="F_848155245_894331"></a><a name="F_848155245_894331_PageTOC_FILE_LINES_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = FILE_LINES(<i>Path</i> [,&#160;/<a href="#F_848155245_910561" class="selected">COMPRESS</a>] [,&#160;/<a href="#F_848155245_910559" class="selected">NOEXPAND_PATH</a>] )</p>
+        <h2 class="API"><a name="F_848155245_900680"></a><a name="F_848155245_26335"></a>Return Value</h2>
+        <p>Returns the number of lines of text contained within the specified file or files. If an array of file names is specified via the <i>Path</i> parameter, the return value is an array with the same number of elements as <i>Path</i>, with each element containing the number of lines in the corresponding file.</p>
+        <h2 class="API"><a name="F_848155245_894333"></a><a name="F_848155245_894333_PageTOC_FILE_LINES_"></a>Arguments</h2>
+        <h3 class="Argument">Path</h3>
+        <p>A scalar string or string array containing the names of the text files for which the number of lines is desired.</p>
+        <h2 class="API"><a name="F_848155245_894336"></a><a name="F_848155245_894336_PageTOC_FILE_LINES_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="F_848155245_910561"></a><a name="F_848155245_910561_Keywords_FILE_LINES__"></a>COMPRESS</h3>
+        <p>If this keyword is set, FILE_LINES assumes that the files specified in <i>Path</i> contain data compressed in the standard GZIP format, and decompresses the data in order to count the number of lines. See the description of the COMPRESS keyword to the <a href="../O/OPEN.htm#O_828691053_932624">OPENR/OPENU/OPENW</a> procedure for additional information. </p>
+        <h3 class="Keyword"><a name="F_848155245_910559"></a><a name="F_848155245_910559_Keywords_FILE_LINES__"></a>NOEXPAND_PATH</h3>
+        <p>If this keyword is set, FILE_LINES uses <i>Path</i> exactly as specified, without expanding any wildcard characters or environment variable names included in the path. See <a href="FILE_SEARCH.htm#F_848155245_893545">FILE_SEARCH</a> for details on path expansion.</p>
+        <h2 class="API"><a name="F_848155245_894346"></a><a name="F_848155245_894346_PageTOC_FILE_LINES_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>5.6</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added COMPRESS keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="F_848155245_894348"></a><a name="F_848155245_894348_PageTOC_FILE_LINES_"></a>See Also</h2>
+        <p><a href="../O/OPEN.htm#O_828691053_932624">OPENR/OPENU/OPENW</a>, <a href="../R/READ.htm#R_822202989_863816">READ/READF</a>, <a href="../Functional List of IDL Routines/Input_Output.htm#funclisting_2438760872_1213961">General File Access</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>CONSTRAINED_MIN</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">CONSTRAINED_MIN</span>
+        </div>
+        <h1 class="Routine"><a name="C_854643309_909247"></a><a name="kanchor315"></a><a name="C_854643309_16176"></a><a name="kanchor316"></a>CONSTRAINED_MIN</h1>
+        <p>The CONSTRAINED_MIN procedure solves nonlinear optimization problems of the following form: </p>
+        <p>Minimize or maximize gp(X), subject to: </p>
+        <p class="indent">glb<sub class="italic">i</sub> ≤ g<sub class="italic">i</sub>(X) ≤ gub<sub class="italic">i</sub>&#160;&#160;&#160;&#160;&#160;&#160;&#160;for i = 0,...,nfuns-1, i ≠ p</p>
+        <p class="indent">xlb<sub class="italic">j</sub> ≤ x<sub class="italic">j</sub> ≤ xub<sub class="italic">j</sub>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for j = 0,...,nvars-1</p>
+        <p><i>X</i> is a vector of <i>nvars</i> variables, <i>x</i><sub>0</sub><i>&#160;,...,x</i><sub>nvars</sub>-1, and <i>G</i> is a vector of <i>nfuns</i> functions <i>g</i><sub>0&#160;</sub><i>,...,g</i><sub>nfuns</sub>-1, which all depend on <i>X</i>. Any of these functions may be nonlinear. Any of the bounds may be infinite and any of the constraints may be absent. If there are no constraints, the problem is solved as an unconstrained optimization problem. The program solves problems of this form by the Generalized Reduced Gradient Method. See References 1-4.</p>
+        <p>CONSTRAINED_MIN uses first partial derivatives of each function <i>g</i><sub class="italic">i</sub> with respect to each variable <i>x</i><sub class="italic">j</sub>. These are automatically computed by finite difference approximation (either forward or central differences). </p>
+        <p>CONSTRAINED_MIN is based on an implementation of the GRG algorithm supplied by Windward Technologies, Inc. See Reference 11.</p>
+        <h2 class="API"><a name="C_854643309_910548"></a><a name="C_854643309_910548_PageTOC_CONSTRAINED_MIN_"></a>Example</h2>
+        <p>This example has 5 variables {X0, X1, ..., X4}, bounded above and below, a quadratic objective function {G3}, and three quadratic constraints {G0, G1, G2}, with both upper and lower bounds. See the Himmelblau text [7], problem 11.</p>
+        <p>Minimize: </p>
+        <p class="Code">G3 = 5.3578547X2X2 + 0.8356891X0X4 + 37.293239X0 - 40792.141 </p>
+        <p>Subject to: </p>
+        <p>0 &lt; G0 = 85.334407 + 0.0056858X1X4 + 0.0006262X0X3 - 0.0022053X2X4 &lt; 92</p>
+        <p>90 &lt; G1 = 80.51249 + 0.0071317X1X4 + 0.0029955X0X1 + 0.0021813X2X2 &lt;110</p>
+        <p>20 &lt; G2 = 9.300961 + 0.0047026X2X4 + 0.0012547X0X2 + 0.0019085X2X3 &lt; 25</p>
+        <p>and, </p>
+        <p class="Code">78 &lt; X0 &lt; 102 </p>
+        <p class="Code">33 &lt; X1 &lt; 45</p>
+        <p class="Code">27 &lt; X2 &lt; 45 </p>
+        <p class="Code">27 &lt; X3 &lt; 45</p>
+        <p class="Code">27 &lt; X4 &lt; 45</p>
+        <p>This problem is solved starting from X = {78, 33, 27, 27, 27} which is infeasible because constraint G2 is not satisfied at this point. </p>
+        <p>The constraint functions and objective function are evaluated by HMBL11: </p>
+        <p class="Code">; Himmelblau Problem 11</p>
+        <p class="Code">; 5 variables and 4 functions</p>
+        <p class="Code">FUNCTION HMBL11, x</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">g = DBLARR(4)</p>
+        <p class="Code">g[0] = 85.334407 + 0.0056858*x[1]*x[4] + 0.0006262*x[0] $</p>
+        <p class="Code">&#160;&#160;&#160;*x[3] - 0.0022053*x[2]*x[4]</p>
+        <p class="Code">g[1] = 80.51249 + 0.0071317*x[1]*x[4] + 0.0029955*x[0] $</p>
+        <p class="Code">&#160;&#160;&#160;*x[1] + 0.0021813*x[2]*x[2]</p>
+        <p class="Code">g[2] = 9.300961 + 0.0047026*x[2]*x[4] + 0.0012547*x[0]* $</p>
+        <p class="Code">&#160;&#160;&#160;x[2] + 0.0019085*x[2]*x[3]</p>
+        <p class="Code">g[3] = 5.3578547*x[2]*x[2] + 0.8356891*x[0]*x[4] $</p>
+        <p class="Code">&#160;&#160;&#160;+ 37.293239*x[0] - 40792.141</p>
+        <p class="Code">RETURN, g</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Example problem for CONSTRAINED_MIN</p>
+        <p class="Code">; Himmelblau Problem 11</p>
+        <p class="Code">; 5 variables and 3 constraints</p>
+        <p class="Code">; Constraints and objective defined in HMBL11</p>
+        <p class="Code">xbnd   = [[78, 33, 27, 27, 27], [102, 45, 45, 45, 45]]</p>
+        <p class="Code">gbnd   = [[0, 90, 20, 0], [92, 110, 25, 0 ]]</p>
+        <p class="Code">nobj   = 3</p>
+        <p class="Code">gcomp  = 'HMBL11'</p>
+        <p class="Code">title  = 'IDL:  Himmelblau 11'</p>
+        <p class="Code">report = 'hmbl11.txt'</p>
+        <p class="Code">x      = [78, 33, 27, 27, 27]</p>
+        <p class="Code">CONSTRAINED_MIN, x, xbnd, gbnd, nobj, gcomp, inform, $</p>
+        <p class="Code">&#160;&#160;&#160;REPORT = report, TITLE = title</p>
+        <p class="Code">g = HMBL11(x)</p>
+        <p class="Code">; Print minimized objective function for HMBL11 problem:</p>
+        <p class="Code">PRINT, g[nobj]</p>
+        <h2 class="API"><a name="C_854643309_908127"></a><a name="C_854643309_908127_PageTOC_CONSTRAINED_MIN_"></a>Syntax</h2>
+        <p class="Syntax">CONSTRAINED_MIN, <i>X</i>, <i>Xbnd</i>, <i>Gbnd</i>, <i>Nobj</i>, <i>Gcomp</i>, <i>Inform</i> [,&#160;<a href="#C_854643309_908210" class="selected">EPSTOP</a>=<i>value</i>] [,&#160;<a href="#C_854643309_927415" class="selected">LIMSER</a>=<i>value</i>] [,&#160;/<a href="#C_854643309_927406" class="selected">MAXIMIZE</a>] [,&#160;<a href="#C_854643309_975889" class="selected">NSTOP</a>=<i>value</i>] [,&#160;<a href="#C_854643309_942066" class="selected">REPORT</a>=<i>filename</i>] [,&#160;<a href="#C_854643309_927408" class="selected">TITLE</a>=<i>string</i>]</p>
+        <h2 class="API"><a name="C_854643309_908131"></a><a name="C_854643309_908131_PageTOC_CONSTRAINED_MIN_"></a>Arguments</h2>
+        <h3 class="Argument">X </h3>
+        <p>An <i>nvars</i>-element vector. On input, <i>X</i> contains initial values for the variables. On output, <i>X</i> contains final values of the variable settings determined by CONSTRAINED_MIN.</p>
+        <h3 class="Argument">Xbnd </h3>
+        <p>Bounds on variables. <i>Xbnd</i> is an <i>nvars x 2</i> element array. </p>
+        <ul>
+            <li value="1"><i>Xbnd[j,0]</i> is the lower bound for variable <i>x[j]</i>. </li>
+            <li value="2"><i>Xbnd[j,1]</i> is the upper bound for variable <i>x[j]</i>. </li>
+            <li value="3">Use -1.0e30 to denote no lower bound and 1.0e30 for no upper bound. </li>
+        </ul>
+        <h3 class="Argument">Gbnd</h3>
+        <p>Bounds on constraint functions. <i>Gbnd</i> is an <i>nfuns x 2</i> element array. </p>
+        <ul>
+            <li value="1"><i>Gbnd[i,0]</i> is the lower bound for function <i>g[i]</i>. </li>
+            <li value="2"><i>Gbnd[i,1]</i> is the upper bound for function <i>g[i]</i>. </li>
+            <li value="3">use -1.0e30 to denote no lower bound and 1.0e30 for no upper bound. </li>
+        </ul>
+        <p>Bounds on the objective function are ignored; set them to 0. </p>
+        <h3 class="Argument">Nobj</h3>
+        <p>Index of the objective function.</p>
+        <h3 class="Argument">Gcomp</h3>
+        <p>A scalar string specifying the name of a user-supplied IDL function. This function must accept an <i>nvars</i>-element vector argument <i>x</i> of variable values and return an <i>nfuns</i>-element vector <i>G</i> of function values. </p>
+        <h3 class="Argument">Inform </h3>
+        <p>Termination status returned from CONSTRAINED_MIN.</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Inform value </p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Message</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0 </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Kuhn-Tucker conditions satisfied. <br />This is the best possible indicator that an optimal point has been found.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Fractional change in objective less than EPSTOP for NSTOP consecutive iterations. See Keywords below.<br />This is not as good as <i>Inform</i>=0, but still indicates the likelihood that an optimal point has been found.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>All remedies have failed to find a better point. <br />User should check functions and bounds for consistency and, perhaps, try other starting values.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Number of completed 1-dimensional searches exceeded LIMSER. See Keywords below.<br />User should check functions and bounds for consistency and, perhaps, try other starting values. It might help to increase LIMSER. Use LIMSER=<i>larger_value</i> to do this.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>4</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Objective function is unbounded.</p>
+                        <p>CONSTRAINED_MIN has observed dramatic change in the objective function over several steps. This is a good indication that the objective function is unbounded. If this is not the case, the user should check functions and bounds for consistency.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>5</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Feasible point not found. <br />CONSTRAINED_MIN was not able to find a feasible point. If the problem is believed to be feasible, the user should check functions and bounds for consistency and perhaps try other starting values.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>6</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Degeneracy has been encountered. <br />The point returned may be close to optimal. The user should check functions and bounds for consistency and perhaps try other starting values.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>7</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Noisy and nonsmooth function values. Possible singularity or error in the function evaluations.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>8</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Optimization process terminated by user request.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>9</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Maximum number of function evaluations exceeded.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>–1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Fatal Error. Some condition, such as <i>nvar</i>s &lt; 0, was encountered. CONSTRAINED_MIN documented the condition in the report and terminated. In this case, the user needs to correct the input and rerun CONSTRAINED_MIN.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>–2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Fatal Error. The report file could not be opened. Check the filename specified via the REPORT keyword, and make sure you have write privileges to the specified path.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>–3</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Fatal Error. Same as <i>Inform</i> = –1. In this case, the REPORT keyword was not specified. Specify the REPORT keyword and rerun CONSTRAINED_MIN, then check the report file for more detail on the error.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="C_854643309_908200"></a><a name="C_854643309_908200_PageTOC_CONSTRAINED_MIN_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="C_854643309_908210"></a><a name="C_854643309_908210_Keywords_CONSTRAINED_MIN__"></a>EPSTOP </h3>
+        <p>Set this keyword to specify the CONSTRAINED_MIN convergence criteria. If the fractional change in the objective function is less than EPSTOP for NSTOP consecutive iterations, the program will accept the current point as optimal. CONSTRAINED_MIN will accept the current point as optimal if the Kuhn-Tucker optimality conditions are satisfied to EPSTOP. By default, EPSTOP = 1.0e-4. </p>
+        <h3 class="Keyword"><a name="C_854643309_927415"></a><a name="C_854643309_927415_Keywords_CONSTRAINED_MIN__"></a>LIMSER</h3>
+        <p>If the number of completed one dimensional searches exceeds LIMSER, CONSTRAINED_MIN terminates and returns inform = 3. By default: LIMSER = 10000.</p>
+        <h3 class="Keyword"><a name="C_854643309_927406"></a><a name="C_854643309_927406_Keywords_CONSTRAINED_MIN__"></a>MAXIMIZE</h3>
+        <p>By default, the CONSTRAINED_MIN procedure performs a minimization. Set the MAXIMIZE keyword to perform a maximization instead.</p>
+        <h3 class="Keyword"><a name="C_854643309_975889"></a><a name="C_854643309_975889_Keywords_CONSTRAINED_MIN__"></a>NSTOP </h3>
+        <p>Set this keyword to specify the CONSTRAINED_MIN convergence criteria. If the fractional change in the objective function is less than EPSTOP for NSTOP consecutive iterations, CONSTRAINED_MIN will accept the current point as optimal. By default, NSTOP = 3.</p>
+        <h3 class="Keyword"><a name="C_854643309_942066"></a><a name="C_854643309_942066_Keywords_CONSTRAINED_MIN__"></a>REPORT </h3>
+        <p>Set this keyword to specify a name for the CONSTRAINED_MIN report file. If the specified file does not exist, it will be created. Note that if the file cannot be created, no error message will be generated. If the specified file already exists, it will be overwritten. By default, CONSTRAINED_MIN does not create a report file.</p>
+        <h3 class="Keyword"><a name="C_854643309_927408"></a><a name="C_854643309_927408_Keywords_CONSTRAINED_MIN__"></a>TITLE </h3>
+        <p>Set this keyword to specify a title for the problem in the CONSTRAINED_MIN report. </p>
+        <h2 class="API">References</h2>
+        <p>1. Lasdon, L.S., Waren, A.D., Jain, A., and Ratner, M., “Design and Testing of a Generalized Reduced Gradient Code for Nonlinear Programming”, ACM Transactions on Mathematical Software, Vol. 4, No. 1, March 1978, pp. 34-50. </p>
+        <p>2. Lasdon, L.S. and Waren, A.D., “Generalized Reduced Gradient Software for Linearly and Nonlinearly Constrained Problems”, in “Design and Implementation of Optimization Software”, H. Greenberg, ed., Sijthoff and Noordhoff, pubs, 1979. </p>
+        <p>3. Abadie, J. and Carpentier, J. “Generalization of the Wolfe Reduced Gradient Method to the Case of Nonlinear Constraints”, in Optimization, R. Fletcher (ed.), Academic Press London; 1969, pp. 37-47. </p>
+        <p>4. Murtagh, B.A. and Saunders, M.A. “Large-scale Linearly Constrained Optimization”, Mathematical Programming, Vol. 14, No. 1, January 1978, pp. 41-72. </p>
+        <p>5. Powell, M.J.D., “Restart Procedures for the Conjugate Gradient Method,” Mathematical Programming, Vol. 12, No. 2, April 1977, pp. 241-255. </p>
+        <p>6. Colville, A.R., “A Comparative Study of Nonlinear Programming Codes,” I.B.M. T.R. no. 320-2949 (1968). </p>
+        <p>7. Himmelblau, D.M., Applied Nonlinear Programming, McGraw-Hill Book Co., New York, 1972. </p>
+        <p>8. Fletcher, R., “A New Approach to Variable Metric Algorithms”, Computer Journal, Vol. 13, 1970, pp. 317-322. </p>
+        <p>9. Smith, S. and Lasdon, L.S., Solving Large Sparse Nonlinear Programs Using GRG, ORSA Journal on Computing, Vol. 4, No. 1,Winter 1992, pp. 1-15. </p>
+        <p>10. Luenbuerger, David G., Linear and Nonlinear Programming, Second Edition, Addison-Wesley, Reading Massachusetts, 1984.</p>
+        <p>11. Windward Technologies, GRG2 Users’s Guide, 1997.</p>
+        <h2 class="API"><a name="C_854643309_1052191"></a><a name="C_854643309_1052191_PageTOC_CONSTRAINED_MIN_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

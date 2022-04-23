@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Overview">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Add Graphics to a Widget Application</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Graphics Overview.htm">Graphics Overview</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Graphics in Applications</span>
+        </div>
+        <h1>Add Graphics to a Widget Application</h1>
+        <p>You can combine graphics within IDL&#160;widget applications by using the WIDGET_WINDOW function. Adding graphics to widget applications gives you the functionality of interactive graphic window with the ability to add your own GUI elements.</p>
+        <p>
+            <img src="../Resources/Images/widget_plot.png" />
+        </p>
+        <p>&#160;</p>
+        <p>The code shown below creates the GUI (widget) application above. You can copy the entire block and paste it into the IDL&#160;editor, or enter <code>.edit plot_widget_doc</code> at the IDL&#160;command line to open the program.</p>
+        <p class="Code">PRO PLOT_WIDGET_DOC_EVENT, event</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;CASE TAG_NAMES(event, /STRUCTURE_NAME) OF</p>
+        <p class="Code">&#160;&#160;&#160;&#160;'WIDGET_BUTTON': BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;WIDGET_CONTROL, event.id, GET_UVALUE = event_UV</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;; Retrieve the Widget Window</p>
+        <p class="Code">&#160;&#160;&#160;&#160;wDraw = WIDGET_INFO(event.top, FIND_BY_UNAME = 'DRAW')</p>
+        <p class="Code">&#160;&#160;&#160;&#160;WIDGET_CONTROL, wDraw, GET_VALUE = graphicWin</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;; Retrieve the plot with the NAME</p>
+        <p class="Code">&#160;&#160;&#160;&#160;; provided on plot creation</p>
+        <p class="Code">&#160;&#160;&#160;&#160;p = graphicWin['PLOT_WIDGET_DOC']</p>
+        <p class="Code">&#160;&#160;&#160;&#160;CASE event_UV OF</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;'DONE': WIDGET_CONTROL, event.top, /DESTROY</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;'RED': p.color='red'</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;'BLUE': p.color='blue'</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;ELSE: ; do nothing</p>
+        <p class="Code">&#160;&#160;&#160;&#160;ENDCASE</p>
+        <p class="Code">&#160;&#160;&#160;&#160;END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;'WIDGET_BASE': begin</p>
+        <p class="Code">&#160;&#160;&#160;&#160;; Handle base resize events. Retrieve our cached padding,</p>
+        <p class="Code">&#160;&#160;&#160;&#160;; and our new size.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;WIDGET_CONTROL, event.id, GET_UVALUE=pad, TLB_GET_SIZE=newSize</p>
+        <p class="Code">&#160;&#160;&#160;&#160;wDraw = WIDGET_INFO(event.top, FIND_BY_UNAME='DRAW')</p>
+        <p class="Code">&#160;&#160;&#160;&#160;; Change the draw widget to match the new size, minus padding.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;xy = newSize - pad</p>
+        <p class="Code">&#160;&#160;&#160;&#160;WIDGET_CONTROL, wDraw, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;DRAW_XSIZE=xy[0], DRAW_YSIZE=xy[1], $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;SCR_XSIZE=xy[0], SCR_YSIZE=xy[1]</p>
+        <p class="Code">&#160;&#160;&#160;&#160;end</p>
+        <p class="Code">&#160;&#160;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;ELSE: ; do nothing</p>
+        <p class="Code">&#160;&#160;ENDCASE</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO PLOT_WIDGET_DOC</p>
+        <p class="Code">&#160;&#160;base1 = WIDGET_BASE(/COLUMN, TITLE='Widget Window example', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;/TLB_SIZE_EVENTS)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;wDraw = WIDGET_WINDOW(base1, UVALUE='draw', UNAME='DRAW')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Create the base for the button:</p>
+        <p class="Code">&#160;&#160;base2 = WIDGET_BASE(base1, /ROW, /ALIGN_CENTER)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Create the action buttons.</p>
+        <p class="Code">&#160;&#160;redline = WIDGET_BUTTON(base2, VALUE='Red Line', UVALUE = 'RED')</p>
+        <p class="Code">&#160;&#160;blueline = WIDGET_BUTTON(base2, VALUE='Blue line', UVALUE='BLUE')</p>
+        <p class="Code">&#160;&#160;done = WIDGET_BUTTON(base2, VALUE = 'Done', UVALUE = 'DONE')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Realize the widget (i.e., display it on screen).</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, base1, /REALIZE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Register the widget with the XMANAGER, leaving the IDL command</p>
+        <p class="Code">&#160;&#160;; line active.</p>
+        <p class="Code">&#160;&#160;XMANAGER, 'PLOT_WIDGET_DOC', base1, /NO_BLOCK</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Cache the padding between the base and the draw</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, base1, TLB_GET_SIZE=basesize</p>
+        <p class="Code">&#160;&#160;xpad = basesize[0] - 640</p>
+        <p class="Code">&#160;&#160;ypad = basesize[1] - 512</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, base1, SET_UVALUE=[xpad,ypad]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Retrieve the newly-created Window object.</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, wDraw, GET_VALUE = graphicWin</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;graphicWin.SELECT</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;PRECIP=[0.5,0.7,1.2,1.8,2.5,1.6,1.9,1.5,1.2,1.0,0.8,0.6]</p>
+        <p class="Code">&#160;&#160;TEMP=[30, 34, 38, 47, 57, 67, 73, 71, 63, 52, 39, 33]</p>
+        <p class="Code">&#160;&#160;DAY=FINDGEN(12) * 30 + 15</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Plot #1: In position #1 on the grid defined by LAYOUT</p>
+        <p class="Code">&#160;&#160;p=PLOT(DAY, PRECIP, NAME = 'PLOT_WIDGET_DOC', SYMBOL='o', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;LINESTYLE='--', TITLE = 'Precipitation', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;YTITLE = 'Inches', XTITLE= 'Day of Year', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;THICK=2, /CURRENT)</p>
+        <p class="Code">END</p>
+        <h2 class="API">Resources</h2>
+        <ul>
+            <li value="1"><a href="../Creating IDL Programs/Creating Applications in IDL/About_Widgets.htm">About Widgets</a>
+            </li>
+            <li value="2"><a href="propChanges.htm">Changing graphics properties</a>
+            </li>
+            <li value="3"><a href="MultiViz.htm">Multiple graphics in one window</a>
+            </li>
+            <li value="4"><a href="ImageGuideMe/SaveImage.htm">Save a graphic</a>
+            </li>
+            <li value="5"><a href="../Reference Material/E/ELLIPSE.htm">ELLIPSE</a>
+            </li>
+            <li value="6"><a href="../Reference Material/P/PLOT.htm">PLOT</a>
+            </li>
+            <li value="7"><a href="../Reference Material/W/WIDGET_BASE.htm">WIDGET_BASE</a>
+            </li>
+            <li value="8"><a href="../Reference Material/W/WIDGET_BUTTON.htm">WIDGET_BUTTON</a>
+            </li>
+            <li value="9"><a href="../Reference Material/W/WIDGET_CONTROL.htm">WIDGET_CONTROL</a>
+            </li>
+            <li value="10"><a href="../Reference Material/W/WIDGET_WINDOW.htm">WIDGET_WINDOW</a>
+            </li>
+            <li value="11"><a href="../Reference Material/X/XMANAGER.htm">XMANAGER</a>
+            </li>
+            <li value="12"><a href="../Reference Material/Functional List of IDL Routines/Graphics.htm">IDL Graphics Functions</a>
+            </li>
+            <li value="13"><a href="../IDL Graphics/FormattingSymsAndLines.htm">Formatting IDL&#160;Graphics Symbols and Lines</a>
+            </li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

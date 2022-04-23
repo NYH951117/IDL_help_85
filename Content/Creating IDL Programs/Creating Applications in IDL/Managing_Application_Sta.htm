@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|Creating Widget Applications">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Managing Application State</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Application Programming/Creating Widget Applications.htm">Creating Widget Applications</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Managing Application State</span>
+        </div>
+        <h1><a name="widget_apps_4063420628_1042385"></a><a name="widget_apps_4063420628_46075"></a>Managing Application State</h1>
+        <p>A <a name="kanchor5006"></a>widget application is usually divided into at least two separate routines, one that creates and realizes the application and another that handles events. These multiple routines need shared access to certain types of information, such as the widget IDs of the application’s widgets and data being used by the application. This shared information is referred to as the <i>application </i><a name="kanchor5007"></a><i>state</i>.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_49321"></a>Techniques for <a name="kanchor5008"></a>Preserving Application State</h2>
+        <p>The following are some techniques you can use to preserve and share application state data between routines.</p>
+        <h3>Using COMMON Blocks</h3>
+        <p><a name="kanchor5009"></a>One obvious answer to this problem is to use a COMMON block to hold the state. However, this solution is generally undesirable because it prevents more than a single copy of the application from running at the same time. It is easy to imagine the chaos that would ensue if multiple instances of the same application were using the <i>same</i> common block without some sort of interlocking.</p>
+        <h3>Using a State Structure in a User Value</h3>
+        <p>A better solution to this problem is to use the user value of one of the widgets to store state information for the application.Using this technique, multiple instances of the same widget code can exist simultaneously. Since this user value can be of any type, a structure can be used to store any number of state-related values. </p>
+        <p>For example, consider the following example widget code:</p>
+        <p class="Code">PRO my_widget_event, event</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, event.TOP, GET_UVALUE=state, /NO_COPY</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;<i>Event-handling code goes here</i></p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, event.TOP, SET_UVALUE=state, /NO_COPY</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO my_widget</p>
+        <p class="Code">&#160;&#160;; Create some widgets</p>
+        <p class="Code">&#160;&#160;wBase = WIDGET_BASE(/COLUMN)</p>
+        <p class="Code">&#160;&#160;wDraw = WIDGET_DRAW(wBAse, XSIZE=300, YSIZE=300)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Realize the base widget and retrieve the widget ID</p>
+        <p class="Code">&#160;&#160;; of the drawable area.</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, wBase, /REALIZE</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, wDraw, GET_VALUE=idxDraw</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Create a state structure variable and set the user</p>
+        <p class="Code">&#160;&#160;; value of the top-level base equal to the state variable.</p>
+        <p class="Code">&#160;&#160;state = {wDraw:wDraw, idxDraw:idxDraw}</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, wBase, SET_UVALUE=state</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Use XMANAGER to manage the widgets</p>
+        <p class="Code">&#160;&#160;XMANAGER, 'my_widget', wBase</p>
+        <p class="Code">END</p>
+        <p>In this example, we store state information (the widget ID of the draw widget and the index of the drawable area) in a structure variable, and set the user value of the top-level base widget equal to that structure variable. This makes it possible to retrieve the structure using the widget ID contained in the <code>TOP</code> field of any widget event structure that arrives at the event handler routine.</p>
+        <p>Notice the use of the NO_COPY keyword to WIDGET_CONTROL in the example. This keyword prevents IDL from duplicating the memory used by the user value during the GET_UVALUE and SET_UVALUE operations. This is an important efficiency consideration if the size of the state data is large. (In this example the use of NO_COPY is not really necessary, as the state data consists only of the two long integers that represent the widget IDs being passed in the state variable.)</p>
+        <p>While it is important to consider efficiency, the use of the NO_COPY keyword does have the side effect of causing the user value of the widget to become undefined when it is retrieved using the GET_UVALUE keyword. If the user value is not replaced before the event handler exits, the next execution of the event routine will fail, since the user value will be undefined.</p>
+        <h3>Using a Pointer to the State Structure</h3>
+        <p>A variation on the above technique uses an IDL pointer to contain the state variable. This eliminates the duplication of data and the need for the use of the NO_COPY keyword. </p>
+        <p>Consider the following example widget code:</p>
+        <p class="Code">PRO my_widget_event, event</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, event.TOP, GET_UVALUE=pState</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;<i>Event-handling code goes here, accessing the state</i></p>
+        <p class="Code">&#160;&#160;<i>structure via the retrieved pointer.</i></p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO my_widget_cleanup, wBase</p>
+        <p class="Code">&#160;&#160;; This routine is called when the application quits.</p>
+        <p class="Code">&#160;&#160;; Retrieve the state variable and free the pointer.</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, wBase, GET_UVALUE=pState</p>
+        <p class="Code">&#160;&#160;PTR_FREE, pState</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO my_widget</p>
+        <p class="Code">&#160;&#160;; Create some widgets.</p>
+        <p class="Code">&#160;&#160;wBase = WIDGET_BASE(/COLUMN)</p>
+        <p class="Code">&#160;&#160;wDraw = WIDGET_DRAW(wBAse, XSIZE=300, YSIZE=300)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Realize the base widget and retrieve the widget ID</p>
+        <p class="Code">&#160;&#160;; of the drawable area.</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, wBase, /REALIZE</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, wDraw, GET_VALUE=idxDraw</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Create a state structure variable.</p>
+        <p class="Code">&#160;&#160;state = {wDraw:wDraw, idxDraw:idxDraw}</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Place the state structure in a pointer and set the user</p>
+        <p class="Code">&#160;&#160;; value of the top-level base widget equal to the pointer.</p>
+        <p class="Code">&#160;&#160;pState = PTR_NEW(state, /NO_COPY)</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, wBase, SET_UVALUE=pState, /NO_COPY</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;; Call XMANAGER to manage the widgets, specifying the routine</p>
+        <p class="Code">&#160;&#160;; to be called when the application quits.</p>
+        <p class="Code">&#160;&#160;XMANAGER, 'my_widget', wBase, CLEANUP='my_widget_cleanup'</p>
+        <p class="Code">END</p>
+        <p>Notice the following differences between this technique and the technique shown in the previous example:</p>
+        <ul>
+            <li value="1">This method eliminates the removal of the user value from the top-level base widget by removing the use of the NO_COPY keyword with the GET_UVALUE keyword to WIDGET_CONTROL. Since only the pointer (a long integer) is passed to the event routine, the efficiency issues connected with copying the value are small enough to ignore. (Note that we do use the NO_COPY keyword when creating the pointer and when initially setting the user value of the top-level base widget; since these statements are executed only once, we don’t worry about the fact that the <code>state</code> or <code>pState</code> variables become undefined.)</li>
+            <li value="2">
+                <p>The state structure contained in the pointer must now be referenced using pointer-dereferencing syntax. For example, to refer to the <code>idxDraw</code> field of the state structure within the event-handling routine, you would use the syntax</p>
+                <p class="Code">(*pState).idxDraw</p>
+            </li>
+            <li value="3">The pointer allocated to store the state structure must be freed when the widget application quits. We do this by specifying a cleanup routine via the CLEANUP keyword to XMANAGER. It is the cleanup routine’s responsibility to free the pointer.</li>
+        </ul>
+        <p>Each of the above techniques has advantages. Choose a method based on the complexity of your application and your level of comfort with features like IDL pointers and the NO_COPY keyword.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

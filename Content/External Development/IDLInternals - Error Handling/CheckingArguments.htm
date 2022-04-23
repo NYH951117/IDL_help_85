@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Error Handling">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Checking Arguments</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="ErrorHandling.htm">IDLInternals - Error Handling</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Checking Arguments</span>
+        </div>
+        <h1>Checking Arguments</h1>
+        <p>IDL allows a user to provide any number of arguments, of any type, to system functions and procedures. IDL checks for a valid number of arguments but the routine itself must check the validity of types. This task consists of examining the <b>argv</b> argument to the routine checking the type and flags field of each argument for suitability. The <b>IDL_StoreScalar()</b> function (see “Storing Scalar Values”) can be very useful in checking write-only arguments.</p>
+        <p>A number of macros exist in order to simplify testing of variable attributes. All of these macros accept a single argument—the <b>VPTR</b> to the argument in question. The macros check for a desired condition and use the <b>IDL_Message()</b> function with the <b>IDL_MSG_LONGJMP</b> action to return to the interpreter if an argument type doesn’t agree. Some of these macros overlap, and some are contradictory. You should select the smallest set that covers your requirements for each argument. For an example that uses one of these macros, see Example: A Complete Numerical Routine Example (FZ_ROOTS2).</p>
+        <h3>IDL_EXCLUDE_UNDEF</h3>
+        <p>The argument must not be of type <b>IDL_TYP_UNDEF</b>. This condition is usually imposed if the argument is intended to provide some input information to the routine.</p>
+        <h3>IDL_EXCLUDE_CONST</h3>
+        <p>The argument must not be a constant. This condition should be specified if your routine intends to change the value of the argument.</p>
+        <h3>IDL_EXCLUDE_EXPR</h3>
+        <p>The argument must not be a constant or a temporary variable (i.e., the argument must be a named variable). Specify this condition if you intend to return a value in the argument. Returning a value in a temporary variable is pointless because the interpreter will remove it from the stack as soon as the routine completes, causing it to be freed for re-use.</p>
+        <p>The <b>IDL_VarCopy()</b> and <b>IDL_StoreScalar()</b> functions automatically check their destination and issue an error if it is an expression. Therefore, if you are using one of these functions to write the new value into the argument variable, you do not need to perform this check first.</p>
+        <h3>IDL_EXCLUDE_FILE</h3>
+        <p>The argument cannot be a file variable as returned by the IDL ASSOC function. Most system routines exclude file variables—they are handled by a small set of existing routines. This check is also handled by the <b>IDL_ENSURE_SIMPLE</b> macro, which also excludes structure variables.</p>
+        <h3>IDL_EXCLUDE_STRUCT</h3>
+        <p>The argument cannot be a structure.</p>
+        <h3>IDL_EXCLUDE_COMPLEX</h3>
+        <p>The argument cannot be <b>IDL_TYP_COMPLEX</b>.</p>
+        <h3>IDL_EXCLUDE_STRING</h3>
+        <p>The argument cannot be <b>IDL_TYP_STRING</b>.</p>
+        <h3>IDL_EXCLUDE_SCALAR</h3>
+        <p>The argument cannot be a scalar.</p>
+        <h3>IDL_ENSURE_ARRAY</h3>
+        <p>The argument must be an array.</p>
+        <h3>IDL_ENSURE_OBJREF</h3>
+        <p>The argument must be an object reference heap variable.</p>
+        <h3>IDL_ENSURE_PTR</h3>
+        <p>The argument must be a pointer heap variable.</p>
+        <h3>IDL_ENSURE_SCALAR</h3>
+        <p>The argument must be a scalar.</p>
+        <h3>IDL_ENSURE_STRING</h3>
+        <p>The argument must be <b>IDL_TYP_STRING</b>.</p>
+        <h3>IDL_ENSURE_SIMPLE</h3>
+        <p>The argument cannot be a file variable, a structure variable, a pointer heap variable, or an object reference heap variable.</p>
+        <h3>IDL_ENSURE_STRUCTURE</h3>
+        <p>The argument must be <b>IDL_TYP_STRUCT</b>.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: S">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>SCOPE_VARFETCH</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="S_list.htm">Routines: S</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">SCOPE_VARFETCH</span>
+        </div>
+        <h1 class="Routine"><a name="S_820040301_1214985"></a><a name="S_820040301_30701"></a>SCOPE_VARFETCH</h1>
+        <p><a name="kanchor2335"></a>The SCOPE_VARFETCH function returns variables outside the local scope of the currently running procedure or function. You can use it to examine or alter variables that are not otherwise visible, or to create new variables in other scopes.</p>
+        <p>In normal IDL operation, routines are not allowed to see variables outside their own scope. This restriction is a fundamental and important property of structured modular programming. Code that accesses non-local scope to alter variables within other active routines can quickly become extremely difficult to understand and maintain. For this reason, avoid using the IDL scope routines. </p>
+        <p>Despite this warning, there is an important class of application that requires the functionality provided by these routines. Programs, usually with graphical user interfaces, that import and export data from the callers’ scope need to be able to access the user’s data variables directly, and without requiring them to explicitly pass those variables to the application as parameters. The SCOPE_VARFETCH function is used to access those variables, and <a href="SCOPE_VARNAME.htm#S_820040301_1196741">SCOPE_VARNAME</a> is used to obtain the correct names with which to refer to them. <a href="SCOPE_LEVEL.htm#S_820040301_1197681">SCOPE_LEVEL</a> returns the scope level of the currently executing routine. The IDL iTools and the ENVI image processing software are examples of programs that need to be able to perform these operations. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>To use this routine successfully, you need to understand the information in <a href="#S_820040301_1215187" class="selected">Altering Accessed Variables and Avoiding Unwanted Copies</a>.</p>
+        <h3><a name="S_820040301_1215081"></a><a name="S_820040301_62292"></a>Interpreter Frames, Level, and Variable Scope</h3>
+        <p>When IDL starts, it is implicitly running within a main program named $MAIN$. You can call procedures or functions from $MAIN$, and those routines can in turn call other routines. Each such routine invocation is represented internally by IDL using an <i>interpreter frame</i>, which IDL uses to maintain access to all variables known to that invocation of that routine. These variables can be local to the routine, parameters passed into the routine by its caller, or global variables (such as common block variables or heap variables). The set of variables visible within a given interpreter frame forms the <i>variable scope</i> of the corresponding routine. As routines are called, IDL pushes interpreter frames onto a call stack, and as those routines return, their frames are removed from the call stack. In the case of a recursive routine (a routine that calls itself), each invocation of the routine is given its own distinct and unshared frame. </p>
+        <p>The frames on the interpreter stack are numbered starting at 1 and increasing by 1 for each routine. This number is the <i>level</i> of the frame and, by implication, the scope that the frame accesses. The call stack always contains the frame for $MAIN$, which is the routine in which IDL execution starts and the only routine in IDL from which you cannot return. $MAIN$ is therefore always level 1. Any routine called from $MAIN$ will be at level 2, routines called from there will be level 3, and so forth. </p>
+        <h2 class="API"><a name="S_820040301_1215084"></a><a name="S_820040301_1215084_PageTOC_SCOPE_VARFETCH_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = SCOPE_VARFETCH(<i>VarName </i>[,&#160;<a href="#S_820040301_1215122" class="selected">COMMON</a>=<i>string</i>] [,&#160;/<a href="#S_820040301_1215135" class="selected">ENTER</a>] [,&#160;<a href="#S_820040301_1215145" class="selected">LEVEL</a>=<i>value</i>] [,&#160;/<a href="#S_820040301_1215173" class="selected">REF_EXTRA</a>] )</p>
+        <h2 class="API"><a name="S_820040301_1215098"></a><a name="S_820040301_1215098_PageTOC_SCOPE_VARFETCH_"></a>Return Value</h2>
+        <p>Returns the variable specified by <i>VarName</i> relative to the scope specified by the <a href="#S_820040301_1215145" class="selected">LEVEL</a> keyword. The value returned by SCOPE_VARFETCH can be used by the caller to directly access, or alter, that variable.</p>
+        <h2 class="API"><a name="S_820040301_1215103"></a><a name="S_820040301_1215103_PageTOC_SCOPE_VARFETCH_"></a>Arguments</h2>
+        <h3 class="Argument">VarName</h3>
+        <p>If the <a href="#S_820040301_1215122" class="selected">COMMON</a> keyword is not set: <i>VarName</i> is the name of the variable to be returned from scope specified by the <a href="#S_820040301_1215145" class="selected">LEVEL</a> keyword. </p>
+        <p>If the <a href="#S_820040301_1215122" class="selected">COMMON</a> keyword is set: If <i>VarName</i> is of non-string type, it is the positional index of the variable to be returned within the specified common block. If <i>VarName</i> is a string, it is the name of the variable to be returned within the common block. In this case, the name corresponds to the name used for that common block variable in the first routine that defined the common block.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For more information, see <a href="SCOPE_VARNAME.htm#S_820040301_1215427">COMMON Variable Names</a>.</p>
+        <h2 class="API"><a name="S_820040301_1215120"></a><a name="S_820040301_1215120_PageTOC_SCOPE_VARFETCH_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="S_820040301_1215122"></a><a name="S_820040301_1215122_Keywords_SCOPE_VARFETCH_"></a>COMMON</h3>
+        <p>Set this keyword to a string containing the name of a common block to cause SCOPE_VARFETCH to return a variable contained within the specified block. The variable to return is determined by the value of <i>VarName</i>, as discussed above.</p>
+        <p>The COMMON keyword cannot be used in conjunction with <a href="#S_820040301_1215135" class="selected">ENTER</a>, <a href="#S_820040301_1215145" class="selected">LEVEL</a>, or <a href="#S_820040301_1215173" class="selected">REF_EXTRA</a>.</p>
+        <h3 class="Keyword"><a name="S_820040301_1215135"></a><a name="S_820040301_1215135_Keywords_SCOPE_VARFETCH_"></a>ENTER</h3>
+        <p>By default, SCOPE_VARFETCH will return only variables that already exist in the specified scope. Attempts to access a nonexistent variable will cause IDL to issue an error and halt execution of the program. Set this keyword to alter this behavior. If ENTER is set and the desired variable does not exist in the specified scope, SCOPE_VARFETCH will create a new variable within that scope and return the new variable. This keyword can be used to export data into other scopes. Generally, the scope of the calling routine and that of $MAIN$ are most likely to be useful destinations.</p>
+        <p>The ENTER keyword cannot be used in conjunction with either <a href="#S_820040301_1215122" class="selected">COMMON</a> or <a href="#S_820040301_1215173" class="selected">REF_EXTRA</a>.</p>
+        <h3 class="Keyword"><a name="S_820040301_1215145"></a><a name="S_820040301_1215145_Keywords_SCOPE_VARFETCH_"></a>LEVEL</h3>
+        <p>Set this keyword to an integer that specifies the scope within which the desired variable should be found. The level can be either an absolute value or relative to the current scope, as shown in the following table:</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Meaning</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Level 0 always refers to the frame for the currently executing routine. This is the default value.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>&lt; 0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Negative levels are a relative specification and refer to the frames of active routines relative to the currently executing routine. Level -1 is the direct caller of the current routine, -2 is the caller of the caller of the current routine, and so forth. If you specify a level that is deeper than the current call stack, SCOPE_VARFETCH clips the value not to go past $MAIN$.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>&gt; 0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Positive levels are an absolute specification and refer directly to the specified frame. Level 1 is $MAIN$, level 2 is the routine called from $MAIN$, and so forth. If you specify a level that is past the currently executing routine, SCOPE_VARFETCH clips the value to the level of the current routine.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>The LEVEL keyword cannot be used in conjunction with the <a href="#S_820040301_1215122" class="selected">COMMON</a> keyword.</p>
+        <h3 class="Keyword"><a name="S_820040301_1215173"></a><a name="S_820040301_1215173_Keywords_SCOPE_VARFETCH_"></a>REF_EXTRA</h3>
+        <p>Set this keyword to cause SCOPE_VARFETCH to return the variable with the keyword name given by <i>VarName</i> from the _REF_EXTRA keywords within the specified level. Normally, a routine is not able to access the _REF_EXTRA keywords passed to it, and can pass them on only to other routines it calls. However, the SCOPE_VARFETCH REF_EXTRA keyword provides a mechanism by which a routine can examine its own _REF_EXTRA keywords.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>See <a href="../../Creating IDL Programs/Application Programming/Keyword_Inheritance.htm">Keyword Inheritance</a>  for more information.</p>
+        <p>The REF_EXTRA keyword cannot be used in conjunction with either <a href="#S_820040301_1215122" class="selected">COMMON</a> or <a href="#S_820040301_1215135" class="selected">ENTER</a>.</p>
+        <h2 class="API"><a name="S_820040301_1215187"></a><a name="S_820040301_1215187_PageTOC_SCOPE_VARFETCH_"></a><a name="S_820040301_95092"></a>Altering Accessed Variables and Avoiding Unwanted Copies</h2>
+        <p>The variable returned by SCOPE_VARFETCH can be used directly in IDL expressions to access the value of a variable from another scope. For example, the following statements access the value of a variable named <code>mydata</code> within the scope of the main program, $MAIN$: </p>
+        <p class="Code">PRINT, SCOPE_VARFETCH('mydata', LEVEL=1)</p>
+        <p class="Code">local_data = SCOPE_VARFETCH('mydata', LEVEL=1) + 100</p>
+        <p>Note that <code>local_data</code> contains only a copy of <code>mydata</code>, not a reference, so you can change <code>local_data</code> without affecting <code>mydata</code>.</p>
+        <p>If you do want to alter the value of a variable such as mydata, you must surround the call to SCOPE_VARFETCH with parentheses. For example, the following statements set <code>mydata</code> to a FINDGEN vector, and then increment it and add a constant to it. Finally, the value of the 5th element of the array is changed to 1000: </p>
+        <p class="Code">(SCOPE_VARFETCH('mydata', LEVEL=1)) = FINDGEN(100)</p>
+        <p class="Code">(SCOPE_VARFETCH('mydata', LEVEL=1))++</p>
+        <p class="Code">(SCOPE_VARFETCH('mydata', LEVEL=1)) += 57</p>
+        <p class="Code">(SCOPE_VARFETCH('mydata', LEVEL=1))[4] = 1000</p>
+        <p>To prevent IDL from making unwanted copies of the variable returned from SCOPE_VARFETCH, you should operate on the result of the SCOPE_VARFETCH function directly and not assign it to other variables. </p>
+        <p>For example, consider the following code, which prints the value of a variable <code>mydata</code> from the main program, $MAIN$: </p>
+        <p class="Code">temp = SCOPE_VARFETCH('mydata', LEVEL=1)</p>
+        <p class="Code">PRINT, temp</p>
+        <p>This code will produce the desired result, but at a higher than necessary cost. Assigning the variable returned by SCOPE_VARFETCH to the variable <code>temp</code> causes IDL to allocate new memory for <code>temp</code> and to make a copy of the <code>mydata</code> variable from $MAIN$ into <code>temp</code>. This process is slower, and will use twice as much memory as necessary, which can be a significant problem if the original <code>mydata</code> variable is very large. Instead, you should write the code this way: </p>
+        <p class="Code">PRINT, SCOPE_VARFETCH('mydata', LEVEL=1)</p>
+        <p>In cases where your code simply needs the value of a variable from another scope, assigning the result of SCOPE_VARFETCH to a local variable will use more memory and time, but is otherwise equivalent to using the direct result of the function. However, if your code wants to alter the original variable, using a local variable will produce the wrong answer. Consider the assignment code from above, modified to use a local variable: </p>
+        <p class="Code">temp = SCOPE_VARFETCH('mydata', LEVEL=1)</p>
+        <p class="Code">temp = FINDGEN(100)</p>
+        <p class="Code">temp++</p>
+        <p class="Code">temp += 57</p>
+        <p class="Code">temp[4] = 1000</p>
+        <p>This code alters the value of the local variable <code>temp</code>, but the original variable <code>mydata</code> remains unaltered. The first line makes a copy of <code>mydata</code>, the second line discards that copy, and the remaining lines operate on the local variable. </p>
+        <p>SCOPE_VARFETCH allows transparent access to variables from other scopes as long as you call it in every place where the variable is needed. Any assignment of the result from SCOPE_VARFETCH to another variable will create a copy. Altering the value of this copy will not alter the original. </p>
+        <h2 class="API"><a name="S_820040301_1215210"></a><a name="S_820040301_1215210_PageTOC_SCOPE_VARFETCH_"></a>Examples</h2>
+        <h3><a name="S_820040301_1215211_Keywords_SCOPE_VARFETCH_"></a>Example 1: Creating a New Variable in the Main Level</h3>
+        <p>The following creates a variable in the main program scope, named <code>newdata</code>. It sets the value using the DIST function, and then uses SURFACE to display it: </p>
+        <p class="Code">(SCOPE_VARFETCH('newdata', /ENTER, LEVEL=1)) = DIST(128)</p>
+        <p class="Code">SURFACE, SCOPE_VARFETCH('newdata', LEVEL=1)</p>
+        <h3><a name="S_820040301_1215215_Keywords_SCOPE_VARFETCH_"></a>Example 2: Using the REF_EXTRA Keyword</h3>
+        <p>The following procedure will print the values of all keywords passed to it via the by-reference _REF_EXTRA keyword inheritance mechanism. In addition, it displays the name or names by which that variable is known in all currently active interpreter frames: </p>
+        <p class="Code">PRO scope_varfetch_ex, _REF_EXTRA=ref<br />&#160;&#160;&#160;FOR ridx = 0, N_ELEMENTS(ref)-1 DO BEGIN<br />&#160;&#160;&#160;&#160;&#160;&#160;kw = ref[ridx]<br />&#160;&#160;&#160;&#160;&#160;&#160;PRINT, 'Value of _REF_EXTRA keyword ', kw, ':'<br />&#160;&#160;&#160;&#160;&#160;&#160;HELP, SCOPE_VARFETCH( kw, /REF_EXTRA )<br /><br />&#160;&#160;&#160;&#160;&#160;&#160;calls = SCOPE_TRACEBACK()<br />&#160;&#160;&#160;&#160;&#160;&#160;FOR i=N_ELEMENTS(calls)-1, 0, -1 DO BEGIN<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;name = SCOPE_VARNAME( SCOPE_VARFETCH(kw, /REF_EXTRA), $<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;LEVEL=-i )<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;cname = STREGEX( calls[i], '[^ ]*', /EXTRACT )<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;PRINT, FORMAT='(%"  _REF_EXTRA %s name in level %s: %s")', $<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;kw, cname, name ? name : ''<br />&#160;&#160;&#160;&#160;&#160;&#160;ENDFOR<br />&#160;&#160;&#160;ENDFOR<br />END</p>
+        <p>Using this procedure, consider the output from the following IDL statements: </p>
+        <p class="Code">a = 1<br />b = 2<br />scope_varfetch_ex, k_a=a, k_b=b</p>
+        <p class="Code">Value of _REF_EXTRA keyword K_A:</p>
+        <p class="Code">&lt;No name&gt;&#160;&#160;&#160;&#160;&#160;INT&#160;&#160;&#160;&#160;&#160;=&#160;&#160;&#160;&#160;&#160;1</p>
+        <p class="Code">_REF_EXTRA K_A name in level EXAMPLE: </p>
+        <p class="Code">_REF_EXTRA K_A name in level $MAIN$: A</p>
+        <p class="Code">Value of _REF_EXTRA keyword K_B:</p>
+        <p class="Code">&lt;No name&gt;&#160;&#160;&#160;&#160;&#160;INT&#160;&#160;&#160;&#160;&#160;=&#160;&#160;&#160;&#160;&#160;2</p>
+        <p class="Code">_REF_EXTRA K_B name in level EXAMPLE: </p>
+        <p class="Code">_REF_EXTRA K_B name in level $MAIN$: B</p>
+        <h2 class="API"><a name="S_820040301_1215247"></a><a name="S_820040301_1215247_PageTOC_SCOPE_VARFETCH_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="S_820040301_1215249"></a><a name="S_820040301_1215249_PageTOC_SCOPE_VARFETCH_"></a>See Also</h2>
+        <p><a href="../H/HELP.htm#H_835179117_748700">HELP</a>, <a href="SCOPE_LEVEL.htm#S_820040301_1197681">SCOPE_LEVEL</a>, <a href="SCOPE_TRACEBACK.htm#S_820040301_1279496">SCOPE_TRACEBACK</a>, <a href="SCOPE_VARNAME.htm#S_820040301_1196741">SCOPE_VARNAME</a>, <a href="../R/ROUTINE_INFO.htm#R_822202989_845681">ROUTINE_INFO</a></p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

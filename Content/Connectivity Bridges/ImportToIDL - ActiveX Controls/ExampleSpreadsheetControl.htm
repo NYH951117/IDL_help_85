@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|COM Import Bridge and ActiveX|ActiveX Controls">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Example Spreadsheet Control</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">COM Import Bridge and ActiveX</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">ActiveX Controls</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Example Spreadsheet Control</span>
+        </div>
+        <h1><a name="Example_Spreadsheet_Control"></a><a name="kanchor5233"></a>Example Spreadsheet Control</h1>
+        <p>This example uses an ActiveX control that displays a spreadsheet interface. The control, contained in the file <i>msowc.dll</i>, is installed along with a typical installation of Microsoft Office. If the control is not present on your system (you’ll know the control is not present if the example code fails when trying to realize the widget hierarchy), the example will not run.</p>
+        <p>The spreadsheet control has the program ID:</p>
+        <p class="Code">OWC.Spreadsheet.9</p>
+        <p>and the class ID:</p>
+        <p class="Code">{0002E510-0000-0000-C000-000000000046}</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The spreadsheet control used in this example is included with older versions of Microsoft Office; it is discussed in Microsoft Knowledge Base Article 248822. Newer versions of Microsoft Office may include spreadsheet controls with updated program and class IDs.</p>
+        <p>Information about the spreadsheet control’s properties and methods was gleaned from <i>Microsoft Excel 97 Visual Basic Step by Step</i> by Reed Jacobson (Microsoft Press, 1997) and by inspection of the control’s interface using the <i>OLE/COM Object Viewer</i> application provided by Microsoft. It is beyond the scope of this manual to describe the spreadsheet control’s interface in detail.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This example, <i><a name="kanchor5234"></a>ActiveXExcel.pro</i>, is included in the <i>examples\doc\bridges\COM</i> subdirectory of the IDL distribution and develops an IDL routine called ActiveXExcel that illustrates use of the spreadsheet ActiveX control within an IDL widget hierarchy. Run the example procedure by entering <i>ActiveXExcel</i> at the IDL command prompt or view the file in an IDL Editor window by entering <i>.EDIT ActiveXExcel.pro</i>.</p>
+        <ol>
+            <li value="1">Create a function that will retrieve data from cells selected in the spreadsheet control. The function takes two arguments: an object reference to the IDLcomActiveX object that instantiates the spreadsheet control, and a variable to contain the data from the selected cells.</li>
+            <p class="Code">FUNCTION excel_getSelection, oExcel, aData</p>
+            <li value="2">Retrieve an object that represents the selected cells. Note that when the ActiveX control returns this object, IDL automatically creates an IDLcomActiveX object that makes it accessible within IDL.</li>
+            <p class="Code">oExcel-&gt;GetProperty, SELECTION=oSel</p>
+            <li value="3">Retrieve the total number of cells selected.</li>
+            <p class="Code">oSel-&gt;GetProperty, COUNT=nCells</p>
+            <li value="4">If no cells are selected, destroy the selection object and return zero (the failure code).</li>
+            <p class="Code">IF (nCells LT 1) THEN BEGIN</p>
+            <p class="Code_Indented">OBJ_DESTROY, oSel</p>
+            <p class="Code_Indented">RETURN, 0</p>
+            <p class="Code">ENDIF</p>
+            <li value="5">Retrieve objects that represent the dimensions of the selection.</li>
+            <p class="Code">oSel-&gt;GetProperty, COLUMNS=oCols, ROWS=oRows</p>
+            <li value="6">Get the dimensions of the selection, then destroy the column and row objects.</li>
+            <p class="Code">oCols-&gt;GetProperty, COUNT=nCols<br />OBJ_DESTROY, oCols<br />oRows-&gt;GetProperty, COUNT=nRows<br />OBJ_DESTROY, oRows</p>
+            <li value="7">Create a floating point array with the same dimensions as the selection.</li>
+            <p class="Code">aData = FLTARR(nCols, nRows, /NOZERO);</p>
+            <li value="8">Iterate through the cells, doing the following:</li>
+            <ul>
+                <li value="1">Retrieve an object that represents the cell. Note that the numeric index of the FOR loop is passed to the GetProperty method as an argument.</li>
+                <li value="2">Get the value contained in the cell.</li>
+                <li value="3">Set the appropriate element of the aData array to the cell's value.</li>
+                <li value="4">Destroy the object.</li>
+                <p class="Code">FOR i=1, nCells DO BEGIN</p>
+                <p class="Code_Indented">oSel-&gt;GetProperty, ITEM=oItem, i</p>
+                <p class="Code_Indented">oItem-&gt;GetProperty, VALUE=vValue</p>
+                <p class="Code_Indented">aData[i-1] = vValue<br />OBJ_DESTROY, oItem</p>
+                <p class="Code">ENDFOR</p>
+            </ul>
+            <li value="9">Destroy the selection object.</li>
+            <p class="Code">OBJ_DESTROY, oSel</p>
+            <li value="10">Return one (the success code) and end the function definition.</li>
+            <p class="Code_Indented">RETURN, 1</p>
+            <p class="Code">END</p>
+            <li value="11">Next, create a procedure that sets the values of the cells in the spreadsheet.<br />This procedure takes one argument: an object reference to the IDLcomActiveX object that instantiates the spreadsheet control.</li>
+            <p class="Code">PRO excel_setData, oExcel</p>
+            <li value="12">Define the size of the data array.</li>
+            <p class="Code">nX = 20</p>
+            <li value="13">Get an object representing the active spreadsheet.</li>
+            <p class="Code">oExcel-&gt;GetProperty, ActiveSheet=oSheet</p>
+            <li value="14">Get an object representing the cells in the spreadsheet.</li>
+            <p class="Code">oSheet-&gt;GetProperty, CELLS=oCells</p>
+            <li value="15">Generate some data.</li>
+            <p class="Code">im = BESELJ(DIST(nX))</p>
+            <li value="16">Iterate through the elements of the data array, doing the following:</li>
+            <ul>
+                <li value="1">Retrieve an object that represents the cell that corresponds to the data element. Note that the numeric indices of the FOR loops are passed to the GetProperty method as arguments.</li>
+                <li value="2">Set the value of the cell.</li>
+                <li value="3">Destroy the object.</li>
+                <p class="Code">FOR i=0, nX-1 DO BEGIN</p>
+                <p class="Code_Indented">FOR j=0, nX-1 DO BEGIN</p>
+                <p class="Code_Indented" style="text-indent: 20px;">oCells-&gt;GetProperty, ITEM=oItem, i+1, j+1</p>
+                <p class="Code_Indented" style="text-indent: 20px;">oItem-&gt;SetProperty, VALUE=im(i,j)</p>
+                <p class="Code_Indented" style="text-indent: 20px;">OBJ_DESTROY, oItem</p>
+                <p class="Code_Indented">ENDFOR</p>
+                <p class="Code">ENDFOR</p>
+            </ul>
+            <li value="17">Destroy the spreadsheet and cell objects, and end the procedure.</li>
+            <p class="Code_Indented">OBJ_DESTROY, oSheet<br />OBJ_DESTROY, oCells</p>
+            <p class="Code">END</p>
+            <li value="18">Next, create a procedure to handle events generated by the widget application.</li>
+            <p class="Code">PRO ActiveXExcel_event, ev</p>
+            <li value="19">The user value of the top-level base widget is set equal to a structure that contains the widget ID of the ActiveX widget. Retrieve the structure into the variable sState.</li>
+            <p class="Code">WIDGET_CONTROL, ev.TOP, GET_UVALUE=sState, /NO_COPY</p>
+            <li value="20">Use the value of the DISPID field of the event structure to sort out “selection changing” events.</li>
+            <p class="Code">IF (ev.DISPID EQ 1513) THEN BEGIN</p>
+            <li value="21">Place data from selected cells in variable aData, using the <i>excel_getSelection</i> function defined above. Check to make sure that the function returns a success value (one) before proceeding.</li>
+            <p class="Code">IF (excel_getSelection(sState.oExcel, aData) NE 0) THEN BEGIN</p>
+            <li value="22">Get the dimensions of the aData variable.</li>
+            <p class="Code">szData = SIZE(aData)</p>
+            <li value="23">If aData is two-dimensional, display a surface, otherwise, plot the data.</li>
+            <p class="Code" style="text-indent: 20px;">IF (szData[0] GT 1 AND szData[1] GT 1 AND szData[2] GT 1) $ THEN SURFACE, aData $</p>
+            <p class="Code_Indented" style="text-indent: 20px;">ELSE $</p>
+            <p class="Code_Indented" style="text-indent: 20px;">PLOT, aData</p>
+            <p class="Code" style="text-indent: 20px;">ENDIF</p>
+            <p class="Code">ENDIF</p>
+            <li value="24">Reset the state variable sState and end the procedure.</li>
+            <p class="Code_Indented">WIDGET_CONTROL, ev.TOP, SET_UVALUE=sState, /NO_COPY</p>
+            <p class="Code">END</p>
+            <li value="25">Create the main widget creation routine.</li>
+            <p class="Code">PRO ActiveXExcel<br />!EXCEPT=0	; Ignore floating-point underflow errors.</p>
+            <li value="26">Create a top-level base widget.</li>
+            <p class="Code">wBase = WIDGET_BASE(COLUMN=1, $</p>
+            <p class="Code_Indented">TITLE="IDL ActiveX Spreadsheet Example")</p>
+            <li value="27">Instantiate the ActiveX spreadsheet control in a widget.</li>
+            <p class="Code">wAx=WIDGET_ACTIVEX(wBase, $</p>
+            <p class="Code_Indented">'{0002E510-0000-0000-C000-000000000046}', $</p>
+            <p class="Code_Indented">SCR_XSIZE=600, SCR_YSIZE=400)</p>
+            <li value="28">Realize the widget hierarchy.</li>
+            <p class="Code">WIDGET_CONTROL, wBase, /REALIZE</p>
+            <li value="29">The value of an ActiveX widget is an object reference to the IDLcomActiveX object that encapsulates the ActiveX control. Retrieve the object reference in the variable oExcel.</li>
+            <p class="Code">WIDGET_CONTROL, wAx, GET_VALUE=oExcel</p>
+            <li value="30"> Turn off the TitleBar property on the spreadsheet control.</li>
+            <p class="Code">oExcel-&gt;SetProperty, DisplayTitleBar=0</p>
+            <li value="31">Populate the spreadsheet control with data, using the excel_setData function defined above.</li>
+            <p class="Code">excel_setData, oExcel</p>
+            <li value="32">Set the user value of the top-level base widget to an anonymous structure that contains the widget ID of the spreadsheet ActiveX widget.</li>
+            <p class="Code">WIDGET_CONTROL, wBase, SET_UVALUE={oExcel:oExcel}</p>
+            <li value="33">Call XMANAGER to manage the widgets, and end the procedure.</li>
+            <p class="Code_Indented">XMANAGER,'ActiveXExcel', wBase, /NO_BLOCK</p>
+            <p class="Code">END</p>
+        </ol>
+        <p>Running the ActiveXExcel procedure display widgets that look like the following:</p>
+        <p>
+            <img src="../Resources/Images/BridgesFigure4-2.png" />
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

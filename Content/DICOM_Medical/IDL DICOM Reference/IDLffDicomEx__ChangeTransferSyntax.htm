@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|Medical Imaging in IDL|IDL DICOM Reference|IDLffDicomEx">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLffDicomEx::ChangeTransferSyntax
+        </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Expanded DICOM Support in IDL/ExpandedDICOMFunctionality.htm">Medical Imaging in IDL</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="DICOMEX_GETCONFIGFILEPAT.htm">IDL DICOM Reference</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLffDicomEx::ChangeTransferSyntax</span>
+        </div>
+        <h1 class="ObjMethod">IDLffDicomEx::ChangeTransferSyntax
+        </h1>
+        <p>The IDLffDicomEx::ChangeTransferSyntax procedure method changes the transfer syntax of the IDLffDicomEx object and its associated pixel data. This allows you to change the compression setting of the pixel data and ensure that the transfer syntax value and pixel data are synchronized. Directly changing the transfer syntax (0002,0010) is not advised.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>There is no support for the JPEG compression algorithms on Macintosh. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Attempting to change an existing file from a lossy JPEG format to another format will fail. This is prohibited to ensure that a file saved in a lossy format is always known to be less than the original data.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When this method successfully completes the equivalent of an <a href="IDLffDicomEx__Commit.htm">IDLffDicomEx::Commit</a> call will have occurred (the file is saved to disk) to ensure the pixel data and the transfer syntax are synchronized. This means any sequence identifiers for the object are invalid and must be re-accessed using the <a href="IDLffDicomEx__GetPrivateValue.htm">IDLffDicomEx::GetPrivateValue</a> or <a href="IDLffDicomEx__GetValue.htm">IDLffDicomEx::GetValue</a> method.</p>
+        <ol>
+            <li value="1">The original syntax is uncompressed and the new syntax is uncompressed. After calling this method, the pixel data remains unchanged, but the transfer syntax is changed. </li>
+            <li value="2">The original syntax is compressed (lossless only) and the new syntax is uncompressed. After calling this method, the pixel data is retrieved and uncompressed, the transfer syntax is changed, the pixel data is written back into the image in the uncompressed format.</li>
+            <li value="3">The original syntax is uncompressed and the new syntax is compressed (lossless or lossy). After calling this method, the pixel data is retrieved from the image, the transfer syntax is changed, the pixel data is written back into the image in the compressed format.</li>
+            <li value="4">The original syntax is compressed (lossless only) and the new syntax is compressed (lossless or lossy). After calling this method, the pixel data is uncompressed, the transfer syntax is changed, the pixel data is written back into the image in the compressed format.</li>
+            <li value="5">The original transfer syntax is the same as the new syntax. Calling this method saves the file.</li>
+        </ol>
+        <h3>Bit Depth Versus Image Compression </h3>
+        <p>The following table provides information on the types of JPEG compression support for images with various bit depths. Not all JPEG formats can be used on all image types. Refer to <i>Digital Imaging and Communications in Medicine (DICOM) - Part 5: Data Structures and Encoding</i> for additional details.</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>JPEG Format</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>8 bit</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>12 bit</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>16 bit</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>JPEG Baseline (lossy)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>No</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>JPEG Extended (Process 2 &amp; 4)(lossy)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>JPEG Lossless, Non-Hierarchical</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Yes</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>JPEG 2000 Image Compression (Lossless Only)</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Yes</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>JPEG 2000 Image Compression</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>Yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>Yes</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Yes</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dicom_ex_4010397576_1006936"></a><a name="dicom_ex_4010397576_1006936_PageTOC_IDLffDicomEx"></a>Syntax</h2>
+        <p class="Syntax"><i>Obj</i>-&gt;[<a href="IDLffDicomEx.htm">IDLffDicomEx</a>::]ChangeTransferSyntax, <i>NewSyntaxUID</i> [,&#160;/<a href="#dicom_ex_4010397576_1007043" class="selected">LOSSY</a>]</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1006940"></a><a name="dicom_ex_4010397576_1006940_PageTOC_IDLffDicomEx"></a>Arguments</h2>
+        <h3 class="Argument">NewSyntaxUID</h3>
+        <p>A string that specifies the new transfer syntax for the file. This argument must be one of the values listed in the following table: </p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');caption-side: top;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Argument Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Transfer Syntax Name</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1.2.840.10008.1.2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Implicit VR Little Endian</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1.2.840.10008.1.2.1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Explicit VR Little Endian</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1.2.840.10008.1.2.2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Explicit VR Big Endian</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1.2.840.10008.1.2.4.50</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>JPEG Baseline (lossy)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1.2.840.10008.1.2.4.51</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>JPEG Extended (Process 2 &amp; 4)(lossy)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1.2.840.10008.1.2.4.70</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>JPEG Lossless, Non-Hierarchical</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1.2.840.10008.1.2.4.90</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>JPEG 2000 Image Compression (Lossless Only)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>1.2.840.10008.1.2.4.91 </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>JPEG 2000 Image Compression</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dicom_ex_4010397576_1007042"></a><a name="dicom_ex_4010397576_1007042_PageTOC_IDLffDicomEx"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dicom_ex_4010397576_1007043"></a><a name="dicom_ex_4010397576_1007043_Keywords_IDLffDicomEx"></a>LOSSY</h3>
+        <p>Set this keyword to control how tags that can indicate lossy compression are updated. The default behavior when the <i>NewSyntaxUID</i> argument is set to a lossy transfer syntax is to update the two tags as indicated in the following table. This occurs when the LOSSY keyword is <i>not</i> set. If this keyword <i>is</i> set the indicated tags remain unchanged. See <i>Digital Imaging and Communications in Medicine (DICOM) - Part 3, </i>Section C.7.6.1.1.5 for additional details on what other tags you can update when the compression format is lossy.</p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');caption-side: top;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>DICOM Attribute</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Indication of Lossy Compression</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Image Type (0008,0008) </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>The first value in this multi-value tag is updated to read as <code>'DERIVED'</code>. </p>
+                        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the Image Type tag is not present it is added.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>Lossy Compression (0028,2110) </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>This tag is updated to read <code>'01'</code> indicating the image has undergone lossy compression. This value should never be changed once set to 01. </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dicom_ex_4010397576_1007068"></a><a name="dicom_ex_4010397576_1007068_PageTOC_IDLffDicomEx"></a>Example</h2>
+        <p>The following example changes the file compression of a selected file to a lossy format. Use the BITS_STORED property to query the bit depth of the image as not all images support all types of compression. Do not set the LOSSY keyword so the Image Type attribute is modified to state that the image is derived. Following compression, the original and compressed images are shown in a window. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This example is not designed for images with more than a single sample per pixel (e.g. RGB images). </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>To avoid an error, you must delete the <code>aImgClone.dcm</code> file prior to running this example more than a single time. The ChangeTransferSyntax method internally calls the <a href="IDLffDicomEx__Commit.htm">IDLffDicomEx::Commit</a> method and writes the file to disk. </p>
+        <p class="Code">PRO dicom_changecompression_doc</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Select a DICOM file.</p>
+        <p class="Code">sFile = DIALOG_PICKFILE( $</p>
+        <p class="Code">    PATH=FILEPATH('',SUBDIRECTORY=['examples','data']), $</p>
+        <p class="Code">    TITLE='Select DICOM Patient File', FILTER='*.dcm', $</p>
+        <p class="Code">    GET_PATH=path)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create a clone (aImgClone.dcm) of the selected file (sfile).</p>
+        <p class="Code">; Set the NON_CONFORMING keyword to be able to add a public SQ  </p>
+        <p class="Code">; of radiopharmaceutical items to any file. </p>
+        <p class="Code"> oImg = OBJ_NEW('IDLffDicomEx', path + 'aImgClone.dcm', $</p>
+        <p class="Code">    CLONE=sfile, /NON_CONFORMING)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Get the value of the Image Type attribute prior to </p>
+        <p class="Code">; changing the transfer syntax.</p>
+        <p class="Code">oImg-&gt;GetProperty, IMAGE_TYPE = vImgType, $</p>
+        <p class="Code">   ROWS=vRows, COLUMNS=vCols</p>
+        <p class="Code">PRINT, 'Image Type Property = ', vImgType</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Check to see if the image has multiple frames.</p>
+        <p class="Code">frameTest = oImg-&gt;QueryValue('0028,0008')</p>
+        <p class="Code">IF FrameTest EQ 2 THEN BEGIN</p>
+        <p class="Code">   oImg-&gt;GetProperty, NUMBER_OF_FRAMES=frame</p>
+        <p class="Code">   frame = frame - 1</p>
+        <p class="Code">ENDIF ELSE BEGIN</p>
+        <p class="Code">   frame = 0</p>
+        <p class="Code">ENDELSE</p>
+        <p class="Code">order = 0</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Get the current transfer syntax. </p>
+        <p class="Code">oImg-&gt;GetProperty, TRANSFER_SYNTAX = vSyntax, $</p>
+        <p class="Code">  BITS_STORED = vBits</p>
+        <p class="Code">PRINT, 'Old Syntax ', vSyntax</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Get the pixel data before compression.</p>
+        <p class="Code">vPixOrig = oImg-&gt;GetPixelData(ORDER=vOrder, COUNT=vCnt)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Change the compression of the file to a lossy type based on</p>
+        <p class="Code">; bit-depth of the image. Note that internally, the</p>
+        <p class="Code">; ChangeTransferSyntax calls commit and writes file to disk. </p>
+        <p class="Code">If vBits EQ 8 THEN $</p>
+        <p class="Code">  oImg-&gt;ChangeTransferSyntax, '1.2.840.10008.1.2.4.50'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IF vBits NE 8 THEN BEGIN</p>
+        <p class="Code">  ; If vBits not equal to 8 then compress the file using</p>
+        <p class="Code">  ; JPEG 2000 lossy compression.</p>
+        <p class="Code">  oImg-&gt;ChangeTransferSyntax, '1.2.840.10008.1.2.4.91'</p>
+        <p class="Code">ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">oImg-&gt;GetProperty, TRANSFER_SYNTAX = vSyntax, $</p>
+        <p class="Code">   IMAGE_TYPE = vImgType</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRINT, 'New Syntax ', vSyntax</p>
+        <p class="Code">PRINT, 'New Image Type Property = ', vImgType</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Retrieve the compress pixel data. </p>
+        <p class="Code">vPixLossy = oImg-&gt;GetPixelData()</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the original and lossy compressed data.</p>
+        <p class="Code">WINDOW, XSIZE = vCols*2, YSIZE = vRows, $</p>
+        <p class="Code">   TITLE = "Original and Compressed Frames"</p>
+        <p class="Code">FOR i = 1, frame+1 DO BEGIN</p>
+        <p class="Code">   TVSCL, vPixOrig[*,*,i-1], 0, ORDER = order</p>
+        <p class="Code">   TVSCL, vPixLossy[*,*,i-1], 1, ORDER = order</p>
+        <p class="Code">   WAIT, 1</p>
+        <p class="Code">ENDFOR</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Clean up references.</p>
+        <p class="Code">OBJ_DESTROY, oImg</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1036864"></a><a name="dicom_ex_4010397576_1036864_PageTOC_IDLffDicomEx"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

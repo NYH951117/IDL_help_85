@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Adding External Widgets to IDL">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDL and External Widgets</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="ExternalWidgets.htm">Adding External Widgets to IDL</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDL and External Widgets</span>
+        </div>
+        <h1><a name="kanchor5530"></a>IDL and External Widgets</h1>
+        <p>This topic describes stub widgets, an IDL widget type not documented in the main IDL online help. Stub widgets allow <a href="../Using CALL_EXTERNAL/CALL_EXTERNAL.htm">CALL_EXTERNAL</a>, <a href="../Adding System Routines/LinkImage.htm">LINKIMAGE</a>, <a href="../Adding System Routines/DLM.htm">DLM</a>, and <a href="../Callable IDL/UsingCallableIDL.htm">Callable IDL</a> users to add their own widgets to IDL widget hierarchies.</p>
+        <p>This feature depends on your system providing the window system libraries used by IDL (particularly the Motif libraries under UNIX) as sharable libraries. It will not work with versions of IDL that statically link against the window system libraries.</p>
+        <p>The next two sections describe IDL’s <b>WIDGET_STUB</b> function and changes to <b>WIDGET_CONTROL</b> when used with <b>WIDGET_STUB</b>. “Functions for Use with Stub Widgets” describes support functions that can be called from your external code to manipulate stub widgets. “Internal Callback Functions” describes how to make stub widgets generate IDL widget events. Finally, “UNIX <b>WIDGET_STUB</b> Example: WIDGET_ARROWB”  illustrates the use of stub widgets with an external program.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Although <b>WIDGET_STUB</b> can be used under Windows, this feature is primarily of interest on UNIX systems. Under Windows we recommend the use of the <b>WIDGET_ACTIVEX</b> functionality, which allows you to use ActiveX controls with IDL without requiring external programming.</p>
+        <h2>WIDGET_STUB</h2>
+        <p>The <b>WIDGET_STUB</b> function creates a widget record that contains no actual underlying widgets. Stub widgets are place holders for integrating external widget types into IDL. Events from those widgets can then be processed in a manner consistent with the rest of the IDL widget system.</p>
+        <p>First, the programmer calls <b>WIDGET_STUB</b> to create the widget, and then uses <a href="../Using CALL_EXTERNAL/CALL_EXTERNAL.htm">CALL_EXTERNAL</a> to call additional custom code to handle the rest. A number of internal functions are provided to manipulate widgets from this custom code. See “Functions for Use with Stub Widgets”for more information.</p>
+        <p>The returned value of this function is the widget ID of the newly-created stub widget.</p>
+        <h3>Calling Sequence</h3>
+        <p>&#160;</p>
+        <p class="Code">Result = WIDGET_STUB(Parent)</p>
+        <h3>Arguments</h3>
+        <h4>Parent</h4>
+        <p>The widget ID of the parent widget. Stub widgets can only have bases or other stub widgets as their parents.</p>
+        <h3>Keywords</h3>
+        <p>The following keywords are accepted by <b>WIDGET_STUB</b> and work the same as for other widget creation functions:</p>
+        <ul>
+            <li value="1">EVENT_FUNC	</li>
+            <li value="2">EVENT_PRO</li>
+            <li value="3">FUNC_GET_VALUE</li>
+            <li value="4">GROUP_LEADER</li>
+            <li value="5">KILL_NOTIFY</li>
+            <li value="6">NO_COPY</li>
+            <li value="7">PRO_SET_VALUE</li>
+            <li value="8">SCR_XSIZE</li>
+            <li value="9">UVALUE</li>
+            <li value="10">XOFFSET</li>
+            <li value="11">XSIZE</li>
+            <li value="12">YOFFSET</li>
+            <li value="13">YSIZE</li>
+        </ul>
+        <h2>WIDGET_CONTROL/WIDGET_STUB</h2>
+        <p>The <b>WIDGET_CONTROL</b> procedure has some differences and limitations when used with <b>WIDGET_STUB</b>, described below.</p>
+        <h3>Keywords</h3>
+        <p>Only the most general keywords are allowed with <b>WIDGET_CONTROL</b> when used with stub widgets. All other keywords are ignored. Here is a list of those keywords that behave identically with all widgets including stub widgets:</p>
+        <ul>
+            <li value="1">BAD_ID</li>
+            <li value="2">CLEAR_EVENTS</li>
+            <li value="3">EVENT_FUNC</li>
+            <li value="4">EVENT_PRO</li>
+            <li value="5">FUNC_GET_VALUE</li>
+            <li value="6">GET_UVALUE</li>
+            <li value="7">GROUP_LEADER</li>
+            <li value="8">HOURGLASS</li>
+            <li value="9">ICONIFY</li>
+            <li value="10">KILL_NOTIFY</li>
+            <li value="11">MANAGED</li>
+            <li value="12">NO_COPY</li>
+            <li value="13">PRO_SET_VALUE</li>
+            <li value="14">RESET</li>
+            <li value="15">SET_UVALUE</li>
+            <li value="16">SHOW</li>
+            <li value="17">TIMER</li>
+            <li value="18">TLB_GET_OFFSET</li>
+            <li value="19">TLB_GET_SIZE</li>
+            <li value="20">TLB_SET_TITLE</li>
+            <li value="21">TLB_SET_XOFFSET</li>
+            <li value="22">TLB_SET_YOFFSET</li>
+            <li value="23">XOFFSET</li>
+            <li value="24">YOFFSET<br /></li>
+        </ul>
+        <p>The following keywords also work with stub widgets, but require additional commentary:</p>
+        <h4>DESTROY</h4>
+        <p>When a widget hierarchy containing stub widgets is destroyed, the following steps are taken:</p>
+        <ul>
+            <li value="1">The lower-level code that deals with the system toolkit destroys any real widgets currently used by the stub widgets.</li>
+            <li value="2">All IDL widget records are added to the free list for re-use.</li>
+            <li value="3">Any requested <b>KILL_NOTIFY</b> callbacks are called.</li>
+        </ul>
+        <p>You should register <b>KILL_NOTIFY</b> callbacks on the topmost stub widget in each widget subtree. Remember that the actual widgets are gone before the callbacks are issued, so don’t attempt to access them. However, the callback provides an opportunity to clean up any related resources used by the widget.</p>
+        <h4>MAP, REALIZE, and SENSITIVE</h4>
+        <p>These keywords cause the toolkit-specific, lower layer of the IDL widgets implementation to be called. In the process of satisfying the specified request, any real widgets used by the stub widgets will be processed, along with the ones created by the non-stub widgets, in the usual way. Any additional processing must be provided via <a href="../Using CALL_EXTERNAL/CALL_EXTERNAL.htm">CALL_EXTERNAL</a>.</p>
+        <h4>XSIZE, SCR_XSIZE, YSIZE, and SCR_YSIZE</h4>
+        <p>These keywords inform IDL how large the stub widget is expected to be. This information is necessary for IDL to calculate sizes and offsets of the surrounding widgets.</p>
+        <p>IDL tries to do something reasonable with these requests but, without knowledge of the actual widget being manipulated, it is possible that the results will not be satisfactory. In such cases, IDL_WidgetStubSetSizeFunc() can be used to specify a routine that IDL can call to perform the necessary sizing for your stub widget.</p>
+        <h2>Functions for Use with Stub Widgets</h2>
+        <p>The following functions present a highly simplified interface to the stub widget class that gives the user enough access to IDL widget internals to make the stub widget work while hiding the details of the actual implementation.</p>
+        <h3>IDL_WidgetStubLock()</h3>
+        <h4>Syntax</h4>
+        <p class="Code">void IDL_WidgetStubLock(int set);</p>
+        <p>IDL event processing occurs asynchronously, so any code that manipulates widgets must execute in a protected region. This function is used to create such a region. Any code that manipulates widgets must be surrounded by two calls to <b>IDL_WidgetStubLock()</b> as follows:</p>
+        <p class="Code">IDL_WidgetStubLock(TRUE);</p>
+        <p class="Code">/* Do your widget stuff */ </p>
+        <p class="Code">IDL_WidgetStubLock(FALSE);</p>
+        <h3>IDL_WidgetStubLookup()</h3>
+        <h4>Syntax:</h4>
+        <p class="Code">char *IDL_WidgetStubLookup(IDL_ULONG id);</p>
+        <p>When IDL creates a widget, it returns an integer value to the caller of the widget creation function. Internally, however, IDL widgets are represented by a pointer to memory. <b>IDL_WidgetStubLookup()</b>  is used to translate the user-level integer value to this memory pointer. All the other internal routines use the memory pointer to reference the widget.</p>
+        <p><code>Id</code> is the integer returned at the user level. Your call to CALL_EXTERNAL should pass this integer to your C-level code for use with <b>IDL_WidgetStubLookup()</b> which translates the integer to the pointer.</p>
+        <p>If the specified id does not represent a valid IDL widget, this function returns NULL. This situation can occur if a widget was killed but its integer handle is still lingering somewhere.</p>
+        <h3>IDL_WidgetIssueStubEvent()</h3>
+        <h4>Syntax:</h4>
+        <p class="Code">void IDL_WidgetIssueStubEvent(char *rec, LONG value);</p>
+        <p>Given a handle to the IDL widget, obtained via <b>IDL_WidgetStubLookup()</b>, this function queues a <b>WIDGET_STUB_EVENT</b>. Such an event is a structure that contains the three standard fields (<code>ID</code>, <code>TOP</code>, and <code>HANDLER</code>) as well as an additional field named <code>VALUE</code> that contains the specified value.</p>
+        <p><code>VALUE</code> can provide a way to access additional information about the widget, possibly by providing a memory address to the information.</p>
+        <h3>IDL_WidgetSetStubIds()</h3>
+        <h4>Syntax:</h4>
+        <p class="Code">void IDL_WidgetSetStubIds(char *rec, unsigned long t_id, unsigned long b_id);</p>
+        <p>IDL widgets are built out of one or more actual widgets. Every IDL widget carries two pointers that are used to locate the top and bottom real widget for a given IDL widget. This function allows you to set these top and bottom pointers in the stub widget for later use.</p>
+        <p>Since the actual pointer type differs from toolkit to toolkit, this function declares <code>t_id</code> (the top real widget) and <code>b_id</code> (the bottom real widget) as unsigned long, an integer data type large enough to safely contain any pointer. Use a C cast operator to handle the difference.</p>
+        <p>After calling <b>WIDGET_STUB</b> to create an IDL stub widget, you will need to use <b>CALL_EXTERNAL</b> to call additional code that creates the real widgets that represent the stub. Having done that, use <b>IDL_WidgetSetStubIds()</b> to save the top and bottom widget pointers.</p>
+        <h3>IDL_WidgetGetStubIds()</h3>
+        <h4>Syntax:</h4>
+        <p class="Code">void IDL_WidgetGetStubIds(char *rec, unsigned long *t_id, unsigned long *b_id);</p>
+        <p>This function returns the top (<code>t_id</code>) and bottom (<code>b_id</code>) real widget pointers for any specified widget (not just stub widgets). When using these values for non-stub widgets, it is the caller’s responsibility to avoid damaging the IDL-created widgets in any way.</p>
+        <h3>IDL_WidgetStubSetSizeFunc()</h3>
+        <h4>Syntax:</h4>
+        <p class="Code">void IDL_WidgetStubSetSizeFunc(char *rec, </p>
+        <p class="Code">&#160;&#160;&#160;IDL_WIDGET_STUB_SET_SIZE_FUNC func)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">typedef void (* IDL_WIDGET_STUB_SET_SIZE_FUNC); </p>
+        <p class="Code">&#160;&#160;&#160;(IDL_ULONG id, int width, int height);</p>
+        <p>When IDL needs to set the size of a stub widget, it attempts to set the size of the bottom real widget to the necessary dimensions. Often, this is the desired behavior, but cases can arise where it would be better to handle sizing differently. In such cases, use <b>IDL_WidgetStubSetSizeFunc()</b> to register a function that IDL will call to do the actual sizing.</p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

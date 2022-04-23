@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: P">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>POLYWARP </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="P_list.htm">Routines: P</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">POLYWARP</span>
+        </div>
+        <h1 class="Routine"><a name="P_817877613_758408"></a><a name="kanchor2073"></a><a name="P_817877613_37175"></a>POLYWARP </h1>
+        <p>The POLYWARP procedure performs polynomial spatial warping.</p>
+        <p>Using least squares estimation, POLYWARP determines the coefficients <i>Kx</i><sub class="italic">i,j</sub> and <i>Ky</i><sub class="italic">(i,j)</sub> of the polynomial functions: </p>
+        <p>
+            <img src="../../images/22_3.jpg" />
+        </p>
+        <p><i>Kx</i> and <i>Ky</i> can be used as inputs P and Q to the built-in function POLY_2D. This coordinate transformation may be then used to map from <i>Xo, Yo</i> coordinates into <i>Xi, Yi</i> coordinates.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>polywarp.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="P_817877613_1075031"></a><a name="P_817877613_1075031_PageTOC_POLYWARP_"></a>Examples</h2>
+        <p>The following example shows how to display an image and warp it using the POLYWARP and POLY_2D routines.</p>
+        <p class="Code">; Create the original image:<br />A = BYTSCL(SIN(DIST(250)))<br /><br />; Get the dimensions of the image<br />sizeA = SIZE(A, /DIMENSIONS) <br />xSize=sizeA[0]<br />ySize=sizeA[1]<br /><br />; Create the display window<br />WINDOW, /FREE, XSIZE=xSize*2, YSIZE=ySize, $<br />&#160;&#160;&#160;TITLE='POLYWARP Example'<br /><br />TVSCL, A, 0<br /><br />; Now set up the Xis and Yis:<br />XI = [24, 35, 102, 92]<br />YI = [81, 24, 25, 92]<br /><br />; Enter the Xos and Yos:<br />XO = [61, 62, 143, 133]<br />YO = [89, 34, 38, 105]<br /><br />; Run POLYWARP to obtain a Kx and Ky:<br />POLYWARP, XI, YI, XO, YO, 1, KX, KY<br /><br />; Create a warped image based on Kx and Ky with POLY_2D:<br />B = POLY_2D(A, KX, KY)<br /><br />; Display the new image:<br />TV, B, 1</p>
+        <h2 class="API"><a name="P_817877613_758419"></a><a name="P_817877613_758419_PageTOC_POLYWARP_"></a>Syntax</h2>
+        <p class="Syntax">POLYWARP, <i>Xi</i>,<i> Yi</i>,<i> Xo</i>,<i> Yo</i>,<i> Degree</i>,<i> Kx</i>,<i> Ky </i>[,&#160;/<a href="#P_817877613_1075034" class="selected">DOUBLE</a>] [,&#160;<a href="#P_817877613_1075060" class="selected">STATUS</a>=<i>variable</i>]</p>
+        <h2 class="API"><a name="P_817877613_758421"></a><a name="P_817877613_758421_PageTOC_POLYWARP_"></a>Arguments</h2>
+        <h3 class="Argument">Xi, Yi</h3>
+        <p>Vectors of X and Y coordinates to be fit as a function of Xo and Yo.</p>
+        <h3 class="Argument">Xo, Yo</h3>
+        <p>Vectors of X and Y independent coordinates. These vectors must have the same number of elements as <i>Xi</i> and <i>Yi</i>.</p>
+        <h3 class="Argument">Degree</h3>
+        <p>The degree of the fit. The number of coordinate pairs must be greater than or equal to (<i>Degree</i>+1)<sup>2</sup>.</p>
+        <h3 class="Argument">Kx</h3>
+        <p>A named variable that will contain the array of coefficients for <i>Xi</i> as a function of (<i>Xo, Y</i>o). This parameter is returned as a (<i>Degree</i>+1) by (<i>Degree</i>+1) element array.</p>
+        <h3 class="Argument">Ky</h3>
+        <p>A named variable that will contain the array of coefficients for <i>Yi</i>. This parameter is returned as a (<i>Degree</i>+1) by (<i>Degree</i>+1) element array.</p>
+        <h2 class="API"><a name="P_817877613_758432"></a><a name="P_817877613_758432_PageTOC_POLYWARP_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="P_817877613_1075034"></a><a name="P_817877613_1075034_Keywords_POLYWARP__"></a>DOUBLE</h3>
+        <p>Set this keyword to use double-precision for computations and to return a double-precision result. Explicitly set DOUBLE=0 to ensure the use of single-precision for computations and to return a single-precision result. By default, POLYWARP performs computations in double precision and returns a double-precision result if any of the inputs are double-precision; computations are performed in single precision and the result returned as single-precision if all of the inputs are single-precision.</p>
+        <h3 class="Keyword"><a name="P_817877613_1075060"></a><a name="P_817877613_1075060_Keywords_POLYWARP__"></a>STATUS</h3>
+        <p>Set this keyword to a named variable to receive the status of the operation. Possible status values are:</p>
+        <table style="caption-side: bottom;mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <caption valign="bottom" style="padding-bottom: 12pt;">
+                <p>&#160;</p>
+            </caption>
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Successful completion.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Singular array (which indicates that the inversion is invalid).</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Warning that a small pivot element was used and that significant accuracy was probably lost.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If STATUS is not specified, any warning messages will be output to the screen.</p>
+        <h2 class="API"><a name="P_817877613_758449"></a><a name="P_817877613_758449_PageTOC_POLYWARP_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="P_817877613_1079162"></a><a name="P_817877613_1079162_PageTOC_POLYWARP_"></a>See Also</h2>
+        <p><a href="POLY_2D.htm#P_817877613_678200">POLY_2D</a>, <a href="../W/WARP_TRI.htm#W_811389549_758712">WARP_TRI</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

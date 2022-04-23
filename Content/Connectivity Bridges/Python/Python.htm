@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Python Bridge</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Property_Table.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Python Bridge</span>
+        </div>
+        <h1>Python Bridge</h1>
+        <ul>
+            <li value="1"><a href="#Overview" class="selected">Overview</a>
+            </li>
+            <li value="2"><a href="#Examples" class="selected">Examples</a>
+            </li>
+            <li value="3"><a href="#Installation" class="selected">Installation</a>
+            </li>
+            <li value="4"><a href="IDLToPython.htm">IDL to Python bridge</a>
+            </li>
+            <li value="5"><a href="PythonToIDL.htm">Python to IDL bridge</a>
+            </li>
+            <li value="6">IDL IPython Notebook Kernel</li>
+        </ul>
+        <h2><a name="Overview"></a>Overview</h2>
+        <p>The Python Bridge consists of two components: the <a href="IDLToPython.htm">IDL to Python bridge</a> and the <a href="PythonToIDL.htm">Python to IDL bridge</a>. The bridge has the following features: </p>
+        <ul>
+            <li value="1">Works with Python 2 and Python 3</li>
+            <li value="2">Access to all IDL routines and Python modules</li>
+            <li value="3">Seamless: looks just like an IDL object or Python module</li>
+            <li value="4">All bridge output is redirected to the standard output</li>
+            <li value="5">Case sensitivity and row/column major is handled automatically</li>
+            <li value="6">Can execute arbitrary command strings in either language</li>
+            <li value="7">Automatic data conversion from IDL arrays to numpy arrays</li>
+            <li value="8">Data is passed by reference when calling routines/methods</li>
+            <li value="9">Can pass main variables back and forth</li>
+        </ul>
+        <h2><a name="Examples"></a>Examples</h2>
+        <p>For example, within IDL, you could execute the following Python commands to create a matplotlib plot:</p>
+        <p class="Code">IDL&gt; <b>ran = Python.Import('numpy.random')</b></p>
+        <p class="Code">IDL&gt; <b>arr = ran.rand(100)  ; call "rand" method</b></p>
+        <p class="Code">IDL&gt; <b>plt = Python.Import('matplotlib.pyplot')</b></p>
+        <p class="Code">IDL&gt; <b>p = plt.plot(arr)  &#160;&#160;; call "plot", pass an array</b></p>
+        <p class="Code">IDL&gt; <b>void = plt.show(block=0)  ; pass keyword</b></p>
+        <p>Within IDL, you can also directly enter Python "command-line mode":</p>
+        <p class="Code">IDL&gt; <b>&gt;&gt;&gt;</b></p>
+        <p class="Code">&gt;&gt;&gt; <b>import matplotlib.pyplot as plt</b></p>
+        <p class="Code">&gt;&gt;&gt; <b>import numpy.random as ran</b></p>
+        <p class="Code">&gt;&gt;&gt; <b>arr = ran.rand(100)</b></p>
+        <p class="Code">&gt;&gt;&gt; <b>p = plt.plot(arr)</b></p>
+        <p class="Code">&gt;&gt;&gt; <b>plt.show()</b></p>
+        <p class="Code">&gt;&gt;&gt; </p>
+        <p class="Code">IDL&gt;</p>
+        <p>On the Python side, you can easily access all IDL&#160;functionality:</p>
+        <p class="Code">&gt;&gt;&gt; <b>from idlpy import IDL</b></p>
+        <p class="Code">&gt;&gt;&gt; <b>import numpy.random as ran</b></p>
+        <p class="Code">&gt;&gt;&gt; <b>arr = ran.rand(100)</b></p>
+        <p class="Code">&gt;&gt;&gt; <b>p = IDL.plot(arr, title='My Plot')</b></p>
+        <p class="Code">&gt;&gt;&gt; <b>p.color = 'red'</b></p>
+        <p class="Code">&gt;&gt;&gt; <b>p.save('myplot.pdf')</b></p>
+        <p class="Code">&gt;&gt;&gt; <b>p.close()</b></p>
+        <h2><a name="Installation"></a>Installation</h2>
+        <p>Your first step should be to install a working copy of Python 2.7.x or 3.4.x including the numpy library. The simplest method is to install one of the pre-configured installations such as Anaconda, which contains everything needed for the IDL-Python bridge. To verify your Python installation, try the following Python commands:</p>
+        <p class="Code">&gt;&gt;&gt; <b>import sys</b></p>
+        <p class="Code">&gt;&gt;&gt; <b>sys.version</b></p>
+        <p class="Code">'3.4.1 |Anaconda 2.1.0 (x86_64)| (default, Sep 10 2014, 17:24:09) \n[GCC 4.2.1 (Apple Inc. build 5577)]'</p>
+        <p class="Code">&gt;&gt;&gt; <b>import numpy as np</b></p>
+        <p class="Code">&gt;&gt;&gt; <b>np.array([1.0,2,3]).dtype</b></p>
+        <p class="Code">dtype('float64')</p>
+        <p>The next step is to configure your system environment variables so that IDL and Python can find each other.</p>
+        <h3>Windows Platforms</h3>
+        <p>You should ensure that your Python executable is on the Windows system PATH environment variable. IDL will use the first Python executable that it finds on the system path. You should also ensure that IDL's <code>bin</code> directory is on the Windows system PATH environment variable when launching Python. For 64-bit Windows this would look like:</p>
+        <p class="Code"><span style="font-family: monospace;">PATH = ...;c:\Program Files\Exelis\IDLXX\bin\bin.x86_64;...</span>
+        </p>
+        <p>where <code>XX</code> is the IDL&#160;version number.</p>
+        <p>If you want multiple versions of IDL side-by-side on your Windows system, you cannot set this permanently in your Windows environment. You need to create a script to append the IDL <code>bin</code> directory to the PATH environment variable, then launch Python.</p>
+        <p>You will also need to add IDL's <code>bin</code> directory and the <code>lib/bridges</code> directory to the PYTHONPATH environment variable. For 64-bit Windows this would look like:</p>
+        <p class="Code"><span style="font-family: monospace;">PYTHONPATH = c:\Program Files\Exelis\IDLXX\bin\bin.x86_64;</span> <span style="font-family: monospace;">C:\Program Files\Exelis\IDLXX\lib\bridges</span></p>
+        <p>where <code>XX</code> is the IDL&#160;version number.</p>
+        <h3>Linux Platforms</h3>
+        <p>You should ensure that your Python executable is on the PATH environment variable.  IDL will use the first Python executable that it finds on the system path. For example, assuming that you have installed Anaconda in <span style="font-family: monospace;">/usr/local/anaconda3</span>:</p>
+        <p class="Code"><span style="font-family: monospace;">PATH = ...:/usr/local/anaconda3:...</span>
+        </p>
+        <p>You will also need to add IDL's <span style="font-family: monospace;">bin</span> directory and the <span style="font-family: monospace;">lib/bridges</span> directory to the PYTHONPATH environment variable. For example:</p>
+        <p class="Code"><span style="font-family: monospace;">PYTHONPATH = /usr/local/idl/bin/bin.linux.x86_64:/usr/local/idl/</span><span style="font-family: monospace;">lib/bridges</span>
+        </p>
+        <p>Then, you need to add both IDL and the Python <span style="font-family: monospace;">lib</span> directory to LD_LIBRARY_PATH. For example:</p>
+        <p class="Code">LD_LIBRARY_PATH = /usr/local/anaconda3/linux_34x/lib:/usr/local/idl/bin/bin.linux.x86_64</p>
+        <p>As a last step, you should also ensure that IDL can find its fonts and resources by executing "<span style="font-family: monospace;">source idl_setup</span>" within IDL's bin directory.</p>
+        <h3>Macintosh Platforms</h3>
+        <p>To run the IDL-Python bridge on Macintosh platforms, you must set four environment variables:</p>
+        <table style="width: 100%;margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Property_Table.css');" class="TableStyle_Property_Table" cellspacing="0">
+            <col style="width: 114px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColSep">
+                        <p style="font-weight: bold;">Variable</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColEnd">
+                        <p>PATH</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColSep">
+                        <p style="font-weight: bold;">Description</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColEnd">
+                        <p>IDL&#160;will use the first Python executable that it finds on the system path. Therefore, prepend the Python <code>bin</code> directory to the current path.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_ColSep">
+                        <p style="font-weight: bold;">Sequence of Directories</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_ColEnd">
+                        <p class="Code">&lt;<i>python-bin-directory</i>&gt;</p>
+                        <p class="Code">&#160;</p>
+                        <p class="Code">$PATH</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep" style="font-weight: bold;">
+                        <p>Bash Example</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColEnd">
+                        <p class="Code">export PATH="/Users/&lt;<i>username</i>&gt;/anaconda3/bin:$PATH"</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>&#160;</p>
+        <table style="width: 100%;margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Property_Table.css');" class="TableStyle_Property_Table" cellspacing="0">
+            <col style="width: 114px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColSep">
+                        <p style="font-weight: bold;">Variable</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColEnd">
+                        <p>DYLD_LIBRARY_PATH</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColSep">
+                        <p style="font-weight: bold;">Description</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColEnd">
+                        <p>Prepend the Python and IDL <code>lib</code> directories to the library path so that IDL can find the Python and IDL libraries. Due to library conflicts between Anaconda and Mac OS X, the <code>ImageIO</code> and <code>usr/lib</code> directories must precede the Python libraries.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_ColSep" style="font-weight: bold;">
+                        <p>Sequence of Directories</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_ColEnd">
+                        <p class="Code">$DYLD_LIBRARY_PATH</p>
+                        <p class="Code">&#160;</p>
+                        <p class="Code">/System/Library/Frameworks/ImageIO.framework/Resources</p>
+                        <p class="Code">&#160;</p>
+                        <p class="Code">/usr/lib</p>
+                        <p class="Code">&#160;</p>
+                        <p class="Code">&lt;<i>python-lib-directory</i>&gt;</p>
+                        <p class="Code">&#160;</p>
+                        <p class="Code">&lt;<i>IDL_DIR</i>&gt;/bin/bin.darwin.x86_64</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep" style="font-weight: bold;">Bash Example</td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColEnd">
+                        <p class="Code">DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:/System/Library/Frameworks/ImageIO.framework/Resources"</p>
+                        <p class="Code">&#160;</p>
+                        <p class="Code">DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:/usr/lib"</p>
+                        <p class="Code">&#160;</p>
+                        <p class="Code">DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:/Users/&lt;<i>username</i>&gt;/anaconda3/lib"</p>
+                        <p class="Code">&#160;</p>
+                        <p class="Code">DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:/Users/&lt;<i>username</i>&gt;/Applications/exelis/idl85/bin/bin.darwin.x86_64"</p>
+                        <p class="Code">&#160;</p>
+                        <p class="Code">export DYLD_LIBRARY_PATH</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>&#160;</p>
+        <table style="width: 100%;margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Property_Table.css');" class="TableStyle_Property_Table" cellspacing="0">
+            <col style="width: 114px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColSep">
+                        <p style="font-weight: bold;">Variable</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColEnd">
+                        <p>PYTHONHOME</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColSep">
+                        <p style="font-weight: bold;">Description</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColEnd">
+                        <p>Specify the Python home directory.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p style="font-weight: bold;">Bash Example</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColEnd">
+                        <p class="Code">export PYTHONHOME="/Users/&lt;<i>username</i>&gt;/anaconda3"</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>&#160;</p>
+        <table style="width: 100%;margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/Property_Table.css');" class="TableStyle_Property_Table" cellspacing="0">
+            <col style="width: 144px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColSep">
+                        <p style="font-weight: bold;">Variable</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColEnd">
+                        <p>PYTHONPATH</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColSep">
+                        <p style="font-weight: bold;">Description</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColEnd">
+                        <p>Prepend the IDL and <code>bridges</code> directories to the Python path.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_ColSep" style="font-weight: bold;">Sequence of Directories</td>
+                    <td class="TableStyle_Property_Table_Body_1_0_ColEnd">
+                        <p class="Code">$PYTHONPATH</p>
+                        <p class="Code">&#160;</p>
+                        <p class="Code">&lt;<i>IDL_DIR</i>&gt;/bin/bin.darwin.x86_64</p>
+                        <p class="Code">&#160;</p>
+                        <p class="Code">&lt;<i>IDL_DIR</i>&gt;/lib/bridges</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep" style="font-weight: bold;">
+                        <p>Bash Example</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColEnd">
+                        <p class="Code">export PYTHONPATH="$PYTHONPATH:/Users/&lt;<i>username</i>&gt;/Applications/exelis/idl85/bin/bin.darwin.x86_64:/Users/&lt;<i>username</i>&gt;/Applications/exelis/idl85/lib/bridges"</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Set these variables as needed for your shell (Bash, C, Korn, etc.) In order for the IDL Workbench to pick up these environment variables, you need to start it from a command line that has these variables set.</p>
+        <p>As a last step, ensure that IDL can finds its fonts and resources by executing the following command within the IDL <code>bin</code> directory:</p>
+        <p class="Code">source idl_setup</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

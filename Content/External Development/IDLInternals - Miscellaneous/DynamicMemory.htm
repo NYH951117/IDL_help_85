@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Miscellaneous">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Dynamic Memory</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="InternalsMisc.htm">IDLInternals - Miscellaneous</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Dynamic Memory</span>
+        </div>
+        <h1><a name="kanchor5499"></a>Dynamic Memory</h1>
+        <p>IDL provides access to the dynamic memory allocation routines it uses internally. Use these routines rather than system-provided routines such as <b>malloc()/free()</b> when possible.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The memory pointers returned by the IDL memory allocation routines discussed in this chapter do not necessarily correspond directly to <b>malloc()/free()</b> calls, or to any other system memory allocation package. You must be careful not to mix memory allocation packages. Memory allocated via a given API can only be freed by the corresponding free call provided by that API. For example, memory allocated by an IDL memory allocation routine can only be freed by the IDL <b>IDL_MemFree()</b> function. Memory allocated by <b>malloc()</b> can only be freed by <b>free()</b>. Failure to follow this rule can lead to memory corruption, including possible crashing of the IDL program.</p>
+        <p>Please note that code called via <a href="../Using CALL_EXTERNAL/CALL_EXTERNAL.htm">CALL_EXTERNAL</a>, or as a system routine (<a href="../Adding System Routines/LinkImage.htm">LINKIMAGE</a>, <a href="../Adding System Routines/DLM.htm">Dynamically Loadable Modules</a>) should not use the IDL dynamic memory routines. Instead, use <b>IDL_GetScratch()</b> (see “Getting Dynamic Memory") which prevents memory from being lost under error conditions.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Our experience shows that in situations where <b>IDL_GetScratch()</b> is appropriate, use of any other memory allocation mechanism should raise a warning flag to the programmer that something is wrong in their code. Rarely if ever is a direct call to <b>malloc()/free()</b> reasonable in such a situation — even if it appears to work correctly, you will have to work harder to provide the error handling functionality that <b>IDL_GetScratch()</b> provides automatically, or your code will leak memory in such situations.</p>
+        <h2 class="API">IDL_MemAlloc()</h2>
+        <p><b>IDL_MemAlloc()</b> is used to allocate dynamic memory.</p>
+        <p class="Code">void *IDL_MemAlloc(IDL_MEMINT n, char *err_str, int action)</p>
+        <p>where:</p>
+        <h3>n</h3>
+        <p>The number of bytes to allocate.</p>
+        <h3>err_str</h3>
+        <p>NULL, or a null terminated text string describing the memory being allocated.</p>
+        <h3>action</h3>
+        <p>An action parameter to be passed to <b>IDL_Message()</b> if <b>IDL_MemAlloc()</b> is unable to allocate the desired memory and <b>err_str</b> is non-NULL.</p>
+        <p><b>IDL_MemAlloc()</b> attempts to allocate the desired amount of memory. If the requested amount is allocated, a pointer to the memory is returned. The memory is aligned strictly enough to be suitable for any object.</p>
+        <p>If the attempt to allocate memory fails and err_str is non-NULL, <b>IDL_Message()</b> is called as:</p>
+        <p class="Code">IDL_Message(IDL_M_CNTGETMEM, action, err_str)</p>
+        <p>If <b>IDL_Message()</b> returns, or if err_str is NULL and <b>IDL_Message()</b> is not called, <b>IDL_MemAlloc()</b> returns a NULL pointer indicating its failure.</p>
+        <h2 class="API">IDL_MemFree()</h2>
+        <p>Memory allocated via <b>IDL_MemAlloc()</b> should only be returned via <b>IDL_MemFree()</b>:</p>
+        <p class="Code">void IDL_MemFree(REGISTER void *m, char *err_str, int action)</p>
+        <h3>m</h3>
+        <p>A pointer to memory previously allocated via <b>IDL_MemAlloc()</b>.</p>
+        <h3>err_str</h3>
+        <p>NULL, or a null terminated text string describing the memory being freed.</p>
+        <h3>action</h3>
+        <p>An action parameter to be passed to <b>IDL_Message()</b> if unable to free memory and err_str is non-NULL.</p>
+        <p><b>IDL_MemFree()</b> attempts to free the specified memory. If the attempt to free memory fails and <b>err_str</b> is non-NULL, <b>IDL_Message()</b> is called as:</p>
+        <p class="Code">IDL_Message(IDL_M_CNTFREMEM, action, err_str)</p>
+        <p>The following actions have undefined consequences, and should not be done:</p>
+        <ul>
+            <li value="1">Returning memory allocated from a source other than <b>IDL_MemAlloc()</b>.</li>
+            <li value="2">Freeing the same allocation more than once.</li>
+            <li value="3">Dereferencing memory once it has been freed.</li>
+        </ul>
+        <h3>IDL_MemAllocPerm()</h3>
+        <p>Another memory allocation routine, <b>IDL_MemAllocPerm()</b>, exists to allocate dynamic memory that will not be returned for reuse. <b>IDL_MemAllocPerm()</b> allocates memory in moderately large units and carves out pieces of these blocks to satisfy its requests. Use of this routine can help minimize the effects of memory fragmentation.</p>
+        <p class="Code">void *IDL_MemAllocPerm(IDL_MEMINT n, char *err_str, int action)</p>
+        <p><b>IDL_MemAllocPerm()</b> takes the same arguments as <b>IDL_MemAlloc()</b>, differing only in that the memory allocated will not be freed until the process exits. Do not attempt to free memory allocated by <b>IDL_MemAllocPerm()</b>. The results of such an action are undefined.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

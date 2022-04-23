@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|Java and COM - IDL Objects">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDL Access</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Java and COM - IDL Objects</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDL Access</span>
+        </div>
+        <h1><a name="IDL_Access"></a><a name="kanchor5306"></a>IDL Access</h1>
+        <p>Calling a method or accessing a property on a wrapper object instance calls into the underlying IDL object’s method or property. Each wrapper object is associated with an IDL process, controlled by the IDL main process, by giving it a process name during wrapper creation by the Export Bridge Assistant. All wrapper objects that use the same process name have their underlying IDL objects created within the same IDL process. For each wrapper object that provides a unique process name, a new IDL process is created.</p>
+        <p>As a COM or Java developer, you do not need to worry about IDL process creation or destruction. Creating a new object creates a new process for it (unless a process already exists and the new object is being added to it), and destroying the last object in a process also destroys the process.</p>
+        <p>The code for the IDL object must be available because the bridge’s process layers call it. The wrapper does not contain the IDL object, only provides an interface for it, and if you modify the IDL object after generation of its wrapper object, the wrapper might not work as expected. For more information, see <a href="../ExportFromIDL - Export Bridge Assistant/ModifyingASourceObjectAfterExport.htm#Modifying_a_Source_Object_After_Export">Modifying a Source Object After Export</a>.</p>
+        <p>See <a href="ConfiguringBuildAndClientMachines.htm#Configuring_Build_And_Client_Machines">Configuring Build and Client Machines</a> for information on setting up machines for building and using wrapper objects.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Stock wrapper methods allow you to work with IDL processes. For COM, see <a href="../ExportFromIDL - COM Objects/StockCOMWrapperMethods.htm#GetProcessName">GetProcessName</a> and <a href="../ExportFromIDL - COM Objects/StockCOMWrapperMethods.htm#SetProcessName">SetProcessName</a>. For Java, see <a href="../ExportFromIDL - Java Objects/StockJavaWrapperMethods.htm#getProcessName">getProcessName</a> and <a href="../ExportFromIDL - Java Objects/StockJavaWrapperMethods.htm#setProcessName">setProcessName</a>. To take effect, you must set a process name before creating an object in order for the object to exist in that process.</p>
+        <p>Consider the following diagram:</p>
+        <p>
+            <img src="../Resources/Images/BridgesFigure6-1.png" />
+        </p>
+        <p>In the diagram, the client has created instances of several different wrapper objects: A, B, C, D, and E. Wrapper objects A and B have their process name set to X, and thus all instances of A and B create their underlying IDL objects in the same IDL process called X. Wrapper object C uses a different process, Y. Since there are three instances of the same wrapper object C, there are three instances of the IDL object C created in the process, Y. Wrapper objects E and D use an entirely different process, Z.</p>
+        <h2><a name="IDL_Ownership_and_Blocking"></a><a name="kanchor5307"></a>IDL Ownership and Blocking</h2>
+        <p>During a method call, the client-side wrapper object instance becomes the owner of the IDL process that contains the underlying IDL object and remains the owner until the method call returns. An IDL process can only have one owner at a time. If there is a current owner of an IDL process and another wrapper object attempts to access the same IDL process, an IDL busy indication is returned through the wrapper object.</p>
+        <p>COM and Java handle error conditions differently: COM method calls return an HRESULT error value, whereas Java method calls throw an exception. In COM, this results in an IDL_BUSY condition; however, in Java, the requests are queued so that no busy condition occurs. See <a href="../ExportFromIDL - COM Objects/ErrorHandling.htm#Error_Handling">Error Handling</a> (COM) and <a href="../ExportFromIDL - Java Objects/ErrorHandling.htm#Error_Handling">Error Handling</a> (Java) for more information.</p>
+        <p>However, if one wrapper object instance owns a particular IDL process, another client process is free to make calls on other wrapper object instances that map to different IDL processes. In other words, the client can have multiple method calls executing at the same time as long as each method call maps to a different process.</p>
+        <p>For example, using the diagram above, if Instance #1 of wrapper object A is the current owner of the IDL process named X, and then another thread calls a method on Instance #1 of wrapper object B, it will return an IDL busy error, since it will try to use the same process as the wrapper object A. However, another thread can call a method on any instances of wrapper objects C, D, and E since they map to a different processes that are not currently owned.</p>
+        <h2><a name="IDL_Licensing_Modes"></a><a name="kanchor5308"></a>IDL Licensing Modes</h2>
+        <p>By default, when a client COM or Java application initializes the IDL object, the IDL export bridge checks to see what type of license is available on the client machine. If an IDL development license is available, it is used and the IDL object runs in full development mode. If a development license is not found, the export bridge checks for a runtime license; if the IDL object runs in runtime mode, normal runtime limitations (no compilation of .pro code, for example) are enforced. If no development or runtime license is found, the IDL object runs in Virtual Machine mode; normal Virtual Machine limitations (no compilation of .pro code, use of EXECUTE disabled, etc.) are enforced.</p>
+        <p>COM and Java applications can explicitly set IDL process initialization parameters to specify which licensing mode the IDL object will use. See the description of the initializer argument to the <a href="../ExportFromIDL - Java Objects/StockJavaWrapperMethods.htm#createObject">createObject</a> method for details on initializing IDL objects from a Java application. See the description of the flags argument to the application.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

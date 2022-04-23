@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|Widget Application Techniques">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Working with Widget Events</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widget Application Techniques</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Working with Widget Events</span>
+        </div>
+        <h1><a name="widget_techniques_4218446668_96232"></a><a name="widget_techniques_4218446668_52686"></a>Working with Widget Events</h1>
+        <p><a name="kanchor5018"></a>Widget events and the process of establishing a widget event loop for your application are described in <a href="Widget_Event_Processing.htm#widget_apps_4063420628_1042201">Widget Event Processing</a>. This section discusses additional topics that may be useful when creating event-driven applications, including:</p>
+        <ul>
+            <li value="1"><a href="#widget_techniques_4218446668_96508" class="selected">Interrupting the Event Loop</a>
+            </li>
+            <li value="2"><a href="#widget_techniques_4218446668_96246" class="selected">Identifying Widget Type from an Event</a>
+            </li>
+            <li value="3"><a href="#widget_techniques_4218446668_96253" class="selected">Keyboard Focus Events</a>
+            </li>
+            <li value="4"><a href="#widget_techniques_4218446668_96233" class="selected">Timer Events</a>
+            </li>
+            <li value="5"><a href="#widget_techniques_4218446668_110080" class="selected">Tracking Events</a>
+            </li>
+            <li value="6"><a href="#widget_techniques_4218446668_110090" class="selected">Context Menu Events</a>
+            </li>
+        </ul>
+        <h2 class="API"><a name="widget_techniques_4218446668_96508"></a><a name="kanchor5019"></a><a name="widget_techniques_4218446668_93003"></a>Interrupting the Event Loop</h2>
+        <p>Beginning with IDL version 5, IDL has the ability to process commands from the IDL command line while simultaneously processing widget events. This means that the IDL command line will remain active even when widget applications are running.</p>
+        <p><a name="kanchor5020"></a>It is possible to interrupt the event function by sending the interrupt character (Control-C). However, you may find that even after sending the interrupt character, IDL does not immediately interrupt the event loop. IDL will interrupt the process that is “on top”—that is, if several applications are running at once, the interrupt will be handled by the first application to receive it. </p>
+        <p>If your widget application is the only active application, and sending the interrupt does not cause it to break, move the mouse cursor across (or click on) one of the widgets.</p>
+        <p>This works because when IDL is in the event function, it only checks for the interrupt between event notifications from the window system. Such events do not necessarily translate one-to-one into IDL widget events because the window system typically generates a large number of events related to the window system’s operation that IDL quietly handles. Moving the mouse cursor across the widgets typically generates some of these events which gives IDL a chance to notice the interrupt and act on it.</p>
+        <h2 class="API"><a name="widget_techniques_4218446668_96246"></a><a name="widget_techniques_4218446668_49482"></a>Identifying Widget Type from an Event</h2>
+        <p><a name="kanchor5021"></a>Given a widget event structure, often you need to know what type of widget generated it without having to match the widget ID in the event structure to all the current widgets. This information is available by specifying the STRUCTURE_NAME keyword to the TAG_NAMES function:</p>
+        <p class="Code">PRINT, 'Event structure type: ', TAG_NAMES(EVENT, /STRUCTURE_NAME)</p>
+        <p>This works because each widget type generates a different event structure. The event structure generated by a given widget type is documented in the description of the widget creation function in the <i>IDL Reference Guide</i>.</p>
+        <p>When using this technique, be aware that although all the basic widgets use named structures for their events, many compound widgets return anonymous structures. This technique does not work well in that case because anonymous structures lack a recognizable name.</p>
+        <p>An alternative technique involves using the TYPE keyword to the <a href="../../Reference Material/W/WIDGET_INFO.htm#W_811389549_680333">WIDGET_INFO</a> function. This method is useful when the widget event name does not specify the widget from which the event originated. Timer events are an example; although the events originate from a widget, the event structure’s name is WIDGET_TIMER. The following statement checks to see if the event is a timer event and, if it is, prints the type code of the widget that generated the event.</p>
+        <p class="Code">IF ((TAG_NAMES(EVENT, /STRUCTURE) EQ 'WIDGET_TIMER') THEN $</p>
+        <p class="Code">&#160;&#160;PRINT, WIDGET_INFO(EVENT.ID, /TYPE)</p>
+        <p>Such a check would be useful if a given widget could generate <i>either</i> a timer event or a “normal” event, and you wanted to differentiate between the two.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Always check for a distinct type of widget event. IDL will continue to add new widgets with new event structures, so it is important not to make assumptions about the contents of a random widget event structure. The structure of existing widget events will remain stable, (although new fields may be added) so checking for a particular type of widget event will always work.</p>
+        <h2 class="API"><a name="widget_techniques_4218446668_96253"></a><a name="widget_techniques_4218446668_35690"></a>Keyboard Focus Events</h2>
+        <p>Base, table, and text widgets can be set to generate <i><a name="kanchor5022"></a>keyboard focus events</i>. Generating and examining keyboard focus events allows you to determine when a given widget has either <i>gained</i> or <i>lost</i> the keyboard focus—that is, when it is brought to the foreground or when it is covered by another window.</p>
+        <p>Set the KBRD_FOCUS_EVENTS keyword to <a href="../../Reference Material/W/WIDGET_BASE.htm#W_811389549_974349">WIDGET_BASE</a>, <a href="../../Reference Material/W/WIDGET_TABLE.htm#W_811389549_976479">WIDGET_TABLE</a>, or <a href="../../Reference Material/W/WIDGET_TEXT.htm#W_811389549_680547">WIDGET_TEXT</a> to generate keyboard focus events. (You can also modify an existing base, table, or text widget to generate keyboard focus events using the KBRD_FOCUS_EVENTS keyword to <a href="../../Reference Material/W/WIDGET_CONTROL.htm#W_811389549_1232714">WIDGET_CONTROL</a>.) You can then use your event-handling procedure to cache the widget ID of the last widget (with keyboard focus events enabled) to have the keyboard focus. One situation where this is useful is when you have an application menu (created with the MBAR keyword to WIDGET_BASE) and you wish to perform an action in a text widget based on the menu item selected. Although the event generated by the user’s menu selection has the <i>menu’s</i> base as its top-level widget ID, if you generate and track keyboard focus events for the text widget, you can “remember” which widget the action triggered by the menu selection should affect. Note that in this example, keyboard focus events are <i>not</i> generated for the menubar’s base.</p>
+        <h2 class="API"><a name="widget_techniques_4218446668_96233"></a><a name="widget_techniques_4218446668_54236"></a>Timer Events</h2>
+        <p>In addition to the normal widget events discussed previously, IDL allows the user to make <i><a name="kanchor5023"></a>timer event</i> requests by using the TIMER keyword. Such events are useful in many applications that are time dependent, such as animation. The syntax for making such a request is:</p>
+        <p class="Code">WIDGET_CONTROL, <i>Widget_Id</i>, TIMER=<i>interval_in_seconds</i></p>
+        <p><i>Widget_Id</i> can be the ID of any type of widget. When such a request is made, IDL generates a timer request after the requested time interval has passed. Timer events consist of a structure with only the standard three fields — no additional information is provided.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>At most one timer event request can be associated with a given widget ID. If multiple timer event requests are associated with a single widget, the last request made takes precedence.</p>
+        <p>It is up to the programmer to differentiate between a normal event and a timer event for a given widget. One way to solve this problem is to make timer requests for widgets that do not otherwise generate events, such as base or label widgets.</p>
+        <p>Each timer request causes a single event to be generated. To generate a steady stream of timer events, you must make a new timer request in the event handler routine each time a timer event is delivered. The following example demonstrates how to check for a timer event and generate a new timer event each time a timer event occurs:</p>
+        <p class="Code">PRO timer_example_event, ev</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, ev.ID, GET_UVALUE=uval</p>
+        <p class="Code">&#160;&#160;IF (TAG_NAMES(ev, /STRUCTURE_NAME) EQ 'WIDGET_TIMER') THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;PRINT, 'Timer Fired'</p>
+        <p class="Code">&#160;&#160;&#160;&#160;WIDGET_CONTROL, ev.TOP, TIMER=2</p>
+        <p class="Code">&#160;&#160;ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;CASE uval OF</p>
+        <p class="Code">&#160;&#160;&#160;&#160;'timer' : BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;WIDGET_CONTROL, ev.TOP, TIMER=2</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;END</p>
+        <p class="Code">&#160;&#160;&#160;&#160;'exit' : WIDGET_CONTROL, ev.TOP, /DESTROY</p>
+        <p class="Code">&#160;&#160;ELSE: </p>
+        <p class="Code">&#160;&#160;ENDCASE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO timer_example</p>
+        <p class="Code">&#160;&#160;base = WIDGET_BASE(/COLUMN, UVALUE='base')</p>
+        <p class="Code">&#160;&#160;b1 = WIDGET_BUTTON(base, VALUE='Fire event', UVALUE='timer')</p>
+        <p class="Code">&#160;&#160;b2 = WIDGET_BUTTON(base, VALUE='Exit', UVALUE='exit')</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, base, /REALIZE</p>
+        <p class="Code">&#160;&#160;XMANAGER, 'timer_example', base, /NO_BLOCK</p>
+        <p class="Code">END</p>
+        <p>See <a href="Draw_Widget_Example.htm#widget_draw_834959296_96336">Draw Widget Example</a> for a larger example using timer events.</p>
+        <h2 class="API"><a name="widget_techniques_4218446668_110080"></a><a name="widget_techniques_4218446668_84265"></a>Tracking Events</h2>
+        <p><i><a name="kanchor5024"></a>Tracking events</i> allow you to determine when the mouse pointer has entered or left the area of the computer screen covered by a given widget. You can use tracking events to allow your interface to react as the user moves the mouse pointer over different interface elements. Tracking events are generated for a widget when the widget creation routine is called with the TRACKING_EVENTS keyword set.</p>
+        <p>The event structure of a tracking event includes a field named ENTER that contains a 1 (one) if the mouse pointer entered the region covered by the widget, or 0 (zero) if the mouse pointer left the region covered by the widget. The following example demonstrates how to check for tracking events and modify the value of a button widget when the mouse cursor is positioned over it.</p>
+        <p class="Code">PRO tracking_demo_event, event</p>
+        <p class="Code">&#160;&#160;IF (TAG_NAMES(event, /STRUCTURE_NAME) EQ 'WIDGET_TRACKING') $</p>
+        <p class="Code">&#160;&#160;THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;IF (event.ENTER EQ 1) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;WIDGET_CONTROL, event.ID, SET_VALUE='Press to Quit'  </p>
+        <p class="Code">&#160;&#160;&#160;&#160;ENDIF ELSE BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;WIDGET_CONTROL, event.ID, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;SET_VALUE='What does this button do?'  </p>
+        <p class="Code">&#160;&#160;&#160;&#160;ENDELSE</p>
+        <p class="Code">&#160;&#160;ENDIF ELSE BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;WIDGET_CONTROL, event.TOP, /DESTROY</p>
+        <p class="Code">&#160;&#160;ENDELSE</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO tracking_demo</p>
+        <p class="Code">&#160;&#160;base = WIDGET_BASE(/COLUMN)</p>
+        <p class="Code">&#160;&#160;button = WIDGET_BUTTON(base, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;VALUE='What does this button do?', /TRACKING_EVENTS)</p>
+        <p class="Code">&#160;&#160;WIDGET_CONTROL, base, /REALIZE</p>
+        <p class="Code">&#160;&#160;XMANAGER, 'tracking_demo', base</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="widget_techniques_4218446668_110090"></a><a name="widget_techniques_4218446668_44060"></a>Context Menu Events</h2>
+        <p>Base, list, text, table and tree widgets can be set to generate <i><a name="kanchor5025"></a>context menu events</i>. Generating and examining context menu events allows you to determine when the user has clicked the right-hand mouse button over a given widget, which in turn allows you to display a “context menu.” (Draw widgets can also generate events when the right-hand mouse button is clicked, using the general BUTTON_EVENTS mechanism.) See <a href="Creating_Menus.htm#widget_techniques_4218446668_95574">Context-Sensitive&gt;Menus</a> for a detailed description.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

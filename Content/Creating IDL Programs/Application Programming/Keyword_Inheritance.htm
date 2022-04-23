@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Parameters">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Keyword Inheritance</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Parameters.htm">Parameters</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Keyword Inheritance</span>
+        </div>
+        <h1><a name="procedures_3673536221_758435"></a><a name="kanchor4650"></a><a name="procedures_3673536221_12333"></a>Keyword Inheritance</h1>
+        <p>Keyword inheritance allows IDL routines to accept keyword parameters not defined in their function or procedure declaration and pass them on to the routines that they call. Routines are able to accept keywords on behalf of the routines they call without explicitly processing each individual keyword. The resulting code is simple, and requires significantly less maintenance. Keyword inheritance is of particular value when writing:</p>
+        <ul>
+            <li value="1"><i><a name="kanchor4651"></a>Wrapper</i> routines, which are variations of a system or user-provided routine. Such wrappers usually augment the behavior of another routine in a small way, largely passing arguments and keywords through without interpretation. Keyword inheritance allows such wrappers to be very simple, and benefit from not having to specify all the details of the underlying routine’s interface. Maintenance of the wrapper is also greatly simplified, because the wrapper does not require modification every time the underlying routine changes.</li>
+            <li value="2">Methods for an object. In an object hierarchy, each subclass has the option of overriding the methods provided by its superclasses. Often, the subclass method calls the superclass version. Keyword inheritance makes it simple to pass on keywords without having to be explicitly aware of them, and without having to be concerned with filtering out those keywords that are not accepted by the superclass method. In addition to enhancing maintainability, this allows subclassing from a base class without having detailed knowledge of its internal implementation, an important consideration for object oriented programming.</li>
+        </ul>
+        <p>There are two steps required to use keyword inheritance in an IDL routine:</p>
+        <ol>
+            <li value="1">The routine must declare that it accepts inherited keywords. This is done by specifying either the _EXTRA or _REF_EXTRA keyword in the formal parameter list of the routine (note the leading underscore in these names). IDL will use one of its two available keyword inheritance mechanisms depending on which of these keyword parameters is used. The first inheritance mechanism (_EXTRA) passes keywords by <i>value</i>, while the other (_REF_EXTRA) passes them by <i>reference</i>. The difference between these methods is explained in <a href="#procedures_3673536221_766933" class="selected">Keyword Inheritance Mechanisms</a>. Advice on how to choose the best one for your needs can be found in <a href="#procedures_3673536221_767128" class="selected">Choosing a Keyword Inheritance Mechanism</a>. Only one of these two keywords can be specified for a given routine.</li>
+            <li value="2">The routine passes the inherited keywords to a called routine, by including either the _EXTRA or _STRICT_EXTRA keyword in the call to that routine. _EXTRA and _STRICT_EXTRA differ only in how IDL behaves when an inherited keyword is not accepted by the called routine. _EXTRA causes such keywords to be quietly ignored, while _STRICT_EXTRA causes IDL to issue an error and stop execution. _EXTRA is the usual choice, while _STRICT_EXTRA is used primarily for wrapper routines.</li>
+        </ol>
+        <p>When using keyword inheritance, the following points should be kept in mind:</p>
+        <ul>
+            <li value="1">The mechanism used by a routine for inherited keywords is solely determined by which keyword (_EXTRA or _REF_EXTRA) is used in the formal parameter list for that routine. Hence, _REF_EXTRA is only used in the formal parameter list of a routine, and never in a call to that routine. This also means that you can change an existing routine from using one mechanism to the other by simply changing the name of the keyword. There is no need to change any of the calls to the routine, just the formal parameter list of the routine itself.</li>
+            <li value="2">Attempting to use both the _EXTRA and _REF_EXTRA keywords together in the formal parameter list of a function or procedure will cause an error to be issued. You can only use one or the other.</li>
+            <li value="3">Only the caller of a routine can dictate whether keywords that are not understood by the called routine should be ignored (_EXTRA) or should generate an error (_STRICT_EXTRA). For this reason, _STRICT_EXTRA is only used in a call to a routine, and not in the formal parameter list for the routine.</li>
+            <li value="4">Attempting to use both the _EXTRA and _STRICT_EXTRA keywords together in a call to a function or procedure will cause an error to be issued. You can only use one or the other.</li>
+        </ul>
+        <h2 class="API"><a name="procedures_3673536221_766933"></a><a name="procedures_3673536221_71485"></a>Keyword Inheritance Mechanisms</h2>
+        <p>As described above, there are two possible mechanisms used by IDL to pass inherited keywords. The one used by a routine is determined by the formal parameter list of the routine.</p>
+        <h3>_EXTRA: Passing Keyword Parameters by Value</h3>
+        <p>You can cause inherited keyword parameters to be passed to a routine by <i>value</i> by adding the keyword parameter _EXTRA to the formal argument list of that routine. Passing parameters by value means that you are giving the called routine a <i>copy</i> of the value of the passed parameter, and not the original. As such, any changes made to the value of such a keyword is not passed back to the caller.</p>
+        <p>When a routine is defined with the formal keyword parameter _EXTRA, and keywords that are not recognized by that routine are passed to it in a call, IDL constructs an anonymous structure to contain the keyword inheritance information. Each tag in this structure has the name of an inherited keyword, and the value of that tag is a copy of the value that was passed to that keyword. If no unrecognized keywords are passed in a call, the value of the _EXTRA keyword will be <i>undefined</i>, indicating that no inherited keyword parameters were passed.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Any keyword values that are set to <a href="../Components of the IDL Language/The_Null_Variable.htm">!NULL</a> will not be included in the _EXTRA structure.</p>
+        <h4>Modifying Inherited Keyword Values</h4>
+        <p>If extra keyword parameters have been passed by value, their values are stored in an anonymous structure. The inheriting routine has the opportunity to modify these values and/or to filter them prior to passing them to another routine. The CREATE_STRUCT, N_TAGS, and TAG_NAMES functions can all be of use in performing such operations. For example, here is an example of adding a keyword named COLOR with value 12 to an _EXTRA structure:</p>
+        <p class="Code">PRO SOMEPROC, _EXTRA = ex</p>
+        <p class="Code">&#160;&#160;&#160;if (N_ELEMENTS(ex) NE 0) $<br />&#160;&#160;&#160;&#160;&#160;&#160;THEN ex = CREATE_STRUCT(’COLOR’, 12, ex) $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;ELSE ex = { COLOR : 12 }</p>
+        <p class="Code">&#160;&#160;&#160;SOME_UNDERLYING_PROC, _EXTRA=ex</p>
+        <p class="Code">END</p>
+        <p>The use of N_ELEMENTS is necessary because if the caller does not supply any inherited keyword, the variable EX will have an undefined value, and an attempt to use that value with CREATE_STRUCT will cause an error to be issued. Hence, we only use CREATE_STRUCT if we know that inherited keywords are present.</p>
+        <h3>_REF_EXTRA: Passing Keyword Parameters by Reference</h3>
+        <p>You specify that a routine accepts inherited keywords by reference, by adding the keyword _REF_EXTRA<a name="kanchor4652"></a> to the formal argument list of the routine. When a routine is defined with _REF_EXTRA, inherited keywords are passed using IDL’s standard parameter passing mechanism, as with any other variable. Unlike regular variables however, the values of these keywords are not available within the routine itself. Instead, the names of these keywords are passed as a string array to the routine as the value of the _REF_EXTRA keyword. The presence of a name in the _REF_EXTRA value indicates that a keyword of that name was passed, and its value is available to be passed on in a function or procedure call (using either _EXTRA or _STRICT_EXTRA). If no unrecognized keywords are passed in a call, the value of the _EXTRA keyword will be <i>undefined</i>, indicating that no inherited keyword parameters were passed.</p>
+        <p>If inherited keywords passed by reference are modified by a called routine, those changes will be passed back to the caller.</p>
+        <p>The <i>pass by reference</i> keyword inheritance mechanism is especially useful when writing object methods.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Keyword values that are set to <a href="../Components of the IDL Language/The_Null_Variable.htm">!NULL</a> <i>will</i> be included in _REF_EXTRA.</p>
+        <h4>Selective Keyword Redirection</h4>
+        <p>If extra keyword parameters have been passed by reference, you can direct different inherited keywords to different routines by specifying a string or array of strings containing keyword names via the _EXTRA keyword. For example, suppose that we write a procedure named SOMEPROC that passes extra keywords by reference:</p>
+        <p class="Code">PRO SOMEPROC, _REF_EXTRA = ex</p>
+        <p class="Code">&#160;&#160;&#160;ONE, _EXTRA=['MOOSE', 'SQUIRREL']</p>
+        <p class="Code">&#160;&#160;&#160;TWO, _EXTRA='SQUIRREL'</p>
+        <p class="Code">END</p>
+        <p>If we call the SOMEPROC routine with three keywords:</p>
+        <p class="Code">SOMEPROC, MOOSE=moose, SQUIRREL=3, SPY=PTR_NEW(moose)</p>
+        <ul>
+            <li value="1">it will pass the keywords MOOSE and SQUIRREL and their values (the IDL variable moose and the integer 3, respectively) to procedure ONE, </li>
+            <li value="2">it will pass the keyword SQUIRREL and its value to procedure TWO, </li>
+            <li value="3">it will do nothing with the keyword SPY, or any other keyword that might be passed to it.</li>
+        </ul>
+        <h2 class="API"><a name="procedures_3673536221_767128"></a><a name="procedures_3673536221_18050"></a>Choosing a Keyword Inheritance Mechanism</h2>
+        <p>The two available keyword inheritance mechanisms have different strengths and weaknesses. The one to choose depends on the requirements of your routine:</p>
+        <ul>
+            <li value="1">If your routine needs to see the values of the inherited keywords, and you do not need to pass modified values back to the caller, use _EXTRA (pass by value).</li>
+            <li value="2">If your routine does not need to see the values of the inherited keywords, and it is OK to pass back modified keyword values, use _REF_EXTRA (pass by reference).</li>
+            <li value="3">If your routine is an object method, _REF_EXTRA is most likely the correct choice for your application.</li>
+            <li value="4">If either mechanism will serve your needs, as is often the case, then we recommend _REF_EXTRA, which has a minor efficiency advantage over _EXTRA, due to the fact that it does not have to construct an anonymous structure and copy the original values into it.</li>
+        </ul>
+        <h2 class="API"><a name="procedures_3673536221_44027"></a>Example: <a name="kanchor4653"></a>Writing a Wrapper Routine</h2>
+        <p>One of the most common uses for the keyword inheritance mechanism is to create <i>wrapper</i> routines that extend the functionality of existing routines. This example shows how to write such a wrapper, using both available inheritance mechanisms.</p>
+        <h3>By Value</h3>
+        <p>In most wrapper routines, there is no need to return modified keyword values back to the calling routine — the aim is simply to provide the complete set of keywords available to the existing routine from the wrapper routine. Hence, the by value form (_EXTRA) of keyword inheritance can be used.</p>
+        <p>For example, suppose that procedure TEST is a wrapper to the PLOT procedure. The text of such a procedure is shown below:</p>
+        <p class="Code">PRO TEST, a, b, _EXTRA = e, COLOR = color</p>
+        <p class="Code">&#160;&#160;&#160;&#160;PLOT, a, b, COLOR = color, _EXTRA = e</p>
+        <p class="Code">END</p>
+        <p>This wrapper passes all keywords it does not accept directly to PLOT using keyword inheritance. If such a keyword is not accepted by the PLOT procedure, it is quietly ignored. If you wish to catch such errors, you would re-write TEST to use the _STRICT_EXTRA keyword in the call to PLOT:</p>
+        <p class="Code">PRO TEST, a, b, _EXTRA = e, COLOR = color</p>
+        <p class="Code">&#160;&#160;&#160;&#160;PLOT, a, b, COLOR = color, _STRICT_EXTRA = e</p>
+        <p class="Code">END</p>
+        <p>This definition of the TEST procedure causes unrecognized keywords (any keywords other than COLOR) to be placed into an anonymous structure assigned to the variable <i style="font-family: Courier;font-style: italic;">e</i>. If there are no unrecognized keywords, <i style="font-family: Courier;font-style: italic;">e</i> will be undefined.</p>
+        <p>For example, when procedure TEST is called with the following command:</p>
+        <p class="Code">TEST, x, y, COLOR=3, LINESTYLE = 4, THICK=5</p>
+        <p>variable <i>e</i>, within TEST, contains an anonymous structure with the value:</p>
+        <p class="Code">{ LINESTYLE: 4, THICK: 5 }</p>
+        <p>These keyword/value pairs are then passed from TEST to the PLOT routine using the _EXTRA keyword:</p>
+        <p class="Code">PLOT, a, b, COLOR = color, _EXTRA = e</p>
+        <p>Note that keywords passed into a routine via _EXTRA override previous settings of that keyword. For example, the call:</p>
+        <p class="Code">PLOT, a, b, COLOR = color, _EXTRA = {COLOR: 12}</p>
+        <p>specifies a color index of 12 to PLOT. </p>
+        <h3>By Reference</h3>
+        <p>It is extremely simple to modify the by value (_EXTRA) version of the TEST procedure from the previous section to use by reference keyword inheritance. It suffices to change the _EXTRA keyword to _REF_EXTRA in the formal parameter list:</p>
+        <p class="Code">PRO TEST, a, b, _REF_EXTRA = e, COLOR = color</p>
+        <p class="Code">&#160;&#160;&#160;&#160;PLOT, a, b, COLOR = color, _STRICT_EXTRA = e</p>
+        <p class="Code">END</p>
+        <p>This definition of the TEST procedure causes unrecognized keywords (any keywords other than COLOR) to be passed to PLOT using the normal IDL parameter passing mechanism. However, their values are not visible within TEST itself. Instead, a string array containing the inherited keyword names is assigned to the variable <i style="font-family: Courier;font-style: italic;">e</i>. If there are no unrecognized keywords, e will be undefined.</p>
+        <p>For example, when procedure TEST is called with the following command:</p>
+        <p class="Code">TEST, x, y, COLOR=3, LINESTYLE = 4, THICK=5</p>
+        <p>variable <i>e</i>, within TEST, contains an anonymous structure with the value:</p>
+        <p class="Code">[ ‘LINESTYLE‘, ‘THICK‘ ]</p>
+        <p>These inherited keywords are then passed from TEST to the PLOT routine using the _EXTRA keyword. Note that keywords passed into a routine via _EXTRA override previous settings of that keyword. For example, the call:</p>
+        <p class="Code">PLOT, a, b, COLOR = color, _EXTRA = {COLOR: 12}</p>
+        <p>specifies a color index of 12 to PLOT. Also note that we are passing a structure (the by value format used by _EXTRA) as the value of the extra keyword to a routine that uses the by reference keyword inheritance mechanism (_REF_EXTRA). There is no problem in doing this, because each routine establishes its own inheritance mechanism independent of any other routines that may be calling it. However, any keyword values that are changed within PLOT will fail to be returned to the caller due to the use of the by-value mechanism.</p>
+        <h2 class="API"><a name="procedures_3673536221_88081"></a>Example: By Value Versus By Reference</h2>
+        <p>The <i>pass by reference</i> keyword inheritance mechanism allows you to change the value of a variable in the calling routine’s context from within the routine, whereas the <i>pass by value</i> mechanism does not. To demonstrate this difference between _EXTRA and _REF_EXTRA, consider the following simple example procedures:</p>
+        <p class="Code">PRO HELP_BYVAL, _EXTRA = ex</p>
+        <p class="Code">&#160;&#160;HELP, _EXTRA = ex</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO HELP_BYREF, _REF_EXTRA = ex</p>
+        <p class="Code">&#160;&#160;HELP, _EXTRA = ex</p>
+        <p class="Code">END</p>
+        <p>Both HELP_BYVAL and HELP_BYREF are simple wrappers to the HELP procedure. The HELP procedure accepts a keyword named OUTPUT that passes back a value to the caller. Observe the result when we call each wrapper, specifying OUTPUT as an inherited keyword parameter:</p>
+        <p class="Code">HELP_BYVAL, OUTPUT = out &amp; HELP, out</p>
+        <p>IDL prints:</p>
+        <p class="Code">% At HELP_BYVAL          2 /dev/tty</p>
+        <p class="Code">%    $MAIN$          </p>
+        <p class="Code">EX              UNDEFINED = &lt;Undefined&gt;</p>
+        <p class="Code">Compiled Procedures:</p>
+        <p class="Code">    $MAIN$  HELP_BYVAL</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Compiled Functions:</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">OUT             UNDEFINED = &lt;Undefined&gt;</p>
+        <p>This occurs because the HELP call within HELP_BYVAL is passed a variable that cannot be used to return a value, due to the use of by value keyword inheritance. It therefore reverts to the default of writing to the user’s screen, and no value is returned to the caller for the OUTPUT keyword.</p>
+        <p>Now run HELP_BYREF:</p>
+        <p class="Code">HELP_BYREF, OUTPUT = out &amp; HELP, out</p>
+        <p>IDL prints:</p>
+        <p class="Code">OUT             STRING    = Array[8]</p>
+        <p>HELP_BYREF returns the value of the HELP OUTPUT keyword as desired.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

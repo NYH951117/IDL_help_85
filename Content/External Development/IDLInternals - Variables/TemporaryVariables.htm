@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Variables">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Temporary Variables</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDLInternalVariables.htm">IDLInternals - Variables</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Temporary Variables</span>
+        </div>
+        <h1><a name="kanchor5456"></a>Temporary Variables</h1>
+        <p>As discussed previously, IDL maintains a pool of nameless variables known as temporary variables. These variables are used by the interpreter to hold temporary results from evaluating expressions, and are also used within system procedures and functions that need temporary workspace. In addition, system functions often obtain a temporary variable to return the result of their operation to the interpreter. Temporary variables have the following characteristics:</p>
+        <ul>
+            <li value="1">All temporaries, when initially allocated, are of type <b>IDL_TYP_UNDEF</b>.</li>
+            <li value="2">Temporary variables do not have a name associated with them.</li>
+            <li value="3">Routines that check out temporaries must either check them back in or return them as the result of the function. Once you return a temporary variable, you cannot access it again.</li>
+            <li value="4">Temporary variables are reclaimed by the interpreter when it is about to exit after executing a program, so it is not possible to lose them and leak dynamic memory by allocating them and failing to return them. If the interpreter is exiting normally and it detects temporaries that have not been returned, it issues an error message. Such an error message indicates an error in the implementation of your system routine. If your routine exits by issuing an <b>IDL_MSG_LONGJMP</b> or <b>IDL_MSG_IO_LONGJMP</b> error via <b>IDL_Message()</b> however, allocated temporaries are expected, and are reclaimed quietly. Hence, your routines need only return temporaries on normal return, and not before issuing errors. See <a href="../IDLInternals - Error Handling/ErrorHandling.htm">IDL Internals: Error Handling</a>.</li>
+        </ul>
+        <p>The interpreter uses temporary variables to hold values that are the result of evaluating expressions. Such temporaries are pushed on the interpreter stack where they are often passed as arguments to other routines. For example, the IDL statement:</p>
+        <p class="Code">PRINT, MAX(FINDGEN(100))</p>
+        <p>Causes the interpreter to perform the following steps:</p>
+        <ol>
+            <li value="1">Push a constant variable with the value 100 onto the stack.</li>
+            <li value="2">  Call the <a href="../../Reference Material/F/FINDGEN.htm">system function FINDGEN</a>, passing it one argument.</li>
+            <li value="3">  FINDGEN returns a temporary variable which is a 100-element vector with each element set to the value of its index.</li>
+            <li value="4">  The interpreter removes the arguments to <b>FINDGEN</b> from the stack (the constant 100) and pushes the resulting temporary variable onto the stack.</li>
+            <li value="5">  The <a href="../../Reference Material/M/MAX.htm">MAX</a> system function is called with a single argument—the temporary result from FINDGEN.</li>
+            <li value="6"> <b>MAX</b> finds the largest element in its argument (99), places that value into a temporary scalar variable, and returns that temporary variable as its result.</li>
+            <li value="7">  The interpreter removes the argument to <b>MAX</b> from the stack. This was the temporary array from <b>FINDGEN</b>, so it is returned to the pool of temporary variables. The resulting temporary variable from <b>MAX</b> is then pushed onto the stack.</li>
+            <li value="8">  The <b>PRINT</b> system procedure is called with a single argument, which is the temporary scalar variable from <b>MAX</b>. It prints the value of the variable and returns.</li>
+            <li value="9">  The interpreter removes the argument to <b>PRINT</b> from the stack, and returns it to the pool of temporary variables.</li>
+        </ol>
+        <h2>Getting a Temporary Variable</h2>
+        <p>Temporary variables are obtained via the <b>IDL_Gettmp()</b> function:</p>
+        <p class="Code">IDL_VPTR IDL_Gettmp(void);</p>
+        <p><b>IDL_Gettmp()</b> requires no arguments, and returns an <b>IDL_VPTR</b> to a temporary variable. This variable must be returned to the pool of temporary variables (with a call to <b>IDL_Deltmp()</b>) or be returned as the value of a system function before control returns to the interpreter, or an error will occur.</p>
+        <p>A number of variants on <b>IDL_Gettmp()</b> exist, as convenience routines for creating temporary scalar variables of a given type and value. In all cases, the value is supplied as the sole argument, and the resulting type is indicated by the name of the routine:</p>
+        <p class="Code">IDL_VPTR IDL_GettmpInt(IDL_INT value); </p>
+        <p class="Code">IDL_VPTR IDL_GettmpUInt(IDL_UINT value); </p>
+        <p class="Code">IDL_VPTR IDL_GettmpLong(IDL_LONG value); </p>
+        <p class="Code">IDL_VPTR IDL_GettmpULong(IDL_ULONG value); </p>
+        <p class="Code">IDL_VPTR IDL_GettmpFILEINT(IDL_FILEINT value); </p>
+        <p class="Code">IDL_VPTR IDL_GettmpMEMINT(IDL_MEMINT value);</p>
+        <h2>Creating a Temporary Array</h2>
+        <p>Temporary array variables can be obtained via the <b>IDL_MakeTempArray()</b> function:</p>
+        <p class="Code">char *IDL_MakeTempArray(int type, int n_dim, IDL_MEMINT dim[], </p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;int init, IDL_VPTR *var)</p>
+        <p>where:</p>
+        <h3>type</h3>
+        <p>The type code for the resulting array. See <a href="../IDLInternals - Types/Types.htm">Type Codes</a>.</p>
+        <h3>n_dim</h3>
+        <p>The number of array dimensions. The constant <b>IDL_MAX_ARRAY_DIM</b> defines the upper limit of this value.</p>
+        <h3>dim</h3>
+        <p>An array of <b>IDL_MAX_ARRAY_DIM</b> elements containing the array dimensions. The number of dimensions in the array is given by the <b>n_dim</b> argument.</p>
+        <h3>init</h3>
+        <p>Specifies the sort of initialization that should be applied to the resulting array. The</p>
+        <p>init argument must be one of the following:</p>
+        <ul>
+            <li value="1"><b>IDL_ARR_INI_INDEX</b> — Each element of the array is set to the value of its index. The <a href="../../Reference Material/I/INDGEN.htm">INDGEN</a> family of built-in system functions is implemented using this feature.</li>
+            <li value="2"><b>IDL_ARR_INI_NOP</b> — No initialization is done. The data area of the array will contain whatever garbage was left behind from its previous use. Experience has shown that <b>IDL_TYP_STRING</b> data should never be left uninitialized due to the risk of dereferencing an invalid string pointer and crashing IDL. Therefore, <b>IDL_TYP_STRING</b> data is zeroed when <b>IDL_ARR_INI_NOP</b> is specified.</li>
+            <li value="3"><b>IDL_ARR_INI_ZERO</b> — The data area of the array is zeroed.</li>
+        </ul>
+        <h3>var</h3>
+        <p>The address of an <b>IDL_VPTR</b> where the address of the resulting temporary variable will be put.</p>
+        <p>The data area of an array <b>IDL_VARIABLE</b> is accessible from its <b>IDL_VPTR</b> as <b>var</b>-&gt;<b>value.arr</b>-&gt;<b>data</b>. However, since most routines that create an array need to access the data area, <b>IDL_MakeTempArray()</b> returns the data area pointer as its value. As with <b>IDL_Gettmp()</b>, the variable allocated via <b>IDL_MakeTempArray()</b> must be returned to the pool of temporary variables or be returned as the value of a system function before control returns to the interpreter, or an error will occur.</p>
+        <h2>Creating a Temporary Vector</h2>
+        <p><b>IDL_MakeTempArray()</b> can be used to create arrays with any number of dimensions, but the common case of creating a 1-dimensional vector can be carried out more conveniently using the <b>IDL_MakeTempVector()</b> function:</p>
+        <p class="Code">char *IDL_MakeTempVector(int type, IDL_MEMINT dim, int init, IDL_VPTR *var)where:</p>
+        <h3>type, init, var</h3>
+        <p>These arguments are the same as for <b>IDL_MakeTempArray()</b>.</p>
+        <h3>dim</h3>
+        <p>The number of elements in the resulting vector.</p>
+        <h2>Creating a Temporary Structure</h2>
+        <p>The <b>IDL_MakeTempStruct()</b> allows you to create an IDL structure variable using memory allocated by IDL, in much the same way that <b>IDL_MakeStruct()</b> and <b>IDL_ImportArray()</b> allow you to create an IDL structure variable using memory you provide. Temporary structure variables can be obtained via the <b>IDL_MakeTempStruct()</b> function:</p>
+        <p class="Code">char *IDL_MakeTempStruct(IDL_StructDefPtr sdef, int n_dim, </p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;IDL_MEMINT dim[], IDL_VPTR *var, int zero)</p>
+        <p>where:</p>
+        <h3>sdef</h3>
+        <p>A pointer to the structure definition.</p>
+        <h3>n_dim</h3>
+        <p>The number of structure dimensions. The constant <b>IDL_MAX_ARRAY_DIM</b> defines the upper limit of this value.</p>
+        <h3>dim</h3>
+        <p>A C array of <b>IDL_MAX_ARRAY_DIM</b> elements containing the structure dimensions. The number of dimensions in the array is given by the <b>n_dim</b> argument.</p>
+        <h3>var</h3>
+        <p>The address of an <b>IDL_VPTR</b> where the address of the resulting temporary variable will be put.</p>
+        <p>The data area of an array <b>IDL_VARIABLE</b> is accessible from its <b>IDL_VPTR</b> as <b>var</b>-&gt;<b>value.arr</b>-&gt;<b>data</b>. However, since most routines that create an array need to access the data area, <b>IDL_MakeTempStruct()</b> returns the data area pointer as its value. As with <b>IDL_Gettmp()</b>, the variable allocated via <b>IDL_MakeTempStruct()</b> must be returned to the pool of temporary variables (with a call to <b>IDL_Deltmp()</b>) or be returned as the value of a system function before control returns to the interpreter, or an error will occur.</p>
+        <h3>zero</h3>
+        <p>Set to TRUE if the data area of the resulting variable should be zeroed, or to FALSE otherwise. Unless the caller intends to immediately copy a valid result into the variable, this argument should be set to TRUE to prevent memory corruption.</p>
+        <h2>Creating a Temporary Vector</h2>
+        <p><b>IDL_MakeTempStruct(</b>) can be used to create arrays with any number of dimensions, but the common case of creating a 1-dimensional vector can be carried out more conveniently using the IDL_<b>MakeTempStructVector()</b> function:</p>
+        <p class="Code">char *IDL_MakeTempStructVector(IDL_StructDefPtr sdef, IDL_MEMINT</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;dim, IDL_VPTR *var, int zero)</p>
+        <p>where:</p>
+        <h3>sdef, var, zero</h3>
+        <p>These arguments are the same as for <b>IDL_MakeTempStruct()</b>.</p>
+        <h3>dim</h3>
+        <p>The number of elements in the resulting vector.</p>
+        <h2>Creating A Temporary Variable Using Another Variable As A Template</h2>
+        <p>It is common to want to create a temporary variable with a form that mimics that of a variable you already have access to. Often, such a temporary variable has the same number of elements and dimensions, but may vary in type. It is possible to do this by using the basic temporary variable creation routines discussed earlier in this chapter, but the resulting code will be complex, and this sort of code occurs frequently. The best way to create such a variable is using the <b>IDL_VarMakeTempFromTemplate()</b> function.</p>
+        <p><b>IDL_VarMakeTempFromTemplate()</b> creates a temporary variable of the desired type, using the <b>template_var</b> argument to specify its dimensionality. The address of this temporary variable is stored at the address specified by the <b>result_addr</b> argument. The address of the start of this variable’s data area is returned as the value of the function.</p>
+        <p class="Code">char *IDL_VarMakeTempFromTemplate(IDL_VPTR template_var,int type, </p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;IDL_StructDefPtr sdef, IDL_VPTR *result_addr,int zero);</p>
+        <p>where:</p>
+        <h3>template_var</h3>
+        <p>Source variable to take dimensionality from. This can be a scalar or array of any type.</p>
+        <h3>type</h3>
+        <p>The IDL type code for the desired temporary variable.</p>
+        <h3>sdef</h3>
+        <p>NULL, or a pointer to a structure definition. This argument is ignored if type is not <b>IDL_TYP_STRUCT</b>. If type is <b>IDL_TYP_STRUCT</b>, <b>sdef</b> supplies the structure definition for the result. It is an error to specify a result type of <b>IDL_TYP_STRUCT</b> without providing a value for sdef, with one exception: If type is <b>IDL_TYP_STRUCT</b> and <b>template_var</b> is a variable of <b>IDL_TYP_STRUCT</b>, and <b>sdef</b> is NULL, then <b>IDL_VarMakeTempFromTemplate()</b> will use structure definition of <b>template_var</b>.</p>
+        <h3>result_addr</h3>
+        <p>Address of <b>IDL_VPTR</b> to receive a pointer to the newly allocated temporary variable.</p>
+        <h3>zero</h3>
+        <p>TRUE if the resulting variable should be zeroed, and FALSE to not do this. Variables of <b>IDL_TYP_STRING</b>, and structure types that contain strings, are always zeroed.</p>
+        <h2>Freeing A Temporary Variable</h2>
+        <p>Use <b>IDL_Deltmp()</b> to free a temporary variable:</p>
+        <p class="Code">void IDL_Deltmp(IDL_VPTR p)</p>
+        <p>where <b>p</b> is an <b>IDL_VPTR</b> to the temporary variable to be returned. <b>IDL_Deltmp()</b> frees the dynamic parts of the temporary variable (if any) and then returns the variable to the pool of available temporaries. Once you have deallocated a temporary variable, you may not access it again. There is also a macro named <b>IDL_DELTMP</b> which checks its argument to make sure it’s a temporary, and if so, calls <b>IDL_Deltmp()</b> to return it.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

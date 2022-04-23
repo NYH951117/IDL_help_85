@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Remote Procedure Calls">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>The IDL&#160;RPC Library</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="RPC.htm">Remote Procedure Calls</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">The IDL&#160;RPC Library</span>
+        </div>
+        <h1><a name="kanchor5441"></a>The IDL&#160;RPC Library</h1>
+        <p>The IDL RPC library contains several C language interface functions that facilitate communication between your application and IDL. There are functions to register and unregister clients, set timeouts, get and set the value of IDL variables, send commands to the IDL server, and cause the server to exit. </p>
+        <ul>
+            <li value="1"><a href="#IDL_RPCC" class="selected">IDL_RPCCleanup</a>
+            </li>
+            <li value="2"><a href="#IDL_RPCD" class="selected">IDL_RPCDeltmp</a>
+            </li>
+            <li value="3"><a href="#IDL_RPCE" class="selected">IDL_RPCExecuteStr</a>
+            </li>
+            <li value="4"><a href="#IDL_RPCG" class="selected">IDL_RPCGetMainVariable</a>
+            </li>
+            <li value="5"><a href="#IDL_RPCG2" class="selected">IDL_RPCGettmp</a>
+            </li>
+            <li value="6"><a href="#IDL_RPCG3" class="selected">IDL_RPCGetVariable</a>
+            </li>
+            <li value="7"><a href="#IDL_RPCI" class="selected">IDL_RPCImportArray</a>
+            </li>
+            <li value="8"><a href="#IDL_RPCI2" class="selected">IDL_RPCInit</a>
+            </li>
+            <li value="9"><a href="#IDL_RPCI3" class="selected">IDL_RPCInitWithLoopback</a>
+            </li>
+            <li value="10"><a href="#IDL_RPCM" class="selected">IDL_RPCMakeArray</a>
+            </li>
+            <li value="11"><a href="#IDL_RPCO2" class="selected">IDL_RPCOutputCapture</a>
+            </li>
+            <li value="12"><a href="#IDL_RPCO" class="selected">IDL_RPCOutputGetStr</a>
+            </li>
+            <li value="13"><a href="#IDL_RPCS" class="selected">IDL_RPCSetMainVariable</a>
+            </li>
+            <li value="14"><a href="#IDL_RPCS2" class="selected">IDL_RPCSetVariable</a>
+            </li>
+            <li value="15"><a href="#IDL_RPCS3" class="selected">IDL_RPCStoreScalar</a>
+            </li>
+            <li value="16"><a href="#IDL_RPCS4" class="selected">IDL_RPCStrDelete</a>
+            </li>
+            <li value="17"><a href="#IDL_RPCS5" class="selected">IDL_RPCStrDup</a>
+            </li>
+            <li value="18"><a href="#IDL_RPCS6" class="selected">IDL_RPCStrEnsureLength</a>
+            </li>
+            <li value="19"><a href="#IDL_RPCS7" class="selected">IDL_RPCStrStore</a>
+            </li>
+            <li value="20"><a href="#IDL_RPCT" class="selected">IDL_RPCTimeout</a>
+            </li>
+            <li value="21"><a href="#IDL_RPCV" class="selected">IDL_RPCVarCopy</a>
+            </li>
+            <li value="22"><a href="#IDL_RPCV2" class="selected">IDL_RPCVarGetData</a>
+            </li>
+            <li value="23"><a href="#Variable" class="selected">Variable Accessor Macros</a>
+            </li>
+        </ul>
+        <h2><a name="IDL_RPCC"></a>IDL_RPCCleanup</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">int IDL_RPCCleanup( CLIENT *pClient, int iKill)</p>
+        <h3>Description</h3>
+        <p>Use this function to release the resources associated with the given <b>CLIENT</b> structure or to kill the IDL RPC server.</p>
+        <h3>Parameters</h3>
+        <h4>pClient</h4>
+        <p>A pointer to the <b>CLIENT</b> structure for the client/server connection to be disconnected.</p>
+        <h4>iKill</h4>
+        <p>Set iKill to a non-zero value to kill the server when the connection is broken.</p>
+        <h4>Return Value</h4>
+        <p>This function returns 1 on success, or 0 on failure.</p>
+        <h2><a name="IDL_RPCD"></a>IDL_RPCDeltmp</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">void IDL_RPCDeltmp( IDL_VPTR vTmp)</p>
+        <h3>Description</h3>
+        <p>Use this function to de-allocate all dynamic memory associated with the <b>IDL_VPTR</b> that is passed into the function. Once this function returns, any dynamic portion of <b>vTmp</b> is deallocated and should not be referenced.</p>
+        <h3>Parameters</h3>
+        <h4>vTmp</h4>
+        <p>The variable that will be de-allocated.</p>
+        <h3>Return Value</h3>
+        <p>None.</p>
+        <h2><a name="IDL_RPCE"></a>IDL_RPCExecuteStr</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">int IDL_RPCExecuteStr(CLIENT *pClient, char * pCommand)</p>
+        <h3>Description</h3>
+        <p>Use this function to send IDL commands to the IDL RPC server. The command is executed just as if it had been entered from the IDL command line.</p>
+        <p>This function cannot be used to send multiple line commands and will return an error if a “$” is detected at the end of the command string. It will also return an error if “$” is the first character, since this would spawn an interactive process and hang the IDL RPC server.</p>
+        <h3>Parameters</h3>
+        <h4>pClient</h4>
+        <p>A pointer to the <b>CLIENT</b> structure that corresponds to the desired IDL session.</p>
+        <h4>pCommand</h4>
+        <p>A null-terminated IDL command string.</p>
+        <h3>Return Value</h3>
+        <p>This function returns the following values:</p>
+        <p>1 — Success.</p>
+        <p>0 — Invalid command string.</p>
+        <p>For all other errors, the value of <b>!ERROR_STATE.CODE</b> is returned. This number could be passed as an argument to the IDL function <b>STRMESSAGE()</b> to determine the exact cause of the error.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When an error occurs in IDL, the !ERROR_STATE system variable remains populated with that error until it is cleared or another error occurs. <b>IDL_RPCExecuteStr()</b> merely returns the error code stored in !ERROR_STATE. To clear the error state, call:</p>
+        <p class="Code">MESSAGE, /RESET</p>
+        <h2><a name="IDL_RPCG"></a>IDL_RPCGetMainVariable</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">IDL_VPTR IDL_RPCGetMainVariable(CLIENT *pClient, char *Name)</p>
+        <h3>Description</h3>
+        <p>Call this function to get the value of an IDL RPC server main level variable referenced by the name contained in <b>Name</b>. <b>IDL_RPCGetMainVariable</b> will then return a pointer to an <b>IDL_VARIABLE</b> structure that contains the value of the variable.</p>
+        <h3>Parameters</h3>
+        <h4>pClient</h4>
+        <p>A pointer to the CLIENT structure that corresponds to the desired IDL session.</p>
+        <h4>Name</h4>
+        <p>The name of the variable to find.</p>
+        <h3>Return Value</h3>
+        <p>On success, this function returns a pointer to an <b>IDL_VARIABLE</b> structure that contains the value of the desired IDL RPC main level variable. On failure this function returns NULL.</p>
+        <p>Note that the returned variable is marked as <b>temporary</b> and should be deleted when the variable is no longer needed. </p>
+        <h2><a name="IDL_RPCG2"></a>IDL_RPCGettmp</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">IDL_VPTR IDL_RPCGettmp(void)</p>
+        <h3>Description</h3>
+        <p>Use this function to create an <b>IDL_VPTR</b> to a dynamically allocated <b>IDL_VARIABLE</b> structure. When you are finished with this variable, pass it to <b>IDL_RPCDeltmp()</b> to free any memory allocated by the variable.</p>
+        <h3>Parameters</h3>
+        <p>None.</p>
+        <h3>Return Value</h3>
+        <p>On success, this function returns an <b>IDL_VPTR</b>. On failure, it returns NULL.</p>
+        <h2><a name="IDL_RPCG3"></a>IDL_RPCGetVariable</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">IDL_VPTR IDL_RPCGetVariable(CLIENT *pClient, char *Name)</p>
+        <h3>Description</h3>
+        <p>Use this function to get a pointer to an <b>IDL_VARIABLE</b> structure that contains the value of an IDL RPC server variable referenced by <b>Name</b>. The current scope of the IDL program is used to get the value of the variable.</p>
+        <h3>Parameters</h3>
+        <h4>pClient</h4>
+        <p>A pointer to the <b>CLIENT</b> structure that corresponds to the desired IDL session.</p>
+        <h4>Name</h4>
+        <p>The name of the variable to find.</p>
+        <h3>Return Value</h3>
+        <p>On success, this function returns a pointer to an <b>IDL_VARIABLE</b> structure that contains the value of the desired IDL RPC variable. On failure this function returns NULL.</p>
+        <p>Note that the returned variable is marked as <b>temporary</b> and should be deleted when the variable is no longer needed. For more information on IDL RPC variables, see Client Variables.</p>
+        <h2><a name="IDL_RPCI"></a>IDL_RPCImportArray</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">IDL_VPTR IDL_RPCImportArray(int n_dim, IDL_MEMINT dim[], int type, UCHAR *data, IDL_ARRAY_FREE_CB free_cb)</p>
+        <h3>Description</h3>
+        <p>Use this function to create an IDL array variable whose data the server supplies, rather than having the client API allocate the data space.</p>
+        <h3>Parameters</h3>
+        <h4>n_dim</h4>
+        <p>The number of dimensions in the array.</p>
+        <h4>dim</h4>
+        <p>An array of <b>IDL_MAX_ARRAY_DIM</b> elements, containing the size of each dimension.</p>
+        <h4>type</h4>
+        <p>The IDL type code describing the data. </p>
+        <h4>data</h4>
+        <p>A pointer to your array data.</p>
+        <h4>free_cb</h4>
+        <p>If non-NULL, free_cb is a pointer to a function that will be called when the IDL RPC client routines frees the array. This feature gives the caller a sure way to know when the data is no longer referenced. Use the called function to perform any required cleanup, such as freeing dynamic memory or releasing shared or mapped memory.</p>
+        <h3>Return Value</h3>
+        <p>An <b>IDL_VPTR</b> that points to an <b>IDL_VARIABLE</b> structure containing a reference to the imported array. This function returns NULL if the operation was unsuccessful.</p>
+        <h2><a name="IDL_RPCI2"></a>IDL_RPCInit</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">Client *IDL_RPCInit(long ServerId, char* pHostname)</p>
+        <h3>Description</h3>
+        <p>Use this function to initialize an IDL RPC client session.</p>
+        <p>The client program is registered as a client of the IDL RPC server. The server that the client is registered with depends on the values of the parameters passed to the function.</p>
+        <h3>Parameters</h3>
+        <h4>ServerId</h4>
+        <p>The ID number of the IDL server that the program is to be registered with. If this value is 0, the default server ID (<code>0x2010CAFE</code>) is used.</p>
+        <h4>pHostname</h4>
+        <p>This is the name of the machine where the IDL server is running. If this value is NULL or “”, the default, “localhost”, is used.</p>
+        <h3>Return Value</h3>
+        <p>A pointer to the new CLIENT structure is returned upon successful completion. This opaque data structure is then later used by the client program to perform operations with the server. This function returns NULL if the operation was unsuccessful.</p>
+        <p>&#160;</p>
+        <h2><a name="IDL_RPCI3"></a>IDL_RPCInitWithLoopback</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">Client *IDL_RPCInitWithLoopback(long PortId, char pHostname)</p>
+        <h3>Description</h3>
+        <p>Use this function to initialize an IDL RPC client session via the loopback interface.</p>
+        <p>The client program is registered as a client of the IDL RPC server. The server that the client is registered with depends on the values of the parameters passed to the function.</p>
+        <h3>Parameters</h3>
+        <h4>PortId</h4>
+        <p>On the IDL server, the ID number of the port on which the program should be registered.</p>
+        <p>If this value is 0, the default port ID (<code>0xC350</code>) is used.</p>
+        <h4>pHostname</h4>
+        <p>This is the name of the machine where the IDL server is running. If this value is NULL or “”, the default, “localhost”, is used.</p>
+        <h3>Return Value</h3>
+        <p>A pointer to the new CLIENT structure is returned upon successful completion. This opaque data structure is then later used by the client program to perform operations with the server. This function returns NULL if the operation was unsuccessful.</p>
+        <h2><a name="IDL_RPCM"></a>IDL_RPCMakeArray</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">char * IDL_RPCMakeArray( int type,	int n_dim, IDL_MEMINT dim[], int init, IDL_VPTR *var)</p>
+        <h3>Description</h3>
+        <p>This function creates an IDL RPC client temporary array variable with a data area of the specified size.</p>
+        <h3>Parameters</h3>
+        <h4>type</h4>
+        <p>The IDL type code for the resulting array.</p>
+        <h4>n_dim</h4>
+        <p>The number of array dimensions. The constant <b>IDL_MAX_ARRAY_DIM</b> defines the upper limit of this value.</p>
+        <h4>dim</h4>
+        <p>A C array of <b>IDL_MAX_ARRAY_DIM</b> elements containing the array dimensions. The number of dimensions in the array is given by the <b>n_dim</b> argument.</p>
+        <h4>init</h4>
+        <p>This parameter specifies the sort of initialization that should be applied to the resulting array. <b>init</b> must be one of the following:</p>
+        <ul>
+            <li value="1"><b>IDL_ARR_INI_NOP</b> — No initialization is done. The data area of the array will contain whatever garbage was left behind from its previous use.</li>
+            <li value="2"><b>IDL_ARR_INI_ZERO</b> — The data area of the array is zeroed.</li>
+        </ul>
+        <h4>var</h4>
+        <p>The address of an <b>IDL_VPTR</b> containing the address of the resulting IDL RPC client temporary variable.</p>
+        <h3>Return Value</h3>
+        <p>On success, this function returns a pointer to the data area of the allocated array. The value returned is the same as is contained in the <b>var-&gt;value.arr-&gt;data</b> field of the variable. On failure, it returns NULL.</p>
+        <p>As with variables returned from <b>IDL_RPCGettmp()</b>, the variable allocated via this function must be de-allocated using <b>IDL_RPCDeltmp()</b> when the variable is no longer needed.</p>
+        <h2><a name="IDL_RPCO2"></a>IDL_RPCOutputCapture</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">int IDL_RPCOutputCapture( CLIENT *pClient, int n_lines)</p>
+        <h3>Description</h3>
+        <p>Use this routine to enable and disable capture of lines output from the IDL RPC server. Normally, IDL will write any output to the terminal on which the server was started. This function can be used to save this information so that the client program can request the lines sent to the output buffer.</p>
+        <h3>Parameters</h3>
+        <h4>pClient</h4>
+        <p>A pointer to the <b>CLIENT</b> structure that corresponds to the desired IDL session.</p>
+        <h4>n_lines</h4>
+        <p>If this value is less than or equal to zero, no output lines will be buffered in the IDL RPC server and output will be sent to the normal output device on the IDL RPC server. If the value of this parameter is greater than zero, the specified number of lines will be stored by the IDL RPC server.</p>
+        <h3>Return Value</h3>
+        <p>This function returns 1 on success, or 0 on failure.</p>
+        <h2><a name="IDL_RPCO"></a>IDL_RPCOutputGetStr</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">int IDL_RPCOutputGetStr(CLIENT *pClient,	IDL_RPC_LINE_S *pLine, int first)</p>
+        <h3>Description</h3>
+        <p>Use this function to get an output line from the line queue being maintained on the RPC server. The routine <b>IDL_RPCOutputCapture()</b> must have been called to initialize the output queue on the RPC server before this routine is called.</p>
+        <h3>Parameters</h3>
+        <h4>pClient</h4>
+        <p>A pointer to the <b>CLIENT</b> structure that corresponds to the desired IDL session.</p>
+        <h4>pLine</h4>
+        <p>A pointer to a valid <b>IDL_RPC_LINE_S</b> structure. The <b>buf</b> field of this structure will contain the output string returned from the IDL RPC server and the flags field will be set to one of the following (from idl_export.h):</p>
+        <ul>
+            <li value="1"><b>IDL_TOUT_F_STDERR</b> — Send the text to <b>stderr</b> rather than <b>stdout</b>, if that distinction means anything to your output device.</li>
+            <li value="2"><b>IDL_TOUT_F_NLPOST</b> — After outputting the text, start a new output line. On a tty, this is equivalent to sending a new line (‘\n) character.</li>
+        </ul>
+        <h4>first</h4>
+        <p>If <b>first</b> is set equal to a non-zero value, the first line is popped from the output buffer on the IDL RPC server (the output buffer is treated like a stack). If first is set equal to zero, the last line is de-queued from the output buffer (the output buffer is treated like a queue).</p>
+        <h3>Return value</h3>
+        <p>A true value (1) is returned upon success. A false value (0) is returned when there are no more lines available in the output buffer or when an RPC error is detected.</p>
+        <h2><a name="IDL_RPCS"></a>IDL_RPCSetMainVariable</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">int IDL_RPCSetMainVariable( CLIENT *pClient,	char *Name, IDL_VPTR pVar)</p>
+        <h3>Description</h3>
+        <p>Use this routine to assign a value to a main level IDL variable in the IDL RPC server session referred to by <b>pClient</b>. If the variable does not already exist, a new variable will be created.</p>
+        <h3>Parameters</h3>
+        <h4>pClient</h4>
+        <p>A pointer to the CLIENT structure that corresponds to the desired IDL session.</p>
+        <h4>Name</h4>
+        <p>A pointer to the null-terminated name of the variable, which must be in upper-case.</p>
+        <h4>pVar</h4>
+        <p>A pointer to an <b>IDL_VARIABLE</b> structure that contains the value that the IDL RPC main level variable referenced by <b>Name</b> should be set to.</p>
+        <h3>Return Value</h3>
+        <p>This function returns 1 on success, or 0 on failure.</p>
+        <h2><a name="IDL_RPCS2"></a>IDL_RPCSetVariable</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">int IDL_RPCSetVariable( CLIENT *pClient,	char *Name, IDL_VPTR pVar)</p>
+        <h3>Description</h3>
+        <p>Use this routine to assign a value to an IDL variable in the IDL RPC server session referred to by <b>pClient</b>. If the variable does not already exist, a new variable will be created. Unlike <b>IDL_RPCSetMainVariable()</b>, this routine sets the variable in the current IDL program scope.</p>
+        <h3>Parameters</h3>
+        <h4>pClient</h4>
+        <p>A pointer to the CLIENT structure that corresponds to the desired IDL session.</p>
+        <h4>Name</h4>
+        <p>A pointer to the null-terminated name of the variable, which must be in upper-case.</p>
+        <h4>pVar</h4>
+        <p>A pointer to an <b>IDL_VARIABLE</b> structure that contains the value that the IDL RPC variable referenced by Name should be set to. </p>
+        <h3>Return Value</h3>
+        <p>This function returns 1 on success, or 0 on failure.</p>
+        <p>&#160;</p>
+        <h2><a name="IDL_RPCS3"></a>IDL_RPCStoreScalar</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">void IDL_RPCStoreScalar(IDL_VPTR dest,	int type, IDL_ALLTYPES *value)</p>
+        <h3>Description</h3>
+        <p>Use this function to store a scalar value into an <b>IDL_VARIABLE</b> structure. Before the scalar is stored, any dynamic part of the existing <b>IDL_VARIABLE</b> is de-allocated.</p>
+        <h3>Parameters</h3>
+        <h4>dest</h4>
+        <p>An <b>IDL_VPTR</b> to the <b>IDL_VARIABLE</b> in which the scalar should be stored.</p>
+        <h4>type</h4>
+        <p>The type code for the scalar value. </p>
+        <h4>value</h4>
+        <p>The address of an <b>IDL_ALLTYPES</b> union that contains the value to store.</p>
+        <h3>Return Value</h3>
+        <p>None.</p>
+        <h2><a name="IDL_RPCS4"></a>IDL_RPCStrDelete</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">void IDL_RPCStrDelete(IDL_STRING *str, IDL_MEMINT n)</p>
+        <h3>Description</h3>
+        <p>Use this function to delete a string. </p>
+        <h2><a name="IDL_RPCS5"></a>IDL_RPCStrDup</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">void IDL_RPCStrDup(IDL_STRING *str, IDL_MEMINT n)</p>
+        <h3>Description</h3>
+        <p>Use this function to duplicate a string. </p>
+        <h2><a name="IDL_RPCS6"></a>IDL_RPCStrEnsureLength</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">void IDL_RPCStrEnsureLength(IDL_STRING *s, int n)</p>
+        <h3>Description</h3>
+        <p>Use this function to check the length of a string. </p>
+        <h2><a name="IDL_RPCS7"></a>IDL_RPCStrStore</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">void IDL_RPCStrStore( IDL_STRING *s, char *fs)</p>
+        <h3>Description</h3>
+        <p>Use this function to store a string.</p>
+        <h2><a name="IDL_RPCT"></a>IDL_RPCTimeout</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">int IDL_RPCTimeout(long lTimeOut)</p>
+        <h3>Description</h3>
+        <p>Use this function to set the timeout value used when the RPC client makes requests of the server.</p>
+        <h3>Parameters</h3>
+        <h4>lTimeOut</h4>
+        <p>A integer value, in seconds, specifying the timeout value that will be used in RPC</p>
+        <p>operations.</p>
+        <h3>Return Value</h3>
+        <p>This function returns 1 on success, or 0 on failure.</p>
+        <h2><a name="IDL_RPCV"></a>IDL_RPCVarCopy</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">void IDL_RPCVarCopy(IDL_VPTR src, IDL_VPTR dst)</p>
+        <h3>Description</h3>
+        <p>Use this function to copy the contents of the <b>src</b> variable to the <b>dst</b> variable. Any dynamic memory associated with dst is de-allocated before the source data is copied. This function emulates the callable IDL function <b>IDL_VarCopy()</b>.</p>
+        <h3>Parameters</h3>
+        <h4>src</h4>
+        <p>The source variable to be copied. If this variable is marked as temporary (returned from <b>IDL_RPCGettmp()</b>, for example) the dynamic data will be moved rather than copied to the destination variable.</p>
+        <h4>dst</h4>
+        <p>The destination variable that <b>src</b> is copied to.</p>
+        <h3>Return Value</h3>
+        <p>None.</p>
+        <h2><a name="IDL_RPCV2"></a>IDL_RPCVarGetData</h2>
+        <h3>Calling Sequence</h3>
+        <p class="Code">void IDL_RPCVarGetData(IDL_VPTR v, IDL_MEMINT *n, char **pd, int ensure_simple)</p>
+        <h3>Description</h3>
+        <p>Use this function to obtain a pointer to a variable’s data, and to determine how many data elements the variable contains.</p>
+        <h3>Parameters</h3>
+        <h4>v</h4>
+        <p>The variable for which data is desired.</p>
+        <h4>n</h4>
+        <p>The address of a variable that will contain the number of elements in <b>v</b>.</p>
+        <h4>pd</h4>
+        <p>The address of a variable that will contain a pointer to <b>v</b>’s data, cast to be a pointer to pointer to char (e.g.<code> (char **) &amp;myptr</code>).</p>
+        <h4>ensure_simple</h4>
+        <p>If TRUE, this routine calls the <b>ENSURE_SIMPLE</b> macro on the argument <b>v</b> to screen out variables of the types it prevents. Otherwise, <b>EXCLUDE_FILE</b> is called, because file variables have no data area to return.</p>
+        <h3>Return Value</h3>
+        <p>On exit, <b>IDL_RPCVarGetData()</b> stores the data count and pointer into the variables pointed at by <b>n</b> and <b>pd</b>, respectively.</p>
+        <h2><a name="Variable"></a>Variable Accessor Macros</h2>
+        <p>The following macros can be used to get information on IDL RPC variables. These macros are defined in <code>idl_rpc.h</code>.</p>
+        <p>All of these macros accept a single argument, v, of type <b>IDL_VPTR</b>.</p>
+        <h3>IDL_RPCGetArrayData(v)</h3>
+        <p>This macro returns a pointer (char*) to the data area of an array block.</p>
+        <h3>IDL_RPCGetArrayDimensions(v)</h3>
+        <p>This macro returns a C array which contains the array dimensions.</p>
+        <h3>IDL_RPCGetArrayNumDims(v)</h3>
+        <p>This macro returns the number of dimensions of the array.</p>
+        <h3>IDL_RPCGetVarByte(v)</h3>
+        <p>This macro returns the value of a 1-byte, unsigned char variable.</p>
+        <h3>IDL_RPCGetVarComplex(v)</h3>
+        <p>This macro returns the value (as a struct, not a pointer) of a complex variable.</p>
+        <h3>IDL_RPCGetVarComplexR(v)</h3>
+        <p>This macro returns the real field of a complex variable.</p>
+        <h3>IDL_RPCGetVarComplexI(v)</h3>
+        <p>This macro returns the imaginary field of a complex variable.</p>
+        <h3>IDL_RPCGetVarDComplex(v)</h3>
+        <p>This macro returns the value (as a struct, not a pointer) of a double precision, complex variable.</p>
+        <h3>IDL_RPCGetVarDComplexR(v)</h3>
+        <p>This macro returns the real field of a double-precision complex variable.</p>
+        <h3>IDL_RPCGetVarDComplexI(v)</h3>
+        <p>This macro returns the imaginary field of a double-precision complex variable.</p>
+        <h3>IDL_RPCGetVarDouble(v)</h3>
+        <p>This macro returns the value of a double-precision, floating-point variable.</p>
+        <h3>IDL_RPCGetVarFloat(v)</h3>
+        <p>This macro returns the value of a single-precision, floating-point variable.</p>
+        <h3>IDL_RPCGetVarInt(v)</h3>
+        <p>This macro returns the value of a 2-byte integer variable.</p>
+        <h3>IDL_RPCGetVarLong(v)</h3>
+        <p>This macro returns the value of a 4-byte integer variable.</p>
+        <h3>IDL_RPCGetVarLong64(v)</h3>
+        <p>This macro returns the value of a 8-byte integer variable.</p>
+        <h3>IDL_RPCVarIsArray(v)</h3>
+        <p>This macro returns non-zero if v is an array variable.</p>
+        <h3>IDL_RPCGetVarString(v)</h3>
+        <p>This macro returns the value of a string variable (as a char*).</p>
+        <h3>IDL_RPCGetVarType(v)</h3>
+        <p>This macro returns the type code of the variable. IDL type codes are discussed in <a href="../IDLInternals - Types/Types.htm">Type Codes</a>.</p>
+        <h3>IDL_RPCGetVarUInt(v)</h3>
+        <p>This macro returns the value of an unsigned 2-byte integer variable.</p>
+        <h3>IDLRPCGetVarULong(v)</h3>
+        <p>This macro returns the value of an unsigned 4-byte integer variable.</p>
+        <h3>IDL_RPCGetVarULong64(v)</h3>
+        <p>This macro returns the value of an unsigned 8-byte integer value.</p>
+        <h2>See Also</h2>
+        <p><a href="../IDLInternals - Types/Types.htm">Type Codes</a>, <a href="../IDLInternals - String Processing/StringProcessing.htm">String Processing </a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

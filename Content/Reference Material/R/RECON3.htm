@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: R">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>RECON3 </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="R_list.htm">Routines: R</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">RECON3</span>
+        </div>
+        <h1 class="Routine"><a name="R_822202989_786968"></a><a name="kanchor2258"></a><a name="R_822202989_52389"></a>RECON3 </h1>
+        <p><a name="kanchor2259"></a><a name="kanchor2260"></a><a name="kanchor2261"></a>The RECON3 function can reconstruct a three-dimensional data array from two or more images (or projections) of an object. For example, if you placed a dark object in front of a white background and then photographed it three times (each time rotating the object a known amount) then these three images could be used with RECON3 to approximate a 3-D volumetric representation of the object. RECON3 also works with translucent projections of an object. RECON3 returns a 3-D byte array.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>recon3.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h3><a name="R_822202989_786976_PageTOC_RECON3_"></a>Using RECON3</h3>
+        <p>Images used in reconstruction should show strong light/dark contrast between the object and the background. If the images contain low (dark) values where the object is and high (bright) values where the object isn’t, the MODE keyword should be set to +1 and the returned volume will have low values where the object is, and high values where the object isn’t. If the images contain high (bright) values where the object is and low (dark) values where the object isn’t, the MODE keyword should be set to -1 and the returned volume will have high values where the object is, and low values where the object isn’t.</p>
+        <p>In general, the object must be CONVEX for a good reconstruction to be possible. Concave regions are not easily reconstructed. An empty coffee cup, for example, would be reconstructed as if it were full.</p>
+        <p>The more images the better. Images from many different angles will improve the quality of the reconstruction. It is also important to supply images that are parallel and perpendicular to any axes of symmetry. Using the coffee cup as an example, at least one image should be looking through the opening in the handle. Telephoto images are also better for reconstruction purposes than wide angle images.</p>
+        <h2 class="API"><a name="R_822202989_786980"></a><a name="R_822202989_786980_PageTOC_RECON3_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = RECON3( <i>Images</i>, <i>Obj_Rot</i>, <i>Obj_Pos</i>, <i>Focal</i>,<i> Dist</i>,<i>Vol_Pos</i>, <i>Img_Ref</i>, <i>Img_Mag</i>, <i>Vol_Size</i> [,&#160;/<a href="#R_822202989_1079063" class="selected">CUBIC</a>] [,&#160;<a href="#R_822202989_787003" class="selected">MISSING</a>=<i>value</i>] [,&#160;<a href="#R_822202989_787006" class="selected">MODE</a>=<i>value</i>] [,&#160;/<a href="#R_822202989_1086709" class="selected">QUIET</a>])</p>
+        <h2 class="API"><a name="R_822202989_1104148"></a><a name="R_822202989_16447"></a>Return Value</h2>
+        <p>Returns a 3-D data array.</p>
+        <h2 class="API"><a name="R_822202989_786982"></a><a name="R_822202989_786982_PageTOC_RECON3_"></a>Arguments</h2>
+        <h3 class="Argument">Images</h3>
+        <p>A 3-D array containing the images to use to reconstruct the volume. Execution time increases linearly with more images. <i>Images</i> must be an 8-bit (byte) array with dimensions (<i>x</i>, <i>y</i>, <i>n</i>) where <i>x</i> is the horizontal image dimension, <i>y</i> is the vertical image dimension, and <i>n</i> is the number of images. Note that <i>n</i> must be at least 2.</p>
+        <h3 class="Argument">Obj_Rot</h3>
+        <p>A 3 x <i>n</i> floating-point array specifying the amount the object is rotated to make it appear as it does in each image. The object is first rotated about the X axis, then about the Y axis, and finally about the Z axis (with the object’s reference point at the origin). <i>Obj_Rot</i>[0, *] is the X rotation for each image, <i>Obj_Rot</i>[1, *] is the Y rotation, and <i>Obj_Rot</i>[2, *] is the Z rotation. </p>
+        <h3 class="Argument">Obj_Pos</h3>
+        <p>A 3 x <i>n</i> floating-point array specifying the position of the object’s reference point relative to the camera lens. The camera lens is located at the coordinate origin and points in the negative Z direction (the view up vector points in the positive Y direction). <i>Obj_Pos</i> should be expressed in this coordinate system. <i>Obj_Pos</i>[0, *] is the X position for each image, <i>Obj_Pos</i>[1, *] is the Y position, and <i>Obj_Pos</i>[2, *] is the Z position. All the values in <i>Obj_Pos</i>[2, *] should be less than zero. Note that the values for <i>Obj_Pos</i>, <i>Focal</i>, <i>Dist</i>, and <i>Vol_Pos</i> should all be expressed in the same units (mm, cm, m, in, ft, etc.).</p>
+        <h3 class="Argument">Focal</h3>
+        <p>An <i>n</i>-element floating-point array specifying the focal length of the lens for each image. Focal may be set to zero to indicate a parallel image projection (infinite focal length).</p>
+        <h3 class="Argument">Dist</h3>
+        <p>An <i>n</i>-element floating-point array specifying the distance from the camera lens to the image plane (film) for each image. <i>Dist</i> should be greater than <i>Focal</i>.</p>
+        <h3 class="Argument">Vol_Pos</h3>
+        <p>A 3 x 2 floating-point array specifying the two opposite corners of a cube that surrounds the object. <i>Vol_Pos</i> should be expressed in the object’s coordinate system relative to the object’s reference point. <i>Vol_Pos</i>[*, 0] specifies one corner and <i>Vol_Pos</i>[*, 1] specifies the opposite corner.</p>
+        <h3 class="Argument">Img_Ref</h3>
+        <p>A 2 x <i>n</i> integer or floating-point array that specifies the pixel location at which the object’s reference point appears in each of the images. <i>Img_Ref</i>[0, *] is the X coordinate for each image and <i>Img_Ref</i>[1, *] is the Y coordinate.</p>
+        <h3 class="Argument">Img_Mag</h3>
+        <p>A 2 x <i>n</i> integer or floating-point array that specifies the magnification factor for each image. This number is actually the length (in pixels) that a test object would appear in an image if it were <i>n</i> units long and <i>n</i> units distant from the camera lens. <i>Img_Mag</i>[0, *] is the X dimension (in pixels) of a test object for each image, and <i>Img_Mag</i>[1, *] is the Y dimension. All elements in <i>Img_Mag</i> should be greater than or equal to 1.</p>
+        <h3 class="Argument">Vol_Size</h3>
+        <p>A 3-element integer or floating-point array that specifies the size of the 3-D byte array to return. Execution time (and resolution) increases exponentially with larger values for <i>Vol_Size</i>. <i>Vol_Size</i>[0] specifies the X dimension of the volume, <i>Vol_Size</i>[1] specifies the Y dimension, and <i>Vol_Size</i>[2] specifies the Z dimension.</p>
+        <h2 class="API"><a name="R_822202989_787001"></a><a name="R_822202989_787001_PageTOC_RECON3_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="R_822202989_1079063"></a><a name="R_822202989_1079063_Keywords_RECON3__"></a>CUBIC</h3>
+        <p>Set this keyword to use cubic interpolation. The default is to use tri-linear interpolation, which is slightly faster.</p>
+        <h3 class="Keyword"><a name="R_822202989_787003"></a><a name="R_822202989_787003_Keywords_RECON3__"></a>MISSING</h3>
+        <p><a name="kanchor2262"></a>Set this keyword equal to a byte value for cells in the 3-D volume that do not map to any of the supplied images. The value of MISSING is passed to the INTERPOLATE function. The default value is zero.</p>
+        <h3 class="Keyword"><a name="R_822202989_787006"></a><a name="R_822202989_787006_Keywords_RECON3__"></a>MODE</h3>
+        <p>Set this keyword to a value less than zero to define each cell in the 3-D volume as the <i>minimum</i> of the corresponding pixels in the images. Set MODE to a value greater than zero to define each cell in the 3-D volume as the <i>maximum</i> of the corresponding pixels in the images. If MODE is set equal to zero then each cell in the 3-D volume is defined as the <i>average</i> of the corresponding pixels in the images. </p>
+        <p>MODE should usually be set to -1 when the images contain a bright object in front of a dark background or to +1 when the images contain a dark object in front of a light background. Setting MODE=0 (the default) requires more memory since the volume array must temporarily be kept as an integer array instead of a byte array.</p>
+        <h3 class="Keyword"><a name="R_822202989_1086709"></a><a name="R_822202989_1086709_Keywords_RECON3__"></a>QUIET</h3>
+        <p>Set this keyword to suppress the output of informational messages when the processing of each image is completed.</p>
+        <h2 class="API"><a name="R_822202989_787009"></a><a name="R_822202989_787009_PageTOC_RECON3_"></a>Examples</h2>
+        <p>Assumptions for this example:</p>
+        <ul>
+            <li value="1">The object’s major axis is parallel to the Z axis. </li>
+            <li value="2">The object’s reference point is at its center. </li>
+            <li value="3">The camera lens is pointed directly at this reference point. </li>
+            <li value="4">The reference point is 5000 mm in front of the camera lens. </li>
+            <li value="5">The focal length of the camera lens is 200 mm.</li>
+        </ul>
+        <p>If the camera is focused on the reference point, then the distance from the lens to the camera’s image plane must be: </p>
+        <p>dist = (d * f) / (d - f) = (5000 * 200) / (5000 - 200) = (1000000 / 4800) = 208.333 mm</p>
+        <p>The object is roughly 600 mm wide and 600 mm high. The reference point appears in the exact center of each image.</p>
+        <p>If the object is 600 mm high and 5000 mm distant from the camera lens, then the object image height must be: </p>
+        <p>hi = (h * f) / (d - f) = (600 * 200) / (5000 - 200) = (120000 / 4800) = 25.0 mm </p>
+        <p>The object image appears 200 pixels high so the final magnification factor is: </p>
+        <p>img_mag = (200 / 25) = 8.0</p>
+        <p>From these assumptions, we can set up the following reconstruction:</p>
+        <p class="Code">; First, define the variables:<br />imgx = 256<br />imgy = 256<br />frames = 3<br />images = BYTARR(imgx, imgy, frames)<br />obj_rot = Fltarr(3, frames)<br />obj_pos = Fltarr(3, frames)<br />focal = Fltarr(frames)<br />dist = Fltarr(frames)<br />vol_pos = Fltarr(3, 2)<br />img_ref = Fltarr(2, frames)<br />img_mag = Fltarr(2, frames)<br />vol_size = [40, 40, 40]</p>
+        <p>Now determine the image location, focal length and distance from the lens:</p>
+        <p class="Code">; The object is 5000 mm directly in front of the camera:<br />obj_pos[0, *] = 0.0<br />obj_pos[1, *] = 0.0<br />obj_pos[2, *] = -5000.0<br /><br />; The focal length of the lens is constant for all the images:<br />focal[*] = 200.0<br /><br />; The distance from the lens to the image plane is also constant:<br />dist[*] = 208.333</p>
+        <p>Determine the remaining relevant information about the object:</p>
+        <p class="Code">; The cube surrounding the object is 600 mm x 600 mm:<br />vol_pos[*, 0] = [-300.0, -300.0, -300.0]<br />vol_pos[*, 1] = [ 300.0, 300.0, 300.0]<br /><br />; The image reference point appears at the center of all the<br />; images:<br />img_ref[0, *] = imgx / 2<br />img_ref[1, *] = imgy / 2<br /><br />; The image magnification factor is constant for all images. <br />; (The images have not been cropped or resized):<br />img_mag[*,*] = 8.0<br /><br />; Only the object rotation changes from one image to the next. <br />; Note that the object is rotated about the X axis first, then Y,<br />; and then Z. Create some fake images for this example: <br />images[30:160, 20:230, 0] = 255<br />images[110:180, 160:180, 0] = 180<br />obj_rot[*, 0] = [-90.0, 0.0, 0.0]<br />images[70:140, 100:130, 1] = 255<br />obj_rot[*, 1] = [-70.0, 75.0, 0.0]<br />images[10:140, 70:170, 2] = 255<br />images[80:90, 170:240, 2] = 150<br />obj_rot[*, 2] = [-130.0, 215.0, 0.0]<br /><br />; Reconstruct the volume:<br />vol = RECON3(images, obj_rot, obj_pos, focal, dist, $<br />&#160;&#160;&#160;vol_pos, img_ref, img_mag, vol_size, Missing=255B, Mode=(-1))</p>
+        <p>Now display the volume in a window using TVSCL:</p>
+        <p class="Code">; Display the volume:<br />shade_volume, vol, 8, v, p<br />scale3, xrange=[0,40], yrange=[0,40], zrange=[0,40]<br />image = polyshade(v, p, /t3d, xs=400, ys=400)<br />tvscl, image</p>
+        <h2 class="API"><a name="R_822202989_36188"></a><a name="R_822202989_36188_PageTOC_RECON3_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre-4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="R_822202989_1093043"></a><a name="R_822202989_1093043_PageTOC_RECON3_"></a>See Also</h2>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

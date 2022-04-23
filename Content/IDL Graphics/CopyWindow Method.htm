@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Methods">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>CopyWindow Method</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Graphics Methods.htm">Graphics Methods</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">CopyWindow Method</span>
+        </div>
+        <h1 class="ObjMethod"><a name="kanchor4258"></a>CopyWindow Method</h1>
+        <p>The CopyWindow function method copies the contents of the graphic window into a [3 x <i>M</i> x <i>N</i>] byte array. By default the resulting image has the same dimensions as the window, although the HEIGHT, WIDTH, and RESOLUTION keywords may be used to override this behavior.</p>
+        <h2 data-mc-conditions="">Example</h2>
+        <p data-mc-conditions="">The following code sample creates a bar plot and saves the image to a PNG file.</p>
+        <p class="Code">x = FINDGEN(41)/10 - 2</p>
+        <p class="Code">gauss = EXP(-x^2)</p>
+        <p class="Code">p = BARPLOT(x, gauss, TITLE='Gaussian Distribution', $</p>
+        <p class="Code">XTITLE='$\it x$', YTITLE='$\it f(x)$', YRANGE=[0,1.1])</p>
+        <p class="Code">t = TEXT(0.75,0.85,'$\it f(x)=exp(-x^2)$', /DATA, FONT_SIZE=24)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Retrieve a smaller "thumbnail" of the graphics window.</p>
+        <p class="Code">result = p.CopyWindow(BORDER=0, RESOLUTION=48)</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result = graphic</i>.CopyWindow( /ANTIALIAS, BORDER=<i>integer</i>, HEIGHT=<i>integer</i>, RESOLUTION=<i>integer</i>, TRANSPARENT=<i>array</i>, WIDTH=<i>integer</i> )</p>
+        <h2 class="API">Return Value</h2>
+        <p>The result is a byte array of dimensions [3 x <i>M</i> x <i>N</i>] containing the window contents. If TRANSPARENT is set then the result will have dimensions [4 x <i>M</i> x <i>N</i>].</p>
+        <h2 class="API">Arguments</h2>
+        <p>None.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">ANTIALIAS</h3>
+        <p>By default, if the output resolution is less than 300 dots-per-inch, then IDL will automatically use anti-aliasing to create a smoother-looking output image. Set this keyword to 0 to disable anti-aliasing.</p>
+        <h3 class="Keyword">BORDER</h3>
+        <p>By default, the copied graphics includes all of the background regions around the graphics, out to the edge of the window. Set this keyword to an integer defining the width of the border around the graphic. For example, setting BORDER=0 will trim the graphic so that there are no extra border pixels surrounding the graphic.</p>
+        <h3 class="Keyword">HEIGHT</h3>
+        <p>Set this keyword to the height of the output array. If this keyword is set, the RESOLUTION keyword is ignored and the width is automatically calculated from the window's aspect ratio.</p>
+        <h3 class="Keyword">RESOLUTION</h3>
+        <p>Set this keyword to the output resolution (in dots per inch) to use when copying the window. If this keyword is not supplied, the result array will be the same size as the window dimensions. The maximum output dimensions are 8192 x 8192. If the output dimensions are larger than these values, the resolution will be automatically reduced.</p>
+        <h3 class="Keyword">TRANSPARENT</h3>
+        <p>Set this keyword to an RGB value (a three-element vector of the form [<i>R, G, B</i>]) indicating which pixels in the output image should be made transparent. If this keyword is set to 1, the color of the lower left pixel in the image is used as the transparent color. If TRANSPARENT is set then the result will have dimensions [4 x <i>M</i> x <i>N</i>].</p>
+        <h3 class="Keyword">WIDTH</h3>
+        <p>Set this keyword to the width of the output array. If this keyword is set, the RESOLUTION keyword is ignored and the height is automatically calculated from the window's aspect ratio.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 61px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>8.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added ANTIALIAS keyword.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="Print Method.htm" class="Heading">Print Method</a>,
+		<a href="../GuideMe/Using IDL Graphics.htm" class="Heading">Using IDL Graphics</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

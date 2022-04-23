@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|Graphics Object Classes|IDLgrPlot">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLgrPlot::SetVertexAttributeData</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_gr.htm">Graphics Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLgrPlot::SetVertexAttributeData</span>
+        </div>
+        <h1 class="ObjMethod"><a name="kanchor3723"></a><a name="objects_gr_2157407275_1804678"></a><a name="objects_gr_2157407275_63842"></a>IDLgrPlot::SetVertexAttributeData</h1>
+        <p>The IDLgrPlot::SetVertexAttributeData procedure method passes a set of per-vertex attribute data to a vertex shader program. When an <a href="IDLgrShader.htm#objects_gr_2157407275_1789376">IDLgrShader</a> object is associated with the plot via the <a href="IDLgrPlot_Properties.htm#objects_gr_2157407275_1799501">SHADER</a> property, this attribute data is made available, a vertex's worth at a time, to the vertex shader program as it processes each vertex in the plot. If there are more vertices in the plot than there are vertex attributes, the list of vertex attributes is reused until all the vertices are drawn.</p>
+        <p>IDL stores the <i>Name</i> and <i>Value</i> of the vertex attribute data variable with this plot object the first time this method is called. When SetVertexAttributeData is called again using the same <i>Name</i> argument, the vertex attribute data variable is updated with the current contents of <i>Value</i>. Once a vertex attribute data variable is associated with this object, there is no way to remove the reference. The shader program ignores any vertex attribute data variable defined for this object but not declared in the shader program. </p>
+        <p>The attribute data may consist of 1 to 4 elements per vertex. The data is passed to the vertex shader program via a shader program variable with the attribute qualifier. The attribute variable may be of GLSL type <code>float</code>, <code>vec2</code>, <code>vec3</code>, <code>vec4</code>, <code>mat2</code>, <code>mat3</code>, or <code>mat4</code>. Internally, the <code>mat2</code> type is treated as two <code>vec2</code> attribute variables, <code>mat3</code> as three <code>vec3</code> attribute variables, and <code>mat4</code> as four <code>vec4</code> attribute variables.</p>
+        <p>If the attribute variable is larger than the data passed to it, the shader program pads the missing elements as follows. A missing second or third element is set to 0.0. A missing fourth element is set to 1.0.</p>
+        <p>For example, the IDL application has a set of vertex attribute data where there is an x&#8209;offset and a y&#8209;offset for each vertex. The vertex program defines an attribute variable using a <code>vec4</code> type so that it can be used in 4x4 general transformations. The IDL program stores the x- and y-offset information in a [2, <i>n</i>] array and sets the value of the attribute variable to this array. As the shader program runs, for each vertex it assigns the two values from the corresponding row of the IDL array to the first two elements in the <code>vec4</code> attribute variable. It also sets the third value to 0.0 and the fourth value to 1.0, thus expanding the 2-element data to a general 3-D point in homogenous coordinate space, suited for 4x4 general transforms.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>A minimum of 16 vertex attribute data variables can be passed to the shader vertex program (use <a href="IDLgrWindow__GetDeviceIn.htm#objects_gr_2157407275_1018597">IDLgrWindow::GetDeviceInfo</a> to determine the exact number). IDL uses one vertex attribute variable, leaving the remainder for user programs. For maximum shader program portability, define 15 or fewer attribute variables. </p>
+        <h2 class="API"><a name="objects_gr_2157407275_1804698"></a><a name="objects_gr_2157407275_47282"></a>Syntax</h2>
+        <p class="Syntax"><i>Obj</i>-&gt;[<a href="IDLgrPlot.htm#objects_gr_2157407275_1012723">IDLgrPlot</a>::]SetVertexAttributeData, <i>Name, Value</i></p>
+        <h2 class="API"><a name="objects_gr_2157407275_1804704"></a><a name="objects_gr_2157407275_30509"></a>Arguments</h2>
+        <h3 class="Argument">Name</h3>
+        <p>Specifies a case-sensitive string name of the attribute variable.</p>
+        <h3 class="Argument">Value</h3>
+        <p>Specifies an IDL array of any numeric type. The array must be of the form [<i>n</i>], [<i>a</i>,<i>n</i>], or [<i>a</i>,<i>a</i>,<i>n</i>] where <i>a</i> is 1,2,3, or 4 and <i>n</i> is the number of vertex attribute elements. IDL will halt with an error if you assign IDL strings, structures, pointers, object references, and undefined variables to <i>Value</i>. IDL converts all numeric types to 32-bit float when submitting the data to the shader program. </p>
+        <h2 class="API"><a name="objects_gr_2157407275_1804711"></a><a name="objects_gr_2157407275_44891"></a>Keywords</h2>
+        <p>None</p>
+        <h2 class="API"><a name="objects_gr_2157407275_1805229"></a><a name="objects_gr_2157407275_99600"></a>Examples</h2>
+        <p>Suppose there is large set of point sample data, along with a set of initial velocity vectors for each point. You want to display an animation of these points as each point moves along its own velocity vector as a function of time. Without a shader program, you would normally have to recalculate the position of each point and replace all the vertices in an IDLgrPolygon (<code>STYLE=0</code>) object with the recomputed values for each animation frame, which would be inefficient with a large number of points.</p>
+        <p>However, with a vertex shader program and vertex attribute data, you can move the points around using the graphics card's GPU instead of recalculating and moving a lot of data around on the system CPU.</p>
+        <p>The interesting parts of the IDL code are:</p>
+        <p class="Code">; Define the original vertices at time=0.</p>
+        <p class="Code">oPolygon-&gt;SetProperty, DATA=vertices </p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Set [3,n] array. </p>
+        <p class="Code">oPolygon-&gt;SetVertexAttributeData, 'velocity', velocities </p>
+        <p class="Code">FOR t=0.0, 100.0, 0.01 DO BEGIN  ;; time samples</p>
+        <p class="Code">&#160;&#160;&#160;oShader-&gt;SetUniformVariable, 'time', t</p>
+        <p class="Code">&#160;&#160;&#160;oWindow-&gt;Draw</p>
+        <p class="Code">ENDFOR</p>
+        <p>And the interesting parts of the vertex shader program are:</p>
+        <p class="Code">attribute vec3 velocity;</p>
+        <p class="Code">uniform float time;</p>
+        <p class="Code">void main () {</p>
+        <p class="Code">&#160;&#160;&#160;vec4 vert;</p>
+        <p class="Code">&#160;&#160;&#160;vert = gl_Vertex + vec4(velocity * time, 0.0);</p>
+        <p class="Code">&#160;&#160;&#160;gl_Position = gl_ModelViewProjectMatrix * vert;</p>
+        <p class="Code">}</p>
+        <h2 class="API"><a name="objects_gr_2157407275_1805231"></a><a name="objects_gr_2157407275_49835"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="objects_gr_2157407275_1804722"></a><a name="objects_gr_2157407275_84038"></a>See Also</h2>
+        <p><a href="IDLgrPlot__GetVertexAttr.htm#objects_gr_2157407275_1804530">IDLgrPlot::GetVertexAttributeData</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

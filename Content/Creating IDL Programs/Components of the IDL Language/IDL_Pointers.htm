@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Data Types">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDL Pointers</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="IDL_Data_Types.htm">Data Types</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Pointers</span>
+        </div>
+        <h1><a name="pointers_3224653378_998074"></a><a name="pointers_3224653378_22368"></a>IDL Pointers</h1>
+        <p><a name="kanchor4525"></a>As illustrated above, you must use a special IDL routine to create a pointer to a heap variable. Two routines are available: PTR_NEW and PTRARR. Before discussing these functions, however, it is useful to examine the concept of a null pointer.</p>
+        <h2 class="API"><a name="pointers_3224653378_96394"></a>Null Pointers</h2>
+        <p>The <i>Null Pointer</i> is a special pointer value that is guaranteed to never point at a valid heap variable. It is used by IDL to initialize pointer variables when no other initializing value is present. It is also a convenient value to use at the end nodes in data structures such as trees and linked lists. </p>
+        <p>It is important to understand the difference between a null pointer and a pointer to an undefined or invalid heap variable. The second case is a valid pointer to a heap variable that does not currently contain a usable value. To make the difference clear, consider the following IDL statements:</p>
+        <p class="Code">;The variable A contains a null pointer.</p>
+        <p class="Code">A = PTR_NEW()</p>
+        <p class="Code">;The variable B contains a pointer to a heap variable with an </p>
+        <p class="Code">;undefined value.</p>
+        <p class="Code">B = PTR_NEW(/ALLOCATE_HEAP)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">HELP, A, B, *B</p>
+        <p>IDL prints:</p>
+        <p class="Code">A               POINTER  = &lt;NullPointer&gt;</p>
+        <p class="Code">B               POINTER  = &lt;PtrHeapVar1&gt;</p>
+        <p class="Code">&lt;PtrHeapVar1&gt;   UNDEFINED = &lt;Undefined&gt;</p>
+        <p>The primary difference is that it is possible to write a useful value into a pointer to an undefined variable, but this is never possible with a null pointer. For example, attempt to assign the value 34 to the null pointer:</p>
+        <p class="Code">*A = 34</p>
+        <p>IDL prints:</p>
+        <p class="Code">% Unable to dereference NULL pointer: A.</p>
+        <p class="Code">% Execution halted at:  $MAIN$</p>
+        <p>Assign the value 34 to a previously-undefined heap variable:</p>
+        <p class="Code">*B = 34</p>
+        <p class="Code">PRINT, *B</p>
+        <p>IDL prints:</p>
+        <p class="Code">      34</p>
+        <p>Similarly, the null pointer is not the same thing as the result of PTR_NEW(0). PTR_NEW(0) returns a pointer to a heap variable that has been initialized with the integer value 0.</p>
+        <h2 class="API"><a name="pointers_3224653378_78473"></a>The PTR_NEW Function</h2>
+        <p>Use the PTR_NEW function to create a single pointer to a new heap variable. If you supply an argument, the newly-created heap variable is set to the value of the argument. For example, the command:</p>
+        <p class="Code">ptr1 = PTR_NEW(FINDGEN(10))</p>
+        <p>creates a new heap variable that contains the ten-element floating point array created by FINDGEN, and places a pointer to this heap variable in ptr1.</p>
+        <p>Note that the argument to PTR_NEW can be of any IDL data type, and can include any IDL expression, including calls to PTR_NEW itself. For example, the command:</p>
+        <p class="Code">ptr2 = PTR_NEW({name:'', next:PTR_NEW()})</p>
+        <p>creates a pointer to a heap variable that contains an anonymous structure with two fields: the first field is a string, the second is a pointer. We will develop this idea further in the examples at the end of this chapter.</p>
+        <p>If you do not supply an argument, the newly-created pointer will be a null pointer. If you wish to create a new heap variable but do not wish to initialize it, use the ALLOCATE_HEAP keyword.</p>
+        <p>See <a href="../../Reference Material/P/PTR_NEW.htm#P_817877613_1086484">PTR_NEW</a> for further details.</p>
+        <h2 class="API"><a name="pointers_3224653378_39919"></a>The PTRARR Function</h2>
+        <p>Use the PTRARR function to create an array of pointers of up to eight dimensions. By default, every element of the array created by PTRARR is set to the null pointer. For example:</p>
+        <p class="Code">;Create a 2 by 2 array of null pointers.</p>
+        <p class="Code">ptarray = PTRARR(2,2)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Display the contents of the ptarray variable, and of the first </p>
+        <p class="Code">;array element.</p>
+        <p class="Code">HELP, ptarray, ptarray(0,0)</p>
+        <p>IDL prints:</p>
+        <p class="Code">PTARR           POINTER   = Array(2, 2)</p>
+        <p class="Code">&lt;Expression&gt;    POINTER   = &lt;NullPointer&gt;</p>
+        <p>If you want each element of the array to point to a new heap variable (as opposed to being a null pointer), use the ALLOCATE_HEAP keyword. Note that in either case, you will need to initialize the array with another IDL statement.</p>
+        <p>See <a href="../../Reference Material/P/PTRARR.htm#P_817877613_845087">PTRARR</a> for further details.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

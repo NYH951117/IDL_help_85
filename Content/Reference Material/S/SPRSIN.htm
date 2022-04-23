@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: S">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>SPRSIN </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="S_list.htm">Routines: S</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">SPRSIN</span>
+        </div>
+        <h1 class="Routine"><a name="S_820040301_1076561"></a><a name="kanchor2444"></a><a name="S_820040301_41214"></a>SPRSIN </h1>
+        <p>The SPRSIN function converts an array, or list of subscripts and values, into a row-index sparse storage mode, retaining only elements with an absolute magnitude greater than or equal to the specified threshold. The list form is much more efficient than the array form if the density of the matrix is low.</p>
+        <p>SPRSIN is based on the routine <code>sprsin</code> described in section 2.7 of <i>Numerical Recipes in C: The Art of Scientific Computing</i> (Second Edition), published by Cambridge University Press, and is used by permission.</p>
+        <h2 class="API"><a name="S_820040301_52038"></a><a name="S_820040301_52038_PageTOC_SPRSIN_"></a>Examples</h2>
+        <h3><a name="S_820040301_1076680_Keywords_SPRSIN__"></a>Example1</h3>
+        <p>Suppose we wish to convert the following array to sparse storage format:</p>
+        <p class="Code">A = [[ 5.0, -0.2, 0.1], $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;[ 3.0, -2.0, 0.3], $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;[ 4.0, -1.0, 0.0]]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Convert to sparse storage mode. All elements of the array A that </p>
+        <p class="Code">; have absolute values less than THRESH are set to zero.</p>
+        <p class="Code">sparse = SPRSIN(A, THRESH = 0.5)</p>
+        <p>The variable SPARSE now contains a representation of A in structure form. See the description of FULSTR for an example that restores such a structure to full storage mode.</p>
+        <h3><a name="S_820040301_1076681_Keywords_SPRSIN__"></a>Example2</h3>
+        <p>This example demonstrates how to use the list form of the call to SPRSIN. The following line of code creates a sparse matrix, equivalent to a 100 by 100 identity matrix, i.e. all diagonal elements are set to 1, all other elements are zero:</p>
+        <p class="Code">I100 = SPRSIN(LINDGEN(100), LINDGEN(100), REPLICATE(1.0,100), 100)</p>
+        <h2 class="API"><a name="S_820040301_52026"></a><a name="S_820040301_52026_PageTOC_SPRSIN_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = SPRSIN( <i>A </i>[,&#160;/<a href="#S_820040301_58754" class="selected">COLUMN</a>] [,&#160;/<a href="#S_820040301_52033" class="selected">DOUBLE</a>] [,&#160;<a href="#S_820040301_52036" class="selected">THRESHOLD</a>=<i>value</i>] )</p>
+        <p>or</p>
+        <p class="Syntax"><i>Result</i> = SPRSIN(<i>Columns, Rows, Values, N</i> [,&#160;/<a href="#S_820040301_52033" class="selected">DOUBLE</a>] [,&#160;<a href="#S_820040301_52036" class="selected">THRESHOLD</a>=<i>value</i>])</p>
+        <h2 class="API"><a name="S_820040301_1135076"></a><a name="S_820040301_76211"></a>Return Value</h2>
+        <p>The result is a row-indexed sparse array contained in structure form. The structure consists of two linear sparse storage vectors: SA, a vector of array values, and IJA, a vector of subscripts to the SA vector. The length of these vectors is equal to 1 plus the number of diagonal elements of the array, plus the number of off-diagonal elements with an absolute magnitude greater that or equal to the threshold value. Diagonal elements of the array are always retained even if their absolute magnitude is less than the specified threshold. </p>
+        <h2 class="API"><a name="S_820040301_52028"></a><a name="S_820040301_52028_PageTOC_SPRSIN_"></a>Arguments</h2>
+        <h3 class="Argument">A </h3>
+        <p>An <i>n</i> by <i>n</i> array of any type except string or complex.</p>
+        <h3 class="Argument">Columns</h3>
+        <p>A vector containing the column subscripts of the non-zero elements. Values must be in the range of 0 to (N-1).</p>
+        <h3 class="Argument">Rows</h3>
+        <p>A vector, of the same length as Column, containing the row subscripts of the non-zero elements. Values must be in the range of 0 to (N-1). </p>
+        <h3 class="Argument">Values</h3>
+        <p>A vector, of the same length as Column, containing the values of the non-zero elements.</p>
+        <h3 class="Argument">N</h3>
+        <p>The size of the resulting sparse matrix.</p>
+        <h2 class="API"><a name="S_820040301_52031"></a><a name="S_820040301_52031_PageTOC_SPRSIN_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="S_820040301_58754"></a><a name="S_820040301_58754_Keywords_SPRSIN__"></a>COLUMN</h3>
+        <p>Set this keyword if the input array <i>A</i> is in column-major format (composed of column vectors) rather than in row-major format (composed of row vectors). This keyword is not allowed in the list form of the call.</p>
+        <h3 class="Keyword"><a name="S_820040301_52033"></a><a name="S_820040301_52033_Keywords_SPRSIN__"></a>DOUBLE</h3>
+        <p>Set this keyword to convert the sparse array to double-precision.</p>
+        <h3 class="Keyword"><a name="S_820040301_52036"></a><a name="S_820040301_52036_Keywords_SPRSIN__"></a>THRESHOLD</h3>
+        <p>Use this keyword to set the criterion for deciding the absolute magnitude of the elements to be retained in sparse storage mode. For single-precision calculations, the default value is 1.0 x 10<sup>-7</sup>. For double-precision values, the default is 1.0 x 10<sup>-14</sup>.</p>
+        <h2 class="API"><a name="S_820040301_1068086"></a><a name="S_820040301_1068086_PageTOC_SPRSIN_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="S_820040301_1110409"></a><a name="S_820040301_1110409_PageTOC_SPRSIN_"></a>See Also</h2>
+        <p><a href="../F/FULSTR.htm#F_848155245_888003">FULSTR</a>, <a href="../L/LINBCG.htm#L_826528365_937544">LINBCG</a>, <a href="SPRSAB.htm#S_820040301_51904">SPRSAB</a>, <a href="SPRSAX.htm#S_820040301_51970">SPRSAX</a>, <a href="SPRSTP.htm#S_820040301_842892">SPRSTP</a>, <a href="../R/READ_SPR.htm#R_822202989_753910">READ_SPR</a>, <a href="../W/WRITE_SPR.htm#W_811389549_754256">WRITE_SPR</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

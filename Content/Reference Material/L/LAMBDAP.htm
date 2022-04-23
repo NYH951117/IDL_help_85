@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: L">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>LAMBDAP</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="L_list.htm">Routines: L</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">LAMBDAP</span>
+        </div>
+        <h1><a name="kanchor1653"></a>LAMBDAP</h1>
+        <p>The LAMBDAP function creates small, inline procedures that can be passed around as IDL strings. These Lambda procedures can be used to make procedure calls, or used as inputs to other IDL routines that require user procedures.</p>
+        <h2 class="API">Examples</h2>
+        <p>Here we create a multi-statement Lambda procedure, and pass it to the CURVEFIT routine:</p>
+        <p class="Code">X = [0.0:9.0]</p>
+        <p class="Code">Y = [12.0, 11.0, 10.2, 9.4, 8.7, 8.1, 7.5, 6.9, 6.5, 6.1]</p>
+        <p class="Code">A = [10.0,-0.1,2.0]</p>
+        <p class="Code">L = LAMBDAP('x,a,f,pder: ' + $</p>
+        <p class="Code_Indented">'bx = EXP(A[1]*X) &amp; F = A[0]*bx + A[2] &amp; ' + $</p>
+        <p class="Code_Indented">'pder = [[bx], [A[0]*X*bx], [REPLICATE(1.0, 10)]]')</p>
+        <p class="Code">yfit = CURVEFIT(X, Y, 1/Y, A, SIGMA, FUNCTION_NAME=L)</p>
+        <p class="Code">PRINT, A</p>
+        <p>IDL prints:</p>
+        <p class="Code">9.9112015     -0.10088314       2.0777268</p>
+        <p>We can also make normal procedure calls on the LambdaP variable:</p>
+        <p class="Code">P = LAMBDAP("arg: PRINT, 'Value of ' + " + $</p>
+        <p class="Code_Indented">"SCOPE_VARNAME(arg,LEVEL=-1) + ' is: ' + STRTRIM(arg,2)")</p>
+        <p class="Code">myvar = 3.14</p>
+        <p class="Code">P, myvar</p>
+        <p>IDL prints:</p>
+        <p class="Code">Value of 'MYVAR' is: 3.14000</p>
+        <p>Notice that for the previous two examples we passed in a string containing the IDL&#160;statements. If our code is short enough, we can also eliminate the quotes and just directly pass in code:</p>
+        <p class="Code">P2 = LAMBDAP(msg: void = DIALOG_MESSAGE(msg))</p>
+        <p class="Code">P2,"hello"</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = LAMBDAP( <i>Code</i> )</p>
+        <h2 class="API">Return Value</h2>
+        <p>A string giving IDL's internal name for the LambdaP procedure. You should ignore the actual value, but instead, you should simply pass the string into your other IDL routines. You can also make direct procedure calls on the returned string and IDL will call your Lambda routine.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Code</h3>
+        <p>A string containing your Lambda code, or the actual code itself. The string or code should have the following form:</p>
+        <p class="Code">"arg1, arg2, arg3,... : statement &amp; statement &amp; statement..."</p>
+        <p>Your Lambda routine must accept at least one argument, although it doesn't necessarily need to use that argument. The code can contain any number of IDL statements. This can include flow-control statements such as if/then, while, or for loops, as long as the statements are separated by "&amp;" characters.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you use actual code within the LAMBDAP call, then all of your statements must fit on a single line. You can use "&amp;" to separate multiple statements, but you cannot use "$" to continue the code onto the next line. If your code is too long to easily fit on a single line, you should use a string containing the code. You can then break the string across multiple lines, as in the first example at the top.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The actual names of the arguments do not matter, as long as they are valid IDL variable names, and they match the variable names within the code. When the Lambda procedure is called, the input variables will be passed into your Lambda procedure in the same order as the call.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If you call Lambda again with the identical <i>Code</i>, then for efficiency a new Lambda procedure will not be created. Instead, the existing Lambda routine will be returned. If for some reason you must have a new routine you should change the code string, for example by changing the names of the arguments.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h2 class="API">Implementation</h2>
+        <p>LAMBDAP creates a new procedure with the following form:</p>
+        <p class="Code">PRO IDL$LAMBDAPxxx, <i>arg1</i>, <i>arg2</i>,...</p>
+        <p class="Code_Indented">COMPILE_OPT IDL2, hidden</p>
+        <p class="Code_Indented" style="font-style: italic;">statement &amp; statement &amp; statement &amp; ...</p>
+        <p class="Code">END</p>
+        <p>The "<code>xxx</code>" is filled in with a unique number for each call to Lambda.</p>
+        <p>IDL&#160;then compiles the newly-created routine, and returns the name of the routine in the <i>Result</i>.</p>
+        <p>If you call Lambda again with the identical <i>Code</i> string, IDL first looks in its list to see if this routine already exists, and returns the same routine name. This makes it efficient to do nested Lambda calls and avoids the overhead of creating extra routines.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Since Lambda procedures are dynamically created at runtime, the routines are not saved within IDL&#160;SAVE files. To use the Lambda procedure in a future IDL&#160;session, you must re-run the code that creates the Lambda procedure.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span><a href="../R/RESOLVE_ALL.htm">RESOLVE_ALL</a> cannot resolve calls to  <a href="#">LAMBDAP</a> procedures, and will throw an error with the name of the "unresolved" variable. You should either set the SKIP_ROUTINES keyword to the name of your Lambda variable, or use CONTINUE_ON_ERROR to suppress the errors.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="LAMBDA.htm">LAMBDA</a>, <a href="../../Objects/Static_Methods.htm">Static Methods and Properties</a>, <a href="../Static Methods/IDL_Variable.htm#Filter">Filter method</a>, <a href="../Static Methods/IDL_Variable.htm#Map">Map method</a>, <a href="../Static Methods/IDL_Variable.htm#Reduce">Reduce method</a></p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

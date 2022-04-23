@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Obsolete Internal Interfaces">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Interfaces Obsoleted in IDL 5.5</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="ObsIntInterfaces.htm">Obsolete Internal Interfaces</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Interfaces Obsoleted in IDL 5.5</span>
+        </div>
+        <h1>Interfaces Obsoleted in IDL 5.5</h1>
+        <p>The following areas changed in IDL 5.5, requiring the introduction of new interfaces, and causing some old interfaces to become obsolete. These old interfaces remain in IDL and can be used by user code. However, new code should not use them, and old code might benefit from migration as part of normal maintenance:</p>
+        <ul>
+            <li value="1">The IDL_Message() IDL_MSG_ATTR_SYS attribute has been retired, in favor of the more general IDL_MessageSyscode() function.</li>
+            <li value="2">The IDL_MessageErrno() and IDL_MessageErrnoFromBlock() functions have been retired in favor of the IDL_MessageSyscode() and IDL_MessageSyscodeFromBlock() functions, which are more general.</li>
+            <li value="3">IDL’s keyword API has been redesigned to be easier to use and understand, and to be reentrant.</li>
+        </ul>
+        <h2>IDL_MSG_ATTR_SYS</h2>
+        <p>IDL_MSG_ATTR_SYS is one of the possible attribute values that can be included in the action argument to the IDL_Message() function. Its purpose was to cause IDL_Message() to report the system error currently contained in the process errno global variable. This functionality is now available in a more general and useful form via the IDL_MessageSyscode() and IDL_MessageSyscodeFromBlock() functions, documented in “Issuing Error Messages”.</p>
+        <p>IDL_Message() always issues a single-line error message that describes the problem from IDL’s point of view. Often, however, there is an underlying system reason for the error that should also be displayed to give the user a complete picture of what went wrong. For example, the IDL view of the problem might be “Unable to open file”, while the underlying system reason for the error is “no such directory”.</p>
+        <p>The UNIX system provides a global variable named errno for communicating such system level errors. Whenever a call to a system function fails, it returns a1, and puts an error code into errno that specifies the reason for the failure. Other functions, such as those provided by the standard C library, do not set errno. These functions do set errno.</p>
+        <p>Specifying IDL_MSG_ATTR_SYS tells IDL_Message() to check errno, and if it is non-null, to issue a second line containing the text of the system error message.</p>
+        <p>Specify IDL_MSG_ATTR_SYS only if you are calling IDL_Message() as the result of a failed UNIX system call. Otherwise, errno might contain an unrelated garbage value resulting in an incorrect error message.</p>
+        <p>The Microsoft Windows operating system has errno for compatibility with the expectations of C programmers, but typically do not set it. On these operating systems, it is possible to specify IDL_MSG_ATTR_SYS, but it has no effect.</p>
+        <h2>Specifying errno Explicitly: IDL_MessageErrno()</h2>
+        <p>The IDL_MessageErrno() and IDL_MessageErrnoFromBlock() functions allow you to throw an error message that includes the system error from the UNIX/POSIX errno global variable. These functions have been replaced by IDL_MessageSyscode() and IDL_MessageSyscodeFromBlock() which in addition to being able to throw UNIX/Posix errors, can also throw other types of system error.</p>
+        <p>There are times when specifying the IDL_MSG_ATTR_SYS modifier code in the action argument to IDL_Message() is inadequate. This situation usually occurs when your code attempts to perform some cleanup operation when an operating system call fails before calling IDL_Message() and this cleanup code might alter the value of errno. In such cases, it is preferable to use the IDL_MessageErrno() or IDL_MessageErrnoFromBlock() functions to issue the message:</p>
+        <p class="Code">void IDL_MessageErrno(int code, int errno, int action, …)</p>
+        <p class="Code">void IDL_MessageErrnoFromBlock(IDL_MSG_BLOCK block, int code, int errno, int action, ...)</p>
+        <p>These function differs from IDL_Message() in two ways:</p>
+        <p>1.   There is an additional argument used to specify the value of errno. See the discussion of errno in “IDL_MSG_ATTR_SYS”  for additional information about errno and its use.</p>
+        <p>2.   The IDL_MSG_ATTR_SYS modifier code for the action argument is ignored.-</p>
+        <h2>Processing Keywords With IDL_KWGetParams()</h2>
+        <p>Previous versions of IDL used a keyword API based around the IDL_KWGetParams() and IDL_KWCleanup() functions. This API was confusing to use (It was difficult to know when IDL_KWCleanup() was supposed to be called), and was not reentrant (requiring extensive and error prone code in some IDL system routines). The new API, using IDL_KWProcessByOffset() and IDL_KW_FREE, solve these problems and result in easier to write and maintain code.</p>
+        <p>To enable rapid conversion from the old API to the new, the new API uses most of the same data structures as the old (with the notable exception of IDL_KW_ARR_DESC, which is replaced by IDL_KW_ARR_DESC_R).</p>
+        <p>This section reproduces those parts of the documentation of the original API that differ from the current API, which is described in  <a href="../IDLInternals - Keyword Processing/IDLKeywordProcessing.htm">IDL Internals: Keyword Processing</a></p>
+        <h2>The IDL_KW_PAR Structure</h2>
+        <p>IDL_KW_PAR is used with the old keyword API in largely the same manner as the current API, as described in <a href="../IDLInternals - Keyword Processing/IDLKeywordProcessing.htm">Overview Of IDL Keyword Processing</a>. The main difference is that the contents of the specified and value fields are the addresses of static variables, rather than offsets into a KW_RESULT structure as with the new API.</p>
+        <h3>specified</h3>
+        <p>The address of a C int variable that will be set to TRUE (non-zero) or FALSE (0) based on whether the routine was called with the keyword present. This field should be set to NULL ((int *) 0) if this information is not needed.</p>
+        <h3>value</h3>
+        <p>If the keyword is a read-only scalar, this field is a pointer to a C variable of the correct type (IDL_LONG, IDL_ULONG, IDL_LONG64, IDL_ULONG64, float, double, or IDL_STRING).</p>
+        <p>In the case of a read-only array, value is a pointer to an IDL_KW_ARR_DESC, which is discussed in <a href="../IDLInternals - Keyword Processing/IDL_KW_ARR_DESC.htm">The IDL_KW_ARR_DESC Structure</a>. In the case of an output variable (i.e., the IDL_KW_OUT flag is set), this field should point to an IDL_VPTR that will be filled by IDL_KWGetParams() with the address of the keyword argument.</p>
+        <h2>The IDL_KW_ARR_DESC Structure</h2>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The IDL_KW_ARR_DESC structure was superseded by IDL_KW_ARR_DESC_R in the current API. The reason for this change is that the n field of IDL_KW_ARR_DESC is modified by the call to IDL_KWGetParams(), requiring the IDL_KW_ARR_DESC structure to be defined in static memory, and rendering it non-reentrant.</p>
+        <p>When a keyword is specified to be a read-only array (i.e., the IDL_KW_ARRAY flag is set), the value field of the IDL_KW_PAR struct should be set to point to an IDL_KW_ARR_DESC structure. This structure is defined as:</p>
+        <p class="Code">typedef struct { char *data; IDL_MEMINT nmin; IDL_MEMINT nmax; IDL_MEMINT n;</p>
+        <p class="Code">} IDL_KW_ARR_DESC;</p>
+        <p>where:</p>
+        <h3>data</h3>
+        <p>The address of a C array to receive the data. This array must be of the C type mapped into by the type field of the IDL_KW_PAR struct. For example, IDL_TYP_LONG maps into a C IDL_LONG. There must be nmax elements in the array.</p>
+        <h3>nmin</h3>
+        <p>The minimum number of elements allowed.</p>
+        <h3>nmax</h3>
+        <p>The maximum number of elements allowed.</p>
+        <h3>n</h3>
+        <p>The number of elements actually present. Unlike the other fields, this field is set by IDL_KWGetParams().</p>
+        <h2>Processing Keywords</h2>
+        <p>The IDL_KWGetParams() function is used to process keywords. IDL_KWGetParams() performs the following actions on behalf of the calling system routine:</p>
+        <ul>
+            <li value="1">Verify that the keywords passed to the routine are all allowed by the routine.</li>
+            <li value="2">Carry out the type checking and conversions required for each keyword.</li>
+            <li value="3">Find the positional (non-keyword) arguments that are scattered among the keyword arguments in argv and copy them in order into the plain_args array.</li>
+            <li value="4">Return the number of plain arguments copied into plain_args.</li>
+        </ul>
+        <p>IDL_KWGetParams() has the form:</p>
+        <p class="Code">int IDL_KWGetParams(int argc, IDL_VPTR *argv,char *argk, IDL_KW_PAR *kw_list, IDL_VPTR plain_args[], int mask)</p>
+        <p>where:</p>
+        <h3>argc</h3>
+        <p>The number of arguments passed to the caller. This is the first parameter to all system routines.</p>
+        <h3>argv</h3>
+        <p>The array of IDL_VPTR to arguments that was passed to the caller. This is the second parameter to all system routines.</p>
+        <h3>argk</h3>
+        <p>The pointer to the keyword list that was passed to the caller. This is the third parameter to all system routines that accept keyword arguments.</p>
+        <h3>kw_list</h3>
+        <p>An array of IDL_KW_PAR structures (see<a href="../IDLInternals - Keyword Processing/IDLKeywordProcessing.htm">Overview Of IDL Keyword Processing</a>, and <a href="../IDLInternals - Keyword Processing/IDL_KW_PAR.htm">The IDL_KW_PAR Structure</a>) that specifies the acceptable keywords for this routine. This array is terminated by setting the keyword field of the final struct to NULL ((char *) 0).</p>
+        <h3>plain_args</h3>
+        <p>An array of IDL_VPTR into which the IDL_VPTRs of the positional arguments will be copied. This array must have enough elements to hold the maximum possible number of positional arguments, as defined in IDL_SYSFUN_DEF2. See “Registering Routines” on page 296.</p>
+        <h3>mask</h3>
+        <p>Mask enable. This variable is ANDed with the mask field of each IDL_KW_PAR struct in the array given by kw_list. If the result is non-zero, the keyword is accepted as a valid keyword for the called system routine. If the result is zero, the keyword is ignored.</p>
+        <h2>Speeding Keyword Processing</h2>
+        <p>As mentioned above, the kw_list argument to IDL_KWGetParams() is a null terminated list of IDL_KW_PAR structures. The time required to scan each item of the keyword array and zero the required fields (those fields specified, and value fields with IDL_KW_ZERO set), can become significant, especially when more than a few keyword array elements (e.g., 5 to 10 elements) are present.</p>
+        <p>To speed things up, specify IDL_KW_FAST_SCAN as the first keyword array element. If IDL_KW_FAST_SCAN is the first keyword array element, the keyword array is compiled by IDL_KWGetParams() into a more efficient form the first time it is used. Subsequent calls use this efficient version, greatly speeding keyword processing. Usage of IDL_KW_FAST_SCAN is optional, and is not worthwhile for small lists. For longer lists, however, the improvement in speed is noticeable. For example, the following list does not use fast scanning:</p>
+        <p class="Code">static IDL_KW_PAR	kw_pars[] = {</p>
+        <p class="Code">{ "DOUBLE", IDL_TYP_DOUBLE, 1, 0, &amp;d_there, CHARA(d) },</p>
+        <p class="Code">{ "FLOAT", IDL_TYP_FLOAT, 1, IDL_KW_ZERO, 0, CHARA(f) },</p>
+        <p class="Code">{ NULL }</p>
+        <p class="Code">};</p>
+        <p>To use fast scanning, it would be written as:</p>
+        <p class="Code">static IDL_KW_PAR	kw_pars[] = { IDL_KW_FAST_SCAN,</p>
+        <p class="Code">{ "DOUBLE", IDL_TYP_DOUBLE, 1, 0, &amp;d_there, CHARA(d) },</p>
+        <p class="Code">{"FLOAT", IDL_TYP_FLOAT, 1, IDL_KW_ZERO, 0, CHARA(f) },</p>
+        <p class="Code">{ NULL }</p>
+        <p class="Code">};</p>
+        <p>&#160;</p>
+        <h2>Cleaning Up</h2>
+        <p>The IDL_KWCleanup() function is necessary if the keywords allowed by a system routine include any input-only keywords of type IDL_TYP_STRING, or if the IDL_KW_VIN flag is used by any of the keyword IDL_KW_PAR structures. Such keywords can cause keyword processing to allocate temporary variables that must be cleaned up after they’ve outlived their usefulness. Call IDL_KWCleanup() as follows:</p>
+        <p class="Code">void IDL_KWCleanup(int fcn)</p>
+        <p>where fcn specifies the operation to be performed, and must be one of the following values:</p>
+        <h3>IDL_KW_MARK</h3>
+        <p>Mark the stack by placing the statement:</p>
+        <p class="Code">IDL_KWCleanup(IDL_KW_MARK);</p>
+        <p>above the call to IDL_KWGetParams(). In addition, you will need to make a call with IDL_KW_CLEAN at the end.</p>
+        <h3>IDL_KW_CLEAN</h3>
+        <p>Clean up from the last call to IDL_KWGetParams() by placing the line:</p>
+        <p class="Code">IDL_KWCleanup(IDL_KW_CLEAN);</p>
+        <p>just above the return statement.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

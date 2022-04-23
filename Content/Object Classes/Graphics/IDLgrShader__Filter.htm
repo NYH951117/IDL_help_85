@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|Graphics Object Classes|IDLgrShader">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLgrShader::Filter</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_gr.htm">Graphics Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLgrShader::Filter</span>
+        </div>
+        <h1 class="ObjMethod"><a name="objects_gr_2157407275_1795293"></a><a name="kanchor3805"></a><a name="objects_gr_2157407275_51369"></a>IDLgrShader::Filter</h1>
+        <p>The IDLgrShader::Filter function method, implemented only in an IDLgrShader subclass, provides a way to implement a software-based fallback for an image filtering shader program when the graphics card hardware does not support shading language. </p>
+        <p>This function is only available for shader objects associated with IDLgrImage objects, and is activated only when the required hardware support is not present or when the <a href="IDLgrShader_Properties.htm#objects_gr_2157407275_1794789">FORCE_FILTER</a> property of the shader object or IDLgrFilterChain object is set to a non-zero value. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Never call this method directly. It is called automatically in response to changes requiring a re-draw of the scene, including <a href="IDLgrShader__SetUniformV.htm#objects_gr_2157407275_1796144">IDLgrShader::SetUniformVariable</a> updates.</p>
+        <p>This method should not be included in a subclassed shader object attached to texture mapped IDLgrSurface or IDLgrPolygon object (where an image is associated via the TEXTURE_MAP property). A software fallback option is not available in such cases. </p>
+        <h2 class="API"><a name="objects_gr_2157407275_1795310"></a><a name="objects_gr_2157407275_13812"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>-&gt;[<a href="IDLgrShader.htm#objects_gr_2157407275_1789376">IDLgrShader</a> subclass::]Filter( <i>Image</i> )</p>
+        <h2 class="API"><a name="objects_gr_2157407275_29179"></a>Return Value</h2>
+        <p>Returns an IDL array containing the resulting filtered image. The array must have the same dimensions and type as the incoming image. If the returned array does not meet these requirements, IDL ignores the array and draws the image with its original data.</p>
+        <p>This method should apply the desired operation to the image data and return that data as its function return value. IDL clamps the returned image data to the range [0.0, 1.0] and converts this range into the pixel component range appropriate for the device. In most cases, this is [0, 255].</p>
+        <h2 class="API"><a name="objects_gr_2157407275_1795327"></a><a name="objects_gr_2157407275_36059"></a>Arguments</h2>
+        <h3 class="Argument">Image</h3>
+        <p>An array containing the image data. This array is always of type FLOAT and contains RGBA components arranged in PIXEL_INTERLEAVE format, [4, <i>cols</i>, <i>rows</i>].</p>
+        <h2 class="API"><a name="objects_gr_2157407275_1795330"></a><a name="objects_gr_2157407275_53882"></a>Keywords</h2>
+        <p>None.</p>
+        <h2 class="API"><a name="objects_gr_2157407275_1795826"></a><a name="objects_gr_2157407275_41253"></a>Examples</h2>
+        <p>The following code segment shows an implementation of the Filter method in an object, <code>shader_rgb_doc</code>, that subclasses from IDLgrShader. Within the method, access the RGBA floating-point, pixel-interleaved data in <i>Image</i>. Alter the intensity of each red, green, and blue channel based on values (<i>s</i>) contained in the uniform variable (<i>scl</i>). Return the filtered image.</p>
+        <p class="Code">Function shader_rgb_doc::Filter, Image</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">newImage=Image</p>
+        <p class="Code">self-&gt;GetUniformVariable, 'scl', s</p>
+        <p class="Code">newImage[0,*,*] *= s[0]</p>
+        <p class="Code">newImage[1,*,*] *= s[1]</p>
+        <p class="Code">newImage[2,*,*] *= s[2]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">RETURN, newImage</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p class="ExampleCode">See <code>shader_rgb_doc__define<a name="kanchor3806"></a>.pro </code>for the complete, working example, which is located in the <code>examples/doc/shaders</code> subdirectory of the IDL distribution. Run the example by creating an instance of the object at the IDL command prompt using <code>orgbshader=OBJ_NEW("shader_rgb_doc")</code> or view the file in an IDL Editor window by entering <code>shader_rgb_doc__define.pro</code>. </p>
+        <h2 class="API"><a name="objects_gr_2157407275_1795348"></a><a name="objects_gr_2157407275_74498"></a>Version History</h2>
+        <table style="mc-table-style: url('../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="objects_gr_2157407275_1795941"></a><a name="objects_gr_2157407275_82221"></a>See Also </h2>
+        <p><a href="IDLgrShader__SetUniformV.htm#objects_gr_2157407275_1796144">IDLgrShader::SetUniformVariable</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

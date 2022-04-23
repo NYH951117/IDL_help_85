@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Error Handling">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Creating Custom
+Error Messages</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ErrorHandling.htm">Error Handling</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Creating Custom Error Messages</span>
+        </div>
+        <h1><a name="debug_2348412560_546127"></a><a name="debug_2348412560_41782"></a>Creating Custom
+Error Messages</h1>
+        <p>To generate an exception and cause control to return to the
+error handler, use the MESSAGE procedure. Calling MESSAGE generates an
+exception that sets the !ERROR_STATE system variable. !ERROR_STATE.MSG
+is set to the string used as an argument to MESSAGE. </p>
+        <p>The <a href="../../Reference Material/M/MESSAGE.htm#M_824365677_988498">MESSAGE
+</a> procedure is used by user procedures and functions to issue errors. It has the form:</p>
+        <p class="Code">MESSAGE, <i>Text</i></p>
+        <p>where <i>Text</i> is a scalar string that
+contains the text of the error message.</p>
+        <p>The MESSAGE procedure issues error and informational messages
+using the same mechanism employed by built-in IDL routines. By default,
+the message is issued as an error, the message is output, and IDL takes
+the action specified by the <a href="../../Reference Material/O/ON_ERROR.htm#O_828691053_889555">ON_ERROR</a>
+ procedure.</p>
+        <p>As a side effect of issuing the error, appropriate fields of
+the system variable !ERROR_STATE are set; the text of the error message
+is placed in <madcap:keyword term="!ERROR_STATE system variable:MSG field:custom error messages" xmlns:madcap="http://www.madcapsoftware.com/Schemas/MadCap.xsd">!ERROR_STATE.MSG,
+or in <madcap:keyword term="!ERROR_STATE system variable:SYS_MSG field:custom error messages">!ERROR_STATE.SYS_MSG
+for the operating system�€™s component of the error message. See <a href="../Appendices/Error_Handling_System_Va.htm#sysvars_272074529_1003013">!ERROR_STATE</a>
+for more information.</madcap:keyword></madcap:keyword></p>
+        <p>As an example, assume the statement:</p>
+        <p class="Code">MESSAGE, 'Unexpected value encountered.'</p>
+        <p>is executed in a procedure named CALC. IDL would print:</p>
+        <p class="Code">% CALC: Unexpected value encountered.</p>
+        <p>and execution would halt.</p>
+        <p>The MESSAGE procedure accepts several keywords that modify its
+behavior. See <a href="../../Reference Material/M/MESSAGE.htm#M_824365677_988498">MESSAGE</a>
+ for
+additional details.</p>
+        <p>Another use of MESSAGE involves re-signaling trapped errors.
+For example, the following code uses ON_IOERROR to read from a file
+until an error (presumably end�€‘of�€‘file) occurs. It then closes the
+file
+and reissues the error.</p>
+        <p class="Code">; Open the data file.</p>
+        <p class="Code">OPENR, UNIT, 'DATA.DAT', /GET_LUN</p>
+        <p class="Code">  <![CDATA[ ]]></p>
+        <p class="Code">; Arrange for jump to label EOD when an
+input/output error occurs.</p>
+        <p class="Code">ON_IOERROR, EOD</p>
+        <p class="Code">  <![CDATA[ ]]></p>
+        <p class="Code">; Read every line of the file.</p>
+        <p class="Code">WHILE 1 DO READF, UNIT, LINE</p>
+        <p class="Code">  <![CDATA[ ]]></p>
+        <p class="Code">; An error has occurred. Cancel the
+input/output error trap.</p>
+        <p class="Code">EOD: ON_IOERROR, NULL</p>
+        <p class="Code">  <![CDATA[ ]]></p>
+        <p class="Code">; Close the file.</p>
+        <p class="Code">FREE_LUN, UNIT</p>
+        <p class="Code">  <![CDATA[ ]]></p>
+        <p class="Code">; Reissue the error. !ERROR_STATE.MSG
+contains the appropriate</p>
+        <p class="Code">; text. The IOERROR keyword causes it to
+be issued as an</p>
+        <p class="Code">; input/output error. Use of NONAME
+prevents MESSAGE from tacking</p>
+        <p class="Code">; the name of the current routine to the
+beginning of the message</p>
+        <p class="Code">; string since !ERROR_STATE.MSG already
+contains it.</p>
+        <p class="Code">MESSAGE, !ERROR_STATE.MSG, /NONAME,
+/IOERROR</p>
+        <h2 class="API"><a name="debug_2348412560_62485"></a>Message
+Blocks</h2>
+        <p><span class="DocumentTitleProductName">IDL</span>
+        </p>
+        <p class="Code">MESSAGE, 'Howdy, folks'</p>
+        <p>at the <span class="DocumentTitleProductName">IDL</span></p>
+        <p class="Code">% $MAIN$: Howdy, folks</p>
+        <p class="Code">% Execution halted at: $MAIN$ </p>
+        <p>indicating that the message was issued from within the IDL <code>$MAIN$
+</code>program. </p>
+        <p>A <i>message block</i> is a collection of
+messages that are loaded into IDL as a single unit. At startup, IDL
+contains a single internal message block named IDL_MBLK_CORE, which
+contains the standard messages required by the IDL system. By default,
+MESSAGE throws the IDL_M_USER_ERR message from the IDL_MBLK_CORE
+message block, producing output similar to that shown above.</p>
+        <p>Dynamically loadable modules (DLMs) usually define additional
+message blocks for their own needs when they are loaded. In addition,
+if you wish to provide something other than the default error message
+for your own <span class="DocumentTitleProductName">IDL</span></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

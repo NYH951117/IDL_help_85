@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: R">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>READ_MRSID </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="R_list.htm">Routines: R</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">READ_MRSID</span>
+        </div>
+        <h1 class="Routine"><a name="R_822202989_1086302"></a><a name="kanchor2219"></a><a name="R_822202989_56967"></a>READ_MRSID </h1>
+        <p>The READ_MRSID function extracts and returns image data from a MrSID file at the specified level and location. It is a wrapper around the object interface that presents MrSID image loading in a familiar way to users of the READ_* image routines. However this function is not as efficient as the object interface and the object interface should be used whenever possible. See <a href="../../Object Classes/File Format/IDLffMrSID.htm#objects_ff_3755668711_1006579">IDLffMrSID</a> for information about the object interface.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine is only available under Microsoft Windows.</p>
+        <h2 class="API"><a name="R_822202989_1233413"></a><a name="R_822202989_1086322_PageTOC_READ_MRSID_"></a>Examples</h2>
+        <p class="Code">; Query the file.</p>
+        <p class="Code">result = QUERY_MRSID(FILE_SEARCH(!DIR, 'test_gs.sid'), info)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; If result is not zero, read in an image from the file and</p>
+        <p class="Code">; display it.</p>
+        <p class="Code">IF (result NE 0) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;PRINT, info</p>
+        <p class="Code">&#160;&#160;&#160;imageData = READ_MRSID(FILE_SEARCH(!DIR, 'test_gs.sid'), $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;SUB_RECT = [0, 0, 200, 200], LEVEL = 3)</p>
+        <p class="Code">&#160;&#160;&#160;oImage = OBJ_NEW('IDLgrImage', imageData, ORDER = 0)</p>
+        <p class="Code">&#160;&#160;&#160;XOBJVIEW, oImage, BACKGROUND = [255,255,0]</p>
+        <p class="Code">ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use the file access object to query the file.</p>
+        <p class="Code">oMrSID = OBJ_NEW('IDLffMrSID', FILEPATH('test_gs.sid',$<br />&#160;&#160;&#160;&#160;&#160;&#160;SUBDIRECTORY=[‘examples’, ‘data’]))</p>
+        <p class="Code">oMrSID-&gt;GetProperty, PIXEL_TYPE=pt, $ </p>
+        <p class="Code">&#160;&#160;&#160;CHANNELS = chan, DIMENSIONS = dims, $</p>
+        <p class="Code">&#160;&#160;&#160;TYPE = type, LEVELS = lvls</p>
+        <p class="Code">PRINT, pt, chan, dims, type, lvls</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use the object to read in an image from the file.</p>
+        <p class="Code">lvls = -3</p>
+        <p class="Code">dimsatlvl = oMrSID-&gt;GetDimsAtLevel(lvls)</p>
+        <p class="Code">PRINT, dimsatlvl</p>
+        <p class="Code">imageData = oMrSID-&gt;GetImageData(LEVEL = 3)</p>
+        <p class="Code">PRINT, size(imageData)</p>
+        <p class="Code">OBJ_DESTROY, oImage</p>
+        <h2 class="API"><a name="R_822202989_1086308"></a><a name="R_822202989_1086308_PageTOC_READ_MRSID_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result </i>= READ_MRSID ( <i>Filename</i> [,&#160;<a href="#R_822202989_1086317" class="selected">LEVEL</a>=<i>lvl</i>] [,&#160;<a href="#R_822202989_1086319" class="selected">SUB_RECT</a>=<i>rect</i>] )</p>
+        <h2 class="API"><a name="R_822202989_1086310"></a><a name="R_822202989_1086310_PageTOC_READ_MRSID_"></a>Return Value</h2>
+        <p><i>ImageData</i> returns an <i>n</i>-by-<i>w</i>-by-<i>h</i> array containing the image data where <i>n</i> is 1 for grayscale or 3 for RGB images, <i>w</i> is the width and<i> h </i>is the height.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The returned image is ordered bottom-up, the first pixel returned is located at the bottom-left of the image. This differs from how data is stored in the MrSID file where the image is top-down, meaning the pixel at the start of the file is located at the top-left of the image.</p>
+        <h2 class="API"><a name="R_822202989_1086313"></a><a name="R_822202989_1086313_PageTOC_READ_MRSID_"></a>Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>A scalar string containing the full path and filename of the MrSID file to read. </p>
+        <h2 class="API"><a name="R_822202989_1086316"></a><a name="R_822202989_1086316_PageTOC_READ_MRSID_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="R_822202989_1086317"></a><a name="R_822202989_1086317_Keywords_READ_MRSID__"></a>LEVEL</h3>
+        <p>Set this keyword to an integer that specifies the level at which to read the image. If this keyword is not set, the maximum level (see <a href="../Q/QUERY_MRSID.htm#Q_815714925_1073572">QUERY_MRSID</a>) is used which returns the minimum resolution.</p>
+        <h3 class="Keyword"><a name="R_822202989_1086319"></a><a name="R_822202989_1086319_Keywords_READ_MRSID__"></a>SUB_RECT</h3>
+        <p>Set this keyword to a four-element vector [x, y, xdim, ydim] specifying the position of the lower left-hand corner and the dimensions of the sub-rectangle of the MrSID image to return. This is useful for displaying only a portion of the high-resolution image. If this keyword is not set, the entire image will be returned. This may require significant memory if a high-resolution level is selected. If the sub-rectangle is greater than the bounds of the image at the selected level the area outside the image bounds will be set to black.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The elements of SUB_RECT are measured in pixels at the current level. This means the point x = 10, y = 10 at level 1 will be located at x = 20, y = 20 at level 0 and x&#160;=&#160;5, y = 5 at level 2.</p>
+        <h2 class="API"><a name="R_822202989_1092954"></a><a name="R_822202989_1092954_PageTOC_READ_MRSID_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.5</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

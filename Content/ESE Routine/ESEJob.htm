@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="ESE Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>ESEJob</title>
+        <link href="../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="ESEAPIOverview.htm">ESE Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">ESEJob</span>
+        </div>
+        <h1 class="Routine"><a name="kanchor4190"></a>ESEJob</h1>
+        <p>The ESEJob class represents the ESE job that is produced whenever a task is run. It provides the ability to monitor the job's status and retrieve both input and output parameters.</p>
+        <h2 class="API">Methods</h2>
+        <ul>
+            <li value="1"><a href="#Cancel" class="selected">ESEJob::Cancel</a>
+            </li>
+            <li value="2"><a href="#GetParameter" class="selected">ESEJob::GetParameter</a>
+            </li>
+            <li value="3"><a href="#GetParameters" class="selected">ESEJob::GetParameters</a>
+            </li>
+            <li value="4"><a href="#Info" class="selected">ESEJob::Info</a>
+            </li>
+            <li value="5"><a href="#JSON" class="selected">ESEJob::JSON</a>
+            </li>
+            <li value="6"><a href="#Monitor" class="selected">ESEJob::Monitor</a>
+            </li>
+        </ul>
+        <h2 class="API">Examples</h2>
+        <h3>Example 1</h3>
+        <p>The job object can be used to get the values of input and output parameters. The following example will run the task and only return when the task is completed. Then the status can be checked and the output parameter values retrieved.</p>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 8181, 'ese_addition' )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Job = Task.Run( a = 1, b = 2 )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Info = Job.Info()</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IF ( Info.Status eq ESE.jobSucceeded ) THEN&#160;BEGIN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">PRINT, Job.a       ; 'a' is an input parameter</p>
+        <p class="Code_Indented">PRINT, Job.b       ; 'b' is an input parameter</p>
+        <p class="Code_Indented">PRINT, Job.answer  ; 'answer' is an output parameter</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ENDIF ELSE BEGIN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">PRINT, 'Uh oh...'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ENDELSE</p>
+        <h3>Example 2</h3>
+        <p>When multiple asynchronous jobs are run in parallel, the "join" functionality of the ESE class can be used to wait until all the jobs have completed. In this example, one task object is acquired and then it is run multiple times.</p>
+        <p class="Code">Task = ESE.findTask( 'localhost', 8181, 'smooth_sailing' )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">n = 4</p>
+        <p class="Code">jobs = objarr( n )</p>
+        <p class="Code">FOR i = 0, n - 1 DO&#160;BEGIN</p>
+        <p class="Code_Indented">jobs[ i ] = Task.Run( /ASYNC )</p>
+        <p class="Code">ENDFOR</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">status = ESE.Join( jobs )</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IF ( min( status ) ) THEN&#160;BEGIN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">PRINT, 'Jobs ran successfully.'</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">FOREACH j, jobs, index DO&#160;BEGIN</p>
+        <p class="Code_Indented">&#160;&#160;&#160;PRINT, 'Job[', strtrim( index, 2 ) + '] URL = ' + j.outputFile[ 'url' ]</p>
+        <p class="Code_Indented">ENDFOREACH</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ENDIF ELSE&#160;BEGIN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">PRINT, 'Uh oh...'</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">FOREACH j, jobs, index DO&#160;BEGIN</p>
+        <p class="Code_Indented">&#160;&#160;&#160;IF ( status[ index ] eq 0 ) THEN !null = j.cancel()</p>
+        <p class="Code_Indented">ENDFOREACH</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ENDELSE</p>
+        <p>The for loop at lines 5 through 7 runs 4 jobs in parallel. The join at line 9 blocks execution until all 4 jobs have either completed successfully or one has failed. The join returns a status array of zeros and ones, indicating which jobs succeeded and which failed or are still running. If jobs are still running, it may be desirable to cancel them.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The join method has options for reporting status changes.</p>
+        <h2 class="API">Properties</h2>
+        <h3 class="Property"><i>INPUTPARAMETER</i>  (IDLVariable, Get)</h3>
+        <p>The value of the specified input parameter as an IDL variable.</p>
+        <h3 class="Property"><i>OUTPARAMETER</i> (IDLVariable, Get)</h3>
+        <p>The value of the specified parameter as an IDL variable. Conversion from JSON to IDL is either performed by default routines or by custom routines. If the job did not complete successfully, then the return value is !null.</p>
+        <h1 class="ObjMethod"><a name="Cancel"></a>ESEJob::Cancel</h1>
+        <p>This method cancels a queued, submitted, or executing job. This method has no effect on jobs that are no longer running.</p>
+        <h2 class="API">Example</h2>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 8181, 'smooth_sailing' )</p>
+        <p class="Code">Job = Task.Run( /ASYNC )</p>
+        <p class="Code">Canceled = Job.Cancel()</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>.[ESEJob::]Cancel()</p>
+        <h2 class="API">Return Value</h2>
+        <p>The return value indicates success or failure of the cancellation request (!true or !false).</p>
+        <h2 class="API">Arguments</h2>
+        <p>None.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="GetParameter"></a>ESEJob::GetParameter</h1>
+        <p>GetParameter returns an <a href="ESETaskParameter.htm">ESETaskParameter</a> object for the named parameter.</p>
+        <h2 class="API">Example</h2>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 8181, 'ese_addition' )</p>
+        <p class="Code">Job = Task.Run( a = 1, b = 2 )</p>
+        <p class="Code">Parameter = Job.GetParameter( 'answer' )</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>.[ESEJob::]GetParameter( <i>Name</i> )</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns an ESETaskParameter object for the named parameter. If the parameter does not exist, then it returns !null.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Name</h3>
+        <p>Specifies the name of the particular parameter to return.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="GetParameters"></a>ESEJob::GetParameters</h1>
+        <p>GetParameters returns a list of <a href="ESETaskParameter.htm">ESETaskParameter</a> objects.</p>
+        <h2 class="API">Example</h2>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 8181, 'ese_addition' )</p>
+        <p class="Code">Job = Task.Run( a = 1, b = 2 )</p>
+        <p class="Code">Parameters = Job.GetParameters()</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>.[ESEJob::]GetParameters( [ /NAMES ])</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns a list of ESETaskParameter objects. If the task does not have any parameters then returns an empty list. If NAMES is set, it returns an array of parameter names, or returns !null if the task does not have any parameters.</p>
+        <h2 class="API">Arguments</h2>
+        <p>None.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">NAMES</h3>
+        <p>Set this keyword to return just the names of parameters instead of ESETaskParameter objects.</p>
+        <h1 class="ObjMethod"><a name="Info"></a>ESEJob::Info</h1>
+        <p>Returns a dictionary with all the properties of the job.</p>
+        <h2 class="API">Example</h2>
+        <p class="Code">&#160;</p>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 8181, 'ese_addition' )</p>
+        <p class="Code">Job = Task.Run( a = 1, b = 2 )</p>
+        <p class="Code">Info = Job.Info()</p>
+        <p class="Code">Status = Info.Status</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>.[ESEJob::]Info()</p>
+        <h2 class="API">Return Value</h2>
+        <p>The return value is a dictionary with the following fields:</p>
+        <ul>
+            <li value="1"><b>Id:</b> (integer) The job's identifier.</li>
+            <li value="2"><b>Status:</b> (string) The job's overall status:  ESE.jobQueued, ESE.jobSubmitted, ESE.jobExecuting, ESE.jobSucceeded, ESE.jobFailed, ESE.jobCancelling, ESE.jobCancelled, ESE.jobTimedOut.</li>
+            <li value="3"><b>Progress:</b> (integer) The progress percentage, as reported by the running task with a range of [0,100].</li>
+            <li value="4"><b>ProgressMessage:</b> (string) The progress message, as reported by the running task.</li>
+            <li value="5"><b>ErrorMessage:</b> (string) The error message from the job's JSON or from the ESE API.</li>
+            <li value="6"><b>taskURI:</b> (object) The URI of the task that produced the job.</li>
+            <li value="7"><b>taskName:</b> (object) The name of the task that produced the job.</li>
+            <li value="8"><b>httpRequest:</b> (string) The full HTTP request string used to run the task.</li>
+        </ul>
+        <h2 class="API">Arguments</h2>
+        <p>None.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="JSON"></a>ESEJob::JSON</h1>
+        <p>Returns the job's JSON.</p>
+        <h2 class="API">Example</h2>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 8181, 'ese_addition' )</p>
+        <p class="Code">Job = Task.Run( a = 1, b = 2 )</p>
+        <p class="Code">JSON = Job.JSON()</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>.[ESEJob::]JSON()</p>
+        <h2 class="API">Return Value</h2>
+        <p>Returns the job's status JSON as a string. This JSON contains all information the ESE system knows about the job.</p>
+        <h2 class="API">Arguments</h2>
+        <p>None.</p>
+        <h2 class="API">Keywords</h2>
+        <p>None.</p>
+        <h1 class="ObjMethod"><a name="Monitor"></a>ESEJob::Monitor</h1>
+        <p>The Monitor method provides the ability to monitor a job for job status and progress changes.</p>
+        <p>The specified callback is invoked whenever the monitor notices that the job status or progress number changed. This is useful for only asynchronous jobs.</p>
+        <h2 class="API">Example</h2>
+        <p>In this example a "smooth sailing" job is monitored and its progress is printed to the IDL console:</p>
+        <p class="Code">Task = ESE.FindTask( 'localhost', 8181, 'smooth_sailing' )</p>
+        <p class="Code">Job = Task.Run( /ASYNC)</p>
+        <p class="Code">Job.Monitor, 'handleJobChange'</p>
+        <p>The callback is:</p>
+        <p class="Code">PRO handleJobChange, Job, userData</p>
+        <p class="Code">PRINT, 'Job Progress: ' + strtrim( info.Progress, 2 )</p>
+        <p class="Code">END</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Obj</i>.[ESEJob::]Monitor, <i>Callback</i> [, USER_DATA = <i>value</i> ] [, REQUESTS_PER_SECOND = <i>double</i> ]</p>
+        <h2 class="API">Return Value</h2>
+        <p>None.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">Callback</h3>
+        <p>The name of a procedure to invoke whenever the job changes status or progress.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">REQUESTS_PER_SECOND</h3>
+        <p>The number of times per second to check on the job's status. The default is 1.0.</p>
+        <h3 class="Keyword">USER_DATA</h3>
+        <p>An optional value to pass to the callback.</p>
+        <h2 class="API">Version History</h2>
+        <table class="TableStyle_VersionTable" style="mc-table-style: url('../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;" cellspacing="0">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">IDL 8.4.1</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">Introduced</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="ESE.htm">ESE</a>, <a href="ESETaskParameter.htm">ESETaskParameter</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

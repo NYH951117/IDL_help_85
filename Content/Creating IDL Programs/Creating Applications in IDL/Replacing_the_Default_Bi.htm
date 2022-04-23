@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|About Tree Widgets">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Replacing the Default Bitmaps</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="About_Tree_Widgets.htm">About Tree Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Replacing the Default Bitmaps</span>
+        </div>
+        <h1><a name="widget_tree_1678712652_98769"></a><a name="widget_tree_1678712652_52357"></a><a name="kanchor5100"></a>Replacing the Default Bitmaps</h1>
+        <p>By default, tree widgets use bitmap images of a folder and a single piece of paper as the icons representing branch and leaf nodes in a tree widget hierarchy. You can modify the look of the tree widget by supplying your own bitmap for a given node. Set the BITMAP keyword to WIDGET_TREE equal to a 16 x 16 x 3 array that contains a 24-bit color image.</p>
+        <p>For example, suppose you have a 16 x 16 pixel TrueColor icon stored in a TIFF file. The following commands make the image the icon used for the root node of a tree widget hierarchy:</p>
+        <p class="Code">myIcon = READ_TIFF('/<i>path_to</i>/myicon.tif', INTERLEAVE=2)</p>
+        <p class="Code">wtRoot = WIDGET_TREE(wTree, /FOLDER, BITMAP=myIcon)</p>
+        <p>Note the use of the INTERLEAVE keyword to ensure that the resulting image array has dimensions 16 x 16 x 3. Depending on your image file format, you may need to modify the image array in other ways.</p>
+        <h2 class="API">Using Images from the IDL Distribution</h2>
+        <p>The <code>/resources/bitmaps</code> subdirectory of the IDL distribution contains a selection of 16-color (4-bit), 16 x 16 pixel icon images. To use these images as bitmaps in a tree widget, you must convert them to 16 x 16 x 3 (24-bit color) arrays. </p>
+        <p>The following code snippet loads the camera icon stored in <code>IDLDIR/resources/bitmaps/camera.bmp</code> into a 16 x 16 x 3 array:</p>
+        <p class="Code">; Create a 24-bit image array.</p>
+        <p class="Code">imageRGB = BYTARR(16, 16, 3, /NOZERO)</p>
+        <p class="Code">; Read in the bitmap.</p>
+        <p class="Code">file = FILEPATH('camera.bmp', SUBDIR=['resource', 'bitmaps'])</p>
+        <p class="Code">image8 = READ_BMP(file, Red, Green, Blue)</p>
+        <p class="Code">; Pass the image through the color table</p>
+        <p class="Code">imageRGB[0,0,0] = Red[image8]</p>
+        <p class="Code">imageRGB[0,0,1] = Green[image8]</p>
+        <p class="Code">imageRGB[0,0,2] = Blue[image8]</p>
+        <p>To use the camera icon in a tree widget, you would specify the <code>imageRGB</code> variable as the value of the BITMAP keyword to WIDGET_TREE.</p>
+        <h2 class="API">Adding Transparency to Icons</h2>
+        <p>User supplied bitmaps can have transparent pixels, just as the default icons do. This ensures that the icon’s background matches the background of your tree widget, which you can customize. It also enables one bitmap to suffice for all platforms, which often have different default tree widget background colors.</p>
+        <p>The MASK family of keywords is used to affect tree widget bitmaps. When a tree widget is created with a bitmap or given a new bitmap, the MASK keyword serves to set the masked sub-property of the bitmap. Those pixels in the bitmap that have the same color as the lower left pixel are made to be transparent. Internally, a mask is built and then used to draw only those non-transparent pixels.</p>
+        <p>The following code creates a tree widget node with an unmasked bitmap and then changes it to a different, masked bitmap.</p>
+        <p class="Code">node = WIDGET_TREE(parentNode, BITMAP=icon1)</p>
+        <p class="Code">WIDGET_CONTROL, node, SET_TREE_BITMAP=icon2, /SET_MASK </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The MASK keyword of WIDGET_CONTROL has no effect when not used with SET_TREE_BITMAP. The MASK keyword to WIDGET_INFO can be used to determine if a tree’s bitmap is masked. For more information see <a href="../../Reference Material/W/WIDGET_CONTROL.htm#W_811389549_1232714">WIDGET_CONTROL</a> and <a href="../../Reference Material/W/WIDGET_INFO.htm#W_811389549_680333">WIDGET_INFO</a> in the <i>IDL Reference Guide</i>.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: N|NCDF Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>NCDF_GROUPNAME</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../N_list.htm">Routines: N</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../NCDF_Routines.htm">NCDF Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">NCDF_GROUPNAME</span>
+        </div>
+        <h1 class="Routine"><a name="netCDF_2618656010_1006782"></a><a name="netCDF_2618656010_42275"></a>NCDF_GROUPNAME</h1>
+        <p>The <a name="kanchor1930"></a>NCDF_GROUPNAME function returns the name of the specified group.</p>
+        <p>A file’s root group is represented by the forward slash (/) character.</p>
+        <h2 class="API"><a name="netCDF_2618656010_1049794_PageTOC_NCDF_GROUPNAME_"></a>Examples</h2>
+        <p>The following code sample uses the NetCDF 4 file <code>ncgroup.nc</code>, which is located in the IDL distribution’s <code>/examples/data</code> directory. The file contains groups, group dimensions, and variables. The groups are ordered in the following parent/child hierarchy:</p>
+        <p class="Code">Submarine</p>
+        <p class="Code">	Diesel_Electric</p>
+        <p class="Code">	Nuclear</p>
+        <p class="Code">		Attack</p>
+        <p class="Code">		Missile</p>
+        <p>The code sample opens <code>ncgroup.nc</code>, queries various group, dimension, and variable information, and prints out the results. Click on each of the code snippets to execute the entire example.</p>
+        <p>Section 1:</p>
+        <p class="Code">filename = FILEPATH('ncgroup.nc', $<br />&#160;&#160;&#160;SUBDIR=['examples', 'data'])<br />fileId = NCDF_OPEN(fileName)<br /><br />; Print the parent group<br />parentId = NCDF_GROUPSINQ(fileId)<br />parentName = NCDF_GROUPNAME(parentId[0])<br />PRINT, 'Parent group: ', parentName<br /><br />; Print the children groups<br />childId = NCDF_GROUPSINQ(parentId[0])<br />childName1 = NCDF_GROUPNAME(childId[0])<br />childName2 = NCDF_GROUPNAME(childId[1])<br />PRINT, 'Child groups: ', childName1, ', ', childName2</p>
+        <p>Section 2:</p>
+        <p class="Code">; Return the ID of a group's parent group<br />PRINT, 'Nuclear parent group ID: ', $<br />&#160;&#160;&#160;NCDF_GROUPPARENT(childId[1]) <br /><br />; Return the group ID, given the group name and <br />; parent group ID<br />PRINT, 'Diesel_Electric group ID: ', $<br />&#160;&#160;&#160;NCDF_NCIDINQ(parentId[0], 'Diesel_Electric')<br /><br />; Return the full name of the Diesel_Electric group<br />PRINT, 'Diesel_Electric group full name: ', $<br />&#160;&#160;&#160;NCDF_FULLGROUPNAME(childId[0])</p>
+        <p>Section 3:</p>
+        <p class="Code">; Return the Diesel group's dimension ID, name, and size<br />dieselDimIds = NCDF_DIMIDSINQ(childId[0])<br />NCDF_DIMINQ, childId[0], dieselDimIds[0], dimName1, dimSize1<br />PRINT, 'Diesel_Electric group dimensions'<br />PRINT, 'Dimension ID: ', dieselDimIds[0]<br />PRINT, 'Name: ', dimName1<br />PRINT, 'Size: ', dimSize1<br /><br />; Return the Diesel_Electric group's variable information<br />dieselGrpVarIds = NCDF_VARIDSINQ(childId[0])<br />dieselVarIds = NCDF_VARIDSINQ(childId[0])<br />dieselVarStruct1 = NCDF_VARINQ(childId[0], dieselVarIds[0])<br />PRINT, 'Diesel-Electric group variables'<br />PRINT, 'Name: ', dieselVarStruct1.Name<br />PRINT, 'ID: ', dieselGrpVarIds[0]<br />PRINT, 'Type: ', dieselVarStruct1.DataType<br />PRINT, 'Number of dimensions: ', dieselVarStruct1.Ndims<br />PRINT, 'Number of attributes: ', dieselVarStruct1.Natts<br /><br />; Close the NetCDF file<br />NCDF_CLOSE, fileId</p>
+        <h2 class="API"><a name="netCDF_2618656010_1049784_PageTOC_NCDF_GROUPNAME_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = NCDF_GROUPNAME( <i>Grpid</i> )</p>
+        <h2 class="API"><a name="netCDF_2618656010_1049786_PageTOC_NCDF_GROUPNAME_"></a>Return Value </h2>
+        <p>Returns a string containing the group name. If <i>Grpid </i>is invalid, an error message is displayed.</p>
+        <h2 class="API"><a name="netCDF_2618656010_1049788_PageTOC_NCDF_GROUPNAME_"></a>Arguments</h2>
+        <h3 class="Argument">Grpid</h3>
+        <p>The ID of the group to query, returned from a previous call to <a href="NCDF_OPEN.htm#netCDF_2618656010_1007165">NCDF_OPEN</a>, <a href="NCDF_CREATE.htm#netCDF_2618656010_1006152">NCDF_CREATE</a>, or <a href="NCDF_GROUPDEF.htm#netCDF_2618656010_1006704">NCDF_GROUPDEF</a>.</p>
+        <h2 class="API"><a name="netCDF_2618656010_1049791_PageTOC_NCDF_GROUPNAME_"></a>Keywords</h2>
+        <p>None</p>
+        <h2 class="API"><a name="netCDF_2618656010_1052075_PageTOC_NCDF_GROUPNAME_"></a><a name="netCDF_2618656010_1049796_PageTOC_NCDF_GROUPNAME_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="netCDF_2618656010_1049803_PageTOC_NCDF_GROUPNAME_"></a>See Also</h2>
+        <p><a href="NCDF_FULLGROUPNAME.htm#netCDF_2618656010_1006621">NCDF_FULLGROUPNAME</a>, <a href="NCDF_GROUPPARENT.htm#netCDF_2618656010_1006867">NCDF_GROUPPARENT</a>, <a href="NCDF_NCIDINQ.htm#netCDF_2618656010_1007093">NCDF_NCIDINQ</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

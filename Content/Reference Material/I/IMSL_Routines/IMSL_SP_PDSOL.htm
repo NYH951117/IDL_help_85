@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_SP_PDSOL</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1>IMSL_SP_PDSOL</h1>
+        <p>The IMSL_SP_PDSOL function solves a sparse symmetric positive definite system of linear equations <i>Ax = b</i>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>The IMSL_SP_PDSOL function solves a system of linear algebraic equations having a sparse symmetric positive definite coefficient matrix <i>A</i>. In IMSL_SP_PDSOL default usage, a symbolic factorization of a permutation of the coefficient matrix is computed first, then a numerical factorization is performed. The solution of the linear system is then found using the numeric factor.</p>
+        <p>The symbolic factorization step of the computation consists of determining a minimum degree ordering and then setting up a sparse data structure for the Cholesky factor, <i>L</i>. This step only requires the “pattern” of the sparse coefficient matrix, that is, the locations of the non-zero elements but not any of the elements themselves.</p>
+        <p>The numerical factorization can be carried out in one of two ways. By default, the standard factorization is performed based on a sparse compressed storage scheme. This is fully described in George and Liu (1981). Optionally, a multifrontal technique can be used. The multifrontal method requires more storage but will be faster in certain cases. The multifrontal factorization is based on the routines in Liu (1987). For a detailed description of this method, see Liu (1990), also Duff and Reid (1983, 1984), Ashcraft (1987), Ashcraft et al. (1987), and Liu (1986, 1989).</p>
+        <p>If an application requires that several linear systems be solved where the coefficient matrix is the same but the right-hand sides change, the IMSL_SP_PDFAC function can be used to precompute the Cholesky factor. Then the keyword FACTOR can be used in IMSL_SP_PDSOL to efficiently solve all subsequent systems.</p>
+        <p>Given the numeric factorization, the solution <i>x</i> is obtained by the following calculations:</p>
+        <p>Ly<sub>1</sub> = Pb</p>
+        <p>L<sup>T</sup>y<sub>2</sub> = y<sub>1</sub></p>
+        <p>x = P<sup>T</sup>y<sub>2</sub></p>
+        <p>The permutation information, <i>P</i>, is carried in the numeric factor structure.</p>
+        <h2 class="API">Example</h2>
+        <p>
+            <img src="images/IMSL_SP_PDSOL_Example.png" />
+        </p>
+        <p class="Code">A = REPLICATE(imsl_f_sp_elem, 10)</p>
+        <p class="Code">a(*).row = [0, 1, 2, 2, 3, 3, 4, 4, 4, 4]</p>
+        <p class="Code">a(*).col = [0, 1, 0, 2, 2, 3, 0, 1, 3, 4]</p>
+        <p class="Code">a(*).val = [10, 20, 1, 30, 4, 40, 2, 3, 5, 50]</p>
+        <p class="Code">b = [55.0d0, 83, 103, 97, 82]</p>
+        <p class="Code">x = IMSL_SP_PDSOL(b, a)</p>
+        <p class="Code">PM, x</p>
+        <p class="Code_Indented">5.0000000</p>
+        <p class="Code_Indented">4.0000000</p>
+        <p class="Code_Indented">3.0000000</p>
+        <p class="Code_Indented">2.0000000</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> =IMSL_SP_PDSOL(<i>b</i> [, <i>a</i>] [, /<a href="#CSC_COL" class="selected">CSC_COL</a>] [, /<a href="#CSC_ROW" class="selected">CSC_ROW</a>] [, /<a href="#CSC_VAL" class="selected">CSC_VAL</a>] [, <a href="#FACTOR" class="selected">FACTOR</a>=<i>value</i>] [, <a href="#LG_DIAG" class="selected">LG_DIAG</a>=<i>value</i>] [, <a href="#MULTIFRO" class="selected">MULTIFRONTAL</a>=<i>value</i>] [, <a href="#N_NONZER" class="selected">N_NONZERO</a>=<i>variable</i>] [, <a href="#SM_DIAG" class="selected">SM_DIAG</a>=<i>value</i>])</p>
+        <h2 class="API">Return Value</h2>
+        <p>A one-dimensional array containing the solution of the linear system <i>Ax = b.</i></p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">b</h3>
+        <p>One-dimensional matrix containing the right-hand side.</p>
+        <h3 class="Argument">a</h3>
+        <p>(Optional) Sparse matrix stored as an array of structures containing non-zeros in lower triangle of the coefficient matrix <i>A(i,j)</i>. See “Sparse Matrices: Direct Methods” and its related sections for a description of structures used for sparse matrices.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="CSC_COL"></a>CSC_COL</h3>
+        <p>Accept the coefficient matrix in compressed sparse column (CSC) format. See “Sparse Coordinate Storage Format” for a discussion of this storage scheme. The keywords CSC_COL, CSC_ROW, and CSC_VAL must be used together.</p>
+        <h3 class="Keyword"><a name="CSC_ROW"></a>CSC_ROW</h3>
+        <p>Accept the coefficient matrix in compressed sparse column (CSC) format. See “Sparse Coordinate Storage Format”  for a discussion of this storage scheme. The keywords CSC_COL, CSC_ROW, and CSC_VAL must be used together.</p>
+        <h3 class="Keyword"><a name="CSC_VAL"></a>CSC_VAL</h3>
+        <p>Accept the coefficient matrix in compressed sparse column (CSC) format. See “Sparse Coordinate Storage Format”  for a discussion of this storage scheme. The keywords CSC_COL, CSC_ROW, and CSC_VAL must be used together.</p>
+        <h3 class="Keyword"><a name="FACTOR"></a>FACTOR</h3>
+        <p>The factorization of A as computed by IMSL_SP_PDFAC. If this keyword is used, then the argument a should not be used. This keyword is useful if solutions to systems involving the same coefficient matrix and multiple right-hand sides will be solved.</p>
+        <h3 class="Keyword"><a name="LG_DIAG"></a>LG_DIAG</h3>
+        <p>The largest diagonal element that occurred during the numeric factorization. This keyword is not valid if the keyword FACTOR is used.</p>
+        <h3 class="Keyword"><a name="MULTIFRO"></a>MULTIFRONTAL</h3>
+        <p>If present and nonzero, perform the numeric factorization using a multifrontal technique. By default a standard factorization is computed based on a sparse compressed storage scheme. The keywords MULTIFRONTAL and FACTOR cannot be used together.</p>
+        <h3 class="Keyword"><a name="N_NONZER"></a>N_NONZERO</h3>
+        <p>Named variable into which the total number of non-zeros in the factor is stored. This keyword is not valid if the keyword FACTOR is used.</p>
+        <h3 class="Keyword"><a name="SM_DIAG"></a>SM_DIAG</h3>
+        <p>The smallest diagonal element that occurred during the numeric factorization. This keyword is not valid if the keyword FACTOR is used.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="IMSL_SP_PDFAC.htm">IMSL_SP_PDFAC</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

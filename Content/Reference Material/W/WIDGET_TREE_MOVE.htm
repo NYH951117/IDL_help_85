@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: W">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>WIDGET_TREE_MOVE</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="W_list.htm">Routines: W</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">WIDGET_TREE_MOVE</span>
+        </div>
+        <h1 class="Routine"><a name="W_811389549_1222300"></a><a name="kanchor2905"></a><a name="W_811389549_66971"></a>WIDGET_TREE_MOVE</h1>
+        <p>The WIDGET_TREE_MOVE procedure copies and moves tree widget nodes from one tree to another or within the same tree.</p>
+        <p>WIDGET_TREE_MOVE has two parameters that specify the widget IDs of the nodes to copy and the folder (or root) in which to move (or copy) them. Each of the nodes in the first parameter will be moved (or copied). The default behavior is to duplicate the entire hierarchy rooted at each folder. </p>
+        <p>These properties are automatically inherited by all newly created nodes:</p>
+        <ul>
+            <li value="1">FOLDER, EXPANDED</li>
+            <li value="2">BITMAP, MASK</li>
+            <li value="3">DRAGGABLE, DRAG_NOTIFY, DROP_EVENTS</li>
+            <li value="4">VALUE, UVALUE, UNAME</li>
+            <li value="5">EVENT_FUNC, EVENT_PRO</li>
+        </ul>
+        <p>Move operations handle any data associated with UVALUEs by taking data away from the source and attaching it to the destination node, without making a temporary copy. This allows for an efficient transfer of large data during a move. The callback function can be used to adjust the values based on the parent's values.</p>
+        <p>The following keywords represent properties that are not transferred:</p>
+        <ul>
+            <li value="1">FUNC_GET_VALUE</li>
+            <li value="2">PRO_SET_VALUE</li>
+            <li value="3">NOTIFY_REALIZE</li>
+            <li value="4">KILL_NOTIFY</li>
+        </ul>
+        <p>If these keywords must be set, the new node could be destroyed and recreated in the procedure's callback (with the same parent and index). An alternative is to write a fully custom version of WIDGET_TREE_MOVE.</p>
+        <p>For a more detailed discussion of the tree widget, along with examples, see <a href="../../Creating IDL Programs/Creating Applications in IDL/About_Tree_Widgets.htm#widget_tree_1678712652_96344">About Tree Widgets</a>.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>widget_treet_move.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API">Examples</h2>
+        <p>For examples using WIDGET_TREE_MOVE, see <a href="../../Creating IDL Programs/Creating Applications in IDL/About_Tree_Widgets.htm#widget_tree_1678712652_96344">About Tree Widgets</a>.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax">WIDGET_TREE_MOVE, wMoveNodes, wDestFolder, CALLBACK_FUNC=<i>name</i>, /COPY, INDEX=<i>value</i>, /SELECT, /UPDATE, USERDATA=<i>value</i></p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">wMoveNodes</h3>
+        <p>The widget IDs of the nodes that are to be moved or copied. The value can be a scalar or a vector. By default, moving or copying a folder node duplicates the entire hierarchy rooted at that folder. If a node in the list is a descendant of another node in the list, then it will be copied twice: once as a member of the list and once as a member of the ancestor's descendants. For drag and drop implementations, this situation can be avoided by using the TREE_DRAG_SELECT keyword to <a href="WIDGET_INFO.htm#W_811389549_680333">WIDGET_INFO</a>, which removes duplicate nodes from a tree's current selection.</p>
+        <h3 class="Argument">wDestFolder</h3>
+        <p>The widget ID of the destination folder or tree root. The value must be a scalar. If the INDEX keyword is not specified then the moved/copied nodes will be placed at the end of the destination folder's current list of children.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">CALLBACK_FUNC</h3>
+        <p>Set this keyword to the name of a function to customize node moving and/or copying. The callback is invoked immediately after each and every node is duplicated. The callback must be defined as:</p>
+        <p class="Code"><code>FUNCTION Name, wOriginalNode, wNewNode, USERDATA=</code><i>value</i>
+        </p>
+        <p>The value from the USERDATA keyword is passed to the callback function. During move operations, the original node's UVALUE is efficiently transferred to the new node. Copy operations duplicate all UVALUEs.</p>
+        <p>The callback's return value should typically be 1 (one). This causes the new node's children to be duplicated. Entire hierarchies can be duplicated in this manner. This is the default behavior when a callback is not specified. However, if a flat copy is desired, then 0 (zero) should be returned. Return values of 0 stop further duplication of the new node so that its children are not recursively copied. Mixing return values of 0 and 1 is possible and can produce more sophisticated moves/copies.</p>
+        <h3 class="Keyword">COPY</h3>
+        <p>Set this keyword to make a copy of the widgets in wMoveNodes. If not set then the original wMoveNodes are destroyed.</p>
+        <h3 class="Keyword">INDEX</h3>
+        <p>Set this keyword to an integer to specify the relative position at which to insert wMoveNodes into the wDestFolder. The position is zero-based and a value of -1 (the default value) inserts at the tail.</p>
+        <h3 class="Keyword">SELECT</h3>
+        <p>Set this keyword to select the newly moved/copied nodes.</p>
+        <h3 class="Keyword">UPDATE</h3>
+        <p>Set this keyword to allow the source and destination trees to be visually updated during the operation. The default is to turn off updates to prevent flickering.</p>
+        <h3 class="Keyword">USERDATA</h3>
+        <p>Set this keyword to a value that is passed to the CALLBACK_FUNC function.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="WIDGET_TREE.htm#W_811389549_995819">WIDGET_TREE</a>, <a href="WIDGET_CONTROL.htm#W_811389549_1232714">WIDGET_CONTROL</a>, <a href="WIDGET_INFO.htm#W_811389549_680333">WIDGET_INFO</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

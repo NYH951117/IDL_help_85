@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_RANDOM_TABLE</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="IMSL_RANDOM_TABLE"></a>IMSL_RANDOM_TABLE</h1>
+        <p>The IMSL_RANDOM_TABLE procedure sets or retrieves the current table used in either the shuffled or GFSR random number generator.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>The values in table are initialized by the IMSL random number generators. The values are all positive except if you wish to reinitialize the array, in which case the first element of the array is input as a nonpositive value. (Usually, one should avoid reinitializing these arrays, but it might be necessary sometimes in restarting a simulation.) If the first element of table is set to a nonpositive value on the call to IMSL_RANDOM_TABLE with the keyword SET, on the next invocation of a routine to generate random numbers, the appropriate table will be reinitialized.</p>
+        <p>For more details on the shuffled and GFSR generators see the “Overview: Random Number Generation” on page 1066.</p>
+        <h2 class="API">Examples</h2>
+        <h3>Example 1</h3>
+        <p>In this example, three separate simulation streams are used, each with a different form of the generator. Each stream is stopped and restarted. (Although this example is obviously an artificial one, there may be reasons for maintaining separate streams and stopping and restarting them because of the nature of the usage of the random numbers coming from the separate streams.)</p>
+        <p class="Code">nr = 5</p>
+        <p class="Code">iseed1 = 123457</p>
+        <p class="Code">iseed2 = 123457</p>
+        <p class="Code">iseed7 = 123457</p>
+        <p class="Code">; Begin first stream, iopt = 1 (by default)</p>
+        <p class="Code">IMSL_RANDOMOPT, Set = iseed1</p>
+        <p class="Code">r = IMSL_RANDOM(nr)</p>
+        <p class="Code">IMSL_RANDOMOPT, Get = iseed1</p>
+        <p class="Code">PM, r, TITLE = 'First stream output'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">First stream output</p>
+        <p class="Code">0.966220</p>
+        <p class="Code">0.260711</p>
+        <p class="Code">0.766262</p>
+        <p class="Code">0.569337</p>
+        <p class="Code">0.844829</p>
+        <p class="Code">PRINT, 'output seed ', iseed1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">output seed 1814256879</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Begin second stream, iopt = 2</p>
+        <p class="Code">IMSL_RANDOMOPT, gen_opt = 2</p>
+        <p class="Code">IMSL_RANDOMOPT, Set = iseed2</p>
+        <p class="Code">r = IMSL_RANDOM(nr)</p>
+        <p class="Code">IMSL_RANDOMOPT, Get = iseed2</p>
+        <p class="Code">IMSL_RANDOM_TABLE, table, /Get</p>
+        <p class="Code">PM, r, TITLE = 'Second stream output'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Second stream output</p>
+        <p class="Code">0.709518</p>
+        <p class="Code">0.186145</p>
+        <p class="Code">0.479442</p>
+        <p class="Code">0.603839</p>
+        <p class="Code">0.379015</p>
+        <p class="Code">PRINT, 'output seed ', iseed2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">output seed 1965912801</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Begin third stream, iopt = 7</p>
+        <p class="Code">IMSL_RANDOMOPT, gen_opt = 7</p>
+        <p class="Code">IMSL_RANDOMOPT, Set = iseed7</p>
+        <p class="Code">r = IMSL_RANDOM(nr)</p>
+        <p class="Code">IMSL_RANDOMOPT, Get = iseed7</p>
+        <p class="Code">IMSL_RANDOM_TABLE, itable, /Get, /GFSR</p>
+        <p class="Code">PM, r, TITLE = 'Third stream output'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Third stream output</p>
+        <p class="Code">0.391352</p>
+        <p class="Code">0.0262676</p>
+        <p class="Code">0.762180</p>
+        <p class="Code">0.0280987</p>
+        <p class="Code">0.899731</p>
+        <p class="Code">PRINT, 'output seed ', iseed7</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">output seed 1932158269</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Reinitialize seed and resume first stream</p>
+        <p class="Code">IMSL_RANDOMOPT, gen_opt = 1</p>
+        <p class="Code">IMSL_RANDOMOPT, Set = iseed1</p>
+        <p class="Code">r = IMSL_RANDOM(nr)</p>
+        <p class="Code">IMSL_RANDOMOPT, Get = iseed1</p>
+        <p class="Code">PM, r, TITLE = 'First stream output'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">First stream output</p>
+        <p class="Code">0.0442665</p>
+        <p class="Code">0.987184</p>
+        <p class="Code">0.601350</p>
+        <p class="Code">0.896375</p>
+        <p class="Code">0.380854</p>
+        <p class="Code">PRINT, 'output seed ', iseed1</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">output seed 817878095</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Reinitialize seed &amp; table for shuffling &amp; resume second stream</p>
+        <p class="Code">IMSL_RANDOMOPT, gen_opt = 2</p>
+        <p class="Code">IMSL_RANDOMOPT, Set = iseed2</p>
+        <p class="Code">IMSL_RANDOM_TABLE, table, /Set</p>
+        <p class="Code">r = IMSL_RANDOM(nr)</p>
+        <p class="Code">IMSL_RANDOMOPT, Get = iseed2</p>
+        <p class="Code">PM, r, TITLE = 'Second stream output'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Second stream output</p>
+        <p class="Code">0.255690</p>
+        <p class="Code">0.478770</p>
+        <p class="Code">0.225802</p>
+        <p class="Code">0.345467</p>
+        <p class="Code">0.581051</p>
+        <p class="Code">PRINT, 'output seed ', iseed2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">output seed 2108806573</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Reinitialize seed and table for GFSR and resume third stream.</p>
+        <p class="Code">IMSL_RANDOMOPT, GEN_OPT = 7</p>
+        <p class="Code">IMSL_RANDOMOPT, SET = iseed7</p>
+        <p class="Code">IMSL_RANDOM_TABLE, itable, /SET, /GFSR</p>
+        <p class="Code">r = IMSL_RANDOM(nr)</p>
+        <p class="Code">IMSL_RANDOMOPT, GET = iseed7</p>
+        <p class="Code">PM, r, TITLE = 'Third stream output'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">Third stream output</p>
+        <p class="Code">0.751854</p>
+        <p class="Code">0.508370</p>
+        <p class="Code">0.906986</p>
+        <p class="Code">0.0910035</p>
+        <p class="Code">0.691663</p>
+        <p class="Code">PRINT, 'output seed ', iseed7</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">output seed 1485334679</p>
+        <h2 class="API">Syntax</h2>
+        <p>IMSL_RANDOM_TABLE, <i>table</i> [, /DOUBLE] [, /GET | /SET] [, /GFSR]</p>
+        <h2 class="API">Return Value</h2>
+        <p>None</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">table</h3>
+        <p>One dimensional array used in the generators. For the shuffled generators table is length 128. For the GFSR generator table is length 1565. The argument table is input if the keyword SET is used, and output if the keyword GET is used.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">DOUBLE</h3>
+        <p>If present and nonzero, double precision is used. This keyword is active only when the shuffled table is being set or retrieved.</p>
+        <h3 class="Keyword">GET</h3>
+        <p>If present and nonzero, then the specified table is being retieved.</p>
+        <h3 class="Keyword">GFSR</h3>
+        <p>If present and nonzero, then the specified GFSR table is being set or retrieved.</p>
+        <h3 class="Keyword">SET</h3>
+        <p>If present and nonzero, then the specified table is being set.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

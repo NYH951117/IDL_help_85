@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|Miscellaneous Object Classes">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDL_IDLBridge</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_misc.htm">Miscellaneous Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDL_IDLBridge</span>
+        </div>
+        <h1 class="ObjClass"><a name="objects_misc_904195448_1076300"></a><a name="objects_misc_904195448_85525"></a>IDL_IDLBridge</h1>
+        <p data-mc-conditions="Reference Material.Online_Help_Only">
+            <MadCap:conditionalText data-mc-conditions="Reference Material.Online_Help_Only"><a href="#objects_misc_904195448_1076868" class="selected">Superclasses</a> | <a href="#objects_misc_904195448_1076873" class="selected">Creation</a> | <a href="#objects_misc_904195448_1076878" class="selected">Properties</a> | <a href="#objects_misc_904195448_1076883" class="selected">Methods</a> | <a href="#objects_misc_904195448_1076887" class="selected">Examples</a> | <a href="#objects_misc_904195448_1081253" class="selected">Version History</a> | <a href="#objects_misc_904195448_1076952" class="selected">See Also</a></MadCap:conditionalText>
+        </p>
+        <p>The <a name="kanchor4010"></a>IDL_IDLBridge object class allows an IDL se<a name="kanchor4011"></a>ss<a name="kanchor4012"></a>ion to create and control other IDL sessions, each of which runs as a separate process. Each instantiation of an IDL_IDLBridge object corresponds to one such <i><a name="kanchor4013"></a>child </i>process. Child processes are controlled by the <i>parent IDL process </i>- the IDL process that created the IDL_IDLBridge objects. IDL_IDLBridge objects support the following operations: </p>
+        <ul>
+            <li value="1">Exchanging data between the parent IDL process and the child process by copying IDL variables between them using the SetVar and GetVar methods. </li>
+            <li value="2">Executing arbitrary IDL commands in the child process. In synchronous operation, the parent IDL session waits for the child to complete the specified task before continuing. In asynchronous operation, the parent IDL session does not wait, and the two processes run in parallel. </li>
+            <li value="3">Querying the current status of the child process while it asynchronously executes an IDL command. </li>
+            <li value="4">Registering a callback that is called when an asynchronous command finishes execution.</li>
+            <li value="5">Aborting a currently running asynchronous command in a child process. </li>
+        </ul>
+        <p>Using these facilities, one or more IDL_IDLBridge child processes can be used to perform work in parallel with each other and with the parent IDL process that starts them.</p>
+        <p>In general, IDL_IDLBridge child processes do not inherit state information from the parent IDL process. This means that the child process will not have access to data, compiled routines, system variables, or the current working directory of the parent process. The exception to this rule is that IDL_IDLBridge child processes have the same garbage collection enabled/disabled setting as the parent session. For example, if garbage collection is disabled for the parent process, it will also be disabled for the child process.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>On UNIX systems, the IDL_IDLBridge requires that the DISPLAY environment variable be set to a valid X Windows display. If no display is available, execution of the IDL_IDLBridge will halt, with error messages that include:<br /><br /><code>'IDL_IDLBridge: Unable to establish X Connection.'</code></p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>An IDL_IDLBridge object child process is designed to perform computationally intensive, background processing tasks while you continue working with the main IDL program. It is not designed to provide asynchronous interaction with interactive user interfaces.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>A startup file is <i>not</i> automatically executed when a child process is created. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The Execute, GetVar, and SetVar methods to the IDL_IDLBridge object are disabled in IDL Virtual Machine mode. As a result, while it is possible to create an IDL_IDLBridge object in code that runs in the IDL Virtual Machine, it is not particularly useful.</p>
+        <h2 class="API"><a name="objects_misc_904195448_1076868"></a><a name="objects_misc_904195448_75061"></a>Superclasses</h2>
+        <p>None</p>
+        <h2 class="API"><a name="objects_misc_904195448_1076873"></a><a name="objects_misc_904195448_24725"></a>Creation</h2>
+        <p>See <a href="IDL_IDLBridge__Init.htm#objects_misc_904195448_1077606">IDL_IDLBridge::Init</a>.</p>
+        <h2 class="API"><a name="objects_misc_904195448_1076878"></a><a name="objects_misc_904195448_17354"></a>Properties</h2>
+        <p>Objects of this class have the following properties. See <a href="IDL_IDLBridge_Properties.htm#objects_misc_904195448_1086669">IDL_IDLBridge Properties</a> for details on individual properties.</p>
+        <ul>
+            <li value="1"><a href="IDL_IDLBridge_Properties.htm#objects_misc_904195448_1087185">CALLBACK</a>
+            </li>
+            <li value="2"><a href="IDL_IDLBridge_Properties.htm#OPS">OPS</a> <![CDATA[ ]]></li>
+            <li value="3"><a href="IDL_IDLBridge_Properties.htm#objects_misc_904195448_1087478">OUTPUT</a>
+            </li>
+            <li value="4"><a href="IDL_IDLBridge_Properties.htm#objects_misc_904195448_1087603">USERDATA</a>
+            </li>
+        </ul>
+        <h2 class="API"><a name="objects_misc_904195448_1076883"></a><a name="objects_misc_904195448_57890"></a>Methods</h2>
+        <p>This class has the following methods:</p>
+        <ul>
+            <li value="1"><a href="IDL_IDLBridge__Abort.htm#objects_misc_904195448_1077116">IDL_IDLBridge::Abort</a>
+            </li>
+            <li value="2"><a href="IDL_IDLBridge__Cleanup.htm#objects_misc_904195448_1077067">IDL_IDLBridge::Cleanup</a>
+            </li>
+            <li value="3"><a href="IDL_IDLBridge__Execute.htm#objects_misc_904195448_1077268">IDL_IDLBridge::Execute</a>
+            </li>
+            <li value="4"><a href="IDL_IDLBridge__GetProper.htm#objects_misc_904195448_1086947">IDL_IDLBridge::GetProperty</a>
+            </li>
+            <li value="5"><a href="IDL_IDLBridge__GetVar.htm#objects_misc_904195448_1077401">IDL_IDLBridge::GetVar</a>
+            </li>
+            <li value="6"><a href="IDL_IDLBridge__Init.htm#objects_misc_904195448_1077606">IDL_IDLBridge::Init</a>
+            </li>
+            <li value="7"><a href="IDL_IDLBridge__OnCallbac.htm#objects_misc_904195448_1091592">IDL_IDLBridge::OnCallback</a>
+            </li>
+            <li value="8"><a href="IDL_IDLBridge__SetProper.htm#objects_misc_904195448_1087048">IDL_IDLBridge::SetProperty</a>
+            </li>
+            <li value="9"><a href="IDL_IDLBridge__SetVar.htm#objects_misc_904195448_1077712">IDL_IDLBridge::SetVar</a>
+            </li>
+            <li value="10"><a href="IDL_IDLBridge__Status.htm#objects_misc_904195448_1077870">IDL_IDLBridge::Status</a>
+            </li>
+        </ul>
+        <h2 class="API"><a name="objects_misc_904195448_1076887"></a><a name="objects_misc_904195448_68055"></a>Examples</h2>
+        <p>The following sections provide several examples of creating and using IDL_IDLBridge objects:</p>
+        <ul>
+            <li value="1"><a href="#objects_misc_904195448_1082127" class="selected">Multiple Child Processes Example</a> — a demo program that allows you to create and interact with multiple child processes.</li>
+            <li value="2"><a href="#objects_misc_904195448_1079920" class="selected">Tiling and Child Image Processing Example</a> — an image tiling application that includes the ability to filter a very large image in a child process, and display the filtered image once processing is complete. </li>
+            <li value="3"><a href="#objects_misc_904195448_1080224" class="selected">Child Processing Distillation Example</a> — a simple widget interface that exposes the child processing functionality found in the tiling application.</li>
+        </ul>
+        <h3>About Debugging Child Processes</h3>
+        <p>Debugging a routine running in a child IDL process presents challenges not present when debugging routines running in the main IDL process. Child IDL processes have no direct connection to the parent IDL process. Because of this lack of connection, the following conditions exist: </p>
+        <ul>
+            <li value="1">The IDL Workbench's debugging tools are not available</li>
+            <li value="2">Breakpoints are not honored</li>
+            <li value="3">Output from PRINT statements will not appear in the output log</li>
+        </ul>
+        <p>To work around these issues, develop and debug routines in an interactive IDL process before running them in a child process. Once you are ready to test your routines in a child process, consider using one or more of the following approaches:</p>
+        <ul>
+            <li value="1">Consider writing status and error information generated by the routines in the child process to a text file. This can be easily accomplished by setting the <a href="IDL_IDLBridge_Properties.htm#objects_misc_904195448_1087478">OUTPUT</a>property.</li>
+            <li value="2">Display debugging output using DIALOG_MESSAGE rather than PRINT</li>
+            <li value="3">Use the IDL_IDLBridge::Status method to check for completion status of the entire routine</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>For information on how to return HELP information for a child process, see the Examples section of<a href="IDL_IDLBridge__GetVar.htm#objects_misc_904195448_1077401">IDL_IDLBridge::GetVar</a>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>On Windows, you can see debug output generated by the IDL_BRIDGE_DEBUG environment variable in the Debug Monitor (<code>DBMON.exe</code>), available with the Windows Platform SDK. Use the IDL_BRIDGE_DEBUG environment variable setting to control the level of debug output detail. </p>
+        <h3><a name="objects_misc_904195448_1082127"></a><a name="objects_misc_904195448_51817"></a>Multiple Child Processes Example</h3>
+        <p>This example lets you create and interact with a number of child processes where each process executes an IDL command asynchronously. This means that multiple IDL child processes can be completing tasks while the main IDL process remains active. This demonstration of the IDL_IDLBridge functionality can be used as a guide when using the IDL_IDLBridge object in your own code. </p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>You can also investigate the effect of executing commands synchronously by commenting out the NOWAIT keyword in the Execute method call. </p>
+        <p class="ExampleCode">This example <code>idlbridge_demo.pro<a name="kanchor4014"></a></code>, is located in the <code>examples/doc/bridges </code>subdirectory of the IDL distribution. Run the example procedure by entering <code>idlbridge_demo</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT idlbridge_demo.pro</code>. </p>
+        <p>Run the program and click <b>Execute</b> to launch an asynchronous child process that plots a surface in another window. Create additional IDL_IDLBridge objects by selecting <b>File</b>&#160;&gt;&#160;<b>New</b>. Since these processes execute commands asynchronously, you can start and abort one or more processes at will, all while continuing to interact with the main IDL process. </p>
+        <p>Note that once a process is initiated, the <b>Execute</b> button is desensitized. If it were not desensitized and you clicked <b>Execute</b> a second time (while the initial request was still being processed), execution would halt with the error, “The object’s associated IDL process is currently busy.” All child processes must finish executing one command before the next command is accepted. However, you can continue to interact with the parent process or other child processes while a child process executes a command asynchronously. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You can also check status before calling the Execute method as described in <a href="IDL_IDLBridge__Execute.htm#objects_misc_904195448_1082271">Avoiding Busy Execution Errors</a>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>A second version of this example, <code>idlbridge_demo_object.pro<a name="kanchor4015"></a></code>, provides the same functionality without the use of a callback procedure. This requires using <i>timer events</i> to continuously check the <a href="IDL_IDLBridge__Status.htm#objects_misc_904195448_1077870">IDL_IDLBridge::Status</a> method results. See <a href="../../Creating IDL Programs/Creating Applications in IDL/Working_with_Widget_Even.htm#widget_techniques_4218446668_96233">Timer Events</a> for more information on widget timers.</p>
+        <h3><a name="objects_misc_904195448_1079920"></a><a name="objects_misc_904195448_32918"></a>Tiling and Child Image Processing Example</h3>
+        <p>This example displays a very large file (over 15 MB) and lets you explore the tiled image, zooming in or out and panning. It also includes a child process that applies the Roberts edge detection filter to the image data and creates a new 22 MB file. Since the filtering process occurs asynchronously in a child process, the tiling application can continue responding to requests for tile data and display the required tiles. </p>
+        <p class="ExampleCode">This example, <code>idlbridge_tilingjp2_doc.pro<a name="kanchor4016"></a></code>, is located in the <code>examples/doc/bridges </code>subdirectory of the IDL distribution and calls <code>idlbridge_img_processing.pro</code>. Run the example procedure by entering <code>idlbridge_tilingjp2</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT idlbridge_tilingjp2.pro</code>. </p>
+        <p>In this example, the Execute method of the IDL_IDLBridge object is passed a string that contains: </p>
+        <ul>
+            <li value="1">The name of a procedure (<code>idlbridge_img_processing.pro</code>), which contains the image filtering code</li>
+            <li value="2">The JP2 filename, which is a procedure argument</li>
+        </ul>
+        <p>The following lines transfer the variable value using SetVar and launch the <code>idlbridge_img_processing.pro </code>procedure in a child process (<code>oBridge</code>). The command is executed asynchronously due to the NOWAIT keyword.</p>
+        <p class="Code">oBridge-&gt;SetVar, 'filename', (*pState).jp2filename</p>
+        <p class="Code">oBridge-&gt;Execute, $</p>
+        <p class="Code">&#160;&#160;&#160;'idlbridge_img_processing, filename', /NOWAIT</p>
+        <p>When you run the tiling application (<code>idlbridge_tilingjp2_doc.pro</code>), click the <b>Process Image </b>button to begin filtering the data in the child process. When processing is complete, the filtered image is automatically displayed.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This example relies on an image filename to determine what is to be filtered. If the image data were interactively updated through actions such as command line processing, you could pass the actual image data instead of the filename. You may pass scalar or array variables of numeric or string type (those allowed by <a href="IDL_IDLBridge__SetVar.htm#objects_misc_904195448_1077712">IDL_IDLBridge::SetVar</a>) to a child process. </p>
+        <h3><a name="objects_misc_904195448_1080224"></a><a name="objects_misc_904195448_95340"></a>Child Processing Distillation Example</h3>
+        <p>This simple widget application (<code>idlbridge_simple_doc.pro</code>) launches the <code>idlbridge_img_processing.pro</code> procedure in a child process just as the previous tiling application does, but provides streamlined code and a simplified interface so that it is easier to follow execution and status retrieval for the IDL_IDLBridge object. Run the example and click <b>Process Image</b> to launch <code>idlbridge_img_processing.pro </code>in a child process.</p>
+        <p class="ExampleCode">This example, <code>idlbridge_simple_doc.pro<a name="kanchor4017"></a></code>, is located in the <code>examples/doc/bridges </code>subdirectory of the IDL distribution and calls <code>idlbridge_img_processing.pro</code>. Run the example procedure by entering <code>idlbridge_img_processing</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT idlbridge_img_processing.pro</code>. </p>
+        <p>In this simplified example, it is easier to see how the progress bar (created in the child process) can be controlled from the parent IDL session. Typically, the progress bar base is destroyed when the image processing program finishes. However, if the user aborts the process or if an error halts execution, the end of the image processing program is never reached. </p>
+        <p>To kill the widget in the child process, you need the widget ID. You could create and update a widget ID variable in the child process, and then destroy the specific widget from a call in the parent process. However, this ties the two programs together. The parent program must know information that is internal to the child process. </p>
+        <p>Instead of requiring such a connection, you can use a common block. When you assign the value of the widget ID to a common block variable in the child process, you can access this value without having to pass it in from anywhere (either from the parent process or from the child process <code>pState</code> variable). This compartmentalizes processing. The parent process simply calls a routine in the child process to tell it that its operation was terminated abruptly by the master process and that it should clean up any state related to it. The child process routine accesses the progress bar widget ID from the common block and cleans up. In the specified programs, notice the following relevant lines: </p>
+        <p class="Code">; In idlbridge_simple_doc.pro, call the child process routine if </p>
+        <p class="Code">; the user aborts execution or if it ends due to an error.</p>
+        <p class="Code">(*pState).oIDLBridge-&gt;Execute, $</p>
+        <p class="Code">&#160;&#160;&#160;'idlbridge_img_processing_abort_cleanup'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;...</p>
+        <p class="Code">; In idlbridge_img_processing.pro, access the TLB ID,</p>
+        <p class="Code">; wChildBase, which is stored in the common block and cleanup.</p>
+        <p class="Code">PRO idlbridge_img_processing_abort_cleanup</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;COMMON shareWidID, wChildBase</p>
+        <p class="Code">&#160;&#160;&#160;WIDGET_CONTROL, wChildBase, GET_UVALUE=pState</p>
+        <p class="Code">&#160;&#160;&#160;WIDGET_CONTROL, wChildBase, /DESTROY</p>
+        <p class="Code">&#160;&#160;&#160;PTR_FREE, pState</p>
+        <p class="Code">END</p>
+        <h3>Image Processing Child Procedure</h3>
+        <p>The image processing procedure (<code>idlbridge_img_processing.pro</code>), which is called from the tiling application and the simple widget interface, applies a Roberts filter to a given file. It also displays a progress bar to show the completion progress. While the IDL_IDLBridge object can return high level status (aborted, completed, halted with error, executing or idle) for a child process that is executing a command asynchronously, it does not give any indication of what percentage of a child process has been completed. </p>
+        <p>This image processing program updates the progress bar display throughout child process execution to provide more granular user feedback. Such a display could also provide feedback in a synchronous child process where status information is not available.</p>
+        <p class="ExampleCode">This example, <code>idlbridge_img_processing.pro<a name="kanchor4018"></a></code>, is located in the <code>examples/doc/bridges </code>subdirectory of the IDL distribution. Run the example procedure by entering <code>idlbridge_img_processing</code> at the IDL command prompt or view the file in an IDL Editor window by entering <code>.EDIT idlbridge_img_processing.pro</code>. It is designed to be called from the previously mentioned tiling application or simple widget interface, but can be run independently once the required JP2 file has been created. </p>
+        <p>You can use a child process executing a command asynchronously much like a batch file—one that completes processing tasks without any interaction. In such cases, a user interface that relays progress isn’t needed. However, if your application completes background processing that you care about, status updates are useful. This example shows one option for displaying such information if needed. </p>
+        <h2 class="API"><a name="objects_misc_904195448_1081253"></a><a name="objects_misc_904195448_74549"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="objects_misc_904195448_1076952"></a><a name="objects_misc_904195448_28112"></a>See Also</h2>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

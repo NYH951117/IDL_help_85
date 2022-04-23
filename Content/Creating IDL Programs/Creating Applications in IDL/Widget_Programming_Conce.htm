@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|Creating Widget Applications">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Widget Programming Concepts</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Application Programming/Creating Widget Applications.htm">Creating Widget Applications</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Widget Programming Concepts</span>
+        </div>
+        <h1><a name="widget_apps_4063420628_1041825"></a><a name="widget_apps_4063420628_13129"></a>Widget Programming Concepts</h1>
+        <p>This section discusses some basic ideas and concepts that are central to the process of writing IDL widget applications.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_1041838"></a><a name="widget_apps_4063420628_55358"></a>Widget Values</h2>
+        <p>Many widget primitives and compound widgets have <i><a name="kanchor4966"></a>widget values</i> associated with them. Depending on the type of widget, the widget value may represent a static item set by the programmer (the label of a button widget, for example) or a dynamic value set by the user (the numerical value of a slider widget, for example).</p>
+        <p>Widget values are retrieved from a widget using the GET_VALUE keyword to the WIDGET_CONTROL procedure, and set either when the widget is created or using the SET_VALUE keyword to WIDGET_CONTROL. Descriptions of widget value data types and default values are included along with the descriptions of individual widgets in the following sections. (See <a href="Manipulating_Widgets.htm#widget_apps_4063420628_1042022">Manipulating Widgets</a> for details on using WIDGET_CONTROL.) </p>
+        <p>Widgets can also have <i>user values</i>. A widget’s user value is an IDL variable, and can thus be of any of IDL’s data types. User values can contain any information the programmer wants to include; they are not examined or used by IDL except as specified by the widget application programmer. User values and their role in widget programming are discussed in <a href="Widget_User_Values.htm#widget_apps_4063420628_1042184">Widget User Values</a>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If a widget value is a string (as for a button label), you can use language catalogs to internationalize the widget with sets of strings in particular languages.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_51295"></a>Widget IDs</h2>
+        <p>IDL widgets are uniquely identified via their<a name="kanchor4967"></a><i>widget IDs</i>. The widget ID is a long integer assigned to the widget when it is first created; this integer is returned as the value of the widget creation function. For example, you might create a base widget with the following IDL command:</p>
+        <p class="Code">base = WIDGET_BASE()</p>
+        <p>Here, the IDL variable <code>base</code> receives the widget ID of the newly-created top-level base widget.</p>
+        <p>Routines within your widget application that need to retrieve data from widgets or change their appearance need access to the widgets’ IDs. Techniques for passing widget IDs between independent routines in your widget application are discussed in <a href="Working_With_Widget_IDs.htm#widget_apps_4063420628_1042151">Working With Widget IDs</a>.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_48204"></a>Widget Parent/Child Relationships </h2>
+        <p>With one exception (described below), when you create a new widget using one of the WIDGET_* functions, you specify the widget ID of the new widget’s <i><a name="kanchor4968"></a>parent widget</i>. This parent-child relationship defines a <i>widget hierarchy</i>.</p>
+        <p>For example, suppose you have created a base widget whose widget ID is contained in the IDL variable <code>base</code>. The following IDL command creates a button widget that is a <i>child</i> of the base widget whose widget ID is stored in the variable <code>base</code>:</p>
+        <p class="Code">button1 = WIDGET_BUTTON(base, VALUE='Test button')</p>
+        <p>In addition to being below <code>base</code> in the widget hierarchy, <code>button1</code> appears inside <code>base</code> when the base widget is realized on the screen.</p>
+        <p>The exception to this parent-child rule is a special instance of a base widget called a <i>top-level base</i>. A top-level base is different from an “ordinary” base widget in the following ways:</p>
+        <ul>
+            <li value="1">It does not have a parent widget</li>
+            <li value="2">It serves as the top of a widget hierarchy</li>
+            <li value="3">Its widget ID is included in the <code>TOP</code> field of every widget event structure generated by other widgets in its hierarchy</li>
+        </ul>
+        <p>In practice, a widget application always begins with a top-level base. The fact that the widget ID of the top-level base widget is always available in the event structure of widget events is very useful for managing the state of a widget application. This topic is discussed in depth in <a href="Managing_Application_Sta.htm#widget_apps_4063420628_1042385">Managing Application State</a>.</p>
+        <h2 class="API"><a name="widget_apps_4063420628_35501"></a>Instantiating and Displaying Widgets</h2>
+        <p>W<a name="kanchor4969"></a>hen you call a routine that creates a widget, IDL “creates” the widget and assigns it a unique identifier (the <i>widget ID</i>). For example, the following IDL statements create a base widget that holds a button widget, and stores the widgets’ identifiers in the variables <code>base</code> and <code>button</code>:</p>
+        <p class="Code">base = WIDGET_BASE()</p>
+        <p class="Code">button = WIDGET_BUTTON(base, VALUE='My Button')</p>
+        <p>At this point, the widgets are nothing more than data structures (referred to as <i>widget records</i>) in IDL’s memory. Nothing appears on screen, and in fact IDL has yet to calculate the sizes of the widgets or the way they will appear.</p>
+        <p>In order to instantiate the widget — that is, to create the final form of the widget that will be displayed from components supplied by the platform-specific user interface toolkit and (in most cases) make it appear on screen — the widgets must be <i>realized</i>. Realization occurs with a call to the WIDGET_CONTROL procedure, using the REALIZE keyword:</p>
+        <p class="Code">WIDGET_CONTROL, base, /REALIZE</p>
+        <p>After this command has been issued, the widgets appear on the computer screen. (See <a href="Manipulating_Widgets.htm#widget_apps_4063420628_1042022">Manipulating Widgets</a> for details on using WIDGET_CONTROL.) Between the time when the widget is created as an IDL widget record and when it is realized as a platform-specific interface element, you have control over many, but not all, aspects of the widget’s state. Some details of the final realized widget’s state (such as its exact screen geometry) may remain undetermined until the widget is instantiated. Realization, and the related concepts of <i>mapping</i> and <i>sensitivity</i>, are discussed in greater in following sections. </p>
+        <p>It is important to note that unrealized widgets in a widget hierarchy can be manipulated programmatically. Examples of attributes you can manipulate before realization are the overall geometry of the user interface, widget values, and user values. You can even retrieve widget values before the widgets are realized. Unrealized widgets do not, however, generate widget events, since the actual platform-specific user interface has yet to be created.</p>
+        <p>Once a widget has been realized, its corresponding platform-specific user interface toolkit element is instantiated. The native toolkit determines the widget’s exact screen geometry. If the widget is then <i>mapped</i>, it becomes visible on the computer screen, can be manipulated by a user, and generates widget events. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Widgets are mapped by default. This means that when you realize a widget hierarchy, the widgets included in that hierarchy will usually be displayed on screen immediately. You can control the visibility of widget hierarchies — before or after realization — using the MAP keyword to WIDGET_CONTROL. See <a href="Manipulating_Widgets.htm#widget_apps_4063420628_1042081">Controlling Widget Visibility</a> for details.</p>
+        <p>Note also that widgets that are visible on screen can be made unavailable to the user by setting the SENSITIVE keyword to WIDGET_CONTROL. See <a href="Manipulating_Widgets.htm#widget_apps_4063420628_1042091">Sensitizing Widgets</a>for details.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

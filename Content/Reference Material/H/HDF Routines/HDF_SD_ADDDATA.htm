@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: H|HDF Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>HDF_SD_ADDDATA</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../H_list.htm">Routines: H</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../HDF_Routines.htm">HDF Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">HDF_SD_ADDDATA</span>
+        </div>
+        <h1 class="Routine"><a name="HDF_1733484267_1010440"></a><a name="HDF_1733484267_70516"></a>HDF_SD_ADDDATA</h1>
+        <p>The <a name="kanchor1246"></a>HDF_SD_ADDDATA procedure writes a hyperslab of values to an SD dataset. By default, the output data is transposed. This transposition puts the data in column order, which is more efficient in HDF than row order (which is more efficient in IDL). In the rare cases where it is necessary to write the data without transposing, set the NOREVERSE keyword. The OFFSET, COUNT, and STRIDE keywords are similarly affected by the NOREVERSE keyword.</p>
+        <h2 class="API"><a name="HDF_1733484267_1053613_PageTOC_HDF_SD_ADDDATA_"></a>Examples</h2>
+        <p>The following example writes a 230-element by 380-element byte image to an SD dataset, then reads it back as a 70 by 100 image starting at (40, 20), sampling every other Y pixel and every third X pixel:</p>
+        <p class="Code">start = [40, 20] ; Set the start vector.</p>
+        <p class="Code">count = [70, 100] ; Set the count vector.</p>
+        <p class="Code">stride = [2, 3] ; Set the stride vector.</p>
+        <p class="Code">image = DIST(230, 380) ; Create the image.</p>
+        <p class="Code">TV, image ; Display the image.</p>
+        <p class="Code">; Create a new HDF file in SD mode:</p>
+        <p class="Code">SDinterface_id = HDF_SD_START('image.hdf', /CREATE) </p>
+        <p class="Code">; Define a new SD dataset:</p>
+        <p class="Code">SDdataset_id = HDF_SD_CREATE(SDinterface_id, 'image', [230, 380], /BYTE)</p>
+        <p class="Code">HDF_SD_ADDDATA, SDdataset_id, image ; Write the image into the dataset.</p>
+        <p class="Code">HDF_SD_GETDATA, SDdataset_id, full ; Retrieve the full image.</p>
+        <p class="Code">; Retrieve the sub-sampled image:</p>
+        <p class="Code">HDF_SD_GETDATA, SDdataset_id, small, COUNT=count, $</p>
+        <p class="Code">&#160;&#160;&#160;START=start, STRIDE=stride</p>
+        <p class="Code">HDF_SD_ENDACCESS, SDdataset_id</p>
+        <p class="Code">HDF_SD_END, SDinterface_id</p>
+        <p class="Code">HELP, full, small ; Print information about the images. </p>
+        <p class="Code">ERASE ; Erase the window.</p>
+        <p class="Code">TV, full; Display the full image.</p>
+        <p class="Code">TV, small ; Display the sub-sampled image.</p>
+        <p>IDL prints:</p>
+        <p class="Code">FULL &#160;&#160;BYTE = Array(230, 380)</p>
+        <p class="Code">SMALL &#160;BYTE = Array(70, 100)</p>
+        <p>Continuing with our example, suppose we want to write the center 50 by 100 pixels of the image to the file. You might be tempted to try:</p>
+        <p class="Code">HDF_SD_ADDDATA, SDdataset_id, image, START=[90, 90], COUNT=[50,100]</p>
+        <p>You will find, however, that this captures the lower left-hand corner of the original image, rather than the center. To write the data from the center, subset the original image, choosing the data from the center:</p>
+        <p class="Code">HDF_SD_ADDDATA, SDdataset_id, image(90:139, 90:189), START=[90, 90],$</p>
+        <p class="Code">&#160;&#160;&#160;COUNT=[50,100] ; This is the correct way to add the data.</p>
+        <p class="Code">HDF_SD_ENDACCESS, SDdataset_id ; End SD access.</p>
+        <p class="Code">HDF_SD_END, SDinterface_id ; Close the file.</p>
+        <h2 class="API"><a name="HDF_1733484267_1053593_PageTOC_HDF_SD_ADDDATA_"></a>Syntax</h2>
+        <p class="Syntax">HDF_SD_ADDDATA, <i>SDdataset_id</i>, <i>Data</i> [,&#160;<a href="#HDF_1733484267_1010486" class="selected">COUNT</a>=<i>vector</i>] [,&#160;/<a href="#HDF_1733484267_1010489" class="selected">NOREVERSE</a>] [,&#160;<a href="#HDF_1733484267_1010492" class="selected">START</a>=<i>vector</i>] [,&#160;<a href="#HDF_1733484267_1010495" class="selected">STRIDE</a>=<i>vector</i>]</p>
+        <h2 class="API"><a name="HDF_1733484267_1053595_PageTOC_HDF_SD_ADDDATA_"></a>Arguments</h2>
+        <h3 class="Argument">SDdataset_id</h3>
+        <p>An SD dataset ID as returned by HDF_SD_SELECT or HDF_SD_CREATE.</p>
+        <h3 class="Argument">Data</h3>
+        <p>The data to be written.</p>
+        <h2 class="API"><a name="HDF_1733484267_1053600_PageTOC_HDF_SD_ADDDATA_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010486"></a><a name="HDF_1733484267_1053602_Keywords_HDF_SD_ADDDATA_"></a>COUNT</h3>
+        <p>Set this keyword to a vector of counts (i.e., the number of items) to be written in each dimension. The default is to write all available data. Use caution when using this keyword. See the second example, below.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010489"></a><a name="HDF_1733484267_1053605_Keywords_HDF_SD_ADDDATA_"></a>NOREVERSE</h3>
+        <p>Set this keyword to prevent HDF_SD_ADDDATA’s transposition of <i>Data</i> and any vectors specified by keywords into column order.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010492"></a><a name="HDF_1733484267_1053608_Keywords_HDF_SD_ADDDATA_"></a>START</h3>
+        <p>Set this keyword to a vector that contains the starting position for the data. The default position is [0, 0, ..., 0].</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1010495"></a><a name="HDF_1733484267_1053611_Keywords_HDF_SD_ADDDATA_"></a>STRIDE</h3>
+        <p>Set this keyword to a vector that contains the strides, or sampling intervals, between accessed values of the NetCDF variable. The default stride vector is that for a contiguous write: [0, 0, ..., 0].</p>
+        <h2 class="API"><a name="HDF_1733484267_1069285_PageTOC_HDF_SD_ADDDATA_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="HDF_1733484267_1117759_PageTOC_HDF_SD_ADDDATA_"></a>See Also</h2>
+        <p><a href="HDF_SD_GETDATA.htm#HDF_1733484267_1011645">HDF_SD_GETDATA</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

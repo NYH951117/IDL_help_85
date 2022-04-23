@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_QRFAC</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="IMSL_QRFAC"></a>IMSL_QRFAC</h1>
+        <p>The IMSL_QRFAC procedure computes the <i>QR</i> factorization of a real matrix <i>A</i>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>The IMSL_QRFAC procedure computes a <i>QR</i> factorization of the matrix <u style="font-style: italic;">AP</u>, where <i>P</i> is the permutation matrix defined by the pivoting and computes the smallest integer <i>k</i> satisfying |<i>r<sub>k,k</sub></i>| &lt; TOLERANCE*|r<sub>0,0</sub>| to the keyword BASIS.</p>
+        <p>Householder transformations:</p>
+        <p><i>Q</i><sub style="font-style: italic;">k</sub> = <i>I – τ<sub>k</sub>u<sub>k</sub>u<sub>k</sub><sup>T</sup>, k</i> = 0, ..., min(<i>m</i> – 1, <i>n</i>) – 1</p>
+        <p>compute the factorization. The decomposition is computed in the form Q<sub>min</sub> (<i>m</i> – 1, <i>n</i>) – 1 ... <i>Q</i><sub style="font-style: italic;">0</sub><i>AP</i> = <i>R</i>, so <i>AP = QR</i> where <i>Q = Q</i><sub>0</sub> ... <i>Q</i><sub>min</sub> (<i>m</i> – 1, <i>n</i>) – 1. Since each Householder vector <i>u<sub>k</sub></i> has zeros in the first <i>k</i> + 1 entries, it is stored as part of column <i>k</i> of <i>QR</i>. The upper-trapezoidal matrix <i>R</i> is stored in the upper-trapezoidal part of the first min(<i>m, n</i>) rows of <i>QR</i>.</p>
+        <p>When computing the factorization, the procedure computes the <i>QR</i> factorization of <i>AP</i> with <i>P</i> defined by the input pivot and by column pivoting among “free” columns. Before the factorization, initial columns are moved to the beginning of the array <i>A</i> and the final columns to the end. Neither initial nor final columns are permuted further during the computation. Only the free columns are moved.</p>
+        <h2 class="API">Examples</h2>
+        <p>Using the same data as the first example given for the IMSL_QRSOL function, this sample computes the <i>QR</i> factorization of the coefficient. Using keywords, the factorization is returned in the full matrices, rather than the default condensed format.</p>
+        <p class="Code">RM, a, 4, 3</p>
+        <p class="Code">; Define the coefficient matrix.</p>
+        <p class="Code">row 0: 1 2 4</p>
+        <p class="Code">row 1: 1 4 16</p>
+        <p class="Code">row 2: 1 6 36</p>
+        <p class="Code">row 3: 1 8 64</p>
+        <p class="Code">IMSL_QRFAC, a, pvt, Q = q, R = r, AP = ap</p>
+        <p class="Code">; Call IMSL_QRFAC using keywords Q, R, and AP.</p>
+        <p class="Code">PM, q, Title = 'Q', Format = '(4f12.6)'</p>
+        <p class="Code">; Output the results.</p>
+        <p class="Code">Q</p>
+        <p class="Code_Indented">-0.053149 -0.542171 0.808224 -0.223607</p>
+        <p class="Code_Indented">-0.212598 -0.657436 -0.269408 0.670820</p>
+        <p class="Code_Indented">-0.478345 -0.345794 -0.449013 -0.670820</p>
+        <p class="Code_Indented">-0.850390 0.392754 0.269408 0.223607</p>
+        <p class="Code">PM, r, Title = 'R', Format = '(3f12.6)'</p>
+        <p class="Code">R</p>
+        <p class="Code_Indented">-75.259552 -10.629880 -1.594482</p>
+        <p class="Code_Indented">0.000000 -2.646819 -1.152647</p>
+        <p class="Code_Indented">0.000000 0.000000 0.359211</p>
+        <p class="Code_Indented">0.000000 0.000000 0.000000</p>
+        <p class="Code">PM, pvt, Title = 'Pvt'</p>
+        <p class="Code">Pvt</p>
+        <p class="Code">3</p>
+        <p class="Code">2</p>
+        <p class="Code">1</p>
+        <p class="Code">PM, q # r - ap, Title = 'Residual', Format = '(3f12.6)'</p>
+        <p class="Code">Residual</p>
+        <p class="Code_Indented">-0.000004 -0.000001 -0.000000</p>
+        <p class="Code_Indented">0.000000 -0.000000 0.000000</p>
+        <p class="Code_Indented">0.000000 -0.000000 -0.000000</p>
+        <p class="Code_Indented">0.000000 -0.000000 -0.000000</p>
+        <h2 class="API">Syntax</h2>
+        <p>IMSL_QRFAC, <i>a</i> [, <i>pivot</i> [, <i>auxqr, qr</i>] [, AP=<i>variable</i>] [, BASIS=<i>variable</i>] [, /DOUBLE] [, Q=<i>variable</i>] [, R=<i>variable</i>] [, TOLERANCE=<i>value</i>]]</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">a</h3>
+        <p>A two-dimensional matrix containing the coefficient matrix. Element <i>A(i,j)</i> contains the <i>j</i>-th coefficient of the <i>i-</i>th equation.</p>
+        <h3 class="Argument">pivot</h3>
+        <p>A one-dimensional matrix containing the desired variable order and usage</p>
+        <p>information.</p>
+        <ul>
+            <li value="1">On input, if <i>pivot (k)</i> &gt; 0, then column <i>k</i> of <i>A</i> is an initial column. If <i>pivot (k)</i> = 0, then the column of <i>A</i> is a free column and can be interchanged in the column pivoting. If <i>pivot (k)</i> &lt; 0, then column <i>k</i> of <i>A</i> is a final column. If all columns are specified as initial (or final) columns, then no pivoting is performed. (The permutation matrix <i>P</i> is the identity matrix in this case.) Default: <i>pivot (*)</i> = 0</li>
+            <li value="2">On output, <i>pivot (k)</i> contains the index of the column of the original matrix that has been interchanged into column <i>k</i>.</li>
+        </ul>
+        <h3 class="Argument">auxqr</h3>
+        <p>Matrix containing the scalars τ<sub>k</sub> of the Householder transformations that define the decomposition.</p>
+        <h3 class="Argument">qr</h3>
+        <p>Matrix containing the Householder transformations that define the decomposition.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">AP</h3>
+        <p>Named variable into which the product AP of the identity <i>AP = QR</i> is stored. This keyword is useful when attempting to compute the residual <i>AP – QR</i>.</p>
+        <h3 class="Keyword">BASIS</h3>
+        <p>Named variable containing an integer specifying the number of columns used in the solution. The value BASIS = <i>k</i>, if |<i>r</i><sub style="font-style: italic;">k,k</sub>| &lt; TOLERANCE*|<i>r</i><sub style="font-style: italic;">0,0</sub>| and |<i>r<sub>i,i</sub></i>| ≥ TOLERANCE*|<i>r</i><sub style="font-style: italic;">0,0</sub>| for <i>i</i> = 0, 1, ..., <i>k</i> – 1. </p>
+        <h3 class="Keyword">DOUBLE</h3>
+        <p>If present and nonzero, double precision is used.</p>
+        <h3 class="Keyword">Q</h3>
+        <p>Named variable in which the two-dimensional matrix containing the orthogonal matrix of the <i>AP = QR</i> factorization is stored.</p>
+        <h3 class="Keyword">R</h3>
+        <p>Named variable in which the two-dimensional matrix containing the upper-triangular matrix of the <i>AP = QR</i> decomposition is stored.</p>
+        <h3 class="Keyword">TOLERANCE</h3>
+        <p>Nonnegative tolerance used to determine the subset of columns of A to be included in the solution. Default: TOLERANCE = SQRT(ε), where ε is machine precision.</p>
+        <h2 class="API">Errors </h2>
+        <h3 class="Keyword">Fatal Errors</h3>
+        <p><code>MATH_SINGULAR_TRI_MATRIX</code> - Input triangular matrix is singular. The index of the first zero diagonal term is #.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: O">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>ON_IOERROR </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="O_list.htm">Routines: O</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">ON_IOERROR</span>
+        </div>
+        <h1 class="Routine"><a name="O_828691053_889589"></a><a name="O_828691053_27107"></a><a name="kanchor1979"></a><a name="kanchor1980"></a><a name="kanchor1981"></a>ON_IOERROR </h1>
+        <p><a name="kanchor1982"></a>The ON_IOERROR procedure specifies a statement to be jumped to if an I/O error occurs in the current procedure. Normally, when an I/O error occurs, an error message is printed and program execution is stopped. If ON_IOERROR is called and an I/O related error later occurs in the same procedure activation, control is transferred to the designated statement with the error code stored in the system variable !ERROR_STATE. The text of the error message is contained in !ERROR_STATE.MSG.</p>
+        <p>The effect of ON_IOERROR can be canceled by using the label “NULL” in the call.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Note that calls to ON_IOERROR made in the procedure that causes an I/O error supersede any error handling mechanisms created with CATCH and the program branches to the label specified by ON_IOERROR.</p>
+        <h2 class="API"><a name="O_828691053_931224"></a><a name="O_828691053_931224_PageTOC_ON_IOERROR_"></a>Examples</h2>
+        <p>The following code segment reads an integer from the keyboard. If an invalid number is entered, the program re-prompts.</p>
+        <p class="Code">i = 0 ; Number to read:</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">valid = 0 ; Valid flag</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">WHILE valid EQ 0 DO BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;ON_IOERROR, bad_num</p>
+        <p class="Code">&#160;&#160;&#160;READ, 'Enter Number: ', i</p>
+        <p class="Code">&#160;&#160;&#160;;If we get here, i is good.</p>
+        <p class="Code">&#160;&#160;&#160;VALID = 1</p>
+        <p class="Code">bad_num: IF ~ valid THEN $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;PRINT, 'You entered an invalid number.'</p>
+        <p class="Code">ENDWHILE</p>
+        <p class="Code">END</p>
+        <p>When writing procedures and functions that are to be used by others, it is good practice to anticipate and handle errors caused by the user. For example, the following procedure segment, which opens a file specified by the user, handles the case of a nonexistent file or read error.</p>
+        <p class="Code">; Define a function to read, and return a 100-element, </p>
+        <p class="Code">; floating-point array.</p>
+        <p class="Code">FUNCTION READ_DATA, FILE_NAME</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Declare error label.</p>
+        <p class="Code">ON_IOERROR, BAD</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Use the GET_LUN keyword to allocate a logical file unit.</p>
+        <p class="Code">OPENR, UNIT, FILE NAME, /GET_LUN</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">A = FLTARR(100)&#160;&#160;&#160;&#160;&#160;;Define data array.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">READU, UNIT, A&#160;&#160;&#160;&#160;&#160;&#160;;Read the data array.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Clean up and return.</p>
+        <p class="Code">GOTO, DONE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Exception label. Print the error message.</p>
+        <p class="Code">BAD:  PRINT, !ERR_STRING</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Close and free the input/output unit.</p>
+        <p class="Code">DONE: FREE_LUN, UNIT</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Return the result. This will be undefined if an error occurred.</p>
+        <p class="Code">RETURN, A</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>The important things to note in this example are that the FREE_LUN procedure is always called, even in the event of an error, and that this procedure always returns to its caller. It returns an undefined value if an error occurs, causing its caller to encounter the error.</p>
+        <h2 class="API"><a name="O_828691053_889598"></a><a name="O_828691053_889598_PageTOC_ON_IOERROR_"></a>Syntax</h2>
+        <p class="Syntax">ON_IOERROR, <i>Label</i></p>
+        <h2 class="API"><a name="O_828691053_889600"></a><a name="O_828691053_889600_PageTOC_ON_IOERROR_"></a>Arguments</h2>
+        <h3 class="Argument">Label</h3>
+        <p>Statement to jump to when I/O error is encountered.</p>
+        <h2 class="API"><a name="O_828691053_934142"></a><a name="O_828691053_31731"></a>Keywords</h2>
+        <p>None. </p>
+        <h2 class="API"><a name="O_828691053_950060"></a><a name="O_828691053_889612_PageTOC_ON_IOERROR_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="O_828691053_950068"></a><a name="O_828691053_931673_PageTOC_ON_IOERROR_"></a>See Also</h2>
+        <p><a href="../C/CATCH.htm#C_854643309_985147">CATCH</a>, <a href="../M/MESSAGE.htm#M_824365677_988498">MESSAGE</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

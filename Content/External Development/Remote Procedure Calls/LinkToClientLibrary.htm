@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Remote Procedure Calls">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Link to Client Library</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="RPC.htm">Remote Procedure Calls</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Link to Client Library</span>
+        </div>
+        <h1><a name="kanchor5439"></a>Link to Client Library</h1>
+        <p>To make use of the IDL RPC functionality, you will need to do the following:</p>
+        <ul>
+            <li value="1">Include the file <code>idl_rpc.h</code> in your application.</li>
+            <li value="2">Have a copy of <code>idl_export.h</code> in the include path when you compile the client application.</li>
+            <li value="3">Link your client application to the IDL client shared object library (<b>libidl_rpc</b>).</li>
+            <li value="4">If the client library is linked as a shared object, you must set the <b>LD_LIBRARY_PATH</b> environment variable so that it includes the directory that contains the IDL client library. If this variable is not set correctly, an error message will be issued by the system loader when the client program is started.</li>
+        </ul>
+        <p>The command used to compile and link a client program to the IDL RPC client library follows the following format:</p>
+        <p class="Code">% cc -o example $(PRE_FLAGS) example.o -lidl_rpc</p>
+        <p class="Code">$(POST_FLAGS)</p>
+        <p>where <b>PRE_FLAGS</b> and <b>POST_FLAGS</b> are platform dependent. The proper flags for each UNIX operating system supported by IDL are contained in the file Makefile, located in the in the rpc subdirectory of the external subdirectory of the main IDL directory.</p>
+        <h2>Example of IDL RPC Client API</h2>
+        <p>To use the IDL client side API, execute the following sequence of steps:</p>
+        <ol>
+            <li value="1">  Call <b>IDL_RPCInit()</b> to connect to the server</li>
+            <li value="2">Perform actions on the server—get and set variables, run IDL commands, etc.</li>
+            <li value="3">Call <b>IDL_RPCCleanup()</b> to disconnect from the server.</li>
+        </ol>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The <b>IDL_RPC_InitWithLoopback</b> function should be called if the client needs to connect to an RPC server that is registered with the loopback interface.</p>
+        <p>The code shown in the following figure is an example that can be used to set up a remote session of IDL using the RPC features. Note that this C program will need to be linked against the supplied shared library <b>libidl_rpc</b>. This code is included in the <code>idldir/external/rpc</code> directory as <code>example.c</code>.</p>
+        <p>&#160;</p>
+        <p class="Code">#include "idl_rpc.h" int main()</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">CLIENT *pClient;</p>
+        <p class="Code_Indented">char	cmdBuffer[512];</p>
+        <p class="Code_Indented">int	result;</p>
+        <p class="Code_Indented">/* Connect to the server */</p>
+        <p class="Code_Indented">if( (pClient = IDL_RPCInit(0, (char*)NULL)) == (CLIENT*)NULL){ fprintf(stderr, "Can't register with IDL server\n"); exit(1);</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">/* Start a loop that will read commands and then send them to idl */</p>
+        <p class="Code_Indented">for(;;){</p>
+        <p class="Code_Indented">printf("RMTIDL&gt; "); cmdBuffer[0]='\0'; gets(cmdBuffer);</p>
+        <p class="Code_Indented">if( cmdBuffer[0] == '\n' || cmdBuffer[0] == '\0')</p>
+        <p class="Code_Indented">break;</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">result = IDL_RPCExecuteStr(pClient, cmdBuffer);</p>
+        <p class="Code_Indented">}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">/* Now disconnect from the server and kill it. */</p>
+        <p class="Code_Indented">if(!IDL_RPCCleanup(pClient, 1))</p>
+        <p class="Code_Indented">&#160;&#160;&#160;fprintf(stderr, "IDL_RPCCleanup: failed\n");</p>
+        <p class="Code_Indented">exit(0);</p>
+        <p class="Code">}</p>
+        <p>Compile <code>example.c </code>with the appropriate flags for your platform, as described in <a href="#">Linking to the Client Library</a>. Once this example is compiled, execute it using the following commands:</p>
+        <p class="Code">% idlrpc</p>
+        <p>Then, in another process:</p>
+        <p class="Code">% example</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

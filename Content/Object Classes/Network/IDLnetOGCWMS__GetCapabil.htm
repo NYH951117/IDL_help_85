@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|Network Object Classes|IDLnetOGCWMS">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLnetOGCWMS::GetCapabilities</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/NoLines.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_network.htm">Network Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLnetOGCWMS::GetCapabilities</span>
+        </div>
+        <h1 class="ObjMethod"><a name="objects_network_1009015_1393865"></a><a name="objects_network_1009015_30522"></a>I<a name="kanchor4155"></a>DLnetOGCWMS::GetCapabilities</h1>
+        <p>The IDLnetOGCWMS::GetCapabilities function method retrieves an XML file containing layers describing geographic information from a remote OGC WMS server, writes the file to disk, and parses the file contents before returning. The XML file is written to the location specified by the <a href="IDLnetOGCWMS_Properties.htm#objects_network_1009015_1392815">CAPABILITIES_FILENAME</a> property, and will be overwritten if this property value remains unchanged between GetCapabilities requests. </p>
+        <p>You can parse the contents of an existing XML file by setting the <a href="IDLnetOGCWCS__GetCapabil.htm#objects_network_1009015_1385052">FROM_FILE</a> keyword. This avoids having to download the same information as that which exists on disk.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The <a href="IDLnetOGCWMS_Properties.htm#objects_network_1009015_1393513">URL_PATH</a> and <a href="IDLnetOGCWMS_Properties.htm#objects_network_1009015_1393474">URL_HOSTNAME</a> properties must be set before requesting information from a remote WMS server. You can either set these properties manually or pass a URL to the <a href="IDLnetOGCWMS__ParseUrl.htm#objects_network_1009015_1396203">IDLnetOGCWMS::ParseUrl</a> method prior to making a request. If you are dealing with a proxy server, you must also set the <a href="IDLnetOGCWMS_Properties.htm#objects_network_1009015_1393188">PROXY_HOSTNAME</a> and <a href="IDLnetOGCWMS_Properties.htm#objects_network_1009015_1393244">PROXY_PORT</a> properties to the correct values.</p>
+        <p>This method returns only when one of the following occur: </p>
+        <ul>
+            <li value="1">Completes retrieval and parsing of information from server</li>
+            <li value="2">Encounters an HTTP error</li>
+            <li value="3">Encounters an OGC exception</li>
+            <li value="4">Responds to a cancel request as specified in a callback return value</li>
+        </ul>
+        <p>You can implement a callback to return status information during the request by setting the <a href="IDLnetOGCWCS_Properties.htm#objects_network_1009015_1383740">CALLBACK_FUNCTION</a> property. You can also use a callback to cancel a request. See <a href="IDLnetOGCWCS.htm#objects_network_1009015_1402515">Using Callbacks with the IDLnetOGCWCS Object&#160;</a>for details. This method will throw an error if the GetCapabilities request fails. </p>
+        <p>After this method returns, you must use <a href="IDLnetOGCWMS__GetLayers.htm#objects_network_1009015_1394533">IDLnetOGCWMS::GetLayers</a> to return layer details. The GetCapabilities method accesses and parses the information from the server and returns a count containing the number of layers received, but does not provide immediate access to the detailed information. You can also use the <a href="IDLnetOGCWMS__GetService.htm#objects_network_1009015_1395976">IDLnetOGCWMS::GetServiceSection</a> method to access information about service data contained in the XML file. </p>
+        <h2 class="API"><a name="objects_network_1009015_1393932"></a><a name="objects_network_1009015_65246"></a>Syntax</h2>
+        <p class="Syntax"><i>Result = Obj</i>-&gt;[<a href="IDLnetOGCWMS.htm#objects_network_1009015_1392001">IDLnetOGCWMS</a>::]GetCapabilities ([,&#160;/<a href="#objects_network_1009015_1393955" class="selected">DISABLE_INHERITANCE</a>] [&#160;,<a href="IDLnetOGCWCS__GetCapabil.htm#objects_network_1009015_1385052">FROM_FILE</a>=<i>string</i>] [,<a href="IDLnetOGCWCS__GetCapabil.htm#objects_network_1009015_1385065">SCHEMA_CHECKING</a>=<i>value</i>] [,&#160;<a href="#objects_network_1009015_1400814" class="selected">VALIDATION_MODE</a>=<i>value</i>])</p>
+        <h2 class="API"><a name="objects_network_1009015_1393947"></a><a name="objects_network_1009015_74588"></a>Return Value</h2>
+        <p>Returns the number of layers received.</p>
+        <h2 class="API"><a name="objects_network_1009015_1393950"></a><a name="objects_network_1009015_11639"></a>Arguments</h2>
+        <p>None</p>
+        <h2 class="API"><a name="objects_network_1009015_1393953"></a><a name="objects_network_1009015_58457"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="objects_network_1009015_1393955"></a><a name="objects_network_1009015_86875"></a>DISABLE_INHERITANCE</h3>
+        <p>Set this keyword to a Boolean value indicating whether or not to disable layer inheritance as follows: </p>
+        <table style="margin-left: 0;margin-right: auto;caption-side: top;mc-table-style: url('../../Resources/TableStyles/NoLines.css');" class="TableStyle_NoLines" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>False - allow inheritance (the default)</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColEnd">
+                        <p>True - disable inheritance</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>The OGC WMS standard specification defines which child layer tags can inherit from a parent layer. When inheritance is enabled (DISABLE_INHERITANCE=0), the returned layer structures will have inheritance rules applied to each layer as described in Inheritance of Layer Values. For example, if a child inherits its parents’ layer information, the child SRS value will be composed of an array that includes all the SRS values of all parents. When the inheritance rule is “Add,” duplicate values are ignored (not replicated). </p>
+        <h3 class="Keyword">FROM_FILE</h3>
+        <p>Set this keyword to a string containing the full path and filename of an XML file to parse for layers and service data. This allows you use a previously downloaded capabilities file.</p>
+        <p>When you use the FROM_FILE keyword and the <a href="IDLnetOGCWCS_Properties.htm#objects_network_1009015_1383740">CALLBACK_FUNCTION</a> property is set, status information will be returned when the XML file is first accessed and when parsing has ended. The entire file contents are parsed.</p>
+        <h3 class="Keyword">SCHEMA_CHECKING</h3>
+        <p>XML <i>Schemas</i> describe the structure and allowed contents of an XML document. Schemas are more robust than, and are envisioned as a replacement for, Document Type Definitions (DTDs). Schemas are typically provided via a link to an external document, which must be downloaded before validation can occur.</p>
+        <p>Set this keyword to one of the following values to control the degree of error-checking the parser should perform: </p>
+        <table style="margin-left: 0;margin-right: auto;caption-side: top;mc-table-style: url('../../Resources/TableStyles/NoLines.css');" class="TableStyle_NoLines" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>Turn schema checking off — the XML file is not checked for errors. Use this setting to avoid the delays associated with schema checking. This is the default.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>Check for fatal schema errors in the XML file — this setting requires more time since the XML file is checked against a WMS schema reference document accessed from the OGC server. </p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColEnd">
+                        <p>Check for fatal errors in the XML file and schema document — this setting checks both the XML file and the reference schema document for fatal errors, and requires a considerable amount of time.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Keyword"><a name="objects_network_1009015_1400814"></a><a name="objects_network_1009015_1400814_Keywords_IDLnetOGCWMS"></a>VALIDATION_MODE </h3>
+        <p>XML <i>Document Type Definitions</i> (DTDs) describe the structure and allowed contents of an XML document. A DTD can be embedded in an XML document or provided via a link to an external document, which must be downloaded before validation can occur. In most applications, <i>schemas</i> provide a more robust validation mechanism.</p>
+        <p>Set this keyword to one of the following values to control DTD-based validation of the XML document: </p>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/NoLines.css');" class="TableStyle_NoLines" cellspacing="0">
+            <col class="Column-Column1" />
+            <col class="Column-Column1" />
+            <tbody>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>0</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>Turn DTD validation off — external DTDs are not loaded and the XML file is not checked for errors. Use this setting to avoid the delays associated with loading and checking an external DTD. This is the default.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body2">
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                        <p>Validate only if an embedded DTD or a link to an external DTD is provided.</p>
+                    </td>
+                </tr>
+                <tr class="Body-Body1">
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">
+                        <p>2</p>
+                    </td>
+                    <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColEnd">
+                        <p>Always perform validation. If this option is in force and no DTD is provided, every XML element in the document will generate an error.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">Inheritance of Layer Values</h2>
+        <p>The following tables (<a href="#objects_network_1009015_1393999" class="selected">Number</a> below and <a href="#objects_network_1009015_1394023" class="selected">Inheritance</a>) describe how the child layer elements inherit parent layer elements. See the following column descriptions for details. </p>
+        <h3><a name="objects_network_1009015_1393999"></a><a name="objects_network_1009015_75499"></a>Number</h3>
+        <p>The Number column provides information on how many times each element may appear in a layer, either explicitly or through inheritance as follows:</p>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Meaning</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Appears exactly once in each Layer</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>0/1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Appears either once or not at all</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0+</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Appears 0 or more times</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>1+ </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Appears one or more times</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3><a name="objects_network_1009015_1394023"></a><a name="objects_network_1009015_18864"></a>Inheritance</h3>
+        <p>The Inheritance column indicates whether or how the element is inherited by child Layers as follows:</p>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/Description.css');" class="TableStyle_Description" cellspacing="0">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Value</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Meaning</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>No</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Not inherited. If the element is defined as mandatory, each Layer element will include that element.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Replace</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Value can be inherited, but if defined by child, the value is replaced.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p>Add</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Values that may appear more than one time can be inherited from parent and added to any value(s) of the child. Any duplication by the child may be ignored. </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Layer Element Inheritance in Version 1.1.1</h3>
+        <p>When inheritance is enabled (DISABLE_INHERTANCE=0), use the following table to determine the type of allowable inheritance for a server supporting OGC WMS version 1.1.1. </p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Element</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p><a href="#objects_network_1009015_1393999" class="selected">Number</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p><a href="#objects_network_1009015_1394023" class="selected">Inheritance</a>
+                        </p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Layer</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0+</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Title</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Abstract</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>0/1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>KeywordList</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0/1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Style</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>0+</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Add</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>SRS</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1+</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Add</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>LatLonBoundingBox</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Replace</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>BoundingBox</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0+</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Replace</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Dimension</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>0+</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Add</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Extent</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0+</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Replace</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Attribution</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>0/1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Replace</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>AuthorityUrl</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0+</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Add</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Identifier</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>0+</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>MetadataUrl</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0+</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>DataUrl</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>0/1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>FeatureListUrl</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0/1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>ScaleHint</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>0/1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Replace</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Layer Element Inheritance in Version 1.3.0</h3>
+        <p>When inheritance is enabled (DISABLE_INHERTANCE=0), use the following table to determine the type of allowable inheritance for a server supporting OGC WMS version 1.3.0. </p>
+        <table style="mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;caption-side: bottom;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Element</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p><a href="#objects_network_1009015_1393999" class="selected">Number</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p><a href="#objects_network_1009015_1394023" class="selected">Inheritance</a>
+                        </p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Layer</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0+</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Name</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>0/1<sup>a</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Title</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Abstract</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>0/1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>KeywordList</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0/1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Style</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>0+</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Add</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>CRS</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1+<sup>b</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Add</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Ex_GeographicBoundingBox</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>1<sup>b</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Replace</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>BoundingBox</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>1+<sup>b</sup></p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Replace</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Dimension</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>0+</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Replace</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Attribution</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0/1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Replace</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>AuthorityUrl</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>0+</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Add</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Identifier</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0+</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>MetadataUrl</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>0+</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>DataUrl</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0/1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>FeatureListUrl</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>0/1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>No</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>MinScaleDenominator</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>0/1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Replace</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>MaxScaleDenominator</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>0/1</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>Replace</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="Footnote"><sup>a</sup>See <a href="IDLnetOGCWMS__GetMap.htm#objects_network_1009015_1395766">Layer Names and Titles</a> for more information.</p>
+        <p class="Footnote"><sup>b</sup> May be 0 only if a value is inherited from a parent layer.</p>
+        <h2 class="API"><a name="objects_network_1009015_1394306"></a><a name="objects_network_1009015_70014"></a>Examples</h2>
+        <p>See <a href="IDLnetOGCWMS__GetLayers.htm#objects_network_1009015_1394533">IDLnetOGCWMS::GetLayers</a> for an example that parses a URL and then calls GetCapabilities to return an XML file. A callback function is used to return status information about the query. Also see <a href="IDLnetOGCWMS.htm#objects_network_1009015_1397425">Sample WMS Browser</a>.</p>
+        <h2 class="API"><a name="objects_network_1009015_1394312"></a><a name="objects_network_1009015_36485"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="objects_network_1009015_1394320"></a><a name="objects_network_1009015_31883"></a>See Also</h2>
+        <p><a href="IDLnetOGCWMS__GetLayers.htm#objects_network_1009015_1394533">IDLnetOGCWMS::GetLayers</a>, <a href="IDLnetOGCWMS__GetService.htm#objects_network_1009015_1395976">IDLnetOGCWMS::GetServiceSection</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

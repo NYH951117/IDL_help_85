@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Adding System Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Adding System Routines with LINKIMAGE</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="AddingSystRoutines.htm">Adding System Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">LINKIMAGE</span>
+        </div>
+        <h1><a name="kanchor5519"></a>Adding System Routines with LINKIMAGE</h1>
+        <p>The IDL user level <b>LINKIMAGE</b> procedure makes the functionality of the <b>IDL_</b><a href="RegisterRoutines.htm" style="font-weight: bold;">SysRtnAdd()</a> function available to IDL programs. It allows IDL programs to merge routines written in other languages  at run-time. Each call to LINKIMAGE defines a new system procedure or function by specifying the routine’s name, the name of the file containing the code, and the entry point name. The name of your routine is added to IDL’s internal system routine table, making it available in the same manner as any other IDL built-in routine.</p>
+        <p><b>LINKIMAGE</b> is the easiest way to add your system routines to IDL. It does not require linking a separate version of the IDL program with your code the way a direct call to <b>IDL_SysRtnAdd()</b> does, and it does not require writing the extra code required for a <a href="DLM.htm">Dynamically Loadable Module (DLM)</a>. <b>LINKIMAGE</b> is commonly used for simple applications and for testing during the development of a system routine.</p>
+        <p>If you are developing a larger application, or if you intend to distribute your work, you should package your routines as Dynamically Loadable Modules which are much easier for end-users to install and use than <b>LINKIMAGE</b> calls. </p>
+        <p>If your IDL application relies on code written other languages and linked  using the <b>LINKIMAGE</b> procedure, you must make sure that the routines declared with LINKIMAGE are linked into IDL before any code that calls them is restored. In practice, the best way to do this is to make the calls to <b>LINKIMAGE</b> in your MAIN procedure, and include the code that uses the linked routines in a secondary .SAV file. In this case your MAIN procedure may look something like this:</p>
+        <p class="Code">PRO main</p>
+        <p class="Code">;Link the external code.</p>
+        <p class="Code">LINKIMAGE, 'link_function', 'new.dll'</p>
+        <p class="Code">;Restore code that uses linked code. RESTORE, 'secondary.sav'</p>
+        <p class="Code">;Run your application. myapp</p>
+        <p class="Code">END</p>
+        <p>In this scenario, the IDL code that calls the <b>LINK_FUNCTION</b> routine (the routine linked into IDL in the <b>LINKIMAGE</b> call) is contained in the secondary .SAV file</p>
+        <p class="Code">'secondary.sav'.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When creating your secondary .SAV file, you will need to issue the <b>LINKIMAGE</b> command before calling the <b>SAVE</b> procedure to link your routine into IDL after you have exited and restarted. The <b>RESOLVE_ALL</b> routine does not resolve routines linked to IDL with the <b>LINKIMAGE</b> procedure. Dynamically Loadable Modules do not have this issue, and are the best way to avoid the problem.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

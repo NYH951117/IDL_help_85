@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: H|HDF Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>HDF_BROWSER</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/NoLines.css" rel="stylesheet" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../H_list.htm">Routines: H</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../HDF_Routines.htm">HDF Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">HDF_BROWSER</span>
+        </div>
+        <h1><a name="kanchor1129"></a><a name="HDF_1733484267_1006184"></a><a name="HDF_1733484267_56850"></a>HDF_BROWSER</h1>
+        <p>The HDF_BROWSER function presents a graphical user interface (GUI) that allows the user to view the contents of a Hierarchical Data Format (HDF), HDF-EOS, or NetCDF file, and prepare a template for the extraction of HDF data and metadata into IDL. The output template is an IDL structure that may be used when reading HDF files with the HDF_READ routine. If you have several HDF files of identical form, the returned template from HDF_BROWSER may be reused to extract data from these files with HDF_READ. If you do not need a multi-use template, you may call HDF_READ directly.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The <a href="../HDF5 Routines/H5_BROWSER.htm">H5_BROWSER</a> function should be used for HDF5 files.</p>
+        <h2 class="API"><a name="HDF_1733484267_1303568_PageTOC_HDF_BROWSER_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = HDF_BROWSER([<i>Filename</i>] [,&#160;<a href="#HDF_1733484267_1006231" class="selected">CANCEL</a>=<i>variable</i>] [,&#160;<a href="#HDF_1733484267_1006234" class="selected">GROUP</a>=<i>widget_id</i>] [,&#160;<a href="#HDF_1733484267_1006238" class="selected">PREFIX</a>=<i>string</i>])</p>
+        <h2 class="API"><a name="HDF_1733484267_1303580_PageTOC_HDF_BROWSER_"></a>Return Value</h2>
+        <p>Returns a result that is a template structure containing heap variable references, or 0 if no file was selected. The user is required to clean up the heap variable references when done with them.</p>
+        <h2 class="API"><a name="HDF_1733484267_1303583_PageTOC_HDF_BROWSER_"></a>Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>A string containing the name of an HDF file to browse. If <i>Filename</i> is not specified, a dialog allows you to choose a file. </p>
+        <h2 class="API"><a name="HDF_1733484267_1303587_PageTOC_HDF_BROWSER_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="HDF_1733484267_1006231"></a><a name="HDF_1733484267_852206_Keywords_HDF_BROWSER__"></a>CANCEL</h3>
+        <p>Set this keyword to a named variable that will contain the byte value 1 (one) if the user clicked the “Cancel” button or the byte value 0 (zero) otherwise.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1006234"></a><a name="HDF_1733484267_870963_Keywords_HDF_BROWSER__"></a>GROUP</h3>
+        <p>Set this keyword to the widget ID of a widget that calls HDF_BROWSER. When this ID is specified, a death of the caller results in the death of the HDF_BROWSER. The following example demonstrates how to use the GROUP keyword to properly call HDF_BROWSER from within a widget application. To run this example, save the following code as <code>browser_example.pro</code>:</p>
+        <p class="Code">PRO BROWSER_EXAMPLE_EVENT,ev<br /><br />&#160;&#160;&#160;WIDGET_CONTROL,ev.id,GET_VALUE=val<br />&#160;&#160;&#160;&#160;&#160;&#160;CASE val of<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;'Browser':BEGIN<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;a=HDF_BROWSER(GROUP=ev.top)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;HELP,a,/st<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;END<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;'Exit': WIDGET_CONTROL,ev.top,/DESTROY<br />&#160;&#160;&#160;&#160;&#160;&#160;ENDCASE<br /><br />END<br /><br />PRO BROWSER_EXAMPLE<br /><br />&#160;&#160;&#160;a=WIDGET_BASE(/ROW)<br />&#160;&#160;&#160;b=WIDGET_BUTTON(a,VALUE='Browser')<br />&#160;&#160;&#160;c=WIDGET_BUTTON(a,VALUE='Exit')<br />&#160;&#160;&#160;WIDGET_CONTROL,a,/REALIZE<br />&#160;&#160;&#160;XMANAGER,'browser_example',a<br /><br />END</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1006238"></a><a name="HDF_1733484267_852209_Keywords_HDF_BROWSER__"></a>PREFIX</h3>
+        <p>When HDF_BROWSER reviews the contents of an HDF file, it creates default output names for the various data elements. By default these default names begin with a prefix derived from the filename. Set this keyword to a string value to be used in place of the default prefix.</p>
+        <h2 class="API"><a name="HDF_1733484267_1303599_PageTOC_HDF_BROWSER_"></a>Examples </h2>
+        <p class="Code">template = HDF_BROWSER('test.hdf') <br />output_structure = HDF_READ(TEMPLATE=template)</p>
+        <p>&#160;&#160;&#160;&#160;&#160;&#160;&#160;or,</p>
+        <p class="Code">output_structure = HDF_READ('test.hdf', TEMPLATE=template)</p>
+        <h3><a name="HDF_1733484267_12682"></a>Using the HDF Browser Interface </h3>
+        <p>When you call the HDF_BROWSER function from the command line or using the <b>Import HDF</b> macro, the <b>HDF Browser</b> window is displayed. </p>
+        <p />
+        <p>Use the following steps when working with the <b>HDF Browser </b>dialog:</p>
+        <ol>
+            <li value="1">
+                <p><b>Select the type of file you are opening.</b> The following table describes the <b>Display</b> field options: </p>
+                <table style="margin-left: 0;margin-right: auto;caption-side: top;mc-table-style: url('../../../Resources/TableStyles/NoLines.css');" class="TableStyle_NoLines" cellspacing="0">
+                    <col class="Column-Column1" />
+                    <col class="Column-Column1" />
+                    <tbody>
+                        <tr class="Body-Body1">
+                            <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                                <p><b>Display</b>
+                                </p>
+                            </td>
+                            <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                                <p>Select one of the following options to indicate the type of file you are reading:</p>
+                                <p><b>HDF/NETCDF</b>
+                                </p>
+                                <p><b>HDF-EOS</b>
+                                </p>
+                                <p>This selection toggles the following droplist between <b>HDF Summary</b> and <b>HDF-EOS Summary</b>. </p>
+                            </td>
+                        </tr>
+                        <tr class="Body-Body2">
+                            <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                                <p><b>HDF Summary</b>
+                                </p>
+                            </td>
+                            <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                                <p>Displays the number of items in each of the following categories:</p>
+                                <p><b>DF24 (24-bit Images)</b> — 24-bit images and their attributes</p>
+                                <p><b>DFR8 (8-bit Images) </b>— 8-bit images and their attributes</p>
+                                <p><b>DFP (Palettes)</b> — Image palettes</p>
+                                <p><b>SD (Variables/Attributes)</b> — Scientific Datasets and attributes</p>
+                                <p><b>AN (Annotations)</b> — Annotations</p>
+                                <p><b>GR (Generic Raster)</b> — Images</p>
+                                <p><b>GR Global (File) Attributes</b> — Image attributes</p>
+                                <p><b>VGroups</b> — Generic data groups</p>
+                                <p><b>VData</b> — Generic data and attributes</p>
+                            </td>
+                        </tr>
+                        <tr class="Body-Body1">
+                            <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">
+                                <p><b>HDF-EOS Summary</b>
+                                </p>
+                            </td>
+                            <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColEnd">
+                                <p>Displays the number of items in each of the following categories:</p>
+                                <p><b>Point</b> — EOS point data and attributes</p>
+                                <p><b>Swath</b> — EOS swath data and attributes</p>
+                                <p><b>Grid</b> — EOS grid data and attributes</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </li>
+            <li value="2">
+                <p><b>Select any element that contains data.</b> Attributes of the selected data appear in the lower textbox. Use other dialog options as follows:</p>
+                <table style="margin-left: 0;margin-right: auto;caption-side: top;mc-table-style: url('../../../Resources/TableStyles/NoLines.css');" class="TableStyle_NoLines" cellspacing="0">
+                    <col class="Column-Column1" />
+                    <col class="Column-Column1" />
+                    <tbody>
+                        <tr class="Body-Body1">
+                            <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                                <p><b>Preview</b>
+                                </p>
+                            </td>
+                            <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                                <p>Select an image, 2D data set, or 3x<i>n</i>x<i>m</i> data set from the pulldown menu. Make a selection from the following and click <b>Preview</b> to create a display:</p>
+                                <p><b>Preview Image</b> — displays an image or a plot of a 2&#8209;D data set (the default)</p>
+                                <p><b>Preview Surface</b> — displays a surface plot</p>
+                                <p><b>Preview Contour</b> — displays a contour plot</p>
+                                <p><b>Preview Show3</b> — displays an image, surface, and contour plot</p>
+                                <p><b>Fit to Window</b> — fits the display to the visible area of window</p>
+                            </td>
+                        </tr>
+                        <tr class="Body-Body2">
+                            <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                                <p><b>Read </b>
+                                </p>
+                            </td>
+                            <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                                <p>Import the selected data into IDL. Select this checkbox to extract the current data or metadata item from the HDF file.</p>
+                            </td>
+                        </tr>
+                        <tr class="Body-Body1">
+                            <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                                <p><b>Extract As</b>
+                                </p>
+                            </td>
+                            <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                                <p>Enter name for the extracted data or metadata item. Default names are generated for all data items, but may be changed at any time.</p>
+                                <p>The <b>Read</b> checkbox must be selected for the item to be extracted. </p>
+                            </td>
+                        </tr>
+                        <tr class="Body-Body2">
+                            <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                                <p><b>Color Table</b>
+                                </p>
+                            </td>
+                            <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                                <p>Select this option to apply a selected, pre-defined color table to the data. </p>
+                            </td>
+                        </tr>
+                        <tr class="Body-Body1">
+                            <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep">
+                                <p><b>OK</b>
+                                </p>
+                            </td>
+                            <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                                <p>Complete any selected import actions. </p>
+                            </td>
+                        </tr>
+                        <tr class="Body-Body2">
+                            <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep">
+                                <p><b>Cancel</b>
+                                </p>
+                            </td>
+                            <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColEnd">
+                                <p>Dismiss the dialog without making changes. </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </li>
+            <li value="3">
+                <p><b>Select additional data or complete the operation.</b> Continue selecting to read and name the data or metadata items you want to import into IDL and then select one of the following options: </p>
+                <table style="margin-left: 0;margin-right: auto;caption-side: top;mc-table-style: url('../../../Resources/TableStyles/NoLines.css');" class="TableStyle_NoLines" cellspacing="0">
+                    <col class="Column-Column1" />
+                    <col class="Column-Column1" />
+                    <tbody>
+                        <tr class="Body-Body1">
+                            <td class="TableStyle_NoLines_Body_0_0_RowSep_ColSep" style="font-weight: normal;">
+                                <p><b>OK</b>
+                                </p>
+                            </td>
+                            <td class="TableStyle_NoLines_Body_0_0_RowSep_ColEnd">
+                                <p>Generate the template used to import HDF data. </p>
+                            </td>
+                        </tr>
+                        <tr class="Body-Body2">
+                            <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColSep" style="font-weight: normal;">
+                                <p><b>Cancel</b>
+                                </p>
+                            </td>
+                            <td class="TableStyle_NoLines_Body_0_0_RowEnd_ColEnd">
+                                <p>Dismiss the dialog without making changes. </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </li>
+        </ol>
+        <h2 class="API"><a name="HDF_1733484267_1303687_PageTOC_HDF_BROWSER_"></a>Version History</h2>
+        <table style="mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');margin-left: 0;margin-right: auto;caption-side: top;" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="HDF_1733484267_1303695_PageTOC_HDF_BROWSER_"></a>See Also</h2>
+        <p><a href="HDF_READ.htm#HDF_1733484267_1010345">HDF_READ</a>, <a href="../HDF5 Routines/H5_BROWSER.htm">H5_BROWSER</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

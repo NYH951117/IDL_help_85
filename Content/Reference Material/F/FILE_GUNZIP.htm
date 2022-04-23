@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: F">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>FILE_GUNZIP</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="F_list.htm">Routines: F</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">FILE_GUNZIP</span>
+        </div>
+        <h1 class="Routine"><a name="kanchor913"></a>FILE_GUNZIP</h1>
+        <p>The FILE_GUNZIP routine uncompresses a given GZIP input file or files, and saves the uncompressed data into a new file or to memory. The uncompression is done using the ZLIB library, written by Jean-Loup Gailly and Mark Adler.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>file_gunzip.pro</code> in the lib subdirectory of the IDL distribution.</p>
+        <h2 class="API">Examples</h2>
+        <p>Use the following code to compress a single ASCII text file from the IDL examples directory into our current working directory, then GUNZIP the file, and delete the original .gz file:</p>
+        <p class="Code">file = FILEPATH('irreg_grid2.txt', SUBDIR=['examples','data'])</p>
+        <p class="Code">FILE_GZIP, file, 'irreg_grid2.txt.gz'</p>
+        <p class="Code">FILE_GUNZIP, 'irreg_grid2.txt.gz', /DELETE, /VERBOSE</p>
+        <p>IDL prints:</p>
+        <p class="Code">% Uncompress irreg_grid2.txt.gz  14213 bytes</p>
+        <p>As another example, we can uncompress the above file into a buffer.</p>
+        <p class="Code">file = FILEPATH('irreg_grid2.txt', SUBDIR=['examples','data'])</p>
+        <p class="Code">FILE_GZIP, file, 'irreg_grid2.txt.gz'</p>
+        <p class="Code">FILE_GUNZIP, 'irreg_grid2.txt.gz', BUFFER=data</p>
+        <p class="Code">HELP, data</p>
+        <p>IDL prints:</p>
+        <p class="Code">DATA            BYTE      = Array[14213]</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax">FILE_GUNZIP, <i>File</i> [, <i>FileOut</i>]
+			[,&#160;<a href="#BUFFER" class="selected">BUFFER</a>=variable]
+		 [,&#160;/<a href="#CLOSE" class="selected">CLOSE</a>] [,&#160;<a href="#COUNT" class="selected">COUNT</a>=variable]
+			[,&#160;/<a href="#DELETE" class="selected">DELETE</a>] [,&#160;<a href="#NBYTES" class="selected">NBYTES</a>=value]
+			[,&#160;<a href="#OFFSET" class="selected">OFFSET</a>=value] [,&#160;/<a href="#VERBOSE" class="selected">VERBOSE</a>]</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">File</h3>
+        <p>Set this argument to a string or array of strings giving the file or files to uncompress.</p>
+        <h3 class="Argument">FileOut</h3>
+        <p>Set this optional argument to a string or array of strings giving the output filenames (including the full path). <i>FileOut</i> must have the same number of elements as <i>File</i>. If you do not provide <i>FileOut</i>, then IDL constructs the output filenames  by removing the file suffix ".gz" from each filename. In addition, if you do not provide <i>FileOut</i>, then FILE_GUNZIP will uncompress each file into the same directory as the original file.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="BUFFER"></a>BUFFER</h3>
+        <p>Setting this keyword to a named variable causes IDL to store the uncompressed data in the variable rather than within a file. If this keyword is present, do not provide the <i>FileOut</i> argument. If there is no data to return then BUFFER will contain a scalar 0, otherwise BUFFER will be a byte array.</p>
+        <h3 class="Keyword"><a name="CLOSE"></a>CLOSE</h3>
+        <p>By default, the FILE_GUNZIP routine closes the input and output files when the routine finishes. However, if you use the NBYTES or OFFSET keywords, you can set CLOSE=0 to keep the files open. You can then call FILE_GUNZIP again with the same file names, and IDL will continue reading and writing at the current offset within the files. When you finish reading and writing, you must then call FILE_GUNZIP once more with /CLOSE.</p>
+        <h3 class="Keyword"><a name="COUNT"></a>COUNT</h3>
+        <p>Set this keyword to a named variable to return the number of bytes that were uncompressed. If <i>File</i> is an array, then COUNT will be an array of integers.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span> If you have set the NBYTES keyword to read only a portion of the input file, then the returned COUNT value will be equal to NBYTES until the end of the file is reached. When the end is reached, the returned COUNT value will be less than NBYTES. You can use this behavior to determine if you have reached the end of the input file and should then call FILE_GUNZIP with /CLOSE.</p>
+        <h3 class="Keyword"><a name="DELETE"></a>DELETE</h3>
+        <p>By default the FILE_GUNZIP routine preserves the original files. Set the DELETE keyword to delete the original files.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When you are uncompressing multiple files, IDL deletes files as it uncompresses them. If an error occurs during this process, any original files that have been uncompressed will already have been deleted.</p>
+        <h3 class="Keyword"><a name="NBYTES"></a>NBYTES</h3>
+        <p>Set the NBYTES keyword to an integer giving the number of bytes to uncompress. By default, FILE_GUNZIP uncompresses all of the data within the file. If the file is already open (with CLOSE=0 in a previous call) then by default NBYTES is set to read all of the remaining data within the file.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You can not use the NBYTES keyword with multiple files.</p>
+        <h3 class="Keyword"><a name="OFFSET"></a>OFFSET</h3>
+        <p>Set the OFFSET keyword to an integer giving the offset within <i>File</i> at which to start reading and uncompressing data. Note that you should specify this offset in terms of the uncompressed data size (as if the data were already uncompressed). By default, FILE_GUNZIP starts at the beginning of the file (or at the current file position if CLOSE=0 was used to keep the file open in a previous FILE_GUNZIP call).</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>You can not use the OFFSET keyword with multiple files.</p>
+        <h3 class="Keyword"><a name="VERBOSE"></a>VERBOSE</h3>
+        <p>Set this keyword to output additional information while the routine is executing.</p>
+        <h2 class="API">Additional Examples</h2>
+        <h4>Uncompress a Huge File Using Chunks</h4>
+        <p>You can use the CLOSE, COUNT, and NBYTES keywords to uncompress a potentially huge file using small-size chunks. For example:</p>
+        <p class="Code">; Create a gzip-compressed data file</p>
+        <p class="Code">data = BYTSCL(RANDOMU(1,20000), TOP=10)</p>
+        <p class="Code">OPENW, lun, 'test_data.dat.gz', /GET_LUN</p>
+        <p class="Code">WRITEU, lun, ZLIB_COMPRESS(data, /GZIP)</p>
+        <p class="Code">FREE_LUN, lun</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">nbuffer = 4096</p>
+        <p class="Code">count = nbuffer</p>
+        <p class="Code">while (count ne 0) do begin &amp; $</p>
+        <p class="Code_Indented">FILE_GUNZIP, 'test_data.dat.gz', 'test_data.dat', CLOSE=0, $</p>
+        <p class="Code_Indented">COUNT=count, NBYTES=nbuffer &amp; $</p>
+        <p class="Code_Indented">print, ' count =',count &amp; $</p>
+        <p class="Code">endwhile</p>
+        <p class="Code">FILE_GUNZIP, 'test_data.dat.gz', 'test_data.dat', /CLOSE</p>
+        <p>IDL prints:</p>
+        <p class="Code">count =        4096</p>
+        <p class="Code">count =        4096</p>
+        <p class="Code">count =        4096</p>
+        <p class="Code">count =        4096</p>
+        <p class="Code">count =        3616</p>
+        <p class="Code">count =           0</p>
+        <h4>Uncompress a Huge File to a Memory Buffer</h4>
+        <p>In this example we uncompress a file to a memory buffer, using chunks:</p>
+        <p class="Code">; Create a gzip-compressed data file</p>
+        <p class="Code">data = BYTSCL(RANDOMU(1,20000), TOP=10)</p>
+        <p class="Code">OPENW, lun, 'test_data.dat.gz', /GET_LUN</p>
+        <p class="Code">WRITEU, lun, ZLIB_COMPRESS(data, /GZIP)</p>
+        <p class="Code">FREE_LUN, lun</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">nbuffer = 4096</p>
+        <p class="Code">count = nbuffer</p>
+        <p class="Code">newdata = LIST()</p>
+        <p class="Code">while (count ne 0) do begin &amp; $</p>
+        <p class="Code_Indented">FILE_GUNZIP, 'test_data.dat.gz', BUFFER=buffer, CLOSE=0, $</p>
+        <p class="Code_Indented">COUNT=count, NBYTES=nbuffer &amp; $</p>
+        <p class="Code_Indented">  if (count gt 0) then newdata.Add, buffer &amp; $
+</p>
+        <p class="Code">endwhile</p>
+        <p class="Code">FILE_GUNZIP, 'test_data.dat.gz', /CLOSE</p>
+        <p class="Code">newdata = newdata.ToArray(DIMENSION=1)</p>
+        <p class="Code">print, 'new data equals original: ', ARRAY_EQUAL(newdata, data)</p>
+        <p>IDL prints:</p>
+        <p class="Code">new data equals original:    1</p>
+        <h4>Uncompress a Portion of a File</h4>
+        <p>Here, we uncompress just a certain portion of a file to a memory buffer:</p>
+        <p class="Code">; Create a gzip-compressed data file</p>
+        <p class="Code">data = BYTSCL(RANDOMU(1,20000), TOP=10)</p>
+        <p class="Code">OPENW, lun, 'test_data.dat', /GET_LUN</p>
+        <p class="Code">WRITEU, lun, ZLIB_COMPRESS(data, /GZIP)</p>
+        <p class="Code">FREE_LUN, lun</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">FILE_GUNZIP, 'test_data.dat', BUFFER=buffer, $</p>
+        <p class="Code_Indented">NBYTES=10, OFFSET=1000</p>
+        <p class="Code">PRINT, buffer</p>
+        <p class="Code">PRINT, data[1000:1009]</p>
+        <p>IDL prints:</p>
+        <p class="Code">0   4   2   3   3   1   1   9   6   1</p>
+        <p class="Code">0   4   2   3   3   1   1   9   6   1</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 27px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.2.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="FILE_GZIP.htm">FILE_GZIP</a>, <a href="FILE_TAR.htm">FILE_TAR</a>, <a href="FILE_UNTAR.htm">FILE_UNTAR</a>, <a href="FILE_ZIP.htm">FILE_ZIP</a>, <a href="FILE_UNZIP.htm">FILE_UNZIP</a>, <a href="../Z/ZLIB_COMPRESS.htm">ZLIB_COMPRESS</a>, <a href="../Z/ZLIB_UNCOMPRESS.htm">ZLIB_UNCOMPRESS</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

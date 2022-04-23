@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: S">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>SHMDEBUG </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="S_list.htm">Routines: S</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">SHMDEBUG</span>
+        </div>
+        <h1 class="Routine"><a name="S_820040301_1121052"></a><a name="S_820040301_10439"></a>SHMDEBUG </h1>
+        <p><a name="kanchor2372"></a><a name="kanchor2373"></a>The SHMDEBUG function enables a debugging mode in which IDL prints an informational message (including a traceback) every time a variable created with the SHMVAR function loses its reference to the underlying memory segment created by. There are many reasons why a such a variable might lose its reference; some reasons have to do with the internal implementation of the IDL interpreter and are not obvious or visible to the IDL user.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The SHMDEBUG debugging mode should be used for problem solving only, and should not be part of production code.</p>
+        <h2 class="API"><a name="S_820040301_1143099"></a><a name="S_820040301_1121062_PageTOC_SHMDEBUG_"></a>Examples</h2>
+        <p>Create a memory segment, tie a variable to it, enable debugging, and then cause the variable to lose the reference:</p>
+        <p class="Code">old_debug = SHMDEBUG(1) ; Enable debug mode<br />SHMMAP, 'A', 100 ; 100 element floating vector<br />z = SHMVAR('A') ; Variable tied to segment<br />z[0] = FINDGEN(100) ; Does not lose reference<br />z = FINDGEN(100) ; Loses reference</p>
+        <p class="Code">&#160;</p>
+        <p>IDL returns:</p>
+        <p class="Code">% Variable released shared memory segment: A</p>
+        <p class="Code">% Released at: $MAIN$</p>
+        <p>The assignment <code>z[0] = FINDGEN(100)</code> explicitly uses subscripting to assign the FINDGEN value to the array. Under normal circumstances, using subscripting in this way on the left hand side of an assignment is inefficient and not recommended. In this case, however, it has the desirable side effect of causing the variable Z to maintain its connection to its existing underlying memory. In contrast, the second (normally more desirable) assignment without the subscript causes IDL to allocate different memory for the variable Z, with the side effect of losing the connection to the shared memory segment.</p>
+        <h2 class="API"><a name="S_820040301_1121057"></a><a name="S_820040301_1121057_PageTOC_SHMDEBUG_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result </i>= SHMDEBUG(<i>Enable</i>)</p>
+        <h2 class="API"><a name="S_820040301_1133339"></a><a name="S_820040301_70409"></a>Return Value</h2>
+        <p>SHMDEBUG returns the previous setting of the debugging state.</p>
+        <h2 class="API"><a name="S_820040301_1121059"></a><a name="S_820040301_1121059_PageTOC_SHMDEBUG_"></a>Arguments</h2>
+        <h3 class="Argument">Enable</h3>
+        <p>Set this argument equal to a non-zero value to enable debugging, or to zero to disable debugging.</p>
+        <h2 class="API"><a name="S_820040301_1133350"></a><a name="S_820040301_57288"></a>Keywords</h2>
+        <p>None.</p>
+        <h2 class="API"><a name="S_820040301_1143101"></a><a name="S_820040301_1121072_PageTOC_SHMDEBUG_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.6</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="S_820040301_1121074"></a><a name="S_820040301_1121074_PageTOC_SHMDEBUG_"></a>See Also</h2>
+        <p><a href="SHMMAP.htm#S_820040301_1120658">SHMMAP</a>, <a href="SHMUNMAP.htm#S_820040301_1121093">SHMUNMAP</a>, <a href="SHMVAR.htm#S_820040301_1120867">SHMVAR</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|Network Object Classes|IDLnetJPIP">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLnetJPIP Example</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_network.htm">Network Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLnetJPIP Example</span>
+        </div>
+        <h1>IDLnetJPIP Example</h1>
+        <p>The following example uses the IDLnetJPIP object class to access and display JPEG2000 data from a remote server. Please note that before you compile the code (below) in your IDL Workbench, you must edit two lines in the PRO code for<code> jpip_kakadu_server_test</code> to provide the correct information for the remote JPIP server (the sections that need input are noted in the code comments). </p>
+        <p>&#160;</p>
+        <p class="Code">;;-------------------------------------------</p>
+        <p class="Code">FUNCTION jpip_progressive_updates, img, data</p>
+        <p class="Code_Indented" style="text-transform: uppercase;">compile_opt idl2</p>
+        <p class="Code_Indented">ON_ERROR, 2 &#160;                  ; Return errors to caller.</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">; Catch all errors and display an error dialog.</p>
+        <p class="Code_Indented">CATCH, errorStatus            &#160;</p>
+        <p class="Code_Indented">IF (errorStatus ne 0) THEN&#160;BEGIN</p>
+        <p class="Code_Indented">&#160;&#160;&#160;CATCH, /CANCEL</p>
+        <p class="Code_Indented">&#160;&#160;&#160;PRINT, !error_state.msg</p>
+        <p class="Code_Indented">&#160;&#160;&#160;r = DIALOG_MESSAGE(!error_state.msg, TITLE='JPIP Error', $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;&#160;&#160;&#160;DIALOG_PARENT=cwBase, /ERROR)</p>
+        <p class="Code_Indented">&#160;&#160;&#160;RETURN, 1</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">PRINT, 'progressive update</p>
+        <p class="Code_Indented">;;HELP, img</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">IF (data NE 3) THEN&#160;BEGIN</p>
+        <p class="Code_Indented">&#160;&#160;&#160;TV, img</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">IF (data EQ 3) then begin</p>
+        <p class="Code_Indented">&#160;&#160;&#160;TV, img, TRUE=1</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">RETURN, 1</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;;------------------------------------------------</p>
+        <p class="Code">FUNCTION jpip_status_msgs, msg, data</p>
+        <p class="Code_Indented" style="text-transform: uppercase;">compile_opt idl2</p>
+        <p class="Code_Indented">&#160;&#160;&#160;ON_ERROR, 2                   ; Return errors to caller.</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">           ; Catch all errors and display an error dialog.</p>
+        <p class="Code_Indented">CATCH, errorStatus            </p>
+        <p class="Code_Indented">IF (errorStatus NE 0) THEN&#160;BEGIN</p>
+        <p class="Code_Indented2">CATCH, /CANCEL</p>
+        <p class="Code_Indented2">PRINT, !error_state.msg</p>
+        <p class="Code_Indented2">r = Dialog_Message(!error_state.msg, TITLE='JPIP Error', $</p>
+        <p class="Code_Indented2">&#160;&#160;&#160;DIALOG_PARENT=cwBase, /ERROR)</p>
+        <p class="Code_Indented2">RETURN, 1</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">PRINT, msg</p>
+        <p class="Code_Indented">RETURN, 1</p>
+        <p class="Code">end</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;;-------------------------------------------------</p>
+        <p class="Code">PRO jpip_img_props, oJpip</p>
+        <p class="Code" style="text-transform: uppercase;">&#160;&#160;&#160;compile_opt idl2</p>
+        <p class="Code">&#160;</p>
+        <p class="Code_Indented">; Catch all errors and display an error dialog.</p>
+        <p class="Code_Indented">CATCH, errorStatus            </p>
+        <p class="Code_Indented">IF (errorStatus NE 0) THEN&#160;BEGIN</p>
+        <p class="Code_Indented">CATCH, /CANCEL</p>
+        <p class="Code_Indented">PRINT, !error_state.msg</p>
+        <p class="Code_Indented">r = DIALOG_MESSAGE(!error_state.msg, TITLE='JPIP Error', $</p>
+        <p class="Code_Indented">&#160;&#160;&#160;DIALOG_PARENT=cwBase, /ERROR)</p>
+        <p class="Code_Indented">RETURN</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">PRINT, ''</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">oJpip-&gt;GetProperty, BIT_DEPTH = BIT_DEPTH</p>
+        <p class="Code_Indented">PRINT, 'BIT_DEPTH         =', STRTRIM(STRING(BIT_DEPTH), 2)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">oJpip-&gt;GetProperty, COLOR_SPACE = COLOR_SPACE</p>
+        <p class="Code_Indented">PRINT, 'COLOR_SPACE       =', COLOR_SPACE</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">oJpip-&gt;GetProperty, DIMENSIONS = DIMENSIONS</p>
+        <p class="Code_Indented">PRINT, 'DIMENSIONS        =', STRTRIM(STRING(DIMENSIONS), 2)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">oJpip-&gt;GetProperty, N_COMPONENTS = N_COMPONENTS</p>
+        <p class="Code_Indented">PRINT, 'N_COMPONENTS      =', STRTRIM(STRING(N_COMPONENTS), 2)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">oJpip-&gt;GetProperty, N_LAYERS = N_LAYERS</p>
+        <p class="Code_Indented">PRINT, 'N_LAYERS          =', STRTRIM(STRING(N_LAYERS), 2)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">oJpip-&gt;GetProperty, N_LEVELS = N_LEVELS</p>
+        <p class="Code_Indented">PRINT, 'N_LEVELS          =', STRTRIM(STRING(N_LEVELS), 2)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">oJpip-&gt;GetProperty, N_TILES = N_TILES</p>
+        <p class="Code_Indented">PRINT, 'N_TILES           =', STRTRIM(STRING(N_TILES), 2)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">oJpip-&gt;GetProperty, PROGRESSION = PROGRESSION</p>
+        <p class="Code_Indented">PRINT, 'PROGRESSION       =', PROGRESSION</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">oJpip-&gt;GetProperty, REVERSIBLE = REVERSIBLE</p>
+        <p class="Code_Indented">PRINT, 'REVERSIBLE        =', STRTRIM(STRING(REVERSIBLE), 2)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">oJpip-&gt;GetProperty, SIGNED = SIGNED</p>
+        <p class="Code_Indented">PRINT, 'SIGNED            =', STRTRIM(STRING(SIGNED), 2)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">oJpip-&gt;GetProperty, TILE_DIMENSIONS = TILE_DIMENSIONS</p>
+        <p class="Code_Indented">PRINT, 'TILE_DIMENSIONS   =', STRTRIM(STRING(TILE_DIMENSIONS), 2)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">oJpip-&gt;GetProperty, TILE_RANGE = TILE_RANGE</p>
+        <p class="Code_Indented">PRINT, 'TILE_RANGE        =', STRTRIM(STRING(TILE_RANGE ), 2)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">oJpip-&gt;GetProperty, YCC = YCC</p>
+        <p class="Code_Indented">PRINT, 'YCC               =', STRTRIM(STRING(YCC), 2)</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">PRINT, ''</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">end</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;;----------------------------------------------</p>
+        <p class="Code">PRO jpip_kakadu_server_test</p>
+        <p class="Code_Indented" style="text-transform: uppercase;">compile_opt idl2</p>
+        <p class="Code_Indented">; To make this example work you must provide a</p>
+        <p class="Code_Indented">; valid JPIP server url and port number;</p>
+        <p class="Code_Indented">; valid path to an image on the server.</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">           ; Catch all errors and display an error dialog.</p>
+        <p class="Code_Indented">CATCH, errorStatus </p>
+        <p class="Code_Indented">IF (errorStatus NE 0) THEN&#160;BEGIN</p>
+        <p class="Code_Indented2">CATCH, /CANCEL</p>
+        <p class="Code_Indented2">PRINT, !error_state.msg</p>
+        <p class="Code_Indented2">r = DIALOG_MESSAGE(!error_state.msg, TITLE='JPIP Error', $</p>
+        <p class="Code_Indented2">&#160;&#160;&#160;DIALOG_PARENT=cwBase, /ERROR)</p>
+        <p class="Code_Indented2">RETURN</p>
+        <p class="Code_Indented">ENDIF</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">oJpip = OBJ_NEW('IdlNetJpip')</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented2">; *********************************************</p>
+        <p class="Code_Indented2">; YOU MUST EDIT THE NEXT TWO LINES</p>
+        <p class="Code_Indented2">; You must provide a valid JPIP server url and port number.</p>
+        <p class="Code_Indented2">oJpip-&gt;SetProperty, SERVER_NAME = '10.17.2.13'</p>
+        <p class="Code_Indented2">oJpip-&gt;SetProperty, SERVER_PORT = 82</p>
+        <p class="Code_Indented2">&#160;</p>
+        <p class="Code_Indented2">oJpip-&gt;SetProperty, STATUS_CALLBACK_FUNCTION = 'jpip_status_msgs</p>
+        <p class="Code_Indented2">oJpip-&gt;SetProperty, STATUS_CALLBACK_DATA = 1001</p>
+        <p class="Code_Indented2">oJpip-&gt;SetProperty, PROGRESSIVE_CALLBACK_FUNCTION = 'jpip_progressive_updates</p>
+        <p class="Code_Indented2">&#160;</p>
+        <p class="Code_Indented2">; Open a dataset on the JPIP server.</p>
+        <p class="Code_Indented2">;**********************************************</p>
+        <p class="Code_Indented2">; YOU MUST EDIT THIS LINE</p>
+        <p class="Code_Indented2">; You must provide a valid path to an image on the server.</p>
+        <p class="Code_Indented2">oJpip-&gt;Open, 'jp2/utm.jp2</p>
+        <p class="Code_Indented2">region = [0, 0, 511, 511]</p>
+        <p class="Code_Indented2">&#160;</p>
+        <p class="Code_Indented2">jpip_img_props, oJpip</p>
+        <p class="Code_Indented2">oJpip-&gt;GetProperty, N_COMPONENTS = ncomps</p>
+        <p class="Code_Indented2">oJpip-&gt;GetProperty, N_LAYERS = nlayers</p>
+        <p class="Code_Indented2">oJpip-&gt;SetProperty, PROGRESSIVE_CALLBACK_DATA = ncomps</p>
+        <p class="Code_Indented2">&#160;</p>
+        <p class="Code_Indented2">img = oJpip-&gt;GetData(REGION=region, DISCARD_LEVELS=0, $</p>
+        <p class="Code_Indented2">&#160;&#160;&#160;MAX_LAYERS=nlayers, STREAM_DIMENSIONS=strmdims)</p>
+        <p class="Code_Indented2">&#160;</p>
+        <p class="Code_Indented2">IF (ncomps NE 3) THEN&#160;BEGIN</p>
+        <p class="Code_Indented2">&#160;&#160;&#160;TV, img</p>
+        <p class="Code_Indented2">ENDIF</p>
+        <p class="Code_Indented2">&#160;</p>
+        <p class="Code_Indented2">IF (ncomps EQ 3) THEN&#160;BEGIN</p>
+        <p class="Code_Indented2">&#160;&#160;&#160;TV, img, TRUE=1</p>
+        <p class="Code_Indented2">ENDIF</p>
+        <p class="Code_Indented2">&#160;</p>
+        <p class="Code_Indented2">oJpip-&gt;GetStatistics, AVAILABLE_BYTES=ab, BIT_RATE=br, BYTES_STREAMED=bs</p>
+        <p class="Code_Indented2">msg = 'Stats:        Available Bytes = ' +  STRTRIM(ab, 2) + ', Bit Rate = ' +  STRTRIM(br, 2) + ', Bytes Streamed = ' +  STRTRIM(bs, 2)</p>
+        <p class="Code_Indented2">PRINT, msg</p>
+        <p class="Code_Indented2">&#160;</p>
+        <p class="Code_Indented2">OBJ_DESTROY, oJpip</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">PRINT, 'done'</p>
+        <p class="Code">&#160;</p>
+        <h2>See Also</h2>
+        <p><a href="../../Reference Material/C/CATCH.htm">CATCH</a>, <a href="../../Reference Material/D/DIALOG_MESSAGE.htm">DIALOG_MESSAGE</a>, <a href="IDLnetJPIP.htm">IDLnetJPIP</a>, <a href="../../Reference Material/O/OBJ_DESTROY.htm">OBJ_DESTROY</a>, <a href="../../Reference Material/O/OBJ_NEW.htm">OBJ_NEW</a>, <a href="../../Reference Material/S/STRTRIM.htm">STRTRIM</a>, <a href="../../Reference Material/T/TV_Procedure.htm">TV</a> <![CDATA[ ]]></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

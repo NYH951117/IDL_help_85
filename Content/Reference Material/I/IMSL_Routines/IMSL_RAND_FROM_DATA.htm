@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IMSL_RAND_FROM_DATA</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="IMSL_RAND_FROM_DATA"></a>IMSL_RAND_FROM_DATA</h1>
+        <p>The IMSL_RAND_FROM_DATA function generates pseudorandom numbers from a multivariate distribution determined from a given sample.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine requires an IDL Analyst license. For more information, contact your <span class="DocumentTitleCompanyName">Exelis VIS</span> sales or technical support representative.</p>
+        <p>Given a sample of size nsamp of observations of a k-variate random variable, IMSL_RAND_FROM_DATA generates a pseudorandom sample with approximately the same moments as the given sample. The sample obtained is the same as if sampling from a Gaussian kernel estimate of the sample density. (See Thompson 1989.) Routine IMSL_RAND_FROM_DATA uses methods described by Taylor and Thompson (1986).</p>
+        <p>Assume that the (vector-valued) observations x<sub>i</sub> are in the rows of x. An observation, x<sub>j</sub>, is chosen randomly; its nearest <i>m</i> (= <i>nn</i>) neighbors:</p>
+        <p>
+            <img src="images/IMSL_RAND_FROM_DATA1.svg" />
+        </p>
+        <p>are determined; and the mean:</p><span class="Overline">x</span><sub>j</sub>
+        <p>of those nearest neighbors is calculated. Next, a random sample u<sub>1</sub>, u<sub>2</sub>, ..., u<sub>m</sub> is</p>
+        <p>generated from a uniform distribution with lower bound:</p>
+        <p>
+            <img src="images/IMSL_RAND_FROM_DATA2.svg" />
+        </p>
+        <p>and upper bound:</p>
+        <p>
+            <img src="images/IMSL_RAND_FROM_DATA3.svg" />
+        </p>
+        <p>The random variate delivered is:</p>
+        <p>
+            <img src="images/IMSL_RAND_FROM_DATA4.svg" />
+        </p>
+        <p>The process is then repeated until n such simulated variates are generated and stored in the rows of the result.</p>
+        <h2 class="API">Examples</h2>
+        <p>For additional information on using XYZ&#160;Routine, see Additional Examples.</p>
+        <h3>Example 1</h3>
+        <p>In this example, IMSL_RAND_FROM_DATA is used to generate 5 pseudorandom vectors of length 4 using the initial and final systolic pressure and the initial and final diastolic pressure from Data Set A in Afifi and Azen (1979) as the fixed sample from the population to be modeled. (Values of these four variables are in the seventh, tenth, twenty-first, and twenty-fourth columns of data set number nine in routine <a href="IMSL_STATDATA.htm#IMSL_STATDATA">IMSL_STATDATA</a>.)</p>
+        <p class="Code">IMSL_RANDOMOPT, Set = 123457</p>
+        <p class="Code">r = IMSL_STATDATA(9)</p>
+        <p class="Code">x = FLTARR(113, 4)</p>
+        <p class="Code">x(*, 0) = r(*,6)</p>
+        <p class="Code">x(*, 1) = r(*,9)</p>
+        <p class="Code">x(*, 2) = r(*,20)</p>
+        <p class="Code">x(*, 3) = r(*,23)</p>
+        <p class="Code">r = IMSL_RAND_FROM_DATA(5, x, 5)</p>
+        <p class="Code">PM, r</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">162.767 90.5057 153.717 104.877</p>
+        <p class="Code">153.353 78.3180 176.664 85.2155</p>
+        <p class="Code">93.6958 48.1675 153.549 71.3688</p>
+        <p class="Code">101.751 54.1855 113.121 56.2916</p>
+        <p class="Code">91.7403 58.7684 48.4368 28.0994</p>
+        <h2 class="API">Syntax</h2>
+        <p><i>Result</i> = IMSL_RAND_FROM_DATA(<i>n_random</i>, <i>x</i>, <i>nn</i> [, /DOUBLE])</p>
+        <h2 class="API">Return Value</h2>
+        <p>n x ndim matrix containing the random multivariate vectors in its rows.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">n_random</h3>
+        <p>Number of random multivariate vectors to generate.</p>
+        <h3 class="Argument">nn</h3>
+        <p>Number of nearest neighbors of the randomly selected point in x that are used to form the output point in the result.</p>
+        <h3 class="Argument">x</h3>
+        <p>Two dimensional array of size nsamp by ndim containing the given sample.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword">DOUBLE</h3>
+        <p>If present and nonzero, double precision is used.</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col style="width: 40px;" />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">&#160;</td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

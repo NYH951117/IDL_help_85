@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: W">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>WV_CWT</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="W_list.htm">Routines: W</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">WV_CWT</span>
+        </div>
+        <h1 class="Routine"><a name="ref_3320460235_1009330"></a><a name="kanchor2958"></a><a name="ref_3320460235_97696"></a>WV_CWT</h1>
+        <p><a name="kanchor2959"></a><a name="kanchor2960"></a>The WV_CWT function returns the one-dimensional continuous wavelet transform of the input array. The transform is done using a user-inputted wavelet function.</p>
+        <h2 class="API"><a name="ref_3320460235_1060766"></a><a name="ref_3320460235_1060766_PageTOC_WV_CWT_"></a>Example</h2>
+        <p class="Code">; Assume we have monthly random data.</p>
+        <p class="Code">n = 500</p>
+        <p class="Code">dt = 1d/12  ; time sampling</p>
+        <p class="Code">seed = 999</p>
+        <p class="Code">data = RANDOMN(seed, n)</p>
+        <p class="Code">time = 1960 + dt*FINDGEN(n)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Compute the wavelet transform and the power.</p>
+        <p class="Code">wave = WV_CWT(data, 'Morlet', 6, /PAD, SCALE=scales)</p>
+        <p class="Code">wavePower = ABS(wave^2)</p>
+        <p class="Code">; Convert scales to time units.</p>
+        <p class="Code">scales *= dt</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Contour visualization.</p>
+        <p class="Code">c = CONTOUR(wavePower, time, scales, YRANGE=[20,0.25], $</p>
+        <p class="Code_Indented">C_VALUE=FINDGEN(7)+1, $</p>
+        <p class="Code_Indented">/FILL, RGB_TABLE=39, $</p>
+        <p class="Code_Indented">YTITLE='Scale (years)', $</p>
+        <p class="Code_Indented">TITLE='Wavelet Power')</p>
+        <h2 class="API"><a name="ref_3320460235_1009338"></a><a name="ref_3320460235_1009338_PageTOC_WV_CWT_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = WV_CWT(<i>Array, Family, Order</i> [, /<a href="#ref_3320460235_1009356" class="selected">DOUBLE</a>] [,&#160;<a href="#ref_3320460235_1009358" class="selected">DSCALE</a>=<i>scalar</i>] [,&#160;<a href="#ref_3320460235_1009484" class="selected">NSCALE</a>=<i>scalar</i>] [,&#160;/<a href="#ref_3320460235_1009489" class="selected">PAD</a>] [,&#160;<a href="#ref_3320460235_1009494" class="selected">SCALE</a>=<i>variable</i>] [,&#160;<a href="#ref_3320460235_1009568" class="selected">START_SCALE</a>=scalar])</p>
+        <h2 class="API"><a name="ref_3320460235_1009340"></a><a name="ref_3320460235_1009340_PageTOC_WV_CWT_"></a>Return Value</h2>
+        <p>The result is a two-dimensional array of type complex or double complex, containing the continuous wavelet transform of the input <i>Array</i>.</p>
+        <h2 class="API"><a name="ref_3320460235_1009344"></a><a name="ref_3320460235_1009344_PageTOC_WV_CWT_"></a>Arguments</h2>
+        <h3 class="Argument">Array</h3>
+        <p>A one-dimensional array of length N, of floating-point or complex type.</p>
+        <h3 class="Argument">Family</h3>
+        <p>A scalar string giving the name of the wavelet function to use for the transform.</p>
+        <h3 class="Argument">Order</h3>
+        <p>The order number, or parameter, for the wavelet function given by <i>Family</i>.</p>
+        <h2 class="API"><a name="ref_3320460235_1009355"></a><a name="ref_3320460235_1009355_PageTOC_WV_CWT_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="ref_3320460235_1009356"></a><a name="ref_3320460235_1009356_Keywords_WV_CWT_"></a>DOUBLE</h3>
+        <p>Set this keyword to force the computation to be done in double-precision arithmetic.</p>
+        <h3 class="Keyword"><a name="ref_3320460235_1009358"></a><a name="ref_3320460235_1009358_Keywords_WV_CWT_"></a>DSCALE</h3>
+        <p>Set this keyword to a scalar value giving the spacing between scale values, in logarithmic units. The default is 0.25, which gives four subscales within each major scale.</p>
+        <h3 class="Keyword"><a name="ref_3320460235_1009484"></a><a name="ref_3320460235_1009484_Keywords_WV_CWT_"></a>NSCALE</h3>
+        <p>Set this keyword to a scalar value giving the total number of scale values to use for the wavelet transform. The default is [log<sub>2</sub>(N/START_SCALE)]/DSCALE+1.</p>
+        <h3 class="Keyword"><a name="ref_3320460235_1009489"></a><a name="ref_3320460235_1009489_Keywords_WV_CWT_"></a>PAD</h3>
+        <p>Set this keyword to force <i>Array</i> to be padded with zeroes before computing the transform. Enough zeroes are added to make the total length of <i>Array</i> equal to the next-higher power-of-two greater than 2N. Padding with zeroes prevents wraparound of the <i>Array</i> and speeds up the fast Fourier transform.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Padding with zeroes reduces, but does not eliminate, edge effects caused by the discontinuities at the start and end of the data.</p>
+        <h3 class="Keyword"><a name="ref_3320460235_1009494"></a><a name="ref_3320460235_1009494_Keywords_WV_CWT_"></a>SCALE</h3>
+        <p>Set this keyword to a named variable in which to return the scale values used for the continuous wavelet transform. The SCALE values range from START_SCALE up to START_SCALE·2^[(NSCALE–1)DSCALE].</p>
+        <h3 class="Keyword"><a name="ref_3320460235_1009568"></a><a name="ref_3320460235_1009568_Keywords_WV_CWT_"></a>START_SCALE</h3>
+        <p>Set this keyword to a scalar value giving the starting scale, in non-dimensional units. The default is 2, which gives a starting scale that is twice the spacing between <i>Array</i> elements.</p>
+        <h2 class="API"><a name="ref_3320460235_1009388"></a><a name="ref_3320460235_1009388_PageTOC_WV_CWT_"></a>Reference</h2>
+        <p>Torrence and Compo, 1998: A Practical Guide to Wavelet Analysis. <i>Bull. Amer. Meteor. Soc.</i>, <b>79</b>, 61–78.</p>
+        <h2 class="API"><a name="ref_3320460235_1023180"></a><a name="ref_3320460235_1023180_PageTOC_WV_CWT_"></a>Version History</h2>
+        <table cellpadding="0" cellspacing="0" class="TableStyle_VersionTable" style="margin-left: 0;margin-right: auto;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="ref_3320460235_1009360"></a><a name="ref_3320460235_1009360_PageTOC_WV_CWT_"></a>See Also</h2>
+        <p><a href="WV_DWT.htm#ref_3320460235_1010303">WV_DWT</a>,&#160;  <a href="WV_FN_GAUSSIAN.htm#ref_3320460235_1018230">WV_FN_GAUSSIAN</a>,  <a href="WV_FN_MORLET.htm#ref_3320460235_1009579">WV_FN_MORLET</a>, <a href="WV_FN_PAUL.htm#ref_3320460235_1018224">WV_FN_PAUL</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

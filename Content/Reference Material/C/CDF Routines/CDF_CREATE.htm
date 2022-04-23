@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: C|CDF Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>CDF_CREATE</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../C_list.htm">Routines: C</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../CDF_Routines.htm">CDF Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">CDF_CREATE</span>
+        </div>
+        <h1 class="Routine"><a name="CDF_1744428779_1006635"></a><a name="CDF_1744428779_93139"></a>CDF_CREATE</h1>
+        <p>The <a name="kanchor187"></a>CDF_CREATE function creates a new Common Data Format file with the given filename and dimensions.</p>
+        <p>Note that when you create a CDF file, you may specify both encoding and decoding methods. Encoding specifies the method used to write data to the CDF file. Decoding specifies the method used to retrieve data from the CDF file and pass it to an application (IDL, for example). Encoding and decoding methods are specified by setting the <i>XXX</i>_ENCODING and <i>XXX</i>_DECODING keywords to CDF_CREATE. If no decoding method is specified, the decoding method is set to be the same as the encoding method.</p>
+        <p>All CDF encodings and decodings can be written or read on all platforms, but matching the encoding with the architecture used provides the best performance. Since most people work in a single-platform environment most of the time, the HOST_ENCODING method is used as the default encoding scheme. This provides maximum performance. If you know that the CDF file will be transported to a computer using another architecture, specify the encoding for the target architecture or specify NETWORK_ENCODING. Specifying the target architecture provides maximum performance on that architecture; specifying NETWORK_ENCODING provides maximum flexibility.</p>
+        <p>For more discussion on CDF encoding/decoding methods and combinations, see “Encoding” and “Decoding” in the <i>CDF User’s Guide</i>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Versions of IDL beginning with 6.3 support the CDF 3.1 library. If you need to create CDF files that can be read by earlier versions of IDL, or by CDF libraries earlier than version 3.0, use the <a href="CDF_SET_CDF27_BACKWARD_C.htm#CDF_1744428779_1008232">CDF_SET_CDF27_BACKWARD_COMPATIBLE</a> routine.</p>
+        <h2 class="API"><a name="CDF_1744428779_998833_PageTOC_CDF_CREATE_"></a>Examples</h2>
+        <p>Use the following command to create a 10-element by 20-element CDF using network encoding and Sun decoding:</p>
+        <p class="Code">id = CDF_CREATE('cdf_create.cdf', [10,20], /NETWORK_ENCODING, $</p>
+        <p class="Code">&#160;&#160;&#160;/SUN_DECODING)</p>
+        <p class="Code">; ... other cdf commands ...</p>
+        <p class="Code">CDF_CLOSE, id ; close the file.</p>
+        <p>Now suppose that we decide to use HP_DECODING instead. We can use the CLOBBER keyword to delete the existing file when creating the new file:</p>
+        <p class="Code">id = CDF_CREATE('cdf_create.cdf', [10,20], /NETWORK_ENCODING, $</p>
+        <p class="Code">&#160;&#160;&#160;/HP_DECODING, /CLOBBER)</p>
+        <p class="Code">; ... other cdf commands ...</p>
+        <p class="Code">CDF_CLOSE, id ; close the file.</p>
+        <p>The new file is written over the existing file. Use the following command to delete the file:</p>
+        <p class="Code">CDF_DELETE, id</p>
+        <h2 class="API"><a name="CDF_1744428779_997328_PageTOC_CDF_CREATE_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = CDF_CREATE( <i>Filename</i>, [<i>Dimensions</i>] [,&#160;/<a href="#CDF_1744428779_1006775" class="selected">CLOBBER</a>] [,&#160;/<a href="#CDF_1744428779_1006782" class="selected">MULTI_FILE</a> | , /<a href="#CDF_1744428779_1006795" class="selected">SINGLE_FILE</a>] [,&#160;/<a href="#CDF_1744428779_1006779" class="selected">COL_MAJOR</a> | , /<a href="#CDF_1744428779_1006792" class="selected">ROW_MAJOR</a>] )</p>
+        <p><b>Encoding Keywords (pick one):</b>
+            <br />[,&#160;/<a href="#CDF_1744428779_1006803" class="selected">ALPHAOSF1_ENCODING</a>]<br />[,&#160;/<a href="#CDF_1744428779_1006806" class="selected">ALPHAVMSD_ENCODING</a>]<br />[,&#160;/<a href="#CDF_1744428779_1006809" class="selected">ALPHAVMSG_ENCODING</a>]<br />[,&#160;/<a href="#CDF_1744428779_1006812" class="selected">DECSTATION_ENCODING</a>]<br />[,&#160;/<a href="#CDF_1744428779_1006815" class="selected">HOST_ENCODING</a>]<br />[,&#160;/<a href="#CDF_1744428779_1006818" class="selected">HP_ENCODING</a>]<br />[,&#160;/<a href="#CDF_1744428779_1006821" class="selected">IBMPC_ENCODING</a>]<br />[,&#160;/<a href="#CDF_1744428779_1006824" class="selected">IBMRS_ENCODING</a>]<br />[,&#160;/<a href="#CDF_1744428779_1006827" class="selected">MAC_ENCODING</a>]<br />[,&#160;/<a href="#CDF_1744428779_1006830" class="selected">NETWORK_ENCODING</a>] <br />[,&#160;/<a href="#CDF_1744428779_1006833" class="selected">NEXT_ENCODING</a>]<br />[,&#160;/<a href="#CDF_1744428779_1006836" class="selected">SGI_ENCODING</a>]<br />[,&#160;/<a href="#CDF_1744428779_1006839" class="selected">SUN_ENCODING</a>]</p>
+        <p><b>Decoding Keywords (pick one):</b>
+            <br />[,&#160;/<a href="#CDF_1744428779_1006846" class="selected">ALPHAOSF1_DECODING</a>]<br />[,&#160;/<a href="#CDF_1744428779_1006849" class="selected">ALPHAVMSD_DECODING</a>]<br />[,&#160;/<a href="#CDF_1744428779_1006852" class="selected">ALPHAVMSG_DECODING</a>]<br />[,&#160;/<a href="#CDF_1744428779_1006855" class="selected">DECSTATION_DECODING</a>] <br />[,&#160;/<a href="#CDF_1744428779_1006858" class="selected">HOST_DECODING</a>] <br />[,&#160;/<a href="#CDF_1744428779_1006861" class="selected">HP_DECODING</a>] <br />[,&#160;/<a href="#CDF_1744428779_1006864" class="selected">IBMPC_DECODING</a>] <br />[,&#160;/<a href="#CDF_1744428779_1006867" class="selected">IBMRS_DECODING</a>] <br />[,&#160;/<a href="#CDF_1744428779_1006870" class="selected">MAC_DECODING</a>] <br />[,&#160;/<a href="#CDF_1744428779_1006873" class="selected">NETWORK_DECODING</a>] <br />[,&#160;/<a href="#CDF_1744428779_1006876" class="selected">NEXT_DECODING</a>]<br />[,&#160;/<a href="#CDF_1744428779_1006879" class="selected">SGI_DECODING</a>] <br />[,&#160;/<a href="#CDF_1744428779_1006882" class="selected">SUN_DECODING</a>]</p>
+        <h2 class="API"><a name="CDF_1744428779_32814"></a>Return Value</h2>
+        <p>Returns the CDF ID for the new file.</p>
+        <h2 class="API"><a name="CDF_1744428779_997330_PageTOC_CDF_CREATE_"></a>Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>A scalar string containing the name of the file to be created. Note that if the desired filename has a <code>.cdf</code> ending, you can omit the extension and specify just the first part of the filename. For example, specifying <code>“mydata”</code> would open the file <code>mydata.cdf</code>.</p>
+        <h3 class="Argument">Dimensions</h3>
+        <p>A vector of values specifying size of each rVariable dimension. If no dimensions are specified, the file will contain a single scalar per record (<i>i.e.</i>, a 0-dimensional CDF). This argument has no effect on zVariables.</p>
+        <h2 class="API"><a name="CDF_1744428779_1017650_PageTOC_CDF_CREATE_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006775"></a><a name="CDF_1744428779_1017643_Keywords_CDF_CREATE_"></a>CLOBBER</h3>
+        <p>Set this keyword to erase the existing file (if the file already exists) before creating the new version. </p>
+        <p>Note that if the existing file has been corrupted, the CLOBBER operation may fail, causing IDL to display an error message. In this case you must manually delete the existing file from outside IDL.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006779"></a><a name="CDF_1744428779_1017646_Keywords_CDF_CREATE_"></a>COL_MAJOR</h3>
+        <p>Set this keyword to use column major (IDL-like) array ordering for variable storage.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006782"></a><a name="CDF_1744428779_1017715_Keywords_CDF_CREATE_"></a>MULTI_FILE</h3>
+        <p>Set this keyword to cause all CDF control information and attribute entry data to be placed in one <code>.cdf</code> file, with a separate file created for each defined variable. If the variable is an rVariable, then the variable files will have extensions of <code>.v0</code>, <code>.v1</code>, <i>etc.</i>; zVariables will be stored in files with extensions of <code>.z0</code>, <code>.z1</code>, <i>etc.</i> See “Format” in the <i>CDF User’s Guide</i> for more information. If both SINGLE_FILE and MULTI_FILE are set the file will be created in the SINGLE_FILE format.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In versions of IDL prior to 6.3, MULTI_FILE was the default.</p>
+        <p>MULTI_FILE Example:</p>
+        <p class="Code">id=CDF_CREATE('multi', /MULTI_FILE)</p>
+        <p class="Code">CDF_CONTROL, id, GET_FORMAT=cdf_format</p>
+        <p class="Code">HELP, cdf_format</p>
+        <p>IDL prints:</p>
+        <p class="Code">CDF_FORMAT      STRING    = 'MULTI_FILE'</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006792"></a><a name="CDF_1744428779_1017746_Keywords_CDF_CREATE_"></a>ROW_MAJOR</h3>
+        <p>Set this keyword to specify row major (C-like) array ordering for variable storage. This is the default.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006795"></a><a name="CDF_1744428779_1017749_Keywords_CDF_CREATE_"></a>SINGLE_FILE</h3>
+        <p>Set this keyword to cause all CDF information (control information, attribute entry data, variable data, etc.) to be written to a single <code>.cdf</code> file. This is the default. See “Format” in the <i>CDF User’s Guide</i> for more information. If both SINGLE_FILE and MULTI_FILE are set the file will be created in the SINGLE_FILE format.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In versions of IDL prior to 6.3, MULTI_FILE was the default.</p>
+        <h3><a name="CDF_1744428779_997335_Keywords_CDF_CREATE_"></a><a name="CDF_1744428779_997335_PageTOC_CDF_CREATE_"></a>Encoding Keywords</h3>
+        <p>Select one of the following keywords to specify the type of encoding:</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006803"></a><a name="CDF_1744428779_997337_Keywords_CDF_CREATE_"></a>ALPHAOSF1_ENCODING</h3>
+        <p>Set this keyword to indicate DEC ALPHA/OSF1 data encoding.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006806"></a><a name="CDF_1744428779_997340_Keywords_CDF_CREATE_"></a>ALPHAVMSD_ENCODING</h3>
+        <p>Set this keyword to indicate DEC ALPHA/VMS data encoding using Digital’s D_FLOAT representation.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006809"></a><a name="CDF_1744428779_997343_Keywords_CDF_CREATE_"></a>ALPHAVMSG_ENCODING</h3>
+        <p>Set this keyword to indicate DEC ALPHA/VMS data encoding using Digital’s G_FLOAT representation.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006812"></a><a name="CDF_1744428779_1017778_Keywords_CDF_CREATE_"></a>DECSTATION_ENCODING</h3>
+        <p>Set this keyword to select Decstation (MIPSEL) data encoding.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006815"></a><a name="CDF_1744428779_997349_Keywords_CDF_CREATE_"></a>HOST_ENCODING</h3>
+        <p>Set this keyword to select that the file will use native data encoding. This is the default method.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006818"></a><a name="CDF_1744428779_997352_Keywords_CDF_CREATE_"></a>HP_ENCODING</h3>
+        <p>Set this keyword to select HP 9000 data encoding.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006821"></a><a name="CDF_1744428779_1017767_Keywords_CDF_CREATE_"></a>IBMPC_ENCODING</h3>
+        <p>Set this keyword to select IBM PC data encoding.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006824"></a><a name="CDF_1744428779_997355_Keywords_CDF_CREATE_"></a>IBMRS_ENCODING</h3>
+        <p>Set this keyword to select IBM RS/6000 series data encoding.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006827"></a><a name="CDF_1744428779_997367_Keywords_CDF_CREATE_"></a>MAC_ENCODING</h3>
+        <p>Set this keyword to select Macintosh data encoding.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006830"></a><a name="CDF_1744428779_997378_Keywords_CDF_CREATE_"></a>NETWORK_ENCODING</h3>
+        <p>Set this keyword to select network-transportable data encoding (XDR).</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006833"></a><a name="CDF_1744428779_997381_Keywords_CDF_CREATE_"></a>NEXT_ENCODING</h3>
+        <p>Set this keyword to select NeXT data encoding.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006836"></a><a name="CDF_1744428779_1017789_Keywords_CDF_CREATE_"></a>SGI_ENCODING</h3>
+        <p>Set this keyword to select SGI (MIPSEB) data encoding (Silicon Graphics Iris and Power series).</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006839"></a><a name="CDF_1744428779_997390_Keywords_CDF_CREATE_"></a>SUN_ENCODING</h3>
+        <p>Set this keyword to select SUN data encoding.</p>
+        <h3><a name="CDF_1744428779_1017608_Keywords_CDF_CREATE_"></a><a name="CDF_1744428779_1017608_PageTOC_CDF_CREATE_"></a>Decoding Keywords</h3>
+        <p>Select one of the following keywords to specify the type of decoding:</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006846"></a><a name="CDF_1744428779_1017799_Keywords_CDF_CREATE_"></a>ALPHAOSF1_DECODING</h3>
+        <p>Set this keyword to indicate DEC ALPHA/OSF1 data decoding.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006849"></a><a name="CDF_1744428779_1017802_Keywords_CDF_CREATE_"></a>ALPHAVMSD_DECODING</h3>
+        <p>Set this keyword to indicate DEC ALPHA/VMS data decoding using Digital’s D_FLOAT representation.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006852"></a><a name="CDF_1744428779_1017805_Keywords_CDF_CREATE_"></a>ALPHAVMSG_DECODING</h3>
+        <p>Set this keyword to indicate DEC ALPHA/VMS data decoding using Digital’s G_FLOAT representation.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006855"></a><a name="CDF_1744428779_1017808_Keywords_CDF_CREATE_"></a>DECSTATION_DECODING</h3>
+        <p>Set this keyword to select Decstation (MIPSEL) data decoding.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006858"></a><a name="CDF_1744428779_1017811_Keywords_CDF_CREATE_"></a>HOST_DECODING</h3>
+        <p>Set this keyword to select that the file will use native data decoding. This is the default method.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006861"></a><a name="CDF_1744428779_1017814_Keywords_CDF_CREATE_"></a>HP_DECODING</h3>
+        <p>Set this keyword to select HP 9000 data decoding.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006864"></a><a name="CDF_1744428779_1017817_Keywords_CDF_CREATE_"></a>IBMPC_DECODING</h3>
+        <p>Set this keyword to select IBM PC data decoding.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006867"></a><a name="CDF_1744428779_1017820_Keywords_CDF_CREATE_"></a>IBMRS_DECODING</h3>
+        <p>Set this keyword to select IBM RS/6000 series data decoding.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006870"></a><a name="CDF_1744428779_1017823_Keywords_CDF_CREATE_"></a>MAC_DECODING</h3>
+        <p>Set this keyword to select Macintosh data decoding.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006873"></a><a name="CDF_1744428779_1017826_Keywords_CDF_CREATE_"></a>NETWORK_DECODING</h3>
+        <p>Set this keyword to select network-transportable data decoding (XDR).</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006876"></a><a name="CDF_1744428779_1017829_Keywords_CDF_CREATE_"></a>NEXT_DECODING</h3>
+        <p>Set this keyword to select NeXT data decoding.</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006879"></a><a name="CDF_1744428779_1017832_Keywords_CDF_CREATE_"></a>SGI_DECODING</h3>
+        <p>Set this keyword to select SGI (MIPSEB) data decoding (Silicon Graphics Iris and Power series).</p>
+        <h3 class="Keyword"><a name="CDF_1744428779_1006882"></a><a name="CDF_1744428779_1017835_Keywords_CDF_CREATE_"></a>SUN_DECODING</h3>
+        <p>Set this keyword to select SUN data decoding.</p>
+        <h2 class="API"><a name="CDF_1744428779_1028613_PageTOC_CDF_CREATE_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Changed default behavior to create a single file rather than multiple files (see <a href="#CDF_1744428779_1006795" class="selected">SINGLE_FILE</a> and <a href="#CDF_1744428779_1006782" class="selected">MULTI_FILE</a>)</p>
+                        <p>Changed default behavior to use HOST_ENCODING rather than NETWORK_ENCODING</p>
+                        <p>Changed default behavior to use HOST_DECODING rather than NETWORK_DECODING</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

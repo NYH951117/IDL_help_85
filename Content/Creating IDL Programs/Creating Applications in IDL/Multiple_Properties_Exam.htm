@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Language|Widgets|About Property Sheet Widgets">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Multiple Properties Example</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../IDL Programming.htm">Language</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Widget Application Techniques.htm">Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="About_Property_Sheet_Wid.htm">About Property Sheet Widgets</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Multiple Properties Example</span>
+        </div>
+        <h1><a name="widget_propertysheet_3756481120_127413"></a><a name="widget_propertysheet_3756481120_32146"></a>Multiple Properties Example</h1>
+        <p>The following example shows how to create a property sheet for multiple components.</p>
+        <p>Enter the following text in the IDL Editor:</p>
+        <p class="Code">; ExMultiSheet.pro</p>
+        <p class="Code">;</p>
+        <p class="Code">; Provides an example of a property sheet that is</p>
+        <p class="Code">; associated with more than one object. In this case,</p>
+        <p class="Code">; multiple IDLitVisAxis objects are used, with random</p>
+        <p class="Code">; colors and hidden cells, just for fun.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO PropertyEvent, event</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">IF (event.type EQ 0) THEN BEGIN   ; Value changed.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">   PRINT, 'Changed: ', event.component</p>
+        <p class="Code">   PRINT, '   ', event.identifier, ': ', $</p>
+        <p class="Code">   WIDGET_INFO(event.id, COMPONENT = event.component, $</p>
+        <p class="Code">      PROPERTY_VALUE = event.identifier)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ENDIF ELSE BEGIN                ; Selection changed.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">   PRINT, 'Selected: ' + event.identifier</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ENDELSE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO CleanupEvent, baseID</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">WIDGET_CONTROL, baseID, GET_UVALUE = objects</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">FOR i = 0, (N_ELEMENTS(objects) - 1) DO $</p>
+        <p class="Code">   OBJ_DESTROY, objects[i]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO ExMultiSheet_event, event</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">ps = WIDGET_INFO(event.id, $</p>
+        <p class="Code">   FIND_BY_UNAME = 'PropSheet')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">geo_tlb = WIDGET_INFO(event.id, /GEOMETRY)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">WIDGET_CONTROL, ps, $</p>
+        <p class="Code">   SCR_XSIZE = geo_tlb.xsize - (2*geo_tlb.xpad), $</p>
+        <p class="Code">   SCR_YSIZE = geo_tlb.ysize - (2*geo_tlb.ypad)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">PRO ExMultiSheet</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">tlb = WIDGET_BASE(/COLUMN, /TLB_SIZE_EVENTS, $</p>
+        <p class="Code">   KILL_NOTIFY = 'CleanupEvent')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create some columns.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">oComp1 = OBJ_NEW('IDLitVisAxis', $</p>
+        <p class="Code">   COLOR = RANDOMU(s1, 3)*256, $</p>
+        <p class="Code">   TEXT_COLOR = RANDOMU(s7, 3)*256)</p>
+        <p class="Code">oComp2 = OBJ_NEW('IDLitVisAxis', $</p>
+        <p class="Code">   COLOR = RANDOMU(s2, 3)*256, $</p>
+        <p class="Code">   TEXT_COLOR = RANDOMU(s8, 3)*256)</p>
+        <p class="Code">oComp3 = OBJ_NEW('IDLitVisAxis', $</p>
+        <p class="Code">   COLOR = RANDOMU(s3, 3)*256, $</p>
+        <p class="Code">   TEXT_COLOR = RANDOMU(s9, 3)*256)</p>
+        <p class="Code">oComp4 = OBJ_NEW('IDLitVisAxis', $</p>
+        <p class="Code">   COLOR = RANDOMU(s4, 3)*256, $</p>
+        <p class="Code">   TEXT_COLOR = RANDOMU(s10, 3)*256)</p>
+        <p class="Code">oComp5 = OBJ_NEW('IDLitVisAxis', $</p>
+        <p class="Code">   COLOR = RANDOMU(s5, 3)*256, $</p>
+        <p class="Code">   TEXT_COLOR = RANDOMU(s11, 3)*256)</p>
+        <p class="Code">oComp6 = OBJ_NEW('IDLitVisAxis', $</p>
+        <p class="Code">   COLOR = RANDOMU(s6, 3)*256, $</p>
+        <p class="Code">   TEXT_COLOR = RANDOMU(s12, 3)*256)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">oComps = [oComp1, oComp2, oComp3, $</p>
+        <p class="Code">   oComp4, oComp5, oComp6]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">WIDGET_CONTROL, tlb, SET_UVALUE = oComps</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Hide some properties.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">oComp2-&gt;SetPropertyAttribute, 'color', /HIDE</p>
+        <p class="Code">oComp2-&gt;SetPropertyAttribute, 'ticklen', /HIDE</p>
+        <p class="Code">oComp5-&gt;SetPropertyAttribute, 'ticklen', /HIDE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Create the property sheet.</p>
+        <p class="Code">prop = WIDGET_PROPERTYSHEET(tlb, $</p>
+        <p class="Code">   UNAME = 'PropSheet', $</p>
+        <p class="Code">   VALUE = oComps, $</p>
+        <p class="Code">   FONT = 'Courier New*16', $</p>
+        <p class="Code">   XSIZE = 100, YSIZE = 24, $</p>
+        <p class="Code">   /FRAME, EVENT_PRO = 'PropertyEvent')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Activate the widgets.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">WIDGET_CONTROL, tlb, /REALIZE</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">XMANAGER, 'ExMultiSheet', tlb, /NO_BLOCK</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>Save the program as <code>ExMultiSheet.pro</code>, then compile and run it. A property sheet displaying the properties of six axes is displayed: </p>
+        <p>
+            <img src="../../images/widget_propsheet2.gif" />
+        </p>
+        <p>The gray boxes indicate properties that have been hidden. To remove the gray boxes, comment out the code after the following comment:</p>
+        <p class="Code">; Hide some properties.</p>
+        <p>The text is displayed at 16 points in the Courier New font. To view the property sheet with the text displayed in the default size and font, comment out the following segment of the property sheet creation code:</p>
+        <p class="Code">FONT = "Courier New*16", $</p>
+        <p>To see the text displayed in a font and size of your choosing, edit the same segment to include a different font name and size.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

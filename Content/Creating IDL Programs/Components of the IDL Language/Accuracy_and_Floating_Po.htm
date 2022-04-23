@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Accuracy and Floating Point Operations </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="constants_818058343_705345"></a><a name="constants_818058343_69984"></a>Accuracy and Floating Point Operations </h1>
+        <p>In a computer, real numbers are represented with finite precision. While in most cases it is safe to assume that the result of an arithmetic operation done on your computer is correct, it is important to remember that this finite-precision representation leads to unavoidable errors, especially when floating-point numbers, which are digital approximations to real numbers, are involved.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Before using floating-point numbers, we recommend getting a clear view of your data so that you can then understand what level of precision you need. The rest of this topic gives some background on the implications of using floating-point numbers in your arithmetic operations.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The accuracy of both single and double precision numbers in IDL depends upon both the platform and compiler. Since IDL is written in C, numbers in IDL will behave identically with a program written in C on your platform. For details on the compiler and compile flags for your platform, you can examine the <a href="../Appendices/IDL_Environment_System_V.htm#sysvars_272074529_1009307">!MAKE_DLL</a> system variable.</p>
+        <p>To understand why floating-point numbers are inherently inaccurate, consider the following:</p>
+        <ul>
+            <li value="1">Floating-point numbers must be made to fit in a space (a string of binary digits in a computer’s memory register) that can only hold an integer and a scaling factor.</li>
+            <li value="2">Floating-point numbers are represented by strings of a limited number of bits, but represent numbers much larger or smaller than that number of digits can be made to express.</li>
+        </ul>
+        <p>In other words, floating-point values are finite-precision approximations of infinitely precise numbers.</p>
+        <p>For example, some numbers are exactly representable by single-precision floating point numbers:</p>
+        <p class="Code">PRINT, 2.0, FORMAT='(f25.16)'</p>
+        <p class="Code">PRINT, 2.0 EQ 2.0d ? 'true' : 'false'</p>
+        <p class="Code">&#160;</p>
+        <p>IDL displays:</p>
+        <p class="Code">2.0000000000000000</p>
+        <p class="Code">true</p>
+        <p>Other numbers are not exactly representable:</p>
+        <p class="Code">PRINT, 0.1, FORMAT='(f25.16)'</p>
+        <p class="Code">PRINT, 0.1 EQ 0.1d ? 'true' : 'false'</p>
+        <p class="Code">&#160;</p>
+        <p>IDL displays:</p>
+        <p class="Code">0.1000000014901161</p>
+        <p class="Code">false</p>
+        <p class="Code">&#160;</p>
+        <p>Because of these differences, when using many of IDL's math routines you should be aware that calling them with single versus double precision floating-point numbers may give slightly different results. </p>
+        <p>For more information on floating point numbers, refer to the IEEE Standard for Floating-Point Arithmetic (IEEE 754), summarized on <i>Wikipedia.org.</i></p>
+        <h2 class="API"><a name="kanchor5646"></a>Roundoff Error</h2>
+        <p>When working with floating-point arithmetic, it is helpful to consider the quantity known as the machine accuracy or the floating-point accuracy of your particular computer. This is the smallest number that, when added to 1.0, produces a floating-point result that is different from 1.0.</p>
+        <p>A useful way of thinking about machine accuracy is to consider it to be the fractional accuracy to which floating-point numbers are represented. In other words, the machine accuracy roughly corresponds to a change of the least significant bit of the floating-point mantissa—precisely what can happen if a number with more significant digits than fit in the floating-point mantissa is rounded to fit the space available. Generally speaking, every floating-point arithmetic operation introduces an error at least equal to the machine accuracy into the result. This error is known as roundoff error.</p>
+        <p>Roundoff errors are cumulative. Depending on the algorithm you are using, a calculation involving <i>n</i> arithmetic operations might have a total roundoff error between SQRT(<i>n</i>) times the machine accuracy and <i>n</i> times the machine accuracy.</p>
+        <p>Note that the machine accuracy is not the same as the smallest floating-point number your computer can represent. To find these and other machine-dependent quantities for your own computer, see <a href="../../Reference Material/M/MACHAR.htm#M_824365677_887317">MACHAR</a>.</p>
+        <h2 class="API">Truncation <a name="kanchor5647"></a>Error</h2>
+        <p>Another type of error is also present in some numerical algorithms. Truncation error is the error introduced by the process of numerically approximating a continuous function by evaluating it at a finite number of discrete points. Often, accuracy can be increased (again at some cost of computation time) by increasing the number of discrete points evaluated.</p>
+        <p>For example, consider the process of calculating </p>
+        <p>
+            <img src="../../images/62_2.jpg" />
+        </p>
+        <p>Obviously, the answer becomes more accurate as <i>n</i> approaches infinity. When performing the actual computation, however, a cutoff value must be specified for <i>n</i>. Increasing <i>n</i> reduces truncation error at the expense of computational effort. </p>
+        <p>Several IDL routines allow you to specify cutoff values in such cases (see, for example, <a href="../../Reference Material/I/INT_2D.htm#I_833016429_883951">INT_2D</a>. When writing your own routines in IDL, it is important to consider this trade-off between accuracy and computational time.</p>
+        <h2 class="API"> Routines for Mathematical Error <a name="kanchor5648"></a>Assessment</h2>
+        <p>Below is a brief description of IDL <a name="kanchor5649"></a>routines for checking math error status and machine characteristics. </p>
+        <table style="margin-left: 0;margin-right: auto;caption-side: bottom;mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Routine</p>
+                    </th>
+                    <th class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Description</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p><a href="../../Reference Material/C/CHECK_MATH.htm#C_854643309_676079">CHECK_MATH</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>Returns and clears accumulated math error status.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p><a href="../../Reference Material/F/FINITE.htm#F_848155245_676884">FINITE</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p>Returns True if its argument is finite.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColSep">
+                        <p><a href="../../Reference Material/M/MACHAR.htm#M_824365677_887317">MACHAR</a>
+                        </p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowEnd_ColEnd">
+                        <p>Determines and returns machine-specific parameters affecting floating-point arithmetic.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Accuracy and Floating Point Operation References</h3>
+        <p>Burden, Richard L., J. Douglas Faires, and Albert C. Reynolds. <i>Numerical Analysis</i>. Boston: PWS Publishing, 1993. ISBN 0-534-93219-3</p>
+        <p>Goldberg, David. "What Every Computer Scientist Should Know About Floating-Point Arithmetic" in <i>Computing Surveys</i>, March 1991. Association for Computing Machinery, Inc.</p>
+        <p>Stoer, J., and R. Bulirsch. <i>Introduction to Numerical Analysis</i>. New York: Springer-Verlag, 1980. ISBN 0-387-90420-4 </p>
+        <p>Press, William H. et al. <i>Numerical Recipes in C: The Art of Scientific Computing</i>. Cambridge: Cambridge University Press, 1992. ISBN 0-521-43108-5</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

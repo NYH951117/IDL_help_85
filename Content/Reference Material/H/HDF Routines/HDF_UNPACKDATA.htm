@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: H|HDF Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>HDF_UNPACKDATA</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../H_list.htm">Routines: H</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../HDF_Routines.htm">HDF Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">HDF_UNPACKDATA</span>
+        </div>
+        <h1 class="Routine"><a name="HDF_1733484267_1012711"></a><a name="HDF_1733484267_29324"></a>HDF_UNPACKDATA</h1>
+        <p>This procedure<a name="kanchor1268"></a> unpacks an array of byte data into a number of IDL variables. It is useful in deconstructing the output of multi-field HDF Vdata reading routines, such as those found in HDF-EOS, into a set of IDL variables. The packed data is assumed to be an array of bytes that is organized as a number of records. Each record consists of one or more data fields. A record is defined using the HDF_TYPE and HDF_ORDER keywords. These define the record layout in terms of HDF data types. The procedure walks through the input array and copies the values into output IDL arrays. There must be as many entries in the HDF_TYPE and HDF_ORDER keywords as there are data arguments.</p>
+        <h2 class="API"><a name="HDF_1733484267_1043006_PageTOC_HDF_UNPACKDATA_"></a>Examples</h2>
+        <p class="Code">a = INDGEN(5)</p>
+        <p class="Code">b = FINDGEN(5)</p>
+        <p class="Code">c = ['This', 'is', 'a', 'string', 'array.']</p>
+        <p class="Code">HELP, a, b, c</p>
+        <p class="Code">hdftype = [ 22, 5, 4] ; HDF INT16, FLOAT32 and CHAR </p>
+        <p class="Code">order = [ 0, 0, 6] ;  2 + 4 + 6 = 12 bytes/record</p>
+        <p class="Code">data = HDF_PACKDATA( a, b, c, HDF_TYPE=hdftype, HDF_ORDER=order)</p>
+        <p class="Code">HELP, data ; a [12, 5] array (5 - 12byte records)</p>
+        <p class="Code">HDF_UNPACKDATA, data, d, e, f, HDF_TYPE=hdftype, HDF_ORDER=order</p>
+        <p class="Code">HELP, d, e, f ; recover the original arrays</p>
+        <h2 class="API"><a name="HDF_1733484267_1042986_PageTOC_HDF_UNPACKDATA_"></a>Syntax</h2>
+        <p class="Syntax">HDF_UNPACKDATA, <i>packeddata</i>, <i>data1</i> [,&#160;<i>data2</i> [,&#160;<i>data3</i> [,&#160;<i>data4</i> [,&#160;<i>data5</i> [,&#160;<i>data6</i> [,&#160;<i>data7</i> [,&#160;<i>data8</i>]]]]]]] [,&#160;<a href="#HDF_1733484267_1012754" class="selected">HDF_ORDER</a>=<i>array</i>] [,&#160;<a href="#HDF_1733484267_1012757" class="selected">HDF_TYPE</a>=<i>array</i>] [,&#160;<a href="#HDF_1733484267_1012763" class="selected">NREC</a>=<i>records</i>]</p>
+        <h2 class="API"><a name="HDF_1733484267_1042989_PageTOC_HDF_UNPACKDATA_"></a>Arguments</h2>
+        <h3 class="Argument">packeddata</h3>
+        <p>A BYTE array of packed data.</p>
+        <h3 class="Argument">data1...data8</h3>
+        <p>These arguments return IDL arrays of the types specified by HDF_TYPE with values for each record in the packed data. If HDF_ORDER is greater than one, the returned array will be 2D and the leading dimension will be of length HDF_ORDER. The one exception is string types, which will be returned as a 1D array of IDL strings. The fixed-length string field is returned as an IDL string up to the first zero value (if present). The trailing dimension will be equal to the minimum of the NREC keyword value or the number of complete records that fit in the packeddata array.</p>
+        <h2 class="API"><a name="HDF_1733484267_1042996_PageTOC_HDF_UNPACKDATA_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="HDF_1733484267_1012754"></a><a name="HDF_1733484267_1042997_Keywords_HDF_UNPACKDATA_"></a>HDF_ORDER</h3>
+        <p>Set this keyword to an array with the same length as the number of data fields. The values in the array are equal to the number of elements in the return argument for each record. In the case of strings, this is the length (in characters) of the string to be read. A value of zero is interpreted as one element. The default for this keyword is an array of ones.</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1012757"></a><a name="HDF_1733484267_1043000_Keywords_HDF_UNPACKDATA_"></a>HDF_TYPE</h3>
+        <p>Set this keyword to an array with the same length as the number of data fields. The value in the array is an HDF data type for each return argument. The returned IDL variables will have these types. The default for this keyword is an array of the value 5 (an HDF 32-bit float).</p>
+        <h3 class="Keyword"><a name="HDF_1733484267_1012763"></a><a name="HDF_1733484267_1043003_Keywords_HDF_UNPACKDATA_"></a>NREC</h3>
+        <p>Set this keyword to the number of records to read from packeddata. The default is to read as many complete records as exist in the packeddata array.</p>
+        <h2 class="API"><a name="HDF_1733484267_1043018_PageTOC_HDF_UNPACKDATA_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="HDF_1733484267_1117817_PageTOC_HDF_UNPACKDATA_"></a>See Also</h2>
+        <p><a href="HDF_PACKDATA.htm#HDF_1733484267_1010260">HDF_PACKDATA</a>, <a href="HDF_VD_READ.htm#HDF_1733484267_1014111">HDF_VD_READ</a>, <a href="../HDF-EOS Routines/EOS_PT_READLEVEL.htm">EOS_PT_READLEVEL</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

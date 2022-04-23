@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: M">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>MAKE_DLL </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="M_list.htm">Routines: M</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">MAKE_DLL</span>
+        </div>
+        <h1 class="Routine"><a name="M_824365677_960427"></a><a name="kanchor1755"></a><a name="M_824365677_25051"></a>MAKE_DLL </h1>
+        <p><a name="kanchor1756"></a><a name="kanchor1757"></a><a name="kanchor1758"></a>The MAKE_DLL procedure builds a sharable library from C language code which is suitable for use by IDL’s dynamic linking features such as CALL_EXTERNAL,&#160; LINKIMAGE, and dynamically loadable modules (DLMs). MAKE_DLL reduces the complexity of building sharable libraries by providing a stable cross-platform method for the user to describe the desired library, and issuing the necessary operating system commands to build the library.</p>
+        <p><a name="kanchor1759"></a>Although MAKE_DLL is very convenient, it is not intended for use as a general purpose compiler. Instead, MAKE_DLL is specifically targeted to solving the most common IDL dynamic linking problem: building a sharable library from C language source files that are usable by IDL. Because of this, the following requirements apply:</p>
+        <ul>
+            <li value="1">You must have a C compiler installed on your system. It is easiest to use the compiler used to build IDL, because MAKE_DLL already knows how to use that compiler without any additional configuring. To determine which compiler was used, query the !MAKE_DLL system variable with a print statement such as the following:</li>
+        </ul>
+        <p class="Code_Indented">PRINT, !MAKE_DLL.COMPILER_NAME</p>
+        <ul>
+            <li value="1">MAKE_DLL only compiles programs written in the C language; it does not understand Fortran, C++, or any other languages.</li>
+            <li value="2">MAKE_DLL provides only the functionality necessary to build C code intended to be linked with IDL. Not every possible option supported by the C compiler or system linker is addressed, only those commonly needed by IDL-related C code.</li>
+        </ul>
+        <p><a name="kanchor1760"></a>MAKE_DLL solves the most common IDL-centric problem of linking C code with IDL. To do more than this or to use a different language requires a system-specific building process (<i>e.g</i>. make files or projects).</p>
+        <h2 class="API"><a name="M_824365677_960512"></a><a name="M_824365677_960512_PageTOC_MAKE_DLL_"></a>Examples</h2>
+        <p>For more information on using MAKE_DLL, see <a href="#Addition" class="selected">Additional Examples.</a></p>
+        <h3><a name="M_824365677_990529_Keywords_MAKE_DLL__"></a>Example 1: Testmodule DLM</h3>
+        <p>The IDL distribution contains an example of a simple DLM (dynamically loadable module) in the <code>external/dlm</code> subdirectory. This example consists of a single C source file, and the desired sharable library exports a single function called IDL_Load. The following MAKE_DLL statement builds this sharable library, leaving the resulting file in the directory given by !MAKE_DLL.COMPILE_DIRECTORY:</p>
+        <p class="Code">; Locate the source file:</p>
+        <p class="Code">INDIR = FILEPATH('', SUBDIRECTORY=['external', 'dlm'])</p>
+        <p class="Code">; Build the sharable library:</p>
+        <p class="Code">MAKE_DLL, 'testmodule', 'IDL_Load', INPUT_DIRECTORY=INDIR</p>
+        <h2 class="API"><a name="M_824365677_960443"></a><a name="M_824365677_960443_PageTOC_MAKE_DLL_"></a>Syntax</h2>
+        <p class="Syntax">MAKE_DLL, <i>InputFiles</i> [, <i>OutputFile</i>], <i>ExportedRoutineNames</i> [,&#160;<a href="#M_824365677_960457" class="selected">CC</a>=<i>string</i>] [,&#160;<a href="#M_824365677_960459" class="selected">COMPILE_DIRECTORY</a>=<i>path</i>] [,&#160;<a href="#M_824365677_960461" class="selected">DLL_PATH</a>=<i>variable</i>] [,&#160;<a href="#M_824365677_960463" class="selected">EXPORTED_DATA</a>=<i>string</i>] [,&#160;<a href="#M_824365677_960465" class="selected">EXTRA_CFLAGS</a>=<i>string</i>] [,&#160;<a href="#M_824365677_960467" class="selected">EXTRA_LFLAGS</a>=<i>string</i>] [,&#160;<a href="#M_824365677_960469" class="selected">INPUT_DIRECTORY</a>=<i>path</i>] [,&#160;<a href="#M_824365677_960471" class="selected">LD</a>=<i>string</i>] [,&#160;/<a href="#M_824365677_960473" class="selected">NOCLEANUP</a>] [,&#160;<a href="#M_824365677_960502" class="selected">OUTPUT_DIRECTORY</a>=<i>path</i>] [,&#160;/<a href="#M_824365677_1160143" class="selected">PLATFORM_EXTENSION</a>] [,&#160;/<a href="#M_824365677_973081" class="selected">REUSE_EXISTING</a>] [,&#160;/<a href="#M_824365677_960504" class="selected">SHOW_ALL_OUTPUT</a>] [,&#160;/<a href="#M_824365677_960506" class="selected">VERBOSE</a>]</p>
+        <h2 class="API"><a name="M_824365677_960446"></a><a name="M_824365677_960446_PageTOC_MAKE_DLL_"></a>Arguments</h2>
+        <h3 class="Argument">InputFiles</h3>
+        <p>A string (scalar or array) giving the names of the input C program files to be compiled by MAKE_DLL. These names should not include any directory path information or the <code>.c</code> suffix, they are simply the base file names. </p>
+        <p>The input directory is specified using the INPUT_DIRECTORY keyword, and the <code>.c</code> file suffix is assumed.</p>
+        <h3 class="Argument">OutputFile</h3>
+        <p>The base name of the resulting sharable library. This name should not include any directory path information or the sharable library suffix, which differs between platforms (for example: <code>.so</code>, <code>.a</code>, <code>.sl</code>, <code>.exe</code>, <code>.dll</code>). </p>
+        <p>The output directory can be specified using the OUTPUT_DIRECTORY keyword.</p>
+        <p>If the <i>OutputFile</i> argument is omitted, the first name given by <i>InputFile</i> is used as the base name of output file.</p>
+        <h3 class="Argument">ExportedRoutineNames</h3>
+        <p>A string (scalar or array) specifying the names of the routines to be exported (i.e., that are visible for linking) from the resulting sharable library.</p>
+        <h2 class="API"><a name="M_824365677_960456"></a><a name="M_824365677_960456_PageTOC_MAKE_DLL_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="M_824365677_960457"></a><a name="M_824365677_960457_Keywords_MAKE_DLL__"></a>CC</h3>
+        <p>If present, a template string to use in generating the C compiler commands to compile <i>InputFiles</i>. If CC is not specified, the value given by the !MAKE_DLL.CC system variable is used by default. </p>
+        <h3 class="Keyword"><a name="M_824365677_960459"></a><a name="M_824365677_960459_Keywords_MAKE_DLL__"></a>COMPILE_DIRECTORY</h3>
+        <p>To build a sharable library, MAKE_DLL requires a place to create the necessary intermediate files and possibly the final library itself. If COMPILE_DIRECTORY is specified, the directory specified is used. If COMPILE_DIRECTORY is not specified, the directory given by the !MAKE_DLL.COMPILE_DIRECTORY system variable is used.</p>
+        <h3 class="Keyword"><a name="M_824365677_960461"></a><a name="M_824365677_960461_Keywords_MAKE_DLL__"></a>DLL_PATH</h3>
+        <p>If present, the name of a variable to receive the complete file path for the newly created sharable library. The location of the resulting sharable library depends on the setting of the OUTPUT_DIRECTORY or COMPILE_DIRECTORY keywords as well as the !MAKE_DLL.COMPILE_DIRECTORY system variable, and different platforms use different file suffixes to indicate sharable libraries. Use of the DLL_PATH keyword makes it possible to determine the resulting file path in a simple and portable manner.</p>
+        <h3 class="Keyword"><a name="M_824365677_960463"></a><a name="M_824365677_960463_Keywords_MAKE_DLL__"></a>EXPORTED_DATA</h3>
+        <p>A string (scalar or array) containing the names of variables to be exported (i.e., are visible for linking) from the resulting sharable library.</p>
+        <h3 class="Keyword"><a name="M_824365677_960465"></a><a name="M_824365677_960465_Keywords_MAKE_DLL__"></a>EXTRA_CFLAGS</h3>
+        <p>If present, a string supplying extra options for the command used to execute the C compiler to compile the files given by <i>InputFiles</i>. This keyword is frequently used to specify header file include directories. This text is inserted in place of the %X format code in the compile string. </p>
+        <h3 class="Keyword"><a name="M_824365677_960467"></a><a name="M_824365677_960467_Keywords_MAKE_DLL__"></a>EXTRA_LFLAGS</h3>
+        <p>If present, a string supplying extra options for the command used to execute the linker when combining the object files to produce the sharable library. This keyword is frequently used to specify libraries to be included in the link, and is inserted in place of the %X format code in the linker string. </p>
+        <h3 class="Keyword"><a name="M_824365677_960469"></a><a name="M_824365677_960469_Keywords_MAKE_DLL__"></a>INPUT_DIRECTORY</h3>
+        <p>If present, the path to the directory containing the source C files listed in <i>InputFiles</i>. If INPUT_DIRECTORY is not specified, the directory given by COMPILE_DIRECTORY is assumed to contain the files.</p>
+        <h3 class="Keyword"><a name="M_824365677_960471"></a><a name="M_824365677_960471_Keywords_MAKE_DLL__"></a>LD</h3>
+        <p>If present, a template string to use when generating the linker command to generate the resulting sharable library. If LD is not specified, the value given by the !MAKE_DLL.LD system variable is used by default. </p>
+        <h3 class="Keyword"><a name="M_824365677_960473"></a><a name="M_824365677_960473_Keywords_MAKE_DLL__"></a>NOCLEANUP</h3>
+        <p>To produce a sharable library, MAKE_DLL produces several intermediate files:</p>
+        <ol>
+            <li value="1">A shell script (UNIX) or batch file (Windows) that is then executed via SPAWN to build the library.</li>
+            <li value="2">A linker options file. This file is used to control the linker. MAKE_DLL uses it to cause the routines given by the <i>ExportedRoutineNames</i> argument (and EXPORTED_DATA keyword) to be exported from the resulting sharable library. The general platform terminology is shown below. </li>
+        </ol>
+        <table style="caption-side: bottom;mc-table-style: url('../../Resources/TableStyles/Description.css');" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Platform</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Linker Options File Terminology</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>UNIX</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p>export file, or linker map file</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>Windows</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p>a <code>.DEF</code> file</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <ol>
+            <li value="1">Object files, resulting from compiling the source C files given by the <i>InputFiles</i> argument.</li>
+            <li value="2">A log file that captures the output from executing the script, and which can be used for debugging in case of error.</li>
+        </ol>
+        <p>By default, MAKE_DLL deletes all of these intermediate files once the sharable library has been successfully built. Setting the NOCLEANUP keyword prevents MAKE_DLL from removing them. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Set the NOCLEANUP keyword (possibly in conjunction with VERBOSE) for troubleshooting, or to read the files for additional information on how MAKE_DLL works.</p>
+        <h3 class="Keyword"><a name="M_824365677_960502"></a><a name="M_824365677_960502_Keywords_MAKE_DLL__"></a>OUTPUT_DIRECTORY</h3>
+        <p>By default, MAKE_DLL creates the resulting sharable library in the compile directory specified by the COMPILE_DIRECTORY keyword or the !MAKE_DLL.COMPILE_DIRECTORY system variable. The OUTPUT_DIRECTORY keyword can be used to override this and explicitly specify where the library file should go.</p>
+        <h3 class="Keyword"><a name="M_824365677_1160143"></a><a name="M_824365677_1160143_Keywords_MAKE_DLL__"></a>PLATFORM_EXTENSION</h3>
+        <p>Set this keyword to use a platform-specific library naming scheme. Using platform-specific library names allows IDL to select the correct library for the current platform from multiple library files residing in the same directory. </p>
+        <h3 class="Keyword"><a name="M_824365677_973081"></a><a name="M_824365677_973081_Keywords_MAKE_DLL__"></a>REUSE_EXISTING</h3>
+        <p>If this keyword is set, and the sharable library file specified by <i>OutputFile</i> already exists, MAKE_DLL returns without building the sharable library again. Use this keyword in situations where you wish to ensure that a library exists, but only want to build it if it does not. Combining the REUSE_EXISTING and DLL_PATH keywords allows you to get a path to the library in a platform independent manner, building the library only if necessary. </p>
+        <h3 class="Keyword"><a name="M_824365677_960504"></a><a name="M_824365677_960504_Keywords_MAKE_DLL__"></a>SHOW_ALL_OUTPUT</h3>
+        <p>MAKE_DLL normally produces no output unless an error prevents successful building of the sharable library. Set SHOW_ALL_OUTPUT to see all output produced by the spawned process building the library.</p>
+        <h3 class="Keyword"><a name="M_824365677_960506"></a><a name="M_824365677_960506_Keywords_MAKE_DLL__"></a>VERBOSE</h3>
+        <p>If set, VERBOSE causes MAKE_DLL to issue informational messages as it carries out the task of building the sharable library. These messages include information on the intermediate files created to build the library and how they are used.</p>
+        <h2 class="API"><a name="Addition"></a>Additional Examples</h2>
+        <h3><a name="M_824365677_960519_Keywords_MAKE_DLL__"></a><a name="M_824365677_960519_PageTOC_MAKE_DLL_"></a>Example 2: Using GCC</h3>
+        <p>IDL is built with the standard vendor-supported C compiler in order to get maximum integration with the target system. MAKE_DLL assumes that you have the same compiler installed on your system and its defaults are targeted to use it. To use other compilers, you tell MAKE_DLL how to use them. </p>
+        <p>For example, many IDL users have the gcc compiler installed on their systems. This example (tested under 32-bit Solaris 7 using gcc 2.95.2) shows how to use gcc to build the testmodule sharable library from the previous example:</p>
+        <p class="Code">; We need the include directory for the IDL export.h header</p>
+        <p class="Code">; file. One way to get this is to extract it from the</p>
+        <p class="Code">; !MAKE_DLL system variable using the STREGEX function</p>
+        <p class="Code">INCLUDE=STREGEX(!MAKE_DLL.CC, '-I[^ ]+', /EXTRACT)</p>
+        <p class="Code">; Locate the source file</p>
+        <p class="Code">INDIR = FILEPATH('', SUBDIRECTORY=['external', 'dlm'])</p>
+        <p class="Code">; Build the sharable library, using the CC keyword to specify gcc:</p>
+        <p class="Code">MAKE_DLL, 'testmodule', 'IDL_Load', INPUT_DIRECTORY=INDIR, $</p>
+        <p class="Code">&#160;&#160;&#160;CC='gcc -c -fPIC '+ INCLUDE + '%C -o %O'</p>
+        <h2 class="API"><a name="M_824365677_960532"></a><a name="M_824365677_960532_PageTOC_MAKE_DLL_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>5.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColSep">
+                        <p>5.6</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowSep_ColEnd">
+                        <p>Added REUSE_EXISTING keyword</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre 6.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Deprecated VAX_FLOAT keyword</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>7.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added PLATFORM_EXTENSION keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="M_824365677_972887"></a><a name="M_824365677_972887_PageTOC_MAKE_DLL_"></a>See Also</h2>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

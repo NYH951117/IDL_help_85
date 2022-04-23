@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: T">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>TVRD </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="T_list.htm">Routines: T</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">TVRD</span>
+        </div>
+        <h1 class="Routine"><a name="dg_routines_3604229493_888889"></a><a name="dg_routines_3604229493_15540"></a>TVRD </h1>
+        <p><a name="kanchor2641"></a>The TVRD function returns the contents of the specified rectangular portion of the current Direct Graphics window or device. (<i>X</i><sub>0</sub>, <i>Y</i><sub>0</sub>) is the coordinate of the lower left corner of the area to be read and <i>N</i><sub class="italic">x</sub><i>, N</i><sub class="italic">y</sub> is the size of the rectangle in columns and rows. The result is a byte array of dimensions <i>N</i><sub class="italic">x</sub> by <i>N</i><sub class="italic">y</sub>. All parameters are optional. If no arguments are supplied, the entire display device area is read.</p>
+        <h3><a name="dg_routines_3604229493_888916"></a><a name="dg_routines_3604229493_69282"></a>Important Note about TVRD and Backing Store</h3>
+        <p>On some systems, when backing store is provided by the window system (the RETAIN keyword to DEVICE or WINDOW is set to 1), reading data from a window using TVRD may cause unexpected results. For example, data may be improperly read from the window even when the image displayed on screen is correct. Having IDL provide the backing store (set the RETAIN keyword to 2) ensures that the window contents will be read properly. More detailed notes about TVRD and the X Window system can be found below in <a href="#dg_routines_3604229493_888970" class="selected">Unexpected Results Using TVRD with X Windows</a>.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_888987"></a><a name="dg_routines_3604229493_193154_PageTOC_TVRD_"></a>Examples</h2>
+        <p class="Code">; Read the entire contents of the current display device into the</p>
+        <p class="Code">; variable T:</p>
+        <p class="Code">T = TVRD()</p>
+        <p>To read from the display to an IDL variable or expression, use the TVRD function with either the CHANNEL parameter or TRUE keyword parameter. The calling sequence for TVRD is:</p>
+        <p class="indent"><i>Result</i> = TVRD([<i>X</i><sub>0</sub>, <i>Y</i><sub>0</sub>, <i>N</i><sub>x</sub>, <i>N</i><sub>y</sub>, <i>Channel</i>])</p>
+        <p>where (<i>X</i><sub>0</sub>,&#160;<i>Y</i><sub>0</sub>) specifies the window coordinate of the lower-left corner of the rectangle to be read, and (<i>N</i><sub>x</sub>,&#160;<i>N</i><sub>y</sub>) contains the number of columns and rows to read. Note that all parameters to TVRD are optional. If no arguments are supplied, the entire area of the display device is returned.</p>
+        <p>When used without the TRUE parameter, TVRD returns an (<i>N</i><sub>x</sub>,&#160;<i>N</i><sub>y</sub>) byte image read from the indicated channel. If the channel number is not specified or is zero, the maximum RGB value of each pixel is returned, approximating the luminance.</p>
+        <p>If present and nonzero, the TRUE keyword indicates that a TrueColor image is to be read and specifies the index of the dimension over which color is interleaved. The result is a (3, <i>N</i><sub>x</sub>,&#160;<i>N</i><sub>y</sub>) pixel interleaved array if TRUE is 1; or an (<i>N</i><sub>x</sub>,&#160;3,&#160;<i>N</i><sub>y</sub>) line interleaved array if TRUE is 2; or an (<i>N</i><sub>x</sub>,&#160;<i>N</i><sub>y</sub>,&#160;3) image interleaved array if TRUE is 3.</p>
+        <p>Some examples of TVRD follow.</p>
+        <p class="Code">; Read a 512 ∞ 512 image, starting at (0,&#160;0),</p>
+        <p class="Code">; from the red channel into R:</p>
+        <p class="Code">R = TVRD(0, 0, 512, 512, 1)</p>
+        <p class="Code">; Read a TrueColor 512 ∞ 512, line interleaved image,</p>
+        <p class="Code">; starting at (0,&#160;0) into T. The variable T is</p>
+        <p class="Code">; now dimensioned (512,&#160;3,&#160;512):</p>
+        <p class="Code">T = TVRD(0, 0, 512, 512, TRUE = 2)</p>
+        <p class="Code">; Read the maximum RGB value of each pixel into L:</p>
+        <p class="Code">L = TVRD(0, 0, 512, 512)</p>
+        <h2 class="API"><a name="dg_routines_3604229493_888922"></a><a name="dg_routines_3604229493_679776_PageTOC_TVRD_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = TVRD( [<i>X</i><sub class="italic">0</sub> [,&#160;<i>Y</i><sub class="italic">0</sub> [,&#160;<i>N</i><sub class="italic">x</sub> [,&#160;<i>N</i><sub class="italic">y</sub> [,&#160;<i>Channel</i>]]]]] [,&#160;<a href="#dg_routines_3604229493_888954" class="selected">CHANNEL</a>=<i>value</i>] [,&#160;/<a href="#dg_routines_3604229493_888958" class="selected">ORDER</a>] [,&#160;<a href="#dg_routines_3604229493_888961" class="selected">TRUE</a>={1 | 2 | 3}] [,&#160;/<a href="#dg_routines_3604229493_888966" class="selected">WORDS</a>] )</p>
+        <h2 class="API"><a name="dg_routines_3604229493_888937"></a><a name="dg_routines_3604229493_73720"></a>Return Value</h2>
+        <p>Returns a byte array of the specified dimensions.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_888940"></a><a name="dg_routines_3604229493_679778_PageTOC_TVRD_"></a>Arguments</h2>
+        <h3 class="Argument">X<sub class="italic">0</sub></h3>
+        <p>The starting column of data to read. The default is 0.</p>
+        <h3 class="Argument">Y<sub class="italic">0</sub></h3>
+        <p>The starting row of data to read. The default is 0.</p>
+        <h3 class="Argument">N<sub class="italic">x</sub></h3>
+        <p>The number of columns to read. The default is the width of the display device or window less <i>X</i><sub class="italic">0</sub>.</p>
+        <h3 class="Argument">N<sub class="italic">y</sub></h3>
+        <p>The number of rows to read. The default is the height of the display device or window less <i>Y</i><sub class="italic">0</sub>.</p>
+        <h3 class="Argument">Channel</h3>
+        <p>The memory channel to be read. If not specified, this argument is assumed to be zero. This parameter is ignored on display systems that have only one memory channel.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_888952"></a><a name="dg_routines_3604229493_679789_PageTOC_TVRD_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_888954"></a><a name="dg_routines_3604229493_679790_Keywords_TVRD__"></a>CHANNEL</h3>
+        <p>The memory channel to be read. The CHANNEL keyword is identical to the optional <i>Channel</i> argument.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the display is a 24-bit display, and both the CHANNEL and TRUE parameters are absent, the maximum RGB value in each pixel is returned.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_888958"></a><a name="dg_routines_3604229493_679793_Keywords_TVRD__"></a>ORDER</h3>
+        <p>Set this keyword to override the current setting of the !ORDER system variable for the current image only. If set, it causes the image to be read from the top down instead of the normal bottom up.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_888961"></a><a name="dg_routines_3604229493_679795_Keywords_TVRD__"></a>TRUE</h3>
+        <p><a name="kanchor2642"></a>If this keyword is present, it indicates that a TrueColor image is to be read, if the display is capable. The value assigned to TRUE specifies the index of the dimension over which color is interleaved. The result is an (3, <i>n</i><sub class="italic">x</sub>, <i>n</i><sub class="italic">y</sub>) pixel-interleaved array if TRUE is 1; or an (<i>n</i><sub class="italic">x</sub>, 3, <i>n</i><sub class="italic">y</sub>) line-interleaved array if TRUE is 2; or an (<i>n</i><sub class="italic">x</sub>, <i>n</i><sub class="italic">y</sub>, 3) image-interleaved array if TRUE is 3.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDL simply returns the MAX of the three channels when you do TVRD without setting TRUE on a TrueColor system.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_888966"></a><a name="dg_routines_3604229493_679797_Keywords_TVRD__"></a>WORDS</h3>
+        <p>Set this keyword to indicate that words are to be transferred from the device. This keyword is valid only when using devices that can transfer 16-bit pixels. The normal transfer uses 8-bit pixels. If this keyword is set, the function result is an integer array.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_888970"></a><a name="dg_routines_3604229493_679799_PageTOC_TVRD_"></a><a name="dg_routines_3604229493_92228"></a>Unexpected Results Using TVRD with X Windows</h2>
+        <p>When using TVRD with the X Windows graphics device, there are two unexpected behaviors that can be confusing to users:</p>
+        <ul>
+            <li value="1">When reading from a window that is obscured by another window (i.e., the target window has another window “on top” or “in front” of it, or one window overlaps the target), TVRD may return the contents of the window in front as part of the image contained in the target window.</li>
+            <li value="2">When reading from an iconified window, the X server may return a stream of “BadMatch” protocol events.</li>
+        </ul>
+        <p>IDL uses the Xlib function <code>XGetSubImage()</code> to implement TVRD. The following quote is from the documentation for XGetSubImage() found in <i>The X Window System</i> by Robert W. Scheifler and James Gettys, Second Edition, page 174. It explains the reasons for the behaviors described above:</p>
+        <p>“If the drawable is a window, the window must be viewable, and it must be the case that if there were no... overlapping windows, the specified rectangle of the window would be fully visible on the screen, ... or a BadMatch error results. If the window has backing-store, then the backing-store contents are returned for regions of the window that are obscured... If the window does not have backing-store, the returned contents of such obscured regions are undefined.”</p>
+        <p>Hence, the first behavior is caused by attempting to use TVRD on an obscured window that does not have backing store provided by the X server. The result in this case is undefined, meaning that the different servers can produce entirely different results. Many servers simply return the image of the obscuring window.</p>
+        <p>The second behavior is caused by attempting to read from a non-viewable (i.e., unmapped) window. Although IDL could refuse to allow TVRD to work with unmapped windows, some X servers return valid and useful results. Therefore, TVRD is allowed to attempt to read from unmapped windows.</p>
+        <p>Both of these behavior problems can be solved by using one of the following methods:</p>
+        <ul>
+            <li value="1">Always make sure that your target window is mapped and is not obscured before using TVRD on it. The following IDL command can be used:</li>
+        </ul>
+        <p class="Code">&#160;&#160;&#160;WSET, Window_Index</p>
+        <ul>
+            <li value="1">Make IDL provide backing store (rather than the window system) by setting the RETAIN keyword to DEVICE or WINDOW equal to 2.</li>
+        </ul>
+        <p>Note that under X Windows, backing store is a request that may or may not be honored by the X server. Many servers will honor backing store for 8-bit visuals but ignore them for 24-bit visuals because they require three times as much memory.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_889007"></a><a name="dg_routines_3604229493_795990_PageTOC_TVRD_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2><a name="dg_routines_3604229493_889015"></a><a name="dg_routines_3604229493_1086577_PageTOC_TVRD_"></a>See Also</h2>
+        <p><a href="../R/RDPIX_Procedure.htm#dg_routines_3604229493_884618">RDPIX Procedure</a>, <a href="TV_Procedure.htm">TV Procedure</a>, <a href="../W/WRITE_BMP.htm">WRITE_BMP</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

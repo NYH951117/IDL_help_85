@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|IDLInternals - Error Handling">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Message Blocks</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="ErrorHandling.htm">IDLInternals - Error Handling</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Message Blocks</span>
+        </div>
+        <h1><a name="kanchor5471"></a>Message Blocks</h1>
+        <p>IDL maintains messages in opaque data structures known as Message Blocks. A message block contains all the messages for a logically related area.</p>
+        <p>When IDL starts, there is only one defined block named <b>IDL_MBLK_CORE</b>, containing all messages defined by the core IDL product. Typically, dynamically loadable modules (DLMs) each define a message block for their error messages when they are loaded (See <a href="../Adding System Routines/DLM.htm">Dynamically Loadable Modules</a> for a description of DLMs).</p>
+        <p>There are often two versions of IDL message module functions. Those with names that end in FromBlock require an explicit message block. The versions that do not end in FromBlock use the <b>IDL_MBLK_CORE</b> message block.</p>
+        <h2>Define a Message Block</h2>
+        <p>To define a message block, you must supply an array of <b>IDL_MSG_DEF</b> structures:</p>
+        <p class="Code">typedef struct { </p>
+        <p class="Code">&#160;&#160;&#160;char *name; </p>
+        <p class="Code">&#160;&#160;&#160;char *format;</p>
+        <p class="Code">} IDL_MSG_DEF;</p>
+        <p>where:</p>
+        <h3>name</h3>
+        <p>A string giving the name of the message. We suggest that you adopt a consistent unique prefix for all your error codes. All message codes defined by <span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span> start with the prefix <b>IDL_M_</b>. You should not use this prefix when naming your blocks in order to avoid unnecessary name collisions.</p>
+        <h3>format</h3>
+        <p>A format string, in <b>printf(3)</b> format. There is one extension to the printf formatting codes: If the first two letters of the format are “%N”, then IDL will substitute the name of the currently executing IDL procedure or function (if any) followed by a colon and a space when this message is issued. For example:</p>
+        <p class="Code">IDL&gt; print, undefined_var</p>
+        <p class="Code">% PRINT: Variable is undefined: UNDEFINED_VAR.</p>
+        <h2>IDL_MessageDefineBlock()</h2>
+        <p>The <b>IDL_MessageDefineBlock() function</b> is used to define a new message block:</p>
+        <p class="Code">IDL_MSG_BLOCK IDL_MessageDefineBlock</p>
+        <p class="Code">(char *block_name, int n, IDL_MSG_DEF *defs)</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">block_name</h3>
+        <p>Name of the message block. This can be any string, but it will be case folded to upper case. We suggest a single word be used. It is important to pick names that are unlikely to be used by any other application. All blocks defined by <span class="DocumentTitleCompanyName">Exelis VIS</span> start with the prefix <b>IDL_MBLK_</b>. You should not use this prefix when naming your blocks in order to avoid unnecessary confusion.</p>
+        <h3 class="Argument">n</h3>
+        <p>Number of message definitions pointed at by defs.</p>
+        <h3 class="Argument">defs</h3>
+        <p>An array of message definition structs, each one supplying the name and format string for a message in <b>printf(3)</b> format. The memory used for this array, including the strings it points at, must be in permanently allocated read-only storage. IDL does not copy this memory, but simply uses it in place.</p>
+        <p>If possible, the new message block is defined and an opaque pointer to it is returned. This pointer must be supplied to subsequent calls to the “FromBlock” message module functions to identify the message block a given error is being issued from. If it is not possible to define the message block, this function returns NULL.</p>
+        <p>The message functions require a message block pointer and the negative index of the specific message to be issued. Hence, message codes start and zero and grow negatively. For mnemonic convenience, it is standard practice to define preprocessor macros to represent the error codes.</p>
+        <h2>Example: Defining A Message Block</h2>
+        <p>The following code defines a message block named TESTMODULE that contains two messages:</p>
+        <p class="Code">static IDL_MSG_DEF msg_arr[] =</p>
+        <p class="Code">{</p>
+        <p class="Code">&#160;&#160;&#160;#define M_TM_INPRO 0</p>
+        <p class="Code">&#160;&#160;&#160;{	"M_TM_INPRO",	"%NThis is from a loadable module procedure."</p>
+        <p class="Code">&#160;&#160;&#160;},</p>
+        <p class="Code">&#160;&#160;&#160;#define M_TM_INFUN -1</p>
+        <p class="Code">&#160;&#160;&#160;{	"M_TM_INFUN",	"%NThis is from a loadable module function."</p>
+        <p class="Code">&#160;&#160;&#160;},</p>
+        <p class="Code">};</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">msg_Block = IDL_MessageDefineBlock("TestModule", $</p>
+        <p class="Code">&#160;&#160;&#160;sizeof(rosg_arr)/sizeof(rosg_arr[O]), $</p>
+        <p class="Code">&#160;&#160;&#160;rosg_arr);</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

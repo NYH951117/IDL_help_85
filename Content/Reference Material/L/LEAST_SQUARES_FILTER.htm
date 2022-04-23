@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: L">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>LEAST_SQUARES_FILTER</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="L_list.htm">Routines: L</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">LEAST_SQUARES_FILTER</span>
+        </div>
+        <h1 class="Routine"><a name="L_826528365_1072970"></a><a name="kanchor1658"></a>LEAST_SQUARES_FILTER</h1>
+        <p>The LEAST_SQUARES_FILTER function reduces degradation and noise in an image based on the mean and variance of the degradation and noise. This is also known as a <i>constrained least squares filter</i>.</p>
+        <p>If the degraded image is modeled in the spatial domain by</p>
+        <p>
+            <img src="../../images/18_29.jpg" />
+        </p>
+        <p>the constrained least squares filter seeks to find the minimum of</p>
+        <p>
+            <img src="../../images/18_23.jpg" />
+        </p>
+        <p>subject to the constraint</p>
+        <p>
+            <img src="../../images/18_24.jpg" />
+        </p>
+        <p>The solution to this problem is given by the following equation:</p>
+        <p>
+            <img src="../../images/18_25.jpg" />
+        </p>
+        <p>where <i>H(u,v)</i> is the degradation function and</p>
+        <p>
+            <img src="../../images/18_26.jpg" />
+        </p>
+        <p>is the complex conjugate of the degradation function. <i>P(u,v)</i> is the Laplacian operator frequency domain, and γ is a parameter which is set to meet the previously-mentioned constraint. <i>G(u,v)</i> is the frequency domain of the observed image, and</p>
+        <p>
+            <img src="../../images/18_27.jpg" />
+        </p>
+        <p>is the frequency domain estimate of the undegraded image.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>least_squares_filter.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="L_826528365_1073044"></a><a name="L_826528365_1073044_PageTOC_LEAST_SQUARES_FILTER_"></a>Examples</h2>
+        <p>
+            <img src="../images/LSF.png" />
+        </p>
+        <p>In the following example, we introduce some degradation to an image and then filter it with LEAST_SQUARES_FILTER.</p>
+        <p class="Code">; Read an image.</p>
+        <p class="Code">file = FILEPATH('moon_landing.png', SUBDIR=['examples','data'])</p>
+        <p class="Code">astronaut = READ_PNG_png(file)</p>
+        <p class="Code">image_size = SIZE(astronaut, /DIMENSIONS)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Blur the image with a known degradation transfer function.</p>
+        <p class="Code">x_coords = LINDGEN(image_size) mod image_size[0] - image_size[0]/2 + 1</p>
+        <p class="Code">y_coords = TRANSPOSE(x_coords)</p>
+        <p class="Code">k = 0.0025</p>
+        <p class="Code">degradation = EXP(-k * (x_coords^2 + y_coords^2 ) ^ (5d/6d) )</p>
+        <p class="Code">blurred = degradation*FFT(astronaut, /CENTER)</p>
+        <p class="Code">blurred = REAL_PART(FFT(blurred, /INVERSE, /CENTER))</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Filter the degraded image with the least squares filter.</p>
+        <p class="Code">filtered = LEAST_SQUARES_FILTER(blurred, degradation, 10d^(-18.22))</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the original, blurred, and filtered images.</p>
+        <p class="Code">g0 = IMAGE(astronaut, LAYOUT=[3,1,1], DIMENSIONS=[3,1]*image_size, $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE='Original image')</p>
+        <p class="Code">g1 = IMAGE(blurred, LAYOUT=[3,1,2], /CURRENT, $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE='Blurred')</p>
+        <p class="Code">g2 = IMAGE(filtered, LAYOUT=[3,1,3], /CURRENT, $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE='Filtered with LEAST_SQUARES_FILTER')</p>
+        <h2 class="API"><a name="L_826528365_1073013"></a><a name="L_826528365_1073013_PageTOC_LEAST_SQUARES_FILTER_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = LEAST_SQUARES_FILTER( <i>ImageData</i>, <i>DegradationFunction</i>, <i>Gamma</i> )</p>
+        <h2 class="API"><a name="L_826528365_1073015"></a><a name="L_826528365_1073015_PageTOC_LEAST_SQUARES_FILTER_"></a>Return Value</h2>
+        <p>Returns a double-precision floating-point array of the same dimensions as <i>ImageData</i>. </p>
+        <h2 class="API"><a name="L_826528365_1073017"></a><a name="L_826528365_1073017_PageTOC_LEAST_SQUARES_FILTER_"></a>Arguments</h2>
+        <h3 class="Argument">ImageData</h3>
+        <p>A two-dimensional array containing the pixel values of the input image.</p>
+        <h3 class="Argument">DegradationFunction</h3>
+        <p>A two-dimensional array representing the transfer function that describes the image degradation.</p>
+        <p>Degraded images are modeled as the product of the true image with a degradation function and the addition of noise, represented by <i>G(u,v) = H(u,v)F(u,v) + N(u,v)</i>. <i>G(u,v)</i> is the observed image in the frequency domain, <i>H(u,v)</i> is the degradation function, <i>F(u,v)</i> is the true image in the frequency domain, and <i>N(u,v)</i> is the noise function in the frequency domain.</p>
+        <h3 class="Argument">Gamma</h3>
+        <p>A scalar with a value chosen to meet the constrained least squares criterion.</p>
+        <h2 class="API"><a name="L_826528365_1073042"></a><a name="L_826528365_1073042_PageTOC_LEAST_SQUARES_FILTER_"></a>Keywords</h2>
+        <p>None</p>
+        <h2 class="API"><a name="L_826528365_1073047"></a><a name="L_826528365_1073047_PageTOC_LEAST_SQUARES_FILTER_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>7.1</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="L_826528365_1073054"></a><a name="L_826528365_1073054_PageTOC_LEAST_SQUARES_FILTER_"></a>See Also</h2>
+        <p><a href="../M/MEAN_FILTER.htm#M_824365677_1160294">MEAN_FILTER</a>, <a href="../E/ESTIMATOR_FILTER.htm#E_841667181_1035909">ESTIMATOR_FILTER</a>, <a href="../B/BANDPASS_FILTER.htm#B_856805997_1044554">BANDPASS_FILTER</a>, <a href="../B/BANDREJECT_FILTER.htm#B_856805997_1044879">BANDREJECT_FILTER</a>, <a href="../W/WIENER_FILTER.htm#W_811389549_1250099">WIENER_FILTER</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

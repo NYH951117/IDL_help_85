@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>High Precision Images</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1>High Precision Images</h1>
+        <p>Older graphics cards and monitors have been able to display a maximum color depth of 8-bits per channel. In such cases high-precision images that exceed 8-bits per channel must be converted to 8-bit for display. This was accomplished using the IDL <a href="../../Reference Material/B/BYTSCL.htm">BYTSCL function</a> which was limited by the processing capabilities of the CPU. This conversion can now be accomplished by the GPU. The full precision image is passed to the video card memory once and is then converted as it is rendered.</p>
+        <p>For more information and example code, see <a href="HighPrecisionImagesExamples.htm">Examples of Handling High Precision Images</a>.</p>
+        <h2>OpenGL Conversion of Image Data to Texture Data</h2>
+        <p>It is important to understand how OpenGL converts a high precision image to a texture map before writing a shader program. The graphics card vendor ultimately decides what formats are supported. Using the <a href="../../Object Classes/Graphics/IDLgrImage.htm">IDLgrImage</a> INTERNAL_DATA_TYPE property, you tell OpenGL in what format you would like the texture stored. The following table describes the relationship between OpenGL types and the INTERNAL_DATA_TYPE property value.</p>
+        <p>
+            <img src="../../images/Shader_OpenGL_Conversion.png" />
+        </p>
+        <p>An IDLgrImage accepts data of type BYTE, UINT, INT and FLOAT. When you create the texture map, the data from IDLgrImage is converted to the type specified in INTERNAL_DATA_TYPE.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If your image data is floating point, your fragment shader must scale it to the range 0.0 to 1.0 before writing it to gl_FragColor or you need to scale it to the range of 0.0 to 1.0 before setting it on the IDlgrImage.</p>
+        <p>If INTERNAL_DATA_TYPE is set to floating point (INTERNAL_DATA_TYPE equals 2 or 3), image data conversion is performed by OpenGL as follows where <i>c</i> is the color component being converted:</p>
+        <p>
+            <img src="../../images/Shaders_OpenGL_Datatype.png" />
+        </p>
+        <p>If INTERNAL_DATA_TYPE is 1 (8-bit unsigned byte), then the image data is scaled to unsigned byte. This is equivalent to a linear <a href="../../Reference Material/B/BYTSCL.htm">BYTSCL</a> from the entire type range (e.g. 0 - 65535) to unsigned byte (0 - 255).</p>
+        <p>Note</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>INTERNAL_DATA_TYPE of 0, the default, maintains backwards compatibility by converting the image data to byte without scaling. </p>
+        <p>To avoid data loss during conversion, choose an internal data type with sufficient precision to hold your image data. For example, with a 16-bit UINT image that uses the full range of 0 - 65535, if you set INTERNAL_DATA_TYPE to 2 (16-bit floating point), your image will still be converted to the range of 0.0 to 1.0, but some precision will be lost (due to the mantissa of a 16-bit float being only 10 bits). If you need a higher level of precision, set INTERNAL_DATA_TYPE to 3 (32-bit floating point). However, on some cards there may be a performance penalty associated with the higher level of precision, and requesting 32-bit floating point will certainly require more memory.</p>
+        <p>Once the image has been converted to a texture map it can be sampled by the shader. The GLSL procedure, <code>texture2D</code>, returns the sampled texel in floating point (0.0 to 1.0). Therefore, if the INTERNAL_DATA_TYPE is 1 (unsigned byte) the texel is converted to floating point, using <i>c</i>/(2<sup>8</sup> - 1), before being returned.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|Miscellaneous Object Classes">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLdbRecordset
+        </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Property_Table.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_misc.htm">Miscellaneous Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLdbRecordset
+        </span>
+        </div>
+        <h1 class="ObjClass"><a name="DM_Import_2289256752_1006420"></a><a name="kanchor3996"></a>IDLdbRecordset
+        </h1>
+        <p>The IDLdbRecordset object contains a database table or the results from an SQL query.</p>
+        <h2 class="API"><a name="DM_Import_2289256752_44307"></a>Superclasses</h2>
+        <p>None</p>
+        <h2 class="API"><a name="DM_Import_2289256752_1000388_PageTOC_IDLdbRecordset_"></a>Creation</h2>
+        <p>To create a recordset object, a valid database object is required. Use the following IDL DataMinercommand to create a new recordset object:</p>
+        <p><i>RSObj</i> = OBJ_NEW('IDLdbRecordset', <i>DBobj, </i>[,&#160;N_BUFFERS=<i>integer</i>] [,&#160;SQL=<i>string</i>&#160;|&#160;TABLE=<i>string</i>])</p>
+        <p>where <i>DBobj</i> is the object reference of the database object and either the SQL or the TABLE property must be specified.</p>
+        <h3>N_BUFFERS</h3>
+        <p>Set this keyword equal to the number of records to store per database read request in a rapid access memory location. When a IDLdbRecordset object requests records from the datasource it is associated with, the desired records are retrieved from the datasource and cached in the recordset object. The operation to request and transfer the desired records from the datasource can be fairly time consuming, which can impact performance of record access when a large number of records are being requested. Setting this to the optimal number of records can greatly increase IDLdbRecordset::MoveCursor performance and, thus, the overall speed of IDL DataMiner. A higher value is particularly useful, if you are looping through large IDLdbRecordset's with MoveCursor(/NEXT) or MoveCursor(/PREVIOUS) calls. A relatively low value might be called for, if your incremental Dataminer calls are searching for records that are widely dispersed in the target table. The default value is 10 records.</p>
+        <p>Transferring records from the datasource to the recordset object in a block can drastically increase performance, especially when accessing records in a sequential order. The N_BUFFERS keyword gives the user the ability to modify the size of the block of records the dataminer will transfer from the data sources when a request is being made by the recordset. Increasing the block/buffer size can dramatically increase record access time. You may need to experiment with different values to find the most efficient setting for your application.</p>
+        <h3><a name="DM_Import_2289256752_1006453"></a>SQL</h3>
+        <p>A string that contains a valid SQL statement that selects records from the database. This SQL statement can be a Stored Procedure call that provides a return value.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the SQL keyword uses SQL statement syntax unrecognized by the DBMS or the ODBC driver, IDL throws an error that stops execution of the program if not caught and handled by the Dataminer programmer.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the SQL keyword uses an SQL statement that has acceptable syntax, but returns NULL data (because it has filtered out everything in the table it is referencing), then NO ERROR is thrown. The object returned is a valid IDL object. To determine the object returned was actually an “empty” recordset, you must test the recordset with a subsequent call of:<br /><br /><code>result = RSObj-&gt;MoveCursor(/FIRST)</code><br /><br />if <code>result eq 0</code> (or <code>result ne 1</code>), then the recordset returned by OBJ_NEW was an empty (or NULL) recordset.</p>
+        <h3>TABLE</h3>
+        <p>A string that contains the name of a table in the database. This table must be contained in the database referred to by <i>RSObj</i>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the TABLE keyword references a table that does not exist, then IDL throws an error that stops execution of the program if not caught and handled by the Dataminer programmer.</p>
+        <h2 class="API"><a name="DM_Import_2289256752_1013494_PageTOC_IDLdbRecordset_"></a>Properties</h2>
+        <p>Objects of this class have the following properties. See <a href="#DM_Import_2289256752_1015130" class="selected">IDLdbRecordset Properties</a> for details on individual properties.</p>
+        <ul>
+            <li value="1"><a href="#DM_Import_2289256752_1015141" class="selected">CAN_MOVE_ABSOLUTE</a>
+            </li>
+            <li value="2"><a href="#DM_Import_2289256752_1015169" class="selected">CAN_MOVE_FIRST</a>
+            </li>
+            <li value="3"><a href="#DM_Import_2289256752_1015197" class="selected">CAN_MOVE_LAST</a>
+            </li>
+            <li value="4"><a href="#DM_Import_2289256752_1015225" class="selected">CAN_MOVE_NEXT</a>
+            </li>
+            <li value="5"><a href="#DM_Import_2289256752_1015253" class="selected">CAN_MOVE_PRIOR</a>
+            </li>
+            <li value="6"><a href="#DM_Import_2289256752_1015281" class="selected">CAN_MOVE_RELATIVE</a>
+            </li>
+            <li value="7"><a href="#DM_Import_2289256752_1015309" class="selected">FIELD_INFO</a>
+            </li>
+            <li value="8"><a href="#DM_Import_2289256752_1015354" class="selected">GET_DATABASE</a>
+            </li>
+            <li value="9"><a href="#DM_Import_2289256752_1015382" class="selected">IS_READONLY</a>
+            </li>
+            <li value="10"><a href="#DM_Import_2289256752_1015410" class="selected">N_BUFFERS</a>
+            </li>
+            <li value="11"><a href="#DM_Import_2289256752_1015438" class="selected">RECORDSET_SOURCE</a>
+            </li>
+        </ul>
+        <h2 class="API"><a href="javascript:alert('[ /Dest /IDLDBRECORDSETPROPERTIES /DEST')"><a name="DM_Import_2289256752_1015130"></a>IDLdbRecordset Properties</a>
+        </h2>
+        <p><a name="kanchor3997"></a>IDLdbRecordset objects have the following properties in addition to properties inherited from any superclasses. Properties with the word “Yes” in the “Get” column of the property table can be retrieved via <a href="IDLdbRecordset__GetPrope.htm#DM_Import_2289256752_1007129">IDLdbRecordset::GetProperty</a>. There are no Init or SetProperty methods for the IDLdbRecordset object.</p>
+        <h3 class="Property"><a name="DM_Import_2289256752_1015141"></a>CAN_MOVE_ABSOLUTE</h3>
+        <p>If True, the cursor for the recordset can move to an absolute record number.</p>
+        <table class="TableStyle_Property_Table" style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/Property_Table.css');" cellspacing="0">
+            <col />
+            <col />
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColSep">
+                        <p><b>Property Type</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_ColEnd">
+                        <p>Boolean</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColSep">
+                        <p><b>Name String</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_RowSep_ColEnd">
+                        <p><i>not displayed</i>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Get:</b> Yes</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Set:</b> No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Init:</b> No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColEnd">
+                        <p><b>Registered:</b> No</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Property"><a name="DM_Import_2289256752_1015169"></a>CAN_MOVE_FIRST</h3>
+        <p>If True, the cursor for the recordset can move to the first record.</p>
+        <table class="TableStyle_Property_Table" style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/Property_Table.css');" cellspacing="0">
+            <col />
+            <col />
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColSep">
+                        <p><b>Property Type</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_ColEnd">
+                        <p>Boolean</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColSep">
+                        <p><b>Name String</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_RowSep_ColEnd">
+                        <p><i>not displayed</i>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Get:</b> Yes</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Set:</b> No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Init:</b> No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColEnd">
+                        <p><b>Registered:</b> No</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Property"><a name="DM_Import_2289256752_1015197"></a>CAN_MOVE_LAST</h3>
+        <p>If True, the cursor for the recordset can move to the last record.</p>
+        <table class="TableStyle_Property_Table" style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/Property_Table.css');" cellspacing="0">
+            <col />
+            <col />
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColSep">
+                        <p><b>Property Type</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_ColEnd">
+                        <p>Boolean</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColSep">
+                        <p><b>Name String</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_RowSep_ColEnd">
+                        <p><i>not displayed</i>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Get:</b> Yes</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Set:</b> No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Init:</b> No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColEnd">
+                        <p><b>Registered:</b> No</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Property"><a name="DM_Import_2289256752_1015225"></a>CAN_MOVE_NEXT</h3>
+        <p>If True, the cursor for the recordset can move to the next record.</p>
+        <table class="TableStyle_Property_Table" style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/Property_Table.css');" cellspacing="0">
+            <col />
+            <col />
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColSep">
+                        <p><b>Property Type</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_ColEnd">
+                        <p>Boolean</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColSep">
+                        <p><b>Name String</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_RowSep_ColEnd">
+                        <p><i>not displayed</i>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Get:</b> Yes</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Set:</b> No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Init:</b> No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColEnd">
+                        <p><b>Registered:</b> No</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Property"><a name="DM_Import_2289256752_1015253"></a>CAN_MOVE_PRIOR</h3>
+        <p>If True, the cursor for the recordset can move to the previous record.</p>
+        <table class="TableStyle_Property_Table" style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/Property_Table.css');" cellspacing="0">
+            <col />
+            <col />
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColSep">
+                        <p><b>Property Type</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_ColEnd">
+                        <p>Boolean</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColSep">
+                        <p><b>Name String</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_RowSep_ColEnd">
+                        <p><i>not displayed</i>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Get:</b> Yes</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Set:</b> No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Init:</b> No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColEnd">
+                        <p><b>Registered:</b> No</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Property"><a name="DM_Import_2289256752_1015281"></a>CAN_MOVE_RELATIVE</h3>
+        <p>If True, the cursor for the recordset can move to a record number relative to the current record number.</p>
+        <table class="TableStyle_Property_Table" style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/Property_Table.css');" cellspacing="0">
+            <col />
+            <col />
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColSep">
+                        <p><b>Property Type</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_ColEnd">
+                        <p>Boolean</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColSep">
+                        <p><b>Name String</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_RowSep_ColEnd">
+                        <p><i>not displayed</i>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Get:</b> Yes</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Set:</b> No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Init:</b> No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColEnd">
+                        <p><b>Registered:</b> No</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Property"><a name="DM_Import_2289256752_1015309"></a>FIELD_INFO</h3>
+        <p>An array of field informational structures, one for each field in the result set. Field information is only available if the current recordset was generated from a table (that is, if the TABLE property was set when creating the recordset object). Information structures have the following fields (see the ODBC Manual for more information):</p>
+        <ul>
+            <li value="1">TABLE_QUALIFIER: The table qualifier.</li>
+            <li value="2">TABLE_OWNER: The name of the table owner.</li>
+            <li value="3">TABLE_NAME: The name of the table.</li>
+            <li value="4">FIELD_NAME: The name of the field.</li>
+            <li value="5">TYPE_NAME: The datasource type name.</li>
+            <li value="6">PRECISION: Precision of the field.</li>
+            <li value="7">LENGTH: Length in bytes of the data.</li>
+            <li value="8">SCALE: The scale of the field.</li>
+            <li value="9">IS_NULLABLE: The field can contain null values.</li>
+            <li value="10">IS_AUTOINCREMENT: The field is an autoincrement field.</li>
+            <li value="11">IS_CASE_SENSITIVE: The value of the field is case sensitive.</li>
+            <li value="12">IS_UPDATABLE: The field can be updated.</li>
+            <li value="13">IDL_TYPE: The IDL DataMiner type to which the field is mapped.</li>
+        </ul>
+        <p>If a field is returned empty, this indicates that the driver doesn’t support the query for that particular information.</p>
+        <table class="TableStyle_Property_Table" style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/Property_Table.css');" cellspacing="0">
+            <col />
+            <col />
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColSep">
+                        <p><b>Property Type</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_ColEnd">
+                        <p>Array of structures</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColSep">
+                        <p><b>Name String</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_RowSep_ColEnd">
+                        <p><i>not displayed</i>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Get:</b> Yes</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Set:</b> No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Init:</b>  No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColEnd">
+                        <p><b>Registered:</b> No</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Property"><a name="DM_Import_2289256752_1015354"></a>GET_DATABASE</h3>
+        <p>An object reference to the database object used when the current recordset object was created.</p>
+        <table class="TableStyle_Property_Table" style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/Property_Table.css');" cellspacing="0">
+            <col />
+            <col />
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColSep">
+                        <p><b>Property Type</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_ColEnd">
+                        <p>Object reference</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColSep">
+                        <p><b>Name String</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_RowSep_ColEnd">
+                        <p><i>not displayed</i>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Get:</b> Yes</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Set:</b> No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Init:</b>  No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColEnd">
+                        <p><b>Registered:</b> No</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Property"><a name="DM_Import_2289256752_1015382"></a>IS_READONLY</h3>
+        <p>If True, the table is read-only.</p>
+        <table class="TableStyle_Property_Table" style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/Property_Table.css');" cellspacing="0">
+            <col />
+            <col />
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColSep">
+                        <p><b>Property Type</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_ColEnd">
+                        <p>Boolean</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColSep">
+                        <p><b>Name String</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_RowSep_ColEnd">
+                        <p><i>not displayed</i>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Get:</b> Yes</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Set:</b> No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Init:</b>  No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColEnd">
+                        <p><b>Registered:</b> No</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Property"><a name="DM_Import_2289256752_1015410"></a>N_BUFFERS</h3>
+        <p>The number of buffers allocated for the recordset.</p>
+        <table class="TableStyle_Property_Table" style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/Property_Table.css');" cellspacing="0">
+            <col />
+            <col />
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColSep">
+                        <p><b>Property Type</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_ColEnd">
+                        <p>Integer</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColSep">
+                        <p><b>Name String</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_RowSep_ColEnd">
+                        <p><i>not displayed</i>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Get:</b> Yes</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Set:</b> No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Init:</b>  Yes</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColEnd">
+                        <p><b>Registered:</b> No</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 class="Property"><a name="DM_Import_2289256752_1015438"></a>RECORDSET_SOURCE</h3>
+        <p>A string containing either the table name or SQL statement used to create the recordset.</p>
+        <table class="TableStyle_Property_Table" style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/Property_Table.css');" cellspacing="0">
+            <col />
+            <col />
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_ColSep">
+                        <p><b>Property Type</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_ColEnd">
+                        <p><b>String</b>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_0_0_RowSep_ColSep">
+                        <p><b>Name String</b>
+                        </p>
+                    </td>
+                    <td colspan="3" class="TableStyle_Property_Table_Body_0_0_RowSep_ColEnd">
+                        <p><i>not displayed</i>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Get:</b> Yes</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Set:</b> No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColSep">
+                        <p><b>Init:</b>  No</p>
+                    </td>
+                    <td class="TableStyle_Property_Table_Body_1_0_RowEnd_ColEnd">
+                        <p><b>Registered:</b> No</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="DM_Import_2289256752_1008365_PageTOC_IDLdbRecordset_"></a>Methods</h2>
+        <ul>
+            <li value="1"><a href="IDLdbRecordset__AddRecor.htm#DM_Import_2289256752_1006906">IDLdbRecordset::AddRecord</a>
+            </li>
+            <li value="2"><a href="IDLdbRecordset__Cleanup.htm#DM_Import_2289256752_1006948">IDLdbRecordset::Cleanup</a>
+            </li>
+            <li value="3"><a href="IDLdbRecordset__CurrentR.htm#DM_Import_2289256752_1006991">IDLdbRecordset::CurrentRecord</a>
+            </li>
+            <li value="4"><a href="IDLdbRecordset__DeleteRe.htm#DM_Import_2289256752_1007032">IDLdbRecordset::DeleteRecord</a>
+            </li>
+            <li value="5"><a href="IDLdbRecordset__GetField.htm#DM_Import_2289256752_1007072">IDLdbRecordset::GetField</a>
+            </li>
+            <li value="6"><a href="IDLdbRecordset__GetPrope.htm#DM_Import_2289256752_1007129">IDLdbRecordset::GetProperty</a>
+            </li>
+            <li value="7"><a href="IDLdbRecordset__GetRecor.htm#DM_Import_2289256752_1007171">IDLdbRecordset::GetRecord</a>
+            </li>
+            <li value="8"><a href="IDLdbRecordset__Init.htm#DM_Import_2289256752_1007240">IDLdbRecordset::Init</a>
+            </li>
+            <li value="9"><a href="IDLdbRecordset__MoveCurs.htm#DM_Import_2289256752_1007295">IDLdbRecordset::MoveCursor</a>
+            </li>
+            <li value="10"><a href="IDLdbRecordset__NFields.htm#DM_Import_2289256752_1007378">IDLdbRecordset::NFields</a>
+            </li>
+            <li value="11"><a href="IDLdbRecordset__SetField.htm#DM_Import_2289256752_1007423">IDLdbRecordset::SetField</a>
+            </li>
+        </ul>
+        <h2 class="API"><a name="DM_Import_2289256752_61948"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

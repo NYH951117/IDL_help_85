@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Contours">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Filled Contours</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../GUInavigation/contour_plots_gallery.htm">Contours</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Filled Contours</span>
+        </div>
+        <h1><a name="kanchor4212"></a>Filled Contours</h1>
+        <p>You can enhance contour graphics by displaying different levels of the contour and filling them with color. In this topic, we will use the <a href="../../Reference Material/C/CONTOUR.htm">CONTOUR function</a> along with various keywords to demonstrate some of the capabilities of CONTOUR.</p>
+        <p>For additional examples using CONTOUR, see the <a href="../LongExamples/EnvMonitoring/EM_Splash.htm">Environmental Monitoring Long Example</a>.</p>
+        <h2>Smoothed Contour Example</h2>
+        <p>This first example uses random data to demonstrate how to define colors to use, fill the contours and then outline the levels you want to show. This example also illustrates how to smooth contour data.</p>
+        <p>
+            <img src="../../Resources/Images/contour_smooth.png" />
+        </p>
+        <p>The code shown below creates the graphic shown above. You can copy the entire block and paste it into the IDL&#160;command line to run it.</p>
+        <p class="Code">; Create a simple dataset:</p>
+        <p class="Code">data = RANDOMU(seed, 9, 9)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Plot the unsmoothed data:</p>
+        <p class="Code">unsmooth = CONTOUR(data, TITLE='Unsmoothed', $</p>
+        <p class="Code">&#160;&#160;&#160;LAYOUT=[2,1,1], RGB_TABLE=13, /FILL, N_LEVELS=10)</p>
+        <p class="Code">; Draw the outline of the 10 levels</p>
+        <p class="Code">outline1 = CONTOUR(data, N_LEVELS=10, /OVERPLOT)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Plot the smoothed data:</p>
+        <p class="Code">smooth = CONTOUR(MIN_CURVE_SURF(data), TITLE='Smoothed', $</p>
+        <p class="Code">&#160;&#160;&#160;/CURRENT, LAYOUT=[2,1,2], RGB_TABLE=13, $</p>
+        <p class="Code">&#160;&#160;&#160;/FILL, N_LEVELS=10)</p>
+        <p class="Code">; Draw the outline of the 10 levels</p>
+        <p class="Code">outline2 = CONTOUR(MIN_CURVE_SURF(data), $</p>
+        <p class="Code">&#160;&#160;&#160;N_LEVELS=10, /OVERPLOT)</p>
+        <h2><a name="Digital"></a>Digital Elevation Model (DEM) Contour Example</h2>
+        <p>The data in this example is a digital elevation model (DEM) data taken from the Santa Monica mountains in California.</p>
+        <p>
+            <img src="../images/contour_surface_filled.png" />
+        </p>
+        <p>The code shown below creates the graphic shown above. You can copy the entire block and paste it into the IDL command line to run it. The keywords used are explained in detail after the example code.</p>
+        <p xml:space="preserve" class="Code">; Define the digital elevation model data to open.</p>
+        <p class="Code">file = FILEPATH('elevbin.dat', SUBDIR=['examples', 'data'])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Read the binary file and define the data dimensions.</p>
+        <p class="Code">dem = READ_BINARY(file, DATA_DIMS=[64,64])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Rotate the data for display purposes.</p>
+        <p class="Code">dem = ROTATE(dem, 1)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Define the minimum data elements.</p>
+        <p class="Code">dem_min = MIN(dem, MAX=dem_max)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Define the number of levels to display.</p>
+        <p class="Code">nlevels = 15</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Define the levels to display.</p>
+        <p class="Code">levels = FINDGEN(nlevels)/nlevels*(dem_max-dem_min) + dem_min</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Define the levels to show and the colors to use.</p>
+        <p class="Code">levels = [-1, levels]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Display the filled contour.</p>
+        <p class="Code">c1 = CONTOUR(dem, C_VALUE=levels, $</p>
+        <p class="Code">&#160;&#160;&#160;RGB_TABLE=34, /FILL, PLANAR=0,  $</p>
+        <p class="Code">&#160;&#160;&#160;XTITLE='X', YTITLE='Y', ZTITLE='Elevation (m)', $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE='L.A. Basin and Santa Monica Mountains')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Move the Z Axis to the back by changing its location property.</p>
+        <p class="Code">(c1['zaxis']).location = [0, (c1.yrange)[1], 0]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Overplot the contour lines to show more detail.</p>
+        <p class="Code">; Do not display the labels for the contour lines.</p>
+        <p class="Code">c2 = CONTOUR(dem, C_LABEL_SHOW=0, $</p>
+        <p class="Code">&#160;&#160;&#160;C_VALUE=levels, PLANAR=0, COLOR='black', $</p>
+        <p class="Code">&#160;&#160;&#160;/OVERPLOT)</p>
+        <p class="Code">&#160;</p>
+        <p>Explanation of some of the properties and keywords used in the code above:</p>
+        <ul>
+            <li value="1">In the first call to CONTOUR, C_VALUES sets the levels of the contours to the defined variable. </li>
+            <li value="2">The use of "/FILL" turns on the filling of the contour levels using the assigned color table. There are two ways to turn on FILL:<ul><li value="1">/FILL</li><li value="2">FILL=1</li></ul></li>
+            <li value="3">By default, CONTOUR sets the PLANAR property to one which turns on projecting the contour levels onto a 2-dimensional plane. When PLANAR is set to zero, it turns off this projection onto a 2-dimensional plane and allows the contours to occupy 3-dimensional space. It effectively turns the output from CONTOUR into a SURFACE plot.</li>
+            <li value="4">In the second call to CONTOUR, we turn off the labels by setting C_LABEL_SHOW to zero. </li>
+            <li value="5">In this call, not specifying the FILL property sets it to zero (the default) and allows just the contour lines to be drawn in 3-dimensional space (with PLANAR=0).</li>
+        </ul>
+        <h2>See Also</h2>
+        <ul>
+            <li value="1"><a href="../Axes.htm">Axes</a>
+            </li>
+            <li value="2"><a href="../AxesInGraphics.htm">Axes in Graphics</a>
+            </li>
+            <li value="3"><a href="../propChanges.htm">Changing graphics properties</a>
+            </li>
+            <li value="4"><a href="../MultiViz.htm">Multiple graphics in one window</a>
+            </li>
+            <li value="5"><a href="../ImageGuideMe/SaveImage.htm">Save a graphic</a>
+            </li>
+            <li value="6"><a href="../SurfaceGuideMe/surfaces.htm">Displaying surfaces</a>
+            </li>
+            <li value="7"><a href="../SurfaceGuideMe/surfaceContour.htm">Display a surface with contour lines</a>
+            </li>
+            <li value="8"><a href="../../Reference Material/C/CONTOUR.htm">CONTOUR</a>
+            </li>
+            <li value="9"><a href="../../Reference Material/F/FINDGEN.htm">FINDGEN</a>
+            </li>
+            <li value="10"><a href="../../Reference Material/M/MIN.htm">MIN</a>
+            </li>
+            <li value="11"><a href="../../Reference Material/M/MIN_CURVE_SURF.htm">MIN_CURVE_SURF </a>
+            </li>
+            <li value="12"><a href="../../Reference Material/R/RANDOMU.htm">RANDOMU</a>
+            </li>
+            <li value="13"><a href="../../Reference Material/R/READ_BINARY.htm">READ_BINARY</a>
+            </li>
+            <li value="14"><a href="../../Reference Material/R/ROTATE.htm">ROTATE</a>
+            </li>
+            <li value="15"><a href="../../Reference Material/Functional List of IDL Routines/Graphics.htm">IDL Graphics Functions</a>
+            </li>
+            <li value="16"><a href="../../IDL Graphics/FormattingSymsAndLines.htm">Formatting IDL&#160;Graphics Symbols and Lines</a>
+            </li>
+        </ul>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

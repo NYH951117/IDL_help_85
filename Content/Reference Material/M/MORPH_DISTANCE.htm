@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: M">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>MORPH_DISTANCE </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="M_list.htm">Routines: M</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">MORPH_DISTANCE</span>
+        </div>
+        <h1 class="Routine"><a name="M_824365677_948885"></a><a name="kanchor1889"></a><a name="M_824365677_94643"></a>MORPH_DISTANCE </h1>
+        <p>The MORPH_DISTANCE function estimates <i>N</i>-dimensional distance maps, which contain for each foreground pixel the distance to the nearest background pixel, using a given norm. Available norms include non-diagonal neighbors, chessboard, city block, and approximate Euclidean distance.</p>
+        <p>The distance map is useful for a variety of morphological operations: thinning, erosion and dilation by discs of radius <i>r</i>, and granulometry.</p>
+        <h2 class="API"><a name="M_824365677_948945"></a><a name="M_824365677_948945_PageTOC_MORPH_DISTANCE_"></a>Examples</h2>
+        <p>The following code reads a data file in the IDL Demo data directory containing a magnified image of grains of pollen. It then applies a threshold and the morphological distance operator. Thresholding the resulting distance operator with a value of “n” produces the equivalent of eroding the thresholded image with a disc of radius “n”.</p>
+        <p class="Code">;Handle TrueColor displays:<br />DEVICE, DECOMPOSED=0<br /><br />;Read the image<br />path=FILEPATH('pollens.jpg',SUBDIR=['examples','demo','demodata']) <br />READ_JPEG, path, img<br /><br />; Create window:<br />WINDOW, 0, XSIZE=700, YSIZE=540<br /><br />; Display the original image<br />XYOUTS, 180, 525, 'Original Image', ALIGNMENT=.5, /DEVICE<br />TV, img, 20, 280<br /><br />; Apply the threshold:<br />thresh = img GE 140B<br /><br />; Display the thresholded image<br />XYOUTS, 520, 525, 'Thresholded Image', ALIGNMENT=.5, /DEVICE<br />TVSCL, thresh, 360, 280<br /><br />;Create Euclidean distance function<br />edist = MORPH_DISTANCE(thresh, NEIGHBOR_SAMPLING = 3)<br /><br />; Display the distance function<br />XYOUTS, 180, 265, 'Distance Function', ALIGNMENT=.5, /DEVICE<br />TVSCL, edist, 20, 20<br /><br />; Display image after erosion with a disc of radius 5:<br />XYOUTS, 520, 265, 'After erosion with disc of radius 5', $<br />&#160;&#160;&#160;ALIGNMENT=.5, /DEVICE<br />TVSCL, edist GT 5, 360, 20</p>
+        <h2 class="API"><a name="M_824365677_948890"></a><a name="M_824365677_948890_PageTOC_MORPH_DISTANCE_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = MORPH_DISTANCE (<i>Data</i> [,&#160;/<a href="#M_824365677_948898" class="selected">BACKGROUND</a>] [,&#160;<a href="#M_824365677_948900" class="selected">NEIGHBOR_SAMPLING</a>={1&#160;|&#160;2&#160;|&#160;3&#160;}] [,&#160;/<a href="#M_824365677_948943" class="selected">NO_COPY</a>]&#160;)</p>
+        <h2 class="API"><a name="M_824365677_948892"></a><a name="M_824365677_948892_PageTOC_MORPH_DISTANCE_"></a>Return Value</h2>
+        <p>The returned variable is an array of the same dimension as the input array.</p>
+        <h2 class="API"><a name="M_824365677_948894"></a><a name="M_824365677_948894_PageTOC_MORPH_DISTANCE_"></a>Arguments</h2>
+        <h3 class="Argument">Data</h3>
+        <p>An input binary array. Zero-valued pixels are considered to be part of the background.</p>
+        <h2 class="API"><a name="M_824365677_948897"></a><a name="M_824365677_948897_PageTOC_MORPH_DISTANCE_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="M_824365677_948898"></a><a name="M_824365677_948898_Keywords_MORPH_DISTANCE__"></a>BACKGROUND</h3>
+        <p>By default, the distance is computed for the foreground (non-zero) features in the <i>Data</i> argument. Set this keyword to compute the distance of the background features instead of the foreground features. If the keyword is set, elements of <i>Result</i> that are on an edge are set to 0.</p>
+        <h3 class="Keyword"><a name="M_824365677_948900"></a><a name="M_824365677_948900_Keywords_MORPH_DISTANCE__"></a>NEIGHBOR_SAMPLING</h3>
+        <p>Set this keyword to indicate how the distance of each neighbor from a given pixel is determined. Valid values include:</p>
+        <ul>
+            <li value="1">0 = default. No diagonal neighbors. Each neighbor is assigned a distance of 1.</li>
+            <li value="2">1 = chessboard. Each neighbor is assigned a distance of 1.</li>
+            <li value="3">2 = city block. Each neighbor is assigned a distance corresponding to the number of pixels to be visited when traveling from the current pixel to the neighbor. (The path can only take 90 degree turns; no diagonal paths are allowed.)</li>
+            <li value="4">3 = approximate Euclidean distance. Each neighbor is assigned an approximate Euclidean distance, where the distances along the diagonals and the center row and column are correct, but for speed the off-diagonal elements are approximated by adding together the distances after the square root.</li>
+        </ul>
+        <h4>Default Two Dimensional Example</h4>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;1</p>
+        <p class="Code">1&#160;&#160;&#160;&#160;X&#160;&#160;&#160;&#160;1</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;1</p>
+        <h4>Chessboard Two-Dimensional Example</h4>
+        <p class="Code">1&#160;&#160;&#160;&#160;1&#160;&#160;&#160;&#160;1</p>
+        <p class="Code">1&#160;&#160;&#160;&#160;X&#160;&#160;&#160;&#160;1</p>
+        <p class="Code">1&#160;&#160;&#160;&#160;1&#160;&#160;&#160;&#160;1</p>
+        <h4>City Block Two-Dimensional Example:	</h4>
+        <p class="Code">2&#160;&#160;&#160;&#160;1&#160;&#160;&#160;&#160;2</p>
+        <p class="Code">1&#160;&#160;&#160;&#160;X&#160;&#160;&#160;&#160;1</p>
+        <p class="Code">2&#160;&#160;&#160;&#160;1&#160;&#160;&#160;&#160;2</p>
+        <h4>Approximate Euclidean Distance Two-Dimensional Example</h4>
+        <p class="Code">sqrt(2)&#160;&#160;1&#160;&#160;sqrt(2)</p>
+        <p class="Code">&#160;&#160;&#160;1&#160;&#160;&#160;&#160;&#160;X&#160;&#160;&#160;&#160;&#160;1</p>
+        <p class="Code">sqrt(2)&#160;&#160;1&#160;&#160;sqrt(2)</p>
+        <h3 class="Keyword"><a name="M_824365677_948943"></a><a name="M_824365677_948943_Keywords_MORPH_DISTANCE__"></a>NO_COPY</h3>
+        <p>Set this keyword to request that the input array be reused, if possible. If this keyword is set, the input argument is undefined upon return.</p>
+        <h2 class="API"><a name="M_824365677_954699"></a><a name="M_824365677_954699_PageTOC_MORPH_DISTANCE_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="M_824365677_973025"></a><a name="M_824365677_973025_PageTOC_MORPH_DISTANCE_"></a>See Also</h2>
+        <p><a href="../D/DILATE.htm#D_843829869_747869">DILATE</a>, <a href="../E/ERODE.htm#E_841667181_989418">ERODE</a>, <a href="MORPH_CLOSE.htm#M_824365677_1117238">MORPH_CLOSE</a>, <a href="MORPH_GRADIENT.htm#M_824365677_948880">MORPH_GRADIENT</a>, <a href="MORPH_HITORMISS.htm#M_824365677_930030">MORPH_HITORMISS</a>, <a href="MORPH_OPEN.htm#M_824365677_930051">MORPH_OPEN</a>, <a href="MORPH_THIN.htm#M_824365677_930961">MORPH_THIN</a>, <a href="MORPH_TOPHAT.htm#M_824365677_930077">MORPH_TOPHAT</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

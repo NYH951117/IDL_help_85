@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Adding System Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Example: Using Routine Design Iteration (RSUM)</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="AddingSystRoutines.htm">Adding System Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Example: Using Routine Design Iteration (RSUM)</span>
+        </div>
+        <h1>Example: Using Routine Design Iteration (RSUM)</h1>
+        <p>This example shows how a simple routine can be developed in stages. RSUM is a function that returns the running sum of the values in its single input argument. We will present three versions of this routine, each one of which represents an improvement in functionality and flexibility.</p>
+        <p>All three versions use the function <b>IDL_MakeTempFromTemplate()</b>, described in “Creating A Temporary Variable Using Another Variable As A Template”. The result of RSUM always has the same general shape and dimensions as the input argument. <b>IDL_MakeTempFromTemplate()</b> encapsulates the task of creating a temporary variable of the desired type and shape using the input argument as a template.</p>
+        <h2>Running Sum (Example 1)</h2>
+        <p>The first example of RSUM is very simple. It computes a running sum on the array input. The result is a floating point array of the same dimensions.</p>
+        <h3>Calling Sequence</h3>
+        <p class="Code">Result = RSUM1(Array)</p>
+        <h3>Arguments</h3>
+        <h4>Array</h4>
+        <p>Array for which a running sum will be computed.</p>
+        <p>This is a minimal design that lacks some important characteristics that IDL</p>
+        <p>system routines usually embody:</p>
+        <ul>
+            <li value="1">It does not handle scalar input.</li>
+            <li value="2">The type of the input is inflexible. IDL routines usually try to handle any input type and do whatever type conversions are necessary.</li>
+            <li value="3">The result type is always single precision floating point. IDL routines usually perform computations in the type of the input arguments and return a value of the same type.</li>
+        </ul>
+        <p>We will improve on this design in our subsequent examples. The code to implement RSUM1 is shown in the following figure. The line numbers are not part of the code and are present to make the discussion easier to follow. Each line of this routine is discussed below:</p>
+        <p>&#160;</p>
+        <p class="Code">/*1*/ IDL_VPTR IDL_rsum1(int argc, IDL_VPTR argv[])</p>
+        <p class="Code">/*2*/ {</p>
+        <p class="Code">/*3*/ IDL_VPTR v; </p>
+        <p class="Code">/*4*/ IDL_VPTR r; </p>
+        <p class="Code">/*5*/ float *f_src; </p>
+        <p class="Code">/*6*/ float *f_dst; </p>
+        <p class="Code">/*7*/ IDL_MEMINT n;</p>
+        <p class="Code">/*8*/ </p>
+        <p class="Code">/*9*/ </p>
+        <p class="Code">/*10*/ v = argv[0];</p>
+        <p class="Code">/*11*/ if (v-&gt;type != IDL_TYP_FLOAT) </p>
+        <p class="Code">/*12*/ &#160;&#160;&#160;IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP,</p>
+        <p class="Code">/*13*/ &#160;&#160;&#160;"argument must be float"); </p>
+        <p class="Code">/*14*/ IDL_ENSURE_ARRAY(v);</p>
+        <p class="Code">/*15*/ IDL_EXCLUDE_FILE(v);</p>
+        <p class="Code">/*16*/ </p>
+        <p class="Code">/*17*/ f_dst = (float *)</p>
+        <p class="Code">/*18*/ &#160;&#160;&#160;IDL_VarMakeTempFromTemplate(v, IDL_TYP_FLOAT, </p>
+        <p class="Code">/*19*/ &#160;&#160;&#160;&#160;&#160;&#160;(IDL_StructDefPtr) 0, &amp;r, FALSE);</p>
+        <p class="Code">/*20*/ f_src = (float *) v-&gt;value.arr-&gt;data;</p>
+        <p class="Code">/*21*/ n = v-&gt;value.arr-&gt;n_elts - 1;</p>
+        <p class="Code">/*22*/ *f_dst++ = *f_src++;/* First element */</p>
+        <p class="Code">/*23*/ for (; n--; f_dst++) *f_dst = *(f_dst - 1) + *f_src++;</p>
+        <p class="Code">/*24*/ </p>
+        <p class="Code">/*25*/ return r;</p>
+        <p class="Code">/*26*/ }</p>
+        <p>&#160;</p>
+        <p>1 - The standard signature for an IDL system function that does not accept keywords.</p>
+        <p>3 - This variable is used to access the input argument in a convenient way.</p>
+        <p>4 - This <b>IDL_VPTR</b> will be used to return the result.</p>
+        <p>5–6 - As the running sum is computed, <b>f_src</b> will point at the input data and f_dst will point at the output data.</p>
+        <p>7 - The number of elements in the input.</p>
+        <p>10 - Obtain the input variable pointer from argv[0].</p>
+        <p>11 - If the input is not single precision floating point, throw an error and quit. This is overly rigid. Real IDL routines would attempt to either type convert the input or do the computation in the input type.</p>
+        <p>14 - This version can only handle arrays. If the user passes a scalar, it throws an error.</p>
+        <p>15 - This routine cannot handle ASSOC file variables. Most IDL routines exclude such variables as they do not contain any data to work with. ASSOC variable data usually comes into a routine as the result of an expression that yields a temporary variable (e.g. TMP = RSUM(MY_ASSOC_VAR(2))).</p>
+        <p>17 - Create a single precision floating point temporary variable of the same size as the input variable and get a pointer to its data area.</p>
+        <p>20 - Get a pointer to the data area of the input variable. At this point we know this variable is always a floating point array.</p>
+        <p>21 - The number of data elements in the input.</p>
+        <p>22-23 - The running sum computation.</p>
+        <h2>Running Sum (Example 2)</h2>
+        <p>In our second example of <b>RSUM</b>, we improve on the first in several ways:</p>
+        <ul>
+            <li value="1">RSUM2 accepts scalar input.</li>
+            <li value="2">If the input is not of floating type, we type convert it instead of throwing an error.</li>
+            <li value="3">If the input is a temporary variable of the correct type, we will do the running sum computation in place and return the input as our result variable rather than creating an extra temporary. This optimization reduces memory use, and can have positive effects on dynamic memory fragmentation.</li>
+        </ul>
+        <p>This example computes a running sum on the input. The result is a floating point variable with the same structure.</p>
+        <h3>Calling Sequence</h3>
+        <p class="Code">Result = RSUM2(Input)</p>
+        <h3>Arguments</h3>
+        <h4>Input</h4>
+        <p>Scalar or array data of any numeric type for which a running sum will be computed.</p>
+        <h3>Sample Code</h3>
+        <p>&#160;</p>
+        <p class="Code">/*1*/ IDL_VPTR IDL_rsum2(int argc, IDL_VPTR argv[])</p>
+        <p class="Code">/*2*/ {</p>
+        <p class="Code">/*3*/ IDL_VPTR v; </p>
+        <p class="Code">/*4*/ IDL_VPTR r; </p>
+        <p class="Code">/*5*/ float *f_src; </p>
+        <p class="Code">/*6*/ float *f_dst; </p>
+        <p class="Code">/*7*/ IDL_MEMINT n;</p>
+        <p class="Code">/*8*/ </p>
+        <p class="Code">/*9*/ </p>
+        <p class="Code">/*10*/ v = IDL_BasicTypeConversion(1, argv, IDL_TYP_FLOAT);</p>
+        <p class="Code">/*11*/ /* IDL_BasicTypeConversion calls IDL_ENSURE_SIMPLE, so skip /*12*/ it here. */</p>
+        <p class="Code">/*13*/ IDL_VarGetData(v, &amp;n, (char **) &amp;f_src, FALSE);</p>
+        <p class="Code">/*14*/ </p>
+        <p class="Code">/*15*/ /* Get a result var, reusing the input if possible */</p>
+        <p class="Code">/*16*/ if (v-&gt;flags &amp; V_TEMP) {</p>
+        <p class="Code">/*17*/ r = v;</p>
+        <p class="Code">/*18*/ f_dst = f_src;</p>
+        <p class="Code">/*19*/ } else {</p>
+        <p class="Code">/*20*/ f_dst = (float *)</p>
+        <p class="Code">/*21*/ IDL_VarMakeTempFromTemplate(v, IDL_TYP_FLOAT, </p>
+        <p class="Code">/*22*/ (IDL_StructDefPtr) 0, &amp;r, FALSE);</p>
+        <p class="Code">/*23*/ }</p>
+        <p class="Code">/*24*/</p>
+        <p class="Code">/*25*/ *f_dst++ = *f_src++;/* First element */</p>
+        <p class="Code">/*26*/ n--;</p>
+        <p class="Code">/*27*/ for (; n--; f_dst++) *f_dst = *(f_dst - 1) + *f_src++;</p>
+        <p class="Code">/*28*/ </p>
+        <p class="Code">/*29*/ return r;</p>
+        <p class="Code">/*30*/ }</p>
+        <p>&#160;</p>
+        <p>10 - If the input has the wrong type, obtain one of the right type. If it was already of the correct type, <b>IDL_BasicTypeConversion()</b> will simply return the input value without allocating a temporary variable. Hence, no explicit check for that is required. Also, if the input argument cannot be converted to the desired type (e.g. it is a structure or file variable) <b>IDL_BasicTypeConversion()</b> will throw an error. Hence, we know that the result from this function will be what we want without requiring any further checking.</p>
+        <p>13 - <b>IDL_VarGetData()</b> is a more elegant way to obtain a pointer to variable data along with a count of elements. A further benefit is that it automatically handles scalar variables which removes the restriction from RSUM1.</p>
+        <p>15–23 - If the input variable is a temporary, we will do the computation in place and return the input. Otherwise, we create a temporary variable of the desired type to be the result.</p>
+        <p>Note that if <b>IDL_BasicTypeConversion()</b> returned a pointer to anything other than the passed in value of argv[0], that value will be a temporary variable which will then be turned into the function result by this code. Hence, we never free the value from <b>IDL_BasicTypeConversion()</b>.</p>
+        <h2>Running Sum (Example 3)</h2>
+        <p>RSUM2 is a big improvement over RSUM1, but it still suffers from the fact that all computation is done in a single data type. A real IDL system routine always tries to perform computations in the most significant type presented by its arguments. In a single argument case like RSUM, that would mean doing computations in the input data type, whatever that might be. Our final version, RSUM3, resolves this shortcoming.</p>
+        <p>This example computes a running sum on the input. The result is a variable with the same type and structure as the input.</p>
+        <h3>Calling Sequence</h3>
+        <p class="Code">Result = RSUM3(Input)</p>
+        <h3>Arguments</h3>
+        <h4>Input</h4>
+        <p>Scalar or array data of any numeric type for which a running sum will be computed.</p>
+        <p>&#160;</p>
+        <h3>Sample Code</h3>
+        <p>&#160;</p>
+        <p class="Code">/*1*/ cx_public IDL_VPTR IDL_rsum3(int argc, IDL_VPTR argv[])</p>
+        <p class="Code">/*2*/ {</p>
+        <p class="Code">/*3*/ IDL_VPTR v, r;</p>
+        <p class="Code">/*4*/ union {</p>
+        <p class="Code">/*5*/ char *sc;	/* Standard char */ </p>
+        <p class="Code">/*6*/ UCHAR *c;	/* IDL_TYP_BYTE */ </p>
+        <p class="Code">/*7*/ IDL_INT *i;	/* IDL_TYP_INT */ </p>
+        <p class="Code">/*8*/ IDL_UINT *ui;	/* IDL_TYP_UINT */ </p>
+        <p class="Code">/*9*/ IDL_LONG *l;	/* IDL_TYP_LONG */ </p>
+        <p class="Code">/*10*/ IDL_ULONG *ul;	/* IDL_TYP_ULONG */ </p>
+        <p class="Code">/*11*/ IDL_LONG64 *l64;	/* IDL_TYP_LONG64 */ </p>
+        <p class="Code">/*12*/ IDL_ULONG64 *ul64;	/* IDL_TYP_ULONG64 */ </p>
+        <p class="Code">/*13*/ float *f;	/* IDL_TYP_FLOAT */ </p>
+        <p class="Code">/*14*/ double *d;	/* IDL_TYP_DOUBLE */ </p>
+        <p class="Code">/*15*/ IDL_COMPLEX *cmp;	/* IDL_TYP_COMPLEX */ </p>
+        <p class="Code">/*16*/ IDL_DCOMPLEX *dcmp;	/* IDL_TYP_DCOMPLEX */</p>
+        <p class="Code">/*17*/ } src, dst; </p>
+        <p class="Code">/*18*/ IDL_LONG n;</p>
+        <p class="Code">/*19*/ </p>
+        <p class="Code">/*20*/ </p>
+        <p class="Code">/*21*/ v = argv[0];</p>
+        <p class="Code">/*22*/ if (v-&gt;type == IDL_TYP_STRING)</p>
+        <p class="Code">/*23*/ v = IDL_BasicTypeConversion(1, argv, IDL_TYP_FLOAT); </p>
+        <p class="Code">/*24*/ IDL_VarGetData(v, &amp;n, &amp;(src.sc), TRUE);</p>
+        <p class="Code">/*25*/ n--;	/* First is a special case */</p>
+        <p class="Code">/*26*/ </p>
+        <p class="Code">/*27*/ /* Get a result var, reusing the input if possible */</p>
+        <p class="Code">/*28*/ if (v-&gt;flags &amp; IDL_V_TEMP) {</p>
+        <p class="Code">/*29*/ r = v;</p>
+        <p class="Code">/*30*/ dst = src;</p>
+        <p class="Code">/*31*/ } else {</p>
+        <p class="Code">/*32*/ dst.sc = IDL_VarMakeTempFromTemplate(v, v-&gt;type, </p>
+        <p class="Code">/*33*/ &#160;&#160;&#160;(IDL_StructDefPre) 0, &amp;r, FALSE);</p>
+        <p class="Code">/*34*/ }</p>
+        <p class="Code">/*35*/ </p>
+        <p class="Code">/*36*/ #define DOCASE(type, field) \</p>
+        <p class="Code">/*37*/ case type: for (*dst.field++ = *src.field++; n--;\</p>
+        <p class="Code">/*38*/ dst.field++)\</p>
+        <p class="Code">/*39*/ *dst.field = *(dst.field - 1) + *src.field++; break</p>
+        <p class="Code">/*40*/ </p>
+        <p class="Code">/*41*/ #define DOCASE_CMP(type, field) case type: \</p>
+        <p class="Code">/*42*/ for (*dst.field++ = *src.field++; n--; \</p>
+        <p class="Code">/*43*/ dst.field++, src.field++) { \</p>
+        <p class="Code">/*44*/ dst.field-&gt;r = (dst.field - 1)-&gt;r + src.field-&gt;r; \</p>
+        <p class="Code">/*45*/ dst.field-&gt;i = (dst.field - 1)-&gt;i + src.field-&gt;i; } \</p>
+        <p class="Code">/*46*/ break</p>
+        <p class="Code">/*47*/ </p>
+        <p class="Code">/*48*/ switch (v-&gt;type) { </p>
+        <p class="Code">/*49*/ DOCASE(IDL_TYP_BYTE, c); </p>
+        <p class="Code">/*50*/ DOCASE(IDL_TYP_INT, i); </p>
+        <p class="Code">/*51*/ DOCASE(IDL_TYP_LONG, l); </p>
+        <p class="Code">/*52*/ DOCASE(IDL_TYP_FLOAT, f); </p>
+        <p class="Code">/*53*/ DOCASE(IDL_TYP_DOUBLE, d); </p>
+        <p class="Code">/*54*/ DOCASE_CMP(IDL_TYP_COMPLEX, cmp); </p>
+        <p class="Code">/*55*/ DOCASE_CMP(IDL_TYP_DCOMPLEX, dcmp); </p>
+        <p class="Code">/*56*/ DOCASE(IDL_TYP_UINT, ui); </p>
+        <p class="Code">/*57*/ DOCASE(IDL_TYP_ULONG, ul); </p>
+        <p class="Code">/*58*/ DOCASE(IDL_TYP_LONG64, l64); </p>
+        <p class="Code">/*59*/ DOCASE(IDL_TYP_ULONG64, ul64);</p>
+        <p class="Code">/*60*/ default: IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP, </p>
+        <p class="Code">/*61*/ &#160;&#160;&#160;"unexpected type");</p>
+        <p class="Code">/*62*/ }</p>
+        <p class="Code">/*63*/ #undef DOCASE</p>
+        <p class="Code">/*64*/ #undef DOCASE_CMP</p>
+        <p class="Code">/*65*/ </p>
+        <p class="Code">/*66*/ return r;</p>
+        <p class="Code">/*67*/ }</p>
+        <p>&#160;</p>
+        <p>17 - <b>f_src</b> and <b>f_dst</b> are no longer pointers to float. They are now the <b>IDL_ALLPTR</b> type, which can point to data of any IDL type. To reflect this change in scope, the leading <b>f_ prefix</b> has been dropped.</p>
+        <p>22-23 - Strings are the only input type that now require conversion. The other types can either support the computation, or are not convertable to a type that can.</p>
+        <p>36-39 - The code for the running sum computation is logically the same for all non-complex data types, differing only in the <b>IDL_ALLPTR</b> field that is used for each type. Using a macro for this means that the expression is only typed in once, and the C compiler automatically fills in the different parts for each data type. This is less error prone than entering the expression manually for each type, and leads to more readable code. This is one of the rare cases where a macro makes things more reliable and readable.</p>
+        <p>41-46 - A macro for the 2 complex types.</p>
+        <p>46-59 - A switch statement that uses the macros defined above to perform the running sum on all possible types. Note the default case, which traps attempts to compute a running sum on structures.</p>
+        <p>60-61 - Don’t allow the macros used in the above switch statement to remain defined beyond the scope of this function.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

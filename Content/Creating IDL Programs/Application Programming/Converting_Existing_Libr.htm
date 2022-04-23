@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Converting Existing Code Libraries </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1><a name="library_2989941225_770045"></a><a name="library_2989941225_97402"></a>Converting Existing Code Libraries </h1>
+        <p>Existing libraries are bound to experience an occasional conflict with new versions of IDL. The best solution to avoid conflicts is to perform a systematic one-time conversion to a pre<a name="kanchor5623"></a>fixed naming scheme. </p>
+        <p>Any existing library is likely to already have users. Assuming that non-prefixed names were used in such libraries, it is not possible to simply change the names. Such conve<a name="kanchor5624"></a>rsions require time to carry out, and once that has happened, it takes time for users to adjust and alter their usage. However, the actual conversion can go very quickly, and with proper planning it is easy to offer a backwards compatibility option for your users. Use the following steps to convert an existing library:</p>
+        <ol>
+            <li value="1">Generate a list of all files containing routines to be renamed. </li>
+            <li value="2">Using this list, build an IDL batch file that uses .COMPILE on each file. </li>
+            <li value="3">Start a fresh IDL session, execute the batch file, and use HELP, /ROUTINES to get a complete list of all compiled routines. Only IDL user library routines (those <code>.pro</code> files shipped with the IDL distribution) should not contain a prefix. </li>
+            <li value="4">As you rename each routine to its prefixed form, write a non-prefixed wr<a name="kanchor5625"></a>apper routine with the old name that calls the new version. Such wrappers are easy to write in IDL, using the _REF_EXTRA keyword to pass keywords through to the real routine. See <a href="Keyword_Inheritance.htm#procedures_3673536221_758435">Keyword Inheritance</a> for details.</li>
+            <li value="5">Use the COMPILE_OPT OBSOLETE compilation directive in such wrappers so that IDL will recognize them as obsolete routines. See <a href="../../Reference Material/C/COMPILE_OPT.htm#C_854643309_998462">COMPILE_OPT</a> in the <span class="Reference MaterialbkReference Guide">IDL Reference Guide</span> for more information on COMPILE_OPT. These compatibility wrappers serve the following purposes: </li>
+            <ul>
+                <li value="1">You can use them to migrate your library to fully prefixed form over time, since the wrapper will be used any place you failed to change to calling the new name. This enhances the stability of the library and gives you time to do a careful job. </li>
+                <li value="2">Once you are finished, you can provide them to your customers as a bridge, so that their old code continues to work. </li>
+                <li value="3">As you change the names of routines, use grep (or a similar file searching tool) to locate uses of that name, and convert them to the new form as well. </li>
+            </ul>
+            <li value="6">Iterate, using the batch file mentioned above to find any remaining non-prefixed uses of the library names. Since your wrappers specified the COMPILE_OPT OBSOLETE directive, you can set the !WARN system variable to help you pinpoint such uses. You are done when your batch file reveals no more unprefixed names. </li>
+        </ol>
+        <p>Once the conversion is done, you can use the compat<a name="kanchor5626"></a>ibility wrappers to smoothly transition your users to the new names. You should keep the wrappers in a separate subdirectory, and even consider making them optional. Doing this raises the end user’s awareness of the issue and may convince them to convert to using the new names sooner rather than later. </p>
+        <p>When you add new routines to your library, ensure that they use the proper prefix. Do not provide non-prefixed wrapper routines for new routines. There is no backward compatibility issue in this case, and they are not needed. </p>
+        <p>Although the one time hit of prefixing an existing library can consume some time and effort, there are benefits that accrue from doing it. When new versions of IDL are released, the odds of the library working with the new version without encountering any name clashes are extremely high. Use of a consistent prefix also raises the profile of the library to the end user, raising their level of understanding and appreciation for the work it does.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

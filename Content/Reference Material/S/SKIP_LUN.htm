@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: S">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>SKIP_LUN </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="S_list.htm">Routines: S</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">SKIP_LUN</span>
+        </div>
+        <h1 class="Routine"><a name="S_820040301_1120942"></a><a name="kanchor2396"></a><a name="S_820040301_96539"></a>SKIP_LUN </h1>
+        <p><a name="kanchor2397"></a>The SKIP_LUN procedure reads data in an open file and moves the file pointer. It is useful in situations where it is necessary to skip over a known amount of data in a file without the requirement of having the data available in an IDL variable. SKIP_LUN can skip over a fixed amount of data, specified in bytes or lines of text, or can skip over the remainder of the input file from the current position to end of file. Since SKIP_LUN actually performs an input operation to advance the file pointer, it is not as efficient as POINT_LUN for skipping over a fixed number of bytes in a disk file. For that reason, use of POINT_LUN is preferred when possible. SKIP_LUN is especially useful in situations such as:</p>
+        <ul>
+            <li value="1">Skipping over a fixed number of lines of text. Since lines of text can have variable length, it can be difficult to use POINT_LUN to skip them.</li>
+            <li value="2">Skipping data from a file that is not a regular disk file (for example, data from an internet socket).</li>
+        </ul>
+        <h2 class="API"><a name="S_820040301_1120962"></a><a name="S_820040301_1120962_PageTOC_SKIP_LUN_"></a>Examples</h2>
+        <p>Skip the next 8 lines of text from a file:</p>
+        <p class="Code">SKIP_LUN, FromUnit, 8, /LINES</p>
+        <p>Skip the remainder of the data in a file, and use the TRANSFER_COUNT keyword to determine how much data was skipped:</p>
+        <p class="Code">SKIP_LUN, FromUnit, /EOF, TRANSFER_COUNT=n</p>
+        <p>Skip the remainder of the text lines in a file, and use the TRANSFER_COUNT keyword to determine how many lines were skipped:</p>
+        <p class="Code">SKIP_LUN, FromUnit, /EOF, /LINES, TRANSFER_COUNT=n</p>
+        <h2 class="API"><a name="S_820040301_1120947"></a><a name="S_820040301_1120947_PageTOC_SKIP_LUN_"></a>Syntax</h2>
+        <p class="Syntax">SKIP_LUN, <i>FromUnit</i>, [,&#160;<i>Num</i>] [,&#160;/<a href="#S_820040301_1143762" class="selected">EOF</a>] [,&#160;/<a href="#S_820040301_1143765" class="selected">LINES</a>] [,&#160;/<a href="#S_820040301_1143767" class="selected">TRANSFER_COUNT</a>=<i>variable</i>]</p>
+        <h2 class="API"><a name="S_820040301_1120949"></a><a name="S_820040301_1120949_PageTOC_SKIP_LUN_"></a>Arguments</h2>
+        <h3 class="Argument">FromUnit</h3>
+        <p>An integer that specifies the file unit for the file in which the file pointer is to be moved. Data in <i>FromUnit</i> is skipped, starting at the current position of the file pointer. The file pointer is advanced as data is read and skipped. The file specified by <i>FromUnit </i>must be open, and must not have been opened with the RAWIO keyword to OPEN.</p>
+        <h3 class="Argument">Num</h3>
+        <p>The amount of data to skip. This value is specified in bytes, unless the LINES keyword is specified, in which case it is taken to be the number of text lines. If <i>Num</i> is not specified, SKIP_LUN acts as if the EOF keyword has been set, and skips all data in <i>FromUnit</i> (the source file) from the current position of the file pointer to the end of the file.</p>
+        <p>If <i>Num</i> is specified and the source file comes to end of file before the specified amount of data is skipped, SKIP_LUN issues an end-of-file error. The EOF keyword alters this behavior.</p>
+        <h2 class="API"><a name="S_820040301_1120955"></a><a name="S_820040301_1120955_PageTOC_SKIP_LUN_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="S_820040301_1143762"></a><a name="S_820040301_1143762_Keywords_SKIP_LUN__"></a>EOF</h3>
+        <p>Set this keyword to ignore the value given by <i>Num</i> (if present) and instead skip all data from the current position of the file pointer in <i>FromUnit</i> and the end of the file. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If EOF is set, no end-of-file error is issued even if the amount of data skipped does not match the amount specified by <i>Num</i>. The TRANSFER_COUNT keyword can be used with EOF to determine how much data was skipped.</p>
+        <h3 class="Keyword"><a name="S_820040301_1143765"></a><a name="S_820040301_1143765_Keywords_SKIP_LUN__"></a>LINES</h3>
+        <p>Set this keyword to indicate that the <i>Num</i> argument specifies the number of lines of text to be skipped. By default, the <i>Num</i> argument specifies the number of bytes of data to skip.</p>
+        <h3 class="Keyword"><a name="S_820040301_1143767"></a><a name="S_820040301_1143767_Keywords_SKIP_LUN__"></a>TRANSFER_COUNT</h3>
+        <p>Set this keyword equal to a named variable that will contain the amount of data skipped. If LINES is specified, this value is the number of lines of text. Otherwise, it is the number of bytes. TRANSFER_COUNT is primarily useful in conjunction with the EOF keyword. If EOF is not specified, TRANSFER_COUNT will be the same as the value specified for <i>Num</i>.</p>
+        <h2 class="API"><a name="S_820040301_1120969"></a><a name="S_820040301_1120969_PageTOC_SKIP_LUN_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.6</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="S_820040301_1120971"></a><a name="S_820040301_1120971_PageTOC_SKIP_LUN_"></a>See Also</h2>
+        <p><a href="../C/CLOSE.htm#C_854643309_676114">CLOSE</a>, <a href="../C/COPY_LUN.htm#C_854643309_1058915">COPY_LUN</a>, <a href="../E/EOF.htm#E_841667181_984141">EOF</a>, <a href="../F/FILE_COPY.htm#F_848155245_894462">FILE_COPY</a>, <a href="../F/FILE_LINK.htm#F_848155245_894186">FILE_LINK</a>, <a href="../F/FILE_MOVE.htm#F_848155245_894357">FILE_MOVE</a>, <a href="../O/OPEN.htm#O_828691053_932624">OPENR/OPENU/OPENW</a>, <a href="../P/POINT_LUN.htm#P_817877613_678184">POINT_LUN</a>, <a href="../R/READ.htm#R_822202989_863816">READ/READF</a>, <a href="../W/WRITEU.htm#W_811389549_756607">WRITEU</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

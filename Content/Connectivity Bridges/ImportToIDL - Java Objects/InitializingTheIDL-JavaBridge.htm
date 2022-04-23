@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|Java Import Bridge">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Initializing The IDL-Java Bridge</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Java Import Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Initializing The IDL-Java Bridge</span>
+        </div>
+        <h1><a name="Initializing_The_IDL-Java_Bridge"></a>Initializing The IDL-Java Bridge</h1>
+        <p>The IDL-Java bridge must be configured before Java objects can be created and used within IDL. IDL initializes the bridge when it first attempts to create an instance of <a name="kanchor5379"></a>IDLjavaObject. Initializing the bridge involves starting the Java Virtual Machine and creating any internal Java bridge objects (both C++ and Java) including the internal <a href="TheIDLJavaBridgeSessionObject.htm#The_IDL_Java_Bridge_Session_Object">IDLJavaBridgeSession</a> object.</p>
+        <p>When an IDLjavaObject is created, the IDL-Java bridge loads configuration information from a file named</p>
+        <ul>
+            <li value="1"><span style="font-family: monospace;">.idljavabrc</span> on UNIX and Macintosh systems</li>
+            <li value="2"><span style="font-family: monospace;">idljavabrc</span> (or <span style="font-family: monospace;">idljavabrc.32</span>) on Windows systems</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>On a 64-bit Windows install, there are two configuration files: <span style="font-family: monospace;">idljavabrc</span> and <span style="font-family: monospace;">idljavabrc.32</span>. The <span style="font-family: monospace;">idljavabrc</span> is used by the 64-bit version of IDL, while <span style="font-family: monospace;">idljavabrc.32</span> is used by the 32-bit version of IDL. On a 32-bit Windows install, there is only a single configuration file named <span style="font-family: monospace;">idljavabrc</span>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The IDL-Java bridge only reads the configuration file once during an IDL session.</p>
+        <p>The file is read when the first instance of the IDLjavaObject class is created in the session. If you change the configuration after the first instance is created, you must exit and restart IDL to update the IDL-Java bridge with the changes.</p>
+        <p>The following sections discuss the location, contents, and use of the configuration file:</p>
+        <ul>
+            <li value="1"><a href="#Location_of_the_Bridge_Configuration_File" class="selected">Location of the Bridge Configuration File</a>
+            </li>
+            <li value="2"><a href="#Contents_of_the_Bridge_Configuration_File" class="selected">Contents of the Bridge Configuration File</a>
+            </li>
+            <li value="3"><a href="#Overriding_the_Default_Configuration" class="selected">Overriding the Default Configuration</a>
+            </li>
+        </ul>
+        <h2><a name="Location_of_the_Bridge_Configuration_File"></a>Location of the Bridge Configuration File</h2>
+        <p>The IDL-Java bridge looks for the configuration file in the following order:</p>
+        <ol>
+            <li value="1">  If the environment variable <a name="kanchor5380"></a>IDLJAVAB_CONFIG is set, IDL uses the file it specifies.</li>
+            <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This environment variable must include both the path and the file name of the configuration file.</p>
+            <li value="2">  If the IDLJAVAB_CONFIG environment variable is not set or the file indicated by that variable is not found, the path specified in the HOME environment variable is used to try to locate the configuration file.</li>
+            <li value="3">On Windows systems, if the HOME environment variable is not set or the IDL- Java bridge configuration file is not found in the specified location, the path specified in the USERPROFILE environment variable is used to try to locate the configuration file.</li>
+            <li value="4">  If the file is not found in the above-listed locations, IDL looks in the <i>&lt;IDL_DEFAULT&gt;/resource/bridges/import/java</i> directory to locate the default configuration file.</li>
+        </ol>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The IDL installer attempts to create a valid default configuration file based on IDL location. The default file should be verified before trying to create and use Java objects within IDL.</p>
+        <h2><a name="Contents_of_the_Bridge_Configuration_File"></a>Contents of the <a name="kanchor5381"></a>Bridge Configuration File</h2>
+        <p>The configuration file contains the following settings. With a text editor, open your configuration file to verify these settings are correct for your system.</p>
+        <h3>JVM Classpath</h3>
+        <p>The JVM <i>Classpath</i> setting specifies additional locations for user classes. It must point to the location of any class files to be used by the bridge. On Windows, paths should be separated by semi-colons. On UNIX, colons should separate paths.</p>
+        <p>This path may contain folders that contain class files or specific jar files. It follows the same rules for specifying ’-classpath’ when running <i>java</i> or <i>javac</i>. You can also include the CLASSPATH environment variable in the JVM <i>Classpath</i>:</p>
+        <p class="Code">JVM Classpath = $CLASSPATH:/home/johnd/myClasses.jar</p>
+        <p>which allows any class defined in the CLASSPATH environment variable to be used in the IDL-Java bridge.</p>
+        <p>On Windows, an example of a typical JVM <i>Classpath</i> setting is:</p>
+        <p class="Code">JVM Classpath = E:\myClasses.jar;$CLASSPATH</p>
+        <p>On UNIX, an example of a typical JVM <i>Classpath</i> setting is:</p>
+        <p class="Code">JVM Classpath = /home/johnd/myClasses.jar:$CLASSPATH</p>
+        <h3>JVM LibLocation</h3>
+        <p>The JVM <i>LibLocation</i> setting tells the IDL-Java bridge which JVM shared library to use. Various versions of Java ship with different types of JVM libraries. For example, some Java installations include a “classic” JVM, a “hotspot” JVM, and a “server” JVM. Other Java versions have different JVM types.</p>
+        <p>Beginning with IDL 7.1, IDL’s default behavior is to use the JVM installed along with IDL when creating IDL-Java bridge sessions. You can select a different JVM by modifying the value of the JVM <i>LibLocation</i> setting or by setting the IDLJAVAB_LIB_LOCATION environment variable.</p>
+        <h4>Windows</h4>
+        <p>On Windows platforms, you can specify the location of the JVM shared library either by specifying the JVM <i>LibLocation</i> setting in the <i>idljavabrc</i> configuration file or by setting the IDLJAVAB_LIB_LOCATION environment variable.</p>
+        <p>The default JVM LibLocation setting looks like:</p>
+        <p class="Code">JVM LibLocation = C:\Program Files\ITT\idl71\idlde\jre\bin\server</p>
+        <p>where the server directory contains the <i>jvm.dll</i> library file.</p>
+        <h4>Solaris / Linux</h4>
+        <p>On Solaris and Linux systems, you should not specify JVM <i>LibLocation</i> in the <i>.idljavabrc</i> configuration file. Instead, set the IDLJAVAB_LIB_LOCATION environment variable for the session that will use the IDL-Java bridge. The following is a typical command to set the environment variable:</p>
+        <p class="Code">setenv IDLJAVAB_LIB_LOCATION /usr/local/itt/idl71/idlde/bin.linux.x86/jre/lib/i386/server</p>
+        <p>(all on a single line) where the <i>server</i> directory contains the <i>libjvm.so</i> shared library file.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the IDLJAVAB_LIB_LOCATION environment variable is not set when the IDL session starts, IDL will automatically set it to the location of the JVM installed along with IDL. (If the IDLJAVAB_LIB_LOCATION environment variable is set when IDL starts, its value is not changed.)</p>
+        <h4>Macintosh</h4>
+        <p>On Macintosh platforms, IDL uses the JVM provided by the operating system, and ignores the value of the IDLJAVAB_LIB_LOCATION environment variable.</p>
+        <h3>JVM Options</h3>
+        <p>The JVM Option# (where # is any whole number) setting allows you to send additional parameters to the Java Virtual machine upon initialization. These settings must be specified as string values. When these settings are encountered in the initialization, the options are added to the end of the options that the bridge sets by default.</p>
+        <h3>Log Location</h3>
+        <p>The Log Location setting indicates the directory where IDL-Java bridge log files will be created. The default location provided by the IDL installer is /tmp on Unix and C:\temp on Windows.</p>
+        <h3>Bridge Logging</h3>
+        <p>The Bridge Logging setting indicates the type of bridge debug logging to be sent to a file called jb_log&lt;pid&gt;.txt (where &lt;pid&gt; is a process ID number) located in the directory specified by the Log Location setting.</p>
+        <p>Acceptable values (from least verbose to most verbose) are SEVERE, CONFIG, CONFIGFINE. The default value is SEVERE, which specifies that bridge errors are logged. The CONFIG value indicates the configuration settings are also logged. The CONFIGFINE value is the same as CONFIG, but provides more detail.</p>
+        <p>No log file is created if this setting is set to OFF.</p>
+        <h3>Bridge Reset</h3>
+        <p>By default, the IDL-Java bridge persists for the duration of the IDL session in which it was created. This means that modifications to items in the Java Classpath are not loaded until a new IDL session is started. The IDL-Java Bridge Reset Policy allows the IDL-Java bridge to be configured to reset when the IDL executive command .FULL_RESET_SESSION is executed.</p>
+        <p>Set the <i>Restart Bridge</i> setting to True to enable the recreation of the IDL-Java bridge when the .FULL_RESET_SESSION executive command is executed.</p>
+        <h2><a name="Overriding_the_Default_Configuration"></a><a name="kanchor5382"></a>Overriding the Default Configuration</h2>
+        <p>If you have multiple IDL-Java bridge applications, chances are good that you will need a different configuration for each application. In many cases, you will need to alter the CLASSPATH to load different jar files. In other cases you may even need to use different Java virtual machines. While you could manually modify the default configuration file before running different applications, it is probably easier and more convenient to maintain separate configurations for the different applications. This section describes two options for managing multiple configurations.</p>
+        <h3>Option 1: Multiple Configuration Files</h3>
+        <p>If you can maintain a separate configuration file for each application, your IDL application can set the IDLJAVAB_CONFIG environment variable to refer to the appropriate configuration file. Use the IDL SETENV procedure to set the value before creating the first IDLjavaObject:</p>
+        <p class="Code">SETENV, 'IDLJAVAB_CONFIG=C:\myJavaApp\idljavabrc'</p>
+        <p class="Code">oJava = OBJ_NEW(IDLjavaObject$JAVACLASSNAME, JavaClassName)</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>On UNIX systems, you cannot specify the location of the Java virtual machine in the bridge configuration file. If you need to modify the location of the Java virtual machine, you must also set the IDLJAVAB_LIB_LOCATION environment variable.</p>
+        <h3>Option 2: Overriding Individual Environment Variables</h3>
+        <p>If all of your IDL-Java bridge applications use similar configuration settings, but use different values for CLASSPATH or for the Java virtual machine, you can use a single bridge configuration file and re-set the IDLJAVAB_LIB_LOCATION and CLASSPATH environment variables individually. Again, use the IDL SETENV procedure to set the value before creating the first IDLjavaObject:</p>
+        <p class="Code">SETENV, 'CLASSPATH=C:\myJavaApp\myJavaApp.jar'</p>
+        <p class="Code">SETENV, 'IDLJAVAB_LIB_LOCATION=C:\Java\jre1.5.0_12\bin\client'</p>
+        <p class="Code">oJava = OBJ_NEW(IDLjavaObject$JAVACLASSNAME, JavaClassName)</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>Environment variables are specified using all upper-case letters.</p>
+        <p>Note that if you change the value of the CLASSPATH environment variable, the bridge configuration file must contain a “JVM Classpath” line, and that line must include the token $CLASSPATH:</p>
+        <p class="Code">JVM Classpath = $CLASSPATH;c:\some\other\classpath.jar</p>
+        <p>The $CLASSPATH token can be in any position in the path specification, but it must be present or the value of the environment variable will not be included in the classpath used by the IDL-Java bridge.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

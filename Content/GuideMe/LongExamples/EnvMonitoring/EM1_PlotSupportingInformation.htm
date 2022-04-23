@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Graphics|Graphics Gallery|Long Examples|Environmental Monitoring">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Plot Supporting Information</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../../GUInavigation/visualize.htm">Graphics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../../../GUInavigation/visualize.htm">Graphics Gallery</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">Long Examples</span><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Long Example - Plot Supporting Information</span>
+        </div>
+        <h1>Plot Supporting Information</h1>
+        <p>Part of this study included determining the expected decay rate of tritium in the tanks, assuming the tanks remained intact and no tritium leaked into the surrounding sediment. Given these assumptions, how long will it be before the concentration of tritium in the tank falls below the US EPA drinking water standards of 20,000 pCi/L?</p>
+        <p>In this example we calculate the expected decay rate and overplot that with actual measurements taken periodically from the tank.</p>
+        <h2>Create Expected Tritium Decay Plot Inside Source (Tank)</h2>
+        <p>Create a plot showing the possible impact of radioactive decay on the concentration of tritium over time inside in one of the storage tanks. For this example, we assume an initial year of 1995 (the year when the tank was filled and capped), the number of years to calculate = 65, and the assumed initial concentration of tritium in the tank, based on initial measurements, at 7,000,000 pCi/L. </p>
+        <p class="Code">&#160;</p>
+        <p class="Code">iYear = 1995 ; Initial year.</p>
+        <p class="Code">nYR = 65 ; Number of years to calculate.</p>
+        <p class="Code">decay = (-(ALOG(2))/12.32)  ; Decay constant of tritium.</p>
+        <p class="Code">ipCi = 7000000 ; Estimate of initial tritium concentration.</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Three equations to calculate possible boundary conditions.</p>
+        <p class="Code">; pCi is the radioactive decay based on assumed initial tritium</p>
+        <p class="Code">; concentration of 7x10<sup>6</sup> pCi/L. pCiHigh and pCiLow are calculations</p>
+        <p class="Code">; of possible boundary conditions for the decay based on potential</p>
+        <p class="Code">; errors in initial concentration of +/- 10%.</p>
+        <p class="Code">pCi = (ipCi*EXP(decay*FINDGEN(nYR))) ; expected</p>
+        <p class="Code">pCiHigh = ((pCi)*1.10)</p>
+        <p class="Code">pCiLow = ((pCi)*0.90)</p>
+        <p class="Code">year = (iYear+FINDGEN(nYR))</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Plot the expected decay and the high/low conditions.</p>
+        <p class="Code">myPlot = PLOT(year, pCi, $</p>
+        <p class="Code">&#160;&#160;&#160;DIMENSIONS=[800, 550], LINESTYLE=4, $</p>
+        <p class="Code">&#160;&#160;&#160;TITLE="Simple Tritium Decay at Source (pCi/L)", $</p>
+        <p class="Code">&#160;&#160;&#160;XTITLE="Year", YTITLE="Tritium Concentration (pCi/L)", $</p>
+        <p class="Code">&#160;&#160;&#160;NAME='Expected')</p>
+        <p class="Code">high = PLOT(year, pCiHigh, COLOR='red', $</p>
+        <p class="Code">&#160;&#160;&#160;DIMENSIONS=[800, 550], /OVERPLOT, $</p>
+        <p class="Code">&#160;&#160;&#160;THICK=2, NAME='+10%')</p>
+        <p class="Code">low = PLOT(year, pCiLow, COLOR='green', $</p>
+        <p class="Code">&#160;&#160;&#160;DIMENSIONS=[800, 550], /OVERPLOT, $</p>
+        <p class="Code">&#160;&#160;&#160;THICK=2, NAME='-10%')</p>
+        <p class="Code">&#160;</p>
+        <p>IDL displays:</p>
+        <p>
+            <img src="../../images/EM_Decay_Plot1.png" />
+        </p>
+        <p>These simulated data could be overplotted with observed values measured periodically inside the tank to characterize how well the boundary conditions were modeled, and how close the decay simulation is to reality. We will also plot a line representing the US Environmental Protection Agency's (EPA) "safe" concentration of tritium in drinking water of 20,000 pCi/L.</p>
+        <p class="Code">; Prepare to create a line for the "safe" concentration.</p>
+        <p class="Code">year = [2030,2040,2060]</p>
+        <p class="Code">safe = [2e5,2e5,2e5]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">safePlot = PLOT(year, safe, DIMENSIONS=[800, 550], $</p>
+        <p class="Code">&#160;&#160;&#160;COLOR='spring green', NAME='Safe', $</p>
+        <p class="Code">&#160;&#160;&#160;/OVERPLOT, THICK=2, LINESTYLE=4)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Plot the observation data. Create variables for</p>
+        <p class="Code">; observation year (obsYear)and observed concentration (obsCi).</p>
+        <p class="Code">obsYear = [1996,1998,2000,2002,2004,2006, $</p>
+        <p class="Code">&#160;&#160;&#160;2008,2010,2012,2013]</p>
+        <p class="Code">obsCi = [7545000,7499020,7355300,7301000,7103090, $</p>
+        <p class="Code">&#160;&#160;&#160;7042150,7054110,7030110,6802000,6075300]</p>
+        <p class="Code">myObs = PLOT(obsYear, obsCi, LINESTYLE=4, COLOR='purple', $</p>
+        <p class="Code">&#160;&#160;&#160;THICK=3, /OVERPLOT, NAME='Observed')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add a legend using the NAME assigned to each plot.</p>
+        <p class="Code">myLegend = LEGEND(TARGET=[myPlot,myObs,high,low,safePlot], /DATA, $</p>
+        <p class="Code">&#160;&#160;&#160;/AUTO_TEXT_COLOR, FONT_SIZE=10, POSITION=[2055,7e6])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p>The new plot should look like:</p>
+        <p class="Code">
+            <img src="../../images/EM_Decay_Plot2.png" />
+        </p>
+        <p>&#160;</p>
+        <h3>Analysis and Further Investigations</h3>
+        <p>From this plot we can see that the assumed initial concentration of 7,000,000 pCi/L was not quite correct and that the decay of tritium did not proceed as expected. Since observed concentrations vary markedly from expected, we might decide to further investigate the conditions at this particular storage tank. Was more nuclear waste deposited here than we initially assumed? Was the concentration higher than expected? Were additional and undocumented deposits made after 1995? </p>
+        <p>Getting the answers to these questions will also impact the modeling of the future state of the tritium plume since this is partially dependent on how much and when waste was deposited in the tank.</p>
+        <p>We can also tell from the plot alone that levels of tritium in this tank will not reach the EPA's "safe" level of 20,000 pCi/L until sometime around 2055, assuming that the "Expected" line is accurate.</p>
+        <p>&#160;</p>
+        <h2>Other Topics in this Series</h2>
+        <ul>
+            <li value="1"><a href="EM1_Gridding.htm">Model the Study Area and Setting</a>
+            </li>
+            <li value="2"><a href="EM1_SurfacePlot.htm">Plot 3D Terrain and Water Table</a>
+            </li>
+            <li value="3"><a href="EM1_PlumeContours.htm">Create Contours of Pollutant Plume</a>
+            </li>
+            <li value="4"><a href="EM1_FlowVectors.htm">Plot Relative Aquifer Flow Vectors</a>
+            </li>
+        </ul>
+        <h2>See Also</h2>
+        <p><a href="../../../Reference Material/A/ALOG.htm">ALOG</a>, <a href="../../../Reference Material/E/EXP.htm">EXP</a>, <a href="../../../Reference Material/F/FINDGEN.htm">FINDGEN</a>, <a href="../../../Reference Material/L/LEGEND.htm">LEGEND</a>, <a href="../../../Reference Material/P/PLOT.htm">PLOT &#160;&#160;&#160;</a></p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

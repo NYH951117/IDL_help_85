@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Callable IDL">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Initialization Using IDL_Initialize()</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="CallableIDL.htm">Callable IDL</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Initialization Using IDL_Initialize()</span>
+        </div>
+        <h1><a name="kanchor5524"></a>Initialization Using IDL_Initialize()</h1>
+        <p>Use <b>IDL_Initialize()</b> function  to prepare Callable IDL. As a convenience in simpler situations, the <b>IDL_Init()</b> function may also be used for this purpose.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>IDL can only be initialized once for a given process; calling an IDL initialization function more than once for a process will cause an error. If you need to reinitialize an IDL session that is already running, consider using <code>IDL_ExecuteStr(".reset_session");</code></p>
+        <h2>IDL_Initialize()</h2>
+        <p>The <b>IDL_Initialize()</b> function is the primary function used to prepare Callable IDL for use. This must be the first IDL routine called.</p>
+        <p class="Code">int IDL_Initialize(IDL_INIT_DATA *init_data)</p>
+        <p><b>IDL_Initialize()</b> returns TRUE if IDL was successfully initialized, and FALSE otherwise.</p>
+        <h3>init_data</h3>
+        <p>A pointer to an <b>IDL_INIT_DATA</b> structure, used to specify initialization options. If no initialization data is required, a NULL pointer may be passed.</p>
+        <p>The definition of <b>IDL_INIT_DATA</b> includes the following fields:</p>
+        <p class="Code">typedef struct { </p>
+        <p class="Code">&#160;&#160;&#160;IDL_INIT_DATA_OPTIONS_T options;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;struct {	/* options &amp; IDL_INIT_CLARGS */</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;int argc;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;char **argv;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;} clargs;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;void *hwnd;	/* options &amp; IDL_INIT_HWND */</p>
+        <p class="Code">} IDL_INIT_DATA;</p>
+        <p>The options field of <b>IDL_INIT_DATA</b> can be set to any combination of the <b>IDL_INIT_*</b> values described below. Most of these values represent boolean options and no other data is required for them. However, a relatively small number of the options require additional information. This extra information is provided via one of the other fields in the <b>IDL_INIT_DATA</b> structure — see below for more information.</p>
+        <p><b>IDL_Initialize()</b> always examines the value of the options field of this structure. It will only examine the other fields if a value in options requires it to. Otherwise, those other fields are not used and may safely be left uninitialized. This organization allows <span class="DocumentTitleCompanyName">Exelis VIS</span> to add additional initialization options to newer versions of IDL without requiring source code changes to older applications that do not require those new features.</p>
+        <p>The values allowed in the options field of <b>IDL_INIT_DATA</b> are:</p>
+        <h4>IDL_INIT_BACKGROUND</h4>
+        <p>A convenience option, equivalent to setting both the <b>IDL_INIT_NOCMDLINE</b> and <b>IDL_INIT_NOTTYEDIT</b> options.</p>
+        <h4>IDL_INIT_CLARGS</h4>
+        <p>Execution of C programs starts when the <b>main()</b> function is called. Command line arguments are passed to the <b>main()</b> function via the standard <b>argc</b> and <b>argv</b> arguments. Set the <b>IDL_INIT_DATA clargs.argc</b> and <b>clargs.argv</b> fields to these values and set the <b>IDL_INIT_CFLAGS</b> bit in options to pass these command line arguments to IDL for processing. On return, IDL will remove any arguments it understands, and will alter the value of <b>clargs.argc</b> to reflect the count of remaining items.</p>
+        <p>The <b>argc/argv</b> pair passed must follow the usual convention in which <b>argv[0]</b> is the name under which the program was run, and any additional values are the arguments passed to that program.</p>
+        <h4>IDL_INIT_EMBEDDED</h4>
+        <p>IDL is initialized to run applications from a Save/Restore file that contains an embedded <b>license. IDL_RuntimeExec()</b> is then used to run the application(s).</p>
+        <h4>IDL_INIT_GUI</h4>
+        <p>Indicates that IDL is being accessed via the IDL Workbench GUI interface rather than using the standard tty based interface.</p>
+        <h4>IDL_INIT_GUI_AUTO (Unix Only)</h4>
+        <p>IDL will try to use the IDL Workbench GUI. If that fails, IDL uses the standard tty interface.</p>
+        <h4>IDL_INIT_HWND (Windows only)</h4>
+        <p>Under Windows, an application calling IDL will usually want IDL to use its main window as its own. This option is used to pass the application’s main window handle to IDL. In addition to setting <b>IDL_INIT_HWND</b> in the options field, you must set the <code>hwnd</code> field to the value of the window handle to use.</p>
+        <h4>IDL_INIT_LMQUEUE</h4>
+        <p>At startup, if no license is immediately available, IDL will wait for an available license before continuing. This is useful for non-interactive IDL-based tasks such as batch processing, where waiting is acceptable and processing cannot succeed without a license.</p>
+        <h4>IDL_INIT_NOCMDLINE</h4>
+        <p>Indicates to IDL that it is going to be used in a background mode by some other program, and that IDL will not be in control of the user’s input command processing. The main effect of this is that IDL will never prompt for user input from the command line and execution will never stop in such a situation. Instead, IDL will act as if the desired read returned an end of file (EOF) and IDL will instead return to the caller. Another related effect is that <b>XMANAGER</b> will realize that the active command line functionality for processing widget events is not available, and <b>XMANAGER</b> will block to manage events when it is called rather than return immediately.</p>
+        <h4>IDL_INIT_NOLICALIAS</h4>
+        <p>Our <b>FLEXlm</b> floating license policy is to alias all IDL sessions that share the same user/system/display to the same license. If <b>IDL_INIT_NOLICALIAS</b> is set, this IDL session will force a unique license to be checked out. In this case, we allow the user to change the DISPLAY environment variable. This is useful for RPC servers that do notknow where their output will need to go before invocation.</p>
+        <h4>IDL_INIT_NOTTYEDIT (UNIX Only)</h4>
+        <p>Normally under UNIX, if IDL sees that stdin and stdout are ttys, it puts the tty into raw mode and uses termcap/terminfo to handle command line editing. When using callable IDL in a background process that isn’t doing input/output to the tty, the termcap initialization can cause the process to block (because of job control from the shell) with a message like <code>“Stopped (tty output) idl”</code>. Setting this option prevents all tty edit functions and disables the calls to termcap. I/O to the tty is then done with a simple <code>fgets()/printf()</code>. This option only has meaning when a UNIX tty is in use. It is ignored on non-UNIX platforms, or when the <b>IDL_INIT_GUI</b> bit is set.</p>
+        <h4>IDL_INIT_QUIET</h4>
+        <p>Setting this bit suppresses the display of the startup announcement and message of the day.</p>
+        <h4>IDL_INIT_RUNTIME</h4>
+        <p>Setting this bit causes IDL to check out a runtime license instead of the normal license. <b>IDL_RuntimeExec()</b> is then used to run an IDL application restored from a Save/Restore file.</p>
+        <h2>IDL_Init()</h2>
+        <p>The <b>IDL_Init()</b> function offers a simplified interface to <b>IDL_Initialize()</b>. </p>
+        <p>When possible, callable IDL programs should call IDL_Initialize() to perform the initialization operation. However, <b>IDL_Initialize()</b> requires the <b>IDL_INIT_DATA</b> structure type to be defined. This definition comes from the <code>idl_export.h</code> header file supplied with IDL which can be used from the C or C++ languages, but which is not directly usable from languages such as Fortran. <b>IDL_Init()</b> does not use the <b>IDL_INIT_DATA</b> structure, and is therefore more convenient in such cases.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Most Microsoft Windows applications need to pass their main window handle (HWND) to IDL, which is possible using <b>IDL_Initialize()</b>, but not <b>IDL_Init()</b>. <b>IDL_Init()</b> is therefore primarily of interest in Unix environments.</p>
+        <p class="Code">int IDL_Init(int options, int *argc, char *argv[]);</p>
+        <p><b>IDL_Init()</b> returns TRUE if IDL was successfully initialized, and FALSE otherwise.</p>
+        <p><b>IDL_Init()</b> is nothing more than a simple convenience wrapper written using <b>IDL_Initialize()</b>. As an aid in understanding the relationship between these two routines, the code that implements it is shown below.</p>
+        <h3>options</h3>
+        <p>A bitmask used to specify initialization options. This is equivalent setting the options field of the <b>IDL_INIT_DATA</b> structure to the desired options value when using the <b>IDL_Initialize()</b> function. Allowed values for options can be found in “Initialization”.</p>
+        <h3>argc, argv</h3>
+        <p>Command line arguments, as passed by the operating system to the program <b>main()</b> function. Setting these arguments to non-NULL values is equivalent to the following 3 steps using <b>IDL_Initialize()</b>:</p>
+        <ol>
+            <li value="1">Set the <b>clargs.argc</b> field of the <b>IDL_INIT_DATA</b> structure to the number of items in the argv array, as given by argc.</li>
+            <li value="2">  Set the <b>clargs.argv</b> field of the <b>IDL_INIT_DATA</b> structure to the value of <b>argv</b>.</li>
+            <li value="3">Set <b>IDL_INIT_CLARGS</b> bit of the options field of that structure.</li>
+        </ol>
+        <h3>Example using IDL_Init()</h3>
+        <p class="Code">int IDL_Init(int options, int *argc, char *argv[])</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">IDL_INIT_DATA init_data;</p>
+        <p class="Code_Indented">int r;</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">init_data.options = options;</p>
+        <p class="Code_Indented">if (argc) {</p>
+        <p class="Code_Indented">&#160;&#160;&#160;init_data.options |= IDL_INIT_CLARGS;</p>
+        <p class="Code_Indented">&#160;&#160;&#160;init_data.clargs.argc = *argc;</p>
+        <p class="Code_Indented">&#160;&#160;&#160;init_data.clargs.argv = argv;</p>
+        <p class="Code_Indented">&#160;&#160;&#160;}</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">r = IDL_Initialize(&amp;init_data);</p>
+        <p class="Code_Indented">if (argc) *argc = init_data.clargs.argc;</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">return r;</p>
+        <p class="Code">}</p>
+        <h2>Common Microsoft Windows Initialization Issues</h2>
+        <p>Callable IDL applications intended to run under Microsoft Windows commonly face the following issues:</p>
+        <ul>
+            <li value="1">Under Windows, it is usually the case that the use of IDL from another program is non-interactive. By default, IDL assumes an interactive environment in which it is communicating with a user directly. It is necessary to set the <b>IDL_INIT_NOCMDLINE</b> option to change this.</li>
+            <li value="2">Most Microsoft Windows applications have a main window that they wish IDL to use. The window handle for this must be specified to <b>IDL_Initialize()</b>.</li>
+        </ul>
+        <p>The function <b>MyAppInitIDL()</b>, shown below, demonstrates how to specify this information to <b>IDL_Initialize()</b>. This function accepts two arguments: options allows the caller to supply any other IDL_INIT_ option values that the program may need, while hwnd allows the specification of a window handle to be used as the application main window.</p>
+        <p class="Code">int MyAppInitIDL(int options, HWND hwnd)</p>
+        <p class="Code">{</p>
+        <p class="Code">&#160;&#160;&#160;IDL_INIT_DATA init_data;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;/* Combine any other IDL init options with NOCMDLINE */</p>
+        <p class="Code">&#160;&#160;&#160;init_data.options = options | IDL_INIT_NOCMDLINE;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">/* If we have a non-NULL HWND, tell IDL to use it */</p>
+        <p class="Code">&#160;&#160;&#160;if (hwnd) {</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;init_data.options |= IDL_INIT_HWND;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;init_data.hwnd = hwnd;</p>
+        <p class="Code">&#160;&#160;&#160;}</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;return IDL_Initialize(&amp;init_data);</p>
+        <p class="Code">}</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

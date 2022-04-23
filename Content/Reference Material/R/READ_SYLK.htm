@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: R">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>READ_SYLK </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="R_list.htm">Routines: R</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">READ_SYLK</span>
+        </div>
+        <h1 class="Routine"><a name="R_822202989_67820"></a><a name="kanchor2232"></a><a name="R_822202989_95597"></a>READ_SYLK </h1>
+        <p><a name="kanchor2233"></a><a name="kanchor2234"></a><a name="kanchor2235"></a>The READ_SYLK function reads the contents of a SYLK (Symbolic Link) format spreadsheet data file and returns the contents of the file, or of a cell data range, in an IDL variable. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>This routine reads only numeric and string SYLK data. It ignores all spreadsheet and cell formatting information (cell width, text justification, font type, date, time, and monetary notations, etc). Note also that the data in a given cell range must be of the same data type (all integers, for example) in order for the read operation to succeed. See the example below for further information.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>read_sylk.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="R_822202989_67861"></a><a name="R_822202989_67861_PageTOC_READ_SYLK_"></a>Examples</h2>
+        <p>Suppose the following spreadsheet table, with the upper left cell (value = “Index”) at location (0, 0), has been saved as the SYLK file “file.slk”:</p>
+        <p class="Code">Index&#160;&#160;Name&#160;&#160;Gender&#160;&#160;Platform</p>
+        <p class="Code">1&#160;&#160;&#160;&#160;&#160;&#160;Beth&#160;&#160;&#160;F&#160;&#160;&#160;&#160;&#160;&#160;&#160;Windows</p>
+        <p class="Code">2&#160;&#160;&#160;&#160;&#160;&#160;Lubos&#160;&#160;M&#160;&#160;&#160;&#160;&#160;&#160;&#160;UNIX</p>
+        <p class="Code">3&#160;&#160;&#160;&#160;&#160;&#160;Louis&#160;&#160;M&#160;&#160;&#160;&#160;&#160;&#160;&#160;Windows</p>
+        <p class="Code">4&#160;&#160;&#160;&#160;&#160;&#160;Thierry&#160;&#160;M&#160;&#160;&#160;&#160;&#160;&#160;&#160;UNIX</p>
+        <p>Note that the data format of the title row (<i>string</i>, <i>string</i>, <i>string</i>, <i>string</i>) is inconsistent with the following four rows (<i>int</i>, <i>string</i>, <i>string</i>, <i>string</i>) in the table. Because of this, it is impossible to read all of the table into a single IDL variable. The following two commands, however, will read all of the data:</p>
+        <p class="Code">title = READ_SYLK("file.slk", NROWS = 1)</p>
+        <p class="Code">table = READ_SYLK("file.slk", STARTROW = 1)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;Display the top row of the table.</p>
+        <p class="Code">PRINT, title</p>
+        <p>IDL prints:</p>
+        <p class="Code">{ Index Name Gender Platform}</p>
+        <p>Print the table:</p>
+        <p class="Code">PRINT, table</p>
+        <p>IDL prints:</p>
+        <p class="Code">{1 Beth F Windows}{2 Lubos M UNIX}{3 Louis M Windows}{4 Thierry M UNIX}</p>
+        <p>To retrieve only the “Name” column:</p>
+        <p class="Code">names = READ_SYLK("file.slk", /ARRAY, STARTROW = 1, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;STARTCOL = 1, NCOLS = 1)</p>
+        <p class="Code">PRINT, names</p>
+        <p>IDL prints:</p>
+        <p class="Code">Beth Lubos Louis Thierry </p>
+        <p>To retrieve the “Name” column in column format:</p>
+        <p class="Code">namescol = READ_SYLK("file.slk", /ARRAY, /COLMAJOR, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;STARTROW = 1, STARTCOL = 1, NCOLS = 1)</p>
+        <p class="Code">PRINT, namescol</p>
+        <p>IDL prints:</p>
+        <p class="Code">Beth </p>
+        <p class="Code">Lubos </p>
+        <p class="Code">Louis </p>
+        <p class="Code">Thierry </p>
+        <h2 class="API"><a name="R_822202989_67830"></a><a name="R_822202989_67830_PageTOC_READ_SYLK_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = READ_SYLK( <i>File</i> [,&#160;/<a href="#R_822202989_67837" class="selected">ARRAY</a>] [,&#160;/<a href="#R_822202989_67840" class="selected">COLMAJOR</a>] [,&#160;<a href="#R_822202989_67844" class="selected">NCOLS</a>=<i>columns</i>] [,&#160;<a href="#R_822202989_67847" class="selected">NROWS</a>=<i>rows</i>] [,&#160;<a href="#R_822202989_67850" class="selected">STARTCOL</a>=<i>column</i>] [,&#160;<a href="#R_822202989_67853" class="selected">STARTROW</a>=<i>row</i>] [,&#160;/<a href="#R_822202989_67856" class="selected">USEDOUBLES</a>] [,&#160;/<a href="#R_822202989_67859" class="selected">USELONGS</a>] )</p>
+        <h2 class="API"><a name="R_822202989_1103925"></a><a name="R_822202989_60294"></a>Return Value</h2>
+        <p>READ_SYLK returns either a vector of structures or a 2-D array containing the spreadsheet cell data. By default, READ_SYLK returns a vector of structures, each of which contains the data from one <i>row</i> of the table being read. In this case, the individual fields in the structures have the tag names “Col0”, “Col1”, ..., “Col<i>n</i>”. If the COLMAJOR keyword is specified, each of the structures returned contains data from one <i>column</i> of the table, and the tag names are “Row0”, “Row1”, ..., “Row<i>n</i>”.</p>
+        <h2 class="API"><a name="R_822202989_67832"></a><a name="R_822202989_67832_PageTOC_READ_SYLK_"></a>Arguments</h2>
+        <h3 class="Argument">File</h3>
+        <p>A scalar string specifying the full path name of the SYLK file to read.</p>
+        <h2 class="API"><a name="R_822202989_67835"></a><a name="R_822202989_67835_PageTOC_READ_SYLK_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="R_822202989_67837"></a><a name="R_822202989_67837_Keywords_READ_SYLK__"></a>ARRAY</h3>
+        <p>Set this keyword to return an IDL array rather than a vector of structures. Note that all the data in the cell range specified must be of the same data type to successfully return an array. </p>
+        <h3 class="Keyword"><a name="R_822202989_67840"></a><a name="R_822202989_67840_Keywords_READ_SYLK__"></a>COLMAJOR</h3>
+        <p>Set this keyword to create a vector of structures each containing data from a single <i>column</i> of the table being read. If you are creating an array rather than a vector of structures (the ARRAY keyword is set), setting COLMAJOR has the same effect as transposing the resulting array.</p>
+        <p>This keyword should be set when importing spreadsheet data which has column major organization (data stored in columns rather than rows).</p>
+        <h3 class="Keyword"><a name="R_822202989_67844"></a><a name="R_822202989_67844_Keywords_READ_SYLK__"></a>NCOLS</h3>
+        <p>Set this keyword to the number of spreadsheet columns to read. If not specified, all of the cell columns found in the file are read.</p>
+        <h3 class="Keyword"><a name="R_822202989_67847"></a><a name="R_822202989_67847_Keywords_READ_SYLK__"></a>NROWS</h3>
+        <p>Set this keyword to the number of spreadsheet rows to read. If not specified, all of the cell rows found in the file are read.</p>
+        <h3 class="Keyword"><a name="R_822202989_67850"></a><a name="R_822202989_67850_Keywords_READ_SYLK__"></a>STARTCOL</h3>
+        <p>Set this keyword to the first column of spreadsheet cells to read. If not specified, the read operation begins with the first column found in the file (column 0).</p>
+        <h3 class="Keyword"><a name="R_822202989_67853"></a><a name="R_822202989_67853_Keywords_READ_SYLK__"></a>STARTROW</h3>
+        <p>Set this keyword to the first row of spreadsheet cells to read. If not specified, the read operation begins with the first row of cells found in the file (row 0).</p>
+        <h3 class="Keyword"><a name="R_822202989_67856"></a><a name="R_822202989_67856_Keywords_READ_SYLK__"></a>USEDOUBLES</h3>
+        <p>Set this keyword to read any floating-point cell data as double-precision rather than the default single-precision.</p>
+        <h3 class="Keyword"><a name="R_822202989_67859"></a><a name="R_822202989_67859_Keywords_READ_SYLK__"></a>USELONGS</h3>
+        <p>Set this keyword to read any integer cell data as long integer type rather than the default integer type.</p>
+        <h2 class="API"><a name="R_822202989_67890"></a><a name="R_822202989_67890_PageTOC_READ_SYLK_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="R_822202989_1092985"></a><a name="R_822202989_1092985_PageTOC_READ_SYLK_"></a>See Also</h2>
+        <p><a href="../W/WRITE_SYLK.htm#W_811389549_67937">WRITE_SYLK</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

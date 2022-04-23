@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|Medical Imaging in IDL|IDL DICOM Reference|IDLffDicomExQuery">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLffDicomExQuery::Query</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/Description.css" rel="stylesheet" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix">  <![CDATA[ ]]></span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../Expanded DICOM Support in IDL/ExpandedDICOMFunctionality.htm">Medical Imaging in IDL</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="DICOMEX_GETCONFIGFILEPAT.htm">IDL DICOM Reference</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLffDicomExQuery::Query</span>
+        </div>
+        <h1 class="ObjMethod"><a name="dicom_ex_4010397576_1135472"></a><a name="dicom_ex_4010397576_93394"></a>IDLffDicomExQuery::Query</h1>
+        <p>The IDLffDicomExQuery::Query function method is used to query a remote Query/Retrieve SCP Application Entity. A query message is constructed using the appropriate query field properties for the specified query model and query level; the query message is sent to the remote node, which sends a reply for each match. See Defining a Machine to Be Queried for an overview of this process.</p>
+        <p>This method does not return to the caller until one of the following occurs:</p>
+        <ul>
+            <li value="1">The query is complete (all matches have been returned)</li>
+            <li value="2">The number of responses defined by the <a href="IDLffDicomExCfg__SetValue.htm#dicom_ex_4010397576_1133165">MaxQueryResponses</a> configuration parameter is reached</li>
+            <li value="3">The query encounters an error condition</li>
+            <li value="4">The callback function defined by the <a href="IDLffDicomExQuery Properties.htm#dicom_ex_4010397576_1133806">CALLBACK_FUNCTION</a> property returns zero</li>
+        </ul>
+        <h3>Properties Required by a Query</h3>
+        <p>The <a href="IDLffDicomExQuery Properties.htm#dicom_ex_4010397576_1134289">QUERY_SCP</a> property must contain the name of a valid Application Entity that supports the Query SCP service in order for the Query method to succeed. All other properties used by the Query method have usable default values. If no properties other than QUERY_SCP are set, this method will perform a Patient Root / Patient Level query listing all patients on the remote node.</p>
+        <h3>Properties Allowed by a Query</h3>
+        <p>The query field properties that are used in a specific DICOM query are defined by the query model and query level chosen. For example, in a Patient Root / Patient Level query, only the values of the Patient_Name and Patient_ID properties are sent to the remote node; all other query field properties are ignored.</p>
+        <p>See <a href="IDLffDicomExQuery Properties.htm">IDLffDicomExQuery Properties</a> for a complete list of properties used to define a query or that affect the operation of the Query method.</p>
+        <p>See <a href="IDLffDicomExQuery Properties.htm#dicom_ex_4010397576_1134670">Attribute Matching and Wildcards</a> for a discussion of how to perform queries using wildcard values for query properties.</p>
+        <p>See <a href="IDLffDicomExQuery Properties.htm#dicom_ex_4010397576_1134923">Query Property Interactions With Query Model/Level</a> for a complete list of the interactions between query properties and the selected query model and level.</p>
+        <h3>Callbacks and Query Status Information</h3>
+        <p>If the <a href="IDLffDicomExQuery Properties.htm#dicom_ex_4010397576_1133806">CALLBACK_FUNCTION</a> property contains the name of an IDL function, that function is called each time the remote node returns a match. The function is called with an array of strings containing status information about the query as its first parameter. See <a href="IDLffDicomExQuery Properties.htm#dicom_ex_4010397576_1135332">Using Callbacks with the IDLffDicomExQuery Object</a> for a discussion of callback functions.</p>
+        <h3>Canceling a Query</h3>
+        <p>To cancel a query before all matches are returned or the value of the <a href="IDLffDicomExCfg__SetValue.htm#dicom_ex_4010397576_1133165">MaxQueryResponses</a> configuration parameter is reached, the callback function specified by the <a href="IDLffDicomExQuery Properties.htm#dicom_ex_4010397576_1133806">CALLBACK_FUNCTION</a> property must return zero.</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1135523"></a><a name="dicom_ex_4010397576_1135523_PageTOC_IDLffDicomExQuery"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>-&gt;[<a href="IDLffDicomExQuery.htm#dicom_ex_4010397576_1157043">IDLffDicomExQuery</a>::]Query( [,&#160;<a href="#dicom_ex_4010397576_1135593" class="selected">COUNT</a>=<i>variable</i>] )</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1135528"></a><a name="dicom_ex_4010397576_1135528_PageTOC_IDLffDicomExQuery"></a>Return Value</h2>
+        <p>This method returns an array of <code>IDLFFDICOMEXQRESULTS</code> structures containing the information returned by the query, one structure per matched item. The maximum number of structures in the array is defined by the <a href="IDLffDicomExCfg__SetValue.htm#dicom_ex_4010397576_1133165">MaxQueryResponses</a> configuration parameter. </p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The COUNT keyword returns the number of items that match the query. Always check the number of matches before attempting to reference an element in the returned array.</p>
+        <p>The <code>IDLFFDICOMEXQRESULTS</code> structure is described below. With two exceptions, each field in the structure corresponds to a property of the IDLffDicomExQuery object. See the description of the property in <a href="IDLffDicomExQuery Properties.htm">IDLffDicomExQuery Properties</a> for information about the range of possible values returned.</p>
+        <p>The STUDY_DESCRIPTION and SERIES_DESCRIPTION fields do not correspond to query field properties. For selected queries, these fields will contain string values describing the study or series, if the descriptions are available.</p>
+        <p>Note that a field in an <code>IDLFFDICOMEXQRESULTS</code> structure can contain an empty string if <i>either</i> of the following is true:</p>
+        <ul>
+            <li value="1">No value for the field is returned by a particular combination of query model and query level. See <a href="IDLffDicomExQuery Properties.htm#dicom_ex_4010397576_1134923">Query Property Interactions With Query Model/Level</a> for a discussion the fields for which values are returned for a given combination of query model and query level.</li>
+            <li value="2">The actual value of the field is an empty string.</li>
+        </ul>
+        <p>The <code>IDLFFDICOMEXQRESULTS</code> structure has the following fields:</p>
+        <p class="Code">QUERY_MODEL (integer)</p>
+        <p class="Code">QUERY_LEVEL (integer)</p>
+        <p class="Code">PATIENT_NAME (string)</p>
+        <p class="Code">FAMILY_NAME (string)</p>
+        <p class="Code">GIVEN_NAME (string)</p>
+        <p class="Code">MIDDLE_NAME (string)</p>
+        <p class="Code">PREFIX (string)</p>
+        <p class="Code">SUFFIX (string)</p>
+        <p class="Code">PATIENT_ID (string)</p>
+        <p class="Code">STUDY_INSTANCE_UID (string)</p>
+        <p class="Code">STUDY_ID (string)</p>
+        <p class="Code">STUDY_DATE (string)</p>
+        <p class="Code">STUDY_TIME (string)</p>
+        <p class="Code">ACCESSION_NUMBER (string)</p>
+        <p class="Code">SERIES_INSTANCE_UID (string)</p>
+        <p class="Code">SERIES_NUMBER (string)</p>
+        <p class="Code">MODALITY (string)</p>
+        <p class="Code">SOP_INSTANCE_UID (string)</p>
+        <p class="Code">INSTANCE_NUMBER (string)</p>
+        <p class="Code">STUDY_DESCRIPTION (string)</p>
+        <p class="Code">SERIES_DESCRIPTION (string)</p>
+        <h3>Note on Missing UIDS</h3>
+        <p>If a query returns values for a field that is <i>supposed</i> to contain a unique identifier but does not, this method substitutes one of the following strings in the corresponding field of the returned structure:</p>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/Description.css');margin-left: 0;margin-right: auto;" cellspacing="0" class="TableStyle_Description">
+            <col />
+            <col />
+            <thead>
+                <tr>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColSep">
+                        <p>Field with Missing Data</p>
+                    </td>
+                    <td class="TableStyle_Description_Head_0_0_RowSep_ColEnd">
+                        <p>Substituted String</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Patient_ID</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p class="Code">Unknown Patient Id</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColSep">
+                        <p>Study_Instance_UID</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowSep_ColEnd">
+                        <p class="Code">Unknown Study UID</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColSep">
+                        <p>Series_Instance_UID</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_0_0_RowSep_ColEnd">
+                        <p class="Code">Unknown Series UID</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColSep">
+                        <p>SOP_Instance_UID</p>
+                    </td>
+                    <td class="TableStyle_Description_Body_1_0_RowEnd_ColEnd">
+                        <p class="Code">Unknown Image UID</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="dicom_ex_4010397576_1135590"></a><a name="dicom_ex_4010397576_1135590_PageTOC_IDLffDicomExQuery"></a>Arguments</h2>
+        <p>None</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1135592"></a><a name="dicom_ex_4010397576_1135592_PageTOC_IDLffDicomExQuery"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dicom_ex_4010397576_1135593"></a><a name="dicom_ex_4010397576_1135593_Keywords_IDLffDicomExQuery"></a>COUNT</h3>
+        <p>Set this keyword equal to a named variable that will contain a long integer representing the number of <code>IDLFFDICOMEXQRESULTS</code> structures returned by the query. If no matches are found, the variable specified by COUNT will contain zero.</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1135595"></a><a name="dicom_ex_4010397576_1135595_PageTOC_IDLffDicomExQuery"></a>Example</h2>
+        <p>The following example code shows how to programmatically configure a Query/Retrieve SCP Application Entity and perform a query.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In order to run this code, you must supply values for the <code>REMOTE_AET</code>, <code>REMOTE_HOST</code>, and <code>REMOTE_PORT</code> variables.</p>
+        <p>To run the example, do the following:</p>
+        <ol>
+            <li value="1">Copy the example code and paste it into an IDL editor window or another text editor of your choice.</li>
+            <li value="2">Edit the text to supply the values for the three required variables.</li>
+            <li value="3">Save the file as <code>query_patient_root_patient_level.pro.</code></li>
+            <li value="4">Execute <code>query_patient_root_patient_level.pro</code> in IDL.</li>
+        </ol>
+        <p class="Code">PRO query_patient_root_patient_level</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; NOTE:</p>
+        <p class="Code">; To run this example on your own system, define the following</p>
+        <p class="Code">; variables to be valid remote query/retrieve SCP node values.</p>
+        <p class="Code">REMOTE_AET = 'remote_aet'</p>
+        <p class="Code">REMOTE_HOST = 'remote_host_name'</p>
+        <p class="Code">REMOTE_PORT = 'remote_port_number'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Update the local user configuration file.</p>
+        <p class="Code">; First create a new local user configuration object.</p>
+        <p class="Code">ocfg = OBJ_NEW('IDLffDicomExCfg')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Add the Remote Query/Retrieve SCP Application Entity.</p>
+        <p class="Code">ocfg-&gt;SetApplicationEntity, 'remote_qr_scp_aen', $</p>
+        <p class="Code">&#160;&#160;&#160;REMOTE_AET, REMOTE_HOST, REMOTE_PORT, $</p>
+        <p class="Code">&#160;&#160;&#160;'Query_SCP_Service_List', 'Query_SCP'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Save the changes to the configuration file.</p>
+        <p class="Code">ocfg-&gt;Commit</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Destroy the configuration file object.</p>
+        <p class="Code">OBJ_DESTROY, ocfg</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Perform a patient root, patient level query against </p>
+        <p class="Code">; the remote node. First define a new Query/Retrieve SCU object.</p>
+        <p class="Code">oqr  = OBJ_NEW('IDLffDicomExQuery')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Specify the remote node to query.</p>
+        <p class="Code">oqr-&gt;SetProperty, QUERY_SCP = 'remote_qr_scp_aen'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Run the query.</p>
+        <p class="Code">xResults = oqr-&gt;Query(COUNT=cnt)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Print out the query results.</p>
+        <p class="Code">FOR i=0, cnt-1 DO BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;PRINT, 'i = ', i, '  patient_id = ',  $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;xResults[i].patient_id, '     patient_name = ', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;xResults[i].patient_name</p>
+        <p class="Code">ENDFOR</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Destroy the Query/Retrieve SCU object.</p>
+        <p class="Code">OBJ_DESTROY, oqr</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <h2 class="API"><a name="dicom_ex_4010397576_1135648"></a><a name="dicom_ex_4010397576_1135648_PageTOC_IDLffDicomExQuery"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>6.3</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

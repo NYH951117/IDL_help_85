@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: E">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>EXPAND_PATH </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="E_list.htm">Routines: E</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">EXPAND_PATH</span>
+        </div>
+        <h1 class="Routine"><a name="E_841667181_676787"></a><a name="kanchor864"></a><a name="E_841667181_94060"></a>EXPAND_PATH <a name="kanchor865"></a></h1>
+        <p>The EXPAND_PATH function is used to expand a simple path-definition string into a full path listing. The returned path can be useful for setting the !PATH, and !HELP_PATH system variables, for example.</p>
+        <ul>
+            <li value="1"><a name="kanchor866"></a>!PATH is a list of locations where IDL searches for currently undefined procedures and functions.</li>
+            <li value="2"><a name="kanchor867"></a>!HELP_PATH is a list of</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The mechanism used by EXPAND_PATH to expand the path-definition string is the same as that is used to expand the contents of the IDL_PATH, IDL_DLM_PATH, and IDL_HELP_PATH preferences at startup. See The Path Definition String below for more information.</p>
+        <h3><a name="E_841667181_997238"></a><a name="E_841667181_993199_PageTOC_EXPAND_PATH_"></a><a name="E_841667181_22148"></a>The Path Definition String</h3>
+        <p>EXPAND_PATH accepts a single argument, a scalar string that contains a simple path-definition string. EXPAND_PATH expands the path-definition string into a list of directories that can be assigned to the !PATH, !DLM_PATH, or !HELP_PATH system variables.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The syntax of the path definition string describe here can also be used when setting the IDL_PATH, IDL_DLM_PATH, and IDL_HELP_PATH preferences. When IDL starts, it will treat the value of the preference in the same way EXPAND_PATH treats the path definition string.</p>
+        <p>IDL supports the following special notations within the path definition string:</p>
+        <ul>
+            <li value="1"><b>Using “+”</b> — When IDL encounters a “+” in front of a directory name, it searches the directory and all of its subdirectories for files of the appropriate type for the given path:</li>
+            <li class="Indent" value="2">IDL program files (<code>.pro</code> or <code>.sav</code>) if neither the DLM nor the HELP keywords to EXPAND_PATH are present. </li>
+            <li class="Indent" value="3">Dynamically Loadable Module files (<code>.dlm</code>) if the DLM keyword to EXPAND_PATH is present.</li>
+            <li class="Indent" value="4">Files that can be used by IDL’s online help system, if the HELP keyword to EXPAND_PATH is present. On UNIX platforms, help files are Adobe Portable Document Format (<code>.pdf</code>) files, HTML format (<code>.html</code> or <code>.htm</code>) files, or have the file extension<code>.help</code>&#160;. On Windows systems, help files can be either HTML Help (<code>.chm</code>), WinHelp (<code>.hlp</code>), PDF (<code>.pdf</code>), or HTML (<code>.html</code> or <code>.htm</code>) files.</li>
+        </ul>
+        <p class="indent2">Any directory containing one or more of the appropriate type of file is added to the path.</p>
+        <p class="indent2">If the “+” is <i>not</i> present, the specified directory is added to the path regardless of its contents.</p>
+        <p class="indent2"><b>Order of Expanded Directories</b>
+        </p>
+        <p class="indent2">When expanding a path segment starting with “+”, IDL ensures that all directories containing the appropriate type files are placed in the path string. The order in which the directories in such an expanded path segment appear is completely unspecified, and does not necessarily correspond to any specific order (such as top-down alphabetized). This allows IDL to construct the path in the fastest possible way and speeds the process of loading paths at startup. This is only a problem if two subdirectories in such a hierarchy contain a file with the same name. </p>
+        <p class="indent2">If the order in which “+” expands directories is a problem for your application, you should add the directories to the path explicitly and not use “+”. Only the order of the files within a given “+” entry are determined by IDL. It never reorders !PATH (or !DLM_PATH or !HELP_PATH) in any other way. You can therefore obtain any search order you desire by writing the path explicitly.</p>
+        <ul>
+            <li value="1"><b>Using “&lt;IDL_DEFAULT&gt;”</b> — IDL replaces any occurrence of the token <code>&lt;IDL_DEFAULT&gt;</code> in a path definition string with the default value IDL would have used if no environment variable or preference were set. The actual value of this placeholder depends on where IDL has been installed. Hence, to view IDL’s default path:</li>
+        </ul>
+        <p class="Code_Indented">PRINT, EXPAND_PATH('&lt;IDL_DEFAULT&gt;')</p>
+        <p class="indent">To append your own directory after IDL’s default DLM path using the IDL_DLM_PATH environment variable (under UNIX):</p>
+        <p class="Code_Indented">% setenv IDL_DLM_PATH "&lt;IDL_DEFAULT&gt;:/your/path/here"</p>
+        <p class="indent">(Setting the Windows environment variable IDL_DLM_PATH to a similar string would produce the same result on a Windows system.) This substitution allows you to set up your paths without having to hard-code IDL’s defaults into your startup scripts or environment variables.</p>
+        <p class="indent">Note that the actual path that the token <code>&lt;IDL_DEFAULT&gt;</code> expands to depends on the context in which it is used. The default path for <code>.pro</code> and <code>.sav</code> files is different from the default path for <code>.dlm</code> files or help files. To see this, enter the following statements into IDL:</p>
+        <p class="Code_Indented">PRINT, EXPAND_PATH('&lt;IDL_DEFAULT&gt;')</p>
+        <p class="Code_Indented">PRINT, EXPAND_PATH('&lt;IDL_DEFAULT&gt;', /DLM)</p>
+        <p class="Code_Indented">PRINT, EXPAND_PATH('&lt;IDL_DEFAULT&gt;', /HELP)</p>
+        <p class="indent">Three variations of the <code>&lt;IDL_DEFAULT&gt;</code> token eliminate this dependence on context:</p>
+        <ul>
+            <li class="Indent" value="1"><code>&lt;IDL_DEFAULT_PATH&gt;</code> defines the default path to <code>.pro</code> and <code>.sav</code> files.</li>
+            <li class="Indent" value="2"><code>&lt;IDL_DEFAULT_DLM&gt;</code> defines the default path to <code>.dlm</code> files.</li>
+            <li class="Indent" value="3"><code>&lt;IDL_DEFAULT_HELP&gt;</code> defines the default path to help (<code>.pdf</code>, <code>.html</code>, and <code>.chm</code>) files.</li>
+            <li value="4"><b>Using “&lt;IDL_BIN_DIRNAME&gt;”</b> — IDL replaces any occurrence of the token <code>&lt;IDL_BIN_DIRNAME&gt;</code> in a path definition string with the name of the subdirectory within the installed IDL distribution where binaries for the current system are kept. This feature is useful for distributing packages of DLMs (Dynamically Loadable Modules) with support for multiple operating system and hardware combinations.</li>
+            <li value="5"><b>Using “&lt;IDL_VERSION_DIRNAME&gt;”</b> — IDL replaces any occurrence of the token <code>&lt;IDL_VERSION_DIRNAME&gt;</code> in a path definition string with a unique name for the IDL version that is currently running. This feature can be combined with <code>&lt;IDL_BIN_DIRNAME&gt;</code> to easily distribute packages of DLMs with support for multiple IDL versions, operating systems, and hardware platforms.</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>See <a href="../../Creating IDL Programs/Appendices/IDL_Environment_System_V.htm#sysvars_272074529_1004032">!DLM_PATH</a> for examples using the <code>&lt;IDL_BIN_DIRNAME&gt;</code> and <code>&lt;IDL_VERSION_DIRNAME&gt;</code> tokens.</p>
+        <h2 class="API"><a name="E_841667181_987917"></a><a name="E_841667181_987917_PageTOC_EXPAND_PATH_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = EXPAND_PATH( <i>String</i> [,&#160;/<a href="#E_841667181_987744" class="selected">ALL_DIRS</a>] [,&#160;/<a href="#E_841667181_987739" class="selected">ARRAY</a>] [,&#160;<a href="#E_841667181_676819" class="selected">COUNT</a>=<i>variable</i>] [,&#160;/<a href="#E_841667181_987893" class="selected">DLM</a>] [,&#160;/<a href="#E_841667181_987895" class="selected">HELP</a>] )</p>
+        <h2 class="API"><a name="E_841667181_997215"></a><a name="E_841667181_23482"></a>Return Value </h2>
+        <p>Returns a list of directories that can be assigned to the !PATH, !DLM_PATH, or !HELP_PATH system variables given a string path to be expanded.</p>
+        <h2 class="API"><a name="E_841667181_676813"></a><a name="E_841667181_676813_PageTOC_EXPAND_PATH_"></a>Arguments</h2>
+        <h3 class="Argument">String</h3>
+        <p>A scalar string containing the path-definition string to be expanded. See The Path Definition String above for details.</p>
+        <h2 class="API"><a name="E_841667181_676816"></a><a name="E_841667181_676816_PageTOC_EXPAND_PATH_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="E_841667181_987744"></a><a name="E_841667181_987744_Keywords_EXPAND_PATH__"></a>ALL_DIRS</h3>
+        <p>Set this keyword to return all directories without concern for their contents, otherwise, EXPAND_PATH only returns those directories that contain <code>.pro</code> or <code>.sav</code> files.</p>
+        <h3 class="Keyword"><a name="E_841667181_987739"></a><a name="E_841667181_987739_Keywords_EXPAND_PATH__"></a>ARRAY</h3>
+        <p>Set this keyword to return the result as a string array with each element containing one path segment. In this case, there is no need for a separator character and none is supplied. Normally, the result is a string array with the path segments separated with the correct special delimiter character for the current operating system.</p>
+        <h3 class="Keyword"><a name="E_841667181_676819"></a><a name="E_841667181_676819_Keywords_EXPAND_PATH__"></a>COUNT</h3>
+        <p>Set this keyword to a named variable which returns the number of path segments contained in the result.</p>
+        <h3 class="Keyword"><a name="E_841667181_987893"></a><a name="E_841667181_987893_Keywords_EXPAND_PATH__"></a>DLM</h3>
+        <p>Set this keyword to return those directories that contain IDL Dynamically Loadable Module (<code>.dlm</code>) description files (that is, directories specified by the !DLM_PATH system variable).</p>
+        <h3 class="Keyword"><a name="E_841667181_987895"></a><a name="E_841667181_987895_Keywords_EXPAND_PATH__"></a>HELP</h3>
+        <p>Set this keyword to return directories that contain help files (that is, directories specified by the !HELP_PATH system variable). On UNIX platforms, help files are in Adobe Portable Document Format (<code>.pdf)</code>, HTML format (<code>.html</code> or <code>.htm</code>), or have the file extension <code>.help</code>&#160;. On Windows systems, help files can be either HTML Help (<code>.chm</code>), WinHelp (<code>.hlp</code>), PDF (<code>.pdf</code>), or HTML (<code>.html</code> or <code>.htm</code>) files.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In IDL 7.0, the files that comprise IDL’s online help system are not included in the !HELP_PATH, and are thus not found by this keyword.</p>
+        <h2 class="API"><a name="E_841667181_676823"></a><a name="E_841667181_676823_PageTOC_EXPAND_PATH_"></a>Examples</h2>
+        <h3><a name="E_841667181_676824_Keywords_EXPAND_PATH__"></a>Example 1</h3>
+        <p>Assume you have the following directory structure:</p>
+        <p class="Code">/home</p>
+        <p class="Code">&#160;&#160;&#160;myfile.txt</p>
+        <p class="Code">&#160;&#160;&#160;/programs</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;/pro</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;myfile.pro</p>
+        <p>Search the <code>/home</code> directory and all its subdirectories, and return the directories containing <code>.pro</code> and <code>.sav</code> files:</p>
+        <p class="Code">PRINT, EXPAND_PATH('+/home')</p>
+        <p>IDL prints:</p>
+        <p class="Code">/home/programs/pro</p>
+        <h3><a name="E_841667181_987943_Keywords_EXPAND_PATH__"></a>Example 2</h3>
+        <p>Search the same directory, but this time return all directories, not just those containing <code>.pro</code> and <code>.sav</code> files:</p>
+        <p class="Code">PRINT, EXPAND_PATH('+home', /ALL_DIRS)</p>
+        <p>IDL prints:</p>
+        <p class="Code">/home/programs/pro:/home/programs</p>
+        <h3><a name="E_841667181_993579_Keywords_EXPAND_PATH__"></a>Example 3</h3>
+        <p>Print the default value of the !DLM_PATH system variable:</p>
+        <p class="Code">PRINT, EXPAND_PATH('&lt;IDL_DEFAULT&gt;', /DLM)</p>
+        <h2 class="API"><a name="E_841667181_36111"></a><a name="E_841667181_36111_PageTOC_EXPAND_PATH_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.6</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Modified to use the <code>&lt;IDL_*_PATH&gt;</code> syntax</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="E_841667181_992796"></a><a name="E_841667181_992796_PageTOC_EXPAND_PATH_"></a>See Also</h2>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

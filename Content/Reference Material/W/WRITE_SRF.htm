@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: W">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>WRITE_SRF </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="W_list.htm">Routines: W</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">WRITE_SRF</span>
+        </div>
+        <h1 class="Routine"><a name="W_811389549_756539"></a><a name="kanchor2935"></a><a name="W_811389549_20886"></a>WRITE_SRF </h1>
+        <p>The WRITE_SRF procedure writes an image and its color table vectors to a Sun Raster File (SRF).<a name="kanchor2936"></a></p>
+        <p>WRITE_SRF only writes 32-, 24-, and 8-bit-deep rasterfiles of type RT_STANDARD. Use the UNIX command <code>rasfilter8to1</code> to convert these files to 1-bit deep files. See the file <code>/usr/include/rasterfile.h</code> for the structure of Sun rasterfiles.</p>
+        <p>This routine is written in the IDL language. Its source code can be found in the file <code>write_srf.pro</code> in the <code>lib</code> subdirectory of the IDL distribution.</p>
+        <h2 class="API"><a name="W_811389549_756561"></a><a name="W_811389549_756561_PageTOC_WRITE_SRF_"></a>Examples</h2>
+        <p>The following lines create an image in an IDL graphics window, read it from the window and write it as a <code>.srf</code> file in the temporary directory, then read the <code>.srf</code> file and display it in the same graphics window:</p>
+        <p class="Code">; Save device settings and tell IDL to use a color table<br />DEVICE, GET_DECOMPOSED=old_decomposed<br />DEVICE, DECOMPOSED=0<br />LOADCT, 14<br /><br />; Create an image and display it<br />IMAGE1 = DIST(300)<br />WINDOW, 1, XSIZE=300, YSIZE=300<br />TV, IMAGE1<br /><br />; Write a SRF file to the temporary directory<br />; Note the use of the TRUE keyword to TVRD<br />filename = FILEPATH('test.srf', /TMP)<br />WRITE_SRF, filename, TVRD(/TRUE)<br />PRINT, 'File written to ', filename<br /><br />; Read in the file<br />READ_SRF, filename, IMAGE2<br /><br />; Display the IMAGE1 and IMAGE2 side by side<br />; Note the use of the TRUE keyword to TV<br />WINDOW, 1, XSIZE=600, YSIZE=300, $<br />   TITLE='Original (left) and Image read from file (right)'<br />TV, IMAGE1, 0<br />TV, IMAGE2, 1, /TRUE<br /><br />; Restore device settings.<br />DEVICE, DECOMPOSED=old_decomposed</p>
+        <h2 class="API"><a name="W_811389549_756545"></a><a name="W_811389549_756545_PageTOC_WRITE_SRF_"></a>Syntax</h2>
+        <p class="Syntax">WRITE_SRF, <i>Filename</i> [,&#160;<i>Image</i>, <i>R</i>, <i>G</i>, <i>B</i>] [,&#160;/<a href="#W_811389549_756556" class="selected">ORDER</a>] [,&#160;/<a href="#W_811389549_756559" class="selected">WRITE_32</a>]</p>
+        <h2 class="API"><a name="W_811389549_756547"></a><a name="W_811389549_756547_PageTOC_WRITE_SRF_"></a>Arguments</h2>
+        <h3 class="Argument">Filename</h3>
+        <p>A scalar string containing the full pathname of the SRF to write.</p>
+        <h3 class="Argument">Image</h3>
+        <p>The array to be written to the SRF. If <i>Image</i> has dimensions (3,<i>n,m</i>), a 24-bit SRF is written. If <i>Image</i> is omitted, the entire current graphics window is read into an array and written to the SRF file. <i>Image</i> should be of byte type, and in top to bottom scan line order.</p>
+        <h3 class="Argument">R, G, B</h3>
+        <p>The Red, Green, and Blue color vectors to be written to the file. If <i>R</i>, <i>G</i>, <i>B</i> values are not provided, the last color table established using LOADCT is included. If no color table has been established, WRITE_SRF calls LOADCT to load the grayscale entry (table 0).</p>
+        <h2 class="API"><a name="W_811389549_756554"></a><a name="W_811389549_756554_PageTOC_WRITE_SRF_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="W_811389549_756556"></a><a name="W_811389549_756556_Keywords_WRITE_SRF__"></a>ORDER</h3>
+        <p>Set this keyword to write the image from the top down instead of from the bottom up. This setting is only necessary when writing a file from the current IDL graphics window; it is ignored when writing a file from a data array passed as a parameter.</p>
+        <h3 class="Keyword"><a name="W_811389549_756559"></a><a name="W_811389549_756559_Keywords_WRITE_SRF__"></a>WRITE_32</h3>
+        <p>Set this keyword to write a 32-bit file. If the input image is a TrueColor image, dimensioned (3, <i>n, m</i>), it is normally written as a 24-bit raster file. </p>
+        <h2 class="API"><a name="W_811389549_756564"></a><a name="W_811389549_756564_PageTOC_WRITE_SRF_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Original</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="W_811389549_983527"></a><a name="W_811389549_983527_PageTOC_WRITE_SRF_"></a>See Also</h2>
+        <p><a href="../R/READ_SRF.htm#R_822202989_756193">READ_SRF</a>, <a href="../Q/QUERY___Routines.htm#Q_815714925_982368">QUERY_* Routines</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

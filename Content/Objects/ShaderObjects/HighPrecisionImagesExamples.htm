@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Examples of Handling High Precision Images</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <h1>Examples of Handling High Precision Images</h1>
+        <p>The following examples provide guidelines for reading in various types of image data including how to set the <a href="../../Object Classes/Graphics/IDLgrImage.htm">IDLgrImage</a> INTERNAL_DATA_TYPE property and supporting fragment shader code. However, due to the size limitations of the IDL distribution, high-precision images are not included, so you will need to use your own data to create working examples. See the following sections:</p>
+        <ul>
+            <li value="1"><a href="#16Bit">Displaying a 16-bit UINT Image</a>
+            </li>
+            <li value="2"><a href="#11BitUINT">Displaying an 11-bit UINT Image
+</a>
+            </li>
+            <li value="3"><a href="#11BitContrast">Displaying an 11-bit UINT Image with Contrast Adjustment</a>
+            </li>
+        </ul>
+        <h2><a name="16Bit"></a>Displaying a 16-bit UINT Image</h2>
+        <p>In this example, the input image (uiImageData) is 16-bit unsigned integer greyscale image that uses the full range of 0 to 65535. The goal is to display the entire range using a linear byte scale. Traditionally we'd use the BYTSCL function in IDL prior to loading data into the IDLgrImage object:</p>
+        <p class="Code">ScaledImData = BYTSCL(uiImageData, MIN=0, MAX=65535)</p>
+        <p class="Code">oImage = OBJ_NEW('IDLgrImage', ScaledImData, /GREYSCALE)</p>
+        <p>To have the GPU do the scaling, load the unscaled image data into the IDLgrImage and set INTERNAL_DATA_TYPE to 3 (32-bit floating point):</p>
+        <p class="Code">oImage = OBJ_NEW('IDLgrImage', uiImageData, $</p>
+        <p class="Code">&#160;&#160;INTERNAL_DATA_TYPE=3, /GREYSCALE, SHADER=oShader)</p>
+        <p>The fragment shader is extremely simple. Here, the reserved uniform variable,<code> _IDL_ImageTexture</code>, represents the base image in IDL:</p>
+        <p class="Code">uniform sampler2D _IDL_ImageTexture;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">void main(void)</p>
+        <p class="Code">{</p>
+        <p class="Code">gl_FragColor = texture2D(_IDL_ImageTexture, gl_TexCoord[0].xy);</p>
+        <p class="Code">}</p>
+        <p>All we are doing is reading the texel with texture2D and setting it in <code>gl_FragColor</code>. You will notice that there is no explicit conversion to byte because this is handled by OpenGL. The value written into gl_FragColor is a GLSL type vec4 (4 floating point values, RGBA). OpenGL clamps each floating point value to the range 0.0 to 1.0 and converts it to unsigned byte where 0.0 maps to 0 and 1.0 maps to 255. So all we have to do is read the texel value from <code>_IDL_ImageTexture</code> and set it into <code>gl_FragColor</code>.</p>
+        <h2><a name="11BitUINT"></a>Displaying an 11-bit UINT Image</h2>
+        <p>An 11-bit unsigned integer image is usually stored in a 16-bit UINT array, but with only 2048 (2<sup>11</sup>) values used. For this example, let's say the minimum value is 0 and the max is 2047. Traditionally this would be converted to byte as follows:</p>
+        <p class="Code">ScaledImData = BYTSCL(uiImageData, MIN=0, MAX=2047)</p>
+        <p class="Code">oImage = OBJ_NEW('IDLgrImage', ScaledImData, /GREYSCALE)</p>
+        <p>To scale on the GPU we again load the image with the original data. This time INTERNAL_DATA_TYPE can be set to 2 (16-bit float) as this can hold 11-bit unsigned integer data without loss of precision:</p>
+        <p class="Code">oImage = OBJ_NEW('IDLgrImage', uiImageData, $</p>
+        <p class="Code">&#160;&#160;INTERNAL_DATA_TYPE=2, /GREYSCALE, SHADER=oShader)</p>
+        <p>The fragment shader looks like the following where _IDL_ImageTexture represents the base image in IDL:</p>
+        <p class="Code">uniform sampler2D _IDL_ImageTexture;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">void main(void)</p>
+        <p class="Code">{</p>
+        <p class="Code">gl_FragColor = texture2D(_IDL_ImageTexture, $</p>
+        <p class="Code">&#160;&#160;gl_TexCoord[0].xy) *(65535.0 / 2047.0);</p>
+        <p class="Code">}</p>
+        <p>The only difference between this 11-bit example and the previous 16-bit example is the scaling of each texel. When the 16-bit UINT image is converted to floating point, the equation c/(2<sup>16</sup> - 1) is used so 65535 maps to 1.0. However, the maximum value in the 11-bit image is 2047, which is 0.031235 when converted to floating point. This needs scaled to 1.0 before being assigned to<code> gl_FragColor</code> if we want 2047 (image maximum) to map to 255 (maximum intensity) when the byte conversion is done. (Remember a value of 1.0 in <code>gl_FragColor</code> is mapped to 255.)</p>
+        <p>It's possible to implement the full byte scale functionality on the GPU, and let the user interactively specify the input min/max range by passing them as uniform variables. There is a performance advantage to doing this on the GPU as the image data only needs to be loaded once and the byte scale parameters are changed simply by modifying uniform variables. See <a href="../../Object Classes/Graphics/IDLgrShaderBytscl.htm">IDLgrShaderBytscl</a> for more information.</p>
+        <h2><a name="11BitContrast"></a>Displaying an 11-bit UINT Image with Contrast Adjustment</h2>
+        <p>The previous example applied a linear scaling to the 11-bit data to convert it to 8-bit for display purposes. Sometimes it is useful to apply a non-linear function when converting to 8-bit to perform contrast adjustments to compensate for the non-linear response of the display device (monitor, LCD, projector, etc.).</p>
+        <p>For an 11-bit image this can be achieved using a LUT with 2048 entries where each entry contains an 8-bit value. This is sometimes referred to as an 11-bit in, 8-bit out LUT, which uses an 11-bit value to index the LUT and returns an 8-bit value.</p>
+        <p>This is relatively simple to implement on the GPU. First create the 2048 entry contrast enhancement LUT and load it into an IDLgrImage which will be passed to the shader as a texture map (see <a href="ApplyLUTShaders.htm">Applying Lookup Tables Using Shaders</a>  for more information).</p>
+        <p class="Code">x = 2*!PI/256 * FINDGEN(256) ;; 0 to 2 pi</p>
+        <p class="Code">lut = BYTE(BINDGEN(256) - SIN(x)*30)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; Stretch to 2048 entry LUT.</p>
+        <p class="Code">lut = CONGRID(lut, 2048)</p>
+        <p class="Code">oLUT = OBJ_NEW('IDLgrImage', lut, /IMAGE_1D, /GREYSCALE)</p>
+        <p class="Code">oShader-&gt;SetUniformVariable, 'lut', oLUT</p>
+        <p>The image is created as before:</p>
+        <p class="Code">oImage = OBJ_NEW('IDLgrImage', uiImageData, $</p>
+        <p class="Code">&#160;&#160;INTERNAL_DATA_TYPE=2, /GREYSCALE, SHADER=oShader)</p>
+        <p>The fragment shader looks like the following where <code>_IDL_ImageTexture</code> represents the base image in IDL and<i> lut</i> is the lookup table.:</p>
+        <p class="Code">uniform sampler2D _IDL_ImageTexture;</p>
+        <p class="Code">uniform sampler1D lut;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">void main(void)</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">float i = texture2D(_IDL_ImageTexture, $</p>
+        <p class="Code_Indented">&#160;&#160;gl_TexCoord[0].xy).r * (65535.0/2048.0);</p>
+        <p class="Code_Indented">gl_FragColor = texture1D(lut, i);</p>
+        <p class="Code">}</p>
+        <p>The texel value is scaled before being used as an index into the LUT. The following figure shows how the 11-bit to 8-bit LUT is indexed. Only a fraction of the input data range is used (0 - 2047 out of a possible 0 - 65535). As 2047 (0.0312 when converted to float) is the maximum value, this should index to the top entry in the LUT. So we need to scale it to 1.0 by multiplying by 32.015. Now the range of values in the image (0 - 2047) index the entire range of entries in the LUT.</p>
+        <p>
+            <img src="../../images/Shaders_BYTE_Conversion.png" />
+        </p>
+        <p>Although this could be done on the CPU, it is much more efficient to do it on the GPU since the image data only needs to be loaded once and the display compensation curve can be modified simply by changing data in the <a href="../../Object Classes/Graphics/IDLgrImage.htm">IDLgrImage</a> holding the LUT.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

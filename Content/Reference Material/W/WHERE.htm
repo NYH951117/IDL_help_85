@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: W">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>WHERE</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="W_list.htm">Routines: W</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">WHERE</span>
+        </div>
+        <h1 class="Routine"><a name="W_811389549_679886"></a><a name="W_811389549_13948"></a><a name="W_811389549_51796"></a><a name="W_811389549_76802"></a>WHERE<a name="kanchor2696"></a></h1>
+        <p><a name="kanchor2697"></a>The WHERE function returns a vector that contains the one-dimensional subscripts of the nonzero elements of <i>Array_Expression</i>. The length of the resulting vector is equal to the number of nonzero elements in <i>Array_Expression</i>. Frequently the result of WHERE is used as a vector subscript to select elements of an array using given criteria.</p>
+        <h4>Note: When WHERE Returns –1</h4>
+        <p>If the NULL keyword is not set, and all the elements of <i>Array_Expression</i> are zero, then WHERE returns a scalar integer with a value of –1. If you use this result as an index into another array without checking for –1 first, then this will return the last element of the array. To avoid this problem, you should either use /NULL or check the <i>Count</i> argument before indexing. For example:</p>
+        <p class="Code">; Use /NULL, if no elements match then array will not be modified:</p>
+        <p class="Code">array[WHERE(array GT 5, /NULL)] = 5</p>
+        <p>or,</p>
+        <p class="Code">; Use Count to get the number of nonzero elements:</p>
+        <p class="Code">index = WHERE(array GT 5, count)</p>
+        <p class="Code">; Only subscript the array if it is safe:</p>
+        <p class="Code">IF count NE 0 THEN array[index] = 5</p>
+        <h2 class="API"><a name="W_811389549_964005"></a><a name="W_811389549_964005_PageTOC_WHERE_"></a>Examples</h2>
+        <p>See <a href="#Addition" class="selected">Additional Examples</a> for more information on using WHERE.</p>
+        <h3><a name="W_811389549_955123_Keywords_WHERE__"></a>Example 1</h3>
+        <p class="Code">; Create an integer array 0,1,2,...9</p>
+        <p class="Code">array = INDGEN(10)</p>
+        <p class="Code">PRINT, 'array = ', array</p>
+        <p class="Code">; Find the subscripts of all elements that are greater than 5</p>
+        <p class="Code">B = WHERE(array GT 5, count, COMPLEMENT=B_C, NCOMPLEMENT=count_c)</p>
+        <p class="Code">; Print how many and which elements met the search criteria:</p>
+        <p class="Code">PRINT, 'Number of elements &gt; 5: ', count</p>
+        <p class="Code">PRINT, 'Subscripts of elements &gt; 5: ', B</p>
+        <p class="Code">PRINT, 'Number of elements &lt;= 5: ', count_c</p>
+        <p class="Code">PRINT, 'Subscripts of elements &lt;= 5: ', B_C</p>
+        <p>IDL prints:</p>
+        <p class="Code">array =  0  1  2  3  4  5  6  7  8  9</p>
+        <p class="Code">Number of elements &gt; 5:  4</p>
+        <p class="Code">Subscripts of elements &gt; 5:  6  7  8  9</p>
+        <p class="Code">Number of elements &lt;= 5:  6</p>
+        <p class="Code">Subscripts of elements &lt;= 5:  0  1  2  3  4  5</p>
+        <h2 class="API"><a name="W_811389549_679889"></a><a name="W_811389549_679889_PageTOC_WHERE_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = WHERE( <i>Array_Expression</i> [,&#160;<i>Count</i>]
+		[,&#160;<a href="#W_811389549_964874" class="selected">COMPLEMENT</a>=<i>variable</i>]
+			[,&#160;/<a href="#W_811389549_964006" class="selected">L64</a>]
+			[,&#160;<a href="#W_811389549_964887" class="selected">NCOMPLEMENT</a>=<i>variable</i>]
+			[,&#160;/<a href="#WHERE_NULL" class="selected">NULL</a>]
+		)</p>
+        <h2 class="API"><a name="W_811389549_1001428"></a><a name="W_811389549_21005"></a>Return Value</h2>
+        <p>Returns a longword vector containing the subscripts of non-zero array elements matching the specified conditions. If /NULL is set, and no matches are found, then WHERE returns the value <a href="../../Creating IDL Programs/Components of the IDL Language/The_Null_Variable.htm">!NULL</a>.</p>
+        <h2 class="API"><a name="W_811389549_963998"></a><a name="W_811389549_963998_PageTOC_WHERE_"></a>Arguments</h2>
+        <h3 class="Argument">Array_Expression</h3>
+        <p>The array to be searched. Both the real and imaginary parts of a complex number must be zero for the number to be considered zero.</p>
+        <h3 class="Argument">Count</h3>
+        <p>A named variable that will receive the number of nonzero elements found in <i>Array_Expression</i>. This value is returned as a longword integer.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span><a name="kanchor2698"></a><a name="kanchor2699"></a>The system variable !ERR is set to the number of nonzero elements. This effect is for compatibility with previous versions of IDL and should <i>not</i> be used in new code. Use the COUNT argument to return this value instead.</p>
+        <h2 class="API"><a name="W_811389549_679900"></a><a name="W_811389549_679900_PageTOC_WHERE_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="W_811389549_964874"></a><a name="W_811389549_964874_Keywords_WHERE__"></a>COMPLEMENT</h3>
+        <p>Set this keyword to a named variable that receives the subscripts of the zero elements of <i>Array_Expression</i>. These are the subscripts that are not returned in <i>Result</i>. Together, <i>Result</i> and COMPLEMENT specify every subscript in <i>Array_Expression</i>. If there are no zero elements in <i>Array_Expression</i>, COMPLEMENT returns a scalar integer with the value -1, or the value !NULL if the NULL keyword is set.</p>
+        <h3 class="Keyword"><a name="W_811389549_964006"></a><a name="W_811389549_964006_Keywords_WHERE__"></a>L64</h3>
+        <p>By default, the result of WHERE is 32-bit integer when possible, and 64-bit integer if the number of elements being processed requires it. Set L64 to force 64-bit integers to be returned in all cases.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>Only 64-bit versions of IDL are capable of creating variables requiring a 64-bit result. Check the value of !VERSION.MEMORY_BITS to see if your IDL is 64-bit or not.</p>
+        <h3 class="Keyword"><a name="W_811389549_964887"></a><a name="W_811389549_964887_Keywords_WHERE__"></a>NCOMPLEMENT</h3>
+        <p>Set this keyword to a named variable that receives the number of zero elements found in <i>Array_Expression</i>. This value is the number of subscripts that will be returned via the COMPLEMENT keyword if it is specified.</p>
+        <h3 class="Keyword"><a name="WHERE_NULL"></a>NULL</h3>
+        <p>Set this keyword to have WHERE return !NULL instead of -1 when no matches are found.</p>
+        <h3><a name="W_811389549_972680_PageTOC_WHERE_"></a>Thread Pool Keywords</h3>
+        <p>This routine is written to make use of IDL’s <i>thread pool</i>, which can increase execution speed on systems with multiple CPUs. The values stored in the !CPU system variable control whether IDL uses the thread pool for a given computation. In addition, you can use the thread pool keywords TPOOL_MAX_ELTS, TPOOL_MIN_ELTS, and TPOOL_NOTHREAD to override the defaults established by !CPU for a single invocation of this routine. See <a href="../../Creating IDL Programs/Appendices/tpoolkeyw.htm#tpoolkeyw_2501860834_317209">Thread Pool Keywords</a> for details.</p>
+        <h2 class="API"><a name="Addition"></a>Additional Examples</h2>
+        <h3><a name="W_811389549_957830_Keywords_WHERE__"></a>Example 2</h3>
+        <p class="Code">; Create an integer array 0,1,2,...9</p>
+        <p class="Code">array = INDGEN(10)</p>
+        <p class="Code">; Change all elements that are greater than 5 to 5</p>
+        <p class="Code">array[WHERE(array GT 5, /NULL)] = 5</p>
+        <p class="Code">PRINT, array</p>
+        <p class="Code">;</p>
+        <p class="Code">; Change all elements that are greater than 10 to 10.</p>
+        <p class="Code">; Since there are none, WHERE will return !NULL and array will be unchanged:</p>
+        <p class="Code">array[WHERE(array GT 10, /NULL)] = 10</p>
+        <p class="Code">PRINT, array</p>
+        <p>IDL prints:</p>
+        <p class="Code">  0  1  2  3  4  5  5  5  5  5</p>
+        <p class="Code">  0  1  2  3  4  5  5  5  5  5</p>
+        <h2 class="API"><a name="W_811389549_820439"></a><a name="W_811389549_820439_PageTOC_WHERE_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added NULL keyword.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="W_811389549_983396"></a><a name="W_811389549_983396_PageTOC_WHERE_"></a>See Also</h2>
+        <p><a href="../A/ARRAY_INDICES.htm#A_850317933_998503">ARRAY_INDICES</a>, <a href="../U/UNIQ.htm#U_807064173_948328">UNIQ</a>, <a href="../../Creating IDL Programs/Components of the IDL Language/Conditionally_Altering_A.htm#arrays_3727706888_754337">Conditionally Altering Array Elements</a></p>
+        <p class="Hidden">WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE WHERE</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

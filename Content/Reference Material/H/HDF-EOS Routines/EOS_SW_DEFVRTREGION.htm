@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: H|HDF-EOS Routines">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>EOS_SW_DEFVRTREGION</title>
+        <link href="../../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../H_list.htm">Routines: H</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../HDF-EOS Routines.htm">HDF-EOS Routines</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">EOS_SW_DEFVRTREGION</span>
+        </div>
+        <h1 class="Routine"><a name="HDF_EOS_3103509269_1011725"></a><a name="HDF_EOS_3103509269_68783"></a>EOS_SW_DEFVRTREGION</h1>
+        <p>Whereas the EOS_SW_DEFBOXREGION and EOS_SW_DEFTIMEPERIOD functions perform subsetting along the “Track” dimension, this function<a name="kanchor811"></a> allows the user to subset along any dimension. The region is specified by a set of minimum and maximum values and can represent either a dimension index (case 1) or field value range (case 2). In the second case, the field must be one-dimensional and the values must be monotonic (strictly increasing or decreasing) in order that the resulting dimension index range be contiguous. (For the current version of this function, the second option is restricted to fields with one of the following HDF data types: 22, 24, 5, 6.) </p>
+        <p>This function may be called after EOS_SW_DEFBOXREGION or EOS_SW_DEFTIMEPERIOD to provide both geographic or time and “vertical” subsetting. In this case the user provides the id from the previous subset call. (This same id is then returned by the function.) This function may also be called “stand-alone” by setting the input id to (–1). </p>
+        <p>This function may be called up to eight times with the same region ID. It this way a region can be subsetted along a number of dimensions.</p>
+        <p>The EOS_SW_REGIONINFO and EOS_SW_EXTRACTREGION functions work as before, however, because there is no mapping performed between geolocation dimensions and data dimensions the field to be subsetted, (the field specified in the call to EOS_SW_REGIONINFO and EOS_SW_EXTRACTREGION) must contain the dimension used explicitly in the call to EOS_SW_DEFVRTREGION (case 1) or the dimension of the one-dimensional field (case 2).</p>
+        <h2 class="API"><a name="HDF_EOS_3103509269_1018194_PageTOC_EOS_SW_DEFVRTREGION_"></a>Examples</h2>
+        <p>Suppose we have a field called Pressure of dimension Height whose values increase from 100 to1000, and we desire all the elements with values between 500 and 800:</p>
+        <p class="Code">range[0] = 500.d</p>
+        <p class="Code">range[1] = 800.d</p>
+        <p class="Code">regionID = EOS_SW_DEFVRTREGION(swathID, -1, "Pressure", range)</p>
+        <p>The function determines the elements in the Height dimension that correspond to the values of the Pressure field between 500 and 800. </p>
+        <p>If we wish to specify the subset as elements 2 through 5 (0 - based) of the Height dimension, the call would be:</p>
+        <p class="Code">range[0] = 2.d</p>
+        <p class="Code">range[1] = 5.d</p>
+        <p class="Code">regionID = EOS_SW_DEFVRTREGION(swathID, -1, "DIM:Height", range)</p>
+        <p>The “DIM:” prefix tells the routine that the range corresponds to elements of a dimension rather than values of a field. In this example, any field to be subsetted must contain the Height dimension. </p>
+        <p>If a previous subset region or period was defined with an id of subsetID that we wish to refine further with the vertical subsetting defined above, we make the call:</p>
+        <p class="Code">regionID = EOS_SW_DEFVRTREGION(swathID, subsetID, $</p>
+        <p class="Code">&#160;&#160;&#160;"Pressure", range)</p>
+        <p>The return value, regionID, is set equal to subsetID. That is, the subset region is modified rather than a new one created. We can further refine the subset region with another call to the function:</p>
+        <p class="Code">freq[0] = 1540.3d</p>
+        <p class="Code">freq[1] = 1652.8d</p>
+        <p class="Code">regionID = EOS_SW_DEFVRTREGION(swathID, regionID, $</p>
+        <p class="Code">&#160;&#160;&#160;"FreqRange", freq)</p>
+        <h2 class="API"><a name="HDF_EOS_3103509269_1018178_PageTOC_EOS_SW_DEFVRTREGION_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = EOS_SW_DEFVRTREGION(<i>swathID</i>,<i> regionID</i>,<i> vertObj</i>,<i> range</i>)</p>
+        <h2 class="API"><a name="HDF_EOS_3103509269_1018181_PageTOC_EOS_SW_DEFVRTREGION_"></a>Return Value</h2>
+        <p>Returns the swath region ID if successful and FAIL (–1) otherwise.</p>
+        <h2 class="API"><a name="HDF_EOS_3103509269_1018183_PageTOC_EOS_SW_DEFVRTREGION_"></a>Arguments</h2>
+        <h3 class="Argument">swathID</h3>
+        <p>Swath id (long) returned by <a href="EOS_SW_CREATE.htm#HDF_EOS_3103509269_1011130">EOS_SW_CREATE</a> or <a href="EOS_SW_ATTACH.htm#HDF_EOS_3103509269_1010903">EOS_SW_ATTACH</a>.</p>
+        <h3 class="Argument">regionID</h3>
+        <p>Region or period id (long) from previous subset call, or –1 to create a new region within the entire dataset.</p>
+        <h3 class="Argument">vertObj</h3>
+        <p>Dimension or field (string) to subset by.</p>
+        <h3 class="Argument">range</h3>
+        <p>Minimum and maximum range (double) for subset.</p>
+        <h2 class="API"><a name="HDF_EOS_3103509269_1064223_PageTOC_EOS_SW_DEFVRTREGION_"></a>Keywords</h2>
+        <p>None</p>
+        <h2 class="API"><a name="HDF_EOS_3103509269_1052869_PageTOC_EOS_SW_DEFVRTREGION_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.2</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

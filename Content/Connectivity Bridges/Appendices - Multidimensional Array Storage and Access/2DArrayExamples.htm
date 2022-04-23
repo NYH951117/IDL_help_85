@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Bridges|COM Export Bridge|Multidimensional Array Storage and Access">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>2D Array Examples</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../Bridges.htm">Bridges</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbsSelf">COM Export Bridge</span><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="MASAOverview.htm">Multidimensional Array Storage and Access</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">2D Array Examples</span>
+        </div>
+        <h1><a name="2D_Array_Examples"></a>2D Array <a name="kanchor5144"></a>Examples</h1>
+        <p>Let’s create a 2D array that has 3 rows by 5 columns (3x5). Since the ultimate goal is to give the array to IDL for processing, let’s pretend it is an “image.” We will set the first row to all red, the second row to all green, and the third row to all blue. Here’s the conceptual layout of our array</p>
+        <p class="Code">rrrrr</p>
+        <p class="Code">ggggg</p>
+        <p class="Code">bbbbb</p>
+        <p>We will see shortly that even though the conceptual 2D layout is the above, the actual layout in linear memory is quite different between SAFEARRAYs and IDL.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>In the examples below, the “red” value is really the ASCII character ‘r’, “green” is the ASCII character ‘g’, and so on. We use this scheme so when you look at the actual memory, you’ll see the letters “rgb”, which makes for easy reading. It is much less confusing than using the cardinal numbers 1, 2, 3, when you are also talking about ordinal numbering involving 1, 2, 3.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>These examples illustrate how different languages store data. You should not need to include such code in your applications to make them work; the wrapper does the conversion for you.</p>
+        <h2>Visual Basic</h2>
+        <p>Here is how to create the RGB array (matrix) in Visual Basic. This example, by default, creates a valid SAFEARRAY that is compliant with the information above, and stored within a Variant when passed as a parameter in a method call (not shown).</p>
+        <p class="Code">Const RED As Byte = 114</p>
+        <p class="Code">Const GREEN As Byte = 103</p>
+        <p class="Code">Const BLUE As Byte = 98</p>
+        <p class="Code">‘ This creates an array with dimension indices 0..2 &amp; 0..4</p>
+        <p class="Code">‘ inclusive:</p>
+        <p class="Code">‘ i.e., it creates a 3x5 array; with “lower bounds” set to 0.</p>
+        <p class="Code">Dim m(2, 4) As Byte</p>
+        <p class="Code">For I = 0 To 4</p>
+        <p class="Code">m(0, I) = RED</p>
+        <p class="Code">m(1, I) = GREEN</p>
+        <p class="Code">m(2, I) = BLUE</p>
+        <p class="Code">Next I</p>
+        <p>Resulting linear memory:</p>
+        <p class="Code">rgbrgbrgbrgbrgb</p>
+        <p>Resulting SAFEARRAY.rgsabounds:</p>
+        <p class="Code">[0,5], [0,3]</p>
+        <p>Note the reversed order!</p>
+        <h2>C++ Using ATL SAFEARRAY Wrapper Objects</h2>
+        <p>This example uses the ATL Safearray wrapper objects: CComSafeArrayBound and CComSafeArray, which simply wraps the calls to the native Win32 Safearray API calls.</p>
+        <p class="Code">CComSafeArrayBound bound[2];</p>
+        <p class="Code">bound[0].SetCount(3); // 3 rows</p>
+        <p class="Code">bound[1].SetCount(5); // 5 columns</p>
+        <p class="Code">CComSafeArray&lt;byte&gt; matx(bound,2);</p>
+        <p class="Code">long ndx[2];</p>
+        <p class="Code">for ( int i = 0; i &lt; 5; i++ )</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">ndx[0] = 0;</p>
+        <p class="Code_Indented">ndx[1] = i;</p>
+        <p class="Code_Indented">matx.MultiDimSetAt(ndx,'r');</p>
+        <p class="Code_Indented">ndx[0] = 1;</p>
+        <p class="Code_Indented">ndx[1] = i;</p>
+        <p class="Code_Indented">matx.MultiDimSetAt(ndx,'g');</p>
+        <p class="Code_Indented">ndx[0] = 2; ndx[1] = i;</p>
+        <p class="Code_Indented">matx.MultiDimSetAt(ndx,'b');</p>
+        <p class="Code">}</p>
+        <p>Resulting linear memory:</p>
+        <p class="Code">rgbrgbrgbrgbrgb</p>
+        <p>Resulting SAFEARRAY.rgsabounds:</p>
+        <p class="Code">[0,5], [0,3]</p>
+        <p>Observe that when the <i>CComSafeArrayBound</i> array is created, it is initialized in the conceptually correct order (i.e., specifying the “3 rows” by “5 columns”). But, if you look at the actual <i>SAFEARRAY.rgsabounds</i>[] element in memory, you see that they were reversed when the array was created.</p>
+        <h2>C++ Using SAFEARRAY API Calls and Creating Different Memory Layout</h2>
+        <p>C++ has the flexibility to create SAFEARRAYs in many different ways. By calling the SAFEARRAY API calls directly and judiciously, you can create a SAFEARRAY with data in a different order than what is normally expected. IDL and traditional SAFEARRAY data ordering are different. This example puts the data into the SAFEARRAY in the same order as IDL expects it. In other words, it puts the data in the <i>opposite</i> order that is used for SAFEARRAYs when you use the API calls to set individual data elements.</p>
+        <p>But first, we must step back and see how the C++ language stores multidimensional arrays. If you have the following declaration:</p>
+        <p class="Code">byte data[3][5] = {</p>
+        <p class="Code">'r','r','r','r','r',</p>
+        <p class="Code">'g','g','g','g','g',</p>
+        <p class="Code">'b','b','b','b','b' };</p>
+        <p>the resulting linear memory looks like this:</p>
+        <p class="Code">rrrrrgggggbbbbb</p>
+        <p>This is the same order that IDL expects. However, C++ accesses the memory in the opposite way that IDL would access the same data. For example, if you wanted to set the k<sup>th</sup> element of the first row (0-indexed), here’s how the two languages compare:</p>
+        <p>C++:</p>
+        <p class="Code">data[0][k] = value;</p>
+        <p>IDL:</p>
+        <p class="Code">data[k,0] = value</p>
+        <p>However, the resulting linear memory layout is the same.</p>
+        <p>This example creates the 2D RGB array in C++ using the SAFEARRAY API calls and arranging memory in the same layout as IDL.</p>
+        <p class="Code">// First, create the linear memory in the format: rrrrrgggggbbbbb</p>
+        <p class="Code">byte data[3][5];</p>
+        <p class="Code">for ( int i = 0; i &lt; 5; i++ )</p>
+        <p class="Code">{</p>
+        <p class="Code_Indented">data[0][i] = 'r';</p>
+        <p class="Code_Indented">data[1][i] = 'g';</p>
+        <p class="Code_Indented">data[2][i] = 'b';</p>
+        <p class="Code">}</p>
+        <p class="Code">SAFEARRAYBOUND sab[2];</p>
+        <p class="Code">sab[0].lLbound = 0;</p>
+        <p class="Code">sab[0].cElements = 3; // 3 rows</p>
+        <p class="Code">sab[1].lLbound = 0;</p>
+        <p class="Code">sab[1].cElements = 5; // 5 columns</p>
+        <p class="Code">SAFEARRAY* psa = SafeArrayCreateEx(VT_UI1, 2, sab, NULL);</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">// By copying the source data into the safearray data area,</p>
+        <p class="Code">// we can create the data in a different order. Since the</p>
+        <p class="Code">// source data is in the same order as IDL expects, this creates</p>
+        <p class="Code">// a SAFEARRAY with a non-standard ordering.</p>
+        <p class="Code">memcpy(psa-&gt;pvData, data, sizeof(data));</p>
+        <p>Resulting linear memory:</p>
+        <p class="Code">rrrrrgggggbbbbb</p>
+        <p>Resulting SAFEARRAY.rgsabounds:</p>
+        <p class="Code">[0,5], [0,3]</p>
+        <p>The consumer of this array needs some indication that the order is different than standard SAFEARRAYs and that it would not need to be converted before passing off to IDL.</p>
+        <p>Here is how to create the 2D RGB array in IDL pro code:</p>
+        <p class="Code">arr = BYTARR(5, 3)</p>
+        <p class="Code">for i=0,4 do begin</p>
+        <p class="Code_Indented">arr[i,0] = 114B</p>
+        <p class="Code_Indented">arr[i,1] = 103B</p>
+        <p class="Code_Indented">arr[i,2] = 98B</p>
+        <p class="Code">endfor</p>
+        <p>Resulting linear memory:</p>
+        <p class="Code">rrrrrgggggbbbbb</p>
+        <p>Calling <i>help, arr</i> gives the following information:</p>
+        <p class="Code">ARR BYTE = Array[5, 3]</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

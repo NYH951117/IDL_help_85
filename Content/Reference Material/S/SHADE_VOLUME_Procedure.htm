@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: S">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>SHADE_VOLUME Procedure</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="S_list.htm">Routines: S</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">SHADE_VOLUME Procedure</span>
+        </div>
+        <h1 class="Routine"><a name="dg_routines_3604229493_885531"></a><a name="dg_routines_3604229493_78379"></a>SHADE_VOLUME Procedure</h1>
+        <p><a name="kanchor2361"></a><a name="kanchor2362"></a><a name="kanchor2363"></a>Given a 3-D volume and a contour value, SHADE_VOLUME produces a list of vertices and polygons describing the contour surface. The polygons are described by a (3, <i>n</i>) array of vertices and a polygon list array that contains the vertices belonging to each polygon. Given a volume array with dimensions of (<i>D</i><sub>0</sub>, <i>D</i><sub>1</sub>, <i>D</i><sub>2</sub>), the resulting vertex coordinates range between 0 and <i>D</i><sub>0</sub>&#160;–&#160;1 in <i>x</i>, 0 and <i>D</i><sub>1</sub>&#160;–&#160;1 in y, and 0 and <i>D</i><sub>2</sub>&#160;–&#160;1 in <i>z</i>. This surface can then be displayed as a shaded surface by the POLYSHADE procedure. Shading is obtained from either a single light-source model or from user-specified values.</p>
+        <p>SHADE_VOLUME computes the polygons that describe a three dimensional contour surface. Each volume element (voxel) is visited to find the polygons formed by the intersections of the contour surface and the voxel edges. </p>
+        <p>This routine is limited to processing datasets that will fit in memory.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_885558"></a><a name="dg_routines_3604229493_678789_PageTOC_SHADE_VOLUME_"></a>Syntax</h2>
+        <p class="Syntax">SHADE_VOLUME, <i>Volume</i>, <i>Value</i>, <i>Vertex</i>,<i> Poly</i> [,&#160;/<a href="#dg_routines_3604229493_885595" class="selected">LOW</a>] [,&#160;<a href="#dg_routines_3604229493_885598" class="selected">SHADES</a>=<i>array</i>] [,&#160;/<a href="#dg_routines_3604229493_885605" class="selected">VERBOSE</a>] [,&#160;<a href="#dg_routines_3604229493_885608" class="selected">XRANGE</a>=<i>vector</i>] [,&#160;<a href="#dg_routines_3604229493_885611" class="selected">YRANGE</a>=<i>vector</i>] [,&#160;<a href="#dg_routines_3604229493_885614" class="selected">ZRANGE</a>=<i>vector</i>]</p>
+        <h2 class="API"><a name="dg_routines_3604229493_885579"></a><a name="dg_routines_3604229493_678791_PageTOC_SHADE_VOLUME_"></a>Arguments</h2>
+        <h3 class="Argument">Volume</h3>
+        <p>A three-dimensional array that contains the dataset to be contoured. If the <i>Volume</i> array is dimensioned <i>(D</i><sub class="italic">0</sub><i>, D</i><sub class="italic">1</sub><i>, D</i><sub class="italic">2</sub><i>)</i>, the resulting vertex coordinates are as follows: </p>
+        <p class="indent">0&#160;&lt;&#160;X&#160;&lt;&#160;<i>D</i><sub class="italic">0</sub>&#160;-&#160;1; 0&#160;&lt;&#160;Y&#160;&lt;&#160;<i>D</i><sub class="italic">1</sub>&#160;-&#160;1; 0&#160;&lt;&#160;Z&#160;&lt;&#160;<i>D</i><sub class="italic">2</sub>&#160;-&#160;1.</p>
+        <p>If floating-point NaN values are present in <i>Volume</i>, then SHADE_VOLUME may generate inconsistent surfaces and may return NaN values in the <i>Vertex</i> argument.  The surfaces generated by SHADE_VOLUME may also vary across platforms if NaN data is present in the <i>Volume</i> parameter.</p>
+        <h3 class="Argument">Value</h3>
+        <p>The scalar contour value. This value specifies the constant-density surface (also called an isosurface) to be rendered.</p>
+        <h3 class="Argument">Vertex</h3>
+        <p>The name of a variable to receive the vertex array. On output, this variable is set to a (3, <i>n</i>) floating-point array, suitable for input to POLYSHADE.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If SHADE_VOLUME does not generate a surface because the surface defined by the <i>Value</i> argument does not cross any voxel edges in the <i>Volume</i> argument, SHADE_VOLUME sets the <i>Vertex</i> and <i>Poly</i> arguments to undefined variables.</p>
+        <h3 class="Argument">Poly</h3>
+        <p>A named variable to receive the polygon list, an <i>n</i>-element, longword array. This list describes the vertices of each polygon and is suitable for input to POLYSHADE. The vertices of each polygon are listed in counterclockwise order when observed from outside the surface. The vertex description of each polygon is a vector of the form: [<i style="letter-spacing: 0em;">n</i>,<i style="letter-spacing: 0em;">&#160;i</i><sub class="italic">0</sub>,&#160;<i style="letter-spacing: 0em;">i</i><sub class="italic">1</sub>,&#160;...,&#160;<i style="letter-spacing: 0em;">i</i><sub class="italic">n-1</sub>] and the <i>Poly</i> array is the concatenation of the lists of each polygon. For example, when rendering a pyramid consisting of four triangles, <i>Poly</i> would contain 16 elements, made by concatenating four, four-element vectors of the form [3,&#160;<i>V</i><sub class="italic">0</sub>,&#160;<i>V</i><sub class="italic">1</sub>,&#160;<i>V</i><sub class="italic">2</sub>]. <i>V</i><sub class="italic">0</sub>, <i>V</i><sub class="italic">1</sub>, and <i>V</i><sub class="italic">2</sub> are the indices of the vertices describing each triangle.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If SHADE_VOLUME does not generate a surface because the surface defined by the <i>Value</i> argument does not cross any voxel edges in the <i>Volume</i> argument, SHADE_VOLUME sets the <i>Vertex</i> and <i>Poly</i> arguments to undefined variables.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_885593"></a><a name="dg_routines_3604229493_678800_PageTOC_SHADE_VOLUME_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_885595"></a><a name="dg_routines_3604229493_678801_Keywords_SHADE_VOLUME__"></a>LOW</h3>
+        <p>Set this keyword to display the low side of the contour surface (i.e., the contour surfaces enclose high data values). If this keyword is omitted or is 0, the high side of the contour surface is displayed and the contour encloses low data values. If this parameter is incorrectly specified, errors in shading will result.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_885598"></a><a name="dg_routines_3604229493_678803_Keywords_SHADE_VOLUME__"></a>SHADES</h3>
+        <p>An optional array, converted to byte type before use, that contains the user-specified shading color index for each voxel. This array must have the same dimensions as <i>Volume</i>. On completion, SHADE_VOLUME replaces this array with the interpolated shading for each vertex of the surface, contained in <i>Vertex</i>.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When using the SHADES keyword on True Color devices, we recommend that decomposed color support be turned off, by setting DECOMPOSED=0 for <a href="../D/DEVICE_Procedure.htm#dg_routines_3604229493_882302">DEVICE Procedure</a>.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_885605"></a><a name="dg_routines_3604229493_678805_Keywords_SHADE_VOLUME__"></a>VERBOSE</h3>
+        <p>Set this keyword to print a message indicating the number of polygons and vertices that are produced.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_885608"></a><a name="dg_routines_3604229493_678807_Keywords_SHADE_VOLUME__"></a>XRANGE</h3>
+        <p>An optional two-element vector that contains the limits, over the first dimension, of the sub-volume to be considered.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_885611"></a><a name="dg_routines_3604229493_678809_Keywords_SHADE_VOLUME__"></a>YRANGE</h3>
+        <p>An optional two-element vector that contains the limits, over the second dimension, of the sub-volume to be considered.</p>
+        <h3 class="Keyword"><a name="dg_routines_3604229493_885614"></a><a name="dg_routines_3604229493_678811_Keywords_SHADE_VOLUME__"></a>ZRANGE</h3>
+        <p>An optional two-element vector containing the limits, over the third dimension, of the sub-volume to be considered.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_885617"></a><a name="dg_routines_3604229493_678813_PageTOC_SHADE_VOLUME_"></a>Examples</h2>
+        <h3><a name="dg_routines_3604229493_885618"></a><a name="kanchor2364"></a><a name="kanchor2365"></a>Creating an Isosurface Display</h3>
+        <p>A common problem in data visualization is how to display a constant density surface (also known as an isosurface), given a three-dimensional grid of density measurements. In medical imaging, stacking a series of two-dimensional images created by computed tomography or magnetic resonance creates a grid of density measurements that can be contoured to display the surfaces of anatomical structures. Atmospheric scientists create three-dimensional grids of water densities that can be contoured at the proper density level to show the surface of clouds. It is relatively easy to produce these surfaces using the SHADE_VOLUME procedure in conjunction with the POLYSHADE function.</p>
+        <h3><a name="dg_routines_3604229493_885623"></a><a name="dg_routines_3604229493_23645"></a>Cloud Example</h3>
+        <p>This next figure, produced by the following IDL code, shows the three-dimensional contour surface of the precipitating region of a thunderstorm simulated by a three-dimensional cloud model. </p>
+        <p>
+            <img src="../../Resources/Images/mult18.gif" style="margin-left: 2.25px;margin-right: 9.750214px;" />
+        </p>
+        <p>The data were provided by the National Center for Atmospheric Research. The original data are contained in an array called clouds, a (55, 55, 32) element floating-point array. Each array element contains the amount of water contained in the corresponding volume of air.</p>
+        <p class="Code">; Restore the data:<br />RESTORE, FILEPATH('clouds3d.dat', SUBDIR=['examples','data'])<br />; Create the contour surface polygons (v and p)<br />; at density 0.1, from clouds. Show the low side:<br />SHADE_VOLUME, clouds, 0.1, v, p, /LOW<br />; Obtain the dimensions of the volume.<br />; Variables S[1], S[2], and S[3] now contain<br />; the number of columns, rows, and slices in the volume:<br />s = SIZE(clouds)<br />; Use SCALE3 to establish the three-dimensional<br />; transformation matrix. Rotate 45 degrees about the z-axis:<br />SCALE3, XRANGE=[0,S[1]], YRANGE=[0,S[2]], $<br />&#160;&#160;&#160;ZRANGE=[0,S[3]], AX=0, AZ=45<br />; Render and display the polygons:<br />TV, POLYSHADE(v, p, /T3D)</p>
+        <p class="ExampleCode">If you prefer not to enter the IDL code by hand, run the batch file <code>clouds<a name="kanchor2366"></a></code> with the following command at the IDL prompt:<br /><code>&#160;&#160;&#160;@clouds</code></p>
+        <h3><a name="dg_routines_3604229493_885647"></a><a name="dg_routines_3604229493_30458"></a>Rotating the Shaded Volume</h3>
+        <p>The shaded volume can be viewed from different rotations by changing the three-dimensional transformation matrix, !P.T, and calling POLYSHADE for each view. The following code displays 20 views of the volume, each separated by 18 degrees.</p>
+        <p class="Code">; Define number of views:<br />nframes = 20 <br />FOR i = 0, nframes - 1 DO BEGIN &amp; $<br />&#160;&#160;&#160;; Translate the center of the (0, 1) unit cube<br />&#160;&#160;&#160;; to (0,0) and rotate about the x-axis:<br />&#160;&#160;&#160;T3D, TR=[-.5, -.5, -.5], ROT=[0, 360./NFRAMES, 0] &amp; $<br />&#160;&#160;&#160;; Translate the center back to (0.5, 0.5, 0.5):<br />&#160;&#160;&#160;T3D, TR = [.5, .5, .5] &amp; $<br />&#160;&#160;&#160;; Show the surface:<br />&#160;&#160;&#160;TV, POLYSHADE(v, p, /T3D) &amp; $<br />ENDFOR</p>
+        <p>The animation rate of the above loop will not be very fast, especially with a larger number of polygons. Each image could be saved for rapid replay by writing it to a disk file. Given enough memory and/or display resources, the XINTERANIMATE procedure could be used to animate the views.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_885652"></a><a name="dg_routines_3604229493_795776_PageTOC_SHADE_VOLUME_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre-4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">Resources and References</h2>
+        <p>The method used by SHADE_VOLUME is that of Klemp, McIrvin and Boyd, 1990: “PolyPaint—A Three-Dimensional Rendering Package,” <i>American Meteorology Society Proceedings, Sixth International Conference on Interactive Information and Processing Systems</i>. </p>
+        <p>This method is similar to the marching cubes algorithm described by Lorenson and Cline, 1987: “Marching Cubes: A High Resolution 3D Surface Construction Algorithm,” <i>Computer Graphics 21</i>, 163-169.</p>
+        <h2 class="API"><a name="dg_routines_3604229493_885660"></a><a name="dg_routines_3604229493_1110293_PageTOC_SHADE_VOLUME_"></a>See Also</h2>
+        <p><a href="../I/INTERVAL_VOLUME.htm">INTERVAL_VOLUME</a>, <a href="../P/POLYSHADE_Procedure.htm#dg_routines_3604229493_892899">POLYSHADE Procedure</a>, <a href="SHADE_SURF_Procedure.htm#dg_routines_3604229493_885128">SHADE_SURF Procedure</a>, <a href="../X/XVOLUME.htm">XVOLUME</a></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

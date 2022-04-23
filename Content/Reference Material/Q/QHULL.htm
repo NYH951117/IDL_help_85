@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: Q">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>QHULL </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="Q_list.htm">Routines: Q</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">QHULL</span>
+        </div>
+        <h1 class="Routine"><a name="Q_815714925_1073444"></a><a name="kanchor2121"></a><a name="Q_815714925_98635"></a>QHULL </h1>
+        <p><a name="kanchor2122"></a><a name="kanchor2123"></a><a name="kanchor2124"></a>The QHULL procedure constructs convex hulls, Delaunay triangulations, and Voronoi diagrams of a set of points of 2-dimensions or higher. It uses and is based on the program QHULL, which is described in Barber, Dobkin and Huhdanpaa, “The Quickhull Algorithm for Convex Hulls,” <i>ACM Transactions on Mathematical Software</i>, Vol. 22, No 4, December 1996, Pages 469-483.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>QHULL accepts complex input but only utilizes the real part of any complex number.</p>
+        <p>For more information about QHULL see <a href="http://www.qhull.org">http://www.qhull.org</a></p>
+        <h2 class="API"><a name="Q_815714925_1073485"></a><a name="Q_815714925_1073485_PageTOC_QHULL_"></a>Examples</h2>
+        <p>To run this example, copy the text of the following routine, paste it into an IDL editor window, save the window’s contents as <code>ex_qhull.pro</code>, and select <b>Run ex_qhull</b> from the <b>Run</b> menu.</p>
+        <p class="Code">PRO ex_qhull</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Create a collection of random points.</p>
+        <p class="Code">&#160;&#160;&#160;n = 20</p>
+        <p class="Code">&#160;&#160;&#160;seed = 15</p>
+        <p class="Code">&#160;&#160;&#160;x = RANDOMU(seed, n)</p>
+        <p class="Code">&#160;&#160;&#160;y = RANDOMU(seed, n)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Construct the Delaunay triangulation</p>
+        <p class="Code">&#160;&#160;&#160;; and the Voronoi diagram.</p>
+        <p class="Code">&#160;&#160;&#160;QHULL, x, y, triangle, /DELAUNAY, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;VDIAGRAM=vdiagram, VVERTICES=vvert, VNORM=vnorm</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Plot our input points.</p>
+        <p class="Code">&#160;&#160;&#160;PLOT, [-0.1, 1.1], [-0.1, 1.1], /NODATA, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;XSTYLE=4, YSTYLE=4</p>
+        <p class="Code">&#160;&#160;&#160;PLOTS, x, y, PSYM=4</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Plot the Voronoi diagram.</p>
+        <p class="Code">&#160;&#160;&#160;FOR i=0,N_ELEMENTS(vdiagram[2,*])-1 DO BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;vdiag = vdiagram[*, i]</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;j = vdiag[2] + 1</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; Bounded or unbounded?</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;IF (j gt 0) THEN BEGIN&#160;&#160;&#160;; Bounded.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;PLOTS, vvert[*, vdiag[2:3]], PSYM=-5</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;CONTINUE</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; Unbounded, retrieve starting vertex.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;xystart = vvert[*, vdiag[3]]</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; Determine the line equation.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; Vnorm[0]*x + Vnorm[1]*y + Vnorm[2] = 0</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;slope = -vnorm[0,-j]/vnorm[1,-j]</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;intercept = -vnorm[2,-j]/vnorm[1,-j]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; Need to determine the line direction.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; Pick a point on one side along the line.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;xunbound = xystart[0] + 5</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;yunbound = slope*xunbound + intercept</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; Find the closest original vertex.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;void = MIN( (x-xunbound)^2 + (y-yunbound)^2, idx)</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; By definition of Voronoi diagram, the line should</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; be closest to one of the bisected points. If not,</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; our line went in the wrong direction.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;IF (idx ne vdiag[0] &amp;&amp; idx ne vdiag[1]) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;xunbound = xystart[0] - 5</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yunbound = slope*xunbound + intercept</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;PLOTS, [[xystart], [xunbound, yunbound]]</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;ENDFOR</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">END</p>
+        <p>For some other examples using the QHULL procedure, see the <a href="QGRID3.htm#Q_815714925_1118542">QGRID3</a> function. </p>
+        <h2 class="API"><a name="Q_815714925_1073453"></a><a name="Q_815714925_1073453_PageTOC_QHULL_"></a>Syntax</h2>
+        <p class="Syntax">QHULL, <i>V</i>, &#160;<i>Tr</i></p>
+        <p class="indent">or, </p>
+        <p class="Syntax">QHULL, <i>V0</i> , <i>V1</i>, [, <i>V2</i> ... [, <i>V</i>6]&#160;]&#160;, <i>Tr</i> &#160;</p>
+        <p><b>Keywords:</b> [,&#160;<a href="#Q_815714925_1073465" class="selected">BOUNDS</a>=<i>variable</i>&#160;] [,&#160;<a href="#Q_815714925_1073467" class="selected">CONNECTIVITY</a>=<i>variable</i>&#160;] [,&#160;/<a href="#Q_815714925_1073473" class="selected">DELAUNAY</a>&#160;] [,&#160;<a href="#Q_815714925_1073475" class="selected">SPHERE</a>=<i>variable</i>&#160;] [,&#160;<a href="#Q_815714925_1073477" class="selected">VDIAGRAM</a>=<i>variable</i>&#160;] [,&#160;<a href="#Q_815714925_1073481" class="selected">VNORMALS</a>=<i>variable</i>&#160;] [,&#160;<a href="#Q_815714925_1073483" class="selected">VVERTICES</a>=<i>variable</i>&#160;]</p>
+        <h2 class="API"><a name="Q_815714925_1073457"></a><a name="Q_815714925_1073457_PageTOC_QHULL_"></a>Arguments</h2>
+        <h3 class="Argument">V</h3>
+        <p>An input argument providing an <i>nd</i>-by-<i>np</i> array containing the locations of <i>np</i> points, in <i>nd</i> dimensions. The number of dimensions, <i>nd</i>, must be greater than or equal to 2.</p>
+        <h3 class="Argument">V0, V1, V2, ..., V(N–1)</h3>
+        <p>Input vectors of dimension <i>np</i>-by-1 elements each containing the <i>i</i>-th coordinate of <i>np</i> points in <i>nd</i> dimensions. A maximum of seven input vectors may be specified.</p>
+        <h3 class="Argument">Tr</h3>
+        <p>A named variable that will contain an <i>nd1</i>-by-<i>nt</i> array containing the indices of either the convex hull (<i>nd1</i> is equal to <i>nd</i>), or the Delaunay triangulation (<i>nd1</i> is equal to <i>nd</i>+1) of the input points.</p>
+        <h2 class="API"><a name="Q_815714925_1073464"></a><a name="Q_815714925_1073464_PageTOC_QHULL_"></a>Keywords</h2>
+        <h3 class="Keyword"><a name="Q_815714925_1073465"></a><a name="Q_815714925_1073465_Keywords_QHULL__"></a>BOUNDS</h3>
+        <p>Set this keyword equal to a named variable that will contain the indices of the vertices of the convex hull.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>The order of the vertices returned in this variable is unspecified.</p>
+        <h3 class="Keyword"><a name="Q_815714925_1073467"></a><a name="Q_815714925_1073467_Keywords_QHULL__"></a>CONNECTIVITY</h3>
+        <p>Set this keyword equal to a named variable that will contain the adjacency list for each of the <i>np</i> nodes. The list has the following form:</p>
+        <p class="indent">Each element <i>i</i>, 0 ≤<i>i</i> &lt; <i>np</i>, contains the starting index of the connectivity list (<i>list</i>) for node <i>i</i> within the list array. To obtain the adjacency list for node <i>i</i>, extract the list elements from <i>list</i>[<i>i</i>] to <i>list</i>[<i>i</i>+1] – 1. The adjacency list is not ordered. To obtain the connectivity list, either the DELAUNAY or SPHERE keywords must also be specified. </p>
+        <p>For example, to perform a spherical triangulation, use the following procedure call:</p>
+        <p class="Code">QHULL, lon, lat, CONNECTIVITY = list, SHPERE = sphere</p>
+        <p>which returns the adjacency list in the variable list. The subscripts of the nodes adjacent to <i>lon</i>[<i>i</i>] and <i>lat</i>[<i>i</i>] are contained in the array: <i>list</i>[<i>list</i>[<i>i</i>] :<i>list</i>[<i>i</i>+1] – 1].</p>
+        <h3 class="Keyword"><a name="Q_815714925_1073473"></a><a name="Q_815714925_1073473_Keywords_QHULL__"></a>DELAUNAY</h3>
+        <p>Set this keyword to perform a Delaunay triangulation and returns the vertex indices of the resulting polyhedra; otherwise, the convex hull of the data are returned. </p>
+        <h3 class="Keyword"><a name="Q_815714925_1073475"></a><a name="Q_815714925_1073475_Keywords_QHULL__"></a>SPHERE</h3>
+        <p>Set this keyword equal to a named variable that will contain the Delaunay triangulation of the points which lie on the surface of a sphere. The <i>V0</i> argument contains the longitude, in degrees, and <i>V1</i> contains the latitude, in degrees, of each point.</p>
+        <h3 class="Keyword"><a name="Q_815714925_1073477"></a><a name="Q_815714925_1073477_Keywords_QHULL__"></a>VDIAGRAM</h3>
+        <p>Set this keyword equal to a named variable that will contain the connectivity array for the Voronoi diagram.</p>
+        <p>For two-dimensional arrays, VDIAGRAM is a 4-by-<i>nv</i> integer array. For each Voronoi ridge, <i>i</i>, VDIAGRAM[0:1, <i>i</i>] contains the index of the two input points the ridge bisects. VDIAGRAM [2:3,<i> i</i>] contains the indices within VVERTICES of the Voronoi vertices. In the case of an unbounded half-space, VDIAGRAM[2, <i>i</i>] is set to a negative index, <i>j</i>, indicating that the corresponding Voronoi ridge is unbounded, and that the equation for the ridge is contained in VNORMAL[*, –<i>j</i>-1], and starts at Voronoi vertex [3,<i> i</i>].</p>
+        <p>For three-dimensional or higher dimensional arrays, VDIAGRAM is returned as a connectivity vector. This vector has the form [<i>n</i>, v0, v1, i0, i1, ..., in-3], where n is the number of points needed to describe that particular Voronoi ridge, v0 and v1 contain the indices for the two input points that the ridge bisects, and i0...in -3 contain the indices within VVERTICES of the Voronoi vertices. In the case of an unbounded half-space, VDIAGRAM[<i>i</i>] is set to a negative index,<i> j</i>, indicating that the corresponding Voronoi ridge is unbounded, and that the equation for the ridge is contained in VNORMAL[*, –<i>j</i>-1].</p>
+        <h3 class="Keyword"><a name="Q_815714925_1073481"></a><a name="Q_815714925_1073481_Keywords_QHULL__"></a>VNORMALS</h3>
+        <p>Set this keyword equal to a named variable that will contain the normals of each Voronoi ridge that is unbounded. The normals consist of a (<i>nd</i>+1)-by-<i>nu</i> array, where <i>nd </i>is the number of dimensions and <i>nu</i> is the number of unbounded vertices. Each row contains the equation for the unbounded ridge in the form:</p>
+        <p class="Code_Indented">V<sub>0</sub>X<sub>0</sub> + V<sub>1</sub>X<sub>1</sub> + V<sub>2</sub>X<sub>2</sub> + ... + V<sub>nd</sub>X<sub>nd</sub> + V<sub>nd+1</sub> = 0</p>
+        <p>where <code>V<sub>*</sub></code> are the elements of the row within VNORMALS, and <code>X<sub>*</sub></code> are the multidimensional coordinates. See the preceding description of VDIAGRAM for details.</p>
+        <h3 class="Keyword"><a name="Q_815714925_1073483"></a><a name="Q_815714925_1073483_Keywords_QHULL__"></a>VVERTICES</h3>
+        <p>Set this keyword equal to a named variable that will contain the Voronoi vertices.</p>
+        <h2 class="API"><a name="Q_815714925_1073490"></a><a name="Q_815714925_1073490_PageTOC_QHULL_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>5.5</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="Q_815714925_1076449"></a><a name="Q_815714925_1076449_PageTOC_QHULL_"></a>See Also</h2>
+        <p><a href="QGRID3.htm#Q_815714925_1118542">QGRID3</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

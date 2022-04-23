@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Additional Topics|External Development Guide|Using CALL_EXTERNAL">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Wrapper Routines</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../OtherTopics.htm">Additional Topics</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../EDG.htm">External Development Guide</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="CALL_EXTERNAL.htm">Using CALL_EXTERNAL</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Wrapper Routines</span>
+        </div>
+        <h1><a name="kanchor5431"></a>Wrapper Routines</h1>
+        <p><b>CALL_EXTERNAL</b> routines are very sensitive to the number and type of the arguments they receive. Calling a <b>CALL_EXTERNAL</b> routine with the wrong number of arguments or with arguments of the wrong type can cause IDL to crash. For this reason, it is a good practice to provide an IDL wrapper routine that is used to make the actual <b>CALL_EXTERNAL</b> call. The job of this wrapper, which is written in the IDL language, is to ensure that the arguments that are passed to the external code are always of the correct number and type. The following IDL procedure is the wrapper used in the simple_vars() example of the previous section (<a href="PassingParameters.htm">Example: Passing Parameters by Reference to IDL</a>).</p>
+        <h2 class="API">Example Code</h2>
+        <p>This file, <code>simple_vars.pro</code>, is located in the <code>external/call_external/C</code></p>
+        <p>subdirectory of the IDL installation.</p>
+        <p>&#160;</p>
+        <p class="Code"> PRO SIMPLE_VARS, b, i, l, f, d, AUTO_GLUE=auto_glue, DEBUG=debug, $</p>
+        <p class="Code_Indented">	VERBOSE=verbose</p>
+        <p class="Code_Indented">	if ~ (KEYWORD_SET(debug)) THEN ON_ERROR,2</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">	; Type checking: Any missing (undefined) arguments will be set</p>
+        <p class="Code_Indented">	; to a default value. All arguments will be forced to a scalar</p>
+        <p class="Code_Indented">	; of the appropriate type, which may cause errors to be thrown</p>
+        <p class="Code_Indented"> ; if structures are passed in. Local variables are used so that</p>
+        <p class="Code_Indented">	; the values and types of the user supplied arguments don’t change.</p>
+        <p class="Code_Indented">	b_l = (SIZE(b,/TYPE) EQ 0) ? 2b	: byte(b[0])</p>
+        <p class="Code_Indented">	i_l = (SIZE(i,/TYPE) EQ 0) ? 3	: fix(i[0])</p>
+        <p class="Code_Indented">	l_l = (SIZE(l,/TYPE) EQ 0) ? 4L	: long(l[0])</p>
+        <p class="Code_Indented">	f_l = (SIZE(f,/TYPE) EQ 0) ? 5.0	: float(f[0])</p>
+        <p class="Code_Indented">	d_l = (SIZE(d,/TYPE) EQ 0) ? 6.0D : double(d[0])</p>
+        <p class="Code_Indented">&#160;</p>
+        <p class="Code_Indented">	PRINT, ’Calling simple_vars with the following arguments:’</p>
+        <p class="Code_Indented">	HELP, b_l, i_l, l_l, f_l, d_l</p>
+        <p class="Code_Indented">	func = keyword_set(auto_glue) ? ’simple_vars_natural’ : ’simple_vars’</p>
+        <p class="Code_Indented">	IF (CALL_EXTERNAL(GET_CALLEXT_EXLIB(VERBOSE=verbose), func, $</p>
+        <p class="Code_Indented">	&#160;&#160;&#160;b_l, i_l, l_l, f_l, d_l, /CDECL, $</p>
+        <p class="Code_Indented">	&#160;&#160;&#160;AUTO_GLUE=auto_glue, VERBOSE=verbose, $</p>
+        <p class="Code_Indented">	&#160;&#160;&#160;SHOW_ALL_OUTPUT=verbose) EQ 1) then BEGIN</p>
+        <p class="Code_Indented">	&#160;&#160;&#160;&#160;&#160;&#160;PRINT,’After calling simple_vars:’</p>
+        <p class="Code_Indented">	&#160;&#160;&#160;&#160;&#160;&#160;HELP, b_l, i_l, l_l, f_l, d_l</p>
+        <p class="Code_Indented">	&#160;&#160;&#160;ENDIF ELSE MESSAGE,’External call to simple_vars failed’</p>
+        <p class="Code"> END</p>
+        <p>&#160;</p>
+        <p>The routine <code>simple_vars.pro</code> uses the system routine <b>SIZE()</b> to examine the arguments that are passed in by the user to the simple_vars routine. If one of the arguments is undefined, a default value will be used in the call to the external routine. Otherwise, the argument will be converted to a scalar of the appropriate type.</p>
+        <p><b>GET_CALLEXT_EXLIB()</b> is a function provided with the <b>CALL_EXTERNAL</b> examples; it builds the necessary sharable library of external C code and returns the path to the library as its result.</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

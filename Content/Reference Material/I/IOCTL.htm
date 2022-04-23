@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Routines: I">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IOCTL </title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="I_list.htm">Routines: I</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IOCTL</span>
+        </div>
+        <h1 class="Routine"><a name="I_833016429_677310"></a><a name="kanchor1554"></a><a name="I_833016429_61154"></a>IOCTL </h1>
+        <p><a name="kanchor1555"></a>The IOCTL function provides a thin wrapper over the UNIX <code>ioctl(2)</code> system call. IOTCL performs special functions on the specified file. The set of functions actually available depends on your version of UNIX and the type of file (tty, tape, disk file, etc.) referred to.</p>
+        <p>To use IOCTL, read the C programmer’s documentation describing the <code>ioctl(2)</code> function for the desired device and convert all constants and data to their IDL equivalents.</p>
+        <h2 class="API"><a name="I_833016429_677339"></a><a name="I_833016429_677339_PageTOC_IOCTL_"></a>Examples</h2>
+        <p>The following example prints the size of the terminal being used by the current IDL session. It is known to work under SunOS 4.1.2. Changes may be necessary for other operating systems or even other versions of SunOS.</p>
+        <p class="Code">; Variable to receive result. This structure is described in</p>
+        <p class="Code">; Section 4 of the SunOS manual pages under termios(4):</p>
+        <p class="Code">winsize = {row:0u, col:0u, xpixel:0u, ypixel:0u}</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">; The request code for obtaining the tty size, as determined by </p>
+        <p class="Code">; reading the termios(4) documentation, and reading the system </p>
+        <p class="Code">; include files in the /usr/include/sys directory:</p>
+        <p class="Code">TIOCGWINSZ = 21608L</p>
+        <p class="Code">; Make the information request. -1 is the IDL logical file unit for </p>
+        <p class="Code">; the standard output:</p>
+        <p class="Code">ret = IOCTL(-1, TIOCGWINSZ, winsize)<br /><br />; Output the results:</p>
+        <p class="Code">PRINT,winsize.row, winsize.col, $</p>
+        <p class="Code">&#160;&#160;&#160;format='("TTY has ", I0," rows and ", I0," columns.")'</p>
+        <p>The following points should be noted in this example:</p>
+        <ul>
+            <li value="1">Even though we only want the number of rows and columns, we must include all the fields required by the TIOCGWINSIZ <code>ioctl</code> in the winsize variable (as documented in the <code>termio(4)</code> manual page). Not providing a large enough result buffer would cause IDL’s memory to be corrupted.</li>
+            <li value="2">The value of TIOCGWINSZ was determined by examining the system header files provided in the <code>/usr/include/sys</code> directory. Such values are not always portable between major operating system releases.</li>
+        </ul>
+        <h2 class="API"><a name="I_833016429_677314"></a><a name="I_833016429_677314_PageTOC_IOCTL_"></a>Syntax</h2>
+        <p class="Syntax"><i>Result</i> = IOCTL( <i>File_Unit</i> [,&#160;<i>Request</i>, <i>Arg</i>] [,&#160;/<a href="#I_833016429_677325" class="selected">BY_VALUE</a>] [,&#160;/<a href="#I_833016429_677327" class="selected">MT_OFFLINE</a>] [,&#160;/<a href="#I_833016429_677329" class="selected">MT_REWIND</a>] [,&#160;<a href="#I_833016429_677331" class="selected">MT_SKIP_FILE</a>=[-]<i>number_of_files</i>] [,&#160;<a href="#I_833016429_677333" class="selected">MT_SKIP_RECORD</a>=[-]<i>number_of_records</i>] [,&#160;/<a href="#I_833016429_677335" class="selected">MT_WEOF</a>] [,&#160;/<a href="#I_833016429_677337" class="selected">SUPPRESS_ERROR</a>] )</p>
+        <h2 class="API"><a name="I_833016429_884865"></a><a name="I_833016429_25634"></a>Return Value</h2>
+        <p>The value returned by the system <code>ioctl</code> function is returned as the value of the IDL IOCTL function.</p>
+        <h2 class="API"><a name="I_833016429_677316"></a><a name="I_833016429_677316_PageTOC_IOCTL_"></a>Arguments</h2>
+        <h3 class="Argument">File_Unit</h3>
+        <p>The IDL logical unit number (LUN) for the open file on which the <code>ioctl</code> request is made.</p>
+        <h3 class="Argument">Request</h3>
+        <p>A longword integer that specifies the ioctl request code. These codes are usually contained in C language header files provided by the operating system, and are not generally portable between UNIX versions. If one of the “MT” keywords is used, this argument can be omitted.</p>
+        <h3 class="Argument">Arg</h3>
+        <p>A named variable through which data if passed to and from ioctl. IOCTL requests usually request data from the system or supply the system with information. The user must make <i>Arg</i> the correct type and size. Errors in typing or sizing <i>Arg</i> can corrupt the IDL address space and/or make IDL crash. If one of the MT keywords is used, this argument can be omitted.</p>
+        <h2 class="API"><a name="I_833016429_677323"></a><a name="I_833016429_677323_PageTOC_IOCTL_"></a>Keywords</h2>
+        <p>Note that the keywords below that start with “MT” can be used to issue commonly used magnetic tape ioctl() calls. When these keywords are used, the <i>Request</i> and <i>Arg</i> arguments are ignored and an be omitted. Magnetic tape operations not available via these keywords can still be executed by supplying the appropriate <i>Request</i> and <i>Arg</i> values. When issuing magnetic tape IOCTL calls, be aware that different devices have different rules for which ioctl calls are allowed, and when. The documentation for your computer system explains those rules.</p>
+        <h3 class="Keyword"><a name="I_833016429_677325"></a><a name="I_833016429_677325_Keywords_IOCTL__"></a>BY_VALUE</h3>
+        <p>If this keyword is set, <i>Arg</i> is converted to a scalar longword and this longword is passed by value. Normally, <i>Arg</i> is passed to ioctl by reference (i.e., by address).</p>
+        <h3 class="Keyword"><a name="I_833016429_677327"></a><a name="I_833016429_677327_Keywords_IOCTL__"></a>MT_OFFLINE</h3>
+        <p>Set this keyword to rewind and unload a tape.</p>
+        <h3 class="Keyword"><a name="I_833016429_677329"></a><a name="I_833016429_677329_Keywords_IOCTL__"></a>MT_REWIND</h3>
+        <p>Set this keyword to rewind a tape.</p>
+        <h3 class="Keyword"><a name="I_833016429_677331"></a><a name="I_833016429_677331_Keywords_IOCTL__"></a>MT_SKIP_FILE</h3>
+        <p>Use this keyword to skip files on a tape. A positive value skips forward that number of files. A negative value skips backward.</p>
+        <h3 class="Keyword"><a name="I_833016429_677333"></a><a name="I_833016429_677333_Keywords_IOCTL__"></a>MT_SKIP_RECORD</h3>
+        <p>Use this keyword to skip records on tape. A positive value skips forward that number of files. A negative value skips backward.</p>
+        <h3 class="Keyword"><a name="I_833016429_677335"></a><a name="I_833016429_677335_Keywords_IOCTL__"></a>MT_WEOF</h3>
+        <p>Set this keyword to write an EOF (“tape mark”) on the tape at the current location.</p>
+        <h3 class="Keyword"><a name="I_833016429_677337"></a><a name="I_833016429_677337_Keywords_IOCTL__"></a>SUPPRESS_ERROR</h3>
+        <p>Set this keyword to log errors quietly and cause a value of -1 to be returned. The default is for IDL to notice any failures associated with the use of <code>ioctl </code>and issue the appropriate IDL error and halt execution.</p>
+        <h2 class="API"><a name="I_833016429_822399"></a><a name="I_833016429_822399_PageTOC_IOCTL_"></a>Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>Pre 4.0</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API"><a name="I_833016429_880856"></a><a name="I_833016429_880856_PageTOC_IOCTL_"></a>See Also</h2>
+        <p><a href="../O/OPEN.htm#O_828691053_932624">OPENR/OPENU/OPENW</a>
+        </p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

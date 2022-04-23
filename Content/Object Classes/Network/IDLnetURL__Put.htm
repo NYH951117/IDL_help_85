@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="Routines (alphabetical)|Object Classes|Network Object Classes|IDLnetURL">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>IDLnetURL::Put</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/TableStyles/VersionTable.css" rel="stylesheet" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../../images/ref_part1.htm">Routines (alphabetical)</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="../ObjectClasses.htm">Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><a class="MCBreadcrumbsLink" href="objects_network.htm">Network Object Classes</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">IDLnetURL::Put</span>
+        </div>
+        <h1 class="ObjMethod"><a name="objects_network_1009015_1406837"></a><a name="objects_network_1009015_19760"></a>I<a name="kanchor4179"></a>DLnetURL::Put</h1>
+        <p>The IDLnetURL::Put method sends a file or a buffer of data to a remote HTTP or FTP server.</p>
+        <p>This method returns when one of the following events occurs: </p>
+        <ul>
+            <li value="1">The method completes successfully.</li>
+            <li value="2">The method encounters an HTTP or FTP error.</li>
+            <li value="3">The return status of the callback function indicates the caller wants to cancel the Put.</li>
+        </ul>
+        <p>If the URL keyword is not set, the URL_PATH property must be set to the destination (filename) on the remote HTTP or FTP server.</p>
+        <p>When sending data to an HTTP server, IDL uses the “Put” transmission method by default. To use the “Post” transmission method, set the POST keyword.</p>
+        <p>When sending a file to a remote FTP server, the Put method automatically changes directories to the path specified before sending the desired file. If the directories do not exist before sending the desired file, the Put method attempts to create them using the path specified.</p>
+        <p>Calls to the Put method are canceled when the return value of the callback function is zero. </p>
+        <p>See <a href="IDLnetURL.htm#objects_network_1009015_1408886">Using Callbacks with the IDLnetURL Object</a> for details.</p>
+        <h3>Errors</h3>
+        <p>This method generates an error if the transmission fails, or if the remote server is unable to complete the Put or Post request. When an error is generated, the remote HTTP server typically sends an HTML response file indicating the reason for the failure. The FILENAME keyword can be used to set the name for this response file. The <a href="IDLnetURL_Properties.htm#objects_network_1009015_1405781">RESPONSE_FILENAME</a> property contains the complete path to the error file.</p>
+        <p>This method sets the <a href="IDLnetURL_Properties.htm#objects_network_1009015_1405560">RESPONSE_CODE</a> and <a href="IDLnetURL_Properties.htm#objects_network_1009015_1405811">RESPONSE_HEADER</a> properties, which contain response information sent by the remote server. The information stored in these properties can be useful when troubleshooting transmission problems. Receiving callbacks and printing the status strings with the <a href="IDLnetURL_Properties.htm#objects_network_1009015_1406257">VERBOSE</a> and <a href="IDLnetURL_Properties.htm#objects_network_1009015_1408065">CALLBACK_FUNCTION</a> properties set is another valuable troubleshooting technique.</p>
+        <p>Use a CATCH statement to trap errors and print the error message and response code. A HTTP server 401 response code, or a FTP server 530 or 67 response code means that a login is required, or the current username and password are incorrect.</p>
+        <p>If a FTP connection fails, you may need to switch the connection mode from Active to Passive using the <a href="IDLnetURL_Properties.htm#objects_network_1009015_1405317">FTP_CONNECTION_MODE</a> property.</p>
+        <p>A HTTP Put or HTTP Post will fail if the remote HTTP server is out of space, or if the path (destination of the file or data) does not exist or can not be created.</p>
+        <p>Remote servers typically must be configured to support HTTP Put or Post operations. If the remote server does not support these operations, the HTTP Put or Post will fail. Typical error responses to this situation are “400 Bad Request” and “405 Method Not Allowed”.</p>
+        <h2 class="API">Syntax</h2>
+        <p class="Syntax"><i>Result</i> = <i>Obj</i>-&gt;[<a href="IDLnetURL.htm#objects_network_1009015_1370815">IDLnetURL</a>::] Put (&#160;<i>data</i>,&#160;<a href="#objects_network_1009015_1406871" class="selected">BUFFER</a>=<i>value</i>, <a href="#FILENAME" class="selected">FILENAME</a>=<i>string</i>, /<a href="#objects_network_1009015_1406881" class="selected">FTP_EXPLICIT_SSL</a>,&#160;/<a href="#objects_network_1009015_1406883" class="selected">POST</a>,&#160;<a href="#objects_network_1009015_1406885" class="selected">URL</a>=<i>string</i>)</p>
+        <h2 class="API">Return Value</h2>
+        <p>If the server sent a response to the Put or Post request, the return value contains the complete path to the response file. If the server did not send a response to the Put or Post request, the return value is an empty string.</p>
+        <h2 class="API">Arguments</h2>
+        <h3 class="Argument">DATA</h3>
+        <p>When the BUFFER keyword is not set, the data argument is a string containing the name of a file to be transferred. In this case: </p>
+        <ul>
+            <li value="1">If <i>Data</i> specifies a full path, the file is uploaded from the specified path.</li>
+            <li value="2">If <i>Data</i> specifies a relative path, the path is relative to IDL’s current working directory.</li>
+        </ul>
+        <p>When the BUFFER keyword is set, <i>Data</i> is an IDL variable containing the data to be transferred. The data buffer can be a scalar or an array of the following types:</p>
+        <ul>
+            <li value="1">BYTE</li>
+            <li value="2">INT</li>
+            <li value="3">UINT</li>
+            <li value="4">LONG</li>
+            <li value="5">ULONG</li>
+            <li value="6">LONG64</li>
+            <li value="7">ULONG64</li>
+            <li value="8">FLOAT</li>
+            <li value="9">DOUBLE</li>
+            <li value="10">STRING</li>
+        </ul>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>If the buffer contains string values, a linefeed character (10B) is appended to the end of each string before it is passed to the remote server.</p>
+        <h2 class="API">Keywords</h2>
+        <h3 class="Keyword"><a name="objects_network_1009015_1406871"></a><a name="objects_network_1009015_1406871_Keywords_IDLnetURL"></a>BUFFER</h3>
+        <p>Set this keyword to cause the <i>Data</i> argument to be interpreted as the name of an IDL variable to be sent to the remote server.</p>
+        <h3 class="Keyword"><a name="FILENAME"></a>FILENAME</h3>
+        <p>Set this keyword to a string giving the name of the response file if an error occurs. If this keyword is not set then IDLnetURL will choose a default name. After the ::Put method returns, the file name can be retrieved using the <a href="IDLnetURL_Properties.htm#objects_network_1009015_1405781">RESPONSE_FILENAME</a> property.</p>
+        <h3 class="Keyword"><a name="objects_network_1009015_1406881"></a><a name="objects_network_1009015_1406881_Keywords_IDLnetURL"></a>FTP_EXPLICIT_SSL</h3>
+        <p>Set this keyword to explicitly use SSL to transfer the commands and data to or from the remote FTP server. It is not necessary to set this keyword when the scheme is “ftps” (which implicitly activates SSL). </p>
+        <p>See <a href="IDLnetURL.htm#objects_network_1009015_1404804">&#160;</a><a href="IDLnetURL.htm#objects_network_1009015_1404804">Secure FTP</a> for additional notes on SSL connections.</p>
+        <h3 class="Keyword"><a name="objects_network_1009015_1406883"></a><a name="objects_network_1009015_1406883_Keywords_IDLnetURL"></a>	POST</h3>
+        <p>Set this keyword to use the HTTP POST command rather than the HTTP PUT command. This keyword is ignored if the URL Scheme is 'ftp' or ‘ftps’.</p>
+        <h3 class="Keyword"><a name="objects_network_1009015_1406885"></a><a name="objects_network_1009015_1406885_Keywords_IDLnetURL"></a>URL</h3>
+        <p>Set this keyword equal to a string that specifies the complete URL of the location to which the data will be transferred. If this keyword is set, the URL_* properties are ignored.</p>
+        <p class="Note" data-mc-autonum="&lt;b&gt;Note: &lt;/b&gt;"><span class="autonumber"><span><b>Note: </b></span></span>When using a URL that contains a password, the password appears as clear text. To avoid this security problem when using a password, set the URL_* properties explicitly rather than using the URL keyword.</p>
+        <h2 class="API"><a name="objects_network_1009015_1406888"></a><a name="objects_network_1009015_1406888_PageTOC_IDLnetURL"></a>Examples</h2>
+        <h3>Conceptual Examples</h3>
+        <p class="Code">result = Obj-&gt;Put(file)</p>
+        <p>The input parameter is a full or relative path to the local file to transfer to the remote server. The URL_* properties are used. The URL_HOST and URL_PATH properties must be set prior to making this type of Put call. The URL_PATH property determines the destination (filename) on the remote server. The URL_SCHEME property determines if the file is sent using HTTP or FTP. If the remote server sends a response file, it is written to the location specified by the RESPONSE_FILENAME property.</p>
+        <p class="Code">result = Obj-&gt;Put(file, URL='scheme://host/path')</p>
+        <p>The input parameter is a full or relative path to the local file to transfer to the remote server. The URL_* properties are not used. The destination and filename used on the remote server is determined by the path portion of the URL keyword.</p>
+        <p class="Code">result = Obj-&gt;Put(data, /BUFFER, /POST)</p>
+        <p>The input parameter is an IDL variable containing the data to post to the remote server. The URL_* properties are used. The URL_HOST and URL_PATH properties must be set prior to making this type of Post call. The URL_PATH property determines the destination (typically a CGI script that processes the posted data) on the remote server. In this case, the URL_SCHEME property must be HTTP.</p>
+        <h3>Extended Example</h3>
+        <p class="Code">;-----------------------------------------------------------------</p>
+        <p class="Code">FUNCTION Url_Callback, status, progress, data</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Print the info msgs from the url object</p>
+        <p class="Code">&#160;&#160;&#160;PRINT, status</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Return 1 to continue, return 0 to cancel</p>
+        <p class="Code">&#160;&#160;&#160;RETURN, 1</p>
+        <p class="Code">END</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">;-----------------------------------------------------------------</p>
+        <p class="Code">PRO Url_Docs_Ftp_Put</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; If the IDLnetURL object throws an error it will be caught here</p>
+        <p class="Code">&#160;&#160;&#160;CATCH, errorStatus</p>
+        <p class="Code">&#160;&#160;&#160;IF (errorStatus NE 0) THEN BEGIN</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;CATCH, /CANCEL</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; Display the error msg in a dialog and in the IDL Output log</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;r = DIALOG_MESSAGE(!ERROR_STATE.msg, TITLE='URL Error', $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;/ERROR)</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;PRINT, !ERROR_STATE.msg</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; Get the properties that will tell about the error.</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;oUrl-&gt;GetProperty, RESPONSE_CODE=rspCode, $</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;RESPONSE_HEADER=rspHdr, RESPONSE_FILENAME=rspFn</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;PRINT, 'rspCode = ', rspCode</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;PRINT, 'rspHdr= ', rspHdr</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;PRINT, 'rspFn= ', rspFn</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;; Since we are done we can destroy the url object</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;OBJ_DESTROY, oUrl</p>
+        <p class="Code">&#160;&#160;&#160;&#160;&#160;&#160;RETURN</p>
+        <p class="Code">&#160;&#160;&#160;ENDIF</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Sreate a new url object</p>
+        <p class="Code">&#160;&#160;&#160;oUrl = OBJ_NEW('IDLnetUrl')</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Specify the callback function</p>
+        <p class="Code">&#160;&#160;&#160;oUrl-&gt;SetProperty, CALLBACK_FUNCTION ='Url_Callback'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Set verbose to 1 to see more info on the transacton</p>
+        <p class="Code">&#160;&#160;&#160;oUrl-&gt;SetProperty, VERBOSE = 0</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; This is an ftp transaction</p>
+        <p class="Code">&#160;&#160;&#160;oUrl-&gt;SetProperty, URL_SCHEME = 'ftp'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; EDIT THIS LINE: put in a valid ftp server name</p>
+        <p class="Code">&#160;&#160;&#160;oUrl-&gt;SetProperty, URL_HOST = 'ftp_server_name'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Specify the destination path/filename</p>
+        <p class="Code">&#160;&#160;&#160;; EDIT THIS LINE: put in the valid path for your server</p>
+        <p class="Code">&#160;&#160;&#160;oUrl-&gt;SetProperty, URL_PATH = 'valid_path/Night.jpg'</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Specify the appropriate username and password</p>
+        <p class="Code">&#160;&#160;&#160;oUrl-&gt;SetProperty, URL_USERNAME = 'Anonymous'</p>
+        <p class="Code">&#160;&#160;&#160;oUrl-&gt;SetProperty, URL_PASSWORD = ''</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Build a path to an IDL example jpeg file</p>
+        <p class="Code">&#160;&#160;&#160;fn = FILEPATH('Night.jpg',SUBDIR=['examples', 'data'])</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; Use an ftp put request to send the file to the $</p>
+        <p class="Code">&#160;&#160;&#160;; remote ftp server</p>
+        <p class="Code">&#160;&#160;&#160;result = oUrl-&gt;Put(fn)</p>
+        <p class="Code">&#160;</p>
+        <p class="Code">&#160;&#160;&#160;; we are done so we release the url object</p>
+        <p class="Code">&#160;&#160;&#160;OBJ_DESTROY, oUrl</p>
+        <p class="Code">END</p>
+        <h2 class="API">Version History</h2>
+        <table style="caption-side: top;mc-table-style: url('../../Resources/TableStyles/VersionTable.css');" cellspacing="0" class="TableStyle_VersionTable">
+            <col />
+            <col />
+            <tbody>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColSep">
+                        <p>6.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_ColEnd">
+                        <p>Introduced</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColSep">
+                        <p>8.4</p>
+                    </td>
+                    <td class="TableStyle_VersionTable_Body_0_0_RowEnd_ColEnd">
+                        <p>Added FILENAME keyword</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="API">See Also</h2>
+        <p><a href="IDLnetURL__Delete.htm">IDLnetURL::Delete</a>, <a href="IDLnetURL__Get.htm">IDLnetURL::Get</a></p>
+        <p>&#160;</p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>

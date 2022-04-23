@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" lang="en-US" xml:lang="en-US" data-mc-search-type="Stem" data-mc-help-system-file-name="idl.xml" data-mc-path-to-help-system="../../../" data-mc-target-type="WebHelp2" data-mc-runtime-file-type="Topic" data-mc-preload-images="false" data-mc-in-preview-mode="false" data-mc-medium="non-print" data-mc-toc-path="The IDL Workbench">
+    <!-- saved from url=(0016)http://localhost -->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Code Coverage</title>
+        <link href="../../../Skins/Default/Stylesheets/Slideshow.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/TextEffects.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Topic.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Styles.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Tablet.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../../Skins/Default/Stylesheets/Components/Mobile.css" rel="stylesheet" data-mc-generated="True" />
+        <link href="../../Resources/Stylesheets/Doc_Style.css" rel="stylesheet" />
+        <script src="../../../Resources/Scripts/custom.modernizr.js">
+        </script>
+        <script src="../../../Resources/Scripts/jquery.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/require.config.js">
+        </script>
+        <script src="../../../Resources/Scripts/foundation.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/plugins.min.js">
+        </script>
+        <script src="../../../Resources/Scripts/MadCapAll.js">
+        </script>
+    </head>
+    <body>
+        <div class="MCBreadcrumbsBox_0"><span class="MCBreadcrumbsPrefix"> </span><a class="MCBreadcrumbsLink" href="../IDLWorkbenchGuide.htm">The IDL Workbench</a><span class="MCBreadcrumbsDivider"> &gt; </span><span class="MCBreadcrumbs">Code Coverage</span>
+        </div>
+        <h1>Code Coverage</h1>
+        <p><a name="kanchor5416"></a>The IDL Code Coverage feature helps you analyze the lines of code that were executed within your application. Code coverage is very useful at identifying unused or unneeded code paths, or to ensure that your "unit tests" are exercising all of your code.</p>
+        <p>There are three ways to use the Code Coverage feature: The CODE_COVERAGE function, within the Workbench's Editor View, and from the Profiler View.</p>
+        <h2>The CODE_COVERAGE Function</h2>
+        <p>With this method, you can compile and run your application, then call <a href="../../Reference Material/C/CODE_COVERAGE.htm">CODE_COVERAGE</a> for each routine. This will return the lines of code that were not executed, and optionally the lines that were executed.</p>
+        <p>For example, save the following code in a file, compile the code but do not run it:</p>
+        <p class="Code">function ex_codecover</p>
+        <p class="Code_Indented">PRINT, 2+2</p>
+        <p class="Code_Indented">; not reached</p>
+        <p class="Code_Indented">if (0) then begin</p>
+        <p class="Code_Indented2">PRINT, "never reached"</p>
+        <p class="Code_Indented">endif else begin</p>
+        <p class="Code_Indented2">PRINT, "reached"</p>
+        <p class="Code_Indented">endelse</p>
+        <p class="Code_Indented">return, 1 &amp; PRINT,'never reached'</p>
+        <p class="Code_Indented">PRINT, 'past the return'</p>
+        <p class="Code">end</p>
+        <p>Call the CODE_COVERAGE routine and print the results:</p>
+        <p class="Code">r = CODE_COVERAGE('ex_codecover', EXECUTED=e)</p>
+        <p class="Code">PRINT, 'Lines not executed: ', r.ToString()</p>
+        <p class="Code">PRINT, 'Lines executed: ', e.ToString()</p>
+        <p>IDL prints:</p>
+        <p class="Code">Lines not executed:            1           2           4           5           7           9           9          10</p>
+        <p class="Code">Lines executed:            0</p>
+        <p>Note that line 9 is repeated twice since there are two statements on the same line.</p>
+        <p>Now call the function and then call CODE_COVERAGE:</p>
+        <p class="Code">void = EX_CODECOVER()</p>
+        <p class="Code">r = CODE_COVERAGE('ex_codecover', EXECUTED=e)</p>
+        <p class="Code">print, 'Lines not executed: ', r.ToString()</p>
+        <p class="Code">print, 'Lines executed: ', e.ToString()</p>
+        <p>IDL prints:</p>
+        <p class="Code">Lines not executed:            5           9          10</p>
+        <p class="Code">Lines executed:            1           2           4           7           9</p>
+        <p>Note that line 9 is now in both the "executed" and "not executed" list, since only one of the statements was executed.</p>
+        <p>See <a href="../../Reference Material/C/CODE_COVERAGE.htm">CODE_COVERAGE</a> for the rules on what is considered a "line of code."</p>
+        <h2>Code Coverage in the Editor</h2>
+        <p>To enable code coverage in the Workbench Editor, select the <b>Run &gt; Show Code Coverage</b> menu item:</p>
+        <p>
+            <img src="../images/code_coverage1.png" />
+        </p>
+        <p>&#160;</p>
+        <p>After selecting <b>Show Code Coverage</b>, the code coverage annotations will immediately appear in any Editors that contain compiled code. If you open an Editor that does not contain compiled code, those lines will not be highlighted.</p>
+        <p>For example, assume we have the same routine in the example above open in the Editor. Hit the Compile button to make sure that the code is freshly compiled but not run. The Editor should show the following:</p>
+        <p>
+            <img src="../images/code_coverage2.png" />
+        </p>
+        <p>The lines of code are highlighted in red, indicating that they have not been executed.</p>
+        <p>Now run the code by typing the following command:</p>
+        <p class="Code">IDL&gt; void = EX_CODECOVER()</p>
+        <p>The Editor should now automatically update the highlighting to show which lines have been executed:</p>
+        <p>
+            <img src="../images/code_coverage3.png" />
+        </p>
+        <p>The green indicates lines that have been executed at least once. The red indicates lines that still have not been executed. Note that in line 9, the first statement was executed while the second statement was not. For this case the line is colored yellow.</p>
+        <p>Along the right-hand side, the "gutter" shows a snapshot of the entire file, with small green, yellow, or red bars. If you hover your mouse over one of the small bars it will display the line of code. If you click on a small bar it will jump to that section of code.</p>
+        <p>If you have other Editors open, then switching to those other editors will immediately show the code coverage for that file.</p>
+        <p>To reset the code coverage for a file, you can either re-compile the file or use the CODE_COVERAGE function with the /CLEAR keyword. Resetting the IDL&#160;session will also clear out the code coverage.</p>
+        <p>To turn off the code coverage highlighting, select the "Run-&gt;Hide Code Coverage" menu item.</p>
+        <p class="Tip" data-mc-autonum="&lt;b&gt;Tip: &lt;/b&gt;"><span class="autonumber"><span><b>Tip: </b></span></span>IDL automatically keeps track of code coverage for all compiled routines, regardless of the setting of the Code Coverage menu item. You could run your entire application, turn on "Show Code Coverage", and then open up your code in the Editor. The Editor will then update with the current code coverage highlighting.</p>
+        <h2>Code Coverage in the Profiler View</h2>
+        <p>The Profiler View contains three columns related to code coverage:</p>
+        <ul>
+            <li value="1"><b>Lines Run</b> - The number of code lines that were executed within the routine. This is empty for system routines.</li>
+            <li value="2"><b>Total Lines</b> - The total number of code lines within the routine. This is empty for system routines.</li>
+            <li value="3"><b>Code Coverage</b> - The fraction of the total lines of code that were executed, which is just the ratio of Lines Run to Total Lines. A value of 0% indicates that none of the code was executed, while 100% indicates that all of the code was executed.</li>
+        </ul>
+        <p>The Code Coverage column also contains a graph for each routine, showing green for the percentage of code that was executed, and red for the percentage of code that was not executed. You can click on the "Code Coverage" header to sort the view in either increasing or decreasing percentage.</p>
+        <p>If you double click on an IDL&#160;<code>.pro</code> routine, the Editor will be opened to that routine. If code coverage is not already displayed, you can turn on <b>Show Code Coverage</b> using either the button on the Profiler View's toolbar or the <b>Run &gt; Show Code Coverage</b> menu item.</p>
+        <p>See <a href="ProfilerView.htm">Profiler View</a> for more details on using the Profiler.</p>
+        <p>
+            <img src="../images/enableprofiler_console.PNG" />
+        </p>
+        <h2>Changing the Highlighting Colors</h2>
+        <p>You can change the appearance of the green, yellow, and red highlighting bars. In the Workbench, open up the <a href="DEPreferences.htm">Preferences</a> dialog. You can either type the word "annotation" into the search box, or navigate to <b>General &gt; Editors &gt; Text Editors &gt; Annotations</b>. There, you can choose the three different annotation types:</p>
+        <ul>
+            <li value="1">Code Coverage Executed - lines of code that have been hit (default is green)</li>
+            <li value="2">Code Coverage Not Executed - lines of code that have not been hit (default is red)</li>
+            <li value="3">Code Coverage Partially Executed - lines of code that have been partially hit (default is yellow)</li>
+        </ul>
+        <p>Changing the colors will change the highlighting in both the Editor and in the Profiler View.</p>
+        <h2>See Also</h2>
+        <p><a href="../../Reference Material/C/CODE_COVERAGE.htm">CODE_COVERAGE</a>, <a href="ProfilerView.htm">Profiler View</a>, <a href="#">Preferences</a>, <a href="EditorView.htm">Editor View</a> <![CDATA[ ]]></p>
+        <div class="mp_footer">© <span class="DocumentTitleCopyrightYear">2015</span>&#160;<span class="DocumentTitleCopyrightCompanyName">Exelis Visual Information Solutions, Inc., a subsidiary of Harris Corporation</span>. All Rights Reserved. This information is not subject to the controls of the International Traffic in Arms Regulations (ITAR) or the Export Administration Regulations (EAR). However, this information may be restricted from transfer to various embargoed countries under U.S. laws and regulations.</div>
+    </body>
+</html>
