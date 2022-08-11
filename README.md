@@ -1,8 +1,8 @@
 # HTML
 
-http://nyh951117.gitee.io/html
+http://nyh951117.gitee.io/IDL_help_85
 
-https://nyh951117.gitee.io/html
+https://nyh951117.github.io/IDL_help_85
 
 
 #### 介绍
